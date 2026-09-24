@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -422,20 +422,7 @@ select{
     background:#100b0d;
     border:1px solid #2d181e;
     border-radius:12px;
-    padding:20px;
-    position:relative;
-    overflow:hidden;
-}
-
-.stat-card::after{
-    content:"";
-    position:absolute;
-    left:0;
-    bottom:0;
-    width:100%;
-    height:2px;
-    background:#762337;
-    opacity:.65;
+    padding:22px;
 }
 
 .stat-label{
@@ -454,170 +441,8 @@ select{
 
 .dashboard-grid{
     display:grid;
-    grid-template-columns:1.35fr .65fr;
+    grid-template-columns:1.4fr .6fr;
     gap:20px;
-}
-
-.dashboard-grid.two{
-    grid-template-columns:1.15fr .85fr;
-}
-
-.dashboard-chart{
-    min-height:290px;
-}
-
-.chart-wrap{
-    padding:20px;
-}
-
-.chart-bars{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-around;
-    gap:18px;
-    height:220px;
-    padding:18px 10px 8px;
-    border-bottom:1px solid #25161b;
-    background:
-        linear-gradient(to top, transparent 24%, rgba(118,35,55,.10) 25%, transparent 26%),
-        linear-gradient(to top, transparent 49%, rgba(118,35,55,.08) 50%, transparent 51%),
-        linear-gradient(to top, transparent 74%, rgba(118,35,55,.07) 75%, transparent 76%);
-}
-
-.chart-item{
-    flex:1;
-    height:100%;
-    min-width:55px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-end;
-    gap:8px;
-}
-
-.chart-value{
-    color:#ddd;
-    font-size:10px;
-    font-weight:800;
-}
-
-.chart-track{
-    width:min(54px,72%);
-    height:155px;
-    display:flex;
-    align-items:flex-end;
-    background:#0b090a;
-    border:1px solid #28171d;
-    border-radius:8px 8px 3px 3px;
-    overflow:hidden;
-}
-
-.chart-bar{
-    width:100%;
-    min-height:4px;
-    background:linear-gradient(180deg,#a13a52,#5d1b2c);
-    border-radius:6px 6px 0 0;
-    transition:height .35s ease;
-}
-
-.chart-label{
-    color:#777;
-    font-size:9px;
-    text-transform:uppercase;
-    letter-spacing:.8px;
-    text-align:center;
-}
-
-.dashboard-refresh{
-    display:flex;
-    align-items:center;
-    gap:9px;
-}
-
-.refresh-btn{
-    border:1px solid #3b1d27;
-    background:#120b0e;
-    color:#aaa;
-    border-radius:6px;
-    padding:8px 11px;
-    font-size:10px;
-}
-
-.refresh-btn:hover{
-    border-color:#762337;
-    color:#fff;
-    background:#1b0d12;
-}
-
-.last-updated{
-    color:#555;
-    font-size:9px;
-}
-
-.recent-project{
-    display:flex;
-    gap:12px;
-    padding:12px 0;
-    border-bottom:1px solid #21151a;
-}
-
-.recent-project:last-child{
-    border-bottom:none;
-}
-
-.recent-project-thumb{
-    width:62px;
-    height:48px;
-    flex:0 0 62px;
-    object-fit:cover;
-    border-radius:6px;
-    border:1px solid #39202a;
-    background:#171014;
-}
-
-.recent-project-info{
-    min-width:0;
-    flex:1;
-}
-
-.recent-project-name{
-    color:#ddd;
-    font-size:11px;
-    font-weight:bold;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.recent-project-meta{
-    color:#555;
-    font-size:9px;
-    margin-top:4px;
-}
-
-.recent-project-date{
-    color:#777;
-    font-size:9px;
-    margin-top:5px;
-}
-
-.dashboard-empty{
-    padding:28px 5px;
-}
-
-@media(max-width:800px){
-    .dashboard-grid,
-    .dashboard-grid.two{
-        grid-template-columns:1fr;
-    }
-
-    .chart-bars{
-        gap:8px;
-    }
-
-    .chart-track{
-        width:44px;
-    }
 }
 
 .panel{
@@ -1226,16 +1051,6 @@ tr:hover td{
         grid-template-columns:1fr;
     }
 
-    .chart-bars{
-        gap:4px;
-        padding-left:2px;
-        padding-right:2px;
-    }
-
-    .chart-track{
-        width:36px;
-    }
-
 }
 
 
@@ -1252,6 +1067,349 @@ tr:hover td{
         animation:none !important;
     }
 
+}
+
+
+
+/* =====================================================
+   VANTOR MOBILE / TABLET RESPONSIVE UPGRADE
+   Keeps every desktop function available on small screens.
+===================================================== */
+
+html,body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+}
+
+img,video,svg,canvas{
+    max-width:100%;
+}
+
+button,
+input,
+select,
+textarea{
+    min-height:44px;
+}
+
+.table-wrap{
+    max-width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+}
+
+.table-wrap table{
+    min-width:760px;
+}
+
+@media (max-width:1100px){
+    .content{min-width:0;}
+    .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+
+@media (max-width:800px){
+    .mobile-header{
+        height:64px;
+        padding:0 14px;
+        gap:10px;
+    }
+
+    .mobile-logo{
+        font-size:16px;
+        flex:1;
+        min-width:0;
+    }
+
+    .menu-toggle{
+        width:44px;
+        height:44px;
+        min-width:44px;
+        flex:0 0 44px;
+    }
+
+    .sidebar{
+        width:min(310px,88vw);
+        max-width:88vw;
+        box-shadow:20px 0 60px rgba(0,0,0,.55);
+    }
+
+    .sidebar-nav{
+        padding:14px 10px;
+    }
+
+    .side-link{
+        min-height:46px;
+        padding:12px 13px;
+        font-size:13px;
+    }
+
+    .main{
+        width:100%;
+        min-width:0;
+        margin-left:0;
+        padding-top:64px;
+    }
+
+    .content{
+        width:100%;
+        min-width:0;
+        padding:18px 12px 30px;
+    }
+
+    .section-header{
+        gap:12px;
+        margin-bottom:16px;
+    }
+
+    .section-header h2{
+        font-size:21px;
+    }
+
+    .section-header p{
+        line-height:1.5;
+    }
+
+    .add-btn,
+    .quick-btn,
+    .refresh-btn,
+    .open-site,
+    .save-btn,
+    .cancel-btn,
+    .action-btn{
+        min-height:44px;
+    }
+
+    .toolbar{
+        width:100%;
+        flex-direction:column;
+        gap:8px;
+    }
+
+    .search-input,
+    .filter-select{
+        width:100%;
+        min-width:0;
+        font-size:16px;
+        min-height:46px;
+    }
+
+    .panel,
+    .stat-card,
+    .table-wrap,
+    .settings-card{
+        max-width:100%;
+    }
+
+    .panel-head{
+        padding:15px;
+        flex-wrap:wrap;
+    }
+
+    .panel-body{
+        padding:15px;
+    }
+
+    .stats-grid{
+        width:100%;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:9px;
+    }
+
+    .stat-card{
+        min-width:0;
+        padding:14px;
+    }
+
+    .stat-number{
+        font-size:24px;
+        overflow-wrap:anywhere;
+    }
+
+    .dashboard-grid,
+    .dashboard-grid.two{
+        width:100%;
+        grid-template-columns:minmax(0,1fr);
+    }
+
+    .chart-wrap{
+        padding:12px 8px;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    .chart-bars{
+        min-width:430px;
+        gap:8px;
+    }
+
+    .quick-actions{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .modal{
+        padding:8px;
+        align-items:flex-start;
+        overflow-y:auto;
+    }
+
+    .modal-box{
+        width:100%;
+        max-width:100%;
+        max-height:calc(100vh - 16px);
+        max-height:calc(100dvh - 16px);
+        margin:auto 0;
+        border-radius:12px;
+    }
+
+    .modal-head{
+        padding:14px 15px;
+        position:sticky;
+        top:0;
+        z-index:2;
+        background:#100b0d;
+    }
+
+    .modal-body{
+        padding:15px;
+    }
+
+    .form-row{
+        grid-template-columns:minmax(0,1fr);
+        gap:0;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select,
+    .login-group input{
+        font-size:16px;
+        min-height:46px;
+    }
+
+    .form-group textarea{
+        min-height:130px;
+    }
+
+    .modal-actions{
+        position:sticky;
+        bottom:0;
+        z-index:2;
+        background:#100b0d;
+        padding-bottom:2px;
+    }
+
+    .modal-actions button{
+        flex:1;
+        min-width:0;
+        min-height:46px;
+    }
+
+    .upload-box{
+        padding:12px;
+    }
+
+    .upload-box input[type="file"]{
+        width:100%;
+        min-height:46px;
+    }
+
+    .message-box{
+        max-width:100%;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+    }
+
+    .settings-section{
+        padding:16px;
+    }
+
+    .settings-actions{
+        padding:15px;
+        flex-direction:column;
+    }
+
+    .settings-actions button{
+        width:100%;
+        min-height:46px;
+    }
+
+    .toast{
+        width:calc(100% - 24px);
+        max-width:420px;
+        text-align:center;
+        bottom:14px;
+    }
+}
+
+@media (max-width:480px){
+    .content{
+        padding-left:10px;
+        padding-right:10px;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stat-card{
+        padding:12px;
+    }
+
+    .stat-label{
+        font-size:8px;
+        letter-spacing:1px;
+    }
+
+    .stat-number{
+        font-size:22px;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr;
+    }
+
+    .section-header h2{
+        font-size:20px;
+    }
+
+    .chart-bars{
+        min-width:390px;
+    }
+
+    .login-screen{
+        padding:12px;
+    }
+
+    .login-box{
+        width:100%;
+        padding:24px 18px;
+        border-radius:14px;
+    }
+}
+
+@media (max-width:360px){
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .mobile-header{
+        padding-left:10px;
+        padding-right:10px;
+    }
+
+    .sidebar{
+        width:92vw;
+        max-width:92vw;
+    }
+
+    .content{
+        padding-left:8px;
+        padding-right:8px;
+    }
 }
 
 </style>
@@ -1583,7 +1741,7 @@ tr:hover td{
             </h2>
 
             <p>
-                Overview of your VANTOR website. Data syncs automatically.
+                Overview of your VANTOR website.
             </p>
 
         </div>
@@ -1725,40 +1883,24 @@ tr:hover td{
 
     <div class="dashboard-grid">
 
-        <div class="panel dashboard-chart">
+        <div class="panel">
 
             <div class="panel-head">
 
-                <div>
-                    <h3>Content Overview</h3>
-                    <span>Projects / Clients / Services / Offers</span>
-                </div>
+                <h3>
+                    Recent Messages
+                </h3>
 
-                <div class="dashboard-refresh">
-                    <span class="last-updated" id="dashboardLastUpdated">
-                        Updating...
-                    </span>
-
-                    <button
-                        type="button"
-                        class="refresh-btn"
-                        id="dashboardRefreshBtn"
-                    >
-                        ↻ Refresh
-                    </button>
-                </div>
+                <span>
+                    Latest inquiries
+                </span>
 
             </div>
 
-            <div class="chart-wrap">
-
-                <div
-                    class="chart-bars"
-                    id="contentChart"
-                    aria-label="Projects, Clients, Services and Offers statistics"
-                ></div>
-
-            </div>
+            <div
+                class="panel-body"
+                id="recentMessages"
+            ></div>
 
         </div>
 
@@ -1767,9 +1909,9 @@ tr:hover td{
 
             <div class="panel-head">
 
-                <h3>Quick Actions</h3>
-
-                <span>Fast access</span>
+                <h3>
+                    Quick Actions
+                </h3>
 
             </div>
 
@@ -1822,46 +1964,6 @@ tr:hover td{
                 </div>
 
             </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="dashboard-grid two" style="margin-top:20px;">
-
-        <div class="panel">
-
-            <div class="panel-head">
-
-                <h3>Recent Messages</h3>
-
-                <span>Latest inquiries</span>
-
-            </div>
-
-            <div
-                class="panel-body"
-                id="recentMessages"
-            ></div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <div class="panel-head">
-
-                <h3>Recent Projects</h3>
-
-                <span>Latest portfolio items</span>
-
-            </div>
-
-            <div
-                class="panel-body"
-                id="recentProjects"
-            ></div>
 
         </div>
 
@@ -3448,7 +3550,229 @@ tr:hover td{
 ></div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
+/* =====================================================
+   VANTOR CLOUD SYNC
+===================================================== */
+
+const SUPABASE_URL = "https://dtptxhkcogpoleftguas.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL";
+
+// Supabase is optional for the dashboard UI. If the CDN is blocked/offline,
+// the admin page must still open and continue using localStorage.
+let supabaseClient = null;
+if (window.supabase && typeof window.supabase.createClient === "function") {
+    try {
+        supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+    } catch (error) {
+        console.warn("VANTOR Supabase initialization failed:", error);
+    }
+} else {
+    console.warn("VANTOR Supabase CDN is unavailable. Running in local mode.");
+}
+
+const CLOUD_TABLES = {
+    vantor_services: "services",
+    vantor_offers: "offers",
+    vantor_projects: "projects",
+    vantor_clients: "clients",
+    vantor_testimonials: "testimonials",
+    vantor_messages: "messages"
+};
+
+function dbToLocal(key,row){
+    if(!row) return row;
+    const x = {...row};
+
+    if(key === "vantor_services"){
+        x.name = x.name || x.title || "";
+        x.icon = x.icon || "V";
+        x.status = x.status || "Active";
+    }
+
+    if(key === "vantor_offers"){
+        x.name = x.name || x.title || "";
+        x.newPrice = x.newPrice || x.price || "";
+        x.oldPrice = x.oldPrice || x.old_price || x.oldPrice || "";
+        x.status = x.status || "Active";
+    }
+
+    if(key === "vantor_projects"){
+        x.name = x.name || x.title || "";
+        x.status = x.status || "Active";
+    }
+
+    if(key === "vantor_clients"){
+        x.status = x.status || "Active";
+    }
+
+    if(key === "vantor_testimonials"){
+        x.status = x.status || "Active";
+        x.text = x.text || x.message || "";
+    }
+
+    if(key === "vantor_messages"){
+        x.read = x.read ?? x.is_read ?? false;
+        x.status = x.status || (x.read ? "Read" : "Unread");
+    }
+
+    return x;
+}
+
+function localToDb(key,item,includeId){
+    const id = item && item.id;
+    let row = {};
+
+    if(key === "vantor_services"){
+        row = {
+            title: item.name || item.title || "",
+            description: item.description || "",
+            price: item.price || "",
+            image: item.image || "",
+            icon: item.icon || "V",
+            status: item.status || "Active"
+        };
+    }
+
+    if(key === "vantor_offers"){
+        row = {
+            title: item.name || item.title || "",
+            description: item.description || "",
+            price: item.newPrice || item.price || "",
+            old_price: item.oldPrice || item.old_price || "",
+            image: item.image || "",
+            discount: item.discount || item.discountText || "",
+            status: item.status || "Active"
+        };
+    }
+
+    if(key === "vantor_projects"){
+        row = {
+            title: item.name || item.title || "",
+            description: item.description || "",
+            image: item.image || "",
+            category: item.category || "",
+            status: item.status || "Active"
+        };
+    }
+
+    if(key === "vantor_clients"){
+        row = {
+            name: item.name || "",
+            email: item.email || "",
+            phone: item.phone || "",
+            image: item.image || "",
+            company: item.company || "",
+            status: item.status || "Active"
+        };
+    }
+
+    if(key === "vantor_testimonials"){
+        row = {
+            name: item.name || "",
+            message: item.message || item.text || "",
+            rating: Number(item.rating || 5),
+            image: item.image || "",
+            company: item.company || "",
+            status: item.status || "Active",
+            text: item.text || item.message || ""
+        };
+    }
+
+    if(key === "vantor_messages"){
+        row = {
+            name: item.name || "",
+            email: item.email || "",
+            message: item.message || item.text || "",
+            is_read: !!(item.read || item.status === "Read"),
+            phone: item.phone || ""
+        };
+    }
+
+    // The Supabase ids are BIGINT identity columns. Never send our
+    // browser-generated ids such as "project-123..." to a BIGINT column.
+    if(includeId && id !== undefined && id !== null && /^\d+$/.test(String(id))){
+        row.id = Number(id);
+    }
+
+    return row;
+}
+
+async function readCloud(key){
+    const table = CLOUD_TABLES[key];
+    if(!table || !supabaseClient) return null;
+
+    const {data,error} = await supabaseClient
+        .from(table)
+        .select("*")
+        .order("id",{ascending:true});
+
+    if(error){
+        console.warn("VANTOR Supabase read failed:",table,error.message);
+        return null;
+    }
+
+    return (data || []).map(row => dbToLocal(key,row));
+}
+
+async function writeCloud(key,data){
+    const table = CLOUD_TABLES[key];
+    if(!table || !Array.isArray(data) || !supabaseClient) return;
+
+    try{
+        for(const item of data){
+            const payload = localToDb(key,item,true);
+            const {data:created,error} = await supabaseClient
+                .from(table)
+                .insert(payload)
+                .select()
+                .single();
+
+            if(error){
+                // Existing numeric id: update it. Browser-generated id: insert above.
+                if(item.id !== undefined && /^\d+$/.test(String(item.id))){
+                    const updatePayload = localToDb(key,item,true);
+                    const result = await supabaseClient
+                        .from(table)
+                        .update(updatePayload)
+                        .eq("id",Number(item.id));
+                    if(result.error) console.warn("VANTOR Supabase update failed:",table,result.error.message);
+                }else{
+                    console.warn("VANTOR Supabase insert failed:",table,error.message);
+                }
+            }
+        }
+    }catch(error){
+        console.warn("VANTOR Supabase write failed:",error.message);
+    }
+}
+
+async function syncVantorCloud(){
+    // If Supabase already has the data, it wins and becomes the shared source.
+    // If a table is empty, seed it from the laptop's existing localStorage once.
+    for(const key of Object.keys(CLOUD_TABLES)){
+        const remote = await readCloud(key);
+        if(remote === null) continue;
+
+        const local = getData(key);
+
+        if(remote.length > 0){
+            localStorage.setItem(key,JSON.stringify(remote));
+        }else if(local.length > 0){
+            await writeCloud(key,local);
+            const refreshed = await readCloud(key);
+            if(refreshed && refreshed.length){
+                localStorage.setItem(key,JSON.stringify(refreshed));
+            }
+        }
+    }
+}
 
 /* =====================================================
    KEYS
@@ -3557,30 +3881,25 @@ function getData(key){
 
 }
 
-
 function setData(key,data){
-
     try{
-
         localStorage.setItem(
             key,
             JSON.stringify(data)
         );
 
+        if(CLOUD_TABLES[key]){
+            writeCloud(key,data);
+        }
+
         return true;
-
     }catch(error){
-
         showToast(
             "Storage is full. Try using smaller images."
         );
-
         return false;
-
     }
-
 }
-
 
 function uid(prefix="item"){
 
@@ -3620,27 +3939,25 @@ function escapeHtml(value){
 
 function initializeDefaults(){
 
-    if(
-        !localStorage.getItem(
-            KEYS.admins
-        )
-    ){
+    let admins = getData(KEYS.admins);
 
-        setData(
-            KEYS.admins,
-            [
-                {
-                    id:"admin-1",
-                    name:"VANTOR Admin",
-                    email:"admin@vantor.com",
-                    password:"admin123",
-                    role:"Admin",
-                    createdAt:
-                        new Date().toISOString()
-                }
-            ]
-        );
+    const defaultAdmin = {
+        id:"admin-1",
+        name:"VANTOR Admin",
+        email:"admin@vantor.com",
+        password:"admin123",
+        role:"Admin",
+        createdAt:new Date().toISOString()
+    };
 
+    const defaultAdminExists = admins.some(function(item){
+        return String(item.email || "").trim().toLowerCase() ===
+            defaultAdmin.email.toLowerCase();
+    });
+
+    if(!defaultAdminExists){
+        admins.unshift(defaultAdmin);
+        setData(KEYS.admins, admins);
     }
 
 
@@ -4416,8 +4733,8 @@ document
 
                         image:
                             image ??
-                            existing?.image ||
-                            "",
+                            (existing?.image ||
+                            ""),
 
                         status:
                             document.getElementById(
@@ -4734,8 +5051,8 @@ document
 
                         image:
                             image ??
-                            existing?.image ||
-                            "",
+                            (existing?.image ||
+                            ""),
 
                         status:
                             document.getElementById(
@@ -5059,8 +5376,8 @@ document
 
                         image:
                             image ??
-                            existing?.image ||
-                            "",
+                            (existing?.image ||
+                            ""),
 
                         status:
                             document.getElementById(
@@ -7674,38 +7991,58 @@ function renderDashboard(){
     const services =
         getData(KEYS.services);
 
+
     const offers =
         getData(KEYS.offers);
+
 
     const projects =
         getData(KEYS.projects);
 
+
     const clients =
         getData(KEYS.clients);
+
 
     const testimonials =
         getData(KEYS.testimonials);
 
+
     const messages =
         getData(KEYS.messages);
+
 
     const admins =
         getData(KEYS.admins);
 
 
-    document.getElementById("statServices").textContent =
+    document.getElementById(
+        "statServices"
+    ).textContent =
         services.length;
 
-    document.getElementById("statOffers").textContent =
+
+    document.getElementById(
+        "statOffers"
+    ).textContent =
         offers.length;
 
-    document.getElementById("statProjects").textContent =
+
+    document.getElementById(
+        "statProjects"
+    ).textContent =
         projects.length;
 
-    document.getElementById("statClients").textContent =
+
+    document.getElementById(
+        "statClients"
+    ).textContent =
         clients.length;
 
-    document.getElementById("statTestimonials").textContent =
+
+    document.getElementById(
+        "statTestimonials"
+    ).textContent =
         testimonials.length;
 
 
@@ -7717,354 +8054,162 @@ function renderDashboard(){
         ).length;
 
 
-    document.getElementById("statUnread").textContent =
+    document.getElementById(
+        "statUnread"
+    ).textContent =
         unread;
 
-    document.getElementById("statAdmins").textContent =
+
+    document.getElementById(
+        "statAdmins"
+    ).textContent =
         admins.length;
 
 
     const active =
-        services.filter(item => item.status !== "Hidden").length +
-        offers.filter(item => item.status !== "Hidden").length +
-        projects.filter(item => item.status !== "Hidden").length +
-        clients.filter(item => item.status !== "Hidden").length;
+        services.filter(
+            item =>
+                item.status !== "Hidden"
+        ).length +
+        offers.filter(
+            item =>
+                item.status !== "Hidden"
+        ).length +
+        projects.filter(
+            item =>
+                item.status !== "Hidden"
+        ).length +
+        clients.filter(
+            item =>
+                item.status !== "Hidden"
+        ).length;
 
 
-    document.getElementById("statActive").textContent =
+    document.getElementById(
+        "statActive"
+    ).textContent =
         active;
 
-
-    /* -----------------------------------------------------
-       CONTENT CHART
-    ----------------------------------------------------- */
-
-    const chartData = [
-        {
-            label:"Services",
-            value:services.length
-        },
-        {
-            label:"Offers",
-            value:offers.length
-        },
-        {
-            label:"Projects",
-            value:projects.length
-        },
-        {
-            label:"Clients",
-            value:clients.length
-        }
-    ];
-
-
-    const chart =
-        document.getElementById("contentChart");
-
-
-    if(chart){
-
-        const max =
-            Math.max(
-                1,
-                ...chartData.map(item => item.value)
-            );
-
-
-        chart.innerHTML =
-            chartData.map(item => {
-
-                const percent =
-                    item.value === 0
-                    ? 0
-                    : Math.max(
-                        4,
-                        (item.value / max) * 100
-                    );
-
-
-                return `
-                    <div class="chart-item">
-
-                        <div class="chart-value">
-                            ${item.value}
-                        </div>
-
-                        <div class="chart-track">
-
-                            <div
-                                class="chart-bar"
-                                style="height:${percent}%"
-                                title="${escapeHtml(item.label)}: ${item.value}"
-                            ></div>
-
-                        </div>
-
-                        <div class="chart-label">
-                            ${escapeHtml(item.label)}
-                        </div>
-
-                    </div>
-                `;
-
-            }).join("");
-
-    }
-
-
-    /* -----------------------------------------------------
-       RECENT MESSAGES
-    ----------------------------------------------------- */
 
     const recent =
         messages
         .slice()
         .sort(
             (a,b) =>
-                new Date(b.createdAt || 0) -
-                new Date(a.createdAt || 0)
+                new Date(
+                    b.createdAt || 0
+                ) -
+                new Date(
+                    a.createdAt || 0
+                )
         )
         .slice(0,5);
 
 
     const box =
-        document.getElementById("recentMessages");
+        document.getElementById(
+            "recentMessages"
+        );
 
 
     if(!recent.length){
 
         box.innerHTML = `
-            <div class="empty dashboard-empty">
+            <div class="empty">
                 <strong>No messages yet</strong>
                 Website messages will appear here.
             </div>
         `;
 
-    }else{
+        return;
 
-        box.innerHTML =
-            recent.map(item => `
+    }
+
+
+    box.innerHTML =
+        recent.map(item => `
+
+            <div
+                style="
+                    padding:13px 0;
+                    border-bottom:1px solid #21151a;
+                "
+            >
 
                 <div
                     style="
-                        padding:13px 0;
-                        border-bottom:1px solid #21151a;
+                        display:flex;
+                        justify-content:space-between;
+                        gap:10px;
                     "
                 >
 
-                    <div
-                        style="
-                            display:flex;
-                            justify-content:space-between;
-                            gap:10px;
-                        "
-                    >
+                    <div>
 
-                        <div>
-
-                            <div
-                                style="
-                                    color:#ddd;
-                                    font-size:11px;
-                                    font-weight:bold;
-                                "
-                            >
-                                ${escapeHtml(
-                                    item.name ||
-                                    "Unknown"
-                                )}
-                            </div>
-
-                            <div
-                                style="
-                                    color:#555;
-                                    font-size:9px;
-                                    margin-top:3px;
-                                "
-                            >
-                                ${escapeHtml(
-                                    item.email ||
-                                    ""
-                                )}
-                            </div>
-
+                        <div
+                            style="
+                                color:#ddd;
+                                font-size:11px;
+                                font-weight:bold;
+                            "
+                        >
+                            ${escapeHtml(
+                                item.name ||
+                                "Unknown"
+                            )}
                         </div>
 
+                        <div
+                            style="
+                                color:#555;
+                                font-size:9px;
+                                margin-top:3px;
+                            "
+                        >
+                            ${escapeHtml(
+                                item.email ||
+                                ""
+                            )}
+                        </div>
 
-                        <span class="status ${
+                    </div>
+
+
+                    <span class="status ${
+                        item.read ||
+                        item.status === "Read"
+                        ? "read"
+                        : "unread"
+                    }">
+
+                        ${
                             item.read ||
                             item.status === "Read"
-                            ? "read"
-                            : "unread"
-                        }">
+                            ? "Read"
+                            : "Unread"
+                        }
 
-                            ${
-                                item.read ||
-                                item.status === "Read"
-                                ? "Read"
-                                : "Unread"
-                            }
-
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            color:#777;
-                            font-size:10px;
-                            margin-top:9px;
-                        "
-                    >
-                        ${escapeHtml(
-                            item.subject ||
-                            "No subject"
-                        )}
-                    </div>
+                    </span>
 
                 </div>
 
-            `).join("");
 
-    }
-
-
-    /* -----------------------------------------------------
-       RECENT PROJECTS
-    ----------------------------------------------------- */
-
-    const recentProjects =
-        projects
-        .slice()
-        .sort(
-            (a,b) =>
-                new Date(b.createdAt || 0) -
-                new Date(a.createdAt || 0)
-        )
-        .slice(0,5);
-
-
-    const projectsBox =
-        document.getElementById("recentProjects");
-
-
-    if(projectsBox){
-
-        if(!recentProjects.length){
-
-            projectsBox.innerHTML = `
-                <div class="empty dashboard-empty">
-                    <strong>No projects yet</strong>
-                    Add your first portfolio project from Quick Actions.
+                <div
+                    style="
+                        color:#777;
+                        font-size:10px;
+                        margin-top:9px;
+                    "
+                >
+                    ${escapeHtml(
+                        item.subject ||
+                        "No subject"
+                    )}
                 </div>
-            `;
 
-        }else{
+            </div>
 
-            projectsBox.innerHTML =
-                recentProjects.map(item => {
-
-                    const image =
-                        item.image ||
-                        item.imageUrl ||
-                        "";
-
-
-                    const imageHtml =
-                        image
-                        ?
-                        `
-                        <img
-                            class="recent-project-thumb"
-                            src="${escapeHtml(image)}"
-                            alt="${escapeHtml(item.name || "Project")}"
-                        >
-                        `
-                        :
-                        `
-                        <div class="recent-project-thumb"></div>
-                        `;
-
-
-                    const date =
-                        item.createdAt
-                        ?
-                        new Date(
-                            item.createdAt
-                        ).toLocaleDateString()
-                        :
-                        "No date";
-
-
-                    return `
-                        <div class="recent-project">
-
-                            ${imageHtml}
-
-                            <div class="recent-project-info">
-
-                                <div class="recent-project-name">
-                                    ${escapeHtml(
-                                        item.name ||
-                                        "Untitled Project"
-                                    )}
-                                </div>
-
-                                <div class="recent-project-meta">
-                                    ${escapeHtml(
-                                        item.category ||
-                                        item.client ||
-                                        "Portfolio Project"
-                                    )}
-                                </div>
-
-                                <div class="recent-project-date">
-                                    ${escapeHtml(date)}
-                                </div>
-
-                            </div>
-
-                            <span class="status ${
-                                item.status === "Hidden"
-                                ? "hidden"
-                                : "active"
-                            }">
-                                ${escapeHtml(
-                                    item.status || "Active"
-                                )}
-                            </span>
-
-                        </div>
-                    `;
-
-                }).join("");
-
-        }
-
-    }
-
-
-    const updated =
-        document.getElementById(
-            "dashboardLastUpdated"
-        );
-
-
-    if(updated){
-
-        updated.textContent =
-            "Updated " +
-            new Date().toLocaleTimeString(
-                [],
-                {
-                    hour:"2-digit",
-                    minute:"2-digit"
-                }
-            );
-
-    }
+        `).join("");
 
 }
 
@@ -8169,34 +8314,6 @@ document
         );
 
     });
-
-
-/* =====================================================
-   DASHBOARD MANUAL REFRESH
-===================================================== */
-
-const dashboardRefreshBtn =
-    document.getElementById(
-        "dashboardRefreshBtn"
-    );
-
-
-if(dashboardRefreshBtn){
-
-    dashboardRefreshBtn.addEventListener(
-        "click",
-        function(){
-
-            renderAll();
-
-            showToast(
-                "Dashboard updated."
-            );
-
-        }
-    );
-
-}
 
 
 /* =====================================================
@@ -8391,7 +8508,7 @@ setInterval(
         }
 
     },
-    3000
+    2000
 );
 
 
@@ -8405,11 +8522,16 @@ initializeDefaults();
 
 checkAuth();
 
-renderAll();
+// Load the shared Supabase data first, then render the dashboard.
+syncVantorCloud().then(function(){
+    renderAll();
+}).catch(function(error){
+    console.warn("VANTOR cloud startup failed:",error);
+    renderAll();
+});
 
 </script>
 
 </body>
 
 </html>
-```
