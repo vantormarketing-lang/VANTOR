@@ -1,0 +1,3821 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>VANTOR — Digital Marketing Agency</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#080808;
+    color:#f1f1f1;
+    line-height:1.5;
+}
+
+body.modal-open{
+    overflow:hidden;
+}
+
+button,
+input,
+textarea{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+img{
+    max-width:100%;
+}
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root{
+    --bg:#080808;
+    --card:#100b0d;
+    --card2:#120c0f;
+    --border:#2d181e;
+    --border-light:#4a1d29;
+    --burgundy:#762337;
+    --burgundy-dark:#4d1726;
+    --burgundy-light:#a13a52;
+    --text:#f1f1f1;
+    --muted:#888;
+    --muted2:#aaa;
+}
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+.container{
+    width:min(1180px,92%);
+    margin:auto;
+}
+
+section{
+    padding:95px 0;
+}
+
+.section-heading{
+    text-align:center;
+    margin-bottom:48px;
+}
+
+.section-heading span{
+    display:inline-block;
+    color:#a13a52;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    margin-bottom:10px;
+}
+
+.section-heading h2{
+    font-size:38px;
+    margin-bottom:12px;
+}
+
+.section-heading p{
+    color:#777;
+    max-width:650px;
+    margin:auto;
+    font-size:14px;
+}
+
+.empty-state{
+    grid-column:1/-1;
+    padding:50px 25px;
+    border:1px dashed #351a22;
+    border-radius:15px;
+    text-align:center;
+    color:#777;
+}
+
+.empty-state strong{
+    display:block;
+    color:#aaa;
+    margin-bottom:8px;
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+    background:rgba(8,8,8,.88);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid #191919;
+}
+
+.nav-inner{
+    width:min(1180px,92%);
+    height:75px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:#8b2941;
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.nav-links a{
+    color:#999;
+    font-size:12px;
+    transition:.2s;
+}
+
+.nav-links a:hover{
+    color:#fff;
+}
+
+.nav-contact{
+    border:1px solid #5b1f2d;
+    background:#211016;
+    color:#d99aa7 !important;
+    padding:9px 14px;
+    border-radius:6px;
+}
+
+.menu-btn{
+    display:none;
+    background:none;
+    border:0;
+    color:#fff;
+    font-size:25px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+    min-height:100vh;
+    padding:150px 0 100px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(
+            circle at 70% 40%,
+            rgba(93,23,43,.2),
+            transparent 38%
+        ),
+        #080808;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(8,8,8,.98),
+            rgba(8,8,8,.78),
+            rgba(8,8,8,.55)
+        );
+    pointer-events:none;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:760px;
+}
+
+.hero-tag{
+    color:#a13a52;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    font-size:11px;
+    margin-bottom:18px;
+}
+
+.hero h1{
+    font-size:clamp(48px,7vw,86px);
+    line-height:.98;
+    letter-spacing:-3px;
+    margin-bottom:25px;
+}
+
+.hero h1 span{
+    color:#9b304a;
+}
+
+.hero-description{
+    color:#999;
+    max-width:650px;
+    font-size:16px;
+    line-height:1.8;
+    margin-bottom:35px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.btn-primary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:#6d1e30;
+    color:#fff;
+    border:1px solid #7f2b40;
+    padding:13px 22px;
+    border-radius:7px;
+    font-size:13px;
+    transition:.25s;
+}
+
+.btn-primary:hover{
+    background:#8a2942;
+    transform:translateY(-2px);
+}
+
+.btn-secondary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:#120c0f;
+    color:#bbb;
+    border:1px solid #3b2028;
+    padding:13px 22px;
+    border-radius:7px;
+    font-size:13px;
+    transition:.25s;
+}
+
+.btn-secondary:hover{
+    border-color:#762337;
+    color:#fff;
+}
+
+
+/* =====================================================
+   OVERVIEW
+===================================================== */
+
+.overview{
+    padding-top:55px;
+}
+
+.overview-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.overview-card{
+    background:#0e0e0e;
+    border:1px solid #202020;
+    border-radius:13px;
+    padding:27px;
+    text-align:center;
+    transition:.3s;
+}
+
+.overview-card:hover{
+    border-color:#5b1f2d;
+    transform:translateY(-5px);
+}
+
+.overview-number{
+    color:#b64059;
+    font-size:32px;
+    font-weight:900;
+    margin-bottom:5px;
+}
+
+.overview-label{
+    color:#777;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+}
+
+
+/* =====================================================
+   SERVICES
+===================================================== */
+
+.services-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.service-card{
+    background:#100b0d;
+    border:1px solid #2d181e;
+    border-radius:14px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.service-card:hover{
+    transform:translateY(-7px);
+    border-color:#762337;
+    box-shadow:0 25px 55px rgba(80,15,35,.16);
+}
+
+.service-image{
+    width:100%;
+    height:210px;
+    object-fit:cover;
+    display:block;
+}
+
+.service-icon{
+    width:100%;
+    height:210px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(
+            circle at center,
+            #431521,
+            #160c10 65%
+        );
+    color:#9a304a;
+    font-size:55px;
+    font-weight:900;
+}
+
+.service-content{
+    padding:23px;
+}
+
+.service-content h3{
+    font-size:20px;
+    margin-bottom:9px;
+}
+
+.service-content p{
+    color:#888;
+    font-size:13px;
+    line-height:1.7;
+}
+
+
+/* =====================================================
+   OFFERS
+===================================================== */
+
+.offers-section{
+    background:#0b090a;
+}
+
+.offers-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.offer-card{
+    display:flex;
+    flex-direction:column;
+    background:#100b0d;
+    border:1px solid #2d181e;
+    border-radius:14px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.offer-card:hover{
+    transform:translateY(-7px);
+    border-color:#762337;
+    box-shadow:0 25px 55px rgba(80,15,35,.16);
+}
+
+.offer-media{
+    position:relative;
+    height:220px;
+    overflow:hidden;
+    background:#171014;
+}
+
+.offer-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.offer-placeholder{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(
+            circle at center,
+            #431521,
+            #160c10 65%
+        );
+    color:#8c2941;
+    font-size:65px;
+    font-weight:900;
+}
+
+.offer-discount{
+    position:absolute;
+    top:14px;
+    right:14px;
+    background:#762337;
+    color:#fff;
+    padding:7px 10px;
+    border-radius:6px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.offer-content{
+    padding:23px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+}
+
+.offer-content h3{
+    font-size:20px;
+    margin-bottom:8px;
+}
+
+.offer-content p{
+    color:#888;
+    font-size:13px;
+    line-height:1.7;
+    margin-bottom:18px;
+}
+
+.offer-price{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.old-price{
+    color:#666;
+    text-decoration:line-through;
+    font-size:13px;
+}
+
+.new-price{
+    color:#d78d9d;
+    font-size:21px;
+    font-weight:900;
+}
+
+.offer-btn{
+    margin-top:auto;
+    width:100%;
+    background:#281217;
+    color:#dba1ac;
+    border:1px solid #4a1d29;
+    padding:11px 14px;
+    border-radius:7px;
+    transition:.2s;
+}
+
+.offer-btn:hover{
+    background:#6d1e30;
+    color:#fff;
+}
+
+
+/* =====================================================
+   ABOUT
+===================================================== */
+
+.about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:70px;
+    align-items:center;
+}
+
+.about-content h2{
+    font-size:40px;
+    margin-bottom:20px;
+}
+
+.about-content p{
+    color:#888;
+    line-height:1.9;
+    font-size:14px;
+}
+
+.about-box{
+    min-height:330px;
+    border:1px solid #321922;
+    border-radius:18px;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(105,29,48,.25),
+            transparent 60%
+        ),
+        #100b0d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.about-logo{
+    font-size:65px;
+    font-weight:900;
+    letter-spacing:8px;
+    color:#742238;
+}
+
+
+/* =====================================================
+   CLIENTS
+===================================================== */
+
+.clients-section{
+    background:#0b090a;
+}
+
+.clients-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.client-card{
+    background:#100b0d;
+    border:1px solid #2d181e;
+    border-radius:12px;
+    padding:25px;
+    text-align:center;
+    transition:.3s;
+}
+
+.client-card:hover{
+    transform:translateY(-5px);
+    border-color:#762337;
+}
+
+.client-avatar{
+    width:55px;
+    height:55px;
+    margin:0 auto 13px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#6d1e30,#2c1118);
+    color:#fff;
+    font-weight:900;
+}
+
+.client-card h3{
+    font-size:15px;
+    margin-bottom:4px;
+}
+
+.client-card p{
+    color:#777;
+    font-size:12px;
+}
+
+
+/* =====================================================
+   PROJECTS
+===================================================== */
+
+.projects-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.project-card{
+    position:relative;
+    background:#100b0d;
+    border:1px solid #2d181e;
+    border-radius:14px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.project-card:hover{
+    transform:translateY(-7px);
+    border-color:#762337;
+    box-shadow:0 25px 55px rgba(80,15,35,.18);
+}
+
+.project-media{
+    position:relative;
+    height:230px;
+    overflow:hidden;
+    background:#171014;
+}
+
+.project-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:.45s;
+}
+
+.project-card:hover .project-image{
+    transform:scale(1.06);
+}
+
+.project-image-placeholder{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(
+            circle at center,
+            #431521,
+            #160c10 65%
+        );
+    color:#6e2639;
+    font-size:70px;
+    font-weight:900;
+}
+
+.project-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        to top,
+        rgba(8,8,8,.92),
+        rgba(8,8,8,.05)
+    );
+    opacity:0;
+    transition:.3s;
+    display:flex;
+    align-items:flex-end;
+    padding:18px;
+}
+
+.project-card:hover .project-overlay{
+    opacity:1;
+}
+
+.project-overlay span{
+    color:#ddd;
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.project-content{
+    padding:21px;
+}
+
+.project-category{
+    color:#a13a52;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:6px;
+}
+
+.project-content h3{
+    margin-bottom:7px;
+    font-size:20px;
+}
+
+.project-content p{
+    color:#888;
+    font-size:13px;
+    margin-bottom:17px;
+    min-height:42px;
+}
+
+.project-btn{
+    width:100%;
+    background:#281217;
+    color:#dba1ac;
+    border:1px solid #4a1d29;
+    padding:10px 13px;
+    border-radius:7px;
+    transition:.2s;
+}
+
+.project-btn:hover{
+    background:#6d1e30;
+    color:#fff;
+}
+
+
+/* =====================================================
+   TESTIMONIALS
+===================================================== */
+
+.testimonials-section{
+    background:#0b090a;
+}
+
+.testimonials-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.testimonial-card{
+    position:relative;
+    background:
+        linear-gradient(
+            145deg,
+            #130c0f,
+            #0d090b
+        );
+    border:1px solid #2d181e;
+    border-radius:16px;
+    padding:27px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.testimonial-card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:2px;
+    background:#762337;
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:.3s;
+}
+
+.testimonial-card:hover{
+    transform:translateY(-7px);
+    border-color:#762337;
+    box-shadow:
+        0 22px 50px rgba(80,15,35,.16);
+}
+
+.testimonial-card:hover::before{
+    transform:scaleX(1);
+}
+
+.testimonial-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.testimonial-person{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+}
+
+.testimonial-avatar{
+    width:48px;
+    height:48px;
+    min-width:48px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        linear-gradient(
+            135deg,
+            #6d1e30,
+            #2b1118
+        );
+    border:1px solid #6d2638;
+    color:#fff;
+    font-size:17px;
+    font-weight:900;
+}
+
+.testimonial-person-info{
+    min-width:0;
+}
+
+.testimonial-name{
+    color:#eee;
+    font-weight:800;
+    font-size:14px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.testimonial-company{
+    color:#777;
+    font-size:12px;
+    margin-top:3px;
+}
+
+.testimonial-stars{
+    color:#c24b65;
+    font-size:14px;
+    letter-spacing:2px;
+    white-space:nowrap;
+}
+
+.testimonial-text{
+    position:relative;
+    color:#aaa;
+    font-size:14px;
+    line-height:1.8;
+    margin-bottom:23px;
+    padding-left:22px;
+    min-height:90px;
+}
+
+.testimonial-text::before{
+    content:"“";
+    position:absolute;
+    left:0;
+    top:-8px;
+    color:#7d263c;
+    font-size:38px;
+    font-weight:900;
+    line-height:1;
+}
+
+.testimonial-bottom{
+    border-top:1px solid #24151a;
+    padding-top:17px;
+}
+
+.testimonial-feedback-label{
+    color:#666;
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+}
+
+.testimonial-empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:55px 25px;
+    border:1px dashed #351a22;
+    border-radius:16px;
+    color:#777;
+}
+
+.testimonial-empty strong{
+    display:block;
+    color:#aaa;
+    margin-bottom:7px;
+}
+
+
+/* =====================================================
+   CONTACT
+===================================================== */
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:.8fr 1.2fr;
+    gap:45px;
+}
+
+.contact-info{
+    background:#100b0d;
+    border:1px solid #2d181e;
+    border-radius:15px;
+    padding:30px;
+}
+
+.contact-info h3{
+    font-size:25px;
+    margin-bottom:13px;
+}
+
+.contact-info > p{
+    color:#888;
+    font-size:14px;
+    line-height:1.8;
+    margin-bottom:28px;
+}
+
+.contact-item{
+    padding:15px 0;
+    border-bottom:1px solid #22151a;
+}
+
+.contact-item:last-child{
+    border-bottom:none;
+}
+
+.contact-label{
+    color:#6f6f6f;
+    text-transform:uppercase;
+    font-size:9px;
+    letter-spacing:2px;
+    margin-bottom:4px;
+}
+
+.contact-value{
+    color:#d2d2d2;
+    font-size:13px;
+    word-break:break-word;
+}
+
+.contact-value a:hover{
+    color:#a13a52;
+}
+
+.contact-form{
+    background:#100b0d;
+    border:1px solid #2d181e;
+    border-radius:15px;
+    padding:30px;
+}
+
+.form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    margin-bottom:17px;
+}
+
+.form-group label{
+    display:block;
+    color:#999;
+    font-size:11px;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group textarea{
+    width:100%;
+    border:1px solid #302027;
+    background:#0b090a;
+    color:#fff;
+    padding:12px 13px;
+    border-radius:7px;
+    outline:none;
+    transition:.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+    border-color:#762337;
+}
+
+.form-group textarea{
+    resize:vertical;
+    min-height:140px;
+}
+
+.form-submit{
+    width:100%;
+    border:1px solid #7b2940;
+    background:#6d1e30;
+    color:#fff;
+    padding:13px;
+    border-radius:7px;
+    transition:.2s;
+}
+
+.form-submit:hover{
+    background:#842941;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+    border-top:1px solid #1b1b1b;
+    padding:30px 0;
+    background:#060606;
+}
+
+.footer-inner{
+    width:min(1180px,92%);
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.footer-brand{
+    font-size:16px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.footer-text{
+    color:#666;
+    font-size:11px;
+}
+
+.footer-copy{
+    color:#555;
+    font-size:11px;
+}
+
+
+/* =====================================================
+   PROJECT MODAL
+===================================================== */
+
+.project-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.82);
+    backdrop-filter:blur(7px);
+    z-index:2000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+}
+
+.project-modal.show{
+    display:flex;
+}
+
+.project-modal-box{
+    position:relative;
+    width:min(900px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#0f0a0c;
+    border:1px solid #4a1d29;
+    border-radius:18px;
+    box-shadow:0 30px 90px rgba(0,0,0,.7);
+}
+
+.project-modal-box > img{
+    width:100%;
+    max-height:430px;
+    object-fit:cover;
+    display:block;
+    background:#171014;
+}
+
+.project-modal-content{
+    padding:28px;
+}
+
+.project-modal-content h2{
+    font-size:32px;
+    margin:6px 0 12px;
+}
+
+.project-modal-content p{
+    color:#999;
+    line-height:1.8;
+}
+
+.modal-close{
+    position:absolute;
+    top:14px;
+    right:14px;
+    z-index:5;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1px solid #6b2638;
+    background:rgba(10,10,10,.85);
+    color:#fff;
+    font-size:25px;
+    line-height:1;
+}
+
+.modal-close:hover{
+    background:#792039;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1000px){
+
+    .nav-links{
+        gap:15px;
+    }
+
+    .services-grid,
+    .offers-grid,
+    .projects-grid,
+    .testimonials-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .overview-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .clients-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .about-grid{
+        gap:35px;
+    }
+
+}
+
+@media(max-width:750px){
+
+    section{
+        padding:75px 0;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .nav-links{
+        position:absolute;
+        top:75px;
+        left:0;
+        width:100%;
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+        gap:0;
+        background:#0a0a0a;
+        border-bottom:1px solid #242424;
+        padding:10px 5%;
+    }
+
+    .nav-links.show{
+        display:flex;
+    }
+
+    .nav-links a{
+        padding:13px 0;
+        border-bottom:1px solid #171717;
+    }
+
+    .nav-contact{
+        margin:8px 0;
+        text-align:center;
+    }
+
+    .hero{
+        min-height:auto;
+        padding:150px 0 100px;
+    }
+
+    .hero h1{
+        letter-spacing:-2px;
+    }
+
+    .services-grid,
+    .offers-grid,
+    .projects-grid,
+    .testimonials-grid{
+        grid-template-columns:1fr;
+    }
+
+    .about-grid{
+        grid-template-columns:1fr;
+    }
+
+    .about-box{
+        min-height:230px;
+    }
+
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+
+    .footer-inner{
+        flex-direction:column;
+        text-align:center;
+    }
+
+}
+
+@media(max-width:550px){
+
+    .overview-grid,
+    .clients-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-row{
+        grid-template-columns:1fr;
+    }
+
+    .section-heading h2{
+        font-size:31px;
+    }
+
+    .hero h1{
+        font-size:47px;
+    }
+
+    .testimonial-top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE NAV
+===================================================== */
+
+@media(min-width:751px){
+
+    .nav-links{
+        display:flex !important;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="nav-inner">
+
+        <a
+            href="#home"
+            class="logo"
+            id="siteLogo"
+        >
+            VANTOR
+        </a>
+
+
+        <button
+            class="menu-btn"
+            type="button"
+            onclick="toggleMenu()"
+            aria-label="Open Menu"
+        >
+            ☰
+        </button>
+
+
+        <nav
+            class="nav-links"
+            id="navLinks"
+        >
+
+            <a href="#home" onclick="closeMenu()">
+                Home
+            </a>
+
+            <a href="#overview" onclick="closeMenu()">
+                Overview
+            </a>
+
+            <a href="#services" onclick="closeMenu()">
+                Services
+            </a>
+
+            <a href="#offers" onclick="closeMenu()">
+                Offers
+            </a>
+
+            <a href="#about" onclick="closeMenu()">
+                About
+            </a>
+
+            <a href="#clients" onclick="closeMenu()">
+                Clients
+            </a>
+
+            <a href="#work" onclick="closeMenu()">
+                Work
+            </a>
+
+            <a href="#testimonials" onclick="closeMenu()">
+                Testimonials
+            </a>
+
+            <a
+                href="#contact"
+                class="nav-contact"
+                onclick="closeMenu()"
+            >
+                Contact
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section
+    class="hero"
+    id="home"
+>
+
+    <div class="container">
+
+        <div class="hero-content">
+
+            <div
+                class="hero-tag"
+                id="heroTag"
+            >
+                Digital Marketing Agency
+            </div>
+
+
+            <h1 id="heroTitle">
+                We Build Brands That
+                <span>Move Forward.</span>
+            </h1>
+
+
+            <p
+                class="hero-description"
+                id="heroDescription"
+            >
+                VANTOR helps ambitious brands grow through
+                strategy, creative marketing and digital
+                experiences that make an impact.
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a
+                    href="#contact"
+                    class="btn-primary"
+                >
+                    Start a Project
+                </a>
+
+                <a
+                    href="#work"
+                    class="btn-secondary"
+                >
+                    View Our Work
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     OVERVIEW
+===================================================== -->
+
+<section
+    class="overview"
+    id="overview"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>VANTOR Overview</span>
+
+            <h2>Built To Create Impact</h2>
+
+            <p>
+                A quick look at what VANTOR is building
+                with its clients.
+            </p>
+
+        </div>
+
+
+        <div class="overview-grid">
+
+            <div class="overview-card">
+
+                <div
+                    class="overview-number"
+                    id="overviewProjects"
+                >
+                    0
+                </div>
+
+                <div class="overview-label">
+                    Projects Completed
+                </div>
+
+            </div>
+
+
+            <div class="overview-card">
+
+                <div
+                    class="overview-number"
+                    id="overviewClients"
+                >
+                    0
+                </div>
+
+                <div class="overview-label">
+                    Happy Clients
+                </div>
+
+            </div>
+
+
+            <div class="overview-card">
+
+                <div
+                    class="overview-number"
+                    id="overviewServices"
+                >
+                    0
+                </div>
+
+                <div class="overview-label">
+                    Services
+                </div>
+
+            </div>
+
+
+            <div class="overview-card">
+
+                <div
+                    class="overview-number"
+                    id="overviewTestimonials"
+                >
+                    0
+                </div>
+
+                <div class="overview-label">
+                    Client Reviews
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SERVICES
+===================================================== -->
+
+<section id="services">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>What We Do</span>
+
+            <h2>Our Services</h2>
+
+            <p>
+                Strategic digital services designed to help
+                ambitious brands grow.
+            </p>
+
+        </div>
+
+
+        <div
+            class="services-grid"
+            id="servicesGrid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     OFFERS
+===================================================== -->
+
+<section
+    class="offers-section"
+    id="offers"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>Limited Deals</span>
+
+            <h2>Special Offers</h2>
+
+            <p>
+                Explore our latest packages and promotional
+                offers.
+            </p>
+
+        </div>
+
+
+        <div
+            class="offers-grid"
+            id="offersGrid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section id="about">
+
+    <div class="container">
+
+        <div class="about-grid">
+
+            <div class="about-content">
+
+                <div class="section-heading"
+                     style="text-align:left;margin-bottom:25px;">
+
+                    <span>About VANTOR</span>
+
+                    <h2 id="aboutTitle">
+                        We Turn Ideas Into Growth.
+                    </h2>
+
+                </div>
+
+
+                <p id="aboutDescription">
+                    VANTOR is a digital marketing agency
+                    focused on helping businesses build
+                    stronger brands, connect with their
+                    audiences and achieve measurable growth.
+                </p>
+
+            </div>
+
+
+            <div class="about-box">
+
+                <div class="about-logo">
+                    VANTOR
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CLIENTS
+===================================================== -->
+
+<section
+    class="clients-section"
+    id="clients"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>Our Clients</span>
+
+            <h2>Brands We Work With</h2>
+
+            <p>
+                Businesses and brands growing with VANTOR.
+            </p>
+
+        </div>
+
+
+        <div
+            class="clients-grid"
+            id="clientsGrid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROJECTS
+===================================================== -->
+
+<section id="work">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>Portfolio</span>
+
+            <h2>Selected Work</h2>
+
+            <p>
+                A look at some of the projects we've
+                worked on.
+            </p>
+
+        </div>
+
+
+        <div
+            class="projects-grid"
+            id="projectsGrid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     TESTIMONIALS
+===================================================== -->
+
+<section
+    class="testimonials-section"
+    id="testimonials"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>Client Feedback</span>
+
+            <h2>What Our Clients Say</h2>
+
+            <p>
+                Real feedback from businesses that have
+                worked with VANTOR.
+            </p>
+
+        </div>
+
+
+        <div
+            class="testimonials-grid"
+            id="testimonialsGrid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTACT
+===================================================== -->
+
+<section id="contact">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>Let's Work Together</span>
+
+            <h2>Start Your Project</h2>
+
+            <p>
+                Tell us about your project and our team
+                will get back to you.
+            </p>
+
+        </div>
+
+
+        <div class="contact-grid">
+
+
+            <div class="contact-info">
+
+                <h3>Let's Talk</h3>
+
+                <p>
+                    Have an idea, campaign or project in
+                    mind? Send us a message and let's
+                    build something valuable together.
+                </p>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-label">
+                        Email
+                    </div>
+
+                    <div
+                        class="contact-value"
+                        id="contactEmail"
+                    >
+                        hello@vantor.com
+                    </div>
+
+                </div>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-label">
+                        Phone
+                    </div>
+
+                    <div
+                        class="contact-value"
+                        id="contactPhone"
+                    >
+                        +20 100 000 0000
+                    </div>
+
+                </div>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-label">
+                        Instagram
+                    </div>
+
+                    <div class="contact-value">
+
+                        <a
+                            href="#"
+                            id="contactInstagram"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Instagram
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-label">
+                        Facebook
+                    </div>
+
+                    <div class="contact-value">
+
+                        <a
+                            href="#"
+                            id="contactFacebook"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Facebook
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form
+                class="contact-form"
+                id="contactForm"
+            >
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="contactName">
+                            Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="contactName"
+                            required
+                            placeholder="Your name"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="contactEmailInput">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="contactEmailInput"
+                            required
+                            placeholder="you@example.com"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="contactSubject">
+                        Subject
+                    </label>
+
+                    <input
+                        type="text"
+                        id="contactSubject"
+                        required
+                        placeholder="How can we help?"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="contactMessage">
+                        Message
+                    </label>
+
+                    <textarea
+                        id="contactMessage"
+                        required
+                        placeholder="Tell us about your project..."
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="form-submit"
+                >
+                    Send Message
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROJECT MODAL
+===================================================== -->
+
+<div
+    class="project-modal"
+    id="projectModal"
+    onclick="handleProjectModalClick(event)"
+>
+
+    <button
+        class="modal-close"
+        onclick="closeProjectModal()"
+        aria-label="Close"
+    >
+        ×
+    </button>
+
+
+    <div class="project-modal-box">
+
+        <img
+            id="modalImage"
+            alt="Project"
+        >
+
+
+        <div class="project-modal-content">
+
+            <div
+                id="modalCategory"
+                class="project-category"
+            ></div>
+
+
+            <h2 id="modalTitle"></h2>
+
+
+            <p id="modalDescription"></p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div
+            class="footer-brand"
+            id="footerBrand"
+        >
+            VANTOR
+        </div>
+
+
+        <div
+            class="footer-text"
+            id="footerTagline"
+        >
+            Digital Marketing Agency
+        </div>
+
+
+        <div class="footer-copy">
+
+            ©
+            <span id="footerYear"></span>
+            VANTOR. All rights reserved.
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   STORAGE KEYS
+===================================================== */
+
+const KEYS = {
+
+    services:
+        "vantor_services",
+
+    offers:
+        "vantor_offers",
+
+    clients:
+        "vantor_clients",
+
+    projects:
+        "vantor_projects",
+
+    testimonials:
+        "vantor_testimonials",
+
+    messages:
+        "vantor_messages",
+
+    settings:
+        "vantor_settings"
+
+};
+
+
+/* =====================================================
+   STORAGE HELPERS
+===================================================== */
+
+function getStorageData(key){
+
+    try{
+
+        const data =
+            JSON.parse(
+                localStorage.getItem(key) || "[]"
+            );
+
+        return Array.isArray(data)
+            ? data
+            : [];
+
+    }catch(error){
+
+        return [];
+
+    }
+
+}
+
+
+function saveStorageData(key,data){
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value){
+
+    return String(
+        value === undefined ||
+        value === null
+            ? ""
+            : value
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   HIGHLIGHT LAST WORD
+===================================================== */
+
+function highlightLastWord(text){
+
+    const value =
+        String(text || "").trim();
+
+    if(!value){
+        return "";
+    }
+
+    const parts =
+        value.split(/\s+/);
+
+    if(parts.length === 1){
+
+        return `
+            <span>
+                ${escapeHtml(parts[0])}
+            </span>
+        `;
+
+    }
+
+    const last =
+        parts.pop();
+
+    return `
+        ${escapeHtml(parts.join(" "))}
+        <span>
+            ${escapeHtml(last)}
+        </span>
+    `;
+
+}
+
+
+/* =====================================================
+   INITIAL SETTINGS
+===================================================== */
+
+function loadSettings(){
+
+    let settings = {};
+
+    try{
+
+        settings =
+            JSON.parse(
+                localStorage.getItem(
+                    KEYS.settings
+                ) || "{}"
+            );
+
+    }catch(error){
+
+        settings = {};
+
+    }
+
+
+    const siteName =
+        settings.siteName ||
+        "VANTOR";
+
+
+    document.title =
+        siteName +
+        " — Digital Marketing Agency";
+
+
+    const logo =
+        document.getElementById(
+            "siteLogo"
+        );
+
+
+    if(logo){
+
+        const safeName =
+            escapeHtml(siteName);
+
+
+        if(safeName.length > 3){
+
+            const firstPart =
+                safeName.slice(
+                    0,
+                    safeName.length - 3
+                );
+
+            const lastPart =
+                safeName.slice(
+                    -3
+                );
+
+            logo.innerHTML =
+                firstPart +
+                `<span>${lastPart}</span>`;
+
+        }else{
+
+            logo.innerHTML =
+                `<span>${safeName}</span>`;
+
+        }
+
+    }
+
+
+    const footerBrand =
+        document.getElementById(
+            "footerBrand"
+        );
+
+
+    if(footerBrand){
+
+        footerBrand.textContent =
+            siteName;
+
+    }
+
+
+    const heroTag =
+        document.getElementById(
+            "heroTag"
+        );
+
+
+    if(heroTag){
+
+        heroTag.textContent =
+            settings.tagline ||
+            "Digital Marketing Agency";
+
+    }
+
+
+    const heroTitle =
+        document.getElementById(
+            "heroTitle"
+        );
+
+
+    if(heroTitle){
+
+        const title =
+            settings.heroTitle ||
+            "We Build Brands That Move Forward.";
+
+        heroTitle.innerHTML =
+            highlightLastWord(title);
+
+    }
+
+
+    const heroDescription =
+        document.getElementById(
+            "heroDescription"
+        );
+
+
+    if(heroDescription){
+
+        heroDescription.textContent =
+            settings.heroDescription ||
+            "VANTOR helps ambitious brands grow through strategy, creative marketing and digital experiences that make an impact.";
+
+    }
+
+
+    const aboutTitle =
+        document.getElementById(
+            "aboutTitle"
+        );
+
+
+    if(aboutTitle){
+
+        aboutTitle.textContent =
+            settings.aboutTitle ||
+            "We Turn Ideas Into Growth.";
+
+    }
+
+
+    const aboutDescription =
+        document.getElementById(
+            "aboutDescription"
+        );
+
+
+    if(aboutDescription){
+
+        aboutDescription.textContent =
+            settings.aboutDescription ||
+            "VANTOR is a digital marketing agency focused on helping businesses build stronger brands, connect with their audiences and achieve measurable growth.";
+
+    }
+
+
+    const contactEmail =
+        document.getElementById(
+            "contactEmail"
+        );
+
+
+    if(contactEmail){
+
+        contactEmail.textContent =
+            settings.email ||
+            "hello@vantor.com";
+
+    }
+
+
+    const contactPhone =
+        document.getElementById(
+            "contactPhone"
+        );
+
+
+    if(contactPhone){
+
+        contactPhone.textContent =
+            settings.phone ||
+            "+20 100 000 0000";
+
+    }
+
+
+    const instagram =
+        document.getElementById(
+            "contactInstagram"
+        );
+
+
+    if(instagram){
+
+        const value =
+            settings.instagram ||
+            "#";
+
+        instagram.href =
+            value;
+
+        instagram.textContent =
+            value === "#"
+                ? "Instagram"
+                : value;
+
+    }
+
+
+    const facebook =
+        document.getElementById(
+            "contactFacebook"
+        );
+
+
+    if(facebook){
+
+        const value =
+            settings.facebook ||
+            "#";
+
+        facebook.href =
+            value;
+
+        facebook.textContent =
+            value === "#"
+                ? "Facebook"
+                : value;
+
+    }
+
+
+    const footerTagline =
+        document.getElementById(
+            "footerTagline"
+        );
+
+
+    if(footerTagline){
+
+        footerTagline.textContent =
+            settings.tagline ||
+            "Digital Marketing Agency";
+
+    }
+
+
+    if(settings.heroImage){
+
+        const hero =
+            document.getElementById(
+                "home"
+            );
+
+        hero.style.backgroundImage =
+            `
+            linear-gradient(
+                90deg,
+                rgba(8,8,8,.97),
+                rgba(8,8,8,.78),
+                rgba(8,8,8,.45)
+            ),
+            url("${settings.heroImage}")
+            `;
+
+        hero.style.backgroundSize =
+            "cover";
+
+        hero.style.backgroundPosition =
+            "center";
+
+    }
+
+}
+
+
+/* =====================================================
+   OVERVIEW
+===================================================== */
+
+function loadOverview(){
+
+    const services =
+        getStorageData(
+            KEYS.services
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        );
+
+
+    const projects =
+        getStorageData(
+            KEYS.projects
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        );
+
+
+    const clients =
+        getStorageData(
+            KEYS.clients
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        );
+
+
+    const testimonials =
+        getStorageData(
+            KEYS.testimonials
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        );
+
+
+    document.getElementById(
+        "overviewProjects"
+    ).textContent =
+        projects.length;
+
+
+    document.getElementById(
+        "overviewClients"
+    ).textContent =
+        clients.length;
+
+
+    document.getElementById(
+        "overviewServices"
+    ).textContent =
+        services.length;
+
+
+    document.getElementById(
+        "overviewTestimonials"
+    ).textContent =
+        testimonials.length;
+
+}
+
+
+/* =====================================================
+   SERVICES
+===================================================== */
+
+function loadServices(){
+
+    const data =
+        getStorageData(
+            KEYS.services
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        )
+        .reverse();
+
+
+    const grid =
+        document.getElementById(
+            "servicesGrid"
+        );
+
+
+    if(!data.length){
+
+        grid.innerHTML = `
+
+            <div class="empty-state">
+
+                <strong>
+                    Our Services
+                </strong>
+
+                <span>
+                    Services added from the Admin
+                    Dashboard will appear here.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        data.map(item => {
+
+            const image =
+                item.image
+                ?
+
+                `
+                <img
+                    class="service-image"
+                    src="${item.image}"
+                    alt="${escapeHtml(
+                        item.name ||
+                        "Service"
+                    )}"
+                >
+                `
+
+                :
+
+                `
+                <div class="service-icon">
+
+                    ${escapeHtml(
+                        item.icon ||
+                        "V"
+                    )}
+
+                </div>
+                `;
+
+
+            return `
+
+                <article
+                    class="service-card"
+                >
+
+                    ${image}
+
+                    <div class="service-content">
+
+                        <h3>
+                            ${escapeHtml(
+                                item.name ||
+                                "Service"
+                            )}
+                        </h3>
+
+                        <p>
+                            ${escapeHtml(
+                                item.description ||
+                                ""
+                            )}
+                        </p>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   OFFERS
+===================================================== */
+
+function loadOffers(){
+
+    const data =
+        getStorageData(
+            KEYS.offers
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        )
+        .reverse();
+
+
+    const grid =
+        document.getElementById(
+            "offersGrid"
+        );
+
+
+    if(!data.length){
+
+        grid.innerHTML = `
+
+            <div class="empty-state">
+
+                <strong>
+                    No Special Offers Available Right Now
+                </strong>
+
+                <span>
+                    New offers added from the Admin
+                    Dashboard will appear here.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        data.map(item => {
+
+            const discount =
+                item.discount ||
+                item.discountText ||
+                "";
+
+
+            const oldPrice =
+                item.oldPrice ||
+                item.old_price ||
+                "";
+
+
+            const newPrice =
+                item.newPrice ||
+                item.new_price ||
+                item.price ||
+                "";
+
+
+            const image =
+                item.image
+
+                ?
+
+                `
+                <img
+                    class="offer-image"
+                    src="${item.image}"
+                    alt="${escapeHtml(
+                        item.name ||
+                        "Offer"
+                    )}"
+                >
+                `
+
+                :
+
+                `
+                <div class="offer-placeholder">
+                    V
+                </div>
+                `;
+
+
+            return `
+
+                <article class="offer-card">
+
+                    <div class="offer-media">
+
+                        ${image}
+
+                        ${
+                            discount
+                            ?
+                            `
+                            <div class="offer-discount">
+                                ${escapeHtml(discount)}
+                            </div>
+                            `
+                            :
+                            ""
+                        }
+
+                    </div>
+
+
+                    <div class="offer-content">
+
+                        <h3>
+                            ${escapeHtml(
+                                item.name ||
+                                "Special Offer"
+                            )}
+                        </h3>
+
+
+                        <p>
+                            ${escapeHtml(
+                                item.description ||
+                                ""
+                            )}
+                        </p>
+
+
+                        ${
+                            oldPrice ||
+                            newPrice
+                            ?
+
+                            `
+                            <div class="offer-price">
+
+                                ${
+                                    oldPrice
+                                    ?
+                                    `
+                                    <span class="old-price">
+                                        ${escapeHtml(
+                                            oldPrice
+                                        )}
+                                    </span>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                                ${
+                                    newPrice
+                                    ?
+                                    `
+                                    <span class="new-price">
+                                        ${escapeHtml(
+                                            newPrice
+                                        )}
+                                    </span>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                            </div>
+                            `
+
+                            :
+
+                            ""
+                        }
+
+
+                        <button
+                            type="button"
+                            class="offer-btn"
+                            data-offer-id="${encodeURIComponent(
+                                String(
+                                    item.id ??
+                                    item.name ??
+                                    ""
+                                )
+                            )}"
+                            onclick="selectOfferFromButton(this)"
+                        >
+                            Get This Offer
+                        </button>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function selectOfferFromButton(button){
+
+    const encodedId =
+        button.getAttribute(
+            "data-offer-id"
+        );
+
+
+    if(!encodedId){
+        return;
+    }
+
+
+    const id =
+        decodeURIComponent(
+            encodedId
+        );
+
+
+    selectOffer(id);
+
+}
+
+
+function selectOffer(id){
+
+    const offers =
+        getStorageData(
+            KEYS.offers
+        );
+
+
+    const offer =
+        offers.find(
+            item =>
+                String(item.id) === String(id)
+                ||
+                String(item.name) === String(id)
+        );
+
+
+    if(!offer){
+        return;
+    }
+
+
+    const subject =
+        document.getElementById(
+            "contactSubject"
+        );
+
+
+    const message =
+        document.getElementById(
+            "contactMessage"
+        );
+
+
+    if(subject){
+
+        subject.value =
+            "Offer Request: " +
+            (offer.name || "Special Offer");
+
+    }
+
+
+    if(message){
+
+        message.value =
+            "I am interested in the following offer: " +
+            (offer.name || "Special Offer") +
+            ".";
+
+    }
+
+
+    document
+        .getElementById(
+            "contact"
+        )
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
+
+    setTimeout(() => {
+
+        const name =
+            document.getElementById(
+                "contactName"
+            );
+
+        if(name){
+            name.focus();
+        }
+
+    },500);
+
+}
+
+
+/* =====================================================
+   CLIENTS
+===================================================== */
+
+function getInitials(name){
+
+    const value =
+        String(
+            name ||
+            "VANTOR"
+        )
+        .trim();
+
+
+    if(!value){
+        return "V";
+    }
+
+
+    const parts =
+        value
+            .split(/\s+/)
+            .filter(Boolean);
+
+
+    if(parts.length === 1){
+
+        return parts[0]
+            .slice(0,2)
+            .toUpperCase();
+
+    }
+
+
+    return (
+        parts[0][0] +
+        parts[parts.length - 1][0]
+    ).toUpperCase();
+
+}
+
+
+function loadClients(){
+
+    const data =
+        getStorageData(
+            KEYS.clients
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        )
+        .reverse();
+
+
+    const grid =
+        document.getElementById(
+            "clientsGrid"
+        );
+
+
+    if(!data.length){
+
+        grid.innerHTML = `
+
+            <div class="empty-state">
+
+                <strong>
+                    Our Clients
+                </strong>
+
+                <span>
+                    Clients added from the Admin
+                    Dashboard will appear here.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        data.map(item => {
+
+            const name =
+                item.name ||
+                item.company ||
+                "Client";
+
+
+            const company =
+                item.company ||
+                "";
+
+
+            return `
+
+                <article class="client-card">
+
+                    <div class="client-avatar">
+
+                        ${escapeHtml(
+                            getInitials(name)
+                        )}
+
+                    </div>
+
+
+                    <h3>
+
+                        ${escapeHtml(
+                            name
+                        )}
+
+                    </h3>
+
+
+                    ${
+                        company
+                        ?
+                        `
+                        <p>
+                            ${escapeHtml(company)}
+                        </p>
+                        `
+                        :
+                        ""
+                    }
+
+                </article>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   PROJECTS
+===================================================== */
+
+function loadProjects(){
+
+    const data =
+        getStorageData(
+            KEYS.projects
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        )
+        .reverse();
+
+
+    const grid =
+        document.getElementById(
+            "projectsGrid"
+        );
+
+
+    if(!data.length){
+
+        grid.innerHTML = `
+
+            <div class="empty-state">
+
+                <strong>
+                    Our Work
+                </strong>
+
+                <span>
+                    Projects added from the Admin
+                    Dashboard will appear here.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        data.map(item => {
+
+            const projectId =
+                encodeURIComponent(
+                    String(
+                        item.id ??
+                        item.name ??
+                        ""
+                    )
+                );
+
+
+            return `
+
+                <article class="project-card">
+
+                    <div class="project-media">
+
+                        ${
+                            item.image
+
+                            ?
+
+                            `
+                            <img
+                                class="project-image"
+                                src="${item.image}"
+                                alt="${escapeHtml(
+                                    item.name ||
+                                    "Project"
+                                )}"
+                            >
+                            `
+
+                            :
+
+                            `
+                            <div class="project-image-placeholder">
+                                V
+                            </div>
+                            `
+                        }
+
+
+                        <div class="project-overlay">
+
+                            <span>
+                                View Project Details
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="project-content">
+
+                        <div class="project-category">
+
+                            ${escapeHtml(
+                                item.category ||
+                                "Project"
+                            )}
+
+                        </div>
+
+
+                        <h3>
+
+                            ${escapeHtml(
+                                item.name ||
+                                "Untitled Project"
+                            )}
+
+                        </h3>
+
+
+                        <p>
+
+                            ${escapeHtml(
+                                item.description ||
+                                "A VANTOR project."
+                            )}
+
+                        </p>
+
+
+                        <button
+                            class="project-btn"
+                            type="button"
+                            data-project-id="${projectId}"
+                            onclick="openProjectModalFromButton(this)"
+                        >
+                            View Project
+                        </button>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function openProjectModalFromButton(button){
+
+    const encodedId =
+        button.getAttribute(
+            "data-project-id"
+        );
+
+
+    if(!encodedId){
+        return;
+    }
+
+
+    const id =
+        decodeURIComponent(
+            encodedId
+        );
+
+
+    openProjectModal(id);
+
+}
+
+
+function openProjectModal(id){
+
+    const projects =
+        getStorageData(
+            KEYS.projects
+        );
+
+
+    const project =
+        projects.find(
+            item =>
+                String(item.id) === String(id)
+                ||
+                String(item.name) === String(id)
+        );
+
+
+    if(!project){
+        return;
+    }
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        project.name ||
+        "Project";
+
+
+    document.getElementById(
+        "modalCategory"
+    ).textContent =
+        project.category ||
+        "Project";
+
+
+    document.getElementById(
+        "modalDescription"
+    ).textContent =
+        project.description ||
+        "No project description available.";
+
+
+    const image =
+        document.getElementById(
+            "modalImage"
+        );
+
+
+    if(project.image){
+
+        image.src =
+            project.image;
+
+        image.alt =
+            project.name ||
+            "Project";
+
+        image.style.display =
+            "block";
+
+    }else{
+
+        image.removeAttribute(
+            "src"
+        );
+
+        image.alt =
+            "Project";
+
+        image.style.display =
+            "none";
+
+    }
+
+
+    document
+        .getElementById(
+            "projectModal"
+        )
+        .classList.add("show");
+
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+}
+
+
+function closeProjectModal(){
+
+    document
+        .getElementById(
+            "projectModal"
+        )
+        .classList.remove("show");
+
+
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+}
+
+
+function handleProjectModalClick(event){
+
+    if(
+        event.target.id ===
+        "projectModal"
+    ){
+
+        closeProjectModal();
+
+    }
+
+}
+
+
+/* =====================================================
+   TESTIMONIALS
+===================================================== */
+
+function loadTestimonials(){
+
+    const data =
+        getStorageData(
+            KEYS.testimonials
+        )
+        .filter(
+            item =>
+                item.status !== "Hidden"
+        )
+        .reverse();
+
+
+    const grid =
+        document.getElementById(
+            "testimonialsGrid"
+        );
+
+
+    if(!data.length){
+
+        grid.innerHTML = `
+
+            <div class="testimonial-empty">
+
+                <strong>
+                    Client Reviews
+                </strong>
+
+                <span>
+                    Testimonials added from the
+                    Admin Dashboard will appear here.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        data.map(item => {
+
+            let rating =
+                Number(
+                    item.rating ?? 5
+                );
+
+
+            if(
+                !Number.isFinite(rating)
+            ){
+
+                rating = 5;
+
+            }
+
+
+            rating =
+                Math.max(
+                    0,
+                    Math.min(
+                        5,
+                        Math.round(rating)
+                    )
+                );
+
+
+            const stars =
+                "★".repeat(rating) +
+                "☆".repeat(5 - rating);
+
+
+            const name =
+                item.name ||
+                "VANTOR Client";
+
+
+            const company =
+                item.company ||
+                "";
+
+
+            const text =
+                item.text ||
+                item.message ||
+                "";
+
+
+            return `
+
+                <article
+                    class="testimonial-card"
+                >
+
+                    <div class="testimonial-top">
+
+                        <div class="testimonial-person">
+
+                            <div class="testimonial-avatar">
+
+                                ${escapeHtml(
+                                    getInitials(name)
+                                )}
+
+                            </div>
+
+
+                            <div class="testimonial-person-info">
+
+                                <div class="testimonial-name">
+
+                                    ${escapeHtml(
+                                        name
+                                    )}
+
+                                </div>
+
+
+                                ${
+                                    company
+                                    ?
+                                    `
+                                    <div class="testimonial-company">
+
+                                        ${escapeHtml(
+                                            company
+                                        )}
+
+                                    </div>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="testimonial-stars"
+                            aria-label="${rating} out of 5 stars"
+                        >
+
+                            ${stars}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="testimonial-text">
+
+                        ${escapeHtml(
+                            text
+                        )}
+
+                    </div>
+
+
+                    <div class="testimonial-bottom">
+
+                        <div class="testimonial-feedback-label">
+                            Client Feedback
+                        </div>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   CONTACT FORM
+===================================================== */
+
+document
+    .getElementById(
+        "contactForm"
+    )
+    .addEventListener(
+        "submit",
+        function(event){
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById(
+                    "contactName"
+                ).value.trim();
+
+
+            const email =
+                document.getElementById(
+                    "contactEmailInput"
+                ).value.trim();
+
+
+            const subject =
+                document.getElementById(
+                    "contactSubject"
+                ).value.trim();
+
+
+            const message =
+                document.getElementById(
+                    "contactMessage"
+                ).value.trim();
+
+
+            if(
+                !name ||
+                !email ||
+                !subject ||
+                !message
+            ){
+
+                alert(
+                    "Please complete all fields."
+                );
+
+                return;
+
+            }
+
+
+            const messages =
+                getStorageData(
+                    KEYS.messages
+                );
+
+
+            messages.push({
+
+                id:
+                    "message-" +
+                    Date.now(),
+
+                name:
+                    name,
+
+                email:
+                    email,
+
+                subject:
+                    subject,
+
+                message:
+                    message,
+
+                status:
+                    "Unread",
+
+                createdAt:
+                    new Date().toISOString()
+
+            });
+
+
+            saveStorageData(
+                KEYS.messages,
+                messages
+            );
+
+
+            this.reset();
+
+
+            alert(
+                "Your message has been sent successfully."
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   MOBILE MENU
+===================================================== */
+
+function toggleMenu(){
+
+    document
+        .getElementById(
+            "navLinks"
+        )
+        .classList.toggle("show");
+
+}
+
+
+function closeMenu(){
+
+    document
+        .getElementById(
+            "navLinks"
+        )
+        .classList.remove("show");
+
+}
+
+
+/* =====================================================
+   ESC CLOSE MODAL
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeProjectModal();
+
+            closeMenu();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   LOAD EVERYTHING
+===================================================== */
+
+function loadAll(){
+
+    loadSettings();
+
+    loadOverview();
+
+    loadServices();
+
+    loadOffers();
+
+    loadClients();
+
+    loadProjects();
+
+    loadTestimonials();
+
+    document.getElementById(
+        "footerYear"
+    ).textContent =
+        new Date().getFullYear();
+
+}
+
+
+/* =====================================================
+   STORAGE SYNC
+===================================================== */
+
+window.addEventListener(
+    "storage",
+    function(event){
+
+        if(
+            event.key === KEYS.services ||
+            event.key === KEYS.offers ||
+            event.key === KEYS.clients ||
+            event.key === KEYS.projects ||
+            event.key === KEYS.testimonials ||
+            event.key === KEYS.messages ||
+            event.key === KEYS.settings
+        ){
+
+            loadAll();
+
+        }
+
+    }
+);
+
+
+/*
+    Backup sync for local development.
+
+    This helps when the Admin Dashboard and
+    public website are both open in separate tabs.
+*/
+
+setInterval(
+    loadAll,
+    2000
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadAll();
+
+</script>
+
+
+</body>
+
+</html>
+```
