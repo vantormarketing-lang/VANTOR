@@ -4149,12 +4149,13 @@ document
                 );
 
 
-            const user =
+            let user =
                 admins.find(
                     item =>
                         String(
                             item.email || ""
                         )
+                        .trim()
                         .toLowerCase() ===
                         email &&
                         String(
@@ -4162,6 +4163,34 @@ document
                         ) ===
                         password
                 );
+
+
+            /*
+               FALLBACK ADMIN LOGIN
+               Works even when localStorage is empty on
+               GitHub Pages / a new browser.
+            */
+            if(
+                !user &&
+                email === "admin@vantor.com" &&
+                password === "admin123"
+            ){
+
+                user = {
+                    id: "admin-1",
+                    name: "VANTOR Admin",
+                    email: "admin@vantor.com",
+                    password: "admin123",
+                    role: "Admin",
+                    createdAt: new Date().toISOString()
+                };
+
+                setData(
+                    KEYS.admins,
+                    [user]
+                );
+
+            }
 
 
             const error =
