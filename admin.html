@@ -1412,6 +1412,10 @@ textarea{
     }
 }
 
+
+/* PRODUCT CATALOG FIELDS */
+.catalog-help{font-size:12px;opacity:.65;margin-top:5px}
+
 </style>
 
 </head>
@@ -2684,6 +2688,30 @@ textarea{
 
             </div>
 
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Category</label>
+                    <input id="serviceCategory" maxlength="60" placeholder="Streetwear">
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input id="servicePrice" maxlength="40" placeholder="EGP 950">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Sizes</label>
+                    <input id="serviceSizes" maxlength="120" placeholder="S, M, L, XL">
+                    <div class="catalog-help">Separate sizes with commas.</div>
+                </div>
+                <div class="form-group">
+                    <label>Colors</label>
+                    <input id="serviceColors" maxlength="160" placeholder="Black, White">
+                    <div class="catalog-help">Separate colors with commas.</div>
+                </div>
+            </div>
 
             <div class="form-group">
 
@@ -4714,6 +4742,11 @@ function resetServiceForm(){
         "hidden"
     );
 
+    ["serviceCategory","servicePrice","serviceSizes","serviceColors"].forEach(function(id){
+        const el=document.getElementById(id);
+        if(el && !document.getElementById("serviceId").value) el.value="";
+    });
+
 
     document.getElementById(
         "serviceModalTitle"
@@ -4791,6 +4824,26 @@ document
                         description:
                             document.getElementById(
                                 "serviceDescription"
+                            ).value.trim(),
+
+                        category:
+                            document.getElementById(
+                                "serviceCategory"
+                            ).value.trim(),
+
+                        price:
+                            document.getElementById(
+                                "servicePrice"
+                            ).value.trim(),
+
+                        sizes:
+                            document.getElementById(
+                                "serviceSizes"
+                            ).value.trim(),
+
+                        colors:
+                            document.getElementById(
+                                "serviceColors"
                             ).value.trim(),
 
                         icon:
@@ -4912,6 +4965,26 @@ function editService(id){
     ).value =
         item.description || "";
 
+    document.getElementById(
+        "serviceCategory"
+    ).value =
+        item.category || "";
+
+    document.getElementById(
+        "servicePrice"
+    ).value =
+        item.price || "";
+
+    document.getElementById(
+        "serviceSizes"
+    ).value =
+        item.sizes || "";
+
+    document.getElementById(
+        "serviceColors"
+    ).value =
+        item.colors || "";
+
 
     document.getElementById(
         "serviceIcon"
@@ -4952,7 +5025,7 @@ function editService(id){
     document.getElementById(
         "serviceModalTitle"
     ).textContent =
-        "Edit Service";
+        "Edit Product";
 
 
     openModal(
@@ -4966,7 +5039,7 @@ function deleteService(id){
 
     if(
         !confirm(
-            "Delete this service?"
+            "Delete this product?"
         )
     ){
 
@@ -4995,7 +5068,7 @@ function deleteService(id){
     renderAll();
 
     showToast(
-        "Service deleted."
+        "Product deleted."
     );
 
 }
@@ -6888,8 +6961,8 @@ function renderProducts(){
 
         wrap.innerHTML = `
             <div class="empty">
-                <strong>No services found</strong>
-                Add your first service from the button above.
+                <strong>No products found</strong>
+                Add your first product from the button above.
             </div>
         `;
 
@@ -6907,7 +6980,7 @@ function renderProducts(){
                 <tr>
 
                     <th>Image</th>
-                    <th>Service</th>
+                    <th>Product</th>
                     <th>Status</th>
                     <th>Actions</th>
 
