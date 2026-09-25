@@ -319,6 +319,10 @@ section{
     padding-top:55px;
 }
 
+.overview-heading{
+    margin-bottom:28px;
+}
+
 .overview-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -334,23 +338,45 @@ section{
     transition:.3s;
 }
 
+.overview-category{
+    display:block;
+    text-decoration:none;
+    cursor:pointer;
+}
+
 .overview-card:hover{
-    border-color:#5b1f2d;
+    border-color:#762337;
     transform:translateY(-5px);
+    box-shadow:0 18px 40px rgba(80,15,35,.14);
 }
 
 .overview-number{
     color:#b64059;
-    font-size:32px;
+    font-size:38px;
+    line-height:1;
     font-weight:900;
-    margin-bottom:5px;
+    margin-bottom:12px;
 }
 
 .overview-label{
-    color:#777;
+    color:#fff;
+    font-size:14px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+}
+
+.overview-action{
+    display:inline-block;
+    margin-top:13px;
+    color:#8e8e8e;
     font-size:11px;
     text-transform:uppercase;
-    letter-spacing:1.5px;
+    letter-spacing:1px;
+}
+
+.overview-card:hover .overview-action{
+    color:#d85a73;
 }
 
 
@@ -1567,80 +1593,47 @@ footer{
 
 
 <!-- =====================================================
-     OVERVIEW
+     STORE HIGHLIGHTS
 ===================================================== -->
 
 <section
-    class="overview"
+    class="overview store-highlights"
     id="overview"
 >
 
     <div class="container">
 
-        <div class="overview-grid">
+        <div class="section-heading overview-heading">
+            <span>VANTOR STORE</span>
+            <h2>Shop By Style</h2>
+            <p>Explore our main fashion categories and find the pieces that fit your everyday style.</p>
+        </div>
 
-            <div class="overview-card">
+        <div class="overview-grid" id="overviewGrid">
 
-                <div
-                    class="overview-number"
-                    id="overviewStyles"
-                >
-                    0
-                </div>
+            <a class="overview-card overview-category" href="#services">
+                <div class="overview-number" id="overviewCategory1">0</div>
+                <div class="overview-label" id="overviewLabel1">Everyday Essentials</div>
+                <span class="overview-action">Shop Category →</span>
+            </a>
 
-                <div class="overview-label">
-                    Services
-                </div>
+            <a class="overview-card overview-category" href="#services">
+                <div class="overview-number" id="overviewCategory2">0</div>
+                <div class="overview-label" id="overviewLabel2">Streetwear</div>
+                <span class="overview-action">Shop Category →</span>
+            </a>
 
-            </div>
+            <a class="overview-card overview-category" href="#services">
+                <div class="overview-number" id="overviewCategory3">0</div>
+                <div class="overview-label" id="overviewLabel3">Smart Casual</div>
+                <span class="overview-action">Shop Category →</span>
+            </a>
 
-
-            <div class="overview-card">
-
-                <div
-                    class="overview-number"
-                    id="overviewCollections"
-                >
-                    0
-                </div>
-
-                <div class="overview-label">
-                    Projects
-                </div>
-
-            </div>
-
-
-            <div class="overview-card">
-
-                <div
-                    class="overview-number"
-                    id="overviewSizes"
-                >
-                    0
-                </div>
-
-                <div class="overview-label">
-                    Clients
-                </div>
-
-            </div>
-
-
-            <div class="overview-card">
-
-                <div
-                    class="overview-number"
-                    id="overviewSupport"
-                >
-                    0
-                </div>
-
-                <div class="overview-label">
-                    Testimonials
-                </div>
-
-            </div>
+            <a class="overview-card overview-category" href="#services">
+                <div class="overview-number" id="overviewCategory4">0</div>
+                <div class="overview-label" id="overviewLabel4">All Products</div>
+                <span class="overview-action">View Collection →</span>
+            </a>
 
         </div>
 
@@ -3126,100 +3119,55 @@ function loadSettings(){
 
 function loadOverview(){
 
-    const services =
-        getStorageData(
-            KEYS.services
-        )
-        .filter(
-            item =>
-                item.status !==
-                "Hidden"
-        );
+    const products =
+        getStorageData(KEYS.services)
+        .filter(item => item.status !== "Hidden");
 
+    const counts = {};
 
-    const projects =
-        getStorageData(
-            KEYS.projects
-        )
-        .filter(
-            item =>
-                item.status !==
-                "Hidden"
-        );
+    products.forEach(item => {
+        const category = (item.category || "Everyday Essentials").trim();
+        counts[category] = (counts[category] || 0) + 1;
+    });
 
+    const fallbackCategories = [
+        "Everyday Essentials",
+        "Streetwear",
+        "Smart Casual"
+    ];
 
-    const clients =
-        getStorageData(
-            KEYS.clients
-        )
-        .filter(
-            item =>
-                item.status !==
-                "Hidden"
-        );
+    const categories = Object.keys(counts);
+    const chosen = [];
 
+    fallbackCategories.forEach(name => {
+        if(chosen.length < 3 && (counts[name] || 0) > 0){
+            chosen.push(name);
+        }
+    });
 
-    const testimonials =
-        getStorageData(
-            KEYS.testimonials
-        )
-        .filter(
-            item =>
-                item.status !==
-                "Hidden"
-        );
+    categories.forEach(name => {
+        if(chosen.length < 3 && !chosen.includes(name)){
+            chosen.push(name);
+        }
+    });
 
-
-    const servicesEl =
-        document.getElementById(
-            "overviewServices"
-        );
-
-    if(servicesEl){
-
-        servicesEl.textContent =
-            services.length;
-
+    while(chosen.length < 3){
+        chosen.push(fallbackCategories[chosen.length]);
     }
 
+    chosen.forEach((name, index) => {
+        const numberEl = document.getElementById(`overviewCategory${index + 1}`);
+        const labelEl = document.getElementById(`overviewLabel${index + 1}`);
 
-    const projectsEl =
-        document.getElementById(
-            "overviewProjects"
-        );
+        if(numberEl) numberEl.textContent = counts[name] || 0;
+        if(labelEl) labelEl.textContent = name;
+    });
 
-    if(projectsEl){
+    const totalEl = document.getElementById("overviewCategory4");
+    const totalLabel = document.getElementById("overviewLabel4");
 
-        projectsEl.textContent =
-            projects.length;
-
-    }
-
-
-    const clientsEl =
-        document.getElementById(
-            "overviewClients"
-        );
-
-    if(clientsEl){
-
-        clientsEl.textContent =
-            clients.length;
-
-    }
-
-
-    const testimonialsEl =
-        document.getElementById(
-            "overviewTestimonials"
-        );
-
-    if(testimonialsEl){
-
-        testimonialsEl.textContent =
-            testimonials.length;
-
-    }
+    if(totalEl) totalEl.textContent = products.length;
+    if(totalLabel) totalLabel.textContent = "All Products";
 
 }
 
