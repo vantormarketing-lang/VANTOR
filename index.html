@@ -1369,6 +1369,31 @@ footer{
 
 }
 
+
+/* =====================================================
+   PRODUCT SHOP ENHANCEMENTS
+===================================================== */
+.product-card{position:relative;display:flex;flex-direction:column;overflow:hidden}
+.product-card .service-content{display:flex;flex-direction:column;gap:10px;flex:1}
+.product-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto}
+.product-price{font-weight:800;font-size:1rem}
+.product-category{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;opacity:.6}
+.product-buy{border:1px solid currentColor;background:transparent;padding:10px 14px;border-radius:999px;cursor:pointer;font:inherit;font-weight:700}
+.product-buy:hover{transform:translateY(-1px)}
+.product-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.product-options label{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.product-options select{width:100%;margin-top:7px;padding:11px 12px;border:1px solid rgba(0,0,0,.14);border-radius:10px;background:#fff;font:inherit}
+.product-detail-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.product-detail-modal.show{display:flex}
+.product-detail-box{background:#fff;color:#111;width:min(900px,100%);max-height:90vh;overflow:auto;border-radius:20px;padding:24px;position:relative}
+.product-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.product-detail-image{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;background:#f2f2f2}
+.product-detail-placeholder{width:100%;aspect-ratio:1/1;border-radius:14px;background:#f2f2f2;display:grid;place-items:center;font-size:4rem;font-weight:800}
+.product-detail-box h2{margin:8px 0}
+.product-detail-close{position:absolute;right:18px;top:14px;border:0;background:transparent;font-size:30px;cursor:pointer}
+.product-add{width:100%;border:0;background:#111;color:#fff;padding:14px 18px;border-radius:999px;font:inherit;font-weight:800;cursor:pointer}
+@media(max-width:700px){.product-detail-grid{grid-template-columns:1fr}.product-options{grid-template-columns:1fr}}
+
 </style>
 
 </head>
@@ -3135,120 +3160,45 @@ function loadOverview(){
 
 function loadServices(){
 
-    const data =
-        getStorageData(
-            KEYS.services
-        )
-        .filter(
-            item =>
-                item.status !==
-                "Hidden"
-        )
+    const data = getStorageData(KEYS.services)
+        .filter(item => item.status !== "Hidden")
         .reverse();
 
-
-    const grid =
-        document.getElementById(
-            "servicesGrid"
-        );
-
-    if(!grid){
-        return;
-    }
-
+    const grid = document.getElementById("servicesGrid");
+    if(!grid) return;
 
     if(!data.length){
-
-        grid.innerHTML = `
-
-            <div class="empty-state">
-
-                <strong>
-                    Our Services
-                </strong>
-
-                <span>
-                    Products added from the Admin Dashboard will appear here.
-                </span>
-
-            </div>
-
-        `;
-
+        grid.innerHTML = `<div class="empty-state"><strong>SHOP</strong><span>Products added from the Admin Dashboard will appear here.</span></div>`;
         return;
-
     }
 
+    grid.innerHTML = data.map(item => {
 
-    grid.innerHTML =
-        data.map(
-            item => {
+        const image = item.image
+            ? `<img class="service-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name || "Product")}">`
+            : `<div class="service-icon">${escapeHtml(item.icon || "V")}</div>`;
 
-                const image =
-                    item.image
-                    ?
+        const price = item.price || "";
+        const category = item.category || "VANTOR";
+        const productJson = encodeURIComponent(JSON.stringify({
+            id:item.id, name:item.name || "Product", description:item.description || "",
+            image:item.image || "", price:price, category:category,
+            sizes:item.sizes || "S, M, L, XL", colors:item.colors || "Black, White"
+        }));
 
-                    `
-                    <img
-                        class="service-image"
-                        src="${escapeHtml(
-                            item.image
-                        )}"
-                        alt="${escapeHtml(
-                            item.name ||
-                            "Product"
-                        )}"
-                    >
-                    `
-
-                    :
-
-                    `
-                    <div class="service-icon">
-
-                        ${escapeHtml(
-                            item.icon ||
-                            "V"
-                        )}
-
-                    </div>
-                    `;
-
-
-                return `
-
-                    <article
-                        class="service-card"
-                    >
-
-                        ${image}
-
-                        <div class="service-content">
-
-                            <h3>
-                                ${escapeHtml(
-                                    item.name ||
-                                    "Product"
-                                )}
-                            </h3>
-
-                            <p>
-                                ${escapeHtml(
-                                    item.description ||
-                                    ""
-                                )}
-                            </p>
-
-                        </div>
-
-                    </article>
-
-                `;
-
-            }
-        )
-        .join("");
-
+        return `<article class="service-card product-card">
+            ${image}
+            <div class="service-content">
+                <span class="product-category">${escapeHtml(category)}</span>
+                <h3>${escapeHtml(item.name || "Product")}</h3>
+                <p>${escapeHtml(item.description || "")}</p>
+                <div class="product-meta">
+                    <strong class="product-price">${escapeHtml(price || "Price on request")}</strong>
+                    <button class="product-buy" type="button" onclick="openProductDetails(decodeURIComponent('${productJson}'))">View Product</button>
+                </div>
+            </div>
+        </article>`;
+    }).join("");
 }
 
 
@@ -4249,16 +4199,80 @@ function saveCart(cart){
     localStorage.setItem(CART_KEY,JSON.stringify(cart));
     renderCart();
 }
-function addToCartFromOffer(button){
-    const cart=getCart();
-    const name=button.dataset.name||"Product";
-    const price=button.dataset.price||"";
-    const image=button.dataset.image||"";
-    const existing=cart.find(x=>x.name===name && x.price===price);
-    if(existing){existing.qty=(existing.qty||1)+1}
-    else{cart.push({name,price,image,qty:1})}
-    saveCart(cart);
+let currentProduct = null;
+
+function openProductDetails(encoded){
+    try{
+        currentProduct = JSON.parse(encoded);
+    }catch(error){
+        return;
+    }
+
+    const modal=document.getElementById("productDetailModal");
+    const media=document.getElementById("productDetailMedia");
+    document.getElementById("productDetailCategory").textContent=currentProduct.category || "VANTOR";
+    document.getElementById("productDetailName").textContent=currentProduct.name || "Product";
+    document.getElementById("productDetailDescription").textContent=currentProduct.description || "";
+    document.getElementById("productDetailPrice").textContent=currentProduct.price || "Price on request";
+
+    media.innerHTML=currentProduct.image
+        ? `<img class="product-detail-image" src="${escapeHtml(currentProduct.image)}" alt="${escapeHtml(currentProduct.name||"Product")}">`
+        : `<div class="product-detail-placeholder">V</div>`;
+
+    const sizes=String(currentProduct.sizes||"S, M, L, XL").split(",").map(x=>x.trim()).filter(Boolean);
+    const colors=String(currentProduct.colors||"Black, White").split(",").map(x=>x.trim()).filter(Boolean);
+
+    document.getElementById("productSize").innerHTML=sizes.map(x=>`<option>${escapeHtml(x)}</option>`).join("");
+    document.getElementById("productColor").innerHTML=colors.map(x=>`<option>${escapeHtml(x)}</option>`).join("");
+
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden","false");
+}
+
+function closeProductDetails(){
+    const modal=document.getElementById("productDetailModal");
+    if(modal){
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden","true");
+    }
+    currentProduct=null;
+}
+
+function addCurrentProductToCart(){
+    if(!currentProduct)return;
+    const size=document.getElementById("productSize")?.value || "";
+    const color=document.getElementById("productColor")?.value || "";
+    addToCart({
+        name:currentProduct.name,
+        price:currentProduct.price,
+        image:currentProduct.image,
+        size,color,qty:1
+    });
+    closeProductDetails();
     toggleCart(true);
+}
+
+function addToCartFromOffer(button){
+    addToCart({
+        name:button.dataset.name||"Product",
+        price:button.dataset.price||"",
+        image:button.dataset.image||"",
+        size:button.dataset.size||"",
+        color:button.dataset.color||"",
+        qty:1
+    });
+    toggleCart(true);
+}
+
+function addToCart(item){
+    const cart=getCart();
+    const existing=cart.find(x =>
+        x.name===item.name && x.price===item.price &&
+        x.size===item.size && x.color===item.color
+    );
+    if(existing) existing.qty=(existing.qty||1)+1;
+    else cart.push(item);
+    saveCart(cart);
 }
 function renderCart(){
     const cart=getCart();
@@ -4282,7 +4296,7 @@ function renderCart(){
             : `<div class="cart-thumb">V</div>`;
         return `<div class="cart-item">
             ${media}
-            <div><h4>${escapeHtml(item.name)}</h4><p>${escapeHtml(item.price||"Price on request")} · Qty ${Number(item.qty)||1}</p></div>
+            <div><h4>${escapeHtml(item.name)}</h4><p>${escapeHtml(item.price||"Price on request")}${item.size ? ` · ${escapeHtml(item.size)}` : ""}${item.color ? ` · ${escapeHtml(item.color)}` : ""} · Qty ${Number(item.qty)||1}</p></div>
             <button class="cart-remove" type="button" onclick="removeFromCart(${i})">Remove</button>
         </div>`;
     }).join("");
