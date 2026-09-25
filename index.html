@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>VANTOR — Digital Marketing Agency</title>
+<title>VANTOR — Modern Fashion Store</title>
 
 <style>
 
@@ -1160,6 +1160,72 @@ footer{
 }
 
 
+
+/* =====================================================
+   SHOPPING BAG
+===================================================== */
+.cart-fab{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:1500;
+    border:1px solid #7b2940;
+    background:#6d1e30;
+    color:#fff;
+    padding:12px 16px;
+    border-radius:999px;
+    box-shadow:0 15px 40px rgba(0,0,0,.4);
+    font-size:12px;
+}
+.cart-fab:hover{background:#8a2942}
+.cart-drawer{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    background:rgba(0,0,0,.75);
+    display:none;
+    justify-content:flex-end;
+}
+.cart-drawer.show{display:flex}
+.cart-panel{
+    width:min(430px,94vw);
+    height:100%;
+    background:#100b0d;
+    border-left:1px solid #4a1d29;
+    padding:24px;
+    overflow:auto;
+}
+.cart-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #2d181e;
+    padding-bottom:16px;
+    margin-bottom:18px;
+}
+.cart-head h3{font-size:20px}
+.cart-close{
+    width:38px;height:38px;border-radius:50%;
+    border:1px solid #4a1d29;background:#160c10;color:#fff;font-size:20px;
+}
+.cart-item{
+    display:grid;grid-template-columns:60px 1fr auto;gap:12px;
+    align-items:center;padding:13px 0;border-bottom:1px solid #21151a;
+}
+.cart-item img,.cart-thumb{
+    width:60px;height:60px;object-fit:cover;border-radius:8px;
+    border:1px solid #3a2029;background:#171014;
+}
+.cart-thumb{display:flex;align-items:center;justify-content:center;color:#8d2941;font-weight:900}
+.cart-item h4{font-size:13px;margin-bottom:3px}
+.cart-item p{font-size:11px;color:#888}
+.cart-remove{border:0;background:none;color:#a13a52;font-size:11px}
+.cart-total{display:flex;justify-content:space-between;padding:20px 0;font-weight:800}
+.cart-checkout{
+    width:100%;padding:13px;border-radius:7px;border:1px solid #7b2940;
+    background:#6d1e30;color:#fff;
+}
+
 /* =====================================================
    RESPONSIVE
 ===================================================== */
@@ -1407,13 +1473,13 @@ footer{
                 class="hero-tag"
                 id="heroTag"
             >
-                Digital Marketing Agency
+                Modern Fashion Store
             </div>
 
 
             <h1 id="heroTitle">
-                We Build Brands That
-                <span>Move Forward.</span>
+                Wear Your Style.
+                <span>Move Different.</span>
             </h1>
 
 
@@ -1421,9 +1487,7 @@ footer{
                 class="hero-description"
                 id="heroDescription"
             >
-                VANTOR is a digital marketing agency focused on
-                building powerful brands, creating high-converting
-                campaigns and turning ideas into measurable growth.
+                VANTOR is a modern fashion label built around clean silhouettes, everyday essentials and statement pieces made to fit your style.
             </p>
 
 
@@ -1433,14 +1497,14 @@ footer{
                     href="#contact"
                     class="btn-primary"
                 >
-                    Start Your Project
+                    Shop Collection
                 </a>
 
                 <a
                     href="#work"
                     class="btn-secondary"
                 >
-                    View Our Work
+                    Explore Collections
                 </a>
 
             </div>
@@ -1469,7 +1533,7 @@ footer{
 
                 <div
                     class="overview-number"
-                    id="overviewServices"
+                    id="overviewStyles"
                 >
                     0
                 </div>
@@ -1485,7 +1549,7 @@ footer{
 
                 <div
                     class="overview-number"
-                    id="overviewProjects"
+                    id="overviewCollections"
                 >
                     0
                 </div>
@@ -1501,7 +1565,7 @@ footer{
 
                 <div
                     class="overview-number"
-                    id="overviewClients"
+                    id="overviewSizes"
                 >
                     0
                 </div>
@@ -1517,7 +1581,7 @@ footer{
 
                 <div
                     class="overview-number"
-                    id="overviewTestimonials"
+                    id="overviewSupport"
                 >
                     0
                 </div>
@@ -1546,16 +1610,15 @@ footer{
         <div class="section-heading">
 
             <span>
-                What We Do
+                SHOP
             </span>
 
             <h2>
-                Services Built For Growth
+                Shop By Category
             </h2>
 
             <p>
-                Strategic digital marketing solutions designed
-                to help businesses grow, compete and scale.
+                Explore curated pieces across everyday essentials, streetwear and statement looks.
             </p>
 
         </div>
@@ -1585,16 +1648,15 @@ footer{
         <div class="section-heading">
 
             <span>
-                Special Offers
+                DEALS
             </span>
 
             <h2>
-                Limited-Time Packages
+                Featured Deals
             </h2>
 
             <p>
-                Choose a package designed to give your business
-                the push it needs.
+                Fresh drops and limited-time prices, curated for the season.
             </p>
 
         </div>
@@ -1624,19 +1686,16 @@ footer{
 
                 <div class="section-heading">
                     <span>
-                        About VANTOR
+                        ABOUT VANTOR
                     </span>
                 </div>
 
                 <h2 id="aboutTitle">
-                    Marketing With Purpose.
+                    Designed With Purpose.
                 </h2>
 
                 <p id="aboutDescription">
-                    We combine strategy, creativity and
-                    technology to help businesses build strong
-                    digital identities and achieve sustainable
-                    growth.
+                    We combine modern design, quality materials and versatile styling to create pieces you will actually want to wear.
                 </p>
 
             </div>
@@ -1671,15 +1730,15 @@ footer{
         <div class="section-heading">
 
             <span>
-                Our Clients
+                Shop By Style
             </span>
 
             <h2>
-                Brands We Work With
+                Styles Made For You
             </h2>
 
             <p>
-                Businesses and brands growing with VANTOR.
+                Find the look that fits your everyday.
             </p>
 
         </div>
@@ -1706,16 +1765,15 @@ footer{
         <div class="section-heading">
 
             <span>
-                Portfolio
+                COLLECTIONS
             </span>
 
             <h2>
-                Selected Work
+                Latest Collections
             </h2>
 
             <p>
-                A look at some of the projects we've
-                worked on.
+                Discover the latest VANTOR drops and seasonal edits.
             </p>
 
         </div>
@@ -1745,16 +1803,15 @@ footer{
         <div class="section-heading">
 
             <span>
-                Client Feedback
+                CUSTOMER REVIEWS
             </span>
 
             <h2>
-                What Our Clients Say
+                What Shop By Style Say
             </h2>
 
             <p>
-                Real feedback from businesses that have
-                worked with VANTOR.
+                Real feedback from people wearing VANTOR.
             </p>
 
         </div>
@@ -1781,16 +1838,15 @@ footer{
         <div class="section-heading">
 
             <span>
-                Let's Work Together
+                Find Your Next Look
             </span>
 
             <h2>
-                Start Your Project
+                Shop Collection
             </h2>
 
             <p>
-                Tell us about your project and our team
-                will get back to you.
+                Have a question about sizing, orders or a product? Send us a message.
             </p>
 
         </div>
@@ -1802,13 +1858,11 @@ footer{
             <div class="contact-info">
 
                 <h3>
-                    Let's Talk
+                    Need Help?
                 </h3>
 
                 <p>
-                    Have an idea, campaign or project in
-                    mind? Send us a message and let's
-                    build something valuable together.
+                    Need help choosing a size or tracking an order? Send us a message and our team will help.
                 </p>
 
 
@@ -2001,7 +2055,7 @@ footer{
 
         <img
             id="modalImage"
-            alt="Project"
+            alt="Collection"
         >
 
 
@@ -2025,6 +2079,26 @@ footer{
 </div>
 
 
+
+<button class="cart-fab" type="button" onclick="toggleCart()">
+    🛍 Bag <span id="cartCount">0</span>
+</button>
+
+<div class="cart-drawer" id="cartDrawer" onclick="if(event.target===this)toggleCart()">
+    <aside class="cart-panel">
+        <div class="cart-head">
+            <h3>Your Shopping Bag</h3>
+            <button class="cart-close" type="button" onclick="toggleCart()">×</button>
+        </div>
+        <div id="cartItems"></div>
+        <div class="cart-total">
+            <span>Total</span>
+            <span id="cartTotal">EGP 0</span>
+        </div>
+        <button class="cart-checkout" type="button" onclick="checkoutCart()">Checkout / Contact Us</button>
+    </aside>
+</div>
+
 <!-- =====================================================
      FOOTER
 ===================================================== -->
@@ -2045,7 +2119,7 @@ footer{
             class="footer-text"
             id="footerTagline"
         >
-            Digital Marketing Agency
+            Modern Fashion Store
         </div>
 
 
@@ -2769,7 +2843,7 @@ function loadSettings(){
 
         heroTag.textContent =
             settings.tagline ||
-            "Digital Marketing Agency";
+            "Modern Fashion Store";
 
     }
 
@@ -2914,7 +2988,7 @@ function loadSettings(){
 
         footerTagline.textContent =
             settings.tagline ||
-            "Digital Marketing Agency";
+            "Modern Fashion Store";
 
     }
 
@@ -3094,8 +3168,7 @@ function loadServices(){
                 </strong>
 
                 <span>
-                    Services added from the
-                    Admin Dashboard will appear here.
+                    Products added from the Admin Dashboard will appear here.
                 </span>
 
             </div>
@@ -3123,7 +3196,7 @@ function loadServices(){
                         )}"
                         alt="${escapeHtml(
                             item.name ||
-                            "Service"
+                            "Product"
                         )}"
                     >
                     `
@@ -3155,7 +3228,7 @@ function loadServices(){
                             <h3>
                                 ${escapeHtml(
                                     item.name ||
-                                    "Service"
+                                    "Product"
                                 )}
                             </h3>
 
@@ -3214,12 +3287,11 @@ function loadOffers(){
             <div class="empty-state">
 
                 <strong>
-                    Special Offers
+                    DEALS
                 </strong>
 
                 <span>
-                    Offers added from the Admin
-                    Dashboard will appear here.
+                    Deals added from the Admin Dashboard will appear here.
                 </span>
 
             </div>
@@ -3247,7 +3319,7 @@ function loadOffers(){
                         )}"
                         alt="${escapeHtml(
                             item.name ||
-                            "Offer"
+                            "Deal"
                         )}"
                     >
                     `
@@ -3313,7 +3385,7 @@ function loadOffers(){
                             <h3>
                                 ${escapeHtml(
                                     item.name ||
-                                    "Special Offer"
+                                    "Featured Deal"
                                 )}
                             </h3>
 
@@ -3367,9 +3439,12 @@ function loadOffers(){
                             <button
                                 type="button"
                                 class="offer-btn"
-                                onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"
+                                onclick="addToCartFromOffer(this)"
+                                data-name="${escapeHtml(item.name || "Product")}"
+                                data-price="${escapeHtml(newPrice || "")}"
+                                data-image="${escapeHtml(item.image || "")}"
                             >
-                                Get This Offer
+                                Add To Bag
                             </button>
 
                         </div>
@@ -3420,12 +3495,11 @@ function loadClients(){
             <div class="empty-state">
 
                 <strong>
-                    Our Clients
+                    Shop By Style
                 </strong>
 
                 <span>
-                    Clients added from the Admin
-                    Dashboard will appear here.
+                    Style groups added from the Admin Dashboard will appear here.
                 </span>
 
             </div>
@@ -3454,7 +3528,7 @@ function loadClients(){
                             )}"
                             alt="${escapeHtml(
                                 item.name ||
-                                "Client"
+                                "Style"
                             )}"
                             style="
                                 width:55px;
@@ -3501,7 +3575,7 @@ function loadClients(){
                         <h3>
                             ${escapeHtml(
                                 item.name ||
-                                "Client"
+                                "Style"
                             )}
                         </h3>
 
@@ -3558,12 +3632,11 @@ function loadProjects(){
             <div class="empty-state">
 
                 <strong>
-                    Selected Work
+                    Latest Collections
                 </strong>
 
                 <span>
-                    Projects added from the Admin
-                    Dashboard will appear here.
+                    Collections added from the Admin Dashboard will appear here.
                 </span>
 
             </div>
@@ -3609,7 +3682,7 @@ function loadProjects(){
                                     )}"
                                     alt="${escapeHtml(
                                         item.name ||
-                                        "Project"
+                                        "Collection"
                                     )}"
                                 >
                                 `
@@ -3643,7 +3716,7 @@ function loadProjects(){
 
                                 ${escapeHtml(
                                     item.category ||
-                                    "Project"
+                                    "Collection"
                                 )}
 
                             </div>
@@ -3653,7 +3726,7 @@ function loadProjects(){
 
                                 ${escapeHtml(
                                     item.name ||
-                                    "Untitled Project"
+                                    "Untitled Collection"
                                 )}
 
                             </h3>
@@ -3663,7 +3736,7 @@ function loadProjects(){
 
                                 ${escapeHtml(
                                     item.description ||
-                                    "A VANTOR project."
+                                    "A VANTOR collection."
                                 )}
 
                             </p>
@@ -3760,7 +3833,7 @@ function openProjectModal(
 
         title.textContent =
             project.name ||
-            "Project";
+            "Collection";
 
     }
 
@@ -3774,7 +3847,7 @@ function openProjectModal(
 
         category.textContent =
             project.category ||
-            "Project";
+            "Collection";
 
     }
 
@@ -3808,7 +3881,7 @@ function openProjectModal(
 
             image.alt =
                 project.name ||
-                "Project";
+                "Collection";
 
             image.style.display =
                 "block";
@@ -4107,7 +4180,7 @@ function loadTestimonials(){
                             <div
                                 class="testimonial-feedback-label"
                             >
-                                Verified Client Feedback
+                                Verified CUSTOMER REVIEWS
                             </div>
 
                         </div>
@@ -4162,6 +4235,82 @@ function closeMenu(){
 
 }
 
+
+
+/* =====================================================
+   SHOPPING BAG
+===================================================== */
+const CART_KEY = "vantor_cart";
+
+function getCart(){
+    try{return JSON.parse(localStorage.getItem(CART_KEY)||"[]")}catch(e){return []}
+}
+function saveCart(cart){
+    localStorage.setItem(CART_KEY,JSON.stringify(cart));
+    renderCart();
+}
+function addToCartFromOffer(button){
+    const cart=getCart();
+    const name=button.dataset.name||"Product";
+    const price=button.dataset.price||"";
+    const image=button.dataset.image||"";
+    const existing=cart.find(x=>x.name===name && x.price===price);
+    if(existing){existing.qty=(existing.qty||1)+1}
+    else{cart.push({name,price,image,qty:1})}
+    saveCart(cart);
+    toggleCart(true);
+}
+function renderCart(){
+    const cart=getCart();
+    const count=cart.reduce((n,x)=>n+(Number(x.qty)||1),0);
+    const countEl=document.getElementById("cartCount");
+    if(countEl)countEl.textContent=count;
+    const items=document.getElementById("cartItems");
+    const totalEl=document.getElementById("cartTotal");
+    if(!items)return;
+    if(!cart.length){
+        items.innerHTML='<div class="empty-state"><strong>Your bag is empty</strong><span>Add a product from Featured Deals.</span></div>';
+        if(totalEl)totalEl.textContent="EGP 0";
+        return;
+    }
+    let total=0;
+    items.innerHTML=cart.map((item,i)=>{
+        const numeric=parseFloat(String(item.price||"").replace(/[^\d.]/g,""))||0;
+        total+=numeric*(Number(item.qty)||1);
+        const media=item.image
+            ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">`
+            : `<div class="cart-thumb">V</div>`;
+        return `<div class="cart-item">
+            ${media}
+            <div><h4>${escapeHtml(item.name)}</h4><p>${escapeHtml(item.price||"Price on request")} · Qty ${Number(item.qty)||1}</p></div>
+            <button class="cart-remove" type="button" onclick="removeFromCart(${i})">Remove</button>
+        </div>`;
+    }).join("");
+    if(totalEl)totalEl.textContent=total ? `EGP ${total.toLocaleString()}` : "Price on request";
+}
+function removeFromCart(index){
+    const cart=getCart();
+    cart.splice(index,1);
+    saveCart(cart);
+}
+function toggleCart(force){
+    const drawer=document.getElementById("cartDrawer");
+    if(!drawer)return;
+    if(force===true)drawer.classList.add("show");
+    else drawer.classList.toggle("show");
+}
+function checkoutCart(){
+    const cart=getCart();
+    if(!cart.length){toggleCart();return;}
+    const summary=cart.map(x=>`${x.name} x${x.qty||1}`).join(", ");
+    const subject=document.getElementById("contactSubject");
+    const message=document.getElementById("contactMessage");
+    if(subject)subject.value="New Order Request";
+    if(message)message.value=`I would like to order: ${summary}`;
+    toggleCart();
+    document.getElementById("contact")?.scrollIntoView({behavior:"smooth"});
+}
+document.addEventListener("DOMContentLoaded",renderCart);
 
 /* =====================================================
    CONTACT FORM → SUPABASE
