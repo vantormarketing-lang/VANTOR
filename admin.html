@@ -1416,6 +1416,12 @@ textarea{
 /* PRODUCT CATALOG FIELDS */
 .catalog-help{font-size:12px;opacity:.65;margin-top:5px}
 
+
+/* Orders */
+.order-status-select{padding:7px 9px;border:1px solid #ddd;border-radius:8px;background:#fff}
+.order-items-box{font-size:13px;line-height:1.55;max-width:300px}
+.order-meta{font-size:12px;opacity:.65;margin-top:4px}
+
 </style>
 
 </head>
@@ -1608,6 +1614,19 @@ textarea{
         >
             <span class="side-icon">★</span>
             Reviews
+        </button>
+
+
+        <div class="nav-section-title">
+            Sales
+        </div>
+
+        <button
+            class="side-link"
+            data-section="orders"
+        >
+            <span class="side-icon">▣</span>
+            Orders
         </button>
 
 
@@ -2294,6 +2313,23 @@ textarea{
 
 </section>
 
+
+<!-- =====================================================
+     ORDERS
+===================================================== -->
+<section class="admin-section" id="section-orders">
+  <div class="section-header">
+    <div>
+      <h2>Orders</h2>
+      <p>Customer orders submitted from the online store.</p>
+    </div>
+    <button class="add-btn" id="refreshOrdersBtn" type="button">Refresh</button>
+  </div>
+  <div class="toolbar">
+    <input class="search-input" id="orderSearch" type="search" placeholder="Search by customer, phone or order ID...">
+  </div>
+  <div class="table-wrap" id="ordersTableWrap"></div>
+</section>
 
 <!-- =====================================================
      ADMINS
@@ -3650,6 +3686,19 @@ function dbToLocal(key,row){
         x.status = x.status || (x.read ? "Read" : "Unread");
     }
 
+    if(key === "vantor_orders"){
+        x.id = x.id || x.order_id || "";
+        x.customerName = x.customerName || x.customer_name || "";
+        x.phone = x.phone || "";
+        x.email = x.email || "";
+        x.address = x.address || "";
+        x.notes = x.notes || "";
+        x.items = Array.isArray(x.items) ? x.items : [];
+        x.total = Number(x.total || 0);
+        x.status = x.status || "New";
+        x.createdAt = x.createdAt || x.created_at || "";
+    }
+
     return x;
 }
 
@@ -3727,6 +3776,21 @@ function localToDb(key,item,includeId){
     // browser-generated ids such as "project-123..." to a BIGINT column.
     if(includeId && id !== undefined && id !== null && /^\d+$/.test(String(id))){
         row.id = Number(id);
+    }
+
+    if(key === "vantor_orders"){
+        row = {
+            order_id: item.id || item.order_id || "",
+            customer_name: item.customerName || item.customer_name || "",
+            phone: item.phone || "",
+            email: item.email || "",
+            address: item.address || "",
+            notes: item.notes || "",
+            items: item.items || [],
+            total: Number(item.total || 0),
+            status: item.status || "New",
+            created_at: item.createdAt || item.created_at || new Date().toISOString()
+        };
     }
 
     return row;
@@ -3819,6 +3883,7 @@ const KEYS = {
     testimonials:"vantor_testimonials",
 
     messages:"vantor_messages",
+    orders:"vantor_orders",
 
     admins:"vantor_admin_users",
 
@@ -4033,6 +4098,10 @@ function initializeDefaults(){
 
     }
 
+
+    if(!localStorage.getItem(KEYS.orders)){
+        localStorage.setItem(KEYS.orders, JSON.stringify([]));
+    }
 
     /* Seed a starter fashion catalog for a fresh install. */
     if(!localStorage.getItem(KEYS.services)){
@@ -4334,6 +4403,8 @@ const sectionNames = {
 
     messages:"Messages",
 
+    orders:"Orders",
+
     admins:"Admin Users",
 
     settings:"Store Settings"
@@ -4360,6 +4431,9 @@ document
 
     });
 
+
+document.getElementById("orderSearch")?.addEventListener("input",renderOrders);
+document.getElementById("refreshOrdersBtn")?.addEventListener("click",refreshOrders);
 
 function showSection(section){
 
@@ -7984,6 +8058,73 @@ function renderMessages(){
 }
 
 
+
+/* =====================================================
+   RENDER ORDERS
+===================================================== */
+function renderOrders(){
+    const wrap=document.getElementById("ordersTableWrap");
+    if(!wrap)return;
+    const query=(document.getElementById("orderSearch")?.value||"").trim().toLowerCase();
+    const data=getData(KEYS.orders).filter(order=>{
+        return !query ||
+            String(order.id||"").toLowerCase().includes(query) ||
+            String(order.customerName||"").toLowerCase().includes(query) ||
+            String(order.phone||"").toLowerCase().includes(query);
+    }).sort((a,b)=>String(b.createdAt||"").localeCompare(String(a.createdAt||"")));
+    if(!data.length){
+        wrap.innerHTML=`<div class="empty"><strong>No orders found</strong><br>New online orders will appear here.</div>`;
+        return;
+    }
+    wrap.innerHTML=`<table><thead><tr>
+      <th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Created</th><th>Actions</th>
+    </tr></thead><tbody>
+    ${data.map(order=>{
+      const items=(order.items||[]).map(item=>`${escapeHtml(item.name||"Product")} ×${Number(item.qty)||1}${item.size?` · ${escapeHtml(item.size)}`:""}${item.color?` · ${escapeHtml(item.color)}`:""}`).join("<br>");
+      const date=order.createdAt?new Date(order.createdAt).toLocaleString():"-";
+      return `<tr>
+        <td><div class="item-name">${escapeHtml(order.id||"-")}</div><div class="order-meta">${escapeHtml(order.email||"")}</div></td>
+        <td><div class="item-name">${escapeHtml(order.customerName||"-")}</div><div class="item-sub">${escapeHtml(order.phone||"")}<br>${escapeHtml(order.address||"")}</div></td>
+        <td><div class="order-items-box">${items||"-"}</div></td>
+        <td><strong>EGP ${Number(order.total||0).toLocaleString()}</strong></td>
+        <td><select class="order-status-select" onchange="updateOrderStatus('${escapeHtml(order.id)}',this.value)">
+          ${["New","Confirmed","Preparing","Shipped","Completed","Cancelled"].map(s=>`<option value="${s}" ${order.status===s?"selected":""}>${s}</option>`).join("")}
+        </select></td>
+        <td>${escapeHtml(date)}</td>
+        <td><button class="action-btn danger" onclick="deleteOrder('${escapeHtml(order.id)}')">Delete</button></td>
+      </tr>`;
+    }).join("")}
+    </tbody></table>`;
+}
+
+async function updateOrderStatus(id,status){
+    const data=getData(KEYS.orders);
+    const item=data.find(x=>String(x.id)===String(id));
+    if(!item)return;
+    item.status=status;
+    setData(KEYS.orders,data);
+    if(supabaseClient){
+        const result=await supabaseClient.from("orders").update({status}).eq("order_id",id);
+        if(result.error)console.warn("Order status cloud update failed:",result.error.message);
+    }
+    renderOrders();
+}
+async function deleteOrder(id){
+    if(!confirm("Delete this order?"))return;
+    const data=getData(KEYS.orders).filter(x=>String(x.id)!==String(id));
+    localStorage.setItem(KEYS.orders,JSON.stringify(data));
+    if(supabaseClient){
+        const result=await supabaseClient.from("orders").delete().eq("order_id",id);
+        if(result.error)console.warn("Order cloud delete failed:",result.error.message);
+    }
+    renderOrders();
+}
+async function refreshOrders(){
+    const remote=await readCloud(KEYS.orders);
+    if(remote!==null)localStorage.setItem(KEYS.orders,JSON.stringify(remote));
+    renderOrders();
+}
+
 /* =====================================================
    RENDER ADMINS
 ===================================================== */
@@ -8606,6 +8747,8 @@ function renderAll(){
     renderReviews();
 
     renderMessages();
+
+    renderOrders();
 
     renderAdmins();
 
