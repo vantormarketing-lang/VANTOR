@@ -8,7 +8,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VANTOR — Store Admin Dashboard</title>
+<title>VANTOR Fashion — Admin Dashboard</title>
 
 <style>
 
@@ -68,6 +68,43 @@ select{
 }
 
 
+
+/* =====================================================
+   VANTOR BRAND MARK
+===================================================== */
+.v-brand{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:#fff;
+}
+.v-brand-mark{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    display:block;
+}
+.v-brand-wordmark{
+    display:flex;
+    flex-direction:column;
+    line-height:1;
+}
+.v-brand-name{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:18px;
+    letter-spacing:3px;
+    font-weight:700;
+}
+.v-brand-sub{
+    font-size:7px;
+    letter-spacing:3px;
+    color:#bdb1b4;
+    margin-top:5px;
+}
+.brand-svg-stroke{fill:#fff;}
+.brand-svg-cut{fill:#080808;}
+
 /* =====================================================
    LOGIN
 ===================================================== */
@@ -96,6 +133,14 @@ select{
     border-radius:18px;
     padding:38px;
     box-shadow:0 30px 90px rgba(0,0,0,.6);
+}
+
+.login-brand{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:10px;
 }
 
 .login-logo{
@@ -373,6 +418,32 @@ select{
     color:#555;
     font-size:10px;
     margin-top:3px;
+}
+
+.topbar-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.admin-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    border:1px solid #272727;
+    background:#0d0d0d;
+    color:#8e8e8e;
+    padding:8px 10px;
+    border-radius:6px;
+    font-size:10px;
+}
+
+.admin-status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#4c9b70;
+    box-shadow:0 0 0 3px rgba(76,155,112,.10);
 }
 
 .open-site{
@@ -1112,6 +1183,13 @@ textarea{
 }
 
 @media (max-width:800px){
+    .topbar{padding:0 14px;}
+    .topbar-actions{gap:6px;}
+    .admin-status{display:none;}
+    .topbar .open-site{padding:8px 10px;}
+    .v-brand-name{font-size:16px;}
+    .v-brand-sub{font-size:6px;letter-spacing:2.5px;}
+    .v-brand-mark{width:30px;height:30px;flex-basis:30px;}
     .mobile-header{
         height:64px;
         padding:0 14px;
@@ -1444,8 +1522,15 @@ textarea{
         id="loginForm"
     >
 
-        <div class="login-logo">
-            VAN<span>TOR</span>
+        <div class="login-brand">
+            <svg class="v-brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+                <path class="brand-svg-stroke" d="M8 16h25l17 35 17-35h25L58 84H42L8 16z"/>
+                <path class="brand-svg-cut" d="M39 16h18l-7 14-8 15-8-16z"/>
+            </svg>
+            <div class="v-brand-wordmark">
+                <div class="v-brand-name">VANTOR</div>
+                <div class="v-brand-sub">FASHION ADMIN</div>
+            </div>
         </div>
 
         <div class="login-subtitle">
@@ -1517,9 +1602,16 @@ textarea{
 
 <header class="mobile-header">
 
-    <div class="mobile-logo">
-        VAN<span>TOR</span>
-    </div>
+    <a class="v-brand" href="#" onclick="showSection('dashboard');return false;" aria-label="VANTOR Fashion Admin">
+        <svg class="v-brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+            <path class="brand-svg-stroke" d="M8 16h25l17 35 17-35h25L58 84H42L8 16z"/>
+            <path class="brand-svg-cut" d="M39 16h18l-7 14-8 15-8-16z"/>
+        </svg>
+        <div class="v-brand-wordmark">
+            <div class="v-brand-name">VANTOR</div>
+            <div class="v-brand-sub">FASHION</div>
+        </div>
+    </a>
 
     <button
         class="menu-toggle"
@@ -1550,9 +1642,16 @@ textarea{
 
     <div class="sidebar-top">
 
-        <div class="sidebar-logo">
-            VAN<span>TOR</span>
-        </div>
+        <a class="v-brand" href="#" onclick="showSection('dashboard');return false;" aria-label="VANTOR Fashion Admin">
+            <svg class="v-brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+                <path class="brand-svg-stroke" d="M8 16h25l17 35 17-35h25L58 84H42L8 16z"/>
+                <path class="brand-svg-cut" d="M39 16h18l-7 14-8 15-8-16z"/>
+            </svg>
+            <div class="v-brand-wordmark">
+                <div class="v-brand-name">VANTOR</div>
+                <div class="v-brand-sub">FASHION</div>
+            </div>
+        </a>
 
     </div>
 
@@ -1726,19 +1825,26 @@ textarea{
             </div>
 
             <div class="page-subtitle">
-                VANTOR Store Control Panel
+                VANTOR Fashion Control Center
             </div>
 
         </div>
 
 
-        <button
-            class="open-site"
-            id="openWebsiteBtn"
-            type="button"
-        >
-            Open Website ↗
-        </button>
+        <div class="topbar-actions">
+            <div class="admin-status">
+                <span class="admin-status-dot"></span>
+                Admin Panel
+            </div>
+
+            <button
+                class="open-site"
+                id="openWebsiteBtn"
+                type="button"
+            >
+                Open Website ↗
+            </button>
+        </div>
 
     </div>
 
@@ -1831,6 +1937,38 @@ textarea{
             <div
                 class="stat-number"
                 id="statCustomers"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Orders
+            </div>
+
+            <div
+                class="stat-number"
+                id="statOrders"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Pending Orders
+            </div>
+
+            <div
+                class="stat-number"
+                id="statPendingOrders"
             >
                 0
             </div>
@@ -1975,6 +2113,13 @@ textarea{
                         data-quick="testimonials"
                     >
                         + Review
+                    </button>
+
+                    <button
+                        class="quick-btn"
+                        data-quick="orders"
+                    >
+                        View Orders
                     </button>
 
                     <button
@@ -8299,6 +8444,10 @@ function renderDashboard(){
         getData(KEYS.admins);
 
 
+    const orders =
+        getData(KEYS.orders);
+
+
     document.getElementById(
         "statProducts"
     ).textContent =
@@ -8327,6 +8476,27 @@ function renderDashboard(){
         "statReviews"
     ).textContent =
         testimonials.length;
+
+
+    document.getElementById(
+        "statOrders"
+    ).textContent =
+        orders.length;
+
+
+    const pendingOrders =
+        orders.filter(
+            order => {
+                const status = String(order.status || "New").toLowerCase();
+                return status === "new" || status === "pending" || status === "processing";
+            }
+        ).length;
+
+
+    document.getElementById(
+        "statPendingOrders"
+    ).textContent =
+        pendingOrders;
 
 
     const unread =
