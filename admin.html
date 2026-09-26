@@ -3825,11 +3825,58 @@ async function readCloud(key){
     return (data || []).map(row => dbToLocal(key,row));
 }
 
+const cloudWriteRevision = Object.create(null);
+
+function invalidateCloudWrites(key){
+    cloudWriteRevision[key] = (cloudWriteRevision[key] || 0) + 1;
+    return cloudWriteRevision[key];
+}
+
+async function deleteCloudRecord(key,id){
+    const table = CLOUD_TABLES[key];
+    const revision = invalidateCloudWrites(key);
+
+    if(!table || !supabaseClient){
+        return {ok:true, skipped:true};
+    }
+
+    const numericId = Number(id);
+    if(!Number.isFinite(numericId)){
+        return {ok:false, error:"Invalid Supabase record id."};
+    }
+
+    try{
+        if(cloudWriteRevision[key] !== revision){
+            return {ok:false, error:"Cloud operation was superseded by a newer change."};
+        }
+
+        const result = await supabaseClient
+            .from(table)
+            .delete()
+            .eq("id",numericId);
+
+        if(result.error){
+            console.error("VANTOR Supabase direct delete failed:",table,numericId,result.error.message);
+            return {ok:false, error:result.error.message};
+        }
+
+        return {ok:true};
+    }catch(error){
+        console.error("VANTOR Supabase direct delete error:",table,numericId,error);
+        return {ok:false, error:error.message || "Unknown Supabase error."};
+    }
+}
+
 async function writeCloud(key,data){
     const table = CLOUD_TABLES[key];
+    const revision = cloudWriteRevision[key] || 0;
     if(!table || !Array.isArray(data) || !supabaseClient) return;
 
     try{
+        if(cloudWriteRevision[key] !== revision){
+            return;
+        }
+
         /*
            Reconcile deletions first. The old sync only inserted/updated
            records, so a record deleted in Admin could remain in Supabase
@@ -3852,6 +3899,9 @@ async function writeCloud(key,data){
                 .filter(id => Number.isFinite(id));
 
             for(const remoteId of remoteIds){
+                if(cloudWriteRevision[key] !== revision){
+                    return;
+                }
                 if(!wantedIds.has(remoteId)){
                     const result = await supabaseClient
                         .from(table)
@@ -3874,6 +3924,9 @@ async function writeCloud(key,data){
 
         /* Insert new records and update existing numeric records. */
         for(const item of data){
+            if(cloudWriteRevision[key] !== revision){
+                return;
+            }
             const payload = localToDb(key,item,true);
             const {error} = await supabaseClient
                 .from(table)
@@ -4037,6 +4090,7 @@ function getData(key){
 }
 
 function setData(key,data){
+    invalidateCloudWrites(key);
     try{
         localStorage.setItem(
             key,
@@ -5169,7 +5223,7 @@ function editService(id){
 }
 
 
-function deleteService(id){
+async function deleteService(id){
 
     if(
         !confirm(
@@ -5191,6 +5245,18 @@ function deleteService(id){
                 String(item.id) !==
                 String(id)
         );
+
+    // Delete the exact record from Supabase before changing localStorage.
+    const cloudDelete = await deleteCloudRecord(KEYS.services,id);
+
+    if(!cloudDelete.ok){
+        showToast(
+            "Could not delete from cloud: " +
+            (cloudDelete.error || "Supabase error")
+        );
+        return;
+    }
+
 
 
     setData(
@@ -5504,7 +5570,7 @@ function editOffer(id){
 }
 
 
-function deleteOffer(id){
+async function deleteOffer(id){
 
     if(
         !confirm(
@@ -5526,6 +5592,18 @@ function deleteOffer(id){
                 String(item.id) !==
                 String(id)
         );
+
+    // Delete the exact record from Supabase before changing localStorage.
+    const cloudDelete = await deleteCloudRecord(KEYS.offers,id);
+
+    if(!cloudDelete.ok){
+        showToast(
+            "Could not delete from cloud: " +
+            (cloudDelete.error || "Supabase error")
+        );
+        return;
+    }
+
 
 
     setData(
@@ -5810,7 +5888,7 @@ function editProject(id){
 }
 
 
-function deleteProject(id){
+async function deleteProject(id){
 
     if(
         !confirm(
@@ -5832,6 +5910,18 @@ function deleteProject(id){
                 String(item.id) !==
                 String(id)
         );
+
+    // Delete the exact record from Supabase before changing localStorage.
+    const cloudDelete = await deleteCloudRecord(KEYS.projects,id);
+
+    if(!cloudDelete.ok){
+        showToast(
+            "Could not delete from cloud: " +
+            (cloudDelete.error || "Supabase error")
+        );
+        return;
+    }
+
 
 
     setData(
@@ -6039,7 +6129,7 @@ function editClient(id){
 }
 
 
-function deleteClient(id){
+async function deleteClient(id){
 
     if(
         !confirm(
@@ -6061,6 +6151,18 @@ function deleteClient(id){
                 String(item.id) !==
                 String(id)
         );
+
+    // Delete the exact record from Supabase before changing localStorage.
+    const cloudDelete = await deleteCloudRecord(KEYS.clients,id);
+
+    if(!cloudDelete.ok){
+        showToast(
+            "Could not delete from cloud: " +
+            (cloudDelete.error || "Supabase error")
+        );
+        return;
+    }
+
 
 
     setData(
@@ -6302,7 +6404,7 @@ function editTestimonial(id){
 }
 
 
-function deleteTestimonial(id){
+async function deleteTestimonial(id){
 
     if(
         !confirm(
@@ -6324,6 +6426,18 @@ function deleteTestimonial(id){
                 String(item.id) !==
                 String(id)
         );
+
+    // Delete the exact record from Supabase before changing localStorage.
+    const cloudDelete = await deleteCloudRecord(KEYS.testimonials,id);
+
+    if(!cloudDelete.ok){
+        showToast(
+            "Could not delete from cloud: " +
+            (cloudDelete.error || "Supabase error")
+        );
+        return;
+    }
+
 
 
     setData(
