@@ -159,13 +159,35 @@ section{
 }
 
 .logo{
-    font-size:23px;
-    font-weight:900;
-    letter-spacing:2px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    color:#fff;
+    text-decoration:none;
+    line-height:1;
 }
 
-.logo span{
-    color:#8b2941;
+.logo-mark{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    display:block;
+}
+
+.logo-word{
+    font-size:21px;
+    font-weight:800;
+    letter-spacing:3px;
+    color:#fff;
+}
+
+.logo-word small{
+    display:block;
+    margin-top:4px;
+    font-size:7px;
+    font-weight:700;
+    letter-spacing:3px;
+    color:#aaa;
 }
 
 .nav-links{
@@ -1406,7 +1428,7 @@ function renderNewArrivals(){const grid=document.getElementById("newArrivalsGrid
 .trust-section{padding:25px 0;background:#0e090c;border-top:1px solid #1e1116;border-bottom:1px solid #1e1116}.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.trust-item{display:flex;align-items:center;gap:12px;padding:10px 12px}.trust-item>span{color:#a13a52;font-size:11px;font-weight:900}.trust-item strong{display:block;font-size:12px}.trust-item small{display:block;color:#777;font-size:10px;margin-top:2px}
 .style-gallery-section{background:#0b090a}.style-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.style-gallery-card{height:230px;border:1px solid #2d181e;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;position:relative;background:linear-gradient(145deg,#32131f,#100a0d)}.style-gallery-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 25%,rgba(170,65,91,.28),transparent 35%)}.style-gallery-card span{position:relative;color:#c75b72;font-size:10px;letter-spacing:2px}.style-gallery-card strong{position:relative;font-size:20px;margin-top:5px}.tone-two{background:linear-gradient(145deg,#1b2024,#0d0d0d)}.tone-three{background:linear-gradient(145deg,#2a171c,#090909)}.tone-four{background:linear-gradient(145deg,#3a211a,#120b0c)}.tone-five{background:linear-gradient(145deg,#252125,#0c0b0c)}.tone-six{background:linear-gradient(145deg,#401426,#0d090b)}.social-handle{text-align:center;margin-top:22px;color:#d1a0aa;font-size:12px;letter-spacing:2px}.social-handle span{color:#666;letter-spacing:0;margin-left:8px}
 .newsletter-section{padding:65px 0}.newsletter-box{border:1px solid #3a1c26;border-radius:20px;background:linear-gradient(120deg,#160c11,#0f090c);padding:36px;display:flex;align-items:center;justify-content:space-between;gap:30px}.newsletter-box>div>span{color:#a13a52;font-size:10px;letter-spacing:3px}.newsletter-box h2{font-size:34px;margin:5px 0}.newsletter-box p{color:#777;font-size:13px}.newsletter-form{display:flex;gap:8px;width:min(430px,100%)}.newsletter-form input{flex:1;background:#0a0809;border:1px solid #40202a;color:#fff;border-radius:9px;padding:13px}.newsletter-form button{border:1px solid #7b2940;background:#6d1e30;color:#fff;border-radius:9px;padding:0 17px;font-weight:800}
-.site-footer{background:#070707;border-top:1px solid #211319;padding:60px 0 22px}.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:35px}.footer-brand{font-size:28px;font-weight:900;letter-spacing:3px}.footer-text{color:#777;font-size:12px;max-width:280px;margin:10px 0 18px}.footer-socials{display:flex;gap:15px}.footer-socials a,.footer-col a{color:#777;font-size:11px;display:block;margin:8px 0}.footer-socials a:hover,.footer-col a:hover{color:#fff}.footer-col h4{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ddd;margin-bottom:12px}.footer-bottom{border-top:1px solid #191115;margin-top:35px;padding-top:18px;display:flex;justify-content:space-between;color:#555;font-size:10px}
+.site-footer{background:#070707;border-top:1px solid #211319;padding:60px 0 22px}.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:35px}.footer-brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:28px;font-weight:900;letter-spacing:3px}.footer-logo-mark{width:38px;height:38px;display:block}.footer-brand-name{font-size:24px;letter-spacing:3px;color:#fff}.footer-brand-sub{font-size:7px;letter-spacing:3px;color:#777;margin-left:-92px;margin-top:31px}.footer-text{color:#777;font-size:12px;max-width:280px;margin:10px 0 18px}.footer-socials{display:flex;gap:15px}.footer-socials a,.footer-col a{color:#777;font-size:11px;display:block;margin:8px 0}.footer-socials a:hover,.footer-col a:hover{color:#fff}.footer-col h4{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ddd;margin-bottom:12px}.footer-bottom{border-top:1px solid #191115;margin-top:35px;padding-top:18px;display:flex;justify-content:space-between;color:#555;font-size:10px}
 /* darker, readable modals */
 .product-detail-box,.order-box{background:#130c10;color:#f4edf0;border:1px solid #4a1d29;box-shadow:0 25px 80px rgba(0,0,0,.55)}.product-detail-image{background:#211218}.product-detail-placeholder{background:radial-gradient(circle,#431521,#160c10 65%);color:#b0445d}.product-options select,.order-form-group input,.order-form-group textarea,.order-form-group select{background:#0d090b;color:#f1f1f1;border-color:#4a2731}.order-summary{background:#0e090c;border:1px solid #33202a;color:#ddd}.order-summary-row{border-color:#2b1a21}.order-box .order-sub{color:#999}.order-close,.product-detail-close{color:#ddd}.order-submit,.product-add{background:#6d1e30;color:#fff}.order-submit:hover,.product-add:hover{background:#8a2942}.cart-panel{background:#130c10;border-left:1px solid #4a1d29}.cart-item{border-bottom-color:#2b1a21}
 @media(max-width:900px){.new-arrivals-grid{grid-template-columns:repeat(2,1fr)}.trust-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1.5fr 1fr 1fr}.newsletter-box{flex-direction:column;align-items:flex-start}.newsletter-form{width:100%}}
@@ -1604,8 +1626,13 @@ function renderNewArrivals(){const grid=document.getElementById("newArrivalsGrid
             href="#home"
             class="logo"
             id="siteLogo"
+            aria-label="VANTOR Fashion Home"
         >
-            VANTOR
+            <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+                <path d="M7 8h15l10 16L42 8h15L32 55 7 8Z" fill="#fff"/>
+                <path d="M31 25 42 8h15L37 36l-8-11Z" fill="#b9b9b9"/>
+            </svg>
+            <span class="logo-word"><span class="brand-name">VANTOR</span><small>FASHION</small></span>
         </a>
 
 
@@ -2232,7 +2259,14 @@ function renderNewArrivals(){const grid=document.getElementById("newArrivalsGrid
 <footer class="site-footer">
     <div class="container footer-grid">
         <div class="footer-main">
-            <div class="footer-brand" id="footerBrand">VANTOR</div>
+            <div class="footer-brand" id="footerBrand">
+                <svg class="footer-logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M7 8h15l10 16L42 8h15L32 55 7 8Z" fill="#fff"/>
+                    <path d="M31 25 42 8h15L37 36l-8-11Z" fill="#b9b9b9"/>
+                </svg>
+                <span class="footer-brand-name">VANTOR</span>
+                <span class="footer-brand-sub">FASHION</span>
+            </div>
             <p class="footer-text" id="footerTagline">Modern fashion for everyday movement.</p>
             <div class="footer-socials"><a href="#home">Instagram</a><a href="#home">TikTok</a><a href="#home">Facebook</a></div>
         </div>
@@ -2919,9 +2953,14 @@ function loadSettings(){
 
     if(logo){
 
-        logo.textContent =
-            settings.siteName ||
-            "VANTOR";
+        const brandName =
+            logo.querySelector(".brand-name");
+
+        if(brandName){
+            brandName.textContent =
+                settings.siteName ||
+                "VANTOR";
+        }
 
     }
 
@@ -2933,9 +2972,14 @@ function loadSettings(){
 
     if(footerBrand){
 
-        footerBrand.textContent =
-            settings.siteName ||
-            "VANTOR";
+        const footerName =
+            footerBrand.querySelector(".footer-brand-name");
+
+        if(footerName){
+            footerName.textContent =
+                settings.siteName ||
+                "VANTOR";
+        }
 
     }
 
