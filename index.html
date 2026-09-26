@@ -1445,6 +1445,114 @@ footer{
 .order-success.show{display:block}
 @media(max-width:600px){.order-form-grid{grid-template-columns:1fr}.order-form-group.full{grid-column:auto}}
 
+
+
+/* WHY VANTOR */
+.why-vantor-section{
+    padding:100px 0;
+}
+
+.why-vantor-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:20px;
+}
+
+.why-card{
+    padding:28px;
+    border:1px solid rgba(17,17,17,.10);
+    border-radius:20px;
+    background:#fff;
+}
+
+.why-icon{
+    width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#111;
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:22px;
+}
+
+.why-card h3{
+    margin:0 0 10px;
+}
+
+.why-card p{
+    margin:0;
+    line-height:1.7;
+    opacity:.72;
+}
+
+@media(max-width:900px){
+    .why-vantor-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+
+@media(max-width:560px){
+    .why-vantor-grid{grid-template-columns:1fr;}
+}
+
+
+/* =====================================================
+   CONTRAST FIX — CARDS & CHECKOUT
+===================================================== */
+.product-detail-box{
+    background:#151114;
+    color:#fff;
+    border:1px solid #352027;
+}
+.product-detail-box .product-options select{
+    background:#211a1f;
+    color:#fff;
+    border-color:#4a343c;
+}
+.product-detail-box .product-options label{
+    color:#ddd;
+}
+.order-box{
+    background:#151114;
+    color:#fff;
+    border:1px solid #352027;
+}
+.order-box .order-sub{
+    color:#b9b0b4;
+}
+.order-summary{
+    background:#211a1f;
+    border:1px solid #3b2930;
+}
+.order-summary-row{
+    border-bottom-color:#3b2930;
+}
+.order-form-group label{
+    color:#e5dfe2;
+}
+.order-form-group input,
+.order-form-group textarea,
+.order-form-group select{
+    background:#211a1f;
+    color:#fff;
+    border-color:#4a343c;
+}
+.order-form-group input::placeholder,
+.order-form-group textarea::placeholder{
+    color:#8f858a;
+}
+.why-card{
+    background:#151114;
+    color:#fff;
+    border-color:#352027;
+}
+.why-card p{
+    color:#b9b0b4;
+    opacity:1;
+}
+
 </style>
 
 </head>
@@ -1489,43 +1597,30 @@ footer{
                 Home
             </a>
 
-            <a href="#overview" onclick="closeMenu()">
-                Overview
-            </a>
-
             <a href="#services" onclick="closeMenu()">
-                Services
+                Categories
             </a>
 
             <a href="#offers" onclick="closeMenu()">
-                Offers
+                Deals
             </a>
 
             <a href="#about" onclick="closeMenu()">
-                About
+                About Us
             </a>
 
             <a href="#clients" onclick="closeMenu()">
-                Clients
+                Style Edit
             </a>
 
             <a href="#work" onclick="closeMenu()">
-                Work
+                Collections
             </a>
 
             <a href="#testimonials" onclick="closeMenu()">
-                Testimonials
+                Reviews
             </a>
-
-            <a
-                href="#contact"
-                class="nav-contact"
-                onclick="closeMenu()"
-            >
-                Contact
-            </a>
-
-        </nav>
+</nav>
 
     </div>
 
@@ -1570,7 +1665,7 @@ footer{
             <div class="hero-buttons">
 
                 <a
-                    href="#contact"
+                    href="#offers"
                     class="btn-primary"
                 >
                     Shop Collection
@@ -1874,205 +1969,52 @@ footer{
      CONTACT
 ===================================================== -->
 
-<section id="contact">
+
+
+<!-- =====================================================
+     WHY VANTOR
+===================================================== -->
+
+<section id="why-vantor" class="why-vantor-section">
 
     <div class="container">
 
         <div class="section-heading">
-
-            <span>
-                Find Your Next Look
-            </span>
-
-            <h2>
-                Shop Collection
-            </h2>
-
-            <p>
-                Have a question about sizing, orders or a product? Send us a message.
-            </p>
-
+            <span>Why VANTOR</span>
+            <h2>Made For Your Everyday.</h2>
+            <p>Simple shopping, quality pieces and a smoother experience from browsing to delivery.</p>
         </div>
 
+        <div class="why-vantor-grid">
+            <article class="why-card">
+                <div class="why-icon">01</div>
+                <h3>Quality First</h3>
+                <p>Thoughtful essentials designed for everyday wear and easy styling.</p>
+            </article>
 
-        <div class="contact-grid">
+            <article class="why-card">
+                <div class="why-icon">02</div>
+                <h3>Easy Shopping</h3>
+                <p>Choose your style, size and color, then place your order in a few clicks.</p>
+            </article>
 
+            <article class="why-card">
+                <div class="why-icon">03</div>
+                <h3>Secure Orders</h3>
+                <p>Your order details are securely sent to our store system for processing.</p>
+            </article>
 
-            <div class="contact-info">
-
-                <h3>
-                    Need Help?
-                </h3>
-
-                <p>
-                    Need help choosing a size or tracking an order? Send us a message and our team will help.
-                </p>
-
-
-                <div class="contact-item">
-
-                    <div class="contact-label">
-                        Email
-                    </div>
-
-                    <div
-                        class="contact-value"
-                        id="contactEmail"
-                    >
-                        hello@vantor.com
-                    </div>
-
-                </div>
-
-
-                <div class="contact-item">
-
-                    <div class="contact-label">
-                        Phone
-                    </div>
-
-                    <div
-                        class="contact-value"
-                        id="contactPhone"
-                    >
-                        +20 100 000 0000
-                    </div>
-
-                </div>
-
-
-                <div class="contact-item">
-
-                    <div class="contact-label">
-                        Instagram
-                    </div>
-
-                    <div class="contact-value">
-
-                        <a
-                            href="#"
-                            id="contactInstagram"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            Instagram
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <div class="contact-item">
-
-                    <div class="contact-label">
-                        Facebook
-                    </div>
-
-                    <div class="contact-value">
-
-                        <a
-                            href="#"
-                            id="contactFacebook"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            Facebook
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <form
-                class="contact-form"
-                id="contactForm"
-            >
-
-                <div class="form-row">
-
-                    <div class="form-group">
-
-                        <label for="contactName">
-                            Name
-                        </label>
-
-                        <input
-                            type="text"
-                            id="contactName"
-                            required
-                            placeholder="Your name"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="contactEmailInput">
-                            Email
-                        </label>
-
-                        <input
-                            type="email"
-                            id="contactEmailInput"
-                            required
-                            placeholder="you@example.com"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="contactSubject">
-                        Subject
-                    </label>
-
-                    <input
-                        type="text"
-                        id="contactSubject"
-                        required
-                        placeholder="How can we help?"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="contactMessage">
-                        Message
-                    </label>
-
-                    <textarea
-                        id="contactMessage"
-                        required
-                        placeholder="Tell us about your project..."
-                    ></textarea>
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="form-submit"
-                >
-                    Send Message
-                </button>
-
-            </form>
-
+            <article class="why-card">
+                <div class="why-icon">04</div>
+                <h3>Support When Needed</h3>
+                <p>Need help with an order? Our store team is ready to help you.</p>
+            </article>
         </div>
 
     </div>
 
 </section>
+
 
 
 <!-- =====================================================
@@ -4359,13 +4301,11 @@ async function submitOrder(event){
     event.preventDefault();
     const cart=getCart();
     if(!cart.length)return;
-
     const submit=document.getElementById("orderSubmit");
     const total=cart.reduce((sum,item)=>{
         const numeric=parseFloat(String(item.price||"").replace(/[^0-9.]/g,""))||0;
         return sum + numeric*(Number(item.qty)||1);
     },0);
-
     const order={
         id:"order-"+Date.now()+"-"+Math.random().toString(36).slice(2,7),
         customerName:document.getElementById("orderName").value.trim(),
@@ -4378,60 +4318,34 @@ async function submitOrder(event){
         status:"New",
         createdAt:new Date().toISOString()
     };
-
     if(!order.customerName||!order.phone||!order.address)return;
-
-    submit.disabled=true;
-    submit.textContent="Sending...";
-
+    submit.disabled=true; submit.textContent="Sending...";
     try{
-        if(!supabaseClient) throw new Error("Supabase client is not initialized.");
-
         const {error}=await supabaseClient.from("orders").insert({
             order_id:order.id,
             customer_name:order.customerName,
             phone:order.phone,
-            email:order.email || null,
+            email:order.email,
             address:order.address,
-            notes:order.notes || null,
+            notes:order.notes,
             items:order.items,
             total:order.total,
             status:order.status,
             created_at:order.createdAt
         });
-
-        if(error) throw error;
-
-        const pending=JSON.parse(localStorage.getItem("vantor_pending_orders")||"[]");
-        localStorage.setItem("vantor_pending_orders",
-            JSON.stringify(pending.filter(x=>x.id!==order.id)));
-
+        if(error)throw error;
         localStorage.removeItem(CART_KEY);
         renderCart();
         document.getElementById("orderFormView")?.classList.add("hidden");
         document.getElementById("orderSuccess")?.classList.add("show");
-
     }catch(error){
         console.error("Order submission failed:",error);
-
-        const pending=JSON.parse(localStorage.getItem("vantor_pending_orders")||"[]");
-        localStorage.setItem("vantor_pending_orders",
-            JSON.stringify([order,...pending]));
-
-        const details=[
-            error?.message,
-            error?.details,
-            error?.hint,
-            error?.code ? `Code: ${error.code}` : ""
-        ].filter(Boolean).join("\n");
-
-        alert(
-            "الطلب اتحفظ على الجهاز، لكن Supabase رفض حفظه.\n\n"+
-            (details || "راجع إعدادات جدول orders والصلاحيات في Supabase.")
-        );
+        localStorage.setItem("vantor_pending_orders",JSON.stringify([
+            order,...JSON.parse(localStorage.getItem("vantor_pending_orders")||"[]")
+        ]));
+        alert("The order was saved on this device, but cloud delivery is not available yet. Please make sure the Supabase orders table is configured.");
     }finally{
-        submit.disabled=false;
-        submit.textContent="Place Order";
+        submit.disabled=false; submit.textContent="Place Order";
     }
 }
 
@@ -4443,152 +4357,6 @@ document.addEventListener("DOMContentLoaded",function(){
 /* =====================================================
    CONTACT FORM → SUPABASE
 ===================================================== */
-
-async function sendContactMessage(
-    event
-){
-
-    event.preventDefault();
-
-
-    const form =
-        event.target;
-
-
-    const name =
-        document.getElementById(
-            "contactName"
-        )?.value.trim();
-
-
-    const email =
-        document.getElementById(
-            "contactEmailInput"
-        )?.value.trim();
-
-
-    const subject =
-        document.getElementById(
-            "contactSubject"
-        )?.value.trim();
-
-
-    const message =
-        document.getElementById(
-            "contactMessage"
-        )?.value.trim();
-
-
-    if(
-        !name ||
-        !email ||
-        !subject ||
-        !message
-    ){
-
-        alert(
-            "Please complete all fields."
-        );
-
-        return;
-
-    }
-
-
-    const submitButton =
-        form.querySelector(
-            ".form-submit"
-        );
-
-
-    if(submitButton){
-
-        submitButton.disabled =
-            true;
-
-        submitButton.textContent =
-            "Sending...";
-
-    }
-
-
-    const finalMessage =
-        subject
-            ? `Subject: ${subject}\n\n${message}`
-            : message;
-
-
-    try{
-
-        const result =
-            await supabaseClient
-                .from(
-                    "messages"
-                )
-                .insert({
-
-                    name:
-                        name,
-
-                    email:
-                        email,
-
-                    message:
-                        finalMessage,
-
-                    phone:
-                        "",
-
-                    is_read:
-                        false
-
-                });
-
-
-        if(result.error){
-
-            throw result.error;
-
-        }
-
-
-        alert(
-            "Your message has been sent successfully."
-        );
-
-
-        form.reset();
-
-
-    }catch(error){
-
-        console.error(
-            "Contact form error:",
-            error
-        );
-
-
-        alert(
-            "Something went wrong. Please try again."
-        );
-
-
-    }finally{
-
-        if(submitButton){
-
-            submitButton.disabled =
-                false;
-
-            submitButton.textContent =
-                "Send Message";
-
-        }
-
-    }
-
-}
-
 
 /* =====================================================
    MAIN LOAD
