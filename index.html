@@ -1188,6 +1188,19 @@ footer{
 
 
 /* =====================================================
+   PREMIUM STORE INTERACTIONS
+===================================================== */
+const WISHLIST_KEY = "vantor_wishlist";
+function getWishlist(){ try{return JSON.parse(localStorage.getItem(WISHLIST_KEY)||"[]")}catch(e){return []} }
+function saveWishlist(list){localStorage.setItem(WISHLIST_KEY,JSON.stringify(list));updateWishlistCount();}
+function updateWishlistCount(){const n=getWishlist().length; const a=document.getElementById("wishlistCount"); if(a)a.textContent=n; const b=document.getElementById("wishlistFabCount"); if(b)b.textContent=n;}
+function toggleWishlist(){const list=getWishlist(); if(!list.length){alert("Your wishlist is empty. Add products from New Arrivals.");return;} const names=list.map(x=>x.name).join("\n• "); alert("Your VANTOR Wishlist\n\n• "+names);}
+function toggleWishlistItem(encoded){try{const item=JSON.parse(decodeURIComponent(encoded));let list=getWishlist();const exists=list.some(x=>String(x.id)===String(item.id)&&x.name===item.name);if(exists)list=list.filter(x=>!(String(x.id)===String(item.id)&&x.name===item.name));else list.push(item);saveWishlist(list);renderNewArrivals();}catch(e){}}
+function subscribeNewsletter(event){event.preventDefault();const email=document.getElementById("newsletterEmail")?.value.trim();if(!email)return;localStorage.setItem("vantor_newsletter_email",email);alert("Welcome to the VANTOR list ✓");event.target.reset();}
+function renderNewArrivals(){const grid=document.getElementById("newArrivalsGrid");if(!grid)return;const data=getStorageData(KEYS.services).filter(x=>x.status!=="Hidden").reverse().slice(0,4);if(!data.length){grid.innerHTML='<div class="empty-state"><strong>NEW ARRIVALS</strong><span>Add products from the Admin Dashboard to show them here.</span></div>';return;}const wish=getWishlist();grid.innerHTML=data.map(item=>{const obj={id:item.id,name:item.name||"Product",description:item.description||"",image:item.image||"",price:item.price||"",category:item.category||"VANTOR",sizes:item.sizes||"S, M, L, XL",colors:item.colors||"Black, White"};const enc=encodeURIComponent(JSON.stringify(obj));const active=wish.some(x=>String(x.id)===String(obj.id)&&x.name===obj.name);const media=obj.image?`<img src="${escapeHtml(obj.image)}" alt="${escapeHtml(obj.name)}">`:'<div class="arrival-placeholder">V</div>';return `<article class="arrival-card"><div class="arrival-media">${media}<span class="arrival-badge">NEW</span><button class="arrival-wish" type="button" onclick="toggleWishlistItem('${enc}')">${active?'♥':'♡'}</button></div><div class="arrival-info"><span class="arrival-cat">${escapeHtml(obj.category)}</span><h3>${escapeHtml(obj.name)}</h3><div class="arrival-bottom"><span class="arrival-price">${escapeHtml(obj.price||"Price on request")}</span><button class="arrival-add" type="button" onclick="openProductDetails(decodeURIComponent('${enc}'))">Quick View</button></div></div></article>`;}).join("");}
+
+
+/* =====================================================
    SHOPPING BAG
 ===================================================== */
 .cart-fab{
@@ -1384,6 +1397,23 @@ footer{
 
 
 /* =====================================================
+   PREMIUM STORE UPGRADE
+===================================================== */
+.announcement-bar{height:30px;background:#5d1a2b;color:#f5dce2;text-align:center;font-size:10px;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;position:relative;z-index:1002}
+.navbar{top:30px}.nav-inner{height:70px}.nav-links{gap:18px}.nav-wishlist,.nav-bag{border:1px solid #4a1d29;background:#160d11;color:#e2b3bd;border-radius:999px;padding:8px 12px;font-size:11px;font-weight:800}.nav-wishlist{margin-left:4px}.nav-bag{background:#6d1e30;color:#fff}
+.hero{padding-top:165px}.hero-kicker-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}.hero-kicker-row .hero-tag{margin-bottom:0}.hero-season-badge{font-size:9px;letter-spacing:1.7px;border:1px solid #632136;color:#d9a0ad;padding:6px 9px;border-radius:999px}.hero-text-link{display:inline-flex;align-items:center;color:#aaa;font-size:12px;padding:13px 5px}.hero-text-link:hover{color:#fff}
+.section-heading-row{display:flex;justify-content:space-between;align-items:end;text-align:left;gap:20px}.section-heading-row p{margin:0}.section-link{color:#c06a7d;font-size:12px;white-space:nowrap}.new-arrivals-section{background:#0a0809}.new-arrivals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.arrival-card{background:#100b0d;border:1px solid #2d181e;border-radius:15px;overflow:hidden;position:relative;transition:.3s}.arrival-card:hover{transform:translateY(-6px);border-color:#762337}.arrival-media{height:280px;background:#181014;position:relative;overflow:hidden}.arrival-media img{width:100%;height:100%;object-fit:cover;transition:.4s}.arrival-card:hover .arrival-media img{transform:scale(1.05)}.arrival-placeholder{height:100%;display:grid;place-items:center;background:radial-gradient(circle,#431521,#160c10 65%);font-size:65px;font-weight:900;color:#8c2941}.arrival-badge{position:absolute;left:12px;top:12px;background:#f1e7e9;color:#241016;padding:6px 9px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:1px}.arrival-wish{position:absolute;right:12px;top:12px;width:34px;height:34px;border-radius:50%;border:1px solid #6a2b3b;background:rgba(10,8,9,.8);color:#fff}.arrival-info{padding:16px}.arrival-cat{color:#a13a52;font-size:9px;letter-spacing:2px;text-transform:uppercase}.arrival-info h3{font-size:16px;margin:6px 0}.arrival-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}.arrival-price{font-weight:900;color:#e5c2c9}.arrival-add{border:1px solid #57202f;background:#241017;color:#dca6b2;border-radius:999px;padding:8px 11px;font-size:10px;font-weight:800}.arrival-add:hover{background:#6d1e30;color:#fff}
+.trust-section{padding:25px 0;background:#0e090c;border-top:1px solid #1e1116;border-bottom:1px solid #1e1116}.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.trust-item{display:flex;align-items:center;gap:12px;padding:10px 12px}.trust-item>span{color:#a13a52;font-size:11px;font-weight:900}.trust-item strong{display:block;font-size:12px}.trust-item small{display:block;color:#777;font-size:10px;margin-top:2px}
+.style-gallery-section{background:#0b090a}.style-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.style-gallery-card{height:230px;border:1px solid #2d181e;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;position:relative;background:linear-gradient(145deg,#32131f,#100a0d)}.style-gallery-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 25%,rgba(170,65,91,.28),transparent 35%)}.style-gallery-card span{position:relative;color:#c75b72;font-size:10px;letter-spacing:2px}.style-gallery-card strong{position:relative;font-size:20px;margin-top:5px}.tone-two{background:linear-gradient(145deg,#1b2024,#0d0d0d)}.tone-three{background:linear-gradient(145deg,#2a171c,#090909)}.tone-four{background:linear-gradient(145deg,#3a211a,#120b0c)}.tone-five{background:linear-gradient(145deg,#252125,#0c0b0c)}.tone-six{background:linear-gradient(145deg,#401426,#0d090b)}.social-handle{text-align:center;margin-top:22px;color:#d1a0aa;font-size:12px;letter-spacing:2px}.social-handle span{color:#666;letter-spacing:0;margin-left:8px}
+.newsletter-section{padding:65px 0}.newsletter-box{border:1px solid #3a1c26;border-radius:20px;background:linear-gradient(120deg,#160c11,#0f090c);padding:36px;display:flex;align-items:center;justify-content:space-between;gap:30px}.newsletter-box>div>span{color:#a13a52;font-size:10px;letter-spacing:3px}.newsletter-box h2{font-size:34px;margin:5px 0}.newsletter-box p{color:#777;font-size:13px}.newsletter-form{display:flex;gap:8px;width:min(430px,100%)}.newsletter-form input{flex:1;background:#0a0809;border:1px solid #40202a;color:#fff;border-radius:9px;padding:13px}.newsletter-form button{border:1px solid #7b2940;background:#6d1e30;color:#fff;border-radius:9px;padding:0 17px;font-weight:800}
+.site-footer{background:#070707;border-top:1px solid #211319;padding:60px 0 22px}.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:35px}.footer-brand{font-size:28px;font-weight:900;letter-spacing:3px}.footer-text{color:#777;font-size:12px;max-width:280px;margin:10px 0 18px}.footer-socials{display:flex;gap:15px}.footer-socials a,.footer-col a{color:#777;font-size:11px;display:block;margin:8px 0}.footer-socials a:hover,.footer-col a:hover{color:#fff}.footer-col h4{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ddd;margin-bottom:12px}.footer-bottom{border-top:1px solid #191115;margin-top:35px;padding-top:18px;display:flex;justify-content:space-between;color:#555;font-size:10px}
+/* darker, readable modals */
+.product-detail-box,.order-box{background:#130c10;color:#f4edf0;border:1px solid #4a1d29;box-shadow:0 25px 80px rgba(0,0,0,.55)}.product-detail-image{background:#211218}.product-detail-placeholder{background:radial-gradient(circle,#431521,#160c10 65%);color:#b0445d}.product-options select,.order-form-group input,.order-form-group textarea,.order-form-group select{background:#0d090b;color:#f1f1f1;border-color:#4a2731}.order-summary{background:#0e090c;border:1px solid #33202a;color:#ddd}.order-summary-row{border-color:#2b1a21}.order-box .order-sub{color:#999}.order-close,.product-detail-close{color:#ddd}.order-submit,.product-add{background:#6d1e30;color:#fff}.order-submit:hover,.product-add:hover{background:#8a2942}.cart-panel{background:#130c10;border-left:1px solid #4a1d29}.cart-item{border-bottom-color:#2b1a21}
+@media(max-width:900px){.new-arrivals-grid{grid-template-columns:repeat(2,1fr)}.trust-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1.5fr 1fr 1fr}.newsletter-box{flex-direction:column;align-items:flex-start}.newsletter-form{width:100%}}
+@media(max-width:700px){.announcement-bar{font-size:8px;letter-spacing:1px}.nav-links{gap:10px}.nav-wishlist,.nav-bag{display:none}.section-heading-row{align-items:flex-start;flex-direction:column}.style-gallery-grid{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:1fr 1fr}.footer-main{grid-column:1/-1}.footer-bottom{flex-direction:column;gap:8px}.newsletter-box{padding:25px}.newsletter-form{flex-direction:column}.newsletter-form button{padding:12px}}
+
+
+/* =====================================================
    MOBILE NAV
 ===================================================== */
 
@@ -1565,6 +1595,7 @@ footer{
      NAVBAR
 ===================================================== -->
 
+<div class="announcement-bar">NEW DROP • FREE SHIPPING ON ORDERS OVER EGP 1500 • VANTOR</div>
 <header class="navbar">
 
     <div class="nav-inner">
@@ -1620,6 +1651,8 @@ footer{
             <a href="#testimonials" onclick="closeMenu()">
                 Reviews
             </a>
+            <button class="nav-wishlist" type="button" onclick="toggleWishlist()">♡ <span id="wishlistCount">0</span></button>
+            <button class="nav-bag" type="button" onclick="toggleCart()">Bag <span id="navCartCount">0</span></button>
 </nav>
 
     </div>
@@ -1640,11 +1673,9 @@ footer{
 
         <div class="hero-content">
 
-            <div
-                class="hero-tag"
-                id="heroTag"
-            >
-                Modern Fashion Store
+            <div class="hero-kicker-row">
+                <div class="hero-tag" id="heroTag">Modern Fashion Store</div>
+                <span class="hero-season-badge">NEW SEASON</span>
             </div>
 
 
@@ -1664,12 +1695,8 @@ footer{
 
             <div class="hero-buttons">
 
-                <a
-                    href="#offers"
-                    class="btn-primary"
-                >
-                    Shop Collection
-                </a>
+                <a href="#offers" class="btn-primary">Shop Collection</a>
+                <a href="#services" class="hero-text-link">Shop New Arrivals →</a>
 
                 <a
                     href="#work"
@@ -1734,6 +1761,24 @@ footer{
 
     </div>
 
+</section>
+
+
+<!-- =====================================================
+     NEW ARRIVALS
+===================================================== -->
+<section class="new-arrivals-section" id="new-arrivals">
+    <div class="container">
+        <div class="section-heading section-heading-row">
+            <div>
+                <span>JUST IN</span>
+                <h2>New Arrivals</h2>
+                <p>Fresh VANTOR pieces selected for your next everyday look.</p>
+            </div>
+            <a class="section-link" href="#services">View All Products →</a>
+        </div>
+        <div class="new-arrivals-grid" id="newArrivalsGrid"></div>
+    </div>
 </section>
 
 
@@ -1972,6 +2017,57 @@ footer{
 
 
 <!-- =====================================================
+     TRUST STRIP
+===================================================== -->
+<section class="trust-section">
+    <div class="container trust-grid">
+        <div class="trust-item"><span>01</span><div><strong>Fast Delivery</strong><small>Quick delivery across Egypt</small></div></div>
+        <div class="trust-item"><span>02</span><div><strong>Secure Orders</strong><small>Your order details stay protected</small></div></div>
+        <div class="trust-item"><span>03</span><div><strong>Easy Shopping</strong><small>Simple sizes, colors and checkout</small></div></div>
+        <div class="trust-item"><span>04</span><div><strong>Quality Pieces</strong><small>Built for everyday wear</small></div></div>
+    </div>
+</section>
+
+<!-- =====================================================
+     STYLE GALLERY
+===================================================== -->
+<section class="style-gallery-section">
+    <div class="container">
+        <div class="section-heading">
+            <span>VANTOR LOOKS</span>
+            <h2>Follow The VANTOR Look</h2>
+            <p>Editorial-inspired style moments for everyday wear.</p>
+        </div>
+        <div class="style-gallery-grid">
+            <div class="style-gallery-card tone-one"><span>01</span><strong>Daily Uniform</strong></div>
+            <div class="style-gallery-card tone-two"><span>02</span><strong>Street Edit</strong></div>
+            <div class="style-gallery-card tone-three"><span>03</span><strong>After Dark</strong></div>
+            <div class="style-gallery-card tone-four"><span>04</span><strong>Weekend Fit</strong></div>
+            <div class="style-gallery-card tone-five"><span>05</span><strong>Minimal Mood</strong></div>
+            <div class="style-gallery-card tone-six"><span>06</span><strong>New Season</strong></div>
+        </div>
+        <div class="social-handle">@VANTOR <span>Follow the drop.</span></div>
+    </div>
+</section>
+
+<!-- =====================================================
+     NEWSLETTER
+===================================================== -->
+<section class="newsletter-section">
+    <div class="container newsletter-box">
+        <div>
+            <span>VANTOR LIST</span>
+            <h2>Be First In Line.</h2>
+            <p>Get early access to new drops and exclusive offers.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+            <input id="newsletterEmail" type="email" placeholder="Your email address" required>
+            <button type="submit">Join The List</button>
+        </form>
+    </div>
+</section>
+
+<!-- =====================================================
      WHY VANTOR
 ===================================================== -->
 
@@ -2133,38 +2229,18 @@ footer{
      FOOTER
 ===================================================== -->
 
-<footer>
-
-    <div class="footer-inner">
-
-        <div
-            class="footer-brand"
-            id="footerBrand"
-        >
-            VANTOR
+<footer class="site-footer">
+    <div class="container footer-grid">
+        <div class="footer-main">
+            <div class="footer-brand" id="footerBrand">VANTOR</div>
+            <p class="footer-text" id="footerTagline">Modern fashion for everyday movement.</p>
+            <div class="footer-socials"><a href="#home">Instagram</a><a href="#home">TikTok</a><a href="#home">Facebook</a></div>
         </div>
-
-
-        <div
-            class="footer-text"
-            id="footerTagline"
-        >
-            Modern Fashion Store
-        </div>
-
-
-        <div class="footer-copy">
-
-            ©
-
-            <span id="footerYear"></span>
-
-            VANTOR. All rights reserved.
-
-        </div>
-
+        <div class="footer-col"><h4>Shop</h4><a href="#services">Categories</a><a href="#offers">Deals</a><a href="#new-arrivals">New Arrivals</a><a href="#work">Collections</a></div>
+        <div class="footer-col"><h4>Customer Care</h4><a href="#why-vantor">Shipping</a><a href="#why-vantor">Secure Orders</a><a href="#testimonials">Reviews</a><a href="#home">Size Guide</a></div>
+        <div class="footer-col"><h4>VANTOR</h4><a href="#about">About Us</a><a href="#clients">Style Edit</a><a href="#new-arrivals">Wishlist</a><a href="#home">Back To Top ↑</a></div>
     </div>
-
+    <div class="container footer-bottom"><span>© <span id="footerYear"></span> VANTOR. All rights reserved.</span><span>Designed for everyday movement.</span></div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -4239,6 +4315,8 @@ function renderCart(){
     const count=cart.reduce((n,x)=>n+(Number(x.qty)||1),0);
     const countEl=document.getElementById("cartCount");
     if(countEl)countEl.textContent=count;
+    const navCountEl=document.getElementById("navCartCount");
+    if(navCountEl)navCountEl.textContent=count;
     const items=document.getElementById("cartItems");
     const totalEl=document.getElementById("cartTotal");
     if(!items)return;
@@ -4256,11 +4334,17 @@ function renderCart(){
             : `<div class="cart-thumb">V</div>`;
         return `<div class="cart-item">
             ${media}
-            <div><h4>${escapeHtml(item.name)}</h4><p>${escapeHtml(item.price||"Price on request")}${item.size ? ` · ${escapeHtml(item.size)}` : ""}${item.color ? ` · ${escapeHtml(item.color)}` : ""} · Qty ${Number(item.qty)||1}</p></div>
+            <div class="cart-item-info"><h4>${escapeHtml(item.name)}</h4><p>${escapeHtml(item.price||"Price on request")}${item.size ? ` · ${escapeHtml(item.size)}` : ""}${item.color ? ` · ${escapeHtml(item.color)}` : ""}</p><div class="cart-qty"><button type="button" onclick="changeCartQty(${i},-1)">−</button><span>${Number(item.qty)||1}</span><button type="button" onclick="changeCartQty(${i},1)">+</button></div></div>
             <button class="cart-remove" type="button" onclick="removeFromCart(${i})">Remove</button>
         </div>`;
     }).join("");
     if(totalEl)totalEl.textContent=total ? `EGP ${total.toLocaleString()}` : "Price on request";
+}
+function changeCartQty(index,delta){
+    const cart=getCart();
+    if(!cart[index])return;
+    cart[index].qty=Math.max(1,(Number(cart[index].qty)||1)+delta);
+    saveCart(cart);
 }
 function removeFromCart(index){
     const cart=getCart();
