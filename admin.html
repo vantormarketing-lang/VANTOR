@@ -3840,12 +3840,79 @@ async function deleteCloudRecord(key,id){
         return {ok:true, skipped:true};
     }
 
-    const numericId = Number(id);
-    if(!Number.isFinite(numericId)){
-        return {ok:false, error:"Invalid Supabase record id."};
-    }
-
     try{
+        if(cloudWriteRevision[key] !== revision){
+            return {ok:false, error:"Cloud operation was superseded by a newer change."};
+        }
+
+        let remoteId = null;
+        const numericId = Number(id);
+
+        // Normal case: the local record already has the Supabase BIGINT id.
+        if(Number.isInteger(numericId) && numericId > 0 && String(id).match(/^\\d+$/)){
+            remoteId = numericId;
+        }else{
+            // Older/local records may still have browser-generated ids.
+            // Find their exact Supabase row by comparing the local record fields.
+            const localItems = getData(key);
+            const localItem = localItems.find(item => String(item.id) === String(id));
+
+            if(!localItem){
+                return {ok:false, error:"The record was not found in local data."};
+            }
+
+            const remoteResult = await supabaseClient
+                .from(table)
+                .select("*");
+
+            if(remoteResult.error){
+                return {ok:false, error:remoteResult.error.message};
+            }
+
+            const rows = remoteResult.data || [];
+            const normalize = value => String(value ?? "").trim();
+
+            remoteId = null;
+            for(const row of rows){
+                let matches = false;
+
+                if(key === "vantor_offers"){
+                    matches =
+                        normalize(row.title) === normalize(localItem.title || localItem.name) &&
+                        normalize(row.image) === normalize(localItem.image) &&
+                        normalize(row.description) === normalize(localItem.description);
+                }else if(key === "vantor_services"){
+                    matches =
+                        normalize(row.title) === normalize(localItem.title || localItem.name) &&
+                        normalize(row.image) === normalize(localItem.image) &&
+                        normalize(row.description) === normalize(localItem.description);
+                }else if(key === "vantor_projects"){
+                    matches =
+                        normalize(row.title) === normalize(localItem.title || localItem.name) &&
+                        normalize(row.image) === normalize(localItem.image) &&
+                        normalize(row.description) === normalize(localItem.description);
+                }else if(key === "vantor_clients"){
+                    matches =
+                        normalize(row.name) === normalize(localItem.name) &&
+                        normalize(row.email) === normalize(localItem.email) &&
+                        normalize(row.phone) === normalize(localItem.phone);
+                }else if(key === "vantor_testimonials"){
+                    matches =
+                        normalize(row.name) === normalize(localItem.name) &&
+                        normalize(row.message || row.text) === normalize(localItem.message || localItem.text);
+                }
+
+                if(matches){
+                    remoteId = Number(row.id);
+                    break;
+                }
+            }
+        }
+
+        if(!Number.isFinite(remoteId)){
+            return {ok:false, error:"Could not match this item to its Supabase record."};
+        }
+
         if(cloudWriteRevision[key] !== revision){
             return {ok:false, error:"Cloud operation was superseded by a newer change."};
         }
@@ -3853,16 +3920,29 @@ async function deleteCloudRecord(key,id){
         const result = await supabaseClient
             .from(table)
             .delete()
-            .eq("id",numericId);
+            .eq("id",remoteId);
 
         if(result.error){
-            console.error("VANTOR Supabase direct delete failed:",table,numericId,result.error.message);
+            console.error("VANTOR Supabase direct delete failed:",table,remoteId,result.error.message);
             return {ok:false, error:result.error.message};
+        }
+
+        // Verify the row is really gone before allowing the local delete.
+        const verify = await supabaseClient
+            .from(table)
+            .select("id")
+            .eq("id",remoteId);
+
+        if(verify.error){
+            return {ok:false, error:verify.error.message};
+        }
+        if((verify.data || []).length){
+            return {ok:false, error:"Supabase did not remove the record. Check DELETE permissions (RLS)."};
         }
 
         return {ok:true};
     }catch(error){
-        console.error("VANTOR Supabase direct delete error:",table,numericId,error);
+        console.error("VANTOR Supabase direct delete error:",table,id,error);
         return {ok:false, error:error.message || "Unknown Supabase error."};
     }
 }
@@ -5259,9 +5339,9 @@ async function deleteService(id){
 
 
 
-    setData(
+    localStorage.setItem(
         KEYS.services,
-        data
+        JSON.stringify(data)
     );
 
 
@@ -5606,9 +5686,9 @@ async function deleteOffer(id){
 
 
 
-    setData(
+    localStorage.setItem(
         KEYS.offers,
-        data
+        JSON.stringify(data)
     );
 
 
