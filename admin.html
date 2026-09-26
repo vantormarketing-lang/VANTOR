@@ -941,23 +941,6 @@ tr:hover td{
 
 
 /* =====================================================
-   MESSAGE
-===================================================== */
-
-.message-box{
-    background:#0a0909;
-    border:1px solid #26171c;
-    border-radius:8px;
-    padding:13px;
-    color:#aaa;
-    font-size:11px;
-    line-height:1.7;
-    white-space:pre-wrap;
-    max-width:450px;
-}
-
-
-/* =====================================================
    SETTINGS
 ===================================================== */
 
@@ -1394,14 +1377,7 @@ textarea{
         width:100%;
         min-height:46px;
     }
-
-    .message-box{
-        max-width:100%;
-        overflow-wrap:anywhere;
-        word-break:break-word;
-    }
-
-    .settings-section{
+.settings-section{
         padding:16px;
     }
 
@@ -1727,22 +1703,7 @@ textarea{
             <span class="side-icon">▣</span>
             Orders
         </button>
-
-
-        <div class="nav-section-title">
-            Communication
-        </div>
-
-        <button
-            class="side-link"
-            data-section="messages"
-        >
-            <span class="side-icon">✉</span>
-            Messages
-        </button>
-
-
-        <div class="nav-section-title">
+<div class="nav-section-title">
             System
         </div>
 
@@ -1990,25 +1951,7 @@ textarea{
             </div>
 
         </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Unread Messages
-            </div>
-
-            <div
-                class="stat-number"
-                id="statUnread"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
+<div class="stat-card">
 
             <div class="stat-label">
                 Admin Users
@@ -2043,30 +1986,7 @@ textarea{
 
 
     <div class="dashboard-grid">
-
-        <div class="panel">
-
-            <div class="panel-head">
-
-                <h3>
-                    Recent Messages
-                </h3>
-
-                <span>
-                    Latest inquiries
-                </span>
-
-            </div>
-
-            <div
-                class="panel-body"
-                id="recentMessages"
-            ></div>
-
-        </div>
-
-
-        <div class="panel">
+<div class="panel">
 
             <div class="panel-head">
 
@@ -2400,60 +2320,6 @@ textarea{
     <div
         class="table-wrap"
         id="testimonialsTableWrap"
-    ></div>
-
-</section>
-
-
-<!-- =====================================================
-     MESSAGES
-===================================================== -->
-
-<section
-    class="admin-section"
-    id="section-messages"
->
-
-    <div class="section-header">
-
-        <div>
-
-            <h2>
-                Messages
-            </h2>
-
-            <p>
-                Messages submitted from your website.
-            </p>
-
-        </div>
-
-
-        <button
-            class="add-btn"
-            id="markAllReadBtn"
-        >
-            Mark All Read
-        </button>
-
-    </div>
-
-
-    <div class="toolbar">
-
-        <input
-            class="search-input"
-            id="messageSearch"
-            type="search"
-            placeholder="Search messages..."
-        >
-
-    </div>
-
-
-    <div
-        class="table-wrap"
-        id="messagesTableWrap"
     ></div>
 
 </section>
@@ -4546,8 +4412,6 @@ const sectionNames = {
     clients:"Customers",
 
     testimonials:"Reviews",
-
-    messages:"Messages",
 
     orders:"Orders",
 
@@ -6752,129 +6616,6 @@ function deleteAdmin(id){
 
 
 /* =====================================================
-   MESSAGES
-===================================================== */
-
-function markMessageRead(id){
-
-    const data =
-        getData(
-            KEYS.messages
-        );
-
-
-    const item =
-        data.find(
-            item =>
-                String(item.id) ===
-                String(id)
-        );
-
-
-    if(!item){
-        return;
-    }
-
-
-    item.read =
-        true;
-
-    item.status =
-        "Read";
-
-
-    setData(
-        KEYS.messages,
-        data
-    );
-
-
-    renderAll();
-
-}
-
-
-function deleteMessage(id){
-
-    if(
-        !confirm(
-            "Delete this message?"
-        )
-    ){
-
-        return;
-
-    }
-
-
-    const data =
-        getData(
-            KEYS.messages
-        )
-        .filter(
-            item =>
-                String(item.id) !==
-                String(id)
-        );
-
-
-    setData(
-        KEYS.messages,
-        data
-    );
-
-
-    renderAll();
-
-    showToast(
-        "Message deleted."
-    );
-
-}
-
-
-document
-    .getElementById("markAllReadBtn")
-    .addEventListener(
-        "click",
-        function(){
-
-            const data =
-                getData(
-                    KEYS.messages
-                );
-
-
-            data.forEach(
-                item => {
-
-                    item.read =
-                        true;
-
-                    item.status =
-                        "Read";
-
-                }
-            );
-
-
-            setData(
-                KEYS.messages,
-                data
-            );
-
-
-            renderAll();
-
-            showToast(
-                "All messages marked as read."
-            );
-
-        }
-    );
-
-
-/* =====================================================
    SETTINGS
 ===================================================== */
 
@@ -8022,188 +7763,17 @@ function renderReviews(){
 
 
 /* =====================================================
-   RENDER MESSAGES
+   WHATSAPP ORDER LINK
 ===================================================== */
-
-function renderMessages(){
-
-    const query =
-        document.getElementById(
-            "messageSearch"
-        ).value
-        .trim()
-        .toLowerCase();
-
-
-    const data =
-        getData(
-            KEYS.messages
-        )
-        .filter(
-            item =>
-                !query ||
-                String(item.name || "")
-                    .toLowerCase()
-                    .includes(query) ||
-                String(item.email || "")
-                    .toLowerCase()
-                    .includes(query) ||
-                String(item.subject || "")
-                    .toLowerCase()
-                    .includes(query) ||
-                String(item.message || "")
-                    .toLowerCase()
-                    .includes(query)
-        )
-        .reverse();
-
-
-    const wrap =
-        document.getElementById(
-            "messagesTableWrap"
-        );
-
-
-    if(!data.length){
-
-        wrap.innerHTML = `
-            <div class="empty">
-                <strong>No messages found</strong>
-                Website contact form submissions will appear here.
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    wrap.innerHTML = `
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Sender</th>
-                    <th>Subject</th>
-                    <th>Message</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                ${data.map(item => `
-
-                    <tr>
-
-                        <td>
-
-                            <div class="item-name">
-                                ${escapeHtml(
-                                    item.name || "Unknown"
-                                )}
-                            </div>
-
-                            <div class="item-sub">
-                                ${escapeHtml(
-                                    item.email || ""
-                                )}
-                            </div>
-
-                        </td>
-
-
-                        <td>
-                            ${escapeHtml(
-                                item.subject || "-"
-                            )}
-                        </td>
-
-
-                        <td>
-
-                            <div class="message-box">
-                                ${escapeHtml(
-                                    item.message || ""
-                                )}
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="status ${
-                                item.read ||
-                                item.status === "Read"
-                                ? "read"
-                                : "unread"
-                            }">
-
-                                ${
-                                    item.read ||
-                                    item.status === "Read"
-                                    ? "Read"
-                                    : "Unread"
-                                }
-
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="action-group">
-
-                                ${
-                                    item.read ||
-                                    item.status === "Read"
-                                    ?
-                                    ""
-                                    :
-                                    `
-                                    <button
-                                        class="action-btn"
-                                        onclick="markMessageRead('${escapeHtml(item.id)}')"
-                                    >
-                                        Mark Read
-                                    </button>
-                                    `
-                                }
-
-
-                                <button
-                                    class="action-btn danger"
-                                    onclick="deleteMessage('${escapeHtml(item.id)}')"
-                                >
-                                    Delete
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                `).join("")}
-
-            </tbody>
-
-        </table>
-
-    `;
-
+function getWhatsAppUrl(phone, orderId){
+    let digits = String(phone || "").replace(/\D/g, "");
+    if(digits.startsWith("00")) digits = digits.slice(2);
+    if(digits.startsWith("0")) digits = "20" + digits.slice(1);
+    if(!digits.startsWith("20") && digits.length >= 10) digits = "20" + digits;
+    if(digits.length < 10) return "";
+    const message = `Hello, I'm contacting you about VANTOR order ${orderId || ""}.`;
+    return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
-
-
 
 /* =====================================================
    RENDER ORDERS
@@ -8230,14 +7800,14 @@ function renderOrders(){
       const date=order.createdAt?new Date(order.createdAt).toLocaleString():"-";
       return `<tr>
         <td><div class="item-name">${escapeHtml(order.id||"-")}</div><div class="order-meta">${escapeHtml(order.email||"")}</div></td>
-        <td><div class="item-name">${escapeHtml(order.customerName||"-")}</div><div class="item-sub">${escapeHtml(order.phone||"")}<br>${escapeHtml(order.address||"")}</div></td>
+        <td><div class="item-name">${escapeHtml(order.customerName||"-")}</div><div class="item-sub">${getWhatsAppUrl(order.phone, order.id) ? `<a href="${escapeHtml(getWhatsAppUrl(order.phone, order.id))}" target="_blank" rel="noopener noreferrer" style="color:#d8a0ad;text-decoration:none;">${escapeHtml(order.phone||"")}</a>` : escapeHtml(order.phone||"")}<br>${escapeHtml(order.address||"")}</div></td>
         <td><div class="order-items-box">${items||"-"}</div></td>
         <td><strong>EGP ${Number(order.total||0).toLocaleString()}</strong></td>
         <td><select class="order-status-select" onchange="updateOrderStatus('${escapeHtml(order.id)}',this.value)">
           ${["New","Confirmed","Preparing","Shipped","Completed","Cancelled"].map(s=>`<option value="${s}" ${order.status===s?"selected":""}>${s}</option>`).join("")}
         </select></td>
         <td>${escapeHtml(date)}</td>
-        <td><button class="action-btn danger" onclick="deleteOrder('${escapeHtml(order.id)}')">Delete</button></td>
+        <td><div class="action-group">${getWhatsAppUrl(order.phone, order.id) ? `<a class="action-btn" href="${escapeHtml(getWhatsAppUrl(order.phone, order.id))}" target="_blank" rel="noopener noreferrer">WhatsApp</a>` : `<span class="action-btn" style="opacity:.45;pointer-events:none;">No WhatsApp</span>`}<button class="action-btn danger" onclick="deleteOrder('${escapeHtml(order.id)}')">Delete</button></div></td>
       </tr>`;
     }).join("")}
     </tbody></table>`;
@@ -8434,13 +8004,7 @@ function renderDashboard(){
 
     const testimonials =
         getData(KEYS.testimonials);
-
-
-    const messages =
-        getData(KEYS.messages);
-
-
-    const admins =
+const admins =
         getData(KEYS.admins);
 
 
@@ -8497,23 +8061,7 @@ function renderDashboard(){
         "statPendingOrders"
     ).textContent =
         pendingOrders;
-
-
-    const unread =
-        messages.filter(
-            item =>
-                !item.read &&
-                item.status !== "Read"
-        ).length;
-
-
-    document.getElementById(
-        "statUnread"
-    ).textContent =
-        unread;
-
-
-    document.getElementById(
+document.getElementById(
         "statAdmins"
     ).textContent =
         admins.length;
@@ -8542,128 +8090,6 @@ function renderDashboard(){
         "statActive"
     ).textContent =
         active;
-
-
-    const recent =
-        messages
-        .slice()
-        .sort(
-            (a,b) =>
-                new Date(
-                    b.createdAt || 0
-                ) -
-                new Date(
-                    a.createdAt || 0
-                )
-        )
-        .slice(0,5);
-
-
-    const box =
-        document.getElementById(
-            "recentMessages"
-        );
-
-
-    if(!recent.length){
-
-        box.innerHTML = `
-            <div class="empty">
-                <strong>No messages yet</strong>
-                Website messages will appear here.
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    box.innerHTML =
-        recent.map(item => `
-
-            <div
-                style="
-                    padding:13px 0;
-                    border-bottom:1px solid #21151a;
-                "
-            >
-
-                <div
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        gap:10px;
-                    "
-                >
-
-                    <div>
-
-                        <div
-                            style="
-                                color:#ddd;
-                                font-size:11px;
-                                font-weight:bold;
-                            "
-                        >
-                            ${escapeHtml(
-                                item.name ||
-                                "Unknown"
-                            )}
-                        </div>
-
-                        <div
-                            style="
-                                color:#555;
-                                font-size:9px;
-                                margin-top:3px;
-                            "
-                        >
-                            ${escapeHtml(
-                                item.email ||
-                                ""
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <span class="status ${
-                        item.read ||
-                        item.status === "Read"
-                        ? "read"
-                        : "unread"
-                    }">
-
-                        ${
-                            item.read ||
-                            item.status === "Read"
-                            ? "Read"
-                            : "Unread"
-                        }
-
-                    </span>
-
-                </div>
-
-
-                <div
-                    style="
-                        color:#777;
-                        font-size:10px;
-                        margin-top:9px;
-                    "
-                >
-                    ${escapeHtml(
-                        item.subject ||
-                        "No subject"
-                    )}
-                </div>
-
-            </div>
-
-        `).join("");
-
 }
 
 
@@ -8676,8 +8102,7 @@ function renderDashboard(){
     "offerSearch",
     "projectSearch",
     "clientSearch",
-    "testimonialSearch",
-    "messageSearch"
+    "testimonialSearch"
 ]
 .forEach(id => {
 
@@ -8706,12 +8131,7 @@ function renderDashboard(){
                 if(id === "testimonialSearch"){
                     renderReviews();
                 }
-
-                if(id === "messageSearch"){
-                    renderMessages();
-                }
-
-            }
+}
         );
 
 });
@@ -8800,7 +8220,7 @@ document
 
             const confirmed =
                 confirm(
-                    "Reset all VANTOR website data to demo defaults? This will remove current Products, Deals, Collections, Customers, Reviews and Messages."
+                    "Reset all VANTOR website data to demo defaults? This will remove current Products, Deals, Collections, Customers and Reviews."
                 );
 
 
@@ -8917,7 +8337,6 @@ function renderAll(){
 
     renderReviews();
 
-    renderMessages();
 
     renderOrders();
 
