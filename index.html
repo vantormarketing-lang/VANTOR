@@ -152,7 +152,7 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 
 
 <section id="dashboard" class="container" style="padding-top:28px">
-  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Pick up where you left off, track your progress, and keep your next goal visible.</p></div>
+  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Student Dashboard</h2><p>Pick up where you left off, track your progress, and keep your next goal visible.</p></div>
   <div class="grid" style="grid-template-columns:repeat(4,1fr)">
     <div class="review"><div class="eyebrow">In progress</div><h3 style="font-size:30px;margin:8px 0">03</h3><p>English Courses currently active</p></div>
     <div class="review"><div class="eyebrow">Completed</div><h3 style="font-size:30px;margin:8px 0">08</h3><p>English Courses finished</p></div>
@@ -162,7 +162,7 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
   <div class="cta" style="margin-top:22px">
     <div>
       <div class="eyebrow">Continue learning</div>
-      <h3 style="font-size:26px;margin:6px 0">Modern Web Development</h3>
+      <h3 style="font-size:26px;margin:6px 0">English Learning</h3>
       <p>Your next lesson is JavaScript DOM &amp; Events. Keep your 7-day learning streak going.</p>
     </div>
     <button class="btn primary" onclick="showToast('Opening your next lesson...')">Continue Course →</button>
@@ -187,11 +187,11 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 
 <section id="dashboard">
   <div class="container">
-    <div class="head"><div class="eyebrow">Your learning hub</div><h2>Student Dashboard</h2><p>Everything a learner needs in one place: progress, streaks, saved courses, certificates and upcoming tasks.</p></div>
+    <div class="head"><div class="eyebrow">Your learning hub</div><h2>Student Student Dashboard</h2><p>Everything a learner needs in one place: progress, streaks, saved courses, certificates and upcoming tasks.</p></div>
     <div class="dashboard">
       <div class="dash">
         <h3>My English</h3>
-        <div class="course-progress"><div class="cp"><span>Modern Web Development</span><b>64%</b></div><div class="bar"><i style="width:64%"></i></div></div>
+        <div class="course-progress"><div class="cp"><span>English Learning</span><b>64%</b></div><div class="bar"><i style="width:64%"></i></div></div>
         <div class="course-progress"><div class="cp"><span>Digital Marketing Mastery</span><b>38%</b></div><div class="bar"><i style="width:38%"></i></div></div>
         <div class="course-progress"><div class="cp"><span>UI/UX Design from Zero</span><b>82%</b></div><div class="bar"><i style="width:82%"></i></div></div>
       </div>
@@ -342,6 +342,7 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 
 <script>
 const courses=[...document.querySelectorAll('.course')];
+function filterCourses(){ return filterEnglishCourses(); }
 function filterEnglishCourses(){
   const q=document.getElementById('courseSearch').value.toLowerCase().trim();
   const cat=document.getElementById('courseCategory').value;
@@ -400,7 +401,7 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='
     <div class="course-top">
       <div>
         <div class="eyebrow">DOMA ACADEMY • COURSE</div>
-        <h2 id="courseTitle">Modern Web Development</h2>
+        <h2 id="courseTitle">English Learning</h2>
         <p id="courseSubtitle">Build practical skills through guided lessons and projects.</p>
       </div>
       <button class="course-close" id="courseClose" aria-label="Close">×</button>
@@ -451,7 +452,7 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='
 <script id="doma-v2-script">
 (function(){
   const courses = {
-    "Modern Web Development":{
+    "English Learning":{
       subtitle:"HTML, CSS, JavaScript and practical projects.",
       lessons:[
         ["Welcome to Web Development","8 min","Video lesson"],
