@@ -33,7 +33,7 @@
 </div></main></div>
 <div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Edit</h3><button class="btn secondary" id="closeModal">Close</button></div><div id="modalBody"></div></div></div><div id="toast" class="toast"></div>
 <script>
-const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';const SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';const db=supabase.createClient(SB_URL,SB_KEY);let grades=[];let current='dashboard';let starting=false;let started=false;
+const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';const SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';const db=supabase.createClient(SB_URL,SB_KEY);let grades=[];let current='dashboard';const adminState={starting:false,started:false};
 const $=id=>document.getElementById(id);const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function toast(m){$('toast').textContent=m;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2600)}
 function show(name){current=name;document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id==='section-'+name));document.querySelectorAll('.nav button[data-section]').forEach(x=>x.classList.toggle('active',x.dataset.section===name));$('pageTitle').textContent=document.querySelector('.nav button[data-section="'+name+'"]')?.textContent.trim()||'Dashboard';$('sidebar').classList.remove('open');loadSection(name)}
@@ -69,9 +69,9 @@ async function loadNotifications(){const r=await db.from('notifications').select
 function loadSection(n){({dashboard:loadDashboard,lessons:loadLessons,exams:loadExams,homework:loadHomework,students:loadStudents,sales:loadSales,progress:loadProgress,results:loadResults,certificates:loadCertificates,reviews:loadReviews,notifications:loadNotifications}[n]||(()=>{}))()}
 $('lessonRefresh').onclick=loadLessons;$('lessonType').onchange=loadLessons;$('lessonGrade').onchange=loadLessons;$('examRefresh').onclick=loadExams;$('examGrade').onchange=loadExams;$('hwRefresh').onclick=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('salesRefresh').onclick=loadSales;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh').onclick=loadCertificates;$('reviewsRefresh').onclick=loadReviews;$('notifRefresh').onclick=loadNotifications;
 async function start(){
-  if(started)return true;
-  if(starting)return false;
-  starting=true;
+  if(adminState.started)return true;
+  if(adminState.starting)return false;
+  adminState.starting=true;
   try{
     const session=(await db.auth.getSession()).data.session;
     if(!session){$('loginError').textContent='No active Supabase session. Please login again.';return false;}
@@ -86,14 +86,14 @@ async function start(){
     $('login').style.display='none';
     $('app').style.display='block';
     await loadGrades();
-    started=true;
+    adminState.started=true;
     show('dashboard');
     return true;
   }catch(err){
     console.error('DOMA Admin startup error:',err);
     $('loginError').textContent='Admin startup failed: '+(err?.message||String(err));
     return false;
-  }finally{starting=false;}
+  }finally{adminState.starting=false;}
 }
 (async()=>{try{const {data}=await db.auth.getSession();if(data.session)await start()}catch(err){console.error('Session check failed:',err)}})();
 </script>
