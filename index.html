@@ -65,6 +65,44 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 }
 
 </style>
+
+<style id="doma-v2-styles">
+.course-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:none;overflow:auto;padding:28px}
+.course-modal.open{display:block}
+.course-shell{max-width:1180px;margin:auto;background:#100a0d;border:1px solid rgba(192,82,105,.28);border-radius:24px;overflow:hidden;box-shadow:0 25px 80px rgba(0,0,0,.6)}
+.course-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:28px;border-bottom:1px solid rgba(255,255,255,.08)}
+.course-top h2{margin:4px 0 8px;font-size:32px}
+.course-top p{margin:0;color:#b9adb1}
+.course-close{border:1px solid rgba(255,255,255,.12);background:#181013;color:#fff;border-radius:12px;width:42px;height:42px;font-size:22px;cursor:pointer}
+.course-grid{display:grid;grid-template-columns:1.45fr .75fr;min-height:520px}
+.player{padding:28px;border-right:1px solid rgba(255,255,255,.08)}
+.video-box{aspect-ratio:16/9;background:linear-gradient(135deg,#1d0b11,#080808);border:1px solid rgba(192,82,105,.22);border-radius:18px;display:grid;place-items:center;text-align:center;padding:30px}
+.video-box .play{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#9d304a;font-size:28px;margin:auto auto 14px}
+.lesson-info{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:20px}
+.lesson-info h3{margin:0 0 6px}
+.lesson-info p{margin:0;color:#aaa}
+.progress-wrap{margin-top:18px}
+.progress-line{height:8px;background:#21161a;border-radius:99px;overflow:hidden}
+.progress-line span{display:block;height:100%;background:#9d304a;border-radius:99px}
+.lesson-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.lesson-actions button{border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:700}
+.btn-next{background:#9d304a;color:#fff}.btn-ghost{background:#21161a;color:#eee}
+.curriculum{padding:22px}
+.curriculum h3{margin:4px 0 14px}
+.lesson-list{display:grid;gap:8px;max-height:560px;overflow:auto;padding-right:4px}
+.lesson-item{width:100%;text-align:left;background:#160e11;border:1px solid rgba(255,255,255,.07);color:#eee;border-radius:12px;padding:13px;cursor:pointer;display:flex;gap:10px;align-items:center}
+.lesson-item.active{border-color:#9d304a;background:#211015}
+.lesson-item small{display:block;color:#94878b;margin-top:3px}
+.lesson-num{min-width:30px;height:30px;border-radius:8px;background:#25171c;display:grid;place-items:center;color:#c05269;font-weight:800}
+.resource-row{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.resource{padding:10px 12px;border-radius:10px;background:#160e11;border:1px solid rgba(255,255,255,.08);color:#ddd}
+.course-complete{margin-top:18px;padding:16px;border-radius:14px;background:rgba(118,35,55,.16);border:1px solid rgba(192,82,105,.2);display:none}
+.course-complete.show{display:block}
+@media(max-width:850px){
+ .course-modal{padding:12px}.course-grid{grid-template-columns:1fr}.player{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.course-top h2{font-size:25px}
+}
+</style>
+
 </head>
 <body>
 
@@ -335,5 +373,218 @@ function closeModal(){document.getElementById('modal').classList.remove('show')}
 function fakeSubmit(msg){closeModal();showToast(msg)}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 </script>
+
+<div class="course-modal" id="courseModal" aria-hidden="true">
+  <div class="course-shell">
+    <div class="course-top">
+      <div>
+        <div class="eyebrow">DOMA ACADEMY • COURSE</div>
+        <h2 id="courseTitle">Modern Web Development</h2>
+        <p id="courseSubtitle">Build practical skills through guided lessons and projects.</p>
+      </div>
+      <button class="course-close" id="courseClose" aria-label="Close">×</button>
+    </div>
+    <div class="course-grid">
+      <section class="player">
+        <div class="video-box">
+          <div>
+            <div class="play">▶</div>
+            <strong id="lessonTitle">Welcome to the course</strong>
+            <p id="lessonDescription">Your lesson player is ready. Connect your real video URLs later through the backend.</p>
+          </div>
+        </div>
+        <div class="lesson-info">
+          <div>
+            <h3 id="lessonHeading">Lesson 1 — Welcome</h3>
+            <p id="lessonMeta">8 min • Video lesson</p>
+          </div>
+          <strong id="progressText">0%</strong>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-line"><span id="courseProgress" style="width:0%"></span></div>
+        </div>
+        <div class="lesson-actions">
+          <button class="btn-ghost" id="prevLesson">← Previous</button>
+          <button class="btn-next" id="completeLesson">Mark complete</button>
+          <button class="btn-next" id="nextLesson">Next lesson →</button>
+        </div>
+        <div class="resource-row">
+          <div class="resource">📄 Course notes</div>
+          <div class="resource">📥 Practice files</div>
+          <div class="resource">🧠 Quiz</div>
+        </div>
+        <div class="course-complete" id="courseComplete">
+          <strong>🎉 Course completed!</strong>
+          <p>You finished every lesson. This area is ready for certificate generation when Supabase is connected.</p>
+        </div>
+      </section>
+      <aside class="curriculum">
+        <h3>Course Curriculum</h3>
+        <div class="lesson-list" id="lessonList"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+
+<script id="doma-v2-script">
+(function(){
+  const courses = {
+    "Modern Web Development":{
+      subtitle:"HTML, CSS, JavaScript and practical projects.",
+      lessons:[
+        ["Welcome to Web Development","8 min","Video lesson"],
+        ["HTML Foundations","18 min","Video lesson"],
+        ["CSS Layout & Responsive Design","24 min","Video lesson"],
+        ["JavaScript Essentials","27 min","Video lesson"],
+        ["Build Your First Project","42 min","Project"],
+        ["Final Challenge","35 min","Assessment"]
+      ]
+    },
+    "Digital Marketing Mastery":{
+      subtitle:"Build campaigns, content systems and measurable growth.",
+      lessons:[
+        ["Marketing Foundations","12 min","Video lesson"],
+        ["Audience & Positioning","19 min","Video lesson"],
+        ["Content Strategy","24 min","Workshop"],
+        ["Social Media Campaigns","28 min","Video lesson"],
+        ["Analytics & KPIs","21 min","Video lesson"],
+        ["Final Campaign Project","45 min","Project"]
+      ]
+    },
+    "UI/UX Design from Zero":{
+      subtitle:"Learn research, wireframes, interfaces and design systems.",
+      lessons:[
+        ["UX Mindset","10 min","Video lesson"],
+        ["User Research","22 min","Workshop"],
+        ["Wireframing","20 min","Practice"],
+        ["UI Fundamentals","26 min","Video lesson"],
+        ["Design Systems","25 min","Workshop"],
+        ["Portfolio Project","50 min","Project"]
+      ]
+    },
+    "Start & Grow a Business":{
+      subtitle:"Turn an idea into a practical business roadmap.",
+      lessons:[
+        ["Idea Validation","15 min","Video lesson"],
+        ["Customer Discovery","20 min","Workshop"],
+        ["Business Model","24 min","Workshop"],
+        ["Pricing & Offers","18 min","Video lesson"],
+        ["Marketing Plan","30 min","Project"],
+        ["Launch Checklist","16 min","Assessment"]
+      ]
+    },
+    "Productivity & Focus":{
+      subtitle:"Create a sustainable system for focused work.",
+      lessons:[
+        ["Focus Foundations","9 min","Video lesson"],
+        ["Time Blocking","14 min","Practice"],
+        ["Deep Work","18 min","Video lesson"],
+        ["Planning Systems","16 min","Workshop"],
+        ["Habits & Consistency","20 min","Video lesson"],
+        ["Build Your Weekly System","30 min","Project"]
+      ]
+    },
+    "Python for Data & Automation":{
+      subtitle:"Use Python to automate tasks and work with data.",
+      lessons:[
+        ["Python Setup","12 min","Video lesson"],
+        ["Variables & Logic","22 min","Video lesson"],
+        ["Functions & Modules","25 min","Video lesson"],
+        ["Working With Data","30 min","Practice"],
+        ["Automation Scripts","35 min","Workshop"],
+        ["Final Automation Project","48 min","Project"]
+      ]
+    }
+  };
+
+  const modal=document.getElementById('courseModal');
+  if(!modal) return;
+  const title=document.getElementById('courseTitle');
+  const subtitle=document.getElementById('courseSubtitle');
+  const list=document.getElementById('lessonList');
+  const lessonTitle=document.getElementById('lessonTitle');
+  const lessonHeading=document.getElementById('lessonHeading');
+  const lessonDescription=document.getElementById('lessonDescription');
+  const lessonMeta=document.getElementById('lessonMeta');
+  const progress=document.getElementById('courseProgress');
+  const progressText=document.getElementById('progressText');
+  const completeBox=document.getElementById('courseComplete');
+  let currentCourse=null, current=0, completed=new Set();
+
+  function key(){ return 'doma_course_'+currentCourse; }
+
+  function render(){
+    const c=courses[currentCourse]; if(!c) return;
+    list.innerHTML='';
+    c.lessons.forEach((l,i)=>{
+      const b=document.createElement('button');
+      b.className='lesson-item'+(i===current?' active':'');
+      b.innerHTML='<span class="lesson-num">'+(completed.has(i)?'✓':(i+1))+'</span><span><strong>'+l[0]+'</strong><small>'+l[1]+' • '+l[2]+'</small></span>';
+      b.onclick=()=>{current=i;render();};
+      list.appendChild(b);
+    });
+    const l=c.lessons[current];
+    lessonTitle.textContent=l[0];
+    lessonHeading.textContent='Lesson '+(current+1)+' — '+l[0];
+    lessonMeta.textContent=l[1]+' • '+l[2];
+    lessonDescription.textContent='Follow this lesson, practice the skill, then mark it complete to update your learning progress.';
+    const pct=Math.round((completed.size/c.lessons.length)*100);
+    progress.style.width=pct+'%';
+    progressText.textContent=pct+'%';
+    completeBox.classList.toggle('show', completed.size===c.lessons.length);
+    localStorage.setItem(key(),JSON.stringify([...completed]));
+  }
+
+  function openCourse(name){
+    currentCourse=courses[name]?name:Object.keys(courses)[0];
+    title.textContent=currentCourse;
+    subtitle.textContent=courses[currentCourse].subtitle;
+    try{completed=new Set(JSON.parse(localStorage.getItem(key())||'[]'));}catch(e){completed=new Set();}
+    current=0; render();
+    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+
+  function closeCourse(){
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+
+  document.getElementById('courseClose').onclick=closeCourse;
+  modal.addEventListener('click',e=>{if(e.target===modal)closeCourse();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeCourse();});
+
+  document.getElementById('completeLesson').onclick=()=>{
+    completed.add(current); render();
+    if(current<courses[currentCourse].lessons.length-1) current++;
+    render();
+  };
+  document.getElementById('nextLesson').onclick=()=>{
+    if(current<courses[currentCourse].lessons.length-1){current++;render();}
+  };
+  document.getElementById('prevLesson').onclick=()=>{
+    if(current>0){current--;render();}
+  };
+
+  // Hook existing course buttons/cards without changing the original markup.
+  document.querySelectorAll('button,a,.course-card,.card').forEach(el=>{
+    const text=(el.textContent||'').trim();
+    const match=Object.keys(courses).find(n=>text.includes(n));
+    if(match && !el.dataset.domaCourseHook){
+      el.dataset.domaCourseHook='1';
+      el.addEventListener('click',e=>{
+        const href=el.getAttribute('href');
+        if(href && href!=='#') return;
+        e.preventDefault(); openCourse(match);
+      });
+    }
+  });
+
+  // Expose for any future course cards.
+  window.DOMAAcademyOpenCourse=openCourse;
+})();
+</script>
+
 </body>
 </html>
