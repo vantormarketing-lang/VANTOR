@@ -8658,6 +8658,49 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
 
+
+<script>
+const DOMA_CMS_URL="https://dtptxhkcogpoleftguas.supabase.co";
+const DOMA_CMS_KEY="sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL";
+let domaCMS=null, domaGrades=[];
+function domaCmsInit(){
+  if(window.supabase && !domaCMS) domaCMS=window.supabase.createClient(DOMA_CMS_URL,DOMA_CMS_KEY);
+  if(domaCMS) domaCmsLoad();
+}
+async function domaCmsLoad(){
+  if(!domaCMS) return;
+  const {data:grades,error}=await domaCMS.from('grades').select('*').eq('is_active',true).order('sort_order');
+  if(error){console.warn(error);return;}
+  domaGrades=grades||[];
+  const sel=document.getElementById('cmsGrade');
+  if(sel) sel.innerHTML='<option value="">Select grade</option>'+domaGrades.map(g=>`<option value="${g.id}">${escapeHtml(g.name)}</option>`).join('');
+  const {data:lessons}=await domaCMS.from('lessons').select('id,title,lesson_type,is_published,duration_minutes,grades(name)').order('created_at',{ascending:false}).limit(50);
+  const list=document.getElementById('cmsLessonList');
+  if(list) list.innerHTML=(lessons||[]).map(l=>`<div class="panel" style="padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;gap:12px;align-items:center"><div><strong>${escapeHtml(l.title)}</strong><div style="opacity:.7">${escapeHtml(l.grades?.name||'')} • ${escapeHtml(l.lesson_type)} • ${l.duration_minutes||0} min</div></div><button class="btn" onclick="domaCmsDeleteLesson('${l.id}')">Delete</button></div>`).join('')||'<p>No lessons yet.</p>';
+}
+async function domaCmsCreateLesson(){
+  const grade_id=document.getElementById('cmsGrade')?.value;
+  const title=document.getElementById('cmsLessonTitle')?.value.trim();
+  const lesson_type=document.getElementById('cmsLessonType')?.value;
+  const content=document.getElementById('cmsLessonContent')?.value.trim();
+  const duration_minutes=Number(document.getElementById('cmsDuration')?.value||0);
+  if(!grade_id||!title) return alert('Select a grade and enter a lesson title.');
+  const {error}=await domaCMS.from('lessons').insert({grade_id,title,lesson_type,content,duration_minutes,is_published:true});
+  if(error) return alert(error.message);
+  document.getElementById('cmsLessonTitle').value='';
+  document.getElementById('cmsLessonContent').value='';
+  domaCmsLoad();
+}
+async function domaCmsDeleteLesson(id){
+  if(!confirm('Delete this lesson permanently?')) return;
+  const {error}=await domaCMS.from('lessons').delete().eq('id',id);
+  if(error) return alert(error.message);
+  domaCmsLoad();
+}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+domaCmsInit();
+</script>
+
 </body>
 
 </html>
