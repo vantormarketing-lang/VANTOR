@@ -283,6 +283,44 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
   </div>
 </section>
 
+
+<!-- DOMA ACADEMY V4 — Exams & Quizzes -->
+<style>
+.exam-zone{margin-top:26px;padding:22px;background:#100b0d;border:1px solid #2d181f;border-radius:15px}
+.exam-zone h3{margin-bottom:7px}.exam-zone p{color:#888;font-size:12px}
+.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.exam-card{background:#0a0909;border:1px solid #2b181e;border-radius:12px;padding:16px}
+.exam-card h4{font-size:15px;margin-bottom:6px}.exam-meta{color:#777;font-size:10px;margin-bottom:12px}
+.exam-modal{position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(7px);z-index:10050;display:none;overflow:auto;padding:18px}
+.exam-modal.open{display:block}.exam-shell{max-width:920px;margin:auto;background:#100a0d;border:1px solid #512331;border-radius:18px;overflow:hidden}
+.exam-head{padding:20px;border-bottom:1px solid #2b181e;display:flex;justify-content:space-between;gap:15px}
+.exam-head h3{margin:0 0 4px}.exam-head p{margin:0;color:#888;font-size:11px}.exam-timer{font-weight:900;color:#e09aaa;white-space:nowrap}
+.exam-body{padding:20px}.question{background:#0b090a;border:1px solid #2b181e;border-radius:13px;padding:17px;margin-bottom:12px}
+.question b{display:block;margin-bottom:12px}.option{display:block;padding:10px 12px;border:1px solid #2b181e;border-radius:9px;margin:7px 0;color:#bbb;cursor:pointer}
+.option:hover{border-color:#713044;color:#fff}.option input{margin-right:9px}.exam-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:18px}.exam-result{text-align:center;padding:28px}.exam-result .score{font-size:44px;font-weight:900;color:#d17b8e}
+@media(max-width:650px){.exam-grid{grid-template-columns:1fr}.exam-head{flex-direction:column}}
+</style>
+
+<section class="container" id="exams" style="padding-top:20px">
+  <div class="head"><div class="eyebrow">Test your progress</div><h2>Quizzes & Exams</h2>
+    <p>Take published English exams for your selected grade. Your score is saved to your student account.</p>
+  </div>
+  <div class="exam-zone">
+    <div id="domaExamList"><p>Log in and select a grade to load your exams.</p></div>
+  </div>
+</section>
+
+<div class="exam-modal" id="domaExamModal" aria-hidden="true">
+  <div class="exam-shell">
+    <div class="exam-head">
+      <div><div class="eyebrow">DOMA ACADEMY • EXAM</div><h3 id="domaExamTitle">Exam</h3><p id="domaExamDesc"></p></div>
+      <div class="exam-timer" id="domaExamTimer">00:00</div>
+      <button class="close" id="domaExamClose" type="button">×</button>
+    </div>
+    <div class="exam-body" id="domaExamBody"></div>
+  </div>
+</div>
+
 <footer class="footer">
   <div class="container">
     <div class="footgrid">
@@ -682,6 +720,112 @@ function closeStudentDashboard(){ document.getElementById('studentModal')?.class
 function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 domaInitSB();
+</script>
+
+
+<script>
+/* DOMA ACADEMY V4 — Real Supabase Exams */
+(function(){
+  let examRows=[], activeExam=null, activeQuestions=[], timer=null, remaining=0;
+
+  function sb(){ domaInitSB(); return domaSB; }
+  function esc(v){ return escapeHtml(v); }
+
+  async function loadExams(){
+    const box=document.getElementById('domaExamList');
+    if(!box) return;
+    if(!domaUser){ box.innerHTML='<p>Please log in to view exams for your grade.</p>'; return; }
+    await loadDomaProfile();
+    const gradeId=domaProfile?.grade_id;
+    if(!gradeId){ box.innerHTML='<p>Your account does not have a grade selected yet.</p>'; return; }
+
+    const {data,error}=await sb().from('quizzes').select('id,title,description,duration_minutes,pass_percent,grade_id').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false});
+    if(error){ box.innerHTML='<p>'+esc(error.message)+'</p>'; return; }
+    examRows=data||[];
+    box.innerHTML=examRows.length ? '<div class="exam-grid">'+examRows.map(q=>`
+      <div class="exam-card">
+        <div class="eyebrow">Published exam</div>
+        <h4>${esc(q.title)}</h4>
+        <div class="exam-meta">${esc(q.description||'English assessment')} • ${q.duration_minutes||20} min • Pass ${q.pass_percent??50}%</div>
+        <button class="btn primary" type="button" onclick="DOMAStartExam('${q.id}')">Start Exam →</button>
+      </div>`).join('')+'</div>' : '<p>No published exams are available for your grade yet.</p>';
+  }
+
+  async function startExam(id){
+    if(!domaUser) return openModal('login');
+    const q=examRows.find(x=>x.id===id); if(!q) return;
+    const [questionsRes, attemptsRes]=await Promise.all([
+      sb().from('quiz_questions').select('id,question,options,points,sort_order').eq('quiz_id',id).order('sort_order'),
+      sb().from('quiz_attempts').select('id,score,total_points,submitted_at').eq('quiz_id',id).eq('student_id',domaUser.id).order('submitted_at',{ascending:false})
+    ]);
+    if(questionsRes.error) return showToast(questionsRes.error.message);
+    activeExam=q; activeQuestions=questionsRes.data||[];
+    const attempts=attemptsRes.data||[];
+    if(!activeQuestions.length) return showToast('This exam has no questions yet.');
+    if(attempts.length) {
+      const last=attempts[0];
+      showExamResult({score:last.score,total:last.total_points,pass:last.total_points?Math.round(last.score/last.total_points*100)>=Number(q.pass_percent??50):false,previous:true});
+      return;
+    }
+    document.getElementById('domaExamTitle').textContent=q.title;
+    document.getElementById('domaExamDesc').textContent=q.description||'Answer every question, then submit.';
+    const body=document.getElementById('domaExamBody');
+    body.innerHTML=activeQuestions.map((x,i)=>{
+      let opts=Array.isArray(x.options)?x.options:[];
+      return `<div class="question"><b>${i+1}. ${esc(x.question)} <span style="color:#777;font-weight:400">(${x.points||1} pt)</span></b>
+        ${opts.map((o,j)=>`<label class="option"><input type="radio" name="q_${x.id}" value="${esc(o)}"> ${esc(o)}</label>`).join('')}
+      </div>`;
+    }).join('')+`<div class="exam-actions"><button class="btn secondary" type="button" onclick="DOMACloseExam()">Exit</button><button class="btn primary" type="button" onclick="DOMASubmitExam()">Submit Exam</button></div>`;
+    document.getElementById('domaExamModal').classList.add('open');
+    remaining=Math.max(1,Number(q.duration_minutes||20))*60; updateTimer();
+    clearInterval(timer); timer=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){clearInterval(timer);DOMASubmitExam(true)}},1000);
+  }
+
+  function updateTimer(){
+    const el=document.getElementById('domaExamTimer'); if(!el)return;
+    const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); el.textContent=m+':'+s;
+  }
+
+  async function submitExam(auto=false){
+    if(!activeExam || !activeQuestions.length) return;
+    clearInterval(timer);
+    const answers={}; let score=0,total=0;
+    activeQuestions.forEach(q=>{
+      total += Number(q.points||1);
+      const chosen=document.querySelector(`input[name="q_${q.id}"]:checked`)?.value ?? null;
+      answers[q.id]=chosen;
+      // Correct answers are deliberately not exposed to the student query.
+      // Scoring is done server-side by the RPC created in the V4 SQL migration.
+    });
+    const {data,error}=await sb().rpc('submit_quiz_attempt',{p_quiz_id:activeExam.id,p_student_id:domaUser.id,p_answers:answers});
+    if(error) return showToast(error.message);
+    const result=Array.isArray(data)?data[0]:data;
+    closeExam();
+    showExamResult({score:Number(result?.score||0),total:Number(result?.total_points||total),pass:Boolean(result?.passed),auto});
+    loadExams();
+  }
+
+  function showExamResult(r){
+    const modal=document.getElementById('domaExamModal'), body=document.getElementById('domaExamBody');
+    document.getElementById('domaExamTitle').textContent=activeExam?.title||'Exam Result';
+    document.getElementById('domaExamDesc').textContent='Your saved result';
+    const pct=r.total?Math.round(Number(r.score)/Number(r.total)*100):0;
+    body.innerHTML=`<div class="exam-result"><div class="eyebrow">${r.previous?'Previous attempt':'Completed'}</div><div class="score">${pct}%</div><p>You scored <strong>${r.score}</strong> out of <strong>${r.total}</strong>.</p><p style="margin-top:8px;color:${r.pass?'#72c9a0':'#d98b9c'}">${r.pass?'PASS — well done.':'NOT PASSED — review your lessons and try again later.'}</p><button class="btn primary" type="button" onclick="DOMACloseExam();loadExams()">Close Result</button></div>`;
+    modal.classList.add('open');
+  }
+
+  function closeExam(){clearInterval(timer);document.getElementById('domaExamModal').classList.remove('open');activeExam=null;activeQuestions=[];}
+  window.DOMAStartExam=startExam; window.DOMASubmitExam=submitExam; window.DOMACloseExam=closeExam;
+  document.getElementById('domaExamClose')?.addEventListener('click',closeExam);
+  document.getElementById('domaExamModal')?.addEventListener('click',e=>{if(e.target.id==='domaExamModal')closeExam();});
+
+  // Refresh when auth state changes.
+  const oldLoadProfile=window.loadDomaProfile;
+  const oldUpdate=window.updateDomaAuthButtons;
+  window.loadDomaProfile=async function(){ const r=oldLoadProfile?await oldLoadProfile():null; setTimeout(loadExams,0); return r; };
+  setTimeout(loadExams,700);
+  window.addEventListener('focus',loadExams);
+})();
 </script>
 
 </body>
