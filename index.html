@@ -665,26 +665,62 @@ function updateDomaAuthButtons(){
   });
 }
 async function domaSignup(){
+  domaInitSB();
   const name = document.getElementById('domaSignupName')?.value.trim();
   const email = document.getElementById('domaSignupEmail')?.value.trim();
   const pass = document.getElementById('domaSignupPassword')?.value || '';
   const grade = document.getElementById('domaSignupGrade')?.value || '';
   if(!name || !email || pass.length < 6 || !grade) return showToast('Please complete the signup form.');
-  const {data,error} = await domaSB.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
+
+  const {data,error} = await domaSB.auth.signUp({
+    email,
+    password:pass,
+    options:{data:{full_name:name}}
+  });
   if(error) return showToast(error.message);
-  if(data.user){
-    const {data:g} = await domaSB.from('grades').select('id,name').eq('name',grade).maybeSingle();
-    if(g) await domaSB.from('profiles').update({full_name:name,grade_id:g.id}).eq('id',data.user.id);
+  if(!data?.user) return showToast('Account could not be created. Please try again.');
+
+  // Save the selected grade on the student's profile.
+  const {data:g} = await domaSB.from('grades').select('id,name').eq('name',grade).maybeSingle();
+  if(g){
+    await domaSB.from('profiles').update({full_name:name,grade_id:g.id}).eq('id',data.user.id);
   }
+
+  // Supabase may return an active session immediately when email confirmation is disabled.
+  // In that case, log the new student in right away instead of leaving them signed out.
+  if(data.session){
+    domaUser = data.session.user;
+    await loadDomaProfile();
+    closeModal();
+    showToast('Account created. You are now logged in.');
+    setTimeout(()=>domaOpenGrade(grade),120);
+    return;
+  }
+
+  // If email confirmation is enabled, Supabase intentionally returns no session.
+  // Try a password sign-in so this also works automatically when confirmation is not required.
+  const login = await domaSB.auth.signInWithPassword({email,password:pass});
+  if(!login.error && login.data?.session){
+    domaUser = login.data.session.user;
+    await loadDomaProfile();
+    closeModal();
+    showToast('Account created. You are now logged in.');
+    setTimeout(()=>domaOpenGrade(grade),120);
+    return;
+  }
+
   closeModal();
-  showToast('Account created. Check your email if confirmation is enabled.');
+  showToast('Account created. Please confirm your email, then log in.');
 }
 async function domaLogin(){
+  domaInitSB();
   const email = document.getElementById('domaLoginEmail')?.value.trim();
   const pass = document.getElementById('domaLoginPassword')?.value || '';
   if(!email || !pass) return showToast('Enter your email and password.');
-  const {error} = await domaSB.auth.signInWithPassword({email,password:pass});
+  const {data,error} = await domaSB.auth.signInWithPassword({email,password:pass});
   if(error) return showToast(error.message);
+  domaUser = data?.user || data?.session?.user || null;
+  await loadDomaProfile();
   closeModal();
   showToast('Welcome back to DOMA ACADEMY.');
 }
