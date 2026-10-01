@@ -1072,7 +1072,7 @@ tr:hover td{
 
 
 /* =====================================================
-   VANTOR MOBILE / TABLET RESPONSIVE UPGRADE
+   DOMA ACADEMY MOBILE / TABLET RESPONSIVE UPGRADE
    Keeps every desktop function available on small screens.
 ===================================================== */
 
@@ -1466,6 +1466,19 @@ textarea{
 
 </style>
 
+
+<style id="academy-admin-overhaul">
+.academy-admin-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.academy-admin-card{background:#120b0e;border:1px solid #2d181e;border-radius:14px;padding:18px}
+.academy-admin-card h3{margin:0 0 7px}.academy-admin-muted{color:#8f8287}
+.academy-admin-value{font-size:28px;font-weight:800;margin-bottom:4px}
+.academy-admin-progress{height:8px;background:#24171b;border-radius:99px;overflow:hidden}.academy-admin-progress span{display:block;height:100%;background:#9d304a}
+.academy-admin-list{display:grid;gap:9px}.academy-admin-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#160e11;border:1px solid #ffffff0a;border-radius:10px;padding:12px}
+.academy-admin-pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:#24151a;color:#c05269;font-size:11px}
+@media(max-width:1050px){.academy-admin-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.academy-admin-grid{grid-template-columns:1fr}}
+</style>
+
 </head>
 
 
@@ -1620,18 +1633,18 @@ textarea{
 
         <button
             class="side-link"
-            data-section="services"
+            data-section="courses"
         >
             <span class="side-icon">✦</span>
-            Services
+            Courses
         </button>
 
         <button
             class="side-link"
-            data-section="offers"
+            data-section="learningPaths"
         >
             <span class="side-icon">%</span>
-            Offers
+            Learning Paths
         </button>
 
         <button
@@ -1644,18 +1657,18 @@ textarea{
 
         <button
             class="side-link"
-            data-section="clients"
+            data-section="students"
         >
             <span class="side-icon">◎</span>
-            Clients
+            Students
         </button>
 
         <button
             class="side-link"
-            data-section="testimonials"
+            data-section="reviews"
         >
             <span class="side-icon">★</span>
-            Testimonials
+            Reviews
         </button>
 
 
@@ -1665,10 +1678,10 @@ textarea{
 
         <button
             class="side-link"
-            data-section="messages"
+            data-section="notifications"
         >
             <span class="side-icon">✉</span>
-            Messages
+            Notifications
         </button>
 
 
@@ -1779,6 +1792,70 @@ textarea{
      DASHBOARD
 ===================================================== -->
 
+
+<section class="admin-section academy-command-center" id="academyCommandCenter">
+  <div class="section-header">
+    <div>
+      <div class="eyebrow">DOMA ACADEMY</div>
+      <h2>Academy Command Center</h2>
+      <p class="academy-admin-muted">Manage learning, students, instructors and academy content.</p>
+    </div>
+  </div>
+
+  <div class="academy-admin-grid">
+    <div class="academy-admin-card"><div class="academy-admin-muted">Published Courses</div><div class="academy-admin-value">12</div><span class="academy-admin-pill">+2 this month</span></div>
+    <div class="academy-admin-card"><div class="academy-admin-muted">Active Students</div><div class="academy-admin-value">1,248</div><span class="academy-admin-pill">Learning now</span></div>
+    <div class="academy-admin-card"><div class="academy-admin-muted">Instructors</div><div class="academy-admin-value">18</div><span class="academy-admin-pill">4 active today</span></div>
+    <div class="academy-admin-card"><div class="academy-admin-muted">Certificates</div><div class="academy-admin-value">326</div><span class="academy-admin-pill">Issued</span></div>
+  </div>
+
+  <div class="academy-admin-grid">
+    <div class="academy-admin-card">
+      <h3>Course Completion</h3>
+      <div class="academy-admin-value">84%</div>
+      <div class="academy-admin-progress"><span style="width:84%"></span></div>
+      <p class="academy-admin-muted">Overall student completion rate</p>
+    </div>
+    <div class="academy-admin-card">
+      <h3>Learning Hours</h3>
+      <div class="academy-admin-value">2,840h</div>
+      <p class="academy-admin-muted">Student learning time this month</p>
+    </div>
+    <div class="academy-admin-card">
+      <h3>Quiz Attempts</h3>
+      <div class="academy-admin-value">3,912</div>
+      <p class="academy-admin-muted">Assessments completed</p>
+    </div>
+    <div class="academy-admin-card">
+      <h3>Reviews</h3>
+      <div class="academy-admin-value">4.8/5</div>
+      <p class="academy-admin-muted">Average learner rating</p>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="panel">
+      <div class="panel-head"><h3>Active Courses</h3><span class="academy-admin-pill">Manage</span></div>
+      <div class="panel-body academy-admin-list">
+        <div class="academy-admin-row"><span><strong>Modern Web Development</strong><br><small class="academy-admin-muted">428 students</small></span><span class="academy-admin-pill">Published</span></div>
+        <div class="academy-admin-row"><span><strong>Digital Marketing Mastery</strong><br><small class="academy-admin-muted">312 students</small></span><span class="academy-admin-pill">Published</span></div>
+        <div class="academy-admin-row"><span><strong>UI/UX Design from Zero</strong><br><small class="academy-admin-muted">267 students</small></span><span class="academy-admin-pill">Published</span></div>
+        <div class="academy-admin-row"><span><strong>Python for Data & Automation</strong><br><small class="academy-admin-muted">184 students</small></span><span class="academy-admin-pill">Draft</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h3>Recent Learning Activity</h3></div>
+      <div class="panel-body academy-admin-list">
+        <div class="academy-admin-row"><span>New student enrolled</span><small class="academy-admin-muted">2 min ago</small></div>
+        <div class="academy-admin-row"><span>Quiz completed</span><small class="academy-admin-muted">18 min ago</small></div>
+        <div class="academy-admin-row"><span>Certificate issued</span><small class="academy-admin-muted">1 hr ago</small></div>
+        <div class="academy-admin-row"><span>New course review</span><small class="academy-admin-muted">2 hrs ago</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section
     class="admin-section active"
     id="section-dashboard"
@@ -1813,7 +1890,7 @@ textarea{
         <div class="stat-card doma-stat">
             <div class="stat-label">Learning Paths</div>
             <div class="stat-number" id="statOffers">0</div>
-            <div class="doma-stat-note">Programs & special offers</div>
+            <div class="doma-stat-note">Programs & special learningPaths</div>
         </div>
 
         <div class="stat-card doma-stat">
@@ -1837,7 +1914,7 @@ textarea{
         <div class="stat-card doma-stat">
             <div class="stat-label">Notifications</div>
             <div class="stat-number" id="statUnread">0</div>
-            <div class="doma-stat-note">Unread platform messages</div>
+            <div class="doma-stat-note">Unread platform notifications</div>
         </div>
 
         <div class="stat-card doma-stat">
@@ -1933,11 +2010,11 @@ textarea{
             </div>
             <div class="panel-body">
                 <div class="quick-actions doma-quick-actions">
-                    <button class="quick-btn" data-quick="services">+ Course</button>
-                    <button class="quick-btn" data-quick="offers">+ Learning Path</button>
+                    <button class="quick-btn" data-quick="courses">+ Course</button>
+                    <button class="quick-btn" data-quick="learningPaths">+ Learning Path</button>
                     <button class="quick-btn" data-quick="projects">+ Project</button>
-                    <button class="quick-btn" data-quick="clients">+ Student</button>
-                    <button class="quick-btn" data-quick="testimonials">+ Review</button>
+                    <button class="quick-btn" data-quick="students">+ Student</button>
+                    <button class="quick-btn" data-quick="reviews">+ Review</button>
                     <button class="quick-btn" data-quick="settings">Academy Settings</button>
                 </div>
             </div>
@@ -1973,7 +2050,7 @@ textarea{
 
 <section
     class="admin-section"
-    id="section-services"
+    id="section-courses"
 >
 
     <div class="section-header">
@@ -1981,11 +2058,11 @@ textarea{
         <div>
 
             <h2>
-                Services
+                Courses
             </h2>
 
             <p>
-                Manage services displayed on the website.
+                Manage courses displayed on the website.
             </p>
 
         </div>
@@ -1994,7 +2071,7 @@ textarea{
             class="add-btn"
             id="addServiceBtn"
         >
-            + Add Service
+            + Add Course
         </button>
 
     </div>
@@ -2006,7 +2083,7 @@ textarea{
             class="search-input"
             id="serviceSearch"
             type="search"
-            placeholder="Search services..."
+            placeholder="Search courses..."
         >
 
     </div>
@@ -2026,7 +2103,7 @@ textarea{
 
 <section
     class="admin-section"
-    id="section-offers"
+    id="section-learningPaths"
 >
 
     <div class="section-header">
@@ -2034,11 +2111,11 @@ textarea{
         <div>
 
             <h2>
-                Offers
+                Learning Paths
             </h2>
 
             <p>
-                Manage special offers and pricing.
+                Manage special learningPaths and pricing.
             </p>
 
         </div>
@@ -2047,7 +2124,7 @@ textarea{
             class="add-btn"
             id="addOfferBtn"
         >
-            + Add Offer
+            + Add Learning Path
         </button>
 
     </div>
@@ -2059,7 +2136,7 @@ textarea{
             class="search-input"
             id="offerSearch"
             type="search"
-            placeholder="Search offers..."
+            placeholder="Search learningPaths..."
         >
 
     </div>
@@ -2132,7 +2209,7 @@ textarea{
 
 <section
     class="admin-section"
-    id="section-clients"
+    id="section-students"
 >
 
     <div class="section-header">
@@ -2140,7 +2217,7 @@ textarea{
         <div>
 
             <h2>
-                Clients
+                Students
             </h2>
 
             <p>
@@ -2153,7 +2230,7 @@ textarea{
             class="add-btn"
             id="addClientBtn"
         >
-            + Add Client
+            + Add Student
         </button>
 
     </div>
@@ -2165,7 +2242,7 @@ textarea{
             class="search-input"
             id="clientSearch"
             type="search"
-            placeholder="Search clients..."
+            placeholder="Search students..."
         >
 
     </div>
@@ -2185,7 +2262,7 @@ textarea{
 
 <section
     class="admin-section"
-    id="section-testimonials"
+    id="section-reviews"
 >
 
     <div class="section-header">
@@ -2193,7 +2270,7 @@ textarea{
         <div>
 
             <h2>
-                Testimonials
+                Reviews
             </h2>
 
             <p>
@@ -2206,7 +2283,7 @@ textarea{
             class="add-btn"
             id="addTestimonialBtn"
         >
-            + Add Testimonial
+            + Add Review
         </button>
 
     </div>
@@ -2218,7 +2295,7 @@ textarea{
             class="search-input"
             id="testimonialSearch"
             type="search"
-            placeholder="Search testimonials..."
+            placeholder="Search reviews..."
         >
 
     </div>
@@ -2238,7 +2315,7 @@ textarea{
 
 <section
     class="admin-section"
-    id="section-messages"
+    id="section-notifications"
 >
 
     <div class="section-header">
@@ -2246,11 +2323,11 @@ textarea{
         <div>
 
             <h2>
-                Messages
+                Notifications
             </h2>
 
             <p>
-                Messages submitted from your website.
+                Notifications submitted from your website.
             </p>
 
         </div>
@@ -2272,7 +2349,7 @@ textarea{
             class="search-input"
             id="messageSearch"
             type="search"
-            placeholder="Search messages..."
+            placeholder="Search notifications..."
         >
 
     </div>
@@ -2626,7 +2703,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="serviceModalTitle">
-                Add Service
+                Add Course
             </h3>
 
             <button
@@ -2654,7 +2731,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Service Name
+                    Course Name
                 </label>
 
                 <input
@@ -2698,7 +2775,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Service Image
+                    Course Image
                 </label>
 
                 <div class="upload-box">
@@ -2716,7 +2793,7 @@ textarea{
                     <img
                         class="preview-image hidden"
                         id="serviceImagePreview"
-                        alt="Service preview"
+                        alt="Course preview"
                     >
 
                 </div>
@@ -2759,7 +2836,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Service
+                    Save Course
                 </button>
 
             </div>
@@ -2785,7 +2862,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="offerModalTitle">
-                Add Offer
+                Add Learning Path
             </h3>
 
             <button
@@ -2813,7 +2890,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Offer Name
+                    Learning Path Name
                 </label>
 
                 <input
@@ -2888,7 +2965,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Offer Image
+                    Learning Path Image
                 </label>
 
                 <div class="upload-box">
@@ -2906,7 +2983,7 @@ textarea{
                     <img
                         class="preview-image hidden"
                         id="offerImagePreview"
-                        alt="Offer preview"
+                        alt="Learning Path preview"
                     >
 
                 </div>
@@ -2949,7 +3026,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Offer
+                    Save Learning Path
                 </button>
 
             </div>
@@ -3134,7 +3211,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="clientModalTitle">
-                Add Client
+                Add Student
             </h3>
 
             <button
@@ -3162,7 +3239,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Client Name
+                    Student Name
                 </label>
 
                 <input
@@ -3223,7 +3300,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Client
+                    Save Student
                 </button>
 
             </div>
@@ -3249,7 +3326,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="testimonialModalTitle">
-                Add Testimonial
+                Add Review
             </h3>
 
             <button
@@ -3279,7 +3356,7 @@ textarea{
                 <div class="form-group">
 
                     <label>
-                        Client Name
+                        Student Name
                     </label>
 
                     <input
@@ -3347,7 +3424,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Client Feedback
+                    Student Feedback
                 </label>
 
                 <textarea
@@ -3394,7 +3471,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Testimonial
+                    Save Review
                 </button>
 
             </div>
@@ -3550,7 +3627,7 @@ textarea{
 <script>
 
 /* =====================================================
-   VANTOR CLOUD SYNC
+   DOMA ACADEMY CLOUD SYNC
 ===================================================== */
 
 const SUPABASE_URL = "https://dtptxhkcogpoleftguas.supabase.co";
@@ -3566,19 +3643,19 @@ if (window.supabase && typeof window.supabase.createClient === "function") {
             SUPABASE_PUBLISHABLE_KEY
         );
     } catch (error) {
-        console.warn("VANTOR Supabase initialization failed:", error);
+        console.warn("DOMA ACADEMY Supabase initialization failed:", error);
     }
 } else {
-    console.warn("VANTOR Supabase CDN is unavailable. Running in local mode.");
+    console.warn("DOMA ACADEMY Supabase CDN is unavailable. Running in local mode.");
 }
 
 const CLOUD_TABLES = {
-    vantor_services: "services",
-    vantor_offers: "offers",
+    vantor_services: "courses",
+    vantor_offers: "learningPaths",
     vantor_projects: "projects",
-    vantor_clients: "clients",
-    vantor_testimonials: "testimonials",
-    vantor_messages: "messages"
+    vantor_clients: "students",
+    vantor_testimonials: "reviews",
+    vantor_messages: "notifications"
 };
 
 function dbToLocal(key,row){
@@ -3709,7 +3786,7 @@ async function readCloud(key){
         .order("id",{ascending:true});
 
     if(error){
-        console.warn("VANTOR Supabase read failed:",table,error.message);
+        console.warn("DOMA ACADEMY Supabase read failed:",table,error.message);
         return null;
     }
 
@@ -3737,18 +3814,18 @@ async function writeCloud(key,data){
                         .from(table)
                         .update(updatePayload)
                         .eq("id",Number(item.id));
-                    if(result.error) console.warn("VANTOR Supabase update failed:",table,result.error.message);
+                    if(result.error) console.warn("DOMA ACADEMY Supabase update failed:",table,result.error.message);
                 }else{
-                    console.warn("VANTOR Supabase insert failed:",table,error.message);
+                    console.warn("DOMA ACADEMY Supabase insert failed:",table,error.message);
                 }
             }
         }
     }catch(error){
-        console.warn("VANTOR Supabase write failed:",error.message);
+        console.warn("DOMA ACADEMY Supabase write failed:",error.message);
     }
 }
 
-async function syncVantorCloud(){
+async function syncDOMA ACADEMYCloud(){
     // If Supabase already has the data, it wins and becomes the shared source.
     // If a table is empty, seed it from the laptop's existing localStorage once.
     for(const key of Object.keys(CLOUD_TABLES)){
@@ -3775,17 +3852,17 @@ async function syncVantorCloud(){
 
 const KEYS = {
 
-    services:"vantor_services",
+    courses:"vantor_services",
 
-    offers:"vantor_offers",
+    learningPaths:"vantor_offers",
 
     projects:"vantor_projects",
 
-    clients:"vantor_clients",
+    students:"vantor_clients",
 
-    testimonials:"vantor_testimonials",
+    reviews:"vantor_testimonials",
 
-    messages:"vantor_messages",
+    notifications:"vantor_messages",
 
     admins:"vantor_admin_users",
 
@@ -3802,17 +3879,17 @@ const KEYS = {
 
 const LEGACY_KEYS = {
 
-    services:"vantorServices",
+    courses:"vantorServices",
 
-    offers:"vantorOffers",
+    learningPaths:"vantorOffers",
 
-    clients:"vantorClients",
+    students:"vantorClients",
 
     projects:"vantorProjects",
 
-    testimonials:"vantorTestimonials",
+    reviews:"vantorTestimonials",
 
-    messages:"vantorMessages",
+    notifications:"vantorMessages",
 
     settings:"vantorSettings",
 
@@ -3966,7 +4043,7 @@ function initializeDefaults(){
             KEYS.settings,
             JSON.stringify({
 
-                siteName:"VANTOR",
+                siteName:"DOMA ACADEMY",
 
                 tagline:
                     "Digital Marketing Agency",
@@ -3975,13 +4052,13 @@ function initializeDefaults(){
                     "We Build Brands That Move Forward.",
 
                 heroDescription:
-                    "VANTOR helps ambitious brands grow through strategy, creative marketing and digital experiences that make an impact.",
+                    "DOMA ACADEMY helps ambitious brands grow through strategy, creative marketing and digital experiences that make an impact.",
 
                 aboutTitle:
                     "We Turn Ideas Into Growth.",
 
                 aboutDescription:
-                    "VANTOR is a digital marketing agency focused on helping businesses build stronger brands, connect with their audiences and achieve measurable growth.",
+                    "DOMA ACADEMY is a digital marketing agency focused on helping businesses build stronger brands, connect with their audiences and achieve measurable growth.",
 
                 email:
                     "hello@vantor.com",
@@ -4250,17 +4327,17 @@ const sectionNames = {
 
     dashboard:"Dashboard",
 
-    services:"Services",
+    courses:"Courses",
 
-    offers:"Offers",
+    learningPaths:"Learning Paths",
 
     projects:"Projects",
 
-    clients:"Clients",
+    students:"Students",
 
-    testimonials:"Testimonials",
+    reviews:"Reviews",
 
-    messages:"Messages",
+    notifications:"Notifications",
 
     admins:"Admin Users",
 
@@ -4674,7 +4751,7 @@ function resetServiceForm(){
     document.getElementById(
         "serviceModalTitle"
     ).textContent =
-        "Add Service";
+        "Add Course";
 
 }
 
@@ -4712,7 +4789,7 @@ document
 
             const data =
                 getData(
-                    KEYS.services
+                    KEYS.courses
                 );
 
 
@@ -4791,7 +4868,7 @@ document
 
                     if(
                         setData(
-                            KEYS.services,
+                            KEYS.courses,
                             data
                         )
                     ){
@@ -4803,7 +4880,7 @@ document
                         renderAll();
 
                         showToast(
-                            "Service saved successfully."
+                            "Course saved successfully."
                         );
 
                     }
@@ -4838,7 +4915,7 @@ function editService(id){
 
     const item =
         getData(
-            KEYS.services
+            KEYS.courses
         ).find(
             item =>
                 String(item.id) ===
@@ -4908,7 +4985,7 @@ function editService(id){
     document.getElementById(
         "serviceModalTitle"
     ).textContent =
-        "Edit Service";
+        "Edit Course";
 
 
     openModal(
@@ -4933,7 +5010,7 @@ function deleteService(id){
 
     const data =
         getData(
-            KEYS.services
+            KEYS.courses
         )
         .filter(
             item =>
@@ -4943,7 +5020,7 @@ function deleteService(id){
 
 
     setData(
-        KEYS.services,
+        KEYS.courses,
         data
     );
 
@@ -4951,7 +5028,7 @@ function deleteService(id){
     renderAll();
 
     showToast(
-        "Service deleted."
+        "Course deleted."
     );
 
 }
@@ -4983,7 +5060,7 @@ function resetOfferForm(){
     document.getElementById(
         "offerModalTitle"
     ).textContent =
-        "Add Offer";
+        "Add Learning Path";
 
 }
 
@@ -5021,7 +5098,7 @@ document
 
             const data =
                 getData(
-                    KEYS.offers
+                    KEYS.learningPaths
                 );
 
 
@@ -5107,7 +5184,7 @@ document
 
                     if(
                         setData(
-                            KEYS.offers,
+                            KEYS.learningPaths,
                             data
                         )
                     ){
@@ -5119,7 +5196,7 @@ document
                         renderAll();
 
                         showToast(
-                            "Offer saved successfully."
+                            "Learning Path saved successfully."
                         );
 
                     }
@@ -5154,7 +5231,7 @@ function editOffer(id){
 
     const item =
         getData(
-            KEYS.offers
+            KEYS.learningPaths
         ).find(
             item =>
                 String(item.id) ===
@@ -5243,7 +5320,7 @@ function editOffer(id){
     document.getElementById(
         "offerModalTitle"
     ).textContent =
-        "Edit Offer";
+        "Edit Learning Path";
 
 
     openModal(
@@ -5268,7 +5345,7 @@ function deleteOffer(id){
 
     const data =
         getData(
-            KEYS.offers
+            KEYS.learningPaths
         )
         .filter(
             item =>
@@ -5278,7 +5355,7 @@ function deleteOffer(id){
 
 
     setData(
-        KEYS.offers,
+        KEYS.learningPaths,
         data
     );
 
@@ -5286,7 +5363,7 @@ function deleteOffer(id){
     renderAll();
 
     showToast(
-        "Offer deleted."
+        "Learning Path deleted."
     );
 
 }
@@ -5617,7 +5694,7 @@ function resetClientForm(){
     document.getElementById(
         "clientModalTitle"
     ).textContent =
-        "Add Client";
+        "Add Student";
 
 }
 
@@ -5655,7 +5732,7 @@ document
 
             const data =
                 getData(
-                    KEYS.clients
+                    KEYS.students
                 );
 
 
@@ -5713,7 +5790,7 @@ document
 
             if(
                 setData(
-                    KEYS.clients,
+                    KEYS.students,
                     data
                 )
             ){
@@ -5725,7 +5802,7 @@ document
                 renderAll();
 
                 showToast(
-                    "Client saved successfully."
+                    "Student saved successfully."
                 );
 
             }
@@ -5738,7 +5815,7 @@ function editClient(id){
 
     const item =
         getData(
-            KEYS.clients
+            KEYS.students
         ).find(
             item =>
                 String(item.id) ===
@@ -5778,7 +5855,7 @@ function editClient(id){
     document.getElementById(
         "clientModalTitle"
     ).textContent =
-        "Edit Client";
+        "Edit Student";
 
 
     openModal(
@@ -5803,7 +5880,7 @@ function deleteClient(id){
 
     const data =
         getData(
-            KEYS.clients
+            KEYS.students
         )
         .filter(
             item =>
@@ -5813,7 +5890,7 @@ function deleteClient(id){
 
 
     setData(
-        KEYS.clients,
+        KEYS.students,
         data
     );
 
@@ -5821,7 +5898,7 @@ function deleteClient(id){
     renderAll();
 
     showToast(
-        "Client deleted."
+        "Student deleted."
     );
 
 }
@@ -5852,7 +5929,7 @@ function resetTestimonialForm(){
     document.getElementById(
         "testimonialModalTitle"
     ).textContent =
-        "Add Testimonial";
+        "Add Review";
 
 }
 
@@ -5890,7 +5967,7 @@ document
 
             const data =
                 getData(
-                    KEYS.testimonials
+                    KEYS.reviews
                 );
 
 
@@ -5960,7 +6037,7 @@ document
 
             if(
                 setData(
-                    KEYS.testimonials,
+                    KEYS.reviews,
                     data
                 )
             ){
@@ -5972,7 +6049,7 @@ document
                 renderAll();
 
                 showToast(
-                    "Testimonial saved successfully."
+                    "Review saved successfully."
                 );
 
             }
@@ -5985,7 +6062,7 @@ function editTestimonial(id){
 
     const item =
         getData(
-            KEYS.testimonials
+            KEYS.reviews
         ).find(
             item =>
                 String(item.id) ===
@@ -6041,7 +6118,7 @@ function editTestimonial(id){
     document.getElementById(
         "testimonialModalTitle"
     ).textContent =
-        "Edit Testimonial";
+        "Edit Review";
 
 
     openModal(
@@ -6066,7 +6143,7 @@ function deleteTestimonial(id){
 
     const data =
         getData(
-            KEYS.testimonials
+            KEYS.reviews
         )
         .filter(
             item =>
@@ -6076,7 +6153,7 @@ function deleteTestimonial(id){
 
 
     setData(
-        KEYS.testimonials,
+        KEYS.reviews,
         data
     );
 
@@ -6084,7 +6161,7 @@ function deleteTestimonial(id){
     renderAll();
 
     showToast(
-        "Testimonial deleted."
+        "Review deleted."
     );
 
 }
@@ -6422,7 +6499,7 @@ function markMessageRead(id){
 
     const data =
         getData(
-            KEYS.messages
+            KEYS.notifications
         );
 
 
@@ -6447,7 +6524,7 @@ function markMessageRead(id){
 
 
     setData(
-        KEYS.messages,
+        KEYS.notifications,
         data
     );
 
@@ -6472,7 +6549,7 @@ function deleteMessage(id){
 
     const data =
         getData(
-            KEYS.messages
+            KEYS.notifications
         )
         .filter(
             item =>
@@ -6482,7 +6559,7 @@ function deleteMessage(id){
 
 
     setData(
-        KEYS.messages,
+        KEYS.notifications,
         data
     );
 
@@ -6490,7 +6567,7 @@ function deleteMessage(id){
     renderAll();
 
     showToast(
-        "Message deleted."
+        "Notification deleted."
     );
 
 }
@@ -6504,7 +6581,7 @@ document
 
             const data =
                 getData(
-                    KEYS.messages
+                    KEYS.notifications
                 );
 
 
@@ -6522,7 +6599,7 @@ document
 
 
             setData(
-                KEYS.messages,
+                KEYS.notifications,
                 data
             );
 
@@ -6530,7 +6607,7 @@ document
             renderAll();
 
             showToast(
-                "All messages marked as read."
+                "All notifications marked as read."
             );
 
         }
@@ -6555,7 +6632,7 @@ function loadSettingsForm(){
         "settingsSiteName"
     ).value =
         settings.siteName ||
-        "VANTOR";
+        "DOMA ACADEMY";
 
 
     document.getElementById(
@@ -6819,7 +6896,7 @@ function renderServices(){
 
     const data =
         getData(
-            KEYS.services
+            KEYS.courses
         )
         .filter(
             item =>
@@ -6844,7 +6921,7 @@ function renderServices(){
 
         wrap.innerHTML = `
             <div class="empty">
-                <strong>No services found</strong>
+                <strong>No courses found</strong>
                 Add your first service from the button above.
             </div>
         `;
@@ -6863,7 +6940,7 @@ function renderServices(){
                 <tr>
 
                     <th>Image</th>
-                    <th>Service</th>
+                    <th>Course</th>
                     <th>Status</th>
                     <th>Actions</th>
 
@@ -6987,7 +7064,7 @@ function renderOffers(){
 
     const data =
         getData(
-            KEYS.offers
+            KEYS.learningPaths
         )
         .filter(
             item =>
@@ -7012,7 +7089,7 @@ function renderOffers(){
 
         wrap.innerHTML = `
             <div class="empty">
-                <strong>No offers found</strong>
+                <strong>No learningPaths found</strong>
                 Add your first offer from the button above.
             </div>
         `;
@@ -7031,7 +7108,7 @@ function renderOffers(){
                 <tr>
 
                     <th>Image</th>
-                    <th>Offer</th>
+                    <th>Learning Path</th>
                     <th>Price</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -7364,7 +7441,7 @@ function renderClients(){
 
     const data =
         getData(
-            KEYS.clients
+            KEYS.students
         )
         .filter(
             item =>
@@ -7389,7 +7466,7 @@ function renderClients(){
 
         wrap.innerHTML = `
             <div class="empty">
-                <strong>No clients found</strong>
+                <strong>No students found</strong>
                 Add your first client from the button above.
             </div>
         `;
@@ -7407,7 +7484,7 @@ function renderClients(){
 
                 <tr>
 
-                    <th>Client</th>
+                    <th>Student</th>
                     <th>Company</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -7427,7 +7504,7 @@ function renderClients(){
 
                             <div class="item-name">
                                 ${escapeHtml(
-                                    item.name || "Client"
+                                    item.name || "Student"
                                 )}
                             </div>
 
@@ -7509,7 +7586,7 @@ function renderTestimonials(){
 
     const data =
         getData(
-            KEYS.testimonials
+            KEYS.reviews
         )
         .filter(
             item =>
@@ -7543,7 +7620,7 @@ function renderTestimonials(){
 
         wrap.innerHTML = `
             <div class="empty">
-                <strong>No testimonials found</strong>
+                <strong>No reviews found</strong>
                 Add your first testimonial from the button above.
             </div>
         `;
@@ -7561,7 +7638,7 @@ function renderTestimonials(){
 
                 <tr>
 
-                    <th>Client</th>
+                    <th>Student</th>
                     <th>Company</th>
                     <th>Rating</th>
                     <th>Status</th>
@@ -7597,7 +7674,7 @@ function renderTestimonials(){
                                 <div class="item-name">
                                     ${escapeHtml(
                                         item.name ||
-                                        "Client"
+                                        "Student"
                                     )}
                                 </div>
 
@@ -7700,7 +7777,7 @@ function renderMessages(){
 
     const data =
         getData(
-            KEYS.messages
+            KEYS.notifications
         )
         .filter(
             item =>
@@ -7731,7 +7808,7 @@ function renderMessages(){
 
         wrap.innerHTML = `
             <div class="empty">
-                <strong>No messages found</strong>
+                <strong>No notifications found</strong>
                 Website contact form submissions will appear here.
             </div>
         `;
@@ -7751,7 +7828,7 @@ function renderMessages(){
 
                     <th>Sender</th>
                     <th>Subject</th>
-                    <th>Message</th>
+                    <th>Notification</th>
                     <th>Status</th>
                     <th>Actions</th>
 
@@ -8012,28 +8089,28 @@ function renderAdmins(){
 
 function renderDashboard(){
 
-    const services =
-        getData(KEYS.services);
+    const courses =
+        getData(KEYS.courses);
 
 
-    const offers =
-        getData(KEYS.offers);
+    const learningPaths =
+        getData(KEYS.learningPaths);
 
 
     const projects =
         getData(KEYS.projects);
 
 
-    const clients =
-        getData(KEYS.clients);
+    const students =
+        getData(KEYS.students);
 
 
-    const testimonials =
-        getData(KEYS.testimonials);
+    const reviews =
+        getData(KEYS.reviews);
 
 
-    const messages =
-        getData(KEYS.messages);
+    const notifications =
+        getData(KEYS.notifications);
 
 
     const admins =
@@ -8043,13 +8120,13 @@ function renderDashboard(){
     document.getElementById(
         "statServices"
     ).textContent =
-        services.length;
+        courses.length;
 
 
     document.getElementById(
         "statOffers"
     ).textContent =
-        offers.length;
+        learningPaths.length;
 
 
     document.getElementById(
@@ -8061,17 +8138,17 @@ function renderDashboard(){
     document.getElementById(
         "statClients"
     ).textContent =
-        clients.length;
+        students.length;
 
 
     document.getElementById(
         "statTestimonials"
     ).textContent =
-        testimonials.length;
+        reviews.length;
 
 
     const unread =
-        messages.filter(
+        notifications.filter(
             item =>
                 !item.read &&
                 item.status !== "Read"
@@ -8091,11 +8168,11 @@ function renderDashboard(){
 
 
     const active =
-        services.filter(
+        courses.filter(
             item =>
                 item.status !== "Hidden"
         ).length +
-        offers.filter(
+        learningPaths.filter(
             item =>
                 item.status !== "Hidden"
         ).length +
@@ -8103,7 +8180,7 @@ function renderDashboard(){
             item =>
                 item.status !== "Hidden"
         ).length +
-        clients.filter(
+        students.filter(
             item =>
                 item.status !== "Hidden"
         ).length;
@@ -8116,7 +8193,7 @@ function renderDashboard(){
 
 
     const recent =
-        messages
+        notifications
         .slice()
         .sort(
             (a,b) =>
@@ -8140,8 +8217,8 @@ function renderDashboard(){
 
         box.innerHTML = `
             <div class="empty">
-                <strong>No messages yet</strong>
-                Website messages will appear here.
+                <strong>No notifications yet</strong>
+                Website notifications will appear here.
             </div>
         `;
 
@@ -8309,12 +8386,12 @@ document
                 );
 
 
-                if(section === "services"){
+                if(section === "courses"){
                     resetServiceForm();
                     openModal("serviceModal");
                 }
 
-                if(section === "offers"){
+                if(section === "learningPaths"){
                     resetOfferForm();
                     openModal("offerModal");
                 }
@@ -8324,12 +8401,12 @@ document
                     openModal("projectModal");
                 }
 
-                if(section === "clients"){
+                if(section === "students"){
                     resetClientForm();
                     openModal("clientModal");
                 }
 
-                if(section === "testimonials"){
+                if(section === "reviews"){
                     resetTestimonialForm();
                     openModal("testimonialModal");
                 }
@@ -8371,7 +8448,7 @@ document
 
             const confirmed =
                 confirm(
-                    "Reset all VANTOR website data to demo defaults? This will remove current Services, Offers, Projects, Clients, Testimonials and Messages."
+                    "Reset all DOMA ACADEMY website data to demo defaults? This will remove current Courses, Learning Paths, Projects, Students, Reviews and Notifications."
                 );
 
 
@@ -8381,11 +8458,11 @@ document
 
 
             localStorage.removeItem(
-                KEYS.services
+                KEYS.courses
             );
 
             localStorage.removeItem(
-                KEYS.offers
+                KEYS.learningPaths
             );
 
             localStorage.removeItem(
@@ -8393,15 +8470,15 @@ document
             );
 
             localStorage.removeItem(
-                KEYS.clients
+                KEYS.students
             );
 
             localStorage.removeItem(
-                KEYS.testimonials
+                KEYS.reviews
             );
 
             localStorage.removeItem(
-                KEYS.messages
+                KEYS.notifications
             );
 
 
@@ -8547,10 +8624,10 @@ initializeDefaults();
 checkAuth();
 
 // Load the shared Supabase data first, then render the dashboard.
-syncVantorCloud().then(function(){
+syncDOMA ACADEMYCloud().then(function(){
     renderAll();
 }).catch(function(error){
-    console.warn("VANTOR cloud startup failed:",error);
+    console.warn("DOMA ACADEMY cloud startup failed:",error);
     renderAll();
 });
 
