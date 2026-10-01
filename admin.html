@@ -1827,7 +1827,7 @@ textarea{
       <p class="academy-admin-muted">Assessments completed</p>
     </div>
     <div class="academy-admin-card">
-      <h3>Reviews</h3>
+      <h3>Teacher Reviews</h3>
       <div class="academy-admin-value">4.8/5</div>
       <p class="academy-admin-muted">Average learner rating</p>
     </div>
@@ -1873,8 +1873,8 @@ textarea{
     <div class="doma-welcome">
         <div>
             <div class="doma-eyebrow">Good to see you</div>
-            <h1>Run DOMA ACADEMY from one place.</h1>
-            <p>Courses, students, learning progress, certificates and platform activity — all in one dashboard.</p>
+            <h1>Run DOMA ACADEMY English from one place.</h1>
+            <p>Grades, English lessons, students, exams, homework, results and progress — all in one dashboard.</p>
         </div>
         <div class="doma-welcome-mark">DA</div>
     </div>
@@ -1882,33 +1882,33 @@ textarea{
     <div class="stats-grid doma-stats-grid">
 
         <div class="stat-card doma-stat">
-            <div class="stat-label">Courses</div>
+            <div class="stat-label">English Lessons</div>
             <div class="stat-number" id="statServices">0</div>
-            <div class="doma-stat-note">Published learning content</div>
+            <div class="doma-stat-note">Published English lessons</div>
         </div>
 
         <div class="stat-card doma-stat">
-            <div class="stat-label">Learning Paths</div>
+            <div class="stat-label">Grades & Classes</div>
             <div class="stat-number" id="statOffers">0</div>
-            <div class="doma-stat-note">Programs & special learningPaths</div>
+            <div class="doma-stat-note">Preparatory & Secondary grades</div>
         </div>
 
         <div class="stat-card doma-stat">
-            <div class="stat-label">Projects</div>
+            <div class="stat-label">Homework</div>
             <div class="stat-number" id="statProjects">0</div>
-            <div class="doma-stat-note">Practical learning projects</div>
+            <div class="doma-stat-note">School English practice</div>
         </div>
 
         <div class="stat-card doma-stat">
             <div class="stat-label">Students</div>
             <div class="stat-number" id="statClients">0</div>
-            <div class="doma-stat-note">Learner accounts</div>
+            <div class="doma-stat-note">Student accounts</div>
         </div>
 
         <div class="stat-card doma-stat">
-            <div class="stat-label">Reviews</div>
+            <div class="stat-label">Teacher Reviews</div>
             <div class="stat-number" id="statTestimonials">0</div>
-            <div class="doma-stat-note">Student feedback</div>
+            <div class="doma-stat-note">Teacher & student feedback</div>
         </div>
 
         <div class="stat-card doma-stat">
@@ -1926,12 +1926,25 @@ textarea{
         <div class="stat-card doma-stat">
             <div class="stat-label">Published Content</div>
             <div class="stat-number" id="statActive">0</div>
-            <div class="doma-stat-note">Active academy content</div>
+            <div class="doma-stat-note">Active English content</div>
         </div>
 
     </div>
 
-    <div class="doma-dashboard-grid">
+    <div class="panel doma-panel" style="margin-top:20px">
+  <div class="panel-head"><div><h3>English School Management</h3><span>Egyptian Preparatory & Secondary students</span></div></div>
+  <div class="panel-body">
+    <div class="featuregrid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="feature"><b>1st–3rd Preparatory</b><p>Units, lessons, grammar, vocabulary and exams.</p></div>
+      <div class="feature"><b>1st–3rd Secondary</b><p>Secondary English curriculum and revision.</p></div>
+      <div class="feature"><b>Grammar & Vocabulary</b><p>Create structured English content.</p></div>
+      <div class="feature"><b>Quizzes & Exams</b><p>Questions, answers, scoring and results.</p></div>
+      <div class="feature"><b>Homework</b><p>Assignments and teacher feedback.</p></div>
+      <div class="feature"><b>Results & Progress</b><p>Track student performance and completion.</p></div>
+    </div>
+  </div>
+</div>
+<div class="doma-dashboard-grid">
 
         <div class="panel doma-panel">
 
@@ -1971,7 +1984,7 @@ textarea{
                         <strong>Enabled</strong>
                     </div>
                     <div class="doma-mini-card">
-                        <span>Projects</span>
+                        <span>Homework</span>
                         <strong>Active</strong>
                     </div>
                     <div class="doma-mini-card">
@@ -2029,7 +2042,7 @@ textarea{
             </div>
             <div class="panel-body">
                 <div class="doma-feature-list">
-                    <div><span>🎓</span><b>Course Management</b><small>Create and organize learning content</small></div>
+                    <div><span>🎓</span><b>English Lesson Management</b><small>Create and organize learning content</small></div>
                     <div><span>📊</span><b>Progress Tracking</b><small>Monitor learner completion</small></div>
                     <div><span>📝</span><b>Quizzes & Assessments</b><small>Manage knowledge checks</small></div>
                     <div><span>🏆</span><b>Certificates</b><small>Track completed learning paths</small></div>
@@ -8448,7 +8461,7 @@ document
 
             const confirmed =
                 confirm(
-                    "Reset all DOMA ACADEMY website data to demo defaults? This will remove current Courses, Learning Paths, Projects, Students, Reviews and Notifications."
+                    "Reset all DOMA ACADEMY website data to demo defaults? This will remove current English Lessons, Grades, Homework, Students, Reviews and Notifications."
                 );
 
 
