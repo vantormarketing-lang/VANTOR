@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DOMA ACADEMY — Learning Platform</title>
+<title>DOMA ACADEMY — English Learning Platform</title>
 <meta name="description" content="DOMA ACADEMY is a modern learning platform for practical courses, skills, quizzes, certificates and career growth.">
 <style>
 :root{
@@ -103,10 +103,8 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 }
 </style>
 
-<style>
-#domaSubModal{position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:12000;display:none;align-items:center;justify-content:center;padding:18px}
-#domaSubModal.show{display:flex}.doma-sub-box{width:min(760px,100%);max-height:92vh;overflow:auto;background:#120b0e;border:1px solid #5a2635;border-radius:22px;padding:24px;box-shadow:0 30px 90px #000}.doma-sub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.doma-sub-card{border:1px solid #382028;background:#0b0809;border-radius:15px;padding:16px;cursor:pointer}.doma-sub-card.selected{border-color:#c05269;box-shadow:0 0 0 1px #c05269 inset}.doma-sub-card h4{margin:0 0 7px}.doma-sub-price{font-size:24px;font-weight:900}.doma-sub-muted{color:#999;font-size:12px}.doma-sub-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}.doma-sub-input{width:100%;padding:12px;border-radius:10px;border:1px solid #382028;background:#0b0809;color:#fff}.doma-sub-status{padding:10px;border-radius:10px;background:#1b1014;color:#dcb0bb;font-size:12px;display:none}.doma-sub-status.show{display:block}@media(max-width:650px){.doma-sub-grid{grid-template-columns:1fr}}
-</style></head>
+<style id="doma-subscription-css">.doma-sub-overlay{position:fixed;inset:0;background:rgba(8,8,10,.78);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;z-index:99999}.doma-sub-overlay.open{display:flex}.doma-sub-box{width:min(720px,100%);max-height:92vh;overflow:auto;background:#171114;border:1px solid #3b2329;border-radius:22px;box-shadow:0 25px 80px rgba(0,0,0,.45);color:#fff;padding:26px}.doma-sub-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.doma-sub-head h3{margin:0;font-size:25px}.doma-sub-close{border:0;background:#2a1b20;color:#fff;width:38px;height:38px;border-radius:50%;font-size:24px;cursor:pointer}.doma-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.doma-plan{border:1px solid #4b2a32;background:#20171a;border-radius:15px;padding:16px;cursor:pointer}.doma-plan.active{border-color:#c05269;box-shadow:0 0 0 2px rgba(192,82,105,.18)}.doma-plan strong{display:block;font-size:17px}.doma-plan span{display:block;margin-top:7px;color:#d7c7ca}.doma-price{font-size:26px;font-weight:800;margin-top:10px}.doma-pay-box{background:#21161a;border:1px dashed #9b5363;border-radius:16px;padding:16px;margin:16px 0}.doma-pay-number{font-size:25px;font-weight:900;letter-spacing:2px;margin-top:6px}.doma-sub-form{display:grid;gap:12px}.doma-sub-form input{width:100%;box-sizing:border-box;background:#100d0e;color:#fff;border:1px solid #493138;border-radius:12px;padding:13px}.doma-file{padding:10px!important}.doma-sub-note{font-size:13px;color:#bcaeb1}.doma-status{padding:12px 14px;border-radius:12px;background:#24191d;color:#eadde0;margin-top:10px}.doma-sub-success{padding:20px;border-radius:16px;background:#17241d;border:1px solid #365b45}.doma-sub-success b{font-size:18px}@media(max-width:650px){.doma-plan-grid{grid-template-columns:1fr}.doma-sub-box{padding:18px}}</style>
+</head>
 <body>
 
 <nav class="nav">
@@ -118,7 +116,7 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
       <span>DOMA ACADEMY<small>LEARNING PLATFORM • BY ADHAM</small></span>
     </a>
     <div class="links">
-      <a href="#courses">Courses</a><a href="#dashboard">My Learning</a><a href="#categories">Categories</a><a href="#dashboard">Dashboard</a><a href="#instructors">Instructors</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      <a href="#courses">English Courses</a><a href="#dashboard">My English</a><a href="#categories">Grades</a><a href="#dashboard">Student Dashboard</a><a href="#instructors">Teachers</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
     </div>
     <div class="nav-actions"><button class="iconbtn" onclick="openModal('search')">⌕</button><button class="btn secondary login" onclick="openModal('login')">Log In</button><button class="btn primary" onclick="openModal('signup')">Get Started</button><button class="menu">☰</button></div>
   </div>
@@ -127,12 +125,12 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 <header class="hero" id="home">
   <div class="container hero-grid">
     <div>
-      <div class="eyebrow">Learn. Build. Grow.</div>
+      <div class="eyebrow">Learn English. Build Your Future.</div>
       <h1>Turn your curiosity into <span>real skills.</span></h1>
       <p>DOMA ACADEMY is a modern learning platform for practical, career-focused education. Learn from structured courses, practice with quizzes, track your progress and earn certificates.</p>
-      <div class="actions"><a class="btn primary" href="#courses">Explore Courses →</a><button class="btn secondary" onclick="openModal('signup')">Start Learning Free</button></div>
+      <div class="actions"><a class="btn primary" href="#courses">Explore English Courses →</a><button class="btn secondary" onclick="openModal('signup')">Start Learning Free</button></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><span class="tag">Self-paced</span><span class="tag">Projects</span><span class="tag">Certificates</span><span class="tag">Progress Tracking</span></div><div class="mini-proof">
-        <div class="proof"><strong>120+</strong><span>Expert Courses</span></div>
+        <div class="proof"><strong>120+</strong><span>Expert English Courses</span></div>
         <div class="proof"><strong>18K+</strong><span>Active Learners</span></div>
         <div class="proof"><strong>94%</strong><span>Completion Rate</span></div>
       </div>
@@ -147,25 +145,25 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 
 <div class="container searchbar">
   <div class="searchbox">
-    <input id="courseSearch" placeholder="Search courses, skills or topics..." oninput="filterCourses()">
-    <select id="courseCategory" onchange="filterCourses()"><option value="all">All categories</option><option>Business</option><option>Technology</option><option>Design</option><option>Marketing</option><option>Personal Growth</option></select>
-    <button class="btn primary" onclick="filterCourses()">Search</button>
+    <input id="courseSearch" placeholder="Search courses, skills or topics..." oninput="filterEnglishCourses()">
+    <select id="courseCategory" onchange="filterEnglishCourses()"><option value="all">All categories</option><option>Business</option><option>Technology</option><option>Design</option><option>Marketing</option><option>Personal Growth</option></select>
+    <button class="btn primary" onclick="filterEnglishCourses()">Search</button>
   </div>
 </div>
 
 
 <section id="dashboard" class="container" style="padding-top:28px">
-  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Pick up where you left off, track your progress, and keep your next goal visible.</p></div>
+  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Student Dashboard</h2><p>Pick up where you left off, track your progress, and keep your next goal visible.</p></div>
   <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-    <div class="review"><div class="eyebrow">In progress</div><h3 style="font-size:30px;margin:8px 0">03</h3><p>Courses currently active</p></div>
-    <div class="review"><div class="eyebrow">Completed</div><h3 style="font-size:30px;margin:8px 0">08</h3><p>Courses finished</p></div>
+    <div class="review"><div class="eyebrow">In progress</div><h3 style="font-size:30px;margin:8px 0">03</h3><p>English Courses currently active</p></div>
+    <div class="review"><div class="eyebrow">Completed</div><h3 style="font-size:30px;margin:8px 0">08</h3><p>English Courses finished</p></div>
     <div class="review"><div class="eyebrow">Learning time</div><h3 style="font-size:30px;margin:8px 0">24h</h3><p>This month</p></div>
     <div class="review"><div class="eyebrow">Certificates</div><h3 style="font-size:30px;margin:8px 0">05</h3><p>Ready to share</p></div>
   </div>
   <div class="cta" style="margin-top:22px">
     <div>
       <div class="eyebrow">Continue learning</div>
-      <h3 style="font-size:26px;margin:6px 0">Modern Web Development</h3>
+      <h3 style="font-size:26px;margin:6px 0">English Learning</h3>
       <p>Your next lesson is JavaScript DOM &amp; Events. Keep your 7-day learning streak going.</p>
     </div>
     <button class="btn primary" onclick="showToast('Opening your next lesson...')">Continue Course →</button>
@@ -184,75 +182,23 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
   </div>
 </section>
 
-<section id="courses">
-  <div class="container">
-    <div class="sectionhead">
-      <div><div class="eyebrow">DOMA ACADEMY • ENGLISH</div>
-      <h2>Choose your school grade.</h2>
-      <p>English lessons designed for Egyptian Preparatory and Secondary students.</p></div>
-    </div>
-    <div class="filterbar">
-      <input class="field" id="courseSearch" oninput="filterCourses()" placeholder="Search English lessons, grammar, vocabulary...">
-      <select class="field" id="courseCategory" onchange="filterCourses()">
-        <option value="all">All Grades</option>
-        <option value="prep1">1st Preparatory</option>
-        <option value="prep2">2nd Preparatory</option>
-        <option value="prep3">3rd Preparatory</option>
-        <option value="sec1">1st Secondary</option>
-        <option value="sec2">2nd Secondary</option>
-        <option value="sec3">3rd Secondary</option>
-      </select>
-    </div>
-    <div class="coursegrid">
-      <article class="course" data-category="prep1" data-search="1st preparatory prep grammar vocabulary reading writing listening exams">
-        <div class="coursecover"><span>PREP 1</span></div><div class="coursebody"><div class="tag">1st Preparatory</div><h3>English — First Prep</h3><p>Grammar, vocabulary, reading, writing, listening and school exams.</p><button class="btn primary" onclick="openGrade('1st Preparatory')">Open Grade →</button></div>
-      </article>
-      <article class="course" data-category="prep2" data-search="2nd preparatory prep grammar vocabulary reading writing listening exams">
-        <div class="coursecover"><span>PREP 2</span></div><div class="coursebody"><div class="tag">2nd Preparatory</div><h3>English — Second Prep</h3><p>Stronger grammar, vocabulary and exam practice unit by unit.</p><button class="btn primary" onclick="openGrade('2nd Preparatory')">Open Grade →</button></div>
-      </article>
-      <article class="course" data-category="prep3" data-search="3rd preparatory prep grammar vocabulary reading writing listening exams">
-        <div class="coursecover"><span>PREP 3</span></div><div class="coursebody"><div class="tag">3rd Preparatory</div><h3>English — Third Prep</h3><p>Revision-focused English with tests and final exam practice.</p><button class="btn primary" onclick="openGrade('3rd Preparatory')">Open Grade →</button></div>
-      </article>
-      <article class="course" data-category="sec1" data-search="1st secondary secondary grammar vocabulary reading writing listening exams">
-        <div class="coursecover"><span>SEC 1</span></div><div class="coursebody"><div class="tag">1st Secondary</div><h3>English — First Secondary</h3><p>School English with structured grammar, vocabulary and skills practice.</p><button class="btn primary" onclick="openGrade('1st Secondary')">Open Grade →</button></div>
-      </article>
-      <article class="course" data-category="sec2" data-search="2nd secondary secondary grammar vocabulary reading writing listening exams">
-        <div class="coursecover"><span>SEC 2</span></div><div class="coursebody"><div class="tag">2nd Secondary</div><h3>English — Second Secondary</h3><p>Advanced reading, writing, grammar and exam preparation.</p><button class="btn primary" onclick="openGrade('2nd Secondary')">Open Grade →</button></div>
-      </article>
-      <article class="course" data-category="sec3" data-search="3rd secondary secondary thanaweya amma grammar vocabulary reading writing listening exams">
-        <div class="coursecover"><span>SEC 3</span></div><div class="coursebody"><div class="tag">3rd Secondary</div><h3>English — Third Secondary</h3><p>High-school English revision, practice tests and final-exam readiness.</p><button class="btn primary" onclick="openGrade('3rd Secondary')">Open Grade →</button></div>
-      </article>
-    </div>
-  </div>
-</section>
+<section id="courses"><div class="container"><div class="sectionhead"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade and start learning.</h2><p>Focused English lessons for Egyptian preparatory and secondary students.</p></div></div><div class="filterbar"><input class="field" id="courseSearch" oninput="filterCourses()" placeholder="Search lessons, grammar, vocabulary..."><select class="field" id="courseCategory" onchange="filterCourses()"><option value="all">All Grades</option><option value="prep1">1st Preparatory</option><option value="prep2">2nd Preparatory</option><option value="prep3">3rd Preparatory</option><option value="sec1">1st Secondary</option><option value="sec2">2nd Secondary</option><option value="sec3">3rd Secondary</option></select></div><div class="coursegrid"><article class="course" data-category="prep1" data-search="1st preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 1</span></div><div class="coursebody"><div class="tag">1st Preparatory</div><h3>English — 1st Preparatory</h3><p>Grammar, vocabulary, reading, writing, listening and school exams.</p><button class="btn primary" onclick="showToast('Opening 1st Preparatory English...')">Open Grade →</button></div></article><article class="course" data-category="prep2" data-search="2nd preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 2</span></div><div class="coursebody"><div class="tag">2nd Preparatory</div><h3>English — 2nd Preparatory</h3><p>Stronger grammar, vocabulary and unit-by-unit exam practice.</p><button class="btn primary" onclick="showToast('Opening 2nd Preparatory English...')">Open Grade →</button></div></article><article class="course" data-category="prep3" data-search="3rd preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 3</span></div><div class="coursebody"><div class="tag">3rd Preparatory</div><h3>English — 3rd Preparatory</h3><p>Revision-focused English preparation with tests and mock exams.</p><button class="btn primary" onclick="showToast('Opening 3rd Preparatory English...')">Open Grade →</button></div></article><article class="course" data-category="sec1" data-search="1st secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 1</span></div><div class="coursebody"><div class="tag">1st Secondary</div><h3>English — 1st Secondary</h3><p>Structured school English with grammar and skills practice.</p><button class="btn primary" onclick="showToast('Opening 1st Secondary English...')">Open Grade →</button></div></article><article class="course" data-category="sec2" data-search="2nd secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 2</span></div><div class="coursebody"><div class="tag">2nd Secondary</div><h3>English — 2nd Secondary</h3><p>Advanced reading, writing, grammar and exam preparation.</p><button class="btn primary" onclick="showToast('Opening 2nd Secondary English...')">Open Grade →</button></div></article><article class="course" data-category="sec3" data-search="3rd secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 3</span></div><div class="coursebody"><div class="tag">3rd Secondary</div><h3>English — 3rd Secondary</h3><p>Final-year English revision, practice tests and exam readiness.</p><button class="btn primary" onclick="showToast('Opening 3rd Secondary English...')">Open Grade →</button></div></article></div></div></section>
 
-<section id="categories">
-  <div class="container">
-    <div class="sectionhead"><div><div class="eyebrow">ENGLISH SKILLS</div><h2>Everything students need for school English.</h2></div></div>
-    <div class="featuregrid">
-      <div class="feature"><b>Grammar</b><p>Clear explanations and guided exercises.</p></div>
-      <div class="feature"><b>Vocabulary</b><p>Unit vocabulary, meanings, usage and revision.</p></div>
-      <div class="feature"><b>Reading</b><p>Comprehension passages and question practice.</p></div>
-      <div class="feature"><b>Writing</b><p>Structures, model answers and writing practice.</p></div>
-      <div class="feature"><b>Listening</b><p>Listening activities and comprehension checks.</p></div>
-      <div class="feature"><b>Quizzes & Exams</b><p>Homework, quizzes, mock exams and results.</p></div>
-    </div>
-  </div>
-</section>
+<section id="categories"><div class="container"><div class="sectionhead"><div><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2></div></div><div class="featuregrid"><div class="feature"><b>Grammar</b><p>Clear explanations with guided exercises.</p></div><div class="feature"><b>Vocabulary</b><p>Unit words, meanings, usage and revision.</p></div><div class="feature"><b>Reading</b><p>Comprehension passages and question practice.</p></div><div class="feature"><b>Writing</b><p>Structures, model answers and guided practice.</p></div><div class="feature"><b>Listening</b><p>Listening practice and comprehension checks.</p></div><div class="feature"><b>Quizzes & Exams</b><p>Homework, quizzes, mock exams and results.</p></div></div></div></section>
 
 <section id="dashboard">
   <div class="container">
-    <div class="head"><div class="eyebrow">Your learning hub</div><h2>Student Dashboard</h2><p>Everything a learner needs in one place: progress, streaks, saved courses, certificates and upcoming tasks.</p></div>
+    <div class="head"><div class="eyebrow">Your learning hub</div><h2>Student Student Dashboard</h2><p>Everything a learner needs in one place: progress, streaks, saved courses, certificates and upcoming tasks.</p></div>
     <div class="dashboard">
       <div class="dash">
-        <h3>My Learning</h3>
-        <div class="course-progress"><div class="cp"><span>Modern Web Development</span><b>64%</b></div><div class="bar"><i style="width:64%"></i></div></div>
+        <h3>My English</h3>
+        <div class="course-progress"><div class="cp"><span>English Learning</span><b>64%</b></div><div class="bar"><i style="width:64%"></i></div></div>
         <div class="course-progress"><div class="cp"><span>Digital Marketing Mastery</span><b>38%</b></div><div class="bar"><i style="width:38%"></i></div></div>
         <div class="course-progress"><div class="cp"><span>UI/UX Design from Zero</span><b>82%</b></div><div class="bar"><i style="width:82%"></i></div></div>
       </div>
       <div class="dash">
         <h3>Learning Overview</h3>
-        <div class="statgrid"><div class="stat"><strong>14</strong><span>Courses</span></div><div class="stat"><strong>86h</strong><span>Learning time</span></div><div class="stat"><strong>5</strong><span>Certificates</span></div></div>
+        <div class="statgrid"><div class="stat"><strong>14</strong><span>English Courses</span></div><div class="stat"><strong>86h</strong><span>Learning time</span></div><div class="stat"><strong>5</strong><span>Certificates</span></div></div>
         <div style="margin-top:16px;color:#777;font-size:11px">🔥 12-day learning streak — keep going.</div>
       </div>
     </div>
@@ -277,7 +223,7 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 
 <section id="instructors">
   <div class="container">
-    <div class="head"><div class="eyebrow">Learn from practitioners</div><h2>Featured Instructors</h2><p>Experienced educators and professionals focused on useful, real-world skills.</p></div>
+    <div class="head"><div class="eyebrow">Learn from practitioners</div><h2>Featured Teachers</h2><p>Experienced educators and professionals focused on useful, real-world skills.</p></div>
     <div class="instructors">
       <div class="instructor"><div class="avatar">AK</div><h3>Adam Kareem</h3><p>Web Development • 4.9 rating</p></div>
       <div class="instructor"><div class="avatar">SN</div><h3>Sarah Nabil</h3><p>Digital Marketing • 4.8 rating</p></div>
@@ -302,7 +248,7 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
     <div class="head"><div class="eyebrow">Simple access</div><h2>Choose Your Learning Plan</h2><p>Start free, then unlock more learning when you are ready.</p></div>
     <div class="pricing">
       <div class="plan"><span class="label">Free</span><h3>Starter</h3><div class="money">$0 <small>/ forever</small></div><ul><li>Selected free lessons</li><li>Learning progress</li><li>Community access</li><li>Basic quizzes</li></ul><button class="btn secondary" onclick="openModal('signup')">Create Account</button></div>
-      <div class="plan hot"><span class="label">Most Popular</span><h3>DOMA Student</h3><div class="money">Subscription access</div><ul><li>Grade-based English access</li><li>Certificates</li><li>Projects & resources</li><li>Advanced assessments</li></ul><button class="btn primary" onclick="openModal('signup')">Start Pro</button></div>
+      <div class="plan hot"><span class="label">Most Popular</span><h3>Pro Learner</h3><div class="money">$19 <small>/ month</small></div><ul><li>Full course library</li><li>Certificates</li><li>Projects & resources</li><li>Advanced assessments</li></ul><button class="btn primary" onclick="openModal('signup')">Start Pro</button></div>
       <div class="plan"><span class="label">For Teams</span><h3>Academy</h3><div class="money">Custom</div><ul><li>Team learning dashboard</li><li>Progress & reporting</li><li>Private learning paths</li><li>Admin support</li></ul><button class="btn secondary" onclick="openModal('contact')">Talk to Us</button></div>
     </div>
   </div>
@@ -325,7 +271,7 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
     <div class="faq">
       <details><summary>Can I start learning for free?</summary><p>Yes. The Starter plan includes selected free lessons and basic learning features.</p></details>
       <details><summary>Do courses include certificates?</summary><p>Eligible completed courses can provide a shareable completion certificate.</p></details>
-      <details><summary>Can I learn at my own pace?</summary><p>Yes. Courses are designed for self-paced learning, with progress saved in your dashboard.</p></details>
+      <details><summary>Can I learn at my own pace?</summary><p>Yes. English Courses are designed for self-paced learning, with progress saved in your dashboard.</p></details>
       <details><summary>Are there quizzes and projects?</summary><p>Yes. The platform is designed around lessons, knowledge checks, practical exercises and projects.</p></details>
       <details><summary>Can teams use DOMA ACADEMY?</summary><p>Yes. The Academy plan is designed for organizations that want team learning and progress reporting.</p></details>
     </div>
@@ -334,57 +280,71 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 
 <section>
   <div class="container">
-    <div class="cta"><div class="eyebrow">Your English journey starts here</div><h2>Master English with a clear school-focused path.</h2><p>Join DOMA ACADEMY and build practical skills with a clear path, measurable progress and projects that matter.</p><button class="btn primary" onclick="openModal('signup')">Create Your Student Account →</button></div>
+    <div class="cta"><div class="eyebrow">Your next skill starts here</div><h2>Learn something that moves you forward.</h2><p>Learn English for Egyptian preparatory and secondary grades with lessons, grammar, vocabulary, reading, writing, listening, quizzes and exams.</p><button class="btn primary" onclick="openModal('signup')">Create Your Free Account →</button></div>
   </div>
 </section>
+
+
+<!-- DOMA ACADEMY V4 — Exams & Quizzes -->
+<style>
+.exam-zone{margin-top:26px;padding:22px;background:#100b0d;border:1px solid #2d181f;border-radius:15px}
+.exam-zone h3{margin-bottom:7px}.exam-zone p{color:#888;font-size:12px}
+.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.exam-card{background:#0a0909;border:1px solid #2b181e;border-radius:12px;padding:16px}
+.exam-card h4{font-size:15px;margin-bottom:6px}.exam-meta{color:#777;font-size:10px;margin-bottom:12px}
+.exam-modal{position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(7px);z-index:10050;display:none;overflow:auto;padding:18px}
+.exam-modal.open{display:block}.exam-shell{max-width:920px;margin:auto;background:#100a0d;border:1px solid #512331;border-radius:18px;overflow:hidden}
+.exam-head{padding:20px;border-bottom:1px solid #2b181e;display:flex;justify-content:space-between;gap:15px}
+.exam-head h3{margin:0 0 4px}.exam-head p{margin:0;color:#888;font-size:11px}.exam-timer{font-weight:900;color:#e09aaa;white-space:nowrap}
+.exam-body{padding:20px}.question{background:#0b090a;border:1px solid #2b181e;border-radius:13px;padding:17px;margin-bottom:12px}
+.question b{display:block;margin-bottom:12px}.option{display:block;padding:10px 12px;border:1px solid #2b181e;border-radius:9px;margin:7px 0;color:#bbb;cursor:pointer}
+.option:hover{border-color:#713044;color:#fff}.option input{margin-right:9px}.exam-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:18px}.exam-result{text-align:center;padding:28px}.exam-result .score{font-size:44px;font-weight:900;color:#d17b8e}
+@media(max-width:650px){.exam-grid{grid-template-columns:1fr}.exam-head{flex-direction:column}}
+</style>
+
+<section class="container" id="exams" style="padding-top:20px">
+  <div class="head"><div class="eyebrow">Test your progress</div><h2>Quizzes & Exams</h2>
+    <p>Take published English exams for your selected grade. Your score is saved to your student account.</p>
+  </div>
+  <div class="exam-zone">
+    <div id="domaExamList"><p>Log in and select a grade to load your exams.</p></div>
+  </div>
+</section>
+
+<div class="exam-modal" id="domaExamModal" aria-hidden="true">
+  <div class="exam-shell">
+    <div class="exam-head">
+      <div><div class="eyebrow">DOMA ACADEMY • EXAM</div><h3 id="domaExamTitle">Exam</h3><p id="domaExamDesc"></p></div>
+      <div class="exam-timer" id="domaExamTimer">00:00</div>
+      <button class="close" id="domaExamClose" type="button">×</button>
+    </div>
+    <div class="exam-body" id="domaExamBody"></div>
+  </div>
+</div>
 
 <footer class="footer">
   <div class="container">
     <div class="footgrid">
       <div><a class="brand" href="#home"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>DOMA ACADEMY<small>BY ADHAM</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div>
-      <div><h4>Platform</h4><a href="#courses">Courses</a><a href="#categories">Categories</a><a href="#dashboard">Dashboard</a><a href="#pricing">Pricing</a></div>
-      <div><h4>Learning</h4><a href="#instructors">Instructors</a><a href="#faq">FAQ</a><a href="#courses">Projects</a><a href="#dashboard">Certificates</a></div>
+      <div><h4>Platform</h4><a href="#courses">English Courses</a><a href="#categories">Grades</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div>
+      <div><h4>Learning</h4><a href="#instructors">Teachers</a><a href="#faq">FAQ</a><a href="#courses">Projects</a><a href="#dashboard">Certificates</a></div>
       <div><h4>Support</h4><a href="#" onclick="openModal('contact');return false">Contact</a><a href="#" onclick="openModal('contact');return false">Help Center</a><a href="#" onclick="showToast('Community area is ready for integration.') ;return false">Community</a></div>
     </div>
-    <div class="copy"><span>© 2026 DOMA ACADEMY — Learning Platform.</span><span>Built for learning. Designed for progress.</span></div>
+    <div class="copy"><span>© 2026 DOMA ACADEMY — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div>
   </div>
 </footer>
 
-<div class="modal" id="gradeModal"><div class="modalbox">
-  <div class="modalhead"><h3 id="gradeTitle">English Grade</h3><button class="close" onclick="closeGrade()">×</button></div>
-  <p>Select the English area you want to study.</p>
-  <div class="featuregrid">
-    <div class="feature"><b>Lessons</b><p>Units and school lessons.</p><button class="btn primary" onclick="showToast('Lessons area ready.')">Open</button></div>
-    <div class="feature"><b>Grammar</b><p>Rules and exercises.</p><button class="btn primary" onclick="showToast('Grammar area ready.')">Practice</button></div>
-    <div class="feature"><b>Vocabulary</b><p>Words and revision.</p><button class="btn primary" onclick="showToast('Vocabulary area ready.')">Practice</button></div>
-    <div class="feature"><b>Reading & Writing</b><p>School skills practice.</p><button class="btn primary" onclick="showToast('Skills area ready.')">Start</button></div>
-    <div class="feature"><b>Quizzes & Exams</b><p>Tests and score tracking.</p><button class="btn primary" onclick="showToast('Tests area ready.')">Take Test</button></div>
-    <div class="feature"><b>Homework</b><p>Assignments and feedback.</p><button class="btn primary" onclick="showToast('Homework area ready.')">View</button></div>
-  </div>
-</div></div>
 <div class="modal" id="modal"><div class="modalbox">
   <div class="modalhead"><h3 id="modalTitle">Get Started</h3><button class="close" onclick="closeModal()">×</button></div>
   <p id="modalText">Create your account and start your learning journey.</p>
   <div id="modalBody"></div>
 </div></div>
-<div class="toast" id="toast"></div>
-
-
-<div id="domaSubModal"><div class="doma-sub-box">
-  <div style="display:flex;justify-content:space-between;gap:15px;align-items:flex-start"><div><div class="eyebrow">DOMA ACADEMY • SUBSCRIPTION</div><h2 id="domaSubTitle" style="margin:6px 0">Subscribe to your grade</h2><p id="domaSubHint" class="doma-sub-muted">Choose a plan and submit your Mobile Cash receipt.</p></div><button class="course-close" onclick="domaCloseSub()">×</button></div>
-  <div class="doma-sub-grid" id="domaPlanGrid"></div>
-  <div class="doma-sub-row"><b>Mobile Cash:</b><span style="font-size:18px;font-weight:900">01006525147</span></div>
-  <div class="doma-sub-row"><input id="domaSenderPhone" class="doma-sub-input" placeholder="Your Mobile Cash sender number"></div>
-  <div class="doma-sub-row"><input id="domaReceipt" class="doma-sub-input" type="file" accept="image/*"></div>
-  <div id="domaSubStatus" class="doma-sub-status"></div>
-  <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px"><button class="btn secondary" onclick="domaCloseSub()">Cancel</button><button class="btn primary" onclick="domaSubmitSubscription()">Submit Request</button></div>
-</div></div>
+<div class="toast" id="toast"></div><div class="doma-sub-overlay" id="domaSubscriptionOverlay" aria-hidden="true"><div class="doma-sub-box"><div class="doma-sub-head"><div><div class="eyebrow">DOMA ACADEMY • SUBSCRIPTION</div><h3 id="domaSubTitle">Grade Subscription</h3><p>Choose your subscription and send your payment proof for approval.</p></div><button class="doma-sub-close" type="button" onclick="closeDomaSubscription()">×</button></div><div id="domaSubBody"></div></div></div>
 
 <script>
 const courses=[...document.querySelectorAll('.course')];
-function openGrade(name){domaOpenSub(name);}
-function closeGrade(){document.getElementById('gradeModal').classList.remove('show');}
-function filterCourses(){
+function filterCourses(){ return filterEnglishCourses(); }
+function filterEnglishCourses(){
   const q=document.getElementById('courseSearch').value.toLowerCase().trim();
   const cat=document.getElementById('courseCategory').value;
   courses.forEach(c=>{
@@ -402,19 +362,20 @@ function showToast(msg){
   clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
 }
 function openModal(type){
+  domaInitSB();
   const m=document.getElementById('modal'), title=document.getElementById('modalTitle'), text=document.getElementById('modalText'), body=document.getElementById('modalBody');
   if(type==='login'){
-    title.textContent='Welcome back';text.textContent='Log in to continue your learning journey.';
-    body.innerHTML='<div class="formgrid"><input id="domaLoginEmail" class="field" placeholder="Email address"><input id="domaLoginPass" class="field" type="password" placeholder="Password"><button class="btn primary full" onclick="domaLogin()">Log In</button></div>';
+    title.textContent='Student Login'; text.textContent='Sign in to access your grade, lessons and progress.';
+    body.innerHTML='<div class="formgrid"><input id="domaLoginEmail" class="field" type="email" placeholder="Email address"><input id="domaLoginPassword" class="field" type="password" placeholder="Password"><button class="btn primary full" onclick="domaLogin()">Log In</button><button class="btn full" onclick="closeModal();openModal(\'signup\')">Create Student Account</button></div>';
   }else if(type==='signup'){
-    title.textContent='Create your account';text.textContent='Create your free DOMA ACADEMY learner account.';
-    body.innerHTML='<div class="formgrid"><input id="domaSignupName" class="field" placeholder="Full name"><input id="domaSignupEmail" class="field" placeholder="Email address"><input id="domaSignupPass" class="field" type="password" placeholder="Create password"><button class="btn primary full" onclick="domaSignup()">Create Account</button></div>';
+    title.textContent='Create Student Account'; text.textContent='Create your English learning account and select your school grade.';
+    body.innerHTML='<div class="formgrid"><input id="domaSignupName" class="field" placeholder="Full name"><input id="domaSignupEmail" class="field" type="email" placeholder="Email address"><input id="domaSignupPassword" class="field" type="password" placeholder="Password (6+ characters)"><select id="domaSignupGrade" class="field"><option value="">Select your grade</option><option>1st Preparatory</option><option>2nd Preparatory</option><option>3rd Preparatory</option><option>1st Secondary</option><option>2nd Secondary</option><option>3rd Secondary</option></select><button class="btn primary full" onclick="domaSignup()">Create Student Account</button></div>';
   }else if(type==='search'){
-    title.textContent='Find your next course';text.textContent='Search the course library by skill or topic.';
-    body.innerHTML='<div class="formgrid"><input id="modalSearch" class="field full" placeholder="e.g. Python, marketing, UI/UX" onkeydown="if(event.key===\'Enter\'){document.getElementById(\'courseSearch\').value=this.value;closeModal();filterCourses();document.getElementById(\'courses\').scrollIntoView()}"><button class="btn primary full" onclick="document.getElementById(\'courseSearch\').value=document.getElementById(\'modalSearch\').value;closeModal();filterCourses();document.getElementById(\'courses\').scrollIntoView()">Search Courses</button></div>';
+    title.textContent='Find English Content'; text.textContent='Search the English library by grade, skill or topic.';
+    body.innerHTML='<div class="formgrid"><input id="modalSearch" class="field full" placeholder="e.g. grammar, vocabulary, reading" onkeydown="if(event.key===\'Enter\'){document.getElementById(\'courseSearch\').value=this.value;closeModal();filterEnglishCourses();document.getElementById(\'courses\').scrollIntoView()}"><button class="btn primary full" onclick="document.getElementById(\'courseSearch\').value=document.getElementById(\'modalSearch\').value;closeModal();filterEnglishCourses();document.getElementById(\'courses\').scrollIntoView()">Search English Content</button></div>';
   }else{
-    title.textContent='Talk to DOMA ACADEMY';text.textContent='Send a message and our team can help with courses, teams or platform access.';
-    body.innerHTML='<div class="formgrid"><input class="field" placeholder="Your name"><input class="field" placeholder="Email address"><textarea class="field full" rows="5" placeholder="How can we help?"></textarea><button class="btn primary full" onclick="fakeSubmit(\'Thanks — your message has been received.\')">Send Message</button></div>';
+    title.textContent='DOMA ACADEMY'; text.textContent='English learning for Egyptian preparatory and secondary students.';
+    body.innerHTML='<div class="formgrid"><button class="btn primary full" onclick="closeModal();openStudentDashboard()">Open Student Dashboard</button><button class="btn full" onclick="closeModal();openModal(\'login\')">Student Login</button><button class="btn full" onclick="closeModal();openModal(\'signup\')">Create Account</button></div>';
   }
   m.classList.add('show');
 }
@@ -423,12 +384,25 @@ function fakeSubmit(msg){closeModal();showToast(msg)}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 </script>
 
+
+<div class="modal" id="studentModal">
+  <div class="modalbox" style="max-width:900px">
+    <div class="modalhead">
+      <h3>Student Dashboard</h3>
+      <button class="close" onclick="closeStudentDashboard()">×</button>
+    </div>
+    <div id="studentDashboardBody">
+      <p>Loading your student account...</p>
+    </div>
+  </div>
+</div>
+
 <div class="course-modal" id="courseModal" aria-hidden="true">
   <div class="course-shell">
     <div class="course-top">
       <div>
         <div class="eyebrow">DOMA ACADEMY • COURSE</div>
-        <h2 id="courseTitle">Modern Web Development</h2>
+        <h2 id="courseTitle">English Learning</h2>
         <p id="courseSubtitle">Build practical skills through guided lessons and projects.</p>
       </div>
       <button class="course-close" id="courseClose" aria-label="Close">×</button>
@@ -479,7 +453,7 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='
 <script id="doma-v2-script">
 (function(){
   const courses = {
-    "Modern Web Development":{
+    "English Learning":{
       subtitle:"HTML, CSS, JavaScript and practical projects.",
       lessons:[
         ["Welcome to Web Development","8 min","Video lesson"],
@@ -636,23 +610,256 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='
 </script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const DOMA_SB_URL='https://dtptxhkcogpoleftguas.supabase.co';
-const DOMA_SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-let domaSBClient=null,domaSelectedGrade='',domaSelectedPlan='monthly';
-try{ if(window.supabase?.createClient) domaSBClient=window.supabase.createClient(DOMA_SB_URL,DOMA_SB_KEY); }catch(e){console.warn(e)}
-const DOMA_PRICES={'1st Preparatory':150,'2nd Preparatory':200,'3rd Preparatory':250,'1st Secondary':150,'2nd Secondary':200,'3rd Secondary':250};
-function domaEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-async function domaLogin(){const e=document.getElementById('domaLoginEmail').value.trim(),p=document.getElementById('domaLoginPass').value;if(!e||!p)return domaStatus('');if(!domaSBClient)return fakeSubmit('Supabase is not available.');const r=await domaSBClient.auth.signInWithPassword({email:e,password:p});if(r.error)return alert(r.error.message);closeModal();showToast('Welcome back to DOMA ACADEMY.');}
-async function domaSignup(){const n=document.getElementById('domaSignupName').value.trim(),e=document.getElementById('domaSignupEmail').value.trim(),p=document.getElementById('domaSignupPass').value;if(!n||!e||p.length<6)return alert('Enter your name, a valid email, and a password of at least 6 characters.');if(!domaSBClient)return alert('Supabase is not available.');const r=await domaSBClient.auth.signUp({email:e,password:p,options:{data:{full_name:n}}});if(r.error)return alert(r.error.message);closeModal();showToast(r.data.session?'Account created successfully. Check your email if confirmation is required.':'Account created. Check your email to confirm the account.');}
-function domaOpenSub(grade){domaSelectedGrade=grade;document.getElementById('domaSubTitle').textContent='Subscribe — '+grade;const grid=document.getElementById('domaPlanGrid');const p=DOMA_PRICES[grade]||250;grid.innerHTML=`<div class="doma-sub-card selected" id="planMonthly" onclick="domaChoosePlan('monthly')"><h4>Monthly</h4><div class="doma-sub-price">${p} EGP</div><div class="doma-sub-muted">30 days access</div></div><div class="doma-sub-card" id="planAnnual" onclick="domaChoosePlan('annual')"><h4>Annual</h4><div class="doma-sub-price">${p} EGP</div><div class="doma-sub-muted">12 months access</div></div>`;domaChoosePlan('monthly');document.getElementById('domaSubModal').classList.add('show');domaCheckExisting();}
-function domaChoosePlan(x){domaSelectedPlan=x;document.querySelectorAll('.doma-sub-card').forEach(e=>e.classList.remove('selected'));document.getElementById(x==='monthly'?'planMonthly':'planAnnual')?.classList.add('selected');}
-function domaCloseSub(){document.getElementById('domaSubModal').classList.remove('show')}
-function domaStatus(msg,show=true){const e=document.getElementById('domaSubStatus');e.textContent=msg;e.classList.toggle('show',show)}
-async function domaUser(){if(!domaSBClient)return null;const r=await domaSBClient.auth.getUser();return r.data?.user||null}
-async function domaCheckExisting(){const u=await domaUser();if(!u)return domaStatus('Please log in or create your DOMA ACADEMY account before submitting a subscription request.');const r=await domaSBClient.from('subscriptions').select('status,expires_at,grade_id,grades(name)').eq('student_id',u.id).order('created_at',{ascending:false}).limit(5);if(r.error)return;const active=(r.data||[]).find(x=>x.status==='approved'&&new Date(x.expires_at)>new Date()&&x.grades?.name===domaSelectedGrade);if(active)domaStatus('You already have an active subscription for this grade until '+new Date(active.expires_at).toLocaleDateString()+'.');}
-async function domaSubmitSubscription(){const u=await domaUser();if(!u)return domaStatus('Please log in first.');const file=document.getElementById('domaReceipt').files[0];const phone=document.getElementById('domaSenderPhone').value.trim();if(!file)return domaStatus('Please select the payment receipt image.');if(!phone)return domaStatus('Enter the Mobile Cash sender number.');if(file.size>5*1024*1024)return domaStatus('Receipt image must be 5 MB or less.');const g=await domaSBClient.from('grades').select('id,name').eq('name',domaSelectedGrade).single();if(g.error)return domaStatus(g.error.message);const amount=DOMA_PRICES[domaSelectedGrade]||250;const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';const path=`${u.id}/${crypto.randomUUID()}.${ext}`;domaStatus('Uploading receipt…');const up=await domaSBClient.storage.from('payment-receipts').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});if(up.error)return domaStatus('Receipt upload failed: '+up.error.message);const ins=await domaSBClient.from('subscriptions').insert({student_id:u.id,grade_id:g.data.id,plan_type:domaSelectedPlan,amount,payment_method:'mobile_cash',sender_phone:phone,receipt_path:path,status:'pending'});if(ins.error){await domaSBClient.storage.from('payment-receipts').remove([path]);return domaStatus('Request failed: '+ins.error.message)}domaStatus('Request submitted successfully. Admin review is required before access is activated.');document.getElementById('domaReceipt').value='';}
+/* DOMA ACADEMY — Student layer */
+const DOMA_SUPABASE_URL = "https://dtptxhkcogpoleftguas.supabase.co";
+const DOMA_SUPABASE_KEY = "sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL";
+let domaSB = null;
+let domaUser = null;
+let domaProfile = null;
+
+let domaAuthReady = null;
+function domaInitSB(){
+  if(!window.supabase) return null;
+  if(!domaSB){
+    domaSB = window.supabase.createClient(DOMA_SUPABASE_URL, DOMA_SUPABASE_KEY);
+    domaAuthReady = domaSB.auth.getSession().then(({data})=>{
+      domaUser = data.session?.user || null;
+      if(domaUser) awaitProfileSafely();
+      updateDomaAuthButtons();
+      return domaUser;
+    }).catch(()=>null);
+    domaSB.auth.onAuthStateChange((_event, session)=>{
+      domaUser = session?.user || null;
+      if(domaUser) setTimeout(()=>loadDomaProfile(),0);
+      else domaProfile = null;
+      updateDomaAuthButtons();
+    });
+  }
+  return domaSB;
+}
+async function awaitProfileSafely(){
+  try{ if(domaUser) await loadDomaProfile(); }catch(e){ console.warn('DOMA profile load:',e); }
+}
+async function domaEnsureUser(){
+  const sb=domaInitSB();
+  if(!sb) return null;
+  if(domaAuthReady) await domaAuthReady;
+  if(domaUser) return domaUser;
+  try{
+    const {data}=await sb.auth.getSession();
+    domaUser=data.session?.user||null;
+    if(domaUser) await loadDomaProfile();
+  }catch(e){ console.warn('DOMA auth check:',e); }
+  return domaUser;
+}
+async function loadDomaProfile(){
+  if(!domaSB || !domaUser) return;
+  const {data} = await domaSB.from('profiles').select('*,grades(name)').eq('id',domaUser.id).maybeSingle();
+  domaProfile = data || {id:domaUser.id,email:domaUser.email};
+  updateDomaAuthButtons();
+}
+function updateDomaAuthButtons(){
+  document.querySelectorAll('[data-doma-dashboard]').forEach(el=>{
+    el.textContent = domaUser ? 'My Dashboard' : 'Student Login';
+  });
+}
+async function domaSignup(){
+  const name = document.getElementById('domaSignupName')?.value.trim();
+  const email = document.getElementById('domaSignupEmail')?.value.trim();
+  const pass = document.getElementById('domaSignupPassword')?.value || '';
+  const grade = document.getElementById('domaSignupGrade')?.value || '';
+  if(!name || !email || pass.length < 6 || !grade) return showToast('Please complete the signup form.');
+  const {data,error} = await domaSB.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
+  if(error) return showToast(error.message);
+  if(data.user){
+    const {data:g} = await domaSB.from('grades').select('id,name').eq('name',grade).maybeSingle();
+    if(g) await domaSB.from('profiles').update({full_name:name,grade_id:g.id}).eq('id',data.user.id);
+  }
+  closeModal();
+  showToast('Account created. Check your email if confirmation is enabled.');
+}
+async function domaLogin(){
+  const email = document.getElementById('domaLoginEmail')?.value.trim();
+  const pass = document.getElementById('domaLoginPassword')?.value || '';
+  if(!email || !pass) return showToast('Enter your email and password.');
+  const {error} = await domaSB.auth.signInWithPassword({email,password:pass});
+  if(error) return showToast(error.message);
+  closeModal();
+  showToast('Welcome back to DOMA ACADEMY.');
+}
+async function domaLogout(){
+  if(domaSB) await domaSB.auth.signOut();
+  closeStudentDashboard();
+  showToast('You have been logged out.');
+}
+async function openStudentDashboard(){
+  domaInitSB();
+  if(!domaUser){
+    openModal('login');
+    return;
+  }
+  document.getElementById('studentModal').classList.add('show');
+  const body = document.getElementById('studentDashboardBody');
+  body.innerHTML='<p>Loading progress...</p>';
+  await loadDomaProfile();
+  const gradeId = domaProfile?.grade_id;
+  let lessons=[], progress=[];
+  if(gradeId){
+    const [l,p] = await Promise.all([
+      domaSB.from('lessons').select('id,title,lesson_type,duration_minutes').eq('grade_id',gradeId).eq('is_published',true).order('sort_order'),
+      domaSB.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',domaUser.id)
+    ]);
+    lessons=l.data||[]; progress=p.data||[];
+  }
+  const done = new Set(progress.filter(x=>x.completed).map(x=>x.lesson_id));
+  const percent = lessons.length ? Math.round(done.size/lessons.length*100) : 0;
+  body.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+      <div class="card"><strong>Student</strong><div>${domaProfile?.full_name||domaUser.email}</div></div>
+      <div class="card"><strong>Grade</strong><div>${domaProfile?.grades?.name||'Not selected'}</div></div>
+      <div class="card"><strong>Progress</strong><div>${percent}%</div></div>
+    </div>
+    <div style="margin-bottom:18px"><div style="height:10px;background:#ddd;border-radius:99px;overflow:hidden"><div style="width:${percent}%;height:100%;background:#7f1734"></div></div></div>
+    <h4>My English Lessons</h4>
+    <div style="display:grid;gap:10px;margin-top:12px">
+      ${lessons.length ? lessons.map(l=>`
+        <div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <div><strong>${escapeHtml(l.title)}</strong><div style="opacity:.7">${escapeHtml(l.lesson_type)} • ${l.duration_minutes||0} min</div></div>
+          <button class="btn primary" onclick="toggleLessonProgress('${l.id}',${done.has(l.id)})">${done.has(l.id)?'Completed':'Mark Complete'}</button>
+        </div>`).join('') : '<p>No published lessons for your grade yet.</p>'}
+    </div>
+    <div style="margin-top:18px"><button class="btn" onclick="domaLogout()">Log Out</button></div>`;
+}
+async function toggleLessonProgress(lessonId, current){
+  if(!domaSB || !domaUser) return;
+  const payload={student_id:domaUser.id,lesson_id:lessonId,completed:!current,progress_percent:current?0:100,last_opened_at:new Date().toISOString(),completed_at:current?null:new Date().toISOString()};
+  const {error}=await domaSB.from('lesson_progress').upsert(payload,{onConflict:'student_id,lesson_id'});
+  if(error) return showToast(error.message);
+  openStudentDashboard();
+}
+function closeStudentDashboard(){ document.getElementById('studentModal')?.classList.remove('show'); }
+function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+domaInitSB();
+</script>
+
+
+<script>
+/* DOMA ACADEMY V4 — Real Supabase Exams */
+(function(){
+  let examRows=[], activeExam=null, activeQuestions=[], timer=null, remaining=0;
+
+  function sb(){ domaInitSB(); return domaSB; }
+  function esc(v){ return escapeHtml(v); }
+
+  async function loadExams(){
+    const box=document.getElementById('domaExamList');
+    if(!box) return;
+    if(!domaUser){ box.innerHTML='<p>Please log in to view exams for your grade.</p>'; return; }
+    await loadDomaProfile();
+    const gradeId=domaProfile?.grade_id;
+    if(!gradeId){ box.innerHTML='<p>Your account does not have a grade selected yet.</p>'; return; }
+
+    const {data,error}=await sb().from('quizzes').select('id,title,description,duration_minutes,pass_percent,grade_id').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false});
+    if(error){ box.innerHTML='<p>'+esc(error.message)+'</p>'; return; }
+    examRows=data||[];
+    box.innerHTML=examRows.length ? '<div class="exam-grid">'+examRows.map(q=>`
+      <div class="exam-card">
+        <div class="eyebrow">Published exam</div>
+        <h4>${esc(q.title)}</h4>
+        <div class="exam-meta">${esc(q.description||'English assessment')} • ${q.duration_minutes||20} min • Pass ${q.pass_percent??50}%</div>
+        <button class="btn primary" type="button" onclick="DOMAStartExam('${q.id}')">Start Exam →</button>
+      </div>`).join('')+'</div>' : '<p>No published exams are available for your grade yet.</p>';
+  }
+
+  async function startExam(id){
+    if(!domaUser) return openModal('login');
+    const q=examRows.find(x=>x.id===id); if(!q) return;
+    const [questionsRes, attemptsRes]=await Promise.all([
+      sb().from('quiz_questions').select('id,question,options,points,sort_order').eq('quiz_id',id).order('sort_order'),
+      sb().from('quiz_attempts').select('id,score,total_points,submitted_at').eq('quiz_id',id).eq('student_id',domaUser.id).order('submitted_at',{ascending:false})
+    ]);
+    if(questionsRes.error) return showToast(questionsRes.error.message);
+    activeExam=q; activeQuestions=questionsRes.data||[];
+    const attempts=attemptsRes.data||[];
+    if(!activeQuestions.length) return showToast('This exam has no questions yet.');
+    if(attempts.length) {
+      const last=attempts[0];
+      showExamResult({score:last.score,total:last.total_points,pass:last.total_points?Math.round(last.score/last.total_points*100)>=Number(q.pass_percent??50):false,previous:true});
+      return;
+    }
+    document.getElementById('domaExamTitle').textContent=q.title;
+    document.getElementById('domaExamDesc').textContent=q.description||'Answer every question, then submit.';
+    const body=document.getElementById('domaExamBody');
+    body.innerHTML=activeQuestions.map((x,i)=>{
+      let opts=Array.isArray(x.options)?x.options:[];
+      return `<div class="question"><b>${i+1}. ${esc(x.question)} <span style="color:#777;font-weight:400">(${x.points||1} pt)</span></b>
+        ${opts.map((o,j)=>`<label class="option"><input type="radio" name="q_${x.id}" value="${esc(o)}"> ${esc(o)}</label>`).join('')}
+      </div>`;
+    }).join('')+`<div class="exam-actions"><button class="btn secondary" type="button" onclick="DOMACloseExam()">Exit</button><button class="btn primary" type="button" onclick="DOMASubmitExam()">Submit Exam</button></div>`;
+    document.getElementById('domaExamModal').classList.add('open');
+    remaining=Math.max(1,Number(q.duration_minutes||20))*60; updateTimer();
+    clearInterval(timer); timer=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){clearInterval(timer);DOMASubmitExam(true)}},1000);
+  }
+
+  function updateTimer(){
+    const el=document.getElementById('domaExamTimer'); if(!el)return;
+    const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); el.textContent=m+':'+s;
+  }
+
+  async function submitExam(auto=false){
+    if(!activeExam || !activeQuestions.length) return;
+    clearInterval(timer);
+    const answers={}; let score=0,total=0;
+    activeQuestions.forEach(q=>{
+      total += Number(q.points||1);
+      const chosen=document.querySelector(`input[name="q_${q.id}"]:checked`)?.value ?? null;
+      answers[q.id]=chosen;
+      // Correct answers are deliberately not exposed to the student query.
+      // Scoring is done server-side by the RPC created in the V4 SQL migration.
+    });
+    const {data,error}=await sb().rpc('submit_quiz_attempt',{p_quiz_id:activeExam.id,p_student_id:domaUser.id,p_answers:answers});
+    if(error) return showToast(error.message);
+    const result=Array.isArray(data)?data[0]:data;
+    closeExam();
+    showExamResult({score:Number(result?.score||0),total:Number(result?.total_points||total),pass:Boolean(result?.passed),auto});
+    loadExams();
+  }
+
+  function showExamResult(r){
+    const modal=document.getElementById('domaExamModal'), body=document.getElementById('domaExamBody');
+    document.getElementById('domaExamTitle').textContent=activeExam?.title||'Exam Result';
+    document.getElementById('domaExamDesc').textContent='Your saved result';
+    const pct=r.total?Math.round(Number(r.score)/Number(r.total)*100):0;
+    body.innerHTML=`<div class="exam-result"><div class="eyebrow">${r.previous?'Previous attempt':'Completed'}</div><div class="score">${pct}%</div><p>You scored <strong>${r.score}</strong> out of <strong>${r.total}</strong>.</p><p style="margin-top:8px;color:${r.pass?'#72c9a0':'#d98b9c'}">${r.pass?'PASS — well done.':'NOT PASSED — review your lessons and try again later.'}</p><button class="btn primary" type="button" onclick="DOMACloseExam();loadExams()">Close Result</button></div>`;
+    modal.classList.add('open');
+  }
+
+  function closeExam(){clearInterval(timer);document.getElementById('domaExamModal').classList.remove('open');activeExam=null;activeQuestions=[];}
+  window.DOMAStartExam=startExam; window.DOMASubmitExam=submitExam; window.DOMACloseExam=closeExam;
+  document.getElementById('domaExamClose')?.addEventListener('click',closeExam);
+  document.getElementById('domaExamModal')?.addEventListener('click',e=>{if(e.target.id==='domaExamModal')closeExam();});
+
+  // Refresh when auth state changes.
+  const oldLoadProfile=window.loadDomaProfile;
+  const oldUpdate=window.updateDomaAuthButtons;
+  window.loadDomaProfile=async function(){ const r=oldLoadProfile?await oldLoadProfile():null; setTimeout(loadExams,0); return r; };
+  setTimeout(loadExams,700);
+  window.addEventListener('focus',loadExams);
+})();
+</script>
+
+<script id="doma-subscription-script">
+const DOMA_PAYMENT_PHONE='01006525147';
+const DOMA_PRICES={'1st Preparatory':{monthly:150,annual:150},'2nd Preparatory':{monthly:200,annual:200},'3rd Preparatory':{monthly:250,annual:250}};
+let domaSelectedGrade='',domaSelectedPlan='monthly';
+function closeDomaSubscription(){const x=document.getElementById('domaSubscriptionOverlay');x.classList.remove('open');x.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function openDomaSubscription(grade){domaSelectedGrade=grade;domaSelectedPlan='monthly';const ov=document.getElementById('domaSubscriptionOverlay');document.getElementById('domaSubTitle').textContent=grade+' Subscription';ov.classList.add('open');ov.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';if(!DOMA_PRICES[grade]){document.getElementById('domaSubBody').innerHTML='<div class="doma-status">Pricing for '+grade+' has not been configured yet.</div>';return;}domaRenderSubscription();}
+function domaRenderSubscription(){const p=DOMA_PRICES[domaSelectedGrade][domaSelectedPlan];const m=domaSelectedPlan==='monthly';document.getElementById('domaSubBody').innerHTML='<div class="doma-plan-grid"><div class="doma-plan '+(m?'active':'')+'" onclick="domaSelectedPlan=\'monthly\';domaRenderSubscription()"><strong>Monthly</strong><span>Access for 1 month</span><div class="doma-price">EGP '+DOMA_PRICES[domaSelectedGrade].monthly+'</div></div><div class="doma-plan '+(!m?'active':'')+'" onclick="domaSelectedPlan=\'annual\';domaRenderSubscription()"><strong>Annual</strong><span>Access for 12 months</span><div class="doma-price">EGP '+DOMA_PRICES[domaSelectedGrade].annual+'</div></div></div><div class="doma-pay-box"><div>Transfer the subscription fee to Mobile Cash:</div><div class="doma-pay-number">'+DOMA_PAYMENT_PHONE+'</div><div class="doma-sub-note">After the transfer, upload the payment receipt. Access starts after admin approval.</div></div><div class="doma-sub-form"><input id="domaSubName" placeholder="Student full name"><input id="domaSubPhone" placeholder="Student phone number"><input id="domaSubEmail" type="email" placeholder="Student email"><input id="domaSubProof" class="doma-file" type="file" accept="image/*,.pdf"><div class="doma-sub-note">Selected plan: <b>'+(m?'Monthly (1 month)':'Annual (12 months)')+'</b> — EGP '+p+'</div><button class="btn primary full" type="button" onclick="submitDomaSubscription()">Send Subscription Request</button><div id="domaSubStatus"></div></div>';}
+async function submitDomaSubscription(){const user=await domaEnsureUser();if(!user){document.getElementById('domaSubStatus').innerHTML='<div class="doma-status">Please log in or create a student account first.</div>';return;}const name=document.getElementById('domaSubName').value.trim(),phone=document.getElementById('domaSubPhone').value.trim(),email=document.getElementById('domaSubEmail').value.trim(),file=document.getElementById('domaSubProof').files[0];if(!name||!phone||!email||!file){document.getElementById('domaSubStatus').innerHTML='<div class="doma-status">Complete all fields and upload the payment receipt.</div>';return;}const status=document.getElementById('domaSubStatus');status.innerHTML='<div class="doma-status">Sending your request…</div>';try{const gq=await domaSB.from('grades').select('id,name').eq('name',domaSelectedGrade).maybeSingle();if(gq.error||!gq.data)throw new Error('Grade is not configured in Supabase yet.');const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path=user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;const up=await domaSB.storage.from('payment-proofs').upload(path,file,{upsert:false,contentType:file.type});if(up.error)throw up.error;const price=DOMA_PRICES[domaSelectedGrade][domaSelectedPlan];const ins=await domaSB.from('subscription_requests').insert({student_id:user.id,grade_id:gq.data.id,plan:domaSelectedPlan,amount:price,student_name:name,student_phone:phone,student_email:email,proof_path:path,status:'pending'}).select('id').single();if(ins.error)throw ins.error;status.innerHTML='<div class="doma-sub-success"><b>Request sent successfully.</b><br>Your payment is waiting for admin approval.</div>';}catch(e){status.innerHTML='<div class="doma-status">'+(e.message||'Could not send the request.')+'</div>';}}
+async function domaOpenGrade(grade){const user=await domaEnsureUser();if(!user){openModal('login');return;}try{const gq=await domaSB.from('grades').select('id').eq('name',grade).maybeSingle();if(!gq.data){openDomaSubscription(grade);return;}const r=await domaSB.from('subscriptions').select('id,status,expires_at').eq('student_id',user.id).eq('grade_id',gq.data.id).eq('status','active').gt('expires_at',new Date().toISOString()).maybeSingle();if(r.data){openStudentDashboard();}else{openDomaSubscription(grade);}}catch(e){openDomaSubscription(grade);}}
+document.addEventListener('click',function(e){const b=e.target.closest('.course button');if(!b)return;const card=b.closest('.course'),tag=card&&card.querySelector('.tag'),grade=tag&&tag.textContent.trim();if(grade&&DOMA_PRICES[grade]){e.preventDefault();e.stopImmediatePropagation();domaOpenGrade(grade);}},true);
 </script>
 </body>
 </html>
