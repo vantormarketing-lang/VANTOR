@@ -620,281 +620,90 @@ let domaProfile = null;
 
 let domaAuthReady = null;
 function domaInitSB(){
-  if(!window.supabase) return null;
+  if(!window.supabase){ showToast('Supabase library is not loaded.'); return null; }
   if(!domaSB){
-    domaSB = window.supabase.createClient(DOMA_SUPABASE_URL, DOMA_SUPABASE_KEY);
-    domaAuthReady = domaSB.auth.getSession().then(({data})=>{
-      domaUser = data.session?.user || null;
-      if(domaUser) awaitProfileSafely();
+    domaSB=window.supabase.createClient(DOMA_SUPABASE_URL,DOMA_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    domaAuthReady=domaSB.auth.getSession().then(async ({data})=>{
+      domaUser=data?.session?.user||null;
+      if(domaUser) await awaitProfileSafely();
       updateDomaAuthButtons();
       return domaUser;
-    }).catch(()=>null);
-    domaSB.auth.onAuthStateChange((_event, session)=>{
-      domaUser = session?.user || null;
-      if(domaUser) setTimeout(()=>loadDomaProfile(),0);
-      else domaProfile = null;
+    }).catch(e=>{console.warn('DOMA initial auth:',e);return null;});
+    domaSB.auth.onAuthStateChange((_event,session)=>{
+      domaUser=session?.user||null;
+      if(domaUser) setTimeout(()=>loadDomaProfile(),0); else domaProfile=null;
       updateDomaAuthButtons();
     });
   }
   return domaSB;
 }
-async function awaitProfileSafely(){
-  try{ if(domaUser) await loadDomaProfile(); }catch(e){ console.warn('DOMA profile load:',e); }
-}
+async function awaitProfileSafely(){try{if(domaUser) await loadDomaProfile();}catch(e){console.warn('DOMA profile load:',e);}}
 async function domaEnsureUser(){
-  const sb=domaInitSB();
-  if(!sb) return null;
-  if(domaAuthReady) await domaAuthReady;
-  if(domaUser) return domaUser;
+  const sb=domaInitSB(); if(!sb) return null;
   try{
-    const {data}=await sb.auth.getSession();
-    domaUser=data.session?.user||null;
-    if(domaUser) await loadDomaProfile();
-  }catch(e){ console.warn('DOMA auth check:',e); }
-  return domaUser;
+    if(domaAuthReady) await domaAuthReady;
+    const sessionResult=await sb.auth.getSession();
+    const sessionUser=sessionResult?.data?.session?.user||null;
+    if(sessionUser){ domaUser=sessionUser; await awaitProfileSafely(); return domaUser; }
+    const userResult=await sb.auth.getUser();
+    domaUser=userResult?.data?.user||null;
+    if(domaUser) await awaitProfileSafely();
+  }catch(e){console.warn('DOMA auth check:',e);}
+  return domaUser||null;
 }
 async function loadDomaProfile(){
-  if(!domaSB || !domaUser) return;
-  const {data} = await domaSB.from('profiles').select('*,grades(name)').eq('id',domaUser.id).maybeSingle();
-  domaProfile = data || {id:domaUser.id,email:domaUser.email};
+  if(!domaSB||!domaUser) return;
+  try{
+    const {data,error}=await domaSB.from('profiles').select('*,grades(name)').eq('id',domaUser.id).maybeSingle();
+    if(error) console.warn('DOMA profile query:',error.message);
+    domaProfile=data||{id:domaUser.id,email:domaUser.email,full_name:domaUser.user_metadata?.full_name||''};
+  }catch(e){domaProfile={id:domaUser.id,email:domaUser.email};}
   updateDomaAuthButtons();
 }
-function updateDomaAuthButtons(){
-  document.querySelectorAll('[data-doma-dashboard]').forEach(el=>{
-    el.textContent = domaUser ? 'My Dashboard' : 'Student Login';
-  });
-}
+function updateDomaAuthButtons(){document.querySelectorAll('[data-doma-dashboard]').forEach(el=>{el.textContent=domaUser?'My Dashboard':'Student Login';});}
 async function domaSignup(){
-  domaInitSB();
-  const name = document.getElementById('domaSignupName')?.value.trim();
-  const email = document.getElementById('domaSignupEmail')?.value.trim();
-  const pass = document.getElementById('domaSignupPassword')?.value || '';
-  const grade = document.getElementById('domaSignupGrade')?.value || '';
-  if(!name || !email || pass.length < 6 || !grade) return showToast('Please complete the signup form.');
-
-  const {data,error} = await domaSB.auth.signUp({
-    email,
-    password:pass,
-    options:{data:{full_name:name}}
-  });
-  if(error) return showToast(error.message);
-  if(!data?.user) return showToast('Account could not be created. Please try again.');
-
-  // Save the selected grade on the student's profile.
-  const {data:g} = await domaSB.from('grades').select('id,name').eq('name',grade).maybeSingle();
-  if(g){
-    await domaSB.from('profiles').update({full_name:name,grade_id:g.id}).eq('id',data.user.id);
+  const sb=domaInitSB(); if(!sb) return;
+  const name=document.getElementById('domaSignupName')?.value.trim();
+  const email=document.getElementById('domaSignupEmail')?.value.trim();
+  const pass=document.getElementById('domaSignupPassword')?.value||'';
+  const grade=document.getElementById('domaSignupGrade')?.value||'';
+  if(!name||!email||pass.length<6||!grade) return showToast('Please complete the signup form.');
+  const {data,error}=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
+  if(error){showToast(error.message);return;}
+  if(!data?.user){showToast('Account could not be created. Please try again.');return;}
+  const {data:g,error:ge}=await sb.from('grades').select('id,name').eq('name',grade).maybeSingle();
+  if(g){const pr=await sb.from('profiles').update({full_name:name,grade_id:g.id}).eq('id',data.user.id);if(pr.error) console.warn('DOMA profile update:',pr.error.message);}
+  domaUser=data.session?.user||null;
+  if(!domaUser){
+    const login=await sb.auth.signInWithPassword({email,password:pass});
+    if(!login.error&&login.data?.session) domaUser=login.data.session.user;
+    else if(login.error){closeModal();showToast(login.error.message);return;}
   }
-
-  // Supabase may return an active session immediately when email confirmation is disabled.
-  // In that case, log the new student in right away instead of leaving them signed out.
-  if(data.session){
-    domaUser = data.session.user;
-    await loadDomaProfile();
-    closeModal();
-    showToast('Account created. You are now logged in.');
-    setTimeout(()=>domaOpenGrade(grade),120);
-    return;
-  }
-
-  // If email confirmation is enabled, Supabase intentionally returns no session.
-  // Try a password sign-in so this also works automatically when confirmation is not required.
-  const login = await domaSB.auth.signInWithPassword({email,password:pass});
-  if(!login.error && login.data?.session){
-    domaUser = login.data.session.user;
-    await loadDomaProfile();
-    closeModal();
-    showToast('Account created. You are now logged in.');
-    setTimeout(()=>domaOpenGrade(grade),120);
-    return;
-  }
-
+  if(!domaUser){closeModal();showToast('Account created, but no login session was returned. Please log in once.');return;}
+  await loadDomaProfile();
   closeModal();
-  showToast('Account created. Please confirm your email, then log in.');
+  showToast('Account created. You are now logged in.');
+  setTimeout(()=>domaOpenGrade(grade),150);
 }
 async function domaLogin(){
-  domaInitSB();
-  const email = document.getElementById('domaLoginEmail')?.value.trim();
-  const pass = document.getElementById('domaLoginPassword')?.value || '';
-  if(!email || !pass) return showToast('Enter your email and password.');
-  const {data,error} = await domaSB.auth.signInWithPassword({email,password:pass});
-  if(error) return showToast(error.message);
-  domaUser = data?.user || data?.session?.user || null;
+  const sb=domaInitSB(); if(!sb) return;
+  const email=document.getElementById('domaLoginEmail')?.value.trim();
+  const pass=document.getElementById('domaLoginPassword')?.value||'';
+  if(!email||!pass) return showToast('Enter your email and password.');
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){showToast(error.message);return;}
+  domaUser=data?.session?.user||data?.user||null;
+  if(!domaUser){showToast('Login succeeded but no session was returned. Please refresh and try again.');return;}
   await loadDomaProfile();
-  closeModal();
-  showToast('Welcome back to DOMA ACADEMY.');
+  const pending=window.domaPendingGrade||null; window.domaPendingGrade=null;
+  closeModal(); showToast('Welcome back to DOMA ACADEMY.');
+  if(pending) setTimeout(()=>domaOpenGrade(pending),150);
 }
-async function domaLogout(){
-  if(domaSB) await domaSB.auth.signOut();
-  closeStudentDashboard();
-  showToast('You have been logged out.');
-}
-async function openStudentDashboard(){
-  domaInitSB();
-  if(!domaUser){
-    openModal('login');
-    return;
-  }
-  document.getElementById('studentModal').classList.add('show');
-  const body = document.getElementById('studentDashboardBody');
-  body.innerHTML='<p>Loading progress...</p>';
-  await loadDomaProfile();
-  const gradeId = domaProfile?.grade_id;
-  let lessons=[], progress=[];
-  if(gradeId){
-    const [l,p] = await Promise.all([
-      domaSB.from('lessons').select('id,title,lesson_type,duration_minutes').eq('grade_id',gradeId).eq('is_published',true).order('sort_order'),
-      domaSB.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',domaUser.id)
-    ]);
-    lessons=l.data||[]; progress=p.data||[];
-  }
-  const done = new Set(progress.filter(x=>x.completed).map(x=>x.lesson_id));
-  const percent = lessons.length ? Math.round(done.size/lessons.length*100) : 0;
-  body.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
-      <div class="card"><strong>Student</strong><div>${domaProfile?.full_name||domaUser.email}</div></div>
-      <div class="card"><strong>Grade</strong><div>${domaProfile?.grades?.name||'Not selected'}</div></div>
-      <div class="card"><strong>Progress</strong><div>${percent}%</div></div>
-    </div>
-    <div style="margin-bottom:18px"><div style="height:10px;background:#ddd;border-radius:99px;overflow:hidden"><div style="width:${percent}%;height:100%;background:#7f1734"></div></div></div>
-    <h4>My English Lessons</h4>
-    <div style="display:grid;gap:10px;margin-top:12px">
-      ${lessons.length ? lessons.map(l=>`
-        <div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-          <div><strong>${escapeHtml(l.title)}</strong><div style="opacity:.7">${escapeHtml(l.lesson_type)} • ${l.duration_minutes||0} min</div></div>
-          <button class="btn primary" onclick="toggleLessonProgress('${l.id}',${done.has(l.id)})">${done.has(l.id)?'Completed':'Mark Complete'}</button>
-        </div>`).join('') : '<p>No published lessons for your grade yet.</p>'}
-    </div>
-    <div style="margin-top:18px"><button class="btn" onclick="domaLogout()">Log Out</button></div>`;
-}
-async function toggleLessonProgress(lessonId, current){
-  if(!domaSB || !domaUser) return;
-  const payload={student_id:domaUser.id,lesson_id:lessonId,completed:!current,progress_percent:current?0:100,last_opened_at:new Date().toISOString(),completed_at:current?null:new Date().toISOString()};
-  const {error}=await domaSB.from('lesson_progress').upsert(payload,{onConflict:'student_id,lesson_id'});
-  if(error) return showToast(error.message);
-  openStudentDashboard();
-}
-function closeStudentDashboard(){ document.getElementById('studentModal')?.classList.remove('show'); }
-function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
-
-domaInitSB();
-</script>
-
-
-<script>
-/* DOMA ACADEMY V4 — Real Supabase Exams */
-(function(){
-  let examRows=[], activeExam=null, activeQuestions=[], timer=null, remaining=0;
-
-  function sb(){ domaInitSB(); return domaSB; }
-  function esc(v){ return escapeHtml(v); }
-
-  async function loadExams(){
-    const box=document.getElementById('domaExamList');
-    if(!box) return;
-    if(!domaUser){ box.innerHTML='<p>Please log in to view exams for your grade.</p>'; return; }
-    await loadDomaProfile();
-    const gradeId=domaProfile?.grade_id;
-    if(!gradeId){ box.innerHTML='<p>Your account does not have a grade selected yet.</p>'; return; }
-
-    const {data,error}=await sb().from('quizzes').select('id,title,description,duration_minutes,pass_percent,grade_id').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false});
-    if(error){ box.innerHTML='<p>'+esc(error.message)+'</p>'; return; }
-    examRows=data||[];
-    box.innerHTML=examRows.length ? '<div class="exam-grid">'+examRows.map(q=>`
-      <div class="exam-card">
-        <div class="eyebrow">Published exam</div>
-        <h4>${esc(q.title)}</h4>
-        <div class="exam-meta">${esc(q.description||'English assessment')} • ${q.duration_minutes||20} min • Pass ${q.pass_percent??50}%</div>
-        <button class="btn primary" type="button" onclick="DOMAStartExam('${q.id}')">Start Exam →</button>
-      </div>`).join('')+'</div>' : '<p>No published exams are available for your grade yet.</p>';
-  }
-
-  async function startExam(id){
-    if(!domaUser) return openModal('login');
-    const q=examRows.find(x=>x.id===id); if(!q) return;
-    const [questionsRes, attemptsRes]=await Promise.all([
-      sb().from('quiz_questions').select('id,question,options,points,sort_order').eq('quiz_id',id).order('sort_order'),
-      sb().from('quiz_attempts').select('id,score,total_points,submitted_at').eq('quiz_id',id).eq('student_id',domaUser.id).order('submitted_at',{ascending:false})
-    ]);
-    if(questionsRes.error) return showToast(questionsRes.error.message);
-    activeExam=q; activeQuestions=questionsRes.data||[];
-    const attempts=attemptsRes.data||[];
-    if(!activeQuestions.length) return showToast('This exam has no questions yet.');
-    if(attempts.length) {
-      const last=attempts[0];
-      showExamResult({score:last.score,total:last.total_points,pass:last.total_points?Math.round(last.score/last.total_points*100)>=Number(q.pass_percent??50):false,previous:true});
-      return;
-    }
-    document.getElementById('domaExamTitle').textContent=q.title;
-    document.getElementById('domaExamDesc').textContent=q.description||'Answer every question, then submit.';
-    const body=document.getElementById('domaExamBody');
-    body.innerHTML=activeQuestions.map((x,i)=>{
-      let opts=Array.isArray(x.options)?x.options:[];
-      return `<div class="question"><b>${i+1}. ${esc(x.question)} <span style="color:#777;font-weight:400">(${x.points||1} pt)</span></b>
-        ${opts.map((o,j)=>`<label class="option"><input type="radio" name="q_${x.id}" value="${esc(o)}"> ${esc(o)}</label>`).join('')}
-      </div>`;
-    }).join('')+`<div class="exam-actions"><button class="btn secondary" type="button" onclick="DOMACloseExam()">Exit</button><button class="btn primary" type="button" onclick="DOMASubmitExam()">Submit Exam</button></div>`;
-    document.getElementById('domaExamModal').classList.add('open');
-    remaining=Math.max(1,Number(q.duration_minutes||20))*60; updateTimer();
-    clearInterval(timer); timer=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){clearInterval(timer);DOMASubmitExam(true)}},1000);
-  }
-
-  function updateTimer(){
-    const el=document.getElementById('domaExamTimer'); if(!el)return;
-    const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); el.textContent=m+':'+s;
-  }
-
-  async function submitExam(auto=false){
-    if(!activeExam || !activeQuestions.length) return;
-    clearInterval(timer);
-    const answers={}; let score=0,total=0;
-    activeQuestions.forEach(q=>{
-      total += Number(q.points||1);
-      const chosen=document.querySelector(`input[name="q_${q.id}"]:checked`)?.value ?? null;
-      answers[q.id]=chosen;
-      // Correct answers are deliberately not exposed to the student query.
-      // Scoring is done server-side by the RPC created in the V4 SQL migration.
-    });
-    const {data,error}=await sb().rpc('submit_quiz_attempt',{p_quiz_id:activeExam.id,p_student_id:domaUser.id,p_answers:answers});
-    if(error) return showToast(error.message);
-    const result=Array.isArray(data)?data[0]:data;
-    closeExam();
-    showExamResult({score:Number(result?.score||0),total:Number(result?.total_points||total),pass:Boolean(result?.passed),auto});
-    loadExams();
-  }
-
-  function showExamResult(r){
-    const modal=document.getElementById('domaExamModal'), body=document.getElementById('domaExamBody');
-    document.getElementById('domaExamTitle').textContent=activeExam?.title||'Exam Result';
-    document.getElementById('domaExamDesc').textContent='Your saved result';
-    const pct=r.total?Math.round(Number(r.score)/Number(r.total)*100):0;
-    body.innerHTML=`<div class="exam-result"><div class="eyebrow">${r.previous?'Previous attempt':'Completed'}</div><div class="score">${pct}%</div><p>You scored <strong>${r.score}</strong> out of <strong>${r.total}</strong>.</p><p style="margin-top:8px;color:${r.pass?'#72c9a0':'#d98b9c'}">${r.pass?'PASS — well done.':'NOT PASSED — review your lessons and try again later.'}</p><button class="btn primary" type="button" onclick="DOMACloseExam();loadExams()">Close Result</button></div>`;
-    modal.classList.add('open');
-  }
-
-  function closeExam(){clearInterval(timer);document.getElementById('domaExamModal').classList.remove('open');activeExam=null;activeQuestions=[];}
-  window.DOMAStartExam=startExam; window.DOMASubmitExam=submitExam; window.DOMACloseExam=closeExam;
-  document.getElementById('domaExamClose')?.addEventListener('click',closeExam);
-  document.getElementById('domaExamModal')?.addEventListener('click',e=>{if(e.target.id==='domaExamModal')closeExam();});
-
-  // Refresh when auth state changes.
-  const oldLoadProfile=window.loadDomaProfile;
-  const oldUpdate=window.updateDomaAuthButtons;
-  window.loadDomaProfile=async function(){ const r=oldLoadProfile?await oldLoadProfile():null; setTimeout(loadExams,0); return r; };
-  setTimeout(loadExams,700);
-  window.addEventListener('focus',loadExams);
-})();
-</script>
-
-<script id="doma-subscription-script">
-const DOMA_PAYMENT_PHONE='01006525147';
-const DOMA_PRICES={'1st Preparatory':{monthly:150,annual:150},'2nd Preparatory':{monthly:200,annual:200},'3rd Preparatory':{monthly:250,annual:250}};
-let domaSelectedGrade='',domaSelectedPlan='monthly';
-function closeDomaSubscription(){const x=document.getElementById('domaSubscriptionOverlay');x.classList.remove('open');x.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+async function domaLogout(){if(domaSB) await domaSB.auth.signOut();domaUser=null;domaProfile=null;closeStudentDashboard();showToast('You have been logged out.');}
 function openDomaSubscription(grade){domaSelectedGrade=grade;domaSelectedPlan='monthly';const ov=document.getElementById('domaSubscriptionOverlay');document.getElementById('domaSubTitle').textContent=grade+' Subscription';ov.classList.add('open');ov.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';if(!DOMA_PRICES[grade]){document.getElementById('domaSubBody').innerHTML='<div class="doma-status">Pricing for '+grade+' has not been configured yet.</div>';return;}domaRenderSubscription();}
 function domaRenderSubscription(){const p=DOMA_PRICES[domaSelectedGrade][domaSelectedPlan];const m=domaSelectedPlan==='monthly';document.getElementById('domaSubBody').innerHTML='<div class="doma-plan-grid"><div class="doma-plan '+(m?'active':'')+'" onclick="domaSelectedPlan=\'monthly\';domaRenderSubscription()"><strong>Monthly</strong><span>Access for 1 month</span><div class="doma-price">EGP '+DOMA_PRICES[domaSelectedGrade].monthly+'</div></div><div class="doma-plan '+(!m?'active':'')+'" onclick="domaSelectedPlan=\'annual\';domaRenderSubscription()"><strong>Annual</strong><span>Access for 12 months</span><div class="doma-price">EGP '+DOMA_PRICES[domaSelectedGrade].annual+'</div></div></div><div class="doma-pay-box"><div>Transfer the subscription fee to Mobile Cash:</div><div class="doma-pay-number">'+DOMA_PAYMENT_PHONE+'</div><div class="doma-sub-note">After the transfer, upload the payment receipt. Access starts after admin approval.</div></div><div class="doma-sub-form"><input id="domaSubName" placeholder="Student full name"><input id="domaSubPhone" placeholder="Student phone number"><input id="domaSubEmail" type="email" placeholder="Student email"><input id="domaSubProof" class="doma-file" type="file" accept="image/*,.pdf"><div class="doma-sub-note">Selected plan: <b>'+(m?'Monthly (1 month)':'Annual (12 months)')+'</b> — EGP '+p+'</div><button class="btn primary full" type="button" onclick="submitDomaSubscription()">Send Subscription Request</button><div id="domaSubStatus"></div></div>';}
 async function submitDomaSubscription(){const user=await domaEnsureUser();if(!user){document.getElementById('domaSubStatus').innerHTML='<div class="doma-status">Please log in or create a student account first.</div>';return;}const name=document.getElementById('domaSubName').value.trim(),phone=document.getElementById('domaSubPhone').value.trim(),email=document.getElementById('domaSubEmail').value.trim(),file=document.getElementById('domaSubProof').files[0];if(!name||!phone||!email||!file){document.getElementById('domaSubStatus').innerHTML='<div class="doma-status">Complete all fields and upload the payment receipt.</div>';return;}const status=document.getElementById('domaSubStatus');status.innerHTML='<div class="doma-status">Sending your request…</div>';try{const gq=await domaSB.from('grades').select('id,name').eq('name',domaSelectedGrade).maybeSingle();if(gq.error||!gq.data)throw new Error('Grade is not configured in Supabase yet.');const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path=user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;const up=await domaSB.storage.from('payment-proofs').upload(path,file,{upsert:false,contentType:file.type});if(up.error)throw up.error;const price=DOMA_PRICES[domaSelectedGrade][domaSelectedPlan];const ins=await domaSB.from('subscription_requests').insert({student_id:user.id,grade_id:gq.data.id,plan:domaSelectedPlan,amount:price,student_name:name,student_phone:phone,student_email:email,proof_path:path,status:'pending'}).select('id').single();if(ins.error)throw ins.error;status.innerHTML='<div class="doma-sub-success"><b>Request sent successfully.</b><br>Your payment is waiting for admin approval.</div>';}catch(e){status.innerHTML='<div class="doma-status">'+(e.message||'Could not send the request.')+'</div>';}}
-async function domaOpenGrade(grade){const user=await domaEnsureUser();if(!user){openModal('login');return;}try{const gq=await domaSB.from('grades').select('id').eq('name',grade).maybeSingle();if(!gq.data){openDomaSubscription(grade);return;}const r=await domaSB.from('subscriptions').select('id,status,expires_at').eq('student_id',user.id).eq('grade_id',gq.data.id).eq('status','active').gt('expires_at',new Date().toISOString()).maybeSingle();if(r.data){openStudentDashboard();}else{openDomaSubscription(grade);}}catch(e){openDomaSubscription(grade);}}
+async async function domaOpenGrade(grade){window.domaPendingGrade=grade;const user=await domaEnsureUser();if(!user){openModal('login');return;}window.domaPendingGrade=null;try{const gq=await domaSB.from('grades').select('id').eq('name',grade).maybeSingle();if(gq.error){showToast(gq.error.message);return;}if(!gq.data){openDomaSubscription(grade);return;}const r=await domaSB.from('subscriptions').select('id,status,expires_at').eq('student_id',user.id).eq('grade_id',gq.data.id).eq('status','active').gt('expires_at',new Date().toISOString()).maybeSingle();if(r.error){console.warn('Subscription check:',r.error.message);openDomaSubscription(grade);return;}if(r.data){openStudentDashboard();}else{openDomaSubscription(grade);}}catch(e){console.warn('Open grade:',e);openDomaSubscription(grade);}}
 document.addEventListener('click',function(e){const b=e.target.closest('.course button');if(!b)return;const card=b.closest('.course'),tag=card&&card.querySelector('.tag'),grade=tag&&tag.textContent.trim();if(grade&&DOMA_PRICES[grade]){e.preventDefault();e.stopImmediatePropagation();domaOpenGrade(grade);}},true);
 </script>
 </body>
