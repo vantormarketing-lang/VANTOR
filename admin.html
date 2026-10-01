@@ -9082,7 +9082,7 @@ domaCmsInit();
     target.classList.add('active');target.style.display='block';
   }
   document.querySelectorAll('.side-link[data-section]').forEach(b=>{
-    if(['homework','results','progress'].includes(b.dataset.section)){
+    if(['homework','results','progress','subscriptions'].includes(b.dataset.section)){
       b.addEventListener('click',()=>activateDomaV6Section(b.dataset.section));
     }
   });
