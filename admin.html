@@ -3825,7 +3825,7 @@ async function writeCloud(key,data){
     }
 }
 
-async function syncDOMA ACADEMYCloud(){
+async function syncDOMAACADEMYCloud(){
     // If Supabase already has the data, it wins and becomes the shared source.
     // If a table is empty, seed it from the laptop's existing localStorage once.
     for(const key of Object.keys(CLOUD_TABLES)){
@@ -8624,7 +8624,7 @@ initializeDefaults();
 checkAuth();
 
 // Load the shared Supabase data first, then render the dashboard.
-syncDOMA ACADEMYCloud().then(function(){
+syncDOMAACADEMYCloud().then(function(){
     renderAll();
 }).catch(function(error){
     console.warn("DOMA ACADEMY cloud startup failed:",error);
