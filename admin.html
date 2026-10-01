@@ -1655,6 +1655,12 @@ textarea{
             Projects
         </button>
 
+
+        <button class="side-link" data-section="exams">
+            <span class="side-icon">✓</span>
+            Exams & Quizzes
+        </button>
+
         <button
             class="side-link"
             data-section="students"
@@ -2056,6 +2062,46 @@ textarea{
 
 </section>
 
+
+
+<!-- =====================================================
+     EXAMS & QUIZZES — V4
+===================================================== -->
+<section class="admin-section" id="section-exams">
+  <div class="section-header">
+    <div><h2>Exams & Quizzes</h2><p>Create published exams, questions, scoring and pass marks.</p></div>
+    <button class="add-btn" id="addExamV4Btn">+ New Exam</button>
+  </div>
+  <div class="toolbar">
+    <select class="search-input" id="examGradeV4" style="max-width:280px">
+      <option value="">All Grades</option>
+    </select>
+    <button class="add-btn" id="refreshExamsV4Btn" type="button">Refresh</button>
+  </div>
+  <div class="table-wrap" id="examsV4Table"></div>
+</section>
+
+<div class="modal" id="examV4Modal">
+  <div class="modal-box" style="max-width:980px">
+    <div class="modal-head"><h3 id="examV4Title">Create Exam</h3><button class="close-btn" type="button" data-close-modal="examV4Modal">×</button></div>
+    <form class="modal-body" id="examV4Form">
+      <input type="hidden" id="examV4Id">
+      <div class="form-grid">
+        <div class="form-group"><label>Grade</label><select id="examV4Grade" required></select></div>
+        <div class="form-group"><label>Duration (minutes)</label><input id="examV4Duration" type="number" min="1" value="20" required></div>
+        <div class="form-group full"><label>Exam Title</label><input id="examV4Name" required maxlength="180" placeholder="Unit 1 English Quiz"></div>
+        <div class="form-group full"><label>Description</label><textarea id="examV4Desc" rows="3" placeholder="What students will be tested on"></textarea></div>
+        <div class="form-group"><label>Pass Percentage</label><input id="examV4Pass" type="number" min="0" max="100" value="50" required></div>
+        <div class="form-group"><label>Status</label><select id="examV4Published"><option value="false">Draft</option><option value="true">Published</option></select></div>
+      </div>
+      <div style="margin-top:20px;border-top:1px solid #2b181e;padding-top:18px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h4>Questions</h4><button class="add-btn" type="button" id="addQuestionV4Btn">+ Add Question</button></div>
+        <div id="questionBuilderV4" style="margin-top:12px"></div>
+      </div>
+      <div class="modal-actions"><button type="button" class="cancel-btn" data-close-modal="examV4Modal">Cancel</button><button type="submit" class="save-btn">Save Exam</button></div>
+    </form>
+  </div>
+</div>
 
 <!-- =====================================================
      SERVICES
@@ -8699,6 +8745,104 @@ async function domaCmsDeleteLesson(id){
 }
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 domaCmsInit();
+</script>
+
+
+<script>
+/* DOMA ACADEMY V4 — Admin Exams */
+(function(){
+  const URL="https://dtptxhkcogpoleftguas.supabase.co";
+  const KEY="sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL";
+  const sb=window.supabase?.createClient(URL,KEY);
+  let grades=[], exams=[], questions=[];
+
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  async function loadGrades(){
+    const {data,error}=await sb.from('grades').select('id,name').order('sort_order');
+    if(error)return showToast(error.message);
+    grades=data||[];
+    const opts='<option value="">All Grades</option>'+grades.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('');
+    $('examGradeV4').innerHTML=opts;
+    $('examV4Grade').innerHTML=opts.replace('All Grades','Select grade');
+  }
+  async function loadExams(){
+    const filter=$('examGradeV4').value;
+    let q=sb.from('quizzes').select('id,title,description,duration_minutes,pass_percent,is_published,grade_id,grades(name)').order('created_at',{ascending:false});
+    if(filter)q=q.eq('grade_id',filter);
+    const {data,error}=await q;
+    if(error)return showToast(error.message);
+    exams=data||[];
+    $('examsV4Table').innerHTML=exams.length?`<table><thead><tr><th>Exam</th><th>Grade</th><th>Time</th><th>Pass</th><th>Status</th><th>Actions</th></tr></thead><tbody>${exams.map(x=>`<tr>
+      <td><b>${esc(x.title)}</b><div style="color:#777;font-size:11px">${esc(x.description||'')}</div></td>
+      <td>${esc(x.grades?.name||'')}</td><td>${x.duration_minutes} min</td><td>${x.pass_percent??50}%</td>
+      <td>${x.is_published?'Published':'Draft'}</td>
+      <td><button class="table-btn" onclick="DOMAEditExamV4('${x.id}')">Edit</button> <button class="table-btn danger" onclick="DOMADeleteExamV4('${x.id}')">Delete</button></td>
+    </tr>`).join('')}</tbody></table>`:'<div style="padding:20px;color:#777">No exams yet. Create your first quiz.</div>';
+  }
+  function renderQuestions(){
+    $('questionBuilderV4').innerHTML=questions.map((q,i)=>`
+      <div class="question-builder-v4" data-q="${i}" style="border:1px solid #2b181e;border-radius:12px;padding:14px;margin-bottom:10px;background:#0b090a">
+        <div style="display:flex;justify-content:space-between;gap:10px"><b>Question ${i+1}</b><button type="button" class="table-btn danger" onclick="DOMARemoveQuestionV4(${i})">Remove</button></div>
+        <div class="form-grid" style="margin-top:10px">
+          <div class="form-group full"><label>Question</label><input class="q-text" value="${esc(q.question)}" placeholder="Choose the correct answer"></div>
+          <div class="form-group"><label>Option A</label><input class="q-opt" data-i="0" value="${esc(q.options?.[0]||'')}"></div>
+          <div class="form-group"><label>Option B</label><input class="q-opt" data-i="1" value="${esc(q.options?.[1]||'')}"></div>
+          <div class="form-group"><label>Option C</label><input class="q-opt" data-i="2" value="${esc(q.options?.[2]||'')}"></div>
+          <div class="form-group"><label>Option D</label><input class="q-opt" data-i="3" value="${esc(q.options?.[3]||'')}"></div>
+          <div class="form-group"><label>Correct Answer</label><select class="q-correct">${(q.options||[]).map(o=>`<option ${o===q.correct_answer?'selected':''}>${esc(o)}</option>`).join('')}<option value="">Select after entering options</option></select></div>
+          <div class="form-group"><label>Points</label><input class="q-points" type="number" min="1" value="${q.points||1}"></div>
+        </div>
+      </div>`).join('');
+    // Rebuild correct-answer choices from current option inputs.
+    document.querySelectorAll('.question-builder-v4').forEach(card=>{
+      const opts=[...card.querySelectorAll('.q-opt')];
+      const sel=card.querySelector('.q-correct');
+      const previous=sel.value;
+      sel.innerHTML='<option value="">Select correct answer</option>'+opts.map(o=>`<option value="${esc(o.value)}">${esc(o.value||'(empty)')}</option>`).join('');
+      if(opts.some(o=>o.value===previous))sel.value=previous;
+      opts.forEach(o=>o.addEventListener('input',()=>{const old=sel.value;sel.innerHTML='<option value="">Select correct answer</option>'+opts.map(x=>`<option value="${esc(x.value)}">${esc(x.value||'(empty)')}</option>`).join('');if(opts.some(x=>x.value===old))sel.value=old;}));
+    });
+  }
+  function readQuestions(){
+    return [...document.querySelectorAll('.question-builder-v4')].map((card,i)=>{
+      const opts=[...card.querySelectorAll('.q-opt')].map(x=>x.value.trim()).filter(Boolean);
+      return {id:card.dataset.id||null,question:card.querySelector('.q-text').value.trim(),options:opts,correct_answer:card.querySelector('.q-correct').value,points:Number(card.querySelector('.q-points').value||1),sort_order:i};
+    });
+  }
+  function openNew(){
+    $('examV4Id').value='';$('examV4Name').value='';$('examV4Desc').value='';$('examV4Duration').value=20;$('examV4Pass').value=50;$('examV4Published').value='false';$('examV4Grade').value='';questions=[{question:'',options:['','','',''],correct_answer:'',points:1,sort_order:0}];renderQuestions();openModal('examV4Modal');
+  }
+  async function edit(id){
+    const x=exams.find(e=>e.id===id); if(!x)return;
+    const {data,error}=await sb.from('quiz_questions').select('*').eq('quiz_id',id).order('sort_order');
+    if(error)return showToast(error.message);
+    $('examV4Id').value=x.id;$('examV4Name').value=x.title;$('examV4Desc').value=x.description||'';$('examV4Duration').value=x.duration_minutes||20;$('examV4Pass').value=x.pass_percent??50;$('examV4Published').value=String(x.is_published);$('examV4Grade').value=x.grade_id;questions=data||[];renderQuestions();openModal('examV4Modal');
+  }
+  async function save(e){
+    e.preventDefault();
+    questions=readQuestions();
+    if(!questions.length||questions.some(q=>!q.question||q.options.length<2||!q.correct_answer))return showToast('Every question needs text, at least 2 options, and a correct answer.');
+    const payload={grade_id:$('examV4Grade').value,title:$('examV4Name').value.trim(),description:$('examV4Desc').value.trim(),duration_minutes:Number($('examV4Duration').value),pass_percent:Number($('examV4Pass').value),is_published:$('examV4Published').value==='true'};
+    if(!payload.grade_id||!payload.title)return showToast('Choose a grade and enter an exam title.');
+    let id=$('examV4Id').value, res;
+    if(id)res=await sb.from('quizzes').update(payload).eq('id',id); else {const r=await sb.from('quizzes').insert(payload).select('id').single();res=r;id=r.data?.id;}
+    if(res.error)return showToast(res.error.message);
+    if($('examV4Id').value) await sb.from('quiz_questions').delete().eq('quiz_id',id);
+    const ins=await sb.from('quiz_questions').insert(questions.map(q=>({quiz_id:id,question:q.question,options:q.options,correct_answer:q.correct_answer,points:q.points,sort_order:q.sort_order})));
+    if(ins.error)return showToast(ins.error.message);
+    closeModal();showToast('Exam saved successfully.');loadExams();
+  }
+  async function del(id){
+    if(!confirm('Delete this exam and all its questions?'))return;
+    const {error}=await sb.from('quizzes').delete().eq('id',id);
+    if(error)return showToast(error.message);
+    showToast('Exam deleted.');loadExams();
+  }
+  window.DOMAEditExamV4=edit;window.DOMADeleteExamV4=del;window.DOMARemoveQuestionV4=i=>{questions.splice(i,1);renderQuestions();};
+  $('addExamV4Btn').onclick=openNew;$('refreshExamsV4Btn').onclick=loadExams;$('examGradeV4').onchange=loadExams;$('addQuestionV4Btn').onclick=()=>{questions.push({question:'',options:['','','',''],correct_answer:'',points:1,sort_order:questions.length});renderQuestions();};$('examV4Form').addEventListener('submit',save);
+  loadGrades().then(loadExams);
+})();
 </script>
 
 </body>
