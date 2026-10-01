@@ -8,7 +8,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VANTOR Fashion — Admin Dashboard</title>
+<title>DOMA ACADEMY — Admin Dashboard</title>
 
 <style>
 
@@ -68,43 +68,6 @@ select{
 }
 
 
-
-/* =====================================================
-   VANTOR BRAND MARK
-===================================================== */
-.v-brand{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    text-decoration:none;
-    color:#fff;
-}
-.v-brand-mark{
-    width:34px;
-    height:34px;
-    flex:0 0 34px;
-    display:block;
-}
-.v-brand-wordmark{
-    display:flex;
-    flex-direction:column;
-    line-height:1;
-}
-.v-brand-name{
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:18px;
-    letter-spacing:3px;
-    font-weight:700;
-}
-.v-brand-sub{
-    font-size:7px;
-    letter-spacing:3px;
-    color:#bdb1b4;
-    margin-top:5px;
-}
-.brand-svg-stroke{fill:#fff;}
-.brand-svg-cut{fill:#080808;}
-
 /* =====================================================
    LOGIN
 ===================================================== */
@@ -133,14 +96,6 @@ select{
     border-radius:18px;
     padding:38px;
     box-shadow:0 30px 90px rgba(0,0,0,.6);
-}
-
-.login-brand{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:12px;
-    margin-bottom:10px;
 }
 
 .login-logo{
@@ -418,32 +373,6 @@ select{
     color:#555;
     font-size:10px;
     margin-top:3px;
-}
-
-.topbar-actions{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.admin-status{
-    display:flex;
-    align-items:center;
-    gap:7px;
-    border:1px solid #272727;
-    background:#0d0d0d;
-    color:#8e8e8e;
-    padding:8px 10px;
-    border-radius:6px;
-    font-size:10px;
-}
-
-.admin-status-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:#4c9b70;
-    box-shadow:0 0 0 3px rgba(76,155,112,.10);
 }
 
 .open-site{
@@ -941,6 +870,23 @@ tr:hover td{
 
 
 /* =====================================================
+   MESSAGE
+===================================================== */
+
+.message-box{
+    background:#0a0909;
+    border:1px solid #26171c;
+    border-radius:8px;
+    padding:13px;
+    color:#aaa;
+    font-size:11px;
+    line-height:1.7;
+    white-space:pre-wrap;
+    max-width:450px;
+}
+
+
+/* =====================================================
    SETTINGS
 ===================================================== */
 
@@ -1166,13 +1112,6 @@ textarea{
 }
 
 @media (max-width:800px){
-    .topbar{padding:0 14px;}
-    .topbar-actions{gap:6px;}
-    .admin-status{display:none;}
-    .topbar .open-site{padding:8px 10px;}
-    .v-brand-name{font-size:16px;}
-    .v-brand-sub{font-size:6px;letter-spacing:2.5px;}
-    .v-brand-mark{width:30px;height:30px;flex-basis:30px;}
     .mobile-header{
         height:64px;
         padding:0 14px;
@@ -1377,7 +1316,14 @@ textarea{
         width:100%;
         min-height:46px;
     }
-.settings-section{
+
+    .message-box{
+        max-width:100%;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+    }
+
+    .settings-section{
         padding:16px;
     }
 
@@ -1467,14 +1413,56 @@ textarea{
 }
 
 
-/* PRODUCT CATALOG FIELDS */
-.catalog-help{font-size:12px;opacity:.65;margin-top:5px}
-
-
-/* Orders */
-.order-status-select{padding:7px 9px;border:1px solid #ddd;border-radius:8px;background:#fff}
-.order-items-box{font-size:13px;line-height:1.55;max-width:300px}
-.order-meta{font-size:12px;opacity:.65;margin-top:4px}
+/* =====================================================
+   DOMA ACADEMY ADMIN — INDEX-ALIGNED DASHBOARD
+===================================================== */
+.doma-admin-header{align-items:center}
+.doma-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c05269;font-weight:800;margin-bottom:7px}
+.doma-open-site{border-color:#4a1d29 !important}
+.doma-welcome{
+    margin:0 0 20px;padding:25px 28px;border:1px solid #3a1d25;border-radius:18px;
+    background:radial-gradient(circle at 85% 20%,rgba(157,48,74,.22),transparent 35%),linear-gradient(135deg,#170b10,#0d090b);
+    display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden
+}
+.doma-welcome h1{font-size:28px;line-height:1.15;margin:0 0 9px}
+.doma-welcome p{color:#aaa;max-width:700px;line-height:1.6}
+.doma-welcome-mark{
+    width:92px;height:92px;border-radius:24px;display:grid;place-items:center;flex:0 0 auto;
+    border:1px solid #9d304a66;background:#762337;color:#fff;font-weight:900;font-size:22px;
+    box-shadow:0 15px 40px #0008
+}
+.doma-stats-grid{margin-bottom:20px}
+.doma-stat{position:relative;overflow:hidden}
+.doma-stat:after{content:"";position:absolute;right:-30px;top:-35px;width:90px;height:90px;border-radius:50%;background:#76233718}
+.doma-stat-note{font-size:10px;color:#777;margin-top:7px}
+.doma-dashboard-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-bottom:16px}
+.doma-dashboard-grid-bottom{grid-template-columns:1fr 1fr}
+.doma-panel{min-width:0}
+.doma-progress-card{padding:18px;border:1px solid #ffffff0b;background:#120b0e;border-radius:14px}
+.doma-progress-top{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.doma-progress-top strong{display:block;color:#eee;font-size:14px}
+.doma-progress-top small{display:block;color:#777;margin-top:4px}
+.doma-progress-top b{color:#c05269;font-size:19px}
+.doma-progress{height:9px;background:#25151b;border-radius:99px;overflow:hidden;margin-top:15px}
+.doma-progress span{display:block;height:100%;background:linear-gradient(90deg,#762337,#c05269);border-radius:99px}
+.doma-progress-meta{display:flex;justify-content:space-between;gap:10px;color:#777;font-size:10px;margin-top:10px}
+.doma-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}
+.doma-mini-card{padding:13px;background:#120b0e;border:1px solid #ffffff08;border-radius:12px}
+.doma-mini-card span{display:block;color:#777;font-size:9px;text-transform:uppercase;letter-spacing:1px}
+.doma-mini-card strong{display:block;color:#ddd;margin-top:6px;font-size:12px}
+.doma-feature-list{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.doma-feature-list>div{display:grid;grid-template-columns:28px 1fr;column-gap:8px;align-items:center;padding:11px;background:#120b0e;border:1px solid #ffffff08;border-radius:11px}
+.doma-feature-list span{grid-row:span 2;font-size:17px}
+.doma-feature-list b{font-size:11px;color:#ddd}
+.doma-feature-list small{font-size:9px;color:#666;margin-top:2px}
+@media(max-width:900px){
+ .doma-dashboard-grid,.doma-dashboard-grid-bottom{grid-template-columns:1fr}
+ .doma-mini-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+ .doma-welcome{padding:19px}.doma-welcome h1{font-size:22px}.doma-welcome-mark{width:65px;height:65px;font-size:16px;border-radius:18px}
+ .doma-mini-grid,.doma-feature-list{grid-template-columns:1fr}
+}
 
 </style>
 
@@ -1498,15 +1486,8 @@ textarea{
         id="loginForm"
     >
 
-        <div class="login-brand">
-            <svg class="v-brand-mark" viewBox="0 0 100 100" aria-hidden="true">
-                <path class="brand-svg-stroke" d="M8 16h25l17 35 17-35h25L58 84H42L8 16z"/>
-                <path class="brand-svg-cut" d="M39 16h18l-7 14-8 15-8-16z"/>
-            </svg>
-            <div class="v-brand-wordmark">
-                <div class="v-brand-name">VANTOR</div>
-                <div class="v-brand-sub">FASHION ADMIN</div>
-            </div>
+        <div class="login-logo">
+            DOMA <span>ACADEMY</span>
         </div>
 
         <div class="login-subtitle">
@@ -1525,7 +1506,7 @@ textarea{
                 id="loginEmail"
                 autocomplete="username"
                 required
-                placeholder="admin@vantor.com"
+                placeholder="admin@domaacademy.com"
             >
 
         </div>
@@ -1563,8 +1544,8 @@ textarea{
 
 
         <div class="login-hint">
-            Demo admin login:<br>
-            admin@vantor.com / admin123
+            Default demo login:<br>
+            admin@domaacademy.com / admin123
         </div>
 
     </form>
@@ -1578,16 +1559,9 @@ textarea{
 
 <header class="mobile-header">
 
-    <a class="v-brand" href="#" onclick="showSection('dashboard');return false;" aria-label="VANTOR Fashion Admin">
-        <svg class="v-brand-mark" viewBox="0 0 100 100" aria-hidden="true">
-            <path class="brand-svg-stroke" d="M8 16h25l17 35 17-35h25L58 84H42L8 16z"/>
-            <path class="brand-svg-cut" d="M39 16h18l-7 14-8 15-8-16z"/>
-        </svg>
-        <div class="v-brand-wordmark">
-            <div class="v-brand-name">VANTOR</div>
-            <div class="v-brand-sub">FASHION</div>
-        </div>
-    </a>
+    <div class="mobile-logo">
+        DOMA <span>ACADEMY</span>
+    </div>
 
     <button
         class="menu-toggle"
@@ -1618,16 +1592,9 @@ textarea{
 
     <div class="sidebar-top">
 
-        <a class="v-brand" href="#" onclick="showSection('dashboard');return false;" aria-label="VANTOR Fashion Admin">
-            <svg class="v-brand-mark" viewBox="0 0 100 100" aria-hidden="true">
-                <path class="brand-svg-stroke" d="M8 16h25l17 35 17-35h25L58 84H42L8 16z"/>
-                <path class="brand-svg-cut" d="M39 16h18l-7 14-8 15-8-16z"/>
-            </svg>
-            <div class="v-brand-wordmark">
-                <div class="v-brand-name">VANTOR</div>
-                <div class="v-brand-sub">FASHION</div>
-            </div>
-        </a>
+        <div class="sidebar-logo">
+            DOMA <span>ACADEMY</span>
+        </div>
 
     </div>
 
@@ -1656,7 +1623,7 @@ textarea{
             data-section="services"
         >
             <span class="side-icon">✦</span>
-            Products
+            Services
         </button>
 
         <button
@@ -1664,7 +1631,7 @@ textarea{
             data-section="offers"
         >
             <span class="side-icon">%</span>
-            Deals
+            Offers
         </button>
 
         <button
@@ -1672,7 +1639,7 @@ textarea{
             data-section="projects"
         >
             <span class="side-icon">▧</span>
-            Collections
+            Projects
         </button>
 
         <button
@@ -1680,7 +1647,7 @@ textarea{
             data-section="clients"
         >
             <span class="side-icon">◎</span>
-            Customers
+            Clients
         </button>
 
         <button
@@ -1688,22 +1655,24 @@ textarea{
             data-section="testimonials"
         >
             <span class="side-icon">★</span>
-            Reviews
+            Testimonials
         </button>
 
 
         <div class="nav-section-title">
-            Sales
+            Communication
         </div>
 
         <button
             class="side-link"
-            data-section="orders"
+            data-section="messages"
         >
-            <span class="side-icon">▣</span>
-            Orders
+            <span class="side-icon">✉</span>
+            Messages
         </button>
-<div class="nav-section-title">
+
+
+        <div class="nav-section-title">
             System
         </div>
 
@@ -1720,7 +1689,7 @@ textarea{
             data-section="settings"
         >
             <span class="side-icon">⚙</span>
-            Store Settings
+            Site Settings
         </button>
 
         <button
@@ -1742,14 +1711,14 @@ textarea{
                 class="sidebar-user-name"
                 id="sidebarUserName"
             >
-                VANTOR Admin
+                DOMA ACADEMY Admin
             </div>
 
             <div
                 class="sidebar-user-email"
                 id="sidebarUserEmail"
             >
-                admin@vantor.com
+                admin@domaacademy.com
             </div>
 
         </div>
@@ -1786,26 +1755,19 @@ textarea{
             </div>
 
             <div class="page-subtitle">
-                VANTOR Fashion Control Center
+                DOMA ACADEMY Admin Control Panel
             </div>
 
         </div>
 
 
-        <div class="topbar-actions">
-            <div class="admin-status">
-                <span class="admin-status-dot"></span>
-                Admin Panel
-            </div>
-
-            <button
-                class="open-site"
-                id="openWebsiteBtn"
-                type="button"
-            >
-                Open Website ↗
-            </button>
-        </div>
+        <button
+            class="open-site"
+            id="openWebsiteBtn"
+            type="button"
+        >
+            Open Website ↗
+        </button>
 
     </div>
 
@@ -1822,237 +1784,182 @@ textarea{
     id="section-dashboard"
 >
 
-    <div class="section-header">
-
+    <div class="section-header doma-admin-header">
         <div>
+            <div class="doma-eyebrow">DOMA ACADEMY • ADMIN</div>
+            <h2>Learning Dashboard</h2>
+            <p>Manage the same learning experience your students see on the main platform.</p>
+        </div>
+        <button class="open-site doma-open-site" id="openWebsiteBtn2" type="button">Open Academy ↗</button>
+    </div>
 
-            <h2>
-                Dashboard
-            </h2>
+    <div class="doma-welcome">
+        <div>
+            <div class="doma-eyebrow">Good to see you</div>
+            <h1>Run DOMA ACADEMY from one place.</h1>
+            <p>Courses, students, learning progress, certificates and platform activity — all in one dashboard.</p>
+        </div>
+        <div class="doma-welcome-mark">DA</div>
+    </div>
 
-            <p>
-                Manage your VANTOR fashion store.
-            </p>
+    <div class="stats-grid doma-stats-grid">
 
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Courses</div>
+            <div class="stat-number" id="statServices">0</div>
+            <div class="doma-stat-note">Published learning content</div>
+        </div>
+
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Learning Paths</div>
+            <div class="stat-number" id="statOffers">0</div>
+            <div class="doma-stat-note">Programs & special offers</div>
+        </div>
+
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Projects</div>
+            <div class="stat-number" id="statProjects">0</div>
+            <div class="doma-stat-note">Practical learning projects</div>
+        </div>
+
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Students</div>
+            <div class="stat-number" id="statClients">0</div>
+            <div class="doma-stat-note">Learner accounts</div>
+        </div>
+
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Reviews</div>
+            <div class="stat-number" id="statTestimonials">0</div>
+            <div class="doma-stat-note">Student feedback</div>
+        </div>
+
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Notifications</div>
+            <div class="stat-number" id="statUnread">0</div>
+            <div class="doma-stat-note">Unread platform messages</div>
+        </div>
+
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Admin Users</div>
+            <div class="stat-number" id="statAdmins">0</div>
+            <div class="doma-stat-note">Team access</div>
+        </div>
+
+        <div class="stat-card doma-stat">
+            <div class="stat-label">Published Content</div>
+            <div class="stat-number" id="statActive">0</div>
+            <div class="doma-stat-note">Active academy content</div>
         </div>
 
     </div>
 
+    <div class="doma-dashboard-grid">
 
-    <div class="stats-grid">
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Products
-            </div>
-
-            <div
-                class="stat-number"
-                id="statProducts"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Deals
-            </div>
-
-            <div
-                class="stat-number"
-                id="statDeals"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Collections
-            </div>
-
-            <div
-                class="stat-number"
-                id="statCollections"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Customers
-            </div>
-
-            <div
-                class="stat-number"
-                id="statCustomers"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Orders
-            </div>
-
-            <div
-                class="stat-number"
-                id="statOrders"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Pending Orders
-            </div>
-
-            <div
-                class="stat-number"
-                id="statPendingOrders"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Reviews
-            </div>
-
-            <div
-                class="stat-number"
-                id="statReviews"
-            >
-                0
-            </div>
-
-        </div>
-<div class="stat-card">
-
-            <div class="stat-label">
-                Admin Users
-            </div>
-
-            <div
-                class="stat-number"
-                id="statAdmins"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Active Content
-            </div>
-
-            <div
-                class="stat-number"
-                id="statActive"
-            >
-                0
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="dashboard-grid">
-<div class="panel">
+        <div class="panel doma-panel">
 
             <div class="panel-head">
-
-                <h3>
-                    Quick Actions
-                </h3>
-
+                <div>
+                    <h3>Learning Overview</h3>
+                    <span>Same learning-first structure as the DOMA ACADEMY homepage</span>
+                </div>
             </div>
 
             <div class="panel-body">
 
-                <div class="quick-actions">
+                <div class="doma-progress-card">
+                    <div class="doma-progress-top">
+                        <div>
+                            <strong>Modern Web Development</strong>
+                            <small>Featured course</small>
+                        </div>
+                        <b>68%</b>
+                    </div>
+                    <div class="doma-progress">
+                        <span style="width:68%"></span>
+                    </div>
+                    <div class="doma-progress-meta">
+                        <span>Active learners</span>
+                        <span>Continue learning →</span>
+                    </div>
+                </div>
 
-                    <button
-                        class="quick-btn"
-                        data-quick="services"
-                    >
-                        + Product
-                    </button>
-
-                    <button
-                        class="quick-btn"
-                        data-quick="offers"
-                    >
-                        + Deal
-                    </button>
-
-                    <button
-                        class="quick-btn"
-                        data-quick="projects"
-                    >
-                        + Collection
-                    </button>
-
-                    <button
-                        class="quick-btn"
-                        data-quick="clients"
-                    >
-                        + Customer
-                    </button>
-
-                    <button
-                        class="quick-btn"
-                        data-quick="testimonials"
-                    >
-                        + Review
-                    </button>
-
-                    <button
-                        class="quick-btn"
-                        data-quick="orders"
-                    >
-                        View Orders
-                    </button>
-
-                    <button
-                        class="quick-btn"
-                        data-quick="settings"
-                    >
-                        Store Settings
-                    </button>
-
+                <div class="doma-mini-grid">
+                    <div class="doma-mini-card">
+                        <span>Interactive Lessons</span>
+                        <strong>Ready</strong>
+                    </div>
+                    <div class="doma-mini-card">
+                        <span>Quizzes</span>
+                        <strong>Enabled</strong>
+                    </div>
+                    <div class="doma-mini-card">
+                        <span>Projects</span>
+                        <strong>Active</strong>
+                    </div>
+                    <div class="doma-mini-card">
+                        <span>Certificates</span>
+                        <strong>Available</strong>
+                    </div>
                 </div>
 
             </div>
 
+        </div>
+
+        <div class="panel doma-panel">
+
+            <div class="panel-head">
+                <div>
+                    <h3>Platform Activity</h3>
+                    <span>Latest admin activity</span>
+                </div>
+            </div>
+
+            <div class="panel-body" id="recentMessages"></div>
+
+        </div>
+
+    </div>
+
+    <div class="doma-dashboard-grid doma-dashboard-grid-bottom">
+
+        <div class="panel doma-panel">
+            <div class="panel-head">
+                <div>
+                    <h3>Quick Management</h3>
+                    <span>Manage the main areas of the academy</span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="quick-actions doma-quick-actions">
+                    <button class="quick-btn" data-quick="services">+ Course</button>
+                    <button class="quick-btn" data-quick="offers">+ Learning Path</button>
+                    <button class="quick-btn" data-quick="projects">+ Project</button>
+                    <button class="quick-btn" data-quick="clients">+ Student</button>
+                    <button class="quick-btn" data-quick="testimonials">+ Review</button>
+                    <button class="quick-btn" data-quick="settings">Academy Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel doma-panel">
+            <div class="panel-head">
+                <div>
+                    <h3>Academy Features</h3>
+                    <span>Core tools mirrored from the student experience</span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="doma-feature-list">
+                    <div><span>🎓</span><b>Course Management</b><small>Create and organize learning content</small></div>
+                    <div><span>📊</span><b>Progress Tracking</b><small>Monitor learner completion</small></div>
+                    <div><span>📝</span><b>Quizzes & Assessments</b><small>Manage knowledge checks</small></div>
+                    <div><span>🏆</span><b>Certificates</b><small>Track completed learning paths</small></div>
+                    <div><span>👥</span><b>Students & Instructors</b><small>Manage academy users</small></div>
+                    <div><span>🔔</span><b>Notifications</b><small>Keep learners informed</small></div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -2074,11 +1981,11 @@ textarea{
         <div>
 
             <h2>
-                Products
+                Services
             </h2>
 
             <p>
-                Manage products displayed in the shop.
+                Manage services displayed on the website.
             </p>
 
         </div>
@@ -2087,7 +1994,7 @@ textarea{
             class="add-btn"
             id="addServiceBtn"
         >
-            + Add Product
+            + Add Service
         </button>
 
     </div>
@@ -2127,11 +2034,11 @@ textarea{
         <div>
 
             <h2>
-                Deals
+                Offers
             </h2>
 
             <p>
-                Manage deals, discounts and pricing.
+                Manage special offers and pricing.
             </p>
 
         </div>
@@ -2140,7 +2047,7 @@ textarea{
             class="add-btn"
             id="addOfferBtn"
         >
-            + Add Deal
+            + Add Offer
         </button>
 
     </div>
@@ -2180,11 +2087,11 @@ textarea{
         <div>
 
             <h2>
-                Collections
+                Projects
             </h2>
 
             <p>
-                Manage fashion collections.
+                Manage portfolio projects.
             </p>
 
         </div>
@@ -2193,7 +2100,7 @@ textarea{
             class="add-btn"
             id="addProjectBtn"
         >
-            + Add Collection
+            + Add Project
         </button>
 
     </div>
@@ -2233,11 +2140,11 @@ textarea{
         <div>
 
             <h2>
-                Customers
+                Clients
             </h2>
 
             <p>
-                Manage featured customer/style information.
+                Manage client and company information.
             </p>
 
         </div>
@@ -2246,7 +2153,7 @@ textarea{
             class="add-btn"
             id="addClientBtn"
         >
-            + Add Customer
+            + Add Client
         </button>
 
     </div>
@@ -2286,11 +2193,11 @@ textarea{
         <div>
 
             <h2>
-                Reviews
+                Testimonials
             </h2>
 
             <p>
-                Manage customer reviews and ratings.
+                Manage client feedback and ratings.
             </p>
 
         </div>
@@ -2299,7 +2206,7 @@ textarea{
             class="add-btn"
             id="addTestimonialBtn"
         >
-            + Add Review
+            + Add Testimonial
         </button>
 
     </div>
@@ -2326,21 +2233,58 @@ textarea{
 
 
 <!-- =====================================================
-     ORDERS
+     MESSAGES
 ===================================================== -->
-<section class="admin-section" id="section-orders">
-  <div class="section-header">
-    <div>
-      <h2>Orders</h2>
-      <p>Customer orders submitted from the online store.</p>
+
+<section
+    class="admin-section"
+    id="section-messages"
+>
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                Messages
+            </h2>
+
+            <p>
+                Messages submitted from your website.
+            </p>
+
+        </div>
+
+
+        <button
+            class="add-btn"
+            id="markAllReadBtn"
+        >
+            Mark All Read
+        </button>
+
     </div>
-    <button class="add-btn" id="refreshOrdersBtn" type="button">Refresh</button>
-  </div>
-  <div class="toolbar">
-    <input class="search-input" id="orderSearch" type="search" placeholder="Search by customer, phone or order ID...">
-  </div>
-  <div class="table-wrap" id="ordersTableWrap"></div>
+
+
+    <div class="toolbar">
+
+        <input
+            class="search-input"
+            id="messageSearch"
+            type="search"
+            placeholder="Search messages..."
+        >
+
+    </div>
+
+
+    <div
+        class="table-wrap"
+        id="messagesTableWrap"
+    ></div>
+
 </section>
+
 
 <!-- =====================================================
      ADMINS
@@ -2397,7 +2341,7 @@ textarea{
         <div>
 
             <h2>
-                Store Settings
+                Site Settings
             </h2>
 
             <p>
@@ -2682,7 +2626,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="serviceModalTitle">
-                Add Product
+                Add Service
             </h3>
 
             <button
@@ -2710,7 +2654,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Product Name
+                    Service Name
                 </label>
 
                 <input
@@ -2736,30 +2680,6 @@ textarea{
             </div>
 
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Category</label>
-                    <input id="serviceCategory" maxlength="60" placeholder="Streetwear">
-                </div>
-                <div class="form-group">
-                    <label>Price</label>
-                    <input id="servicePrice" maxlength="40" placeholder="EGP 950">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Sizes</label>
-                    <input id="serviceSizes" maxlength="120" placeholder="S, M, L, XL">
-                    <div class="catalog-help">Separate sizes with commas.</div>
-                </div>
-                <div class="form-group">
-                    <label>Colors</label>
-                    <input id="serviceColors" maxlength="160" placeholder="Black, White">
-                    <div class="catalog-help">Separate colors with commas.</div>
-                </div>
-            </div>
-
             <div class="form-group">
 
                 <label>
@@ -2778,7 +2698,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Product Image
+                    Service Image
                 </label>
 
                 <div class="upload-box">
@@ -2839,7 +2759,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Product
+                    Save Service
                 </button>
 
             </div>
@@ -2865,7 +2785,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="offerModalTitle">
-                Add Deal
+                Add Offer
             </h3>
 
             <button
@@ -2893,7 +2813,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Deal Name
+                    Offer Name
                 </label>
 
                 <input
@@ -2968,7 +2888,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Deal Image
+                    Offer Image
                 </label>
 
                 <div class="upload-box">
@@ -3029,7 +2949,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Deal
+                    Save Offer
                 </button>
 
             </div>
@@ -3055,7 +2975,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="projectModalTitle">
-                Add Collection
+                Add Project
             </h3>
 
             <button
@@ -3083,7 +3003,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Collection Name
+                    Project Name
                 </label>
 
                 <input
@@ -3127,7 +3047,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Collection Image
+                    Project Image
                 </label>
 
                 <div class="upload-box">
@@ -3188,7 +3108,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Collection
+                    Save Project
                 </button>
 
             </div>
@@ -3214,7 +3134,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="clientModalTitle">
-                Add Customer
+                Add Client
             </h3>
 
             <button
@@ -3242,7 +3162,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Customer Name
+                    Client Name
                 </label>
 
                 <input
@@ -3303,7 +3223,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Customer
+                    Save Client
                 </button>
 
             </div>
@@ -3329,7 +3249,7 @@ textarea{
         <div class="modal-head">
 
             <h3 id="testimonialModalTitle">
-                Add Review
+                Add Testimonial
             </h3>
 
             <button
@@ -3359,7 +3279,7 @@ textarea{
                 <div class="form-group">
 
                     <label>
-                        Customer Name
+                        Client Name
                     </label>
 
                     <input
@@ -3427,7 +3347,7 @@ textarea{
             <div class="form-group">
 
                 <label>
-                    Customer Review
+                    Client Feedback
                 </label>
 
                 <textarea
@@ -3474,7 +3394,7 @@ textarea{
                     type="submit"
                     class="save-btn"
                 >
-                    Save Review
+                    Save Testimonial
                 </button>
 
             </div>
@@ -3658,8 +3578,7 @@ const CLOUD_TABLES = {
     vantor_projects: "projects",
     vantor_clients: "clients",
     vantor_testimonials: "testimonials",
-    vantor_messages: "messages",
-    vantor_orders: "orders"
+    vantor_messages: "messages"
 };
 
 function dbToLocal(key,row){
@@ -3696,19 +3615,6 @@ function dbToLocal(key,row){
     if(key === "vantor_messages"){
         x.read = x.read ?? x.is_read ?? false;
         x.status = x.status || (x.read ? "Read" : "Unread");
-    }
-
-    if(key === "vantor_orders"){
-        x.id = x.id || x.order_id || "";
-        x.customerName = x.customerName || x.customer_name || "";
-        x.phone = x.phone || "";
-        x.email = x.email || "";
-        x.address = x.address || "";
-        x.notes = x.notes || "";
-        x.items = Array.isArray(x.items) ? x.items : [];
-        x.total = Number(x.total || 0);
-        x.status = x.status || "New";
-        x.createdAt = x.createdAt || x.created_at || "";
     }
 
     return x;
@@ -3790,21 +3696,6 @@ function localToDb(key,item,includeId){
         row.id = Number(id);
     }
 
-    if(key === "vantor_orders"){
-        row = {
-            order_id: item.id || item.order_id || "",
-            customer_name: item.customerName || item.customer_name || "",
-            phone: item.phone || "",
-            email: item.email || "",
-            address: item.address || "",
-            notes: item.notes || "",
-            items: item.items || [],
-            total: Number(item.total || 0),
-            status: item.status || "New",
-            created_at: item.createdAt || item.created_at || new Date().toISOString()
-        };
-    }
-
     return row;
 }
 
@@ -3825,190 +3716,14 @@ async function readCloud(key){
     return (data || []).map(row => dbToLocal(key,row));
 }
 
-const cloudWriteRevision = Object.create(null);
-
-function invalidateCloudWrites(key){
-    cloudWriteRevision[key] = (cloudWriteRevision[key] || 0) + 1;
-    return cloudWriteRevision[key];
-}
-
-async function deleteCloudRecord(key,id){
-    const table = CLOUD_TABLES[key];
-    const revision = invalidateCloudWrites(key);
-
-    if(!table || !supabaseClient){
-        return {ok:true, skipped:true};
-    }
-
-    try{
-        if(cloudWriteRevision[key] !== revision){
-            return {ok:false, error:"Cloud operation was superseded by a newer change."};
-        }
-
-        let remoteId = null;
-        const numericId = Number(id);
-
-        // Normal case: the local record already has the Supabase BIGINT id.
-        if(Number.isInteger(numericId) && numericId > 0 && String(id).match(/^\\d+$/)){
-            remoteId = numericId;
-        }else{
-            // Older/local records may still have browser-generated ids.
-            // Find their exact Supabase row by comparing the local record fields.
-            const localItems = getData(key);
-            const localItem = localItems.find(item => String(item.id) === String(id));
-
-            if(!localItem){
-                return {ok:false, error:"The record was not found in local data."};
-            }
-
-            const remoteResult = await supabaseClient
-                .from(table)
-                .select("*");
-
-            if(remoteResult.error){
-                return {ok:false, error:remoteResult.error.message};
-            }
-
-            const rows = remoteResult.data || [];
-            const normalize = value => String(value ?? "").trim();
-
-            remoteId = null;
-            for(const row of rows){
-                let matches = false;
-
-                if(key === "vantor_offers"){
-                    matches =
-                        normalize(row.title) === normalize(localItem.title || localItem.name) &&
-                        normalize(row.image) === normalize(localItem.image) &&
-                        normalize(row.description) === normalize(localItem.description);
-                }else if(key === "vantor_services"){
-                    matches =
-                        normalize(row.title) === normalize(localItem.title || localItem.name) &&
-                        normalize(row.image) === normalize(localItem.image) &&
-                        normalize(row.description) === normalize(localItem.description);
-                }else if(key === "vantor_projects"){
-                    matches =
-                        normalize(row.title) === normalize(localItem.title || localItem.name) &&
-                        normalize(row.image) === normalize(localItem.image) &&
-                        normalize(row.description) === normalize(localItem.description);
-                }else if(key === "vantor_clients"){
-                    matches =
-                        normalize(row.name) === normalize(localItem.name) &&
-                        normalize(row.email) === normalize(localItem.email) &&
-                        normalize(row.phone) === normalize(localItem.phone);
-                }else if(key === "vantor_testimonials"){
-                    matches =
-                        normalize(row.name) === normalize(localItem.name) &&
-                        normalize(row.message || row.text) === normalize(localItem.message || localItem.text);
-                }
-
-                if(matches){
-                    remoteId = Number(row.id);
-                    break;
-                }
-            }
-        }
-
-        if(!Number.isFinite(remoteId)){
-            return {ok:false, error:"Could not match this item to its Supabase record."};
-        }
-
-        if(cloudWriteRevision[key] !== revision){
-            return {ok:false, error:"Cloud operation was superseded by a newer change."};
-        }
-
-        const result = await supabaseClient
-            .from(table)
-            .delete()
-            .eq("id",remoteId);
-
-        if(result.error){
-            console.error("VANTOR Supabase direct delete failed:",table,remoteId,result.error.message);
-            return {ok:false, error:result.error.message};
-        }
-
-        // Verify the row is really gone before allowing the local delete.
-        const verify = await supabaseClient
-            .from(table)
-            .select("id")
-            .eq("id",remoteId);
-
-        if(verify.error){
-            return {ok:false, error:verify.error.message};
-        }
-        if((verify.data || []).length){
-            return {ok:false, error:"Supabase did not remove the record. Check DELETE permissions (RLS)."};
-        }
-
-        return {ok:true};
-    }catch(error){
-        console.error("VANTOR Supabase direct delete error:",table,id,error);
-        return {ok:false, error:error.message || "Unknown Supabase error."};
-    }
-}
-
 async function writeCloud(key,data){
     const table = CLOUD_TABLES[key];
-    const revision = cloudWriteRevision[key] || 0;
     if(!table || !Array.isArray(data) || !supabaseClient) return;
 
     try{
-        if(cloudWriteRevision[key] !== revision){
-            return;
-        }
-
-        /*
-           Reconcile deletions first. The old sync only inserted/updated
-           records, so a record deleted in Admin could remain in Supabase
-           and then come back during the next cloud refresh.
-        */
-        const remoteResult = await supabaseClient
-            .from(table)
-            .select("id");
-
-        if(!remoteResult.error){
-            const wantedIds = new Set(
-                data
-                    .map(item => item && item.id)
-                    .filter(id => /^\d+$/.test(String(id)))
-                    .map(id => Number(id))
-            );
-
-            const remoteIds = (remoteResult.data || [])
-                .map(row => Number(row.id))
-                .filter(id => Number.isFinite(id));
-
-            for(const remoteId of remoteIds){
-                if(cloudWriteRevision[key] !== revision){
-                    return;
-                }
-                if(!wantedIds.has(remoteId)){
-                    const result = await supabaseClient
-                        .from(table)
-                        .delete()
-                        .eq("id",remoteId);
-
-                    if(result.error){
-                        console.warn(
-                            "VANTOR Supabase delete sync failed:",
-                            table,
-                            remoteId,
-                            result.error.message
-                        );
-                    }
-                }
-            }
-        }else{
-            console.warn("VANTOR Supabase id sync failed:",table,remoteResult.error.message);
-        }
-
-        /* Insert new records and update existing numeric records. */
         for(const item of data){
-            if(cloudWriteRevision[key] !== revision){
-                return;
-            }
             const payload = localToDb(key,item,true);
-            const {error} = await supabaseClient
+            const {data:created,error} = await supabaseClient
                 .from(table)
                 .insert(payload)
                 .select()
@@ -4022,14 +3737,7 @@ async function writeCloud(key,data){
                         .from(table)
                         .update(updatePayload)
                         .eq("id",Number(item.id));
-
-                    if(result.error){
-                        console.warn(
-                            "VANTOR Supabase update failed:",
-                            table,
-                            result.error.message
-                        );
-                    }
+                    if(result.error) console.warn("VANTOR Supabase update failed:",table,result.error.message);
                 }else{
                     console.warn("VANTOR Supabase insert failed:",table,error.message);
                 }
@@ -4078,7 +3786,6 @@ const KEYS = {
     testimonials:"vantor_testimonials",
 
     messages:"vantor_messages",
-    orders:"vantor_orders",
 
     admins:"vantor_admin_users",
 
@@ -4095,15 +3802,15 @@ const KEYS = {
 
 const LEGACY_KEYS = {
 
-    services:"vantorProducts",
+    services:"vantorServices",
 
-    offers:"vantorDeals",
+    offers:"vantorOffers",
 
-    clients:"vantorCustomers",
+    clients:"vantorClients",
 
-    projects:"vantorCollections",
+    projects:"vantorProjects",
 
-    testimonials:"vantorReviews",
+    testimonials:"vantorTestimonials",
 
     messages:"vantorMessages",
 
@@ -4170,7 +3877,6 @@ function getData(key){
 }
 
 function setData(key,data){
-    invalidateCloudWrites(key);
     try{
         localStorage.setItem(
             key,
@@ -4232,8 +3938,8 @@ function initializeDefaults(){
 
     const defaultAdmin = {
         id:"admin-1",
-        name:"VANTOR Admin",
-        email:"admin@vantor.com",
+        name:"DOMA ACADEMY Admin",
+        email:"admin@domaacademy.com",
         password:"admin123",
         role:"Admin",
         createdAt:new Date().toISOString()
@@ -4263,19 +3969,19 @@ function initializeDefaults(){
                 siteName:"VANTOR",
 
                 tagline:
-                    "Modern Fashion Store",
+                    "Digital Marketing Agency",
 
                 heroTitle:
-                    "Wear Your Style. Move Different.",
+                    "We Build Brands That Move Forward.",
 
                 heroDescription:
-                    "VANTOR is a modern fashion label built around clean silhouettes, everyday essentials and statement pieces made to fit your style.",
+                    "VANTOR helps ambitious brands grow through strategy, creative marketing and digital experiences that make an impact.",
 
                 aboutTitle:
-                    "Designed With Purpose.",
+                    "We Turn Ideas Into Growth.",
 
                 aboutDescription:
-                    "VANTOR creates versatile fashion pieces with modern design, quality materials and an easy-to-wear point of view.",
+                    "VANTOR is a digital marketing agency focused on helping businesses build stronger brands, connect with their audiences and achieve measurable growth.",
 
                 email:
                     "hello@vantor.com",
@@ -4292,49 +3998,6 @@ function initializeDefaults(){
             })
         );
 
-    }
-
-
-    if(!localStorage.getItem(KEYS.orders)){
-        localStorage.setItem(KEYS.orders, JSON.stringify([]));
-    }
-
-    /* Seed a starter fashion catalog for a fresh install. */
-    if(!localStorage.getItem(KEYS.services)){
-        setData(KEYS.services, [
-            {id:"cat-1",name:"Everyday Essentials",description:"Clean basics, relaxed fits and pieces built for daily wear.",icon:"E",status:"Active"},
-            {id:"cat-2",name:"Streetwear",description:"Bold layers and statement pieces for a modern street look.",icon:"S",status:"Active"},
-            {id:"cat-3",name:"Smart Casual",description:"Polished pieces that move easily from day to night.",icon:"C",status:"Active"}
-        ]);
-    }
-    if(!localStorage.getItem(KEYS.offers)){
-        setData(KEYS.offers, [
-            {id:"deal-1",name:"Oversized Essential Tee",description:"Heavyweight cotton tee with a relaxed silhouette.",discount:"20% OFF",oldPrice:"EGP 750",newPrice:"EGP 600",icon:"T",status:"Active"},
-            {id:"deal-2",name:"Classic Relaxed Hoodie",description:"Soft everyday hoodie with a clean minimal finish.",discount:"15% OFF",oldPrice:"EGP 1,400",newPrice:"EGP 1,190",icon:"H",status:"Active"},
-            {id:"deal-3",name:"Tailored Everyday Pants",description:"Straight-leg trousers designed for effortless styling.",discount:"10% OFF",oldPrice:"EGP 1,200",newPrice:"EGP 1,080",icon:"P",status:"Active"}
-        ]);
-    }
-    if(!localStorage.getItem(KEYS.projects)){
-        setData(KEYS.projects, [
-            {id:"col-1",name:"Autumn Core",category:"New Collection",description:"Neutral layers and clean silhouettes for the new season.",icon:"A",status:"Active"},
-            {id:"col-2",name:"Night Shift",category:"Street Edit",description:"Dark tones, relaxed fits and statement pieces after sunset.",icon:"N",status:"Active"},
-            {id:"col-3",name:"Daily Uniform",category:"Essentials",description:"Simple pieces designed to work together every day.",icon:"D",status:"Active"}
-        ]);
-    }
-    if(!localStorage.getItem(KEYS.clients)){
-        setData(KEYS.clients, [
-            {id:"style-1",name:"Minimal",company:"Clean & Neutral",status:"Active"},
-            {id:"style-2",name:"Street",company:"Bold & Relaxed",status:"Active"},
-            {id:"style-3",name:"Classic",company:"Timeless & Sharp",status:"Active"},
-            {id:"style-4",name:"Weekend",company:"Easy & Comfortable",status:"Active"}
-        ]);
-    }
-    if(!localStorage.getItem(KEYS.testimonials)){
-        setData(KEYS.testimonials, [
-            {id:"review-1",name:"Mariam",company:"Verified Customer",rating:5,text:"The fit is exactly what I wanted and the quality feels great.",status:"Active"},
-            {id:"review-2",name:"Omar",company:"Verified Customer",rating:5,text:"Clean design, easy to style and the sizing guide was helpful.",status:"Active"},
-            {id:"review-3",name:"Youssef",company:"Verified Customer",rating:4,text:"Fast response and the pieces look even better in person.",status:"Active"}
-        ]);
     }
 
 }
@@ -4441,7 +4104,7 @@ function updateUserUI(user){
         "sidebarUserName"
     ).textContent =
         user.name ||
-        "VANTOR Admin";
+        "DOMA ACADEMY Admin";
 
 
     document.getElementById(
@@ -4504,14 +4167,14 @@ document
             */
             if(
                 !user &&
-                email === "admin@vantor.com" &&
+                email === "admin@domaacademy.com" &&
                 password === "admin123"
             ){
 
                 user = {
                     id: "admin-1",
-                    name: "VANTOR Admin",
-                    email: "admin@vantor.com",
+                    name: "DOMA ACADEMY Admin",
+                    email: "admin@domaacademy.com",
                     password: "admin123",
                     role: "Admin",
                     createdAt: new Date().toISOString()
@@ -4587,21 +4250,21 @@ const sectionNames = {
 
     dashboard:"Dashboard",
 
-    services:"Products",
+    services:"Services",
 
-    offers:"Deals",
+    offers:"Offers",
 
-    projects:"Collections",
+    projects:"Projects",
 
-    clients:"Customers",
+    clients:"Clients",
 
-    testimonials:"Reviews",
+    testimonials:"Testimonials",
 
-    orders:"Orders",
+    messages:"Messages",
 
     admins:"Admin Users",
 
-    settings:"Store Settings"
+    settings:"Site Settings"
 
 };
 
@@ -4625,9 +4288,6 @@ document
 
     });
 
-
-document.getElementById("orderSearch")?.addEventListener("input",renderOrders);
-document.getElementById("refreshOrdersBtn")?.addEventListener("click",refreshOrders);
 
 function showSection(section){
 
@@ -5010,16 +4670,11 @@ function resetServiceForm(){
         "hidden"
     );
 
-    ["serviceCategory","servicePrice","serviceSizes","serviceColors"].forEach(function(id){
-        const el=document.getElementById(id);
-        if(el && !document.getElementById("serviceId").value) el.value="";
-    });
-
 
     document.getElementById(
         "serviceModalTitle"
     ).textContent =
-        "Add Product";
+        "Add Service";
 
 }
 
@@ -5092,26 +4747,6 @@ document
                         description:
                             document.getElementById(
                                 "serviceDescription"
-                            ).value.trim(),
-
-                        category:
-                            document.getElementById(
-                                "serviceCategory"
-                            ).value.trim(),
-
-                        price:
-                            document.getElementById(
-                                "servicePrice"
-                            ).value.trim(),
-
-                        sizes:
-                            document.getElementById(
-                                "serviceSizes"
-                            ).value.trim(),
-
-                        colors:
-                            document.getElementById(
-                                "serviceColors"
                             ).value.trim(),
 
                         icon:
@@ -5233,26 +4868,6 @@ function editService(id){
     ).value =
         item.description || "";
 
-    document.getElementById(
-        "serviceCategory"
-    ).value =
-        item.category || "";
-
-    document.getElementById(
-        "servicePrice"
-    ).value =
-        item.price || "";
-
-    document.getElementById(
-        "serviceSizes"
-    ).value =
-        item.sizes || "";
-
-    document.getElementById(
-        "serviceColors"
-    ).value =
-        item.colors || "";
-
 
     document.getElementById(
         "serviceIcon"
@@ -5293,7 +4908,7 @@ function editService(id){
     document.getElementById(
         "serviceModalTitle"
     ).textContent =
-        "Edit Product";
+        "Edit Service";
 
 
     openModal(
@@ -5303,11 +4918,11 @@ function editService(id){
 }
 
 
-async function deleteService(id){
+function deleteService(id){
 
     if(
         !confirm(
-            "Delete this product?"
+            "Delete this service?"
         )
     ){
 
@@ -5326,29 +4941,17 @@ async function deleteService(id){
                 String(id)
         );
 
-    // Delete the exact record from Supabase before changing localStorage.
-    const cloudDelete = await deleteCloudRecord(KEYS.services,id);
 
-    if(!cloudDelete.ok){
-        showToast(
-            "Could not delete from cloud: " +
-            (cloudDelete.error || "Supabase error")
-        );
-        return;
-    }
-
-
-
-    localStorage.setItem(
+    setData(
         KEYS.services,
-        JSON.stringify(data)
+        data
     );
 
 
     renderAll();
 
     showToast(
-        "Product deleted."
+        "Service deleted."
     );
 
 }
@@ -5380,7 +4983,7 @@ function resetOfferForm(){
     document.getElementById(
         "offerModalTitle"
     ).textContent =
-        "Add Deal";
+        "Add Offer";
 
 }
 
@@ -5650,7 +5253,7 @@ function editOffer(id){
 }
 
 
-async function deleteOffer(id){
+function deleteOffer(id){
 
     if(
         !confirm(
@@ -5673,22 +5276,10 @@ async function deleteOffer(id){
                 String(id)
         );
 
-    // Delete the exact record from Supabase before changing localStorage.
-    const cloudDelete = await deleteCloudRecord(KEYS.offers,id);
 
-    if(!cloudDelete.ok){
-        showToast(
-            "Could not delete from cloud: " +
-            (cloudDelete.error || "Supabase error")
-        );
-        return;
-    }
-
-
-
-    localStorage.setItem(
+    setData(
         KEYS.offers,
-        JSON.stringify(data)
+        data
     );
 
 
@@ -5727,7 +5318,7 @@ function resetProjectForm(){
     document.getElementById(
         "projectModalTitle"
     ).textContent =
-        "Add Collection";
+        "Add Project";
 
 }
 
@@ -5968,7 +5559,7 @@ function editProject(id){
 }
 
 
-async function deleteProject(id){
+function deleteProject(id){
 
     if(
         !confirm(
@@ -5990,18 +5581,6 @@ async function deleteProject(id){
                 String(item.id) !==
                 String(id)
         );
-
-    // Delete the exact record from Supabase before changing localStorage.
-    const cloudDelete = await deleteCloudRecord(KEYS.projects,id);
-
-    if(!cloudDelete.ok){
-        showToast(
-            "Could not delete from cloud: " +
-            (cloudDelete.error || "Supabase error")
-        );
-        return;
-    }
-
 
 
     setData(
@@ -6038,7 +5617,7 @@ function resetClientForm(){
     document.getElementById(
         "clientModalTitle"
     ).textContent =
-        "Add Customer";
+        "Add Client";
 
 }
 
@@ -6209,7 +5788,7 @@ function editClient(id){
 }
 
 
-async function deleteClient(id){
+function deleteClient(id){
 
     if(
         !confirm(
@@ -6231,18 +5810,6 @@ async function deleteClient(id){
                 String(item.id) !==
                 String(id)
         );
-
-    // Delete the exact record from Supabase before changing localStorage.
-    const cloudDelete = await deleteCloudRecord(KEYS.clients,id);
-
-    if(!cloudDelete.ok){
-        showToast(
-            "Could not delete from cloud: " +
-            (cloudDelete.error || "Supabase error")
-        );
-        return;
-    }
-
 
 
     setData(
@@ -6285,7 +5852,7 @@ function resetTestimonialForm(){
     document.getElementById(
         "testimonialModalTitle"
     ).textContent =
-        "Add Review";
+        "Add Testimonial";
 
 }
 
@@ -6484,7 +6051,7 @@ function editTestimonial(id){
 }
 
 
-async function deleteTestimonial(id){
+function deleteTestimonial(id){
 
     if(
         !confirm(
@@ -6506,18 +6073,6 @@ async function deleteTestimonial(id){
                 String(item.id) !==
                 String(id)
         );
-
-    // Delete the exact record from Supabase before changing localStorage.
-    const cloudDelete = await deleteCloudRecord(KEYS.testimonials,id);
-
-    if(!cloudDelete.ok){
-        showToast(
-            "Could not delete from cloud: " +
-            (cloudDelete.error || "Supabase error")
-        );
-        return;
-    }
-
 
 
     setData(
@@ -6860,6 +6415,129 @@ function deleteAdmin(id){
 
 
 /* =====================================================
+   MESSAGES
+===================================================== */
+
+function markMessageRead(id){
+
+    const data =
+        getData(
+            KEYS.messages
+        );
+
+
+    const item =
+        data.find(
+            item =>
+                String(item.id) ===
+                String(id)
+        );
+
+
+    if(!item){
+        return;
+    }
+
+
+    item.read =
+        true;
+
+    item.status =
+        "Read";
+
+
+    setData(
+        KEYS.messages,
+        data
+    );
+
+
+    renderAll();
+
+}
+
+
+function deleteMessage(id){
+
+    if(
+        !confirm(
+            "Delete this message?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    const data =
+        getData(
+            KEYS.messages
+        )
+        .filter(
+            item =>
+                String(item.id) !==
+                String(id)
+        );
+
+
+    setData(
+        KEYS.messages,
+        data
+    );
+
+
+    renderAll();
+
+    showToast(
+        "Message deleted."
+    );
+
+}
+
+
+document
+    .getElementById("markAllReadBtn")
+    .addEventListener(
+        "click",
+        function(){
+
+            const data =
+                getData(
+                    KEYS.messages
+                );
+
+
+            data.forEach(
+                item => {
+
+                    item.read =
+                        true;
+
+                    item.status =
+                        "Read";
+
+                }
+            );
+
+
+            setData(
+                KEYS.messages,
+                data
+            );
+
+
+            renderAll();
+
+            showToast(
+                "All messages marked as read."
+            );
+
+        }
+    );
+
+
+/* =====================================================
    SETTINGS
 ===================================================== */
 
@@ -6884,14 +6562,14 @@ function loadSettingsForm(){
         "settingsTagline"
     ).value =
         settings.tagline ||
-        "Modern Fashion Store";
+        "Digital Marketing Agency";
 
 
     document.getElementById(
         "settingsHeroTitle"
     ).value =
         settings.heroTitle ||
-        "Wear Your Style. Move Different.";
+        "We Build Brands That Move Forward.";
 
 
     document.getElementById(
@@ -6905,7 +6583,7 @@ function loadSettingsForm(){
         "settingsAboutTitle"
     ).value =
         settings.aboutTitle ||
-        "Designed With Purpose.";
+        "We Turn Ideas Into Growth.";
 
 
     document.getElementById(
@@ -7129,7 +6807,7 @@ function getSettings(){
    RENDER SERVICES
 ===================================================== */
 
-function renderProducts(){
+function renderServices(){
 
     const query =
         document.getElementById(
@@ -7166,8 +6844,8 @@ function renderProducts(){
 
         wrap.innerHTML = `
             <div class="empty">
-                <strong>No products found</strong>
-                Add your first product from the button above.
+                <strong>No services found</strong>
+                Add your first service from the button above.
             </div>
         `;
 
@@ -7185,7 +6863,7 @@ function renderProducts(){
                 <tr>
 
                     <th>Image</th>
-                    <th>Product</th>
+                    <th>Service</th>
                     <th>Status</th>
                     <th>Actions</th>
 
@@ -7297,7 +6975,7 @@ function renderProducts(){
    RENDER OFFERS
 ===================================================== */
 
-function renderDeals(){
+function renderOffers(){
 
     const query =
         document.getElementById(
@@ -7498,7 +7176,7 @@ function renderDeals(){
    RENDER PROJECTS
 ===================================================== */
 
-function renderCollections(){
+function renderProjects(){
 
     const query =
         document.getElementById(
@@ -7674,7 +7352,7 @@ function renderCollections(){
    RENDER CLIENTS
 ===================================================== */
 
-function renderCustomers(){
+function renderClients(){
 
     const query =
         document.getElementById(
@@ -7819,7 +7497,7 @@ function renderCustomers(){
    RENDER TESTIMONIALS
 ===================================================== */
 
-function renderReviews(){
+function renderTestimonials(){
 
     const query =
         document.getElementById(
@@ -8007,83 +7685,187 @@ function renderReviews(){
 
 
 /* =====================================================
-   WHATSAPP ORDER LINK
+   RENDER MESSAGES
 ===================================================== */
-function getWhatsAppUrl(phone, orderId){
-    let digits = String(phone || "").replace(/\D/g, "");
-    if(digits.startsWith("00")) digits = digits.slice(2);
-    if(digits.startsWith("0")) digits = "20" + digits.slice(1);
-    if(!digits.startsWith("20") && digits.length >= 10) digits = "20" + digits;
-    if(digits.length < 10) return "";
-    const message = `Hello, I'm contacting you about VANTOR order ${orderId || ""}.`;
-    return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
-}
 
-/* =====================================================
-   RENDER ORDERS
-===================================================== */
-function renderOrders(){
-    const wrap=document.getElementById("ordersTableWrap");
-    if(!wrap)return;
-    const query=(document.getElementById("orderSearch")?.value||"").trim().toLowerCase();
-    const data=getData(KEYS.orders).filter(order=>{
-        return !query ||
-            String(order.id||"").toLowerCase().includes(query) ||
-            String(order.customerName||"").toLowerCase().includes(query) ||
-            String(order.phone||"").toLowerCase().includes(query);
-    }).sort((a,b)=>String(b.createdAt||"").localeCompare(String(a.createdAt||"")));
+function renderMessages(){
+
+    const query =
+        document.getElementById(
+            "messageSearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    const data =
+        getData(
+            KEYS.messages
+        )
+        .filter(
+            item =>
+                !query ||
+                String(item.name || "")
+                    .toLowerCase()
+                    .includes(query) ||
+                String(item.email || "")
+                    .toLowerCase()
+                    .includes(query) ||
+                String(item.subject || "")
+                    .toLowerCase()
+                    .includes(query) ||
+                String(item.message || "")
+                    .toLowerCase()
+                    .includes(query)
+        )
+        .reverse();
+
+
+    const wrap =
+        document.getElementById(
+            "messagesTableWrap"
+        );
+
+
     if(!data.length){
-        wrap.innerHTML=`<div class="empty"><strong>No orders found</strong><br>New online orders will appear here.</div>`;
+
+        wrap.innerHTML = `
+            <div class="empty">
+                <strong>No messages found</strong>
+                Website contact form submissions will appear here.
+            </div>
+        `;
+
         return;
+
     }
-    wrap.innerHTML=`<table><thead><tr>
-      <th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Created</th><th>Actions</th>
-    </tr></thead><tbody>
-    ${data.map(order=>{
-      const items=(order.items||[]).map(item=>`${escapeHtml(item.name||"Product")} ×${Number(item.qty)||1}${item.size?` · ${escapeHtml(item.size)}`:""}${item.color?` · ${escapeHtml(item.color)}`:""}`).join("<br>");
-      const date=order.createdAt?new Date(order.createdAt).toLocaleString():"-";
-      return `<tr>
-        <td><div class="item-name">${escapeHtml(order.id||"-")}</div><div class="order-meta">${escapeHtml(order.email||"")}</div></td>
-        <td><div class="item-name">${escapeHtml(order.customerName||"-")}</div><div class="item-sub">${getWhatsAppUrl(order.phone, order.id) ? `<a href="${escapeHtml(getWhatsAppUrl(order.phone, order.id))}" target="_blank" rel="noopener noreferrer" style="color:#d8a0ad;text-decoration:none;">${escapeHtml(order.phone||"")}</a>` : escapeHtml(order.phone||"")}<br>${escapeHtml(order.address||"")}</div></td>
-        <td><div class="order-items-box">${items||"-"}</div></td>
-        <td><strong>EGP ${Number(order.total||0).toLocaleString()}</strong></td>
-        <td><select class="order-status-select" onchange="updateOrderStatus('${escapeHtml(order.id)}',this.value)">
-          ${["New","Confirmed","Preparing","Shipped","Completed","Cancelled"].map(s=>`<option value="${s}" ${order.status===s?"selected":""}>${s}</option>`).join("")}
-        </select></td>
-        <td>${escapeHtml(date)}</td>
-        <td><div class="action-group">${getWhatsAppUrl(order.phone, order.id) ? `<a class="action-btn" href="${escapeHtml(getWhatsAppUrl(order.phone, order.id))}" target="_blank" rel="noopener noreferrer">WhatsApp</a>` : `<span class="action-btn" style="opacity:.45;pointer-events:none;">No WhatsApp</span>`}<button class="action-btn danger" onclick="deleteOrder('${escapeHtml(order.id)}')">Delete</button></div></td>
-      </tr>`;
-    }).join("")}
-    </tbody></table>`;
+
+
+    wrap.innerHTML = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Sender</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                ${data.map(item => `
+
+                    <tr>
+
+                        <td>
+
+                            <div class="item-name">
+                                ${escapeHtml(
+                                    item.name || "Unknown"
+                                )}
+                            </div>
+
+                            <div class="item-sub">
+                                ${escapeHtml(
+                                    item.email || ""
+                                )}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            ${escapeHtml(
+                                item.subject || "-"
+                            )}
+                        </td>
+
+
+                        <td>
+
+                            <div class="message-box">
+                                ${escapeHtml(
+                                    item.message || ""
+                                )}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="status ${
+                                item.read ||
+                                item.status === "Read"
+                                ? "read"
+                                : "unread"
+                            }">
+
+                                ${
+                                    item.read ||
+                                    item.status === "Read"
+                                    ? "Read"
+                                    : "Unread"
+                                }
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-group">
+
+                                ${
+                                    item.read ||
+                                    item.status === "Read"
+                                    ?
+                                    ""
+                                    :
+                                    `
+                                    <button
+                                        class="action-btn"
+                                        onclick="markMessageRead('${escapeHtml(item.id)}')"
+                                    >
+                                        Mark Read
+                                    </button>
+                                    `
+                                }
+
+
+                                <button
+                                    class="action-btn danger"
+                                    onclick="deleteMessage('${escapeHtml(item.id)}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `).join("")}
+
+            </tbody>
+
+        </table>
+
+    `;
+
 }
 
-async function updateOrderStatus(id,status){
-    const data=getData(KEYS.orders);
-    const item=data.find(x=>String(x.id)===String(id));
-    if(!item)return;
-    item.status=status;
-    setData(KEYS.orders,data);
-    if(supabaseClient){
-        const result=await supabaseClient.from("orders").update({status}).eq("order_id",id);
-        if(result.error)console.warn("Order status cloud update failed:",result.error.message);
-    }
-    renderOrders();
-}
-async function deleteOrder(id){
-    if(!confirm("Delete this order?"))return;
-    const data=getData(KEYS.orders).filter(x=>String(x.id)!==String(id));
-    localStorage.setItem(KEYS.orders,JSON.stringify(data));
-    if(supabaseClient){
-        const result=await supabaseClient.from("orders").delete().eq("order_id",id);
-        if(result.error)console.warn("Order cloud delete failed:",result.error.message);
-    }
-    renderOrders();
-}
-async function refreshOrders(){
-    const remote=await readCloud(KEYS.orders);
-    if(remote!==null)localStorage.setItem(KEYS.orders,JSON.stringify(remote));
-    renderOrders();
-}
 
 /* =====================================================
    RENDER ADMINS
@@ -8248,64 +8030,61 @@ function renderDashboard(){
 
     const testimonials =
         getData(KEYS.testimonials);
-const admins =
+
+
+    const messages =
+        getData(KEYS.messages);
+
+
+    const admins =
         getData(KEYS.admins);
 
 
-    const orders =
-        getData(KEYS.orders);
-
-
     document.getElementById(
-        "statProducts"
+        "statServices"
     ).textContent =
         services.length;
 
 
     document.getElementById(
-        "statDeals"
+        "statOffers"
     ).textContent =
         offers.length;
 
 
     document.getElementById(
-        "statCollections"
+        "statProjects"
     ).textContent =
         projects.length;
 
 
     document.getElementById(
-        "statCustomers"
+        "statClients"
     ).textContent =
         clients.length;
 
 
     document.getElementById(
-        "statReviews"
+        "statTestimonials"
     ).textContent =
         testimonials.length;
 
 
-    document.getElementById(
-        "statOrders"
-    ).textContent =
-        orders.length;
-
-
-    const pendingOrders =
-        orders.filter(
-            order => {
-                const status = String(order.status || "New").toLowerCase();
-                return status === "new" || status === "pending" || status === "processing";
-            }
+    const unread =
+        messages.filter(
+            item =>
+                !item.read &&
+                item.status !== "Read"
         ).length;
 
 
     document.getElementById(
-        "statPendingOrders"
+        "statUnread"
     ).textContent =
-        pendingOrders;
-document.getElementById(
+        unread;
+
+
+    document.getElementById(
         "statAdmins"
     ).textContent =
         admins.length;
@@ -8334,6 +8113,128 @@ document.getElementById(
         "statActive"
     ).textContent =
         active;
+
+
+    const recent =
+        messages
+        .slice()
+        .sort(
+            (a,b) =>
+                new Date(
+                    b.createdAt || 0
+                ) -
+                new Date(
+                    a.createdAt || 0
+                )
+        )
+        .slice(0,5);
+
+
+    const box =
+        document.getElementById(
+            "recentMessages"
+        );
+
+
+    if(!recent.length){
+
+        box.innerHTML = `
+            <div class="empty">
+                <strong>No messages yet</strong>
+                Website messages will appear here.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        recent.map(item => `
+
+            <div
+                style="
+                    padding:13px 0;
+                    border-bottom:1px solid #21151a;
+                "
+            >
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        gap:10px;
+                    "
+                >
+
+                    <div>
+
+                        <div
+                            style="
+                                color:#ddd;
+                                font-size:11px;
+                                font-weight:bold;
+                            "
+                        >
+                            ${escapeHtml(
+                                item.name ||
+                                "Unknown"
+                            )}
+                        </div>
+
+                        <div
+                            style="
+                                color:#555;
+                                font-size:9px;
+                                margin-top:3px;
+                            "
+                        >
+                            ${escapeHtml(
+                                item.email ||
+                                ""
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <span class="status ${
+                        item.read ||
+                        item.status === "Read"
+                        ? "read"
+                        : "unread"
+                    }">
+
+                        ${
+                            item.read ||
+                            item.status === "Read"
+                            ? "Read"
+                            : "Unread"
+                        }
+
+                    </span>
+
+                </div>
+
+
+                <div
+                    style="
+                        color:#777;
+                        font-size:10px;
+                        margin-top:9px;
+                    "
+                >
+                    ${escapeHtml(
+                        item.subject ||
+                        "No subject"
+                    )}
+                </div>
+
+            </div>
+
+        `).join("");
+
 }
 
 
@@ -8346,7 +8247,8 @@ document.getElementById(
     "offerSearch",
     "projectSearch",
     "clientSearch",
-    "testimonialSearch"
+    "testimonialSearch",
+    "messageSearch"
 ]
 .forEach(id => {
 
@@ -8357,25 +8259,30 @@ document.getElementById(
             function(){
 
                 if(id === "serviceSearch"){
-                    renderProducts();
+                    renderServices();
                 }
 
                 if(id === "offerSearch"){
-                    renderDeals();
+                    renderOffers();
                 }
 
                 if(id === "projectSearch"){
-                    renderCollections();
+                    renderProjects();
                 }
 
                 if(id === "clientSearch"){
-                    renderCustomers();
+                    renderClients();
                 }
 
                 if(id === "testimonialSearch"){
-                    renderReviews();
+                    renderTestimonials();
                 }
-}
+
+                if(id === "messageSearch"){
+                    renderMessages();
+                }
+
+            }
         );
 
 });
@@ -8464,7 +8371,7 @@ document
 
             const confirmed =
                 confirm(
-                    "Reset all VANTOR website data to demo defaults? This will remove current Products, Deals, Collections, Customers and Reviews."
+                    "Reset all VANTOR website data to demo defaults? This will remove current Services, Offers, Projects, Clients, Testimonials and Messages."
                 );
 
 
@@ -8571,18 +8478,17 @@ function renderAll(){
 
     renderDashboard();
 
-    renderProducts();
+    renderServices();
 
-    renderDeals();
+    renderOffers();
 
-    renderCollections();
+    renderProjects();
 
-    renderCustomers();
+    renderClients();
 
-    renderReviews();
+    renderTestimonials();
 
-
-    renderOrders();
+    renderMessages();
 
     renderAdmins();
 
@@ -8648,6 +8554,18 @@ syncVantorCloud().then(function(){
     renderAll();
 });
 
+</script>
+
+
+<script id="doma-admin-dashboard-hook">
+document.addEventListener("DOMContentLoaded", function(){
+    const b=document.getElementById("openWebsiteBtn2");
+    if(b){
+        b.addEventListener("click",function(){
+            window.open("index.html","_blank");
+        });
+    }
+});
 </script>
 
 </body>
