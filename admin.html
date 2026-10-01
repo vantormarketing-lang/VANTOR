@@ -1479,6 +1479,14 @@ textarea{
 @media(max-width:600px){.academy-admin-grid{grid-template-columns:1fr}}
 </style>
 
+
+<style id="doma-v5-enhancements">
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-group input,.form-group select,.form-group textarea{width:100%;box-sizing:border-box}
+@media(max-width:800px){.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}}
+</style>
 </head>
 
 
@@ -1660,6 +1668,7 @@ textarea{
   <span class="side-icon">✓</span>
   Exams & Quizzes
 </button>
+<button class="side-link" data-section="student-manager"><span class="side-icon">◎</span> Students</button>
 
 <button
             class="side-link"
@@ -8925,6 +8934,7 @@ domaCmsInit();
     });
   }
 
+  function initV5(){
   $('domaV5NewExam')?.addEventListener('click',newExam);
   $('domaV5Refresh')?.addEventListener('click',loadExams);
   $('domaV5GradeFilter')?.addEventListener('change',loadExams);
@@ -8938,9 +8948,39 @@ domaCmsInit();
 
   hookSection();
   setTimeout(()=>loadGrades().then(loadExams),500);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',initV5);
+  else initV5();
 })();
 </script>
 
+
+<script>
+(function(){
+  function sb(){
+    return window.supabaseClient||window.supabase||window.domaSB||window.sb;
+  }
+  async function loadStudents(){
+    const box=document.getElementById('domaV5StudentsTable');
+    if(!box) return;
+    const c=sb();
+    if(!c){box.innerHTML='<div style="padding:20px;color:#c05269">Supabase client is not available.</div>';return;}
+    const r=await c.from('profiles').select('id,full_name,email,grade_id,created_at,grades(name)').order('created_at',{ascending:false});
+    if(r.error){box.innerHTML='<div style="padding:20px;color:#c05269">'+String(r.error.message)+'</div>';return;}
+    const rows=r.data||[];
+    box.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Email</th><th>Grade</th><th>Joined</th></tr></thead><tbody>'+
+      rows.map(x=>'<tr><td><b>'+escS(x.full_name||'Student')+'</b></td><td>'+escS(x.email||'')+'</td><td>'+escS(x.grades?.name||'Not selected')+'</td><td>'+new Date(x.created_at).toLocaleDateString()+'</td></tr>').join('')+
+      '</tbody></table>':'<div style="padding:20px;color:#777">No student profiles found.</div>';
+  }
+  function escS(v){return String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+  function init(){
+    document.getElementById('domaV5RefreshStudents')?.addEventListener('click',loadStudents);
+    document.querySelectorAll('.side-link[data-section="student-manager"]').forEach(b=>b.addEventListener('click',()=>setTimeout(loadStudents,50)));
+    setTimeout(loadStudents,700);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 </body>
 
 </html>
