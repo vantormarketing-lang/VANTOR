@@ -1,83 +1,832 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DOMA ACADEMY — English Learning Platform</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="description" content="DOMA ACADEMY is a modern learning platform for practical courses, skills, quizzes, certificates and career growth.">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#080808;color:#f5f2f3;font-family:Inter,Arial,sans-serif}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}
-:root{--bg:#080808;--card:#120c0f;--card2:#171014;--line:#321a23;--red:#8f2943;--red2:#bd4b67;--muted:#958b8e}
-.container{width:min(1180px,92%);margin:auto}.nav{position:sticky;top:0;z-index:20;background:rgba(8,8,8,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.navin{height:72px;display:flex;align-items:center;gap:24px}.brand{font-weight:900;letter-spacing:2px;display:flex;align-items:center;gap:10px;white-space:nowrap}.brand small{display:block;font-size:8px;color:#777;letter-spacing:1px;margin-top:3px}.mark{width:34px;height:34px;border:1px solid #54202d;border-radius:9px;display:grid;place-items:center}.mark svg{width:25px}.links{display:flex;gap:18px;flex:1;justify-content:center}.links a{font-size:11px;color:#aaa}.links a:hover{color:#fff}.btn{border-radius:8px;padding:11px 15px;border:1px solid var(--line);cursor:pointer}.primary{background:#7d233a;color:white;border-color:#a33752}.secondary{background:#120d0f;color:#ddd}.nav-actions{display:flex;gap:8px}.hero{padding:85px 0 60px;background:radial-gradient(circle at 75% 30%,rgba(143,41,67,.18),transparent 35%)}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}.eyebrow{text-transform:uppercase;letter-spacing:2px;color:var(--red2);font-size:10px;font-weight:800}.hero h1{font-size:58px;line-height:1.03;margin:15px 0}.hero h1 span{color:var(--red2)}.hero p{color:#aaa;line-height:1.8;max-width:680px}.actions{display:flex;gap:10px;margin:25px 0}.hero-card{background:linear-gradient(145deg,#160d11,#0e090b);border:1px solid var(--line);padding:25px;border-radius:18px;box-shadow:0 25px 80px #000}.hero-card h3{margin-top:0}.grade-grid,.feature-grid,.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.section{padding:65px 0}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:25px}.head h2{font-size:30px;margin:8px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}.card:hover{border-color:#6c2738}.grade{min-height:145px}.grade b{font-size:17px}.grade p,.card p{color:var(--muted);font-size:12px;line-height:1.6}.feature{min-height:150px}.feature strong{display:block;margin:8px 0}.dashboard{background:#0c090a;border-top:1px solid var(--line)}.dash-grid{grid-template-columns:1.4fr .6fr}.progress{height:8px;background:#211319;border-radius:20px;overflow:hidden}.progress span{display:block;height:100%;background:var(--red2)}.lesson-list{display:grid;gap:8px}.lesson{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #28161d;border-radius:9px;background:#0d090b}.lesson small{color:#777}.footer{border-top:1px solid var(--line);padding:35px 0;color:#777;font-size:11px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.box{width:min(560px,100%);max-height:90vh;overflow:auto;background:#110b0e;border:1px solid #542334;border-radius:16px;padding:25px}.box h2{margin-top:0}.field{margin:12px 0}.field label{display:block;color:#999;font-size:11px;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:11px;background:#080808;color:white;border:1px solid #38202a;border-radius:7px}.close{float:right;background:none;border:0;color:#aaa;font-size:25px;cursor:pointer}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#180d12;border:1px solid #69283b;padding:12px 18px;border-radius:8px;display:none;z-index:200}.toast.show{display:block}.hidden{display:none!important}
-@media(max-width:850px){.links{display:none}.hero-grid,.dash-grid{grid-template-columns:1fr}.hero h1{font-size:40px}.grade-grid,.feature-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.grade-grid,.feature-grid{grid-template-columns:1fr}.nav-actions .secondary{display:none}}
+:root{
+  --bg:#080808;--bg2:#0d090b;--card:#120b0e;--card2:#171014;--line:#2d181f;
+  --burg:#762337;--burg2:#9d304a;--burg3:#c05269;--text:#f5f2f3;--muted:#9b9396;
+  --green:#5fc99a;--gold:#d7ad61;--shadow:0 22px 60px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{text-decoration:none;color:inherit} button,input,select{font:inherit}
+button{cursor:pointer} .container{width:min(1180px,92%);margin:auto}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,.88);backdrop-filter:blur(16px);border-bottom:1px solid #171214}
+.navin{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:2px}
+.mark{width:40px;height:40px;border:1px solid #713044;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#1a0b10,#090909);box-shadow:0 8px 25px #000}
+.mark svg{width:27px;height:27px}.brand small{display:block;font-size:8px;color:#9b8f93;letter-spacing:3px;font-weight:700}
+.links{display:flex;gap:24px;align-items:center}.links a{font-size:12px;color:#aaa;transition:.2s}.links a:hover{color:#fff}
+.nav-actions{display:flex;gap:9px;align-items:center}.iconbtn,.menu{border:1px solid #302024;background:#110b0d;color:#ddd;border-radius:8px;padding:9px 11px}.menu{display:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:800;border:1px solid transparent;transition:.2s}
+.primary{background:var(--burg);border-color:#8d2a40;color:#fff}.primary:hover{background:#92304a;transform:translateY(-2px)}
+.secondary{background:#151012;border-color:#3c222a;color:#ddd}.secondary:hover{border-color:#703045}
+.hero{padding:155px 0 95px;min-height:760px;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 34%,rgba(118,35,55,.28),transparent 34%),linear-gradient(180deg,#080808,#0b0809)}
+.hero:after{content:"";position:absolute;width:620px;height:620px;right:-220px;top:100px;border-radius:50%;border:1px solid #3b1c26;box-shadow:0 0 0 70px rgba(118,35,55,.03),0 0 0 140px rgba(118,35,55,.025)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;position:relative;z-index:2}
+.eyebrow{color:var(--burg3);text-transform:uppercase;letter-spacing:4px;font-size:10px;font-weight:800;margin-bottom:18px}
+h1{font-size:clamp(48px,6.5vw,82px);line-height:.98;letter-spacing:-4px;margin-bottom:24px} h1 span{color:var(--burg3)}
+.hero p{color:var(--muted);max-width:640px;font-size:16px;line-height:1.85;margin-bottom:30px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.mini-proof{display:flex;gap:24px;margin-top:34px;flex-wrap:wrap}.proof strong{font-size:20px}.proof span{display:block;color:#777;font-size:11px}
+.hero-card{background:linear-gradient(150deg,#171014,#0d0a0b);border:1px solid #38202a;border-radius:20px;padding:20px;box-shadow:var(--shadow);position:relative}
+.video{height:310px;border-radius:14px;background:linear-gradient(135deg,#221017,#0b090a);display:grid;place-items:center;position:relative;overflow:hidden}
+.video:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(157,48,74,.16))}
+.play{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#8b2942;border:5px solid rgba(255,255,255,.08);font-size:23px}
+.lesson-row{display:flex;justify-content:space-between;align-items:center;margin-top:15px}.lesson-row b{font-size:14px}.lesson-row span{color:#777;font-size:11px}
+.progress{height:6px;background:#25161b;border-radius:10px;margin-top:10px;overflow:hidden}.progress i{display:block;width:64%;height:100%;background:var(--burg3)}
+section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow{margin-bottom:8px}.head h2{font-size:38px;letter-spacing:-1.5px;margin-bottom:10px}.head p{max-width:650px;margin:auto;color:#888;font-size:14px}
+.searchbar{margin-top:-42px;position:relative;z-index:5}.searchbox{background:#100b0d;border:1px solid #3a2028;border-radius:14px;padding:13px;display:flex;gap:10px;box-shadow:var(--shadow)}.searchbox input{flex:1;background:#080808;border:1px solid #25161b;color:#fff;border-radius:9px;padding:13px 15px;outline:none}.searchbox select{background:#080808;color:#aaa;border:1px solid #25161b;border-radius:9px;padding:0 12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.course{background:var(--card);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:.2s}.course:hover{transform:translateY(-4px);border-color:#673041}.cover{height:175px;padding:18px;display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(135deg,#291018,#0d0b0c)}.tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e0a5b2;background:#2b1119;padding:6px 8px;border-radius:5px}.level{font-size:9px;color:#aaa;background:#0a0909;border:1px solid #382128;padding:5px 7px;border-radius:5px}.coursebody{padding:18px}.course h3{font-size:18px;margin-bottom:7px}.course p{color:#858083;font-size:12px;min-height:42px}.meta{display:flex;gap:14px;color:#777;font-size:10px;margin:13px 0}.course-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #23151a;padding-top:13px}.price{font-weight:900}.old{text-decoration:line-through;color:#666;font-size:10px;margin-left:5px}
+.cats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.cat{background:#100b0d;border:1px solid #2b181e;border-radius:12px;padding:20px 10px;text-align:center;color:#aaa;font-size:12px;transition:.2s}.cat:hover{border-color:#713044;color:#fff;transform:translateY(-2px)}.cat b{display:block;font-size:25px;margin-bottom:7px}
+.dashboard{display:grid;grid-template-columns:1fr 1fr;gap:18px}.dash{background:#100b0d;border:1px solid #2e1a21;border-radius:15px;padding:22px}.dash h3{margin-bottom:15px;font-size:17px}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:14px;background:#0a0909;border:1px solid #24161a;border-radius:10px}.stat strong{font-size:24px}.stat span{display:block;color:#777;font-size:10px}.course-progress{margin:13px 0}.cp{display:flex;justify-content:space-between;font-size:11px;color:#aaa}.bar{height:7px;background:#26171c;border-radius:8px;margin-top:7px}.bar i{display:block;height:100%;background:var(--burg3);border-radius:8px}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.feature{padding:23px;background:#100b0d;border:1px solid #2d181f;border-radius:14px}.feature b{font-size:26px}.feature h3{font-size:15px;margin:9px 0 5px}.feature p{color:#7f787b;font-size:11px}
+.instructors{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.instructor{background:#100b0d;border:1px solid #2d181f;border-radius:14px;padding:18px;text-align:center}.avatar{width:66px;height:66px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(145deg,#7d2740,#251016);font-weight:900;font-size:20px}.instructor h3{font-size:14px}.instructor p{color:#777;font-size:10px;margin-top:4px}
+.learning{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}.path{background:#100b0d;border:1px solid #2d181f;border-radius:15px;padding:22px}.pathrow{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid #211419}.num{width:30px;height:30px;border-radius:8px;background:#291018;display:grid;place-items:center;color:#d78899;font-size:11px}.pathrow h4{font-size:13px}.pathrow p{color:#777;font-size:10px}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.plan{background:#100b0d;border:1px solid #2d181f;border-radius:15px;padding:25px}.plan.hot{border-color:#7d2940;box-shadow:0 20px 55px rgba(118,35,55,.13)}.plan .label{font-size:9px;color:#d98ea0;letter-spacing:2px;text-transform:uppercase}.plan h3{font-size:20px;margin:8px 0}.money{font-size:32px;font-weight:900}.money small{font-size:10px;color:#777;font-weight:400}.plan ul{list-style:none;margin:18px 0}.plan li{font-size:11px;color:#aaa;padding:7px 0;border-bottom:1px solid #201318}.plan li:before{content:"✓";color:#a13a52;margin-right:8px}
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.review{background:#100b0d;border:1px solid #2d181f;border-radius:14px;padding:21px}.stars{color:#d7ad61;letter-spacing:2px;font-size:12px}.review p{color:#9a9295;font-size:12px;margin:12px 0 15px}.person{display:flex;gap:10px;align-items:center}.person .avatar{margin:0;width:38px;height:38px;font-size:12px}.person b{font-size:11px}.person span{display:block;color:#666;font-size:9px}
+.faq{max-width:850px;margin:auto}.faq details{background:#100b0d;border:1px solid #2d181f;border-radius:10px;margin-bottom:9px;padding:15px 17px}.faq summary{cursor:pointer;font-size:13px;font-weight:700}.faq p{color:#858083;font-size:11px;padding-top:10px}
+.cta{background:linear-gradient(135deg,#35121d,#11090c);border:1px solid #6b2739;border-radius:20px;padding:48px;text-align:center}.cta h2{font-size:40px;margin-bottom:10px}.cta p{color:#9d9295;max-width:600px;margin:0 auto 22px}
+.footer{border-top:1px solid #1d1216;padding:45px 0 25px;background:#060606}.footgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:25px}.footer h4{font-size:12px;margin-bottom:12px}.footer a,.footer p{display:block;color:#777;font-size:11px;margin:7px 0}.copy{border-top:1px solid #171013;margin-top:30px;padding-top:18px;color:#555;font-size:10px;display:flex;justify-content:space-between}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}.modal.show{display:flex}.modalbox{width:min(720px,100%);background:#110b0d;border:1px solid #512331;border-radius:17px;padding:24px;box-shadow:var(--shadow)}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{background:none;border:0;color:#999;font-size:24px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{background:#090909;border:1px solid #2b181e;border-radius:8px;padding:11px;color:#fff;width:100%;outline:none}.full{grid-column:1/-1}.modalbox p{color:#888;font-size:12px;margin-bottom:14px}
+.toast{position:fixed;right:18px;bottom:18px;background:#151014;border:1px solid #653044;color:#eee;padding:12px 15px;border-radius:9px;display:none;z-index:3000;font-size:12px}.toast.show{display:block}
+@media(max-width:950px){.links{display:none}.menu{display:block}.nav-actions .login{display:none}.hero-grid,.learning,.dashboard{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.cats{grid-template-columns:repeat(3,1fr)}.features,.instructors{grid-template-columns:repeat(2,1fr)}.footgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){section{padding:68px 0}.hero{padding-top:125px}.hero-grid{gap:30px}h1{font-size:50px}.grid,.pricing,.reviews{grid-template-columns:1fr}.cats{grid-template-columns:repeat(2,1fr)}.features,.instructors,.footgrid{grid-template-columns:1fr}.searchbox{flex-direction:column}.searchbox select{height:44px}.statgrid{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.copy{flex-direction:column;gap:7px}.cta{padding:32px 20px}.cta h2{font-size:30px}}
+
+@media(max-width:820px){
+  #dashboard .grid,#learning-tools .grid{grid-template-columns:1fr 1fr !important}
+}
+@media(max-width:520px){
+  #dashboard .grid,#learning-tools .grid{grid-template-columns:1fr !important}
+}
+
 </style>
+
+<style id="doma-v2-styles">
+.course-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:none;overflow:auto;padding:28px}
+.course-modal.open{display:block}
+.course-shell{max-width:1180px;margin:auto;background:#100a0d;border:1px solid rgba(192,82,105,.28);border-radius:24px;overflow:hidden;box-shadow:0 25px 80px rgba(0,0,0,.6)}
+.course-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:28px;border-bottom:1px solid rgba(255,255,255,.08)}
+.course-top h2{margin:4px 0 8px;font-size:32px}
+.course-top p{margin:0;color:#b9adb1}
+.course-close{border:1px solid rgba(255,255,255,.12);background:#181013;color:#fff;border-radius:12px;width:42px;height:42px;font-size:22px;cursor:pointer}
+.course-grid{display:grid;grid-template-columns:1.45fr .75fr;min-height:520px}
+.player{padding:28px;border-right:1px solid rgba(255,255,255,.08)}
+.video-box{aspect-ratio:16/9;background:linear-gradient(135deg,#1d0b11,#080808);border:1px solid rgba(192,82,105,.22);border-radius:18px;display:grid;place-items:center;text-align:center;padding:30px}
+.video-box .play{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#9d304a;font-size:28px;margin:auto auto 14px}
+.lesson-info{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:20px}
+.lesson-info h3{margin:0 0 6px}
+.lesson-info p{margin:0;color:#aaa}
+.progress-wrap{margin-top:18px}
+.progress-line{height:8px;background:#21161a;border-radius:99px;overflow:hidden}
+.progress-line span{display:block;height:100%;background:#9d304a;border-radius:99px}
+.lesson-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.lesson-actions button{border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:700}
+.btn-next{background:#9d304a;color:#fff}.btn-ghost{background:#21161a;color:#eee}
+.curriculum{padding:22px}
+.curriculum h3{margin:4px 0 14px}
+.lesson-list{display:grid;gap:8px;max-height:560px;overflow:auto;padding-right:4px}
+.lesson-item{width:100%;text-align:left;background:#160e11;border:1px solid rgba(255,255,255,.07);color:#eee;border-radius:12px;padding:13px;cursor:pointer;display:flex;gap:10px;align-items:center}
+.lesson-item.active{border-color:#9d304a;background:#211015}
+.lesson-item small{display:block;color:#94878b;margin-top:3px}
+.lesson-num{min-width:30px;height:30px;border-radius:8px;background:#25171c;display:grid;place-items:center;color:#c05269;font-weight:800}
+.resource-row{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.resource{padding:10px 12px;border-radius:10px;background:#160e11;border:1px solid rgba(255,255,255,.08);color:#ddd}
+.course-complete{margin-top:18px;padding:16px;border-radius:14px;background:rgba(118,35,55,.16);border:1px solid rgba(192,82,105,.2);display:none}
+.course-complete.show{display:block}
+@media(max-width:850px){
+ .course-modal{padding:12px}.course-grid{grid-template-columns:1fr}.player{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.course-top h2{font-size:25px}
+}
+</style>
+
 </head>
 <body>
-<nav class="nav"><div class="container navin">
-<a class="brand" href="#home"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7"/></svg></span><span>DOMA ACADEMY<small>ENGLISH LEARNING • BY ADHAM</small></span></a>
-<div class="links"><a href="#grades">Grades</a><a href="#features">Learning</a><a href="#dashboard">My Dashboard</a><a href="#faq">FAQ</a></div>
-<div class="nav-actions"><button class="btn secondary" onclick="openAuth('login')">Log In</button><button class="btn primary" onclick="openAuth('signup')">Get Started</button></div>
-</div></nav>
 
-<header class="hero" id="home"><div class="container hero-grid"><div>
-<div class="eyebrow">English for Egyptian students</div><h1>Learn English with a <span>clear path.</span></h1>
-<p>DOMA ACADEMY is built for Egyptian preparatory and secondary students. Study lessons, practice grammar and vocabulary, take quizzes and exams, submit homework, track progress and earn certificates.</p>
-<div class="actions"><a class="btn primary" href="#grades">Explore Grades →</a><button class="btn secondary" onclick="openAuth('signup')">Start Learning Free</button></div>
-</div><div class="hero-card"><div class="eyebrow">Six grades</div><h3>One complete English journey.</h3><p>From 1st Preparatory through 3rd Secondary, your account keeps your grade, progress, results and certificates in one place.</p><div class="progress"><span style="width:72%"></span></div><p>Structured learning • Practice • Assessment • Progress</p></div></div></header>
+<nav class="nav">
+  <div class="container navin">
+    <a class="brand" href="#home">
+      <span class="mark" aria-label="DOMA ACADEMY logo">
+        <svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </span>
+      <span>DOMA ACADEMY<small>LEARNING PLATFORM • BY ADHAM</small></span>
+    </a>
+    <div class="links">
+      <a href="#courses">English Courses</a><a href="#dashboard">My English</a><a href="#categories">Grades</a><a href="#dashboard">Student Dashboard</a><a href="#instructors">Teachers</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-actions"><button class="iconbtn" onclick="openModal('search')">⌕</button><button class="btn secondary login" onclick="openModal('login')">Log In</button><button class="btn primary" onclick="openModal('signup')">Get Started</button><button class="menu">☰</button></div>
+  </div>
+</nav>
 
-<section class="section" id="grades"><div class="container"><div class="head"><div><div class="eyebrow">Choose your level</div><h2>Your English grade</h2></div></div><div class="grade-grid" id="gradeGrid"></div></div></section>
-<section class="section" id="features"><div class="container"><div class="head"><div><div class="eyebrow">Everything connected</div><h2>Learn. Practice. Prove it.</h2></div></div><div class="feature-grid">
-<div class="card feature">📘<strong>Lessons & Units</strong><p>Grammar, vocabulary, reading, writing, listening and general lessons organized by grade and unit.</p></div>
-<div class="card feature">🧠<strong>Quizzes & Exams</strong><p>Timed assessments with automatic scoring and saved results.</p></div>
-<div class="card feature">📝<strong>Homework</strong><p>See assignments, submit answers and receive grades and teacher feedback.</p></div>
-<div class="card feature">📈<strong>Progress</strong><p>Track completed lessons, scores and your latest learning activity.</p></div>
-<div class="card feature">🏆<strong>Certificates</strong><p>Keep your earned certificates and certificate codes in your account.</p></div>
-<div class="card feature">🔔<strong>Notifications</strong><p>Important academy updates appear directly in your student dashboard.</p></div>
-</div></div></section>
+<header class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">Learn English. Build Your Future.</div>
+      <h1>Turn your curiosity into <span>real skills.</span></h1>
+      <p>DOMA ACADEMY is a modern learning platform for practical, career-focused education. Learn from structured courses, practice with quizzes, track your progress and earn certificates.</p>
+      <div class="actions"><a class="btn primary" href="#courses">Explore English Courses →</a><button class="btn secondary" onclick="openModal('signup')">Start Learning Free</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><span class="tag">Self-paced</span><span class="tag">Projects</span><span class="tag">Certificates</span><span class="tag">Progress Tracking</span></div><div class="mini-proof">
+        <div class="proof"><strong>120+</strong><span>Expert English Courses</span></div>
+        <div class="proof"><strong>18K+</strong><span>Active Learners</span></div>
+        <div class="proof"><strong>94%</strong><span>Completion Rate</span></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="video"><div class="play">▶</div></div>
+      <div class="lesson-row"><b>Featured: Build Your Digital Career</b><span>64% complete</span></div>
+      <div class="progress"><i></i></div>
+    </div>
+  </div>
+</header>
 
-<section class="section dashboard" id="dashboard"><div class="container"><div class="head"><div><div class="eyebrow">Student area</div><h2 id="dashTitle">Your dashboard</h2></div><button class="btn secondary" onclick="refreshDashboard()">Refresh</button></div>
-<div id="loggedOutDash" class="card"><h3>Log in to see your learning dashboard.</h3><p>Your grade, lessons, homework, results, progress and certificates will appear here.</p><button class="btn primary" onclick="openAuth('login')">Log In</button></div>
-<div id="loggedDash" class="hidden"><div class="dash-grid"><div class="card"><h3 id="studentName">Student</h3><p id="studentGrade">Grade not selected</p><div class="progress"><span id="overallProgress" style="width:0%"></span></div><p id="progressText">0% completed</p><h4>Recent lessons</h4><div id="lessonList" class="lesson-list"></div></div><div class="card"><h3>Quick view</h3><p>Quizzes: <b id="quizCount">0</b></p><p>Homework: <b id="homeworkCount">0</b></p><p>Certificates: <b id="certCount">0</b></p><p>Notifications: <b id="notifCount">0</b></p><button class="btn primary" onclick="openProfile()">Account & Grade</button></div></div></div>
-</div></section>
+<div class="container searchbar">
+  <div class="searchbox">
+    <input id="courseSearch" placeholder="Search courses, skills or topics..." oninput="filterEnglishCourses()">
+    <select id="courseCategory" onchange="filterEnglishCourses()"><option value="all">All categories</option><option>Business</option><option>Technology</option><option>Design</option><option>Marketing</option><option>Personal Growth</option></select>
+    <button class="btn primary" onclick="filterEnglishCourses()">Search</button>
+  </div>
+</div>
 
-<section class="section" id="faq"><div class="container"><div class="head"><div><div class="eyebrow">Help</div><h2>FAQ</h2></div></div><div class="grade-grid">
-<div class="card"><b>Can I learn at my own pace?</b><p>Yes. Your progress is saved to your account.</p></div><div class="card"><b>Are quizzes timed?</b><p>Published quizzes can include a duration set by the academy.</p></div><div class="card"><b>Can I see my results?</b><p>Yes. Your submitted attempts and scores are stored in your dashboard.</p></div>
-</div></div></section>
-<footer class="footer"><div class="container">© 2026 DOMA ACADEMY — English Learning Platform.</div></footer>
 
-<div class="modal" id="authModal"><div class="box"><button class="close" onclick="closeModal()">×</button><h2 id="authTitle">Log In</h2><div id="authBody"></div></div></div>
-<div class="modal" id="profileModal"><div class="box"><button class="close" onclick="closeModal()">×</button><h2>Student Profile</h2><div id="profileBody"></div></div></div>
+<section id="dashboard" class="container" style="padding-top:28px">
+  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Pick up where you left off, track your progress, and keep your next goal visible.</p></div>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="review"><div class="eyebrow">In progress</div><h3 style="font-size:30px;margin:8px 0">03</h3><p>English Courses currently active</p></div>
+    <div class="review"><div class="eyebrow">Completed</div><h3 style="font-size:30px;margin:8px 0">08</h3><p>English Courses finished</p></div>
+    <div class="review"><div class="eyebrow">Learning time</div><h3 style="font-size:30px;margin:8px 0">24h</h3><p>This month</p></div>
+    <div class="review"><div class="eyebrow">Certificates</div><h3 style="font-size:30px;margin:8px 0">05</h3><p>Ready to share</p></div>
+  </div>
+  <div class="cta" style="margin-top:22px">
+    <div>
+      <div class="eyebrow">Continue learning</div>
+      <h3 style="font-size:26px;margin:6px 0">Modern Web Development</h3>
+      <p>Your next lesson is JavaScript DOM &amp; Events. Keep your 7-day learning streak going.</p>
+    </div>
+    <button class="btn primary" onclick="showToast('Opening your next lesson...')">Continue Course →</button>
+  </div>
+</section>
+
+<section id="learning-tools">
+  <div class="container">
+    <div class="head"><div class="eyebrow">Everything in one place</div><h2>Built for Real Learning</h2><p>DOMA ACADEMY brings the essential tools of a modern learning platform into one focused experience.</p></div>
+    <div class="grid">
+      <article class="course"><div class="coursebody"><div class="eyebrow">01</div><h3>Interactive Lessons</h3><p>Structured lessons with clear objectives, examples and practical checkpoints.</p></div></article>
+      <article class="course"><div class="coursebody"><div class="eyebrow">02</div><h3>Quizzes &amp; Assessments</h3><p>Test understanding after each learning module and identify what needs review.</p></div></article>
+      <article class="course"><div class="coursebody"><div class="eyebrow">03</div><h3>Projects &amp; Practice</h3><p>Turn lessons into portfolio-ready work with guided practical projects.</p></div></article>
+      <article class="course"><div class="coursebody"><div class="eyebrow">04</div><h3>Certificates</h3><p>Celebrate completed learning paths with shareable course completion credentials.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section id="courses"><div class="container"><div class="sectionhead"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade and start learning.</h2><p>Focused English lessons for Egyptian preparatory and secondary students.</p></div></div><div class="filterbar"><input class="field" id="courseSearch" oninput="filterCourses()" placeholder="Search lessons, grammar, vocabulary..."><select class="field" id="courseCategory" onchange="filterCourses()"><option value="all">All Grades</option><option value="prep1">1st Preparatory</option><option value="prep2">2nd Preparatory</option><option value="prep3">3rd Preparatory</option><option value="sec1">1st Secondary</option><option value="sec2">2nd Secondary</option><option value="sec3">3rd Secondary</option></select></div><div class="coursegrid"><article class="course" data-category="prep1" data-search="1st preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 1</span></div><div class="coursebody"><div class="tag">1st Preparatory</div><h3>English — 1st Preparatory</h3><p>Grammar, vocabulary, reading, writing, listening and school exams.</p><button class="btn primary" onclick="showToast('Opening 1st Preparatory English...')">Open Grade →</button></div></article><article class="course" data-category="prep2" data-search="2nd preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 2</span></div><div class="coursebody"><div class="tag">2nd Preparatory</div><h3>English — 2nd Preparatory</h3><p>Stronger grammar, vocabulary and unit-by-unit exam practice.</p><button class="btn primary" onclick="showToast('Opening 2nd Preparatory English...')">Open Grade →</button></div></article><article class="course" data-category="prep3" data-search="3rd preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 3</span></div><div class="coursebody"><div class="tag">3rd Preparatory</div><h3>English — 3rd Preparatory</h3><p>Revision-focused English preparation with tests and mock exams.</p><button class="btn primary" onclick="showToast('Opening 3rd Preparatory English...')">Open Grade →</button></div></article><article class="course" data-category="sec1" data-search="1st secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 1</span></div><div class="coursebody"><div class="tag">1st Secondary</div><h3>English — 1st Secondary</h3><p>Structured school English with grammar and skills practice.</p><button class="btn primary" onclick="showToast('Opening 1st Secondary English...')">Open Grade →</button></div></article><article class="course" data-category="sec2" data-search="2nd secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 2</span></div><div class="coursebody"><div class="tag">2nd Secondary</div><h3>English — 2nd Secondary</h3><p>Advanced reading, writing, grammar and exam preparation.</p><button class="btn primary" onclick="showToast('Opening 2nd Secondary English...')">Open Grade →</button></div></article><article class="course" data-category="sec3" data-search="3rd secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 3</span></div><div class="coursebody"><div class="tag">3rd Secondary</div><h3>English — 3rd Secondary</h3><p>Final-year English revision, practice tests and exam readiness.</p><button class="btn primary" onclick="showToast('Opening 3rd Secondary English...')">Open Grade →</button></div></article></div></div></section>
+
+<section id="categories"><div class="container"><div class="sectionhead"><div><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2></div></div><div class="featuregrid"><div class="feature"><b>Grammar</b><p>Clear explanations with guided exercises.</p></div><div class="feature"><b>Vocabulary</b><p>Unit words, meanings, usage and revision.</p></div><div class="feature"><b>Reading</b><p>Comprehension passages and question practice.</p></div><div class="feature"><b>Writing</b><p>Structures, model answers and guided practice.</p></div><div class="feature"><b>Listening</b><p>Listening practice and comprehension checks.</p></div><div class="feature"><b>Quizzes & Exams</b><p>Homework, quizzes, mock exams and results.</p></div></div></div></section>
+
+<section id="dashboard">
+  <div class="container">
+    <div class="head"><div class="eyebrow">Your learning hub</div><h2>Student Dashboard</h2><p>Everything a learner needs in one place: progress, streaks, saved courses, certificates and upcoming tasks.</p></div>
+    <div class="dashboard">
+      <div class="dash">
+        <h3>My English</h3>
+        <div class="course-progress"><div class="cp"><span>Modern Web Development</span><b>64%</b></div><div class="bar"><i style="width:64%"></i></div></div>
+        <div class="course-progress"><div class="cp"><span>Digital Marketing Mastery</span><b>38%</b></div><div class="bar"><i style="width:38%"></i></div></div>
+        <div class="course-progress"><div class="cp"><span>UI/UX Design from Zero</span><b>82%</b></div><div class="bar"><i style="width:82%"></i></div></div>
+      </div>
+      <div class="dash">
+        <h3>Learning Overview</h3>
+        <div class="statgrid"><div class="stat"><strong>14</strong><span>English Courses</span></div><div class="stat"><strong>86h</strong><span>Learning time</span></div><div class="stat"><strong>5</strong><span>Certificates</span></div></div>
+        <div style="margin-top:16px;color:#777;font-size:11px">🔥 12-day learning streak — keep going.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="head"><div class="eyebrow">Built for serious learning</div><h2>Everything You Need to Learn</h2></div>
+    <div class="features">
+      <div class="feature"><b>▶</b><h3>Video Lessons</h3><p>Structured lessons with clear chapters and practical demonstrations.</p></div>
+      <div class="feature"><b>✓</b><h3>Quizzes & Assessments</h3><p>Check understanding with quizzes, exercises and knowledge checks.</p></div>
+      <div class="feature"><b>▣</b><h3>Certificates</h3><p>Complete a course and receive a shareable completion certificate.</p></div>
+      <div class="feature"><b>↗</b><h3>Progress Tracking</h3><p>Track lessons, completion, learning time and personal milestones.</p></div>
+      <div class="feature"><b>⌘</b><h3>Projects</h3><p>Learn by building portfolio-ready projects instead of only watching.</p></div>
+      <div class="feature"><b>⬇</b><h3>Resources</h3><p>Download worksheets, templates, checklists and lesson materials.</p></div>
+      <div class="feature"><b>◷</b><h3>Learning Schedule</h3><p>Plan sessions and stay consistent with a simple learning calendar.</p></div>
+      <div class="feature"><b>☵</b><h3>Community</h3><p>Discuss lessons, ask questions and connect with other learners.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="instructors">
+  <div class="container">
+    <div class="head"><div class="eyebrow">Learn from practitioners</div><h2>Featured Teachers</h2><p>Experienced educators and professionals focused on useful, real-world skills.</p></div>
+    <div class="instructors">
+      <div class="instructor"><div class="avatar">AK</div><h3>Adam Kareem</h3><p>Web Development • 4.9 rating</p></div>
+      <div class="instructor"><div class="avatar">SN</div><h3>Sarah Nabil</h3><p>Digital Marketing • 4.8 rating</p></div>
+      <div class="instructor"><div class="avatar">OM</div><h3>Omar Magdy</h3><p>Business Strategy • 4.9 rating</p></div>
+      <div class="instructor"><div class="avatar">LM</div><h3>Lina Mostafa</h3><p>UI/UX Design • 4.9 rating</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="head"><div class="eyebrow">From beginner to confident</div><h2>Learning Paths</h2></div>
+    <div class="learning">
+      <div class="path"><h3>Digital Career Path</h3><div class="pathrow"><span class="num">01</span><div><h4>Foundations</h4><p>Build the essential digital and communication skills.</p></div></div><div class="pathrow"><span class="num">02</span><div><h4>Core Skill</h4><p>Choose a specialization and complete guided projects.</p></div></div><div class="pathrow"><span class="num">03</span><div><h4>Portfolio</h4><p>Turn your learning into work you can show.</p></div></div></div>
+      <div class="path"><h3>Creator & Business Path</h3><div class="pathrow"><span class="num">01</span><div><h4>Idea & Audience</h4><p>Understand the problem, audience and opportunity.</p></div></div><div class="pathrow"><span class="num">02</span><div><h4>Offer & Content</h4><p>Build a useful offer and a repeatable content system.</p></div></div><div class="pathrow"><span class="num">03</span><div><h4>Growth</h4><p>Measure results and improve the system over time.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="head"><div class="eyebrow">Simple access</div><h2>Choose Your Learning Plan</h2><p>Start free, then unlock more learning when you are ready.</p></div>
+    <div class="pricing">
+      <div class="plan"><span class="label">Free</span><h3>Starter</h3><div class="money">$0 <small>/ forever</small></div><ul><li>Selected free lessons</li><li>Learning progress</li><li>Community access</li><li>Basic quizzes</li></ul><button class="btn secondary" onclick="openModal('signup')">Create Account</button></div>
+      <div class="plan hot"><span class="label">Most Popular</span><h3>Pro Learner</h3><div class="money">$19 <small>/ month</small></div><ul><li>Full course library</li><li>Certificates</li><li>Projects & resources</li><li>Advanced assessments</li></ul><button class="btn primary" onclick="openModal('signup')">Start Pro</button></div>
+      <div class="plan"><span class="label">For Teams</span><h3>Academy</h3><div class="money">Custom</div><ul><li>Team learning dashboard</li><li>Progress & reporting</li><li>Private learning paths</li><li>Admin support</li></ul><button class="btn secondary" onclick="openModal('contact')">Talk to Us</button></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="head"><div class="eyebrow">Learner stories</div><h2>What Students Say</h2></div>
+    <div class="reviews">
+      <div class="review"><div class="stars">★★★★★</div><p>“The lessons are structured, practical and easy to follow. I finally stopped collecting tutorials and started building.”</p><div class="person"><div class="avatar">YA</div><div><b>Youssef A.</b><span>Web Development Student</span></div></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>“The progress system keeps me consistent. I can see exactly what I finished and what I should do next.”</p><div class="person"><div class="avatar">MN</div><div><b>Mariam N.</b><span>Marketing Student</span></div></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>“I used the projects to build a small portfolio while learning. That made the course feel much more valuable.”</p><div class="person"><div class="avatar">KA</div><div><b>Khaled A.</b><span>Design Student</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div>
+    <div class="faq">
+      <details><summary>Can I start learning for free?</summary><p>Yes. The Starter plan includes selected free lessons and basic learning features.</p></details>
+      <details><summary>Do courses include certificates?</summary><p>Eligible completed courses can provide a shareable completion certificate.</p></details>
+      <details><summary>Can I learn at my own pace?</summary><p>Yes. English Courses are designed for self-paced learning, with progress saved in your dashboard.</p></details>
+      <details><summary>Are there quizzes and projects?</summary><p>Yes. The platform is designed around lessons, knowledge checks, practical exercises and projects.</p></details>
+      <details><summary>Can teams use DOMA ACADEMY?</summary><p>Yes. The Academy plan is designed for organizations that want team learning and progress reporting.</p></details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta"><div class="eyebrow">Your next skill starts here</div><h2>Learn something that moves you forward.</h2><p>Learn English for Egyptian preparatory and secondary grades with lessons, grammar, vocabulary, reading, writing, listening, quizzes and exams.</p><button class="btn primary" onclick="openModal('signup')">Create Your Free Account →</button></div>
+  </div>
+</section>
+
+
+<!-- DOMA ACADEMY V4 — Exams & Quizzes -->
+<style>
+.exam-zone{margin-top:26px;padding:22px;background:#100b0d;border:1px solid #2d181f;border-radius:15px}
+.exam-zone h3{margin-bottom:7px}.exam-zone p{color:#888;font-size:12px}
+.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.exam-card{background:#0a0909;border:1px solid #2b181e;border-radius:12px;padding:16px}
+.exam-card h4{font-size:15px;margin-bottom:6px}.exam-meta{color:#777;font-size:10px;margin-bottom:12px}
+.exam-modal{position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(7px);z-index:10050;display:none;overflow:auto;padding:18px}
+.exam-modal.open{display:block}.exam-shell{max-width:920px;margin:auto;background:#100a0d;border:1px solid #512331;border-radius:18px;overflow:hidden}
+.exam-head{padding:20px;border-bottom:1px solid #2b181e;display:flex;justify-content:space-between;gap:15px}
+.exam-head h3{margin:0 0 4px}.exam-head p{margin:0;color:#888;font-size:11px}.exam-timer{font-weight:900;color:#e09aaa;white-space:nowrap}
+.exam-body{padding:20px}.question{background:#0b090a;border:1px solid #2b181e;border-radius:13px;padding:17px;margin-bottom:12px}
+.question b{display:block;margin-bottom:12px}.option{display:block;padding:10px 12px;border:1px solid #2b181e;border-radius:9px;margin:7px 0;color:#bbb;cursor:pointer}
+.option:hover{border-color:#713044;color:#fff}.option input{margin-right:9px}.exam-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:18px}.exam-result{text-align:center;padding:28px}.exam-result .score{font-size:44px;font-weight:900;color:#d17b8e}
+@media(max-width:650px){.exam-grid{grid-template-columns:1fr}.exam-head{flex-direction:column}}
+</style>
+
+<section class="container" id="exams" style="padding-top:20px">
+  <div class="head"><div class="eyebrow">Test your progress</div><h2>Quizzes & Exams</h2>
+    <p>Take published English exams for your selected grade. Your score is saved to your student account.</p>
+  </div>
+  <div class="exam-zone">
+    <div id="domaExamList"><p>Log in and select a grade to load your exams.</p></div>
+  </div>
+</section>
+
+<div class="exam-modal" id="domaExamModal" aria-hidden="true">
+  <div class="exam-shell">
+    <div class="exam-head">
+      <div><div class="eyebrow">DOMA ACADEMY • EXAM</div><h3 id="domaExamTitle">Exam</h3><p id="domaExamDesc"></p></div>
+      <div class="exam-timer" id="domaExamTimer">00:00</div>
+      <button class="close" id="domaExamClose" type="button">×</button>
+    </div>
+    <div class="exam-body" id="domaExamBody"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footgrid">
+      <div><a class="brand" href="#home"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>DOMA ACADEMY<small>BY ADHAM</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div>
+      <div><h4>Platform</h4><a href="#courses">English Courses</a><a href="#categories">Grades</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div>
+      <div><h4>Learning</h4><a href="#instructors">Teachers</a><a href="#faq">FAQ</a><a href="#courses">Projects</a><a href="#dashboard">Certificates</a></div>
+      <div><h4>Support</h4><a href="#" onclick="openModal('contact');return false">Contact</a><a href="#" onclick="openModal('contact');return false">Help Center</a><a href="#" onclick="showToast('Community area is ready for integration.') ;return false">Community</a></div>
+    </div>
+    <div class="copy"><span>© 2026 DOMA ACADEMY — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div>
+  </div>
+</footer>
+
+<div class="modal" id="modal"><div class="modalbox">
+  <div class="modalhead"><h3 id="modalTitle">Get Started</h3><button class="close" onclick="closeModal()">×</button></div>
+  <p id="modalText">Create your account and start your learning journey.</p>
+  <div id="modalBody"></div>
+</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL="https://dtptxhkcogpoleftguas.supabase.co";
-const SUPABASE_ANON_KEY=""; // Put your public Supabase anon key here before deployment.
-let sb=null,currentUser=null;
-if(window.supabase&&SUPABASE_ANON_KEY) sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const gradesFallback=["1st Preparatory","2nd Preparatory","3rd Preparatory","1st Secondary","2nd Secondary","3rd Secondary"];
-
-function toast(x){let t=document.getElementById("toast");t.textContent=x;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2800)}
-function closeModal(){document.querySelectorAll(".modal").forEach(x=>x.classList.remove("show"))}
-function openAuth(mode){document.getElementById("authModal").classList.add("show");document.getElementById("authTitle").textContent=mode==="signup"?"Create your account":"Log In";document.getElementById("authBody").innerHTML=`
-<div class="field"><label>Full name</label><input id="aName" placeholder="Your name"></div>
-<div class="field"><label>Email</label><input id="aEmail" type="email" placeholder="you@example.com"></div>
-<div class="field"><label>Password</label><input id="aPass" type="password" placeholder="••••••••"></div>
-${mode==="signup"?'<div class="field"><label>Grade</label><select id="aGrade">'+gradesFallback.map(g=>'<option>'+g+'</option>').join("")+'</select></div>':''}
-<button class="btn primary" onclick="${mode==="signup"?"signup()":"login()"}">${mode==="signup"?"Create Account":"Log In"}</button>
-<p style="color:#777;font-size:11px">Supabase Auth is used when the public anon key is configured.</p>`}
-async function signup(){if(!sb)return toast("Add the Supabase anon key in the file first.");let name=aName.value,email=aEmail.value,pass=aPass.value,grade=aGrade.value;let {data,error}=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name}}});if(error)return toast(error.message);if(data.user){let {data:g}=await sb.from("grades").select("id,name").eq("name",grade).maybeSingle();await sb.from("profiles").upsert({id:data.user.id,email,full_name:name,grade_id:g?.id||null},{onConflict:"id"});}closeModal();toast("Account created. Check your email if confirmation is enabled.");await refreshAuth()}
-async function login(){if(!sb)return toast("Add the Supabase anon key in the file first.");let {error}=await sb.auth.signInWithPassword({email:aEmail.value,password:aPass.value});if(error)return toast(error.message);closeModal();await refreshAuth();toast("Welcome back.")}
-async function refreshAuth(){if(!sb){renderLoggedOut();return}let {data}=await sb.auth.getUser();currentUser=data.user||null;currentUser?renderLoggedIn():renderLoggedOut()}
-function renderLoggedOut(){loggedOutDash.classList.remove("hidden");loggedDash.classList.add("hidden")}
-async function renderLoggedIn(){loggedOutDash.classList.add("hidden");loggedDash.classList.remove("hidden");let p=await sb.from("profiles").select("*,grades(name)").eq("id",currentUser.id).maybeSingle();studentName.textContent=p.data?.full_name||currentUser.email;studentGrade.textContent=p.data?.grades?.name||"Choose a grade";let gradeId=p.data?.grade_id;if(!gradeId){lessonList.innerHTML='<p style="color:#777">Choose your grade in Account & Grade.</p>';return}
-let lessons=await sb.from("lessons").select("id,title,lesson_type,duration_minutes").eq("grade_id",gradeId).eq("is_published",true).order("sort_order");let prog=await sb.from("lesson_progress").select("lesson_id,completed,progress_percent").eq("student_id",currentUser.id);let pm={};(prog.data||[]).forEach(x=>pm[x.lesson_id]=x);let done=(prog.data||[]).filter(x=>x.completed).length,total=(lessons.data||[]).length;let pct=total?Math.round(done/total*100):0;overallProgress.style.width=pct+"%";progressText.textContent=pct+"% completed";lessonList.innerHTML=(lessons.data||[]).slice(0,8).map(l=>`<div class="lesson"><span><b>${esc(l.title)}</b><small>${esc(l.lesson_type)} • ${l.duration_minutes||0} min</small></span><button class="btn secondary" onclick="completeLesson('${l.id}')">${pm[l.id]?.completed?"Completed":"Mark complete"}</button></div>`).join("")||"<p style='color:#777'>No published lessons yet.</p>";
-let qa=await sb.from("quiz_attempts").select("id").eq("student_id",currentUser.id);let hw=await sb.from("homework_submissions").select("id").eq("student_id",currentUser.id);let ce=await sb.from("certificates").select("id").eq("student_id",currentUser.id);let no=await sb.from("notifications").select("id").eq("student_id",currentUser.id).eq("is_read",false);quizCount.textContent=qa.data?.length||0;homeworkCount.textContent=hw.data?.length||0;certCount.textContent=ce.data?.length||0;notifCount.textContent=no.data?.length||0}
-async function completeLesson(id){if(!sb||!currentUser)return;await sb.from("lesson_progress").upsert({student_id:currentUser.id,lesson_id:id,completed:true,progress_percent:100,last_opened_at:new Date().toISOString(),completed_at:new Date().toISOString()},{onConflict:"student_id,lesson_id"});toast("Lesson completed.");renderLoggedIn()}
-async function openProfile(){if(!sb||!currentUser)return openAuth("login");let p=await sb.from("profiles").select("*,grades(id,name)").eq("id",currentUser.id).maybeSingle();profileModal.classList.add("show");profileBody.innerHTML=`<div class="field"><label>Full name</label><input id="pName" value="${esc(p.data?.full_name||"")}"></div><div class="field"><label>Grade</label><select id="pGrade">${gradesFallback.map(g=>`<option ${p.data?.grades?.name===g?"selected":""}>${g}</option>`).join("")}</select></div><button class="btn primary" onclick="saveProfile()">Save</button><button class="btn secondary" onclick="logout()">Logout</button>`}
-async function saveProfile(){let g=await sb.from("grades").select("id").eq("name",pGrade.value).maybeSingle();await sb.from("profiles").update({full_name:pName.value,grade_id:g.data?.id||null}).eq("id",currentUser.id);closeModal();toast("Profile saved.");renderLoggedIn()}
-async function logout(){await sb.auth.signOut();currentUser=null;closeModal();renderLoggedOut();toast("Logged out.")}
-async function refreshDashboard(){if(sb)await refreshAuth();else toast("Configure Supabase anon key to activate cloud data.")}
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-async function loadGrades(){if(!sb){gradeGrid.innerHTML=gradesFallback.map((g,i)=>`<div class="card grade"><b>${g}</b><p>English curriculum, lessons, grammar, vocabulary, reading, writing, listening and assessments.</p></div>`).join("");return}let r=await sb.from("grades").select("id,name,stage").eq("is_active",true).order("sort_order");gradeGrid.innerHTML=(r.data||[]).map(g=>`<div class="card grade"><b>${esc(g.name)}</b><p>${g.stage==="secondary"?"Secondary":"Preparatory"} English learning path.</p></div>`).join("")}
-loadGrades();refreshAuth();
+const courses=[...document.querySelectorAll('.course')];
+function filterEnglishCourses(){
+  const q=document.getElementById('courseSearch').value.toLowerCase().trim();
+  const cat=document.getElementById('courseCategory').value;
+  courses.forEach(c=>{
+    const okQ=!q||c.dataset.search.includes(q)||c.innerText.toLowerCase().includes(q);
+    const okC=cat==='all'||c.dataset.category===cat;
+    c.style.display=okQ&&okC?'block':'none';
+  });
+}
+function enroll(name){
+  localStorage.setItem('doma_last_course',name);
+  showToast('Added to your learning list: '+name);
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+function openModal(type){
+  domaInitSB();
+  const m=document.getElementById('modal'), title=document.getElementById('modalTitle'), text=document.getElementById('modalText'), body=document.getElementById('modalBody');
+  if(type==='login'){
+    title.textContent='Student Login'; text.textContent='Sign in to access your grade, lessons and progress.';
+    body.innerHTML='<div class="formgrid"><input id="domaLoginEmail" class="field" type="email" placeholder="Email address"><input id="domaLoginPassword" class="field" type="password" placeholder="Password"><button class="btn primary full" onclick="domaLogin()">Log In</button><button class="btn full" onclick="closeModal();openModal(\'signup\')">Create Student Account</button></div>';
+  }else if(type==='signup'){
+    title.textContent='Create Student Account'; text.textContent='Create your English learning account and select your school grade.';
+    body.innerHTML='<div class="formgrid"><input id="domaSignupName" class="field" placeholder="Full name"><input id="domaSignupEmail" class="field" type="email" placeholder="Email address"><input id="domaSignupPassword" class="field" type="password" placeholder="Password (6+ characters)"><select id="domaSignupGrade" class="field"><option value="">Select your grade</option><option>1st Preparatory</option><option>2nd Preparatory</option><option>3rd Preparatory</option><option>1st Secondary</option><option>2nd Secondary</option><option>3rd Secondary</option></select><button class="btn primary full" onclick="domaSignup()">Create Student Account</button></div>';
+  }else if(type==='search'){
+    title.textContent='Find English Content'; text.textContent='Search the English library by grade, skill or topic.';
+    body.innerHTML='<div class="formgrid"><input id="modalSearch" class="field full" placeholder="e.g. grammar, vocabulary, reading" onkeydown="if(event.key===\'Enter\'){document.getElementById(\'courseSearch\').value=this.value;closeModal();filterEnglishCourses();document.getElementById(\'courses\').scrollIntoView()}"><button class="btn primary full" onclick="document.getElementById(\'courseSearch\').value=document.getElementById(\'modalSearch\').value;closeModal();filterEnglishCourses();document.getElementById(\'courses\').scrollIntoView()">Search English Content</button></div>';
+  }else{
+    title.textContent='DOMA ACADEMY'; text.textContent='English learning for Egyptian preparatory and secondary students.';
+    body.innerHTML='<div class="formgrid"><button class="btn primary full" onclick="closeModal();openStudentDashboard()">Open Student Dashboard</button><button class="btn full" onclick="closeModal();openModal(\'login\')">Student Login</button><button class="btn full" onclick="closeModal();openModal(\'signup\')">Create Account</button></div>';
+  }
+  m.classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function fakeSubmit(msg){closeModal();showToast(msg)}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 </script>
-</body></html>
+
+
+<div class="modal" id="studentModal">
+  <div class="modalbox" style="max-width:900px">
+    <div class="modalhead">
+      <h3>Student Dashboard</h3>
+      <button class="close" onclick="closeStudentDashboard()">×</button>
+    </div>
+    <div id="studentDashboardBody">
+      <p>Loading your student account...</p>
+    </div>
+  </div>
+</div>
+
+<div class="course-modal" id="courseModal" aria-hidden="true">
+  <div class="course-shell">
+    <div class="course-top">
+      <div>
+        <div class="eyebrow">DOMA ACADEMY • COURSE</div>
+        <h2 id="courseTitle">Modern Web Development</h2>
+        <p id="courseSubtitle">Build practical skills through guided lessons and projects.</p>
+      </div>
+      <button class="course-close" id="courseClose" aria-label="Close">×</button>
+    </div>
+    <div class="course-grid">
+      <section class="player">
+        <div class="video-box">
+          <div>
+            <div class="play">▶</div>
+            <strong id="lessonTitle">Welcome to the course</strong>
+            <p id="lessonDescription">Your lesson player is ready. Connect your real video URLs later through the backend.</p>
+          </div>
+        </div>
+        <div class="lesson-info">
+          <div>
+            <h3 id="lessonHeading">Lesson 1 — Welcome</h3>
+            <p id="lessonMeta">8 min • Video lesson</p>
+          </div>
+          <strong id="progressText">0%</strong>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-line"><span id="courseProgress" style="width:0%"></span></div>
+        </div>
+        <div class="lesson-actions">
+          <button class="btn-ghost" id="prevLesson">← Previous</button>
+          <button class="btn-next" id="completeLesson">Mark complete</button>
+          <button class="btn-next" id="nextLesson">Next lesson →</button>
+        </div>
+        <div class="resource-row">
+          <div class="resource">📄 Course notes</div>
+          <div class="resource">📥 Practice files</div>
+          <div class="resource">🧠 Quiz</div>
+        </div>
+        <div class="course-complete" id="courseComplete">
+          <strong>🎉 Course completed!</strong>
+          <p>You finished every lesson. This area is ready for certificate generation when Supabase is connected.</p>
+        </div>
+      </section>
+      <aside class="curriculum">
+        <h3>Course Curriculum</h3>
+        <div class="lesson-list" id="lessonList"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+
+<script id="doma-v2-script">
+(function(){
+  const courses = {
+    "Modern Web Development":{
+      subtitle:"HTML, CSS, JavaScript and practical projects.",
+      lessons:[
+        ["Welcome to Web Development","8 min","Video lesson"],
+        ["HTML Foundations","18 min","Video lesson"],
+        ["CSS Layout & Responsive Design","24 min","Video lesson"],
+        ["JavaScript Essentials","27 min","Video lesson"],
+        ["Build Your First Project","42 min","Project"],
+        ["Final Challenge","35 min","Assessment"]
+      ]
+    },
+    "Digital Marketing Mastery":{
+      subtitle:"Build campaigns, content systems and measurable growth.",
+      lessons:[
+        ["Marketing Foundations","12 min","Video lesson"],
+        ["Audience & Positioning","19 min","Video lesson"],
+        ["Content Strategy","24 min","Workshop"],
+        ["Social Media Campaigns","28 min","Video lesson"],
+        ["Analytics & KPIs","21 min","Video lesson"],
+        ["Final Campaign Project","45 min","Project"]
+      ]
+    },
+    "UI/UX Design from Zero":{
+      subtitle:"Learn research, wireframes, interfaces and design systems.",
+      lessons:[
+        ["UX Mindset","10 min","Video lesson"],
+        ["User Research","22 min","Workshop"],
+        ["Wireframing","20 min","Practice"],
+        ["UI Fundamentals","26 min","Video lesson"],
+        ["Design Systems","25 min","Workshop"],
+        ["Portfolio Project","50 min","Project"]
+      ]
+    },
+    "Start & Grow a Business":{
+      subtitle:"Turn an idea into a practical business roadmap.",
+      lessons:[
+        ["Idea Validation","15 min","Video lesson"],
+        ["Customer Discovery","20 min","Workshop"],
+        ["Business Model","24 min","Workshop"],
+        ["Pricing & Offers","18 min","Video lesson"],
+        ["Marketing Plan","30 min","Project"],
+        ["Launch Checklist","16 min","Assessment"]
+      ]
+    },
+    "Productivity & Focus":{
+      subtitle:"Create a sustainable system for focused work.",
+      lessons:[
+        ["Focus Foundations","9 min","Video lesson"],
+        ["Time Blocking","14 min","Practice"],
+        ["Deep Work","18 min","Video lesson"],
+        ["Planning Systems","16 min","Workshop"],
+        ["Habits & Consistency","20 min","Video lesson"],
+        ["Build Your Weekly System","30 min","Project"]
+      ]
+    },
+    "Python for Data & Automation":{
+      subtitle:"Use Python to automate tasks and work with data.",
+      lessons:[
+        ["Python Setup","12 min","Video lesson"],
+        ["Variables & Logic","22 min","Video lesson"],
+        ["Functions & Modules","25 min","Video lesson"],
+        ["Working With Data","30 min","Practice"],
+        ["Automation Scripts","35 min","Workshop"],
+        ["Final Automation Project","48 min","Project"]
+      ]
+    }
+  };
+
+  const modal=document.getElementById('courseModal');
+  if(!modal) return;
+  const title=document.getElementById('courseTitle');
+  const subtitle=document.getElementById('courseSubtitle');
+  const list=document.getElementById('lessonList');
+  const lessonTitle=document.getElementById('lessonTitle');
+  const lessonHeading=document.getElementById('lessonHeading');
+  const lessonDescription=document.getElementById('lessonDescription');
+  const lessonMeta=document.getElementById('lessonMeta');
+  const progress=document.getElementById('courseProgress');
+  const progressText=document.getElementById('progressText');
+  const completeBox=document.getElementById('courseComplete');
+  let currentCourse=null, current=0, completed=new Set();
+
+  function key(){ return 'doma_course_'+currentCourse; }
+
+  function render(){
+    const c=courses[currentCourse]; if(!c) return;
+    list.innerHTML='';
+    c.lessons.forEach((l,i)=>{
+      const b=document.createElement('button');
+      b.className='lesson-item'+(i===current?' active':'');
+      b.innerHTML='<span class="lesson-num">'+(completed.has(i)?'✓':(i+1))+'</span><span><strong>'+l[0]+'</strong><small>'+l[1]+' • '+l[2]+'</small></span>';
+      b.onclick=()=>{current=i;render();};
+      list.appendChild(b);
+    });
+    const l=c.lessons[current];
+    lessonTitle.textContent=l[0];
+    lessonHeading.textContent='Lesson '+(current+1)+' — '+l[0];
+    lessonMeta.textContent=l[1]+' • '+l[2];
+    lessonDescription.textContent='Follow this lesson, practice the skill, then mark it complete to update your learning progress.';
+    const pct=Math.round((completed.size/c.lessons.length)*100);
+    progress.style.width=pct+'%';
+    progressText.textContent=pct+'%';
+    completeBox.classList.toggle('show', completed.size===c.lessons.length);
+    localStorage.setItem(key(),JSON.stringify([...completed]));
+  }
+
+  function openCourse(name){
+    currentCourse=courses[name]?name:Object.keys(courses)[0];
+    title.textContent=currentCourse;
+    subtitle.textContent=courses[currentCourse].subtitle;
+    try{completed=new Set(JSON.parse(localStorage.getItem(key())||'[]'));}catch(e){completed=new Set();}
+    current=0; render();
+    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+
+  function closeCourse(){
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+
+  document.getElementById('courseClose').onclick=closeCourse;
+  modal.addEventListener('click',e=>{if(e.target===modal)closeCourse();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeCourse();});
+
+  document.getElementById('completeLesson').onclick=()=>{
+    completed.add(current); render();
+    if(current<courses[currentCourse].lessons.length-1) current++;
+    render();
+  };
+  document.getElementById('nextLesson').onclick=()=>{
+    if(current<courses[currentCourse].lessons.length-1){current++;render();}
+  };
+  document.getElementById('prevLesson').onclick=()=>{
+    if(current>0){current--;render();}
+  };
+
+  // Hook existing course buttons/cards without changing the original markup.
+  document.querySelectorAll('button,a,.course-card,.card').forEach(el=>{
+    const text=(el.textContent||'').trim();
+    const match=Object.keys(courses).find(n=>text.includes(n));
+    if(match && !el.dataset.domaCourseHook){
+      el.dataset.domaCourseHook='1';
+      el.addEventListener('click',e=>{
+        const href=el.getAttribute('href');
+        if(href && href!=='#') return;
+        e.preventDefault(); openCourse(match);
+      });
+    }
+  });
+
+  // Expose for any future course cards.
+  window.DOMAAcademyOpenCourse=openCourse;
+})();
+</script>
+
+
+<script>
+/* DOMA ACADEMY — Student layer */
+const DOMA_SUPABASE_URL = "https://dtptxhkcogpoleftguas.supabase.co";
+const DOMA_SUPABASE_KEY = "sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL";
+let domaSB = null;
+let domaUser = null;
+let domaProfile = null;
+
+function domaInitSB(){
+  if(window.supabase && !domaSB){
+    domaSB = window.supabase.createClient(DOMA_SUPABASE_URL, DOMA_SUPABASE_KEY);
+    domaSB.auth.getSession().then(({data})=>{
+      domaUser = data.session?.user || null;
+      if(domaUser) loadDomaProfile();
+      updateDomaAuthButtons();
+    });
+    domaSB.auth.onAuthStateChange((_event, session)=>{
+      domaUser = session?.user || null;
+      if(domaUser) loadDomaProfile();
+      updateDomaAuthButtons();
+    });
+  }
+}
+async function loadDomaProfile(){
+  if(!domaSB || !domaUser) return;
+  const {data} = await domaSB.from('profiles').select('*,grades(name)').eq('id',domaUser.id).maybeSingle();
+  domaProfile = data || {id:domaUser.id,email:domaUser.email};
+  updateDomaAuthButtons();
+}
+function updateDomaAuthButtons(){
+  document.querySelectorAll('[data-doma-dashboard]').forEach(el=>{
+    el.textContent = domaUser ? 'My Dashboard' : 'Student Login';
+  });
+}
+async function domaSignup(){
+  const name = document.getElementById('domaSignupName')?.value.trim();
+  const email = document.getElementById('domaSignupEmail')?.value.trim();
+  const pass = document.getElementById('domaSignupPassword')?.value || '';
+  const grade = document.getElementById('domaSignupGrade')?.value || '';
+  if(!name || !email || pass.length < 6 || !grade) return showToast('Please complete the signup form.');
+  const {data,error} = await domaSB.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
+  if(error) return showToast(error.message);
+  if(data.user){
+    const {data:g} = await domaSB.from('grades').select('id,name').eq('name',grade).maybeSingle();
+    if(g) await domaSB.from('profiles').update({full_name:name,grade_id:g.id}).eq('id',data.user.id);
+  }
+  closeModal();
+  showToast('Account created. Check your email if confirmation is enabled.');
+}
+async function domaLogin(){
+  const email = document.getElementById('domaLoginEmail')?.value.trim();
+  const pass = document.getElementById('domaLoginPassword')?.value || '';
+  if(!email || !pass) return showToast('Enter your email and password.');
+  const {error} = await domaSB.auth.signInWithPassword({email,password:pass});
+  if(error) return showToast(error.message);
+  closeModal();
+  showToast('Welcome back to DOMA ACADEMY.');
+}
+async function domaLogout(){
+  if(domaSB) await domaSB.auth.signOut();
+  closeStudentDashboard();
+  showToast('You have been logged out.');
+}
+async function openStudentDashboard(){
+  domaInitSB();
+  if(!domaUser){
+    openModal('login');
+    return;
+  }
+  document.getElementById('studentModal').classList.add('show');
+  const body = document.getElementById('studentDashboardBody');
+  body.innerHTML='<p>Loading progress...</p>';
+  await loadDomaProfile();
+  const gradeId = domaProfile?.grade_id;
+  let lessons=[], progress=[];
+  if(gradeId){
+    const [l,p] = await Promise.all([
+      domaSB.from('lessons').select('id,title,lesson_type,duration_minutes').eq('grade_id',gradeId).eq('is_published',true).order('sort_order'),
+      domaSB.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',domaUser.id)
+    ]);
+    lessons=l.data||[]; progress=p.data||[];
+  }
+  const done = new Set(progress.filter(x=>x.completed).map(x=>x.lesson_id));
+  const percent = lessons.length ? Math.round(done.size/lessons.length*100) : 0;
+  body.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+      <div class="card"><strong>Student</strong><div>${domaProfile?.full_name||domaUser.email}</div></div>
+      <div class="card"><strong>Grade</strong><div>${domaProfile?.grades?.name||'Not selected'}</div></div>
+      <div class="card"><strong>Progress</strong><div>${percent}%</div></div>
+    </div>
+    <div style="margin-bottom:18px"><div style="height:10px;background:#ddd;border-radius:99px;overflow:hidden"><div style="width:${percent}%;height:100%;background:#7f1734"></div></div></div>
+    <h4>My English Lessons</h4>
+    <div style="display:grid;gap:10px;margin-top:12px">
+      ${lessons.length ? lessons.map(l=>`
+        <div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <div><strong>${escapeHtml(l.title)}</strong><div style="opacity:.7">${escapeHtml(l.lesson_type)} • ${l.duration_minutes||0} min</div></div>
+          <button class="btn primary" onclick="toggleLessonProgress('${l.id}',${done.has(l.id)})">${done.has(l.id)?'Completed':'Mark Complete'}</button>
+        </div>`).join('') : '<p>No published lessons for your grade yet.</p>'}
+    </div>
+    <div style="margin-top:18px"><button class="btn" onclick="domaLogout()">Log Out</button></div>`;
+}
+async function toggleLessonProgress(lessonId, current){
+  if(!domaSB || !domaUser) return;
+  const payload={student_id:domaUser.id,lesson_id:lessonId,completed:!current,progress_percent:current?0:100,last_opened_at:new Date().toISOString(),completed_at:current?null:new Date().toISOString()};
+  const {error}=await domaSB.from('lesson_progress').upsert(payload,{onConflict:'student_id,lesson_id'});
+  if(error) return showToast(error.message);
+  openStudentDashboard();
+}
+function closeStudentDashboard(){ document.getElementById('studentModal')?.classList.remove('show'); }
+function escapeHtml(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+domaInitSB();
+</script>
+
+
+<script>
+/* DOMA ACADEMY V4 — Real Supabase Exams */
+(function(){
+  let examRows=[], activeExam=null, activeQuestions=[], timer=null, remaining=0;
+
+  function sb(){ domaInitSB(); return domaSB; }
+  function esc(v){ return escapeHtml(v); }
+
+  async function loadExams(){
+    const box=document.getElementById('domaExamList');
+    if(!box) return;
+    if(!domaUser){ box.innerHTML='<p>Please log in to view exams for your grade.</p>'; return; }
+    await loadDomaProfile();
+    const gradeId=domaProfile?.grade_id;
+    if(!gradeId){ box.innerHTML='<p>Your account does not have a grade selected yet.</p>'; return; }
+
+    const {data,error}=await sb().from('quizzes').select('id,title,description,duration_minutes,pass_percent,grade_id').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false});
+    if(error){ box.innerHTML='<p>'+esc(error.message)+'</p>'; return; }
+    examRows=data||[];
+    box.innerHTML=examRows.length ? '<div class="exam-grid">'+examRows.map(q=>`
+      <div class="exam-card">
+        <div class="eyebrow">Published exam</div>
+        <h4>${esc(q.title)}</h4>
+        <div class="exam-meta">${esc(q.description||'English assessment')} • ${q.duration_minutes||20} min • Pass ${q.pass_percent??50}%</div>
+        <button class="btn primary" type="button" onclick="DOMAStartExam('${q.id}')">Start Exam →</button>
+      </div>`).join('')+'</div>' : '<p>No published exams are available for your grade yet.</p>';
+  }
+
+  async function startExam(id){
+    if(!domaUser) return openModal('login');
+    const q=examRows.find(x=>x.id===id); if(!q) return;
+    const [questionsRes, attemptsRes]=await Promise.all([
+      sb().from('quiz_questions').select('id,question,options,points,sort_order').eq('quiz_id',id).order('sort_order'),
+      sb().from('quiz_attempts').select('id,score,total_points,submitted_at').eq('quiz_id',id).eq('student_id',domaUser.id).order('submitted_at',{ascending:false})
+    ]);
+    if(questionsRes.error) return showToast(questionsRes.error.message);
+    activeExam=q; activeQuestions=questionsRes.data||[];
+    const attempts=attemptsRes.data||[];
+    if(!activeQuestions.length) return showToast('This exam has no questions yet.');
+    if(attempts.length) {
+      const last=attempts[0];
+      showExamResult({score:last.score,total:last.total_points,pass:last.total_points?Math.round(last.score/last.total_points*100)>=Number(q.pass_percent??50):false,previous:true});
+      return;
+    }
+    document.getElementById('domaExamTitle').textContent=q.title;
+    document.getElementById('domaExamDesc').textContent=q.description||'Answer every question, then submit.';
+    const body=document.getElementById('domaExamBody');
+    body.innerHTML=activeQuestions.map((x,i)=>{
+      let opts=Array.isArray(x.options)?x.options:[];
+      return `<div class="question"><b>${i+1}. ${esc(x.question)} <span style="color:#777;font-weight:400">(${x.points||1} pt)</span></b>
+        ${opts.map((o,j)=>`<label class="option"><input type="radio" name="q_${x.id}" value="${esc(o)}"> ${esc(o)}</label>`).join('')}
+      </div>`;
+    }).join('')+`<div class="exam-actions"><button class="btn secondary" type="button" onclick="DOMACloseExam()">Exit</button><button class="btn primary" type="button" onclick="DOMASubmitExam()">Submit Exam</button></div>`;
+    document.getElementById('domaExamModal').classList.add('open');
+    remaining=Math.max(1,Number(q.duration_minutes||20))*60; updateTimer();
+    clearInterval(timer); timer=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){clearInterval(timer);DOMASubmitExam(true)}},1000);
+  }
+
+  function updateTimer(){
+    const el=document.getElementById('domaExamTimer'); if(!el)return;
+    const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); el.textContent=m+':'+s;
+  }
+
+  async function submitExam(auto=false){
+    if(!activeExam || !activeQuestions.length) return;
+    clearInterval(timer);
+    const answers={}; let score=0,total=0;
+    activeQuestions.forEach(q=>{
+      total += Number(q.points||1);
+      const chosen=document.querySelector(`input[name="q_${q.id}"]:checked`)?.value ?? null;
+      answers[q.id]=chosen;
+      // Correct answers are deliberately not exposed to the student query.
+      // Scoring is done server-side by the RPC created in the V4 SQL migration.
+    });
+    const {data,error}=await sb().rpc('submit_quiz_attempt',{p_quiz_id:activeExam.id,p_student_id:domaUser.id,p_answers:answers});
+    if(error) return showToast(error.message);
+    const result=Array.isArray(data)?data[0]:data;
+    closeExam();
+    showExamResult({score:Number(result?.score||0),total:Number(result?.total_points||total),pass:Boolean(result?.passed),auto});
+    loadExams();
+  }
+
+  function showExamResult(r){
+    const modal=document.getElementById('domaExamModal'), body=document.getElementById('domaExamBody');
+    document.getElementById('domaExamTitle').textContent=activeExam?.title||'Exam Result';
+    document.getElementById('domaExamDesc').textContent='Your saved result';
+    const pct=r.total?Math.round(Number(r.score)/Number(r.total)*100):0;
+    body.innerHTML=`<div class="exam-result"><div class="eyebrow">${r.previous?'Previous attempt':'Completed'}</div><div class="score">${pct}%</div><p>You scored <strong>${r.score}</strong> out of <strong>${r.total}</strong>.</p><p style="margin-top:8px;color:${r.pass?'#72c9a0':'#d98b9c'}">${r.pass?'PASS — well done.':'NOT PASSED — review your lessons and try again later.'}</p><button class="btn primary" type="button" onclick="DOMACloseExam();loadExams()">Close Result</button></div>`;
+    modal.classList.add('open');
+  }
+
+  function closeExam(){clearInterval(timer);document.getElementById('domaExamModal').classList.remove('open');activeExam=null;activeQuestions=[];}
+  window.DOMAStartExam=startExam; window.DOMASubmitExam=submitExam; window.DOMACloseExam=closeExam;
+  document.getElementById('domaExamClose')?.addEventListener('click',closeExam);
+  document.getElementById('domaExamModal')?.addEventListener('click',e=>{if(e.target.id==='domaExamModal')closeExam();});
+
+  // Refresh when auth state changes.
+  const oldLoadProfile=window.loadDomaProfile;
+  const oldUpdate=window.updateDomaAuthButtons;
+  window.loadDomaProfile=async function(){ const r=oldLoadProfile?await oldLoadProfile():null; setTimeout(loadExams,0); return r; };
+  setTimeout(loadExams,700);
+  window.addEventListener('focus',loadExams);
+})();
+</script>
+
+</body>
+</html>
