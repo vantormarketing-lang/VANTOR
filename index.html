@@ -4,650 +4,397 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DOMA ACADEMY — English Learning Platform</title>
-<meta name="description" content="DOMA ACADEMY is a modern learning platform for practical courses, skills, quizzes, certificates and career growth.">
+<meta name="description" content="DOMA ACADEMY — English learning for Egyptian preparatory and secondary students with lessons, quizzes, homework, progress and certificates.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{
-  --bg:#080808;--bg2:#0d090b;--card:#120b0e;--card2:#171014;--line:#2d181f;
-  --burg:#762337;--burg2:#9d304a;--burg3:#c05269;--text:#f5f2f3;--muted:#9b9396;
-  --green:#5fc99a;--gold:#d7ad61;--shadow:0 22px 60px rgba(0,0,0,.35);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-a{text-decoration:none;color:inherit} button,input,select{font:inherit}
-button{cursor:pointer} .container{width:min(1180px,92%);margin:auto}
-.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,.88);backdrop-filter:blur(16px);border-bottom:1px solid #171214}
-.navin{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:2px}
-.mark{width:40px;height:40px;border:1px solid #713044;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#1a0b10,#090909);box-shadow:0 8px 25px #000}
-.mark svg{width:27px;height:27px}.brand small{display:block;font-size:8px;color:#9b8f93;letter-spacing:3px;font-weight:700}
-.links{display:flex;gap:24px;align-items:center}.links a{font-size:12px;color:#aaa;transition:.2s}.links a:hover{color:#fff}
-.nav-actions{display:flex;gap:9px;align-items:center}.iconbtn,.menu{border:1px solid #302024;background:#110b0d;color:#ddd;border-radius:8px;padding:9px 11px}.menu{display:none}
-.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:800;border:1px solid transparent;transition:.2s}
-.primary{background:var(--burg);border-color:#8d2a40;color:#fff}.primary:hover{background:#92304a;transform:translateY(-2px)}
-.secondary{background:#151012;border-color:#3c222a;color:#ddd}.secondary:hover{border-color:#703045}
-.hero{padding:155px 0 95px;min-height:760px;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 34%,rgba(118,35,55,.28),transparent 34%),linear-gradient(180deg,#080808,#0b0809)}
-.hero:after{content:"";position:absolute;width:620px;height:620px;right:-220px;top:100px;border-radius:50%;border:1px solid #3b1c26;box-shadow:0 0 0 70px rgba(118,35,55,.03),0 0 0 140px rgba(118,35,55,.025)}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;position:relative;z-index:2}
-.eyebrow{color:var(--burg3);text-transform:uppercase;letter-spacing:4px;font-size:10px;font-weight:800;margin-bottom:18px}
-h1{font-size:clamp(48px,6.5vw,82px);line-height:.98;letter-spacing:-4px;margin-bottom:24px} h1 span{color:var(--burg3)}
-.hero p{color:var(--muted);max-width:640px;font-size:16px;line-height:1.85;margin-bottom:30px}
-.actions{display:flex;gap:10px;flex-wrap:wrap}.mini-proof{display:flex;gap:24px;margin-top:34px;flex-wrap:wrap}.proof strong{font-size:20px}.proof span{display:block;color:#777;font-size:11px}
-.hero-card{background:linear-gradient(150deg,#171014,#0d0a0b);border:1px solid #38202a;border-radius:20px;padding:20px;box-shadow:var(--shadow);position:relative}
-.video{height:310px;border-radius:14px;background:linear-gradient(135deg,#221017,#0b090a);display:grid;place-items:center;position:relative;overflow:hidden}
-.video:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(157,48,74,.16))}
-.play{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#8b2942;border:5px solid rgba(255,255,255,.08);font-size:23px}
-.lesson-row{display:flex;justify-content:space-between;align-items:center;margin-top:15px}.lesson-row b{font-size:14px}.lesson-row span{color:#777;font-size:11px}
-.progress{height:6px;background:#25161b;border-radius:10px;margin-top:10px;overflow:hidden}.progress i{display:block;width:64%;height:100%;background:var(--burg3)}
-section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow{margin-bottom:8px}.head h2{font-size:38px;letter-spacing:-1.5px;margin-bottom:10px}.head p{max-width:650px;margin:auto;color:#888;font-size:14px}
-.searchbar{margin-top:-42px;position:relative;z-index:5}.searchbox{background:#100b0d;border:1px solid #3a2028;border-radius:14px;padding:13px;display:flex;gap:10px;box-shadow:var(--shadow)}.searchbox input{flex:1;background:#080808;border:1px solid #25161b;color:#fff;border-radius:9px;padding:13px 15px;outline:none}.searchbox select{background:#080808;color:#aaa;border:1px solid #25161b;border-radius:9px;padding:0 12px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.course{background:var(--card);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:.2s}.course:hover{transform:translateY(-4px);border-color:#673041}.cover{height:175px;padding:18px;display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(135deg,#291018,#0d0b0c)}.tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e0a5b2;background:#2b1119;padding:6px 8px;border-radius:5px}.level{font-size:9px;color:#aaa;background:#0a0909;border:1px solid #382128;padding:5px 7px;border-radius:5px}.coursebody{padding:18px}.course h3{font-size:18px;margin-bottom:7px}.course p{color:#858083;font-size:12px;min-height:42px}.meta{display:flex;gap:14px;color:#777;font-size:10px;margin:13px 0}.course-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #23151a;padding-top:13px}.price{font-weight:900}.old{text-decoration:line-through;color:#666;font-size:10px;margin-left:5px}
-.cats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.cat{background:#100b0d;border:1px solid #2b181e;border-radius:12px;padding:20px 10px;text-align:center;color:#aaa;font-size:12px;transition:.2s}.cat:hover{border-color:#713044;color:#fff;transform:translateY(-2px)}.cat b{display:block;font-size:25px;margin-bottom:7px}
-.dashboard{display:grid;grid-template-columns:1fr 1fr;gap:18px}.dash{background:#100b0d;border:1px solid #2e1a21;border-radius:15px;padding:22px}.dash h3{margin-bottom:15px;font-size:17px}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:14px;background:#0a0909;border:1px solid #24161a;border-radius:10px}.stat strong{font-size:24px}.stat span{display:block;color:#777;font-size:10px}.course-progress{margin:13px 0}.cp{display:flex;justify-content:space-between;font-size:11px;color:#aaa}.bar{height:7px;background:#26171c;border-radius:8px;margin-top:7px}.bar i{display:block;height:100%;background:var(--burg3);border-radius:8px}
-.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.feature{padding:23px;background:#100b0d;border:1px solid #2d181f;border-radius:14px}.feature b{font-size:26px}.feature h3{font-size:15px;margin:9px 0 5px}.feature p{color:#7f787b;font-size:11px}
-.instructors{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.instructor{background:#100b0d;border:1px solid #2d181f;border-radius:14px;padding:18px;text-align:center}.avatar{width:66px;height:66px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(145deg,#7d2740,#251016);font-weight:900;font-size:20px}.instructor h3{font-size:14px}.instructor p{color:#777;font-size:10px;margin-top:4px}
-.learning{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}.path{background:#100b0d;border:1px solid #2d181f;border-radius:15px;padding:22px}.pathrow{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid #211419}.num{width:30px;height:30px;border-radius:8px;background:#291018;display:grid;place-items:center;color:#d78899;font-size:11px}.pathrow h4{font-size:13px}.pathrow p{color:#777;font-size:10px}
-.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.plan{background:#100b0d;border:1px solid #2d181f;border-radius:15px;padding:25px}.plan.hot{border-color:#7d2940;box-shadow:0 20px 55px rgba(118,35,55,.13)}.plan .label{font-size:9px;color:#d98ea0;letter-spacing:2px;text-transform:uppercase}.plan h3{font-size:20px;margin:8px 0}.money{font-size:32px;font-weight:900}.money small{font-size:10px;color:#777;font-weight:400}.plan ul{list-style:none;margin:18px 0}.plan li{font-size:11px;color:#aaa;padding:7px 0;border-bottom:1px solid #201318}.plan li:before{content:"✓";color:#a13a52;margin-right:8px}
-.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.review{background:#100b0d;border:1px solid #2d181f;border-radius:14px;padding:21px}.stars{color:#d7ad61;letter-spacing:2px;font-size:12px}.review p{color:#9a9295;font-size:12px;margin:12px 0 15px}.person{display:flex;gap:10px;align-items:center}.person .avatar{margin:0;width:38px;height:38px;font-size:12px}.person b{font-size:11px}.person span{display:block;color:#666;font-size:9px}
-.faq{max-width:850px;margin:auto}.faq details{background:#100b0d;border:1px solid #2d181f;border-radius:10px;margin-bottom:9px;padding:15px 17px}.faq summary{cursor:pointer;font-size:13px;font-weight:700}.faq p{color:#858083;font-size:11px;padding-top:10px}
-.cta{background:linear-gradient(135deg,#35121d,#11090c);border:1px solid #6b2739;border-radius:20px;padding:48px;text-align:center}.cta h2{font-size:40px;margin-bottom:10px}.cta p{color:#9d9295;max-width:600px;margin:0 auto 22px}
-.footer{border-top:1px solid #1d1216;padding:45px 0 25px;background:#060606}.footgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:25px}.footer h4{font-size:12px;margin-bottom:12px}.footer a,.footer p{display:block;color:#777;font-size:11px;margin:7px 0}.copy{border-top:1px solid #171013;margin-top:30px;padding-top:18px;color:#555;font-size:10px;display:flex;justify-content:space-between}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}.modal.show{display:flex}.modalbox{width:min(720px,100%);background:#110b0d;border:1px solid #512331;border-radius:17px;padding:24px;box-shadow:var(--shadow)}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{background:none;border:0;color:#999;font-size:24px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{background:#090909;border:1px solid #2b181e;border-radius:8px;padding:11px;color:#fff;width:100%;outline:none}.full{grid-column:1/-1}.modalbox p{color:#888;font-size:12px;margin-bottom:14px}
-.toast{position:fixed;right:18px;bottom:18px;background:#151014;border:1px solid #653044;color:#eee;padding:12px 15px;border-radius:9px;display:none;z-index:3000;font-size:12px}.toast.show{display:block}
-@media(max-width:950px){.links{display:none}.menu{display:block}.nav-actions .login{display:none}.hero-grid,.learning,.dashboard{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.cats{grid-template-columns:repeat(3,1fr)}.features,.instructors{grid-template-columns:repeat(2,1fr)}.footgrid{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){section{padding:68px 0}.hero{padding-top:125px}.hero-grid{gap:30px}h1{font-size:50px}.grid,.pricing,.reviews{grid-template-columns:1fr}.cats{grid-template-columns:repeat(2,1fr)}.features,.instructors,.footgrid{grid-template-columns:1fr}.searchbox{flex-direction:column}.searchbox select{height:44px}.statgrid{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.copy{flex-direction:column;gap:7px}.cta{padding:32px 20px}.cta h2{font-size:30px}}
-
-@media(max-width:820px){
-  #dashboard .grid,#learning-tools .grid{grid-template-columns:1fr 1fr !important}
-}
-@media(max-width:520px){
-  #dashboard .grid,#learning-tools .grid{grid-template-columns:1fr !important}
-}
-
+:root{--bg:#080808;--bg2:#0d090b;--card:#120b0e;--card2:#171014;--line:#2d181f;--burg:#762337;--burg2:#9d304a;--burg3:#c05269;--text:#f5f2f3;--muted:#9b9396;--green:#5fc99a;--gold:#d7ad61;--shadow:0 22px 60px rgba(0,0,0,.35)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}button{cursor:pointer}.container{width:min(1180px,92%);margin:auto}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,.9);backdrop-filter:blur(16px);border-bottom:1px solid #171214}.navin{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:2px}.mark{width:40px;height:40px;border:1px solid #713044;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#1a0b10,#090909);box-shadow:0 8px 25px #000}.mark svg{width:27px;height:27px}.brand small{display:block;font-size:8px;color:#9b8f93;letter-spacing:3px;font-weight:700}.links{display:flex;gap:20px;align-items:center}.links a{font-size:12px;color:#aaa;transition:.2s}.links a:hover{color:#fff}.nav-actions{display:flex;gap:8px;align-items:center}.iconbtn,.menu{border:1px solid #302024;background:#110b0d;color:#ddd;border-radius:8px;padding:9px 11px}.menu{display:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:12px 18px;font-size:13px;font-weight:800;border:1px solid transparent;transition:.2s;gap:8px}.primary{background:var(--burg);border-color:#8d2a40;color:#fff}.primary:hover{background:#92304a;transform:translateY(-2px)}.secondary{background:#151012;border-color:#3c222a;color:#ddd}.secondary:hover{border-color:#703045}.ghost{background:#0f0b0d;border-color:#2d1b21;color:#ccc}
+.hero{padding:150px 0 85px;min-height:720px;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 34%,rgba(118,35,55,.28),transparent 34%),linear-gradient(180deg,#080808,#0b0809)}.hero:after{content:"";position:absolute;width:620px;height:620px;right:-220px;top:100px;border-radius:50%;border:1px solid #3b1c26;box-shadow:0 0 0 70px rgba(118,35,55,.03),0 0 0 140px rgba(118,35,55,.025)}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:55px;align-items:center;position:relative;z-index:2}.eyebrow{color:var(--burg3);text-transform:uppercase;letter-spacing:4px;font-size:10px;font-weight:800;margin-bottom:14px}.hero h1{font-size:clamp(48px,6.5vw,82px);line-height:.98;letter-spacing:-4px;margin-bottom:22px}.hero h1 span{color:var(--burg3)}.hero p{color:var(--muted);max-width:660px;font-size:16px;line-height:1.85;margin-bottom:28px}.actions{display:flex;gap:10px;flex-wrap:wrap}.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e0a5b2;background:#2b1119;padding:6px 8px;border-radius:5px}.mini-proof{display:flex;gap:24px;margin-top:32px;flex-wrap:wrap}.proof strong{font-size:21px}.proof span{display:block;color:#777;font-size:10px}.hero-card{background:linear-gradient(150deg,#171014,#0d0a0b);border:1px solid #38202a;border-radius:20px;padding:18px;box-shadow:var(--shadow)}.hero-panel{min-height:375px;border-radius:15px;background:linear-gradient(135deg,#221017,#0b090a);border:1px solid #2f1820;padding:22px;display:flex;flex-direction:column;justify-content:space-between}.hero-panel-top{display:flex;justify-content:space-between;gap:10px}.hero-logo{font-size:58px;font-weight:900;letter-spacing:-4px;color:#fff}.hero-logo span{color:var(--burg3)}.hero-panel h3{font-size:25px;margin-top:15px}.hero-panel p{font-size:12px;margin:7px 0 0;color:#8e8387}.hero-stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}.hero-stat div{background:#0a0909;border:1px solid #24161a;border-radius:11px;padding:13px}.hero-stat b{font-size:20px}.hero-stat span{display:block;color:#777;font-size:10px}
+section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow{margin-bottom:7px}.head h2{font-size:38px;letter-spacing:-1.5px;margin-bottom:10px}.head p{max-width:690px;margin:auto;color:#888;font-size:14px}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:22px}.section-head h2{font-size:32px;letter-spacing:-1px}.section-head p{color:#888;font-size:12px;margin-top:5px}
+.searchbar{margin-top:-40px;position:relative;z-index:5}.searchbox{background:#100b0d;border:1px solid #3a2028;border-radius:14px;padding:12px;display:grid;grid-template-columns:1fr 220px auto;gap:10px;box-shadow:var(--shadow)}.field{background:#090909;border:1px solid #2b181e;color:#fff;border-radius:9px;padding:12px;outline:none;width:100%}.field:focus{border-color:#703045}.field::placeholder{color:#666}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card{background:#100b0d;border:1px solid #2d181f;border-radius:15px}.feature{padding:21px}.feature b{font-size:27px}.feature h3{font-size:15px;margin:8px 0 5px}.feature p{color:#7f787b;font-size:11px}.grade{overflow:hidden;transition:.2s}.grade:hover{transform:translateY(-4px);border-color:#673041}.grade-cover{height:150px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(135deg,#291018,#0d0b0c)}.grade-cover strong{font-size:28px;letter-spacing:-1px}.stage{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e0a5b2;background:#2b1119;padding:6px 8px;border-radius:5px}.grade-body{padding:18px}.grade-body h3{font-size:18px}.grade-body p{color:#858083;font-size:11px;min-height:42px;margin:7px 0 15px}.grade-meta{display:flex;gap:10px;flex-wrap:wrap;color:#777;font-size:10px;margin-bottom:15px}.grade-actions{display:flex;gap:8px;flex-wrap:wrap}
+.dashboard{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.dash{padding:22px}.dash h3{font-size:17px;margin-bottom:14px}.progress-item{margin:13px 0}.cp{display:flex;justify-content:space-between;font-size:11px;color:#aaa}.bar{height:8px;background:#26171c;border-radius:8px;margin-top:7px;overflow:hidden}.bar i{display:block;height:100%;background:var(--burg3);border-radius:8px}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:14px;background:#0a0909;border:1px solid #24161a;border-radius:10px}.stat strong{font-size:24px}.stat span{display:block;color:#777;font-size:10px}.notice{margin-top:14px;padding:12px;border-radius:10px;background:#211016;border:1px solid #42212b;color:#aaa;font-size:11px}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.tool{padding:21px}.tool-icon{width:38px;height:38px;border-radius:10px;background:#281018;border:1px solid #49202c;display:grid;place-items:center;color:#d98ea0;font-weight:900}.tool h3{font-size:15px;margin:11px 0 5px}.tool p{color:#7f787b;font-size:11px}
+.teachers{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.teacher{padding:18px;text-align:center}.avatar{width:66px;height:66px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(145deg,#7d2740,#251016);font-weight:900;font-size:20px}.teacher h3{font-size:14px}.teacher p{color:#777;font-size:10px;margin-top:4px}.teacher small{display:block;color:#5d5558;margin-top:7px;font-size:9px}
+.pricing{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.plan{padding:24px}.plan h3{font-size:20px;margin:7px 0}.money{font-size:31px;font-weight:900}.money small{font-size:10px;color:#777;font-weight:400}.plan ul{list-style:none;margin:17px 0}.plan li{font-size:11px;color:#aaa;padding:7px 0;border-bottom:1px solid #201318}.plan li:before{content:"✓";color:#a13a52;margin-right:8px}
+.faq{max-width:850px;margin:auto}.faq details{background:#100b0d;border:1px solid #2d181f;border-radius:10px;margin-bottom:9px;padding:15px 17px}.faq summary{cursor:pointer;font-size:13px;font-weight:700}.faq p{color:#858083;font-size:11px;padding-top:10px}.cta{background:linear-gradient(135deg,#35121d,#11090c);border:1px solid #6b2739;border-radius:20px;padding:45px;text-align:center}.cta h2{font-size:39px;margin-bottom:10px}.cta p{color:#9d9295;max-width:650px;margin:0 auto 22px}.footer{border-top:1px solid #1d1216;padding:42px 0 24px;background:#060606}.footgrid{display:grid;grid-template-columns:1.45fr 1fr 1fr 1fr;gap:24px}.footer h4{font-size:12px;margin-bottom:12px}.footer a,.footer p{display:block;color:#777;font-size:11px;margin:7px 0}.copy{border-top:1px solid #171013;margin-top:28px;padding-top:17px;color:#555;font-size:10px;display:flex;justify-content:space-between}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;z-index:5000;padding:18px}.modal.show{display:flex}.modalbox{width:min(760px,100%);max-height:92vh;overflow:auto;background:#110b0d;border:1px solid #512331;border-radius:18px;padding:24px;box-shadow:var(--shadow)}.modalhead{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:16px}.close{background:none;border:0;color:#999;font-size:25px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.full{grid-column:1/-1}.modalbox>p{color:#888;font-size:12px;margin-bottom:14px}.status{display:none;margin-top:12px;padding:11px 12px;border-radius:10px;background:#211016;border:1px solid #5a2534;color:#ddd;font-size:11px}.status.show{display:block}.error{color:#ef9cac}.success{color:#89e2be}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(7px);display:none;z-index:5500;padding:12px}.drawer.show{display:block}.drawer-shell{height:100%;max-width:1220px;margin:auto;background:#0d090b;border:1px solid #3d1d28;border-radius:20px;overflow:hidden;display:grid;grid-template-columns:250px 1fr}.drawer-side{background:#0a0809;border-right:1px solid #27151b;padding:18px;overflow:auto}.drawer-brand{margin-bottom:19px}.user-card{padding:13px;background:#130c0f;border:1px solid #2d181f;border-radius:12px;margin-bottom:15px}.user-card strong{display:block;font-size:14px}.user-card span{display:block;color:#777;font-size:10px;margin-top:2px}.side-link{display:flex;align-items:center;gap:9px;width:100%;background:transparent;border:0;color:#aaa;padding:10px 11px;border-radius:9px;text-align:left;font-size:11px;margin-bottom:4px}.side-link:hover,.side-link.active{background:#211016;color:#fff}.drawer-main{display:flex;flex-direction:column;min-width:0}.drawer-top{padding:18px 22px;border-bottom:1px solid #27151b;display:flex;justify-content:space-between;align-items:center;gap:15px}.drawer-top h2{font-size:24px}.drawer-top p{font-size:11px;color:#777}.drawer-body{padding:22px;overflow:auto}.workspace-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.workspace-card{padding:17px}.workspace-card h3{font-size:14px;margin-bottom:6px}.workspace-card p{font-size:10px;color:#777}.table-list{display:grid;gap:9px}.listrow{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#110b0d;border:1px solid #2d181f;border-radius:12px;padding:12px}.listrow-main strong{font-size:12px}.listrow-main span{display:block;color:#777;font-size:10px}.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:99px;background:#1c1014;color:#c98b9b;border:1px solid #40222c;font-size:9px}.empty{padding:28px;text-align:center;color:#777;background:#100b0d;border:1px dashed #321c23;border-radius:13px}.lesson-view{display:grid;grid-template-columns:1.45fr .75fr;gap:17px}.lesson-player{padding:20px}.lesson-list{padding:15px;max-height:650px;overflow:auto}.lesson-btn{width:100%;background:#120c0f;color:#ddd;border:1px solid #2a191f;border-radius:10px;padding:11px;text-align:left;display:flex;gap:10px;align-items:center;margin-bottom:7px}.lesson-btn.active{border-color:#9d304a;background:#211016}.lesson-num{width:28px;height:28px;min-width:28px;border-radius:7px;background:#25171c;display:grid;place-items:center;color:#d98ea0;font-weight:800;font-size:10px}.lesson-content{background:#0a0909;border:1px solid #24161a;border-radius:13px;padding:18px}.video-wrap{aspect-ratio:16/9;background:#160d10;border:1px solid #341b24;border-radius:12px;display:grid;place-items:center;overflow:hidden}.video-wrap video{width:100%;height:100%;object-fit:contain;background:#000}.video-placeholder{text-align:center;color:#817579;padding:30px}.video-placeholder b{display:block;font-size:30px;color:#bc5068;margin-bottom:5px}.lesson-content h3{font-size:18px;margin:16px 0 7px}.lesson-content p{font-size:11px;color:#9a9295;white-space:pre-wrap}.lesson-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}.lesson-actions{display:flex;gap:8px;flex-wrap:wrap}.resource-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.resource{padding:8px 10px;background:#160e11;border:1px solid #2e1b22;border-radius:8px;color:#aaa;font-size:10px}.quiz-box{padding:19px}.question{padding:15px;border:1px solid #2a191f;border-radius:12px;background:#0c090a;margin-bottom:11px}.question h4{font-size:12px;margin-bottom:9px}.option{display:flex;gap:7px;align-items:flex-start;padding:7px 0;color:#aaa;font-size:11px}.scorebox{padding:16px;border:1px solid #4a222f;background:#211016;border-radius:12px;margin-top:12px}.hw-card{padding:18px}.hw-card h3{font-size:15px}.hw-card p{color:#888;font-size:11px;margin:7px 0}.hw-meta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.cert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.cert{padding:18px;background:linear-gradient(145deg,#171014,#0c090a);border:1px solid #3c2029;border-radius:14px}.cert-code{font-family:monospace;font-size:10px;color:#d98ea0;margin-top:8px}.notification{padding:14px;border-radius:12px;background:#120c0f;border:1px solid #2d181f}.notification.unread{border-color:#6a2a3d}.notification strong{font-size:12px}.notification p{font-size:10px;color:#888;margin-top:4px}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.account-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.toast{position:fixed;right:18px;bottom:18px;background:#151014;border:1px solid #653044;color:#eee;padding:12px 15px;border-radius:9px;display:none;z-index:7000;font-size:12px;max-width:min(420px,calc(100% - 36px))}.toast.show{display:block}
+@media(max-width:1000px){.links{display:none}.menu{display:block}.nav-actions .login{display:none}.hero-grid{grid-template-columns:1fr}.grid6{grid-template-columns:repeat(3,1fr)}.grid4,.tools,.teachers{grid-template-columns:repeat(2,1fr)}.dashboard{grid-template-columns:1fr}.footgrid{grid-template-columns:1fr 1fr}.drawer-shell{grid-template-columns:210px 1fr}.lesson-view{grid-template-columns:1fr}}
+@media(max-width:700px){.navin{height:70px}.hero{padding-top:125px}.hero h1{font-size:48px}.searchbox{grid-template-columns:1fr}.grid3,.pricing,.cert-grid{grid-template-columns:1fr}.grid6{grid-template-columns:repeat(2,1fr)}.grid4,.tools,.teachers{grid-template-columns:1fr}.footgrid{grid-template-columns:1fr}.copy{flex-direction:column;gap:7px}.formgrid,.profile-grid{grid-template-columns:1fr}.full{grid-column:auto}.drawer{padding:0}.drawer-shell{border-radius:0;border:0;grid-template-columns:1fr}.drawer-side{display:none}.drawer-top{padding:15px}.drawer-body{padding:15px}.workspace-grid{grid-template-columns:1fr}.hero-stat{grid-template-columns:1fr 1fr}.cta{padding:30px 20px}.cta h2{font-size:29px}.section-head{align-items:start;flex-direction:column}}
 </style>
-
-<style id="doma-v2-styles">
-.course-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:none;overflow:auto;padding:28px}
-.course-modal.open{display:block}
-.course-shell{max-width:1180px;margin:auto;background:#100a0d;border:1px solid rgba(192,82,105,.28);border-radius:24px;overflow:hidden;box-shadow:0 25px 80px rgba(0,0,0,.6)}
-.course-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:28px;border-bottom:1px solid rgba(255,255,255,.08)}
-.course-top h2{margin:4px 0 8px;font-size:32px}
-.course-top p{margin:0;color:#b9adb1}
-.course-close{border:1px solid rgba(255,255,255,.12);background:#181013;color:#fff;border-radius:12px;width:42px;height:42px;font-size:22px;cursor:pointer}
-.course-grid{display:grid;grid-template-columns:1.45fr .75fr;min-height:520px}
-.player{padding:28px;border-right:1px solid rgba(255,255,255,.08)}
-.video-box{aspect-ratio:16/9;background:linear-gradient(135deg,#1d0b11,#080808);border:1px solid rgba(192,82,105,.22);border-radius:18px;display:grid;place-items:center;text-align:center;padding:30px}
-.video-box .play{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#9d304a;font-size:28px;margin:auto auto 14px}
-.lesson-info{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:20px}
-.lesson-info h3{margin:0 0 6px}
-.lesson-info p{margin:0;color:#aaa}
-.progress-wrap{margin-top:18px}
-.progress-line{height:8px;background:#21161a;border-radius:99px;overflow:hidden}
-.progress-line span{display:block;height:100%;background:#9d304a;border-radius:99px}
-.lesson-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-.lesson-actions button{border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:700}
-.btn-next{background:#9d304a;color:#fff}.btn-ghost{background:#21161a;color:#eee}
-.curriculum{padding:22px}
-.curriculum h3{margin:4px 0 14px}
-.lesson-list{display:grid;gap:8px;max-height:560px;overflow:auto;padding-right:4px}
-.lesson-item{width:100%;text-align:left;background:#160e11;border:1px solid rgba(255,255,255,.07);color:#eee;border-radius:12px;padding:13px;cursor:pointer;display:flex;gap:10px;align-items:center}
-.lesson-item.active{border-color:#9d304a;background:#211015}
-.lesson-item small{display:block;color:#94878b;margin-top:3px}
-.lesson-num{min-width:30px;height:30px;border-radius:8px;background:#25171c;display:grid;place-items:center;color:#c05269;font-weight:800}
-.resource-row{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-.resource{padding:10px 12px;border-radius:10px;background:#160e11;border:1px solid rgba(255,255,255,.08);color:#ddd}
-.course-complete{margin-top:18px;padding:16px;border-radius:14px;background:rgba(118,35,55,.16);border:1px solid rgba(192,82,105,.2);display:none}
-.course-complete.show{display:block}
-@media(max-width:850px){
- .course-modal{padding:12px}.course-grid{grid-template-columns:1fr}.player{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.course-top h2{font-size:25px}
-}
-</style>
-
 </head>
 <body>
-
 <nav class="nav">
   <div class="container navin">
-    <a class="brand" href="#home">
-      <span class="mark" aria-label="DOMA ACADEMY logo">
-        <svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>
-      </span>
-      <span>DOMA ACADEMY<small>LEARNING PLATFORM • BY ADHAM</small></span>
-    </a>
-    <div class="links">
-      <a href="#courses">English Courses</a><a href="#dashboard">My English</a><a href="#categories">Grades</a><a href="#dashboard">Student Dashboard</a><a href="#instructors">Teachers</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
-    </div>
-    <div class="nav-actions"><button class="iconbtn" onclick="openModal('search')">⌕</button><button class="btn secondary login" onclick="openModal('login')">Log In</button><button class="btn primary" onclick="openModal('signup')">Get Started</button><button class="menu">☰</button></div>
+    <a class="brand" href="#home"><span class="mark" aria-label="DOMA ACADEMY logo"><svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>DOMA ACADEMY<small>ENGLISH LEARNING • BY ADHAM</small></span></a>
+    <div class="links"><a href="#grades">Grades</a><a href="#subjects">Learning</a><a href="#dashboard">Dashboard</a><a href="#teachers">Teachers</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
+    <div class="nav-actions"><button class="iconbtn" onclick="openSearch()">⌕</button><button id="navLogin" class="btn secondary login" onclick="openAuth('login')">Log In</button><button id="navAction" class="btn primary" onclick="openAuth('signup')">Get Started</button><button class="menu" onclick="toggleMobileMenu()">☰</button></div>
   </div>
 </nav>
 
-<header class="hero" id="home">
-  <div class="container hero-grid">
-    <div>
-      <div class="eyebrow">Learn English. Build Your Future.</div>
-      <h1>Turn your curiosity into <span>real skills.</span></h1>
-      <p>DOMA ACADEMY is a modern learning platform for practical, career-focused education. Learn from structured courses, practice with quizzes, track your progress and earn certificates.</p>
-      <div class="actions"><a class="btn primary" href="#courses">Explore English Courses →</a><button class="btn secondary" onclick="openModal('signup')">Start Learning Free</button></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><span class="tag">Self-paced</span><span class="tag">Projects</span><span class="tag">Certificates</span><span class="tag">Progress Tracking</span></div><div class="mini-proof">
-        <div class="proof"><strong>120+</strong><span>Expert English Courses</span></div>
-        <div class="proof"><strong>18K+</strong><span>Active Learners</span></div>
-        <div class="proof"><strong>94%</strong><span>Completion Rate</span></div>
-      </div>
-    </div>
-    <div class="hero-card">
-      <div class="video"><div class="play">▶</div></div>
-      <div class="lesson-row"><b>Featured: Build Your Digital Career</b><span>64% complete</span></div>
-      <div class="progress"><i></i></div>
-    </div>
-  </div>
-</header>
+<div id="mobileNav" class="modal" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>DOMA ACADEMY</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#subjects" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#teachers" onclick="closeMobileMenu()">Teachers</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
 
-<div class="container searchbar">
-  <div class="searchbox">
-    <input id="courseSearch" placeholder="Search courses, skills or topics..." oninput="filterEnglish Courses()">
-    <select id="courseCategory" onchange="filterEnglish Courses()"><option value="all">All categories</option><option>Business</option><option>Technology</option><option>Design</option><option>Marketing</option><option>Personal Growth</option></select>
-    <button class="btn primary" onclick="filterEnglish Courses()">Search</button>
-  </div>
-</div>
+<header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Master English with <span>a clear path.</span></h1><p>DOMA ACADEMY is built for Egyptian preparatory and secondary students: grade-based lessons, grammar, vocabulary, reading, writing, listening, quizzes, homework, progress and certificates — all in one place.</p><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a><button class="btn secondary" onclick="openAuth('signup')">Create Student Account</button></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory & Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>24/7</strong><span>Student access after approval</span></div></div></div><div class="hero-card"><div class="hero-panel"><div class="hero-panel-top"><div><div class="eyebrow">Student Learning Hub</div><div class="hero-logo">D<span>O</span>MA</div></div><span class="pill">Supabase Connected</span></div><div><h3>Study. Practice. Track. Improve.</h3><p>Your account becomes your personal English study space after you choose a grade and activate access.</p><div class="hero-stat"><div><b>Lessons</b><span>Grammar • Vocabulary • Reading</span></div><div><b>Assessment</b><span>Quizzes • Homework • Exams</span></div></div></div></div></div></div></header>
 
+<div class="container searchbar"><div class="searchbox"><input id="publicSearch" class="field" placeholder="Search grades, grammar, vocabulary, reading..." oninput="filterGrades()"><select id="publicStage" class="field" onchange="filterGrades()"><option value="all">All stages</option><option value="preparatory">Preparatory</option><option value="secondary">Secondary</option></select><button class="btn primary" onclick="filterGrades()">Search</button></div></div>
 
-<section id="dashboard" class="container" style="padding-top:28px">
-  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Student Dashboard</h2><p>Pick up where you left off, track your progress, and keep your next goal visible.</p></div>
-  <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-    <div class="review"><div class="eyebrow">In progress</div><h3 style="font-size:30px;margin:8px 0">03</h3><p>English Courses currently active</p></div>
-    <div class="review"><div class="eyebrow">Completed</div><h3 style="font-size:30px;margin:8px 0">08</h3><p>English Courses finished</p></div>
-    <div class="review"><div class="eyebrow">Learning time</div><h3 style="font-size:30px;margin:8px 0">24h</h3><p>This month</p></div>
-    <div class="review"><div class="eyebrow">Certificates</div><h3 style="font-size:30px;margin:8px 0">05</h3><p>Ready to share</p></div>
-  </div>
-  <div class="cta" style="margin-top:22px">
-    <div>
-      <div class="eyebrow">Continue learning</div>
-      <h3 style="font-size:26px;margin:6px 0">Modern Web Development</h3>
-      <p>Your next lesson is JavaScript DOM &amp; Events. Keep your 7-day learning streak going.</p>
-    </div>
-    <button class="btn primary" onclick="showToast('Opening your next lesson...')">Continue Course →</button>
-  </div>
-</section>
+<section id="grades"><div class="container"><div class="section-head"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade.</h2><p>Select your school grade to see access options and start your English journey.</p></div><span id="gradeLoadStatus" class="pill">Loading grades…</span></div><div id="gradeGrid" class="grid3"><div class="empty">Loading grades from DOMA ACADEMY…</div></div></div></section>
 
-<section id="learning-tools">
-  <div class="container">
-    <div class="head"><div class="eyebrow">Everything in one place</div><h2>Built for Real Learning</h2><p>DOMA ACADEMY brings the essential tools of a modern learning platform into one focused experience.</p></div>
-    <div class="grid">
-      <article class="course"><div class="coursebody"><div class="eyebrow">01</div><h3>Interactive Lessons</h3><p>Structured lessons with clear objectives, examples and practical checkpoints.</p></div></article>
-      <article class="course"><div class="coursebody"><div class="eyebrow">02</div><h3>Quizzes &amp; Assessments</h3><p>Test understanding after each learning module and identify what needs review.</p></div></article>
-      <article class="course"><div class="coursebody"><div class="eyebrow">03</div><h3>Projects &amp; Practice</h3><p>Turn lessons into portfolio-ready work with guided practical projects.</p></div></article>
-      <article class="course"><div class="coursebody"><div class="eyebrow">04</div><h3>Certificates</h3><p>Celebrate completed learning paths with shareable course completion credentials.</p></div></article>
-    </div>
-  </div>
-</section>
+<section id="subjects"><div class="container"><div class="head"><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2><p>Each grade can be organized from the Admin page into lessons, units, quizzes and homework.</p></div><div class="tools"><div class="card tool"><div class="tool-icon">A</div><h3>Grammar</h3><p>Clear explanations, examples and guided practice.</p></div><div class="card tool"><div class="tool-icon">V</div><h3>Vocabulary</h3><p>Meanings, usage, revision and unit vocabulary.</p></div><div class="card tool"><div class="tool-icon">R</div><h3>Reading</h3><p>Comprehension passages with focused questions.</p></div><div class="card tool"><div class="tool-icon">W</div><h3>Writing</h3><p>Structures, models and writing practice.</p></div><div class="card tool"><div class="tool-icon">L</div><h3>Listening</h3><p>Listening activities and comprehension checks.</p></div><div class="card tool"><div class="tool-icon">Q</div><h3>Quizzes</h3><p>Short assessments after learning modules.</p></div><div class="card tool"><div class="tool-icon">H</div><h3>Homework</h3><p>Assignments submitted directly from the student area.</p></div><div class="card tool"><div class="tool-icon">C</div><h3>Certificates</h3><p>Certificates stored in the student account when issued.</p></div></div></div></section>
 
-<section id="courses"><div class="container"><div class="sectionhead"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade and start learning.</h2><p>Focused English lessons for Egyptian preparatory and secondary students.</p></div></div><div class="filterbar"><input class="field" id="courseSearch" oninput="filterCourses()" placeholder="Search lessons, grammar, vocabulary..."><select class="field" id="courseCategory" onchange="filterCourses()"><option value="all">All Grades</option><option value="prep1">1st Preparatory</option><option value="prep2">2nd Preparatory</option><option value="prep3">3rd Preparatory</option><option value="sec1">1st Secondary</option><option value="sec2">2nd Secondary</option><option value="sec3">3rd Secondary</option></select></div><div class="coursegrid"><article class="course" data-category="prep1" data-search="1st preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 1</span></div><div class="coursebody"><div class="tag">1st Preparatory</div><h3>English — 1st Preparatory</h3><p>Grammar, vocabulary, reading, writing, listening and school exams.</p><button class="btn primary" onclick="domaOpenGrade('1st Preparatory')">Open Grade →</button></div></article><article class="course" data-category="prep2" data-search="2nd preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 2</span></div><div class="coursebody"><div class="tag">2nd Preparatory</div><h3>English — 2nd Preparatory</h3><p>Stronger grammar, vocabulary and unit-by-unit exam practice.</p><button class="btn primary" onclick="domaOpenGrade('2nd Preparatory')">Open Grade →</button></div></article><article class="course" data-category="prep3" data-search="3rd preparatory grammar vocabulary reading writing listening exams"><div class="coursecover"><span>PREP 3</span></div><div class="coursebody"><div class="tag">3rd Preparatory</div><h3>English — 3rd Preparatory</h3><p>Revision-focused English preparation with tests and mock exams.</p><button class="btn primary" onclick="domaOpenGrade('3rd Preparatory')">Open Grade →</button></div></article><article class="course" data-category="sec1" data-search="1st secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 1</span></div><div class="coursebody"><div class="tag">1st Secondary</div><h3>English — 1st Secondary</h3><p>Structured school English with grammar and skills practice.</p><button class="btn primary" onclick="domaOpenGrade('1st Secondary')">Open Grade →</button></div></article><article class="course" data-category="sec2" data-search="2nd secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 2</span></div><div class="coursebody"><div class="tag">2nd Secondary</div><h3>English — 2nd Secondary</h3><p>Advanced reading, writing, grammar and exam preparation.</p><button class="btn primary" onclick="domaOpenGrade('2nd Secondary')">Open Grade →</button></div></article><article class="course" data-category="sec3" data-search="3rd secondary grammar vocabulary reading writing listening exams"><div class="coursecover"><span>SEC 3</span></div><div class="coursebody"><div class="tag">3rd Secondary</div><h3>English — 3rd Secondary</h3><p>Final-year English revision, practice tests and exam readiness.</p><button class="btn primary" onclick="domaOpenGrade('3rd Secondary')">Open Grade →</button></div></article></div></div></section>
+<section id="dashboard"><div class="container"><div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Log in to see your grade, active subscription, lesson progress, quizzes, homework, certificates and notifications.</p></div><div class="dashboard"><div class="card dash"><h3>My English</h3><div id="dashboardGradeProgress"><div class="empty">Log in to load your English progress.</div></div></div><div class="card dash"><h3>Learning Overview</h3><div class="statgrid"><div class="stat"><strong id="dashLessons">—</strong><span>Lessons completed</span></div><div class="stat"><strong id="dashQuizzes">—</strong><span>Quiz attempts</span></div><div class="stat"><strong id="dashCerts">—</strong><span>Certificates</span></div></div><div id="dashNotice" class="notice">Your personalized dashboard appears after login.</div></div></div></div></section>
 
-<section id="categories"><div class="container"><div class="sectionhead"><div><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2></div></div><div class="featuregrid"><div class="feature"><b>Grammar</b><p>Clear explanations with guided exercises.</p></div><div class="feature"><b>Vocabulary</b><p>Unit words, meanings, usage and revision.</p></div><div class="feature"><b>Reading</b><p>Comprehension passages and question practice.</p></div><div class="feature"><b>Writing</b><p>Structures, model answers and guided practice.</p></div><div class="feature"><b>Listening</b><p>Listening practice and comprehension checks.</p></div><div class="feature"><b>Quizzes & Exams</b><p>Homework, quizzes, mock exams and results.</p></div></div></div></section>
+<section id="teachers"><div class="container"><div class="head"><div class="eyebrow">Teaching team</div><h2>Featured Teachers</h2><p>Teachers can be managed from the Admin area as your academy grows.</p></div><div class="teachers"><div class="card teacher"><div class="avatar">DA</div><h3>DOMA English Team</h3><p>Preparatory English</p><small>Grammar • Vocabulary • Reading</small></div><div class="card teacher"><div class="avatar">DB</div><h3>DOMA English Team</h3><p>Secondary English</p><small>Grammar • Writing • Exams</small></div><div class="card teacher"><div class="avatar">DL</div><h3>DOMA Listening Team</h3><p>Listening Practice</p><small>Audio lessons • Checks</small></div><div class="card teacher"><div class="avatar">DQ</div><h3>DOMA Assessment Team</h3><p>Quizzes & Homework</p><small>Practice • Results</small></div></div></div></section>
 
-<section id="dashboard">
-  <div class="container">
-    <div class="head"><div class="eyebrow">Your learning hub</div><h2>Student Student Dashboard</h2><p>Everything a learner needs in one place: progress, streaks, saved courses, certificates and upcoming tasks.</p></div>
-    <div class="dashboard">
-      <div class="dash">
-        <h3>My English</h3>
-        <div class="course-progress"><div class="cp"><span>Modern Web Development</span><b>64%</b></div><div class="bar"><i style="width:64%"></i></div></div>
-        <div class="course-progress"><div class="cp"><span>Digital Marketing Mastery</span><b>38%</b></div><div class="bar"><i style="width:38%"></i></div></div>
-        <div class="course-progress"><div class="cp"><span>UI/UX Design from Zero</span><b>82%</b></div><div class="bar"><i style="width:82%"></i></div></div>
-      </div>
-      <div class="dash">
-        <h3>Learning Overview</h3>
-        <div class="statgrid"><div class="stat"><strong>14</strong><span>English Courses</span></div><div class="stat"><strong>86h</strong><span>Learning time</span></div><div class="stat"><strong>5</strong><span>Certificates</span></div></div>
-        <div style="margin-top:16px;color:#777;font-size:11px">🔥 12-day learning streak — keep going.</div>
-      </div>
-    </div>
-  </div>
-</section>
+<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div><h2>Choose monthly or annual access.</h2><p>Pricing is set by grade. The same subscription flow works across all six grades.</p></div><div class="pricing"><div class="card plan"><span class="pill">Monthly</span><h3>Grade Access</h3><div class="money">150–250 <small>EGP / month</small></div><ul><li>Access for your selected grade</li><li>Lessons & published curriculum</li><li>Quizzes & assessments</li><li>Homework & student results</li><li>Progress & certificates</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan" style="border-color:#7d2940"><span class="pill">Annual</span><h3>Grade Access</h3><div class="money">150–250 <small>EGP / year</small></div><ul><li>Access for your selected grade</li><li>12-month active period</li><li>Lessons & published curriculum</li><li>Quizzes & homework</li><li>Progress & certificates</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div></div></div></section>
 
-<section>
-  <div class="container">
-    <div class="head"><div class="eyebrow">Built for serious learning</div><h2>Everything You Need to Learn</h2></div>
-    <div class="features">
-      <div class="feature"><b>▶</b><h3>Video Lessons</h3><p>Structured lessons with clear chapters and practical demonstrations.</p></div>
-      <div class="feature"><b>✓</b><h3>Quizzes & Assessments</h3><p>Check understanding with quizzes, exercises and knowledge checks.</p></div>
-      <div class="feature"><b>▣</b><h3>Certificates</h3><p>Complete a course and receive a shareable completion certificate.</p></div>
-      <div class="feature"><b>↗</b><h3>Progress Tracking</h3><p>Track lessons, completion, learning time and personal milestones.</p></div>
-      <div class="feature"><b>⌘</b><h3>Projects</h3><p>Learn by building portfolio-ready projects instead of only watching.</p></div>
-      <div class="feature"><b>⬇</b><h3>Resources</h3><p>Download worksheets, templates, checklists and lesson materials.</p></div>
-      <div class="feature"><b>◷</b><h3>Learning Schedule</h3><p>Plan sessions and stay consistent with a simple learning calendar.</p></div>
-      <div class="feature"><b>☵</b><h3>Community</h3><p>Discuss lessons, ask questions and connect with other learners.</p></div>
-    </div>
-  </div>
-</section>
+<section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq"><details><summary>How do I start learning?</summary><p>Create a student account, choose your grade, select monthly or annual access, send the payment through Mobile Cash, and upload the receipt. Access starts after admin approval.</p></details><details><summary>Which grades are supported?</summary><p>1st, 2nd and 3rd Preparatory plus 1st, 2nd and 3rd Secondary.</p></details><details><summary>What can I study?</summary><p>Published content can include grammar, vocabulary, reading, writing, listening, quizzes and homework for your selected grade.</p></details><details><summary>Where do I see my progress?</summary><p>Use the Student Dashboard to track completed lessons, quiz attempts, certificates, homework and notifications.</p></details><details><summary>Can I study from my phone?</summary><p>Yes. The student interface is responsive and works on desktop and mobile browsers.</p></details></div></div></section>
 
-<section id="instructors">
-  <div class="container">
-    <div class="head"><div class="eyebrow">Learn from practitioners</div><h2>Featured Teachers</h2><p>Experienced educators and professionals focused on useful, real-world skills.</p></div>
-    <div class="instructors">
-      <div class="instructor"><div class="avatar">AK</div><h3>Adam Kareem</h3><p>Web Development • 4.9 rating</p></div>
-      <div class="instructor"><div class="avatar">SN</div><h3>Sarah Nabil</h3><p>Digital Marketing • 4.8 rating</p></div>
-      <div class="instructor"><div class="avatar">OM</div><h3>Omar Magdy</h3><p>Business Strategy • 4.9 rating</p></div>
-      <div class="instructor"><div class="avatar">LM</div><h3>Lina Mostafa</h3><p>UI/UX Design • 4.9 rating</p></div>
-    </div>
-  </div>
-</section>
+<section><div class="container"><div class="cta"><div class="eyebrow">Your next English lesson starts here</div><h2>Build stronger English, one lesson at a time.</h2><p>Create your student account and choose the grade that matches your school year.</p><button class="btn primary" onclick="openAuth('signup')">Create Student Account →</button></div></div></section>
 
-<section>
-  <div class="container">
-    <div class="head"><div class="eyebrow">From beginner to confident</div><h2>Learning Paths</h2></div>
-    <div class="learning">
-      <div class="path"><h3>Digital Career Path</h3><div class="pathrow"><span class="num">01</span><div><h4>Foundations</h4><p>Build the essential digital and communication skills.</p></div></div><div class="pathrow"><span class="num">02</span><div><h4>Core Skill</h4><p>Choose a specialization and complete guided projects.</p></div></div><div class="pathrow"><span class="num">03</span><div><h4>Portfolio</h4><p>Turn your learning into work you can show.</p></div></div></div>
-      <div class="path"><h3>Creator & Business Path</h3><div class="pathrow"><span class="num">01</span><div><h4>Idea & Audience</h4><p>Understand the problem, audience and opportunity.</p></div></div><div class="pathrow"><span class="num">02</span><div><h4>Offer & Content</h4><p>Build a useful offer and a repeatable content system.</p></div></div><div class="pathrow"><span class="num">03</span><div><h4>Growth</h4><p>Measure results and improve the system over time.</p></div></div></div>
-    </div>
-  </div>
-</section>
+<footer class="footer"><div class="container"><div class="footgrid"><div><a class="brand" href="#home"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>DOMA ACADEMY<small>BY ADHAM</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div><div><h4>Platform</h4><a href="#grades">Grades</a><a href="#subjects">Learning</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div><div><h4>Learning</h4><a href="#subjects">Grammar</a><a href="#subjects">Vocabulary</a><a href="#subjects">Reading</a><a href="#subjects">Writing</a></div><div><h4>Account</h4><a href="#" onclick="openAuth('login');return false">Log In</a><a href="#" onclick="openAuth('signup');return false">Create Account</a><a href="#dashboard">My Progress</a><a href="#faq">FAQ</a></div></div><div class="copy"><span>© 2026 DOMA ACADEMY — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div></div></footer>
 
-<section id="pricing">
-  <div class="container">
-    <div class="head"><div class="eyebrow">Simple access</div><h2>Choose Your Learning Plan</h2><p>Start free, then unlock more learning when you are ready.</p></div>
-    <div class="pricing">
-      <div class="plan"><span class="label">Free</span><h3>Starter</h3><div class="money">$0 <small>/ forever</small></div><ul><li>Selected free lessons</li><li>Learning progress</li><li>Community access</li><li>Basic quizzes</li></ul><button class="btn secondary" onclick="openModal('signup')">Create Account</button></div>
-      <div class="plan hot"><span class="label">Most Popular</span><h3>Pro Learner</h3><div class="money">$19 <small>/ month</small></div><ul><li>Full course library</li><li>Certificates</li><li>Projects & resources</li><li>Advanced assessments</li></ul><button class="btn primary" onclick="openModal('signup')">Start Pro</button></div>
-      <div class="plan"><span class="label">For Teams</span><h3>Academy</h3><div class="money">Custom</div><ul><li>Team learning dashboard</li><li>Progress & reporting</li><li>Private learning paths</li><li>Admin support</li></ul><button class="btn secondary" onclick="openModal('contact')">Talk to Us</button></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="head"><div class="eyebrow">Learner stories</div><h2>What Students Say</h2></div>
-    <div class="reviews">
-      <div class="review"><div class="stars">★★★★★</div><p>“The lessons are structured, practical and easy to follow. I finally stopped collecting tutorials and started building.”</p><div class="person"><div class="avatar">YA</div><div><b>Youssef A.</b><span>Web Development Student</span></div></div></div>
-      <div class="review"><div class="stars">★★★★★</div><p>“The progress system keeps me consistent. I can see exactly what I finished and what I should do next.”</p><div class="person"><div class="avatar">MN</div><div><b>Mariam N.</b><span>Marketing Student</span></div></div></div>
-      <div class="review"><div class="stars">★★★★★</div><p>“I used the projects to build a small portfolio while learning. That made the course feel much more valuable.”</p><div class="person"><div class="avatar">KA</div><div><b>Khaled A.</b><span>Design Student</span></div></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="faq">
-  <div class="container">
-    <div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div>
-    <div class="faq">
-      <details><summary>Can I start learning for free?</summary><p>Yes. The Starter plan includes selected free lessons and basic learning features.</p></details>
-      <details><summary>Do courses include certificates?</summary><p>Eligible completed courses can provide a shareable completion certificate.</p></details>
-      <details><summary>Can I learn at my own pace?</summary><p>Yes. English Courses are designed for self-paced learning, with progress saved in your dashboard.</p></details>
-      <details><summary>Are there quizzes and projects?</summary><p>Yes. The platform is designed around lessons, knowledge checks, practical exercises and projects.</p></details>
-      <details><summary>Can teams use DOMA ACADEMY?</summary><p>Yes. The Academy plan is designed for organizations that want team learning and progress reporting.</p></details>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="cta"><div class="eyebrow">Your next skill starts here</div><h2>Learn something that moves you forward.</h2><p>Join DOMA ACADEMY and build practical skills with a clear path, measurable progress and projects that matter.</p><button class="btn primary" onclick="openModal('signup')">Create Your Free Account →</button></div>
-  </div>
-</section>
-
-<footer class="footer">
-  <div class="container">
-    <div class="footgrid">
-      <div><a class="brand" href="#home"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>DOMA ACADEMY<small>BY ADHAM</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div>
-      <div><h4>Platform</h4><a href="#courses">English Courses</a><a href="#categories">Grades</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div>
-      <div><h4>Learning</h4><a href="#instructors">Teachers</a><a href="#faq">FAQ</a><a href="#courses">Projects</a><a href="#dashboard">Certificates</a></div>
-      <div><h4>Support</h4><a href="#" onclick="openModal('contact');return false">Contact</a><a href="#" onclick="openModal('contact');return false">Help Center</a><a href="#" onclick="showToast('Community area is ready for integration.') ;return false">Community</a></div>
-    </div>
-    <div class="copy"><span>© 2026 DOMA ACADEMY — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div>
-  </div>
-</footer>
-
-<div class="modal" id="modal"><div class="modalbox">
-  <div class="modalhead"><h3 id="modalTitle">Get Started</h3><button class="close" onclick="closeModal()">×</button></div>
-  <p id="modalText">Create your account and start your learning journey.</p>
-  <div id="modalBody"></div>
-</div></div>
-<div class="toast" id="toast"></div>
+<div id="modal" class="modal"><div class="modalbox"><div class="modalhead"><h3 id="modalTitle">DOMA ACADEMY</h3><button class="close" onclick="closeModal()">×</button></div><p id="modalText"></p><div id="modalBody"></div></div></div>
+<div id="gradeModal" class="modal"><div class="modalbox"><div class="modalhead"><h3 id="gradeModalTitle">Grade Access</h3><button class="close" onclick="closeGradeModal()">×</button></div><p id="gradeModalText"></p><div id="gradeModalBody"></div></div></div>
+<div id="drawer" class="drawer"><div class="drawer-shell"><aside class="drawer-side"><div class="drawer-brand"><a class="brand" href="#home"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 6h14" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>DOMA ACADEMY<small>STUDENT AREA</small></span></a></div><div id="userCard" class="user-card"><strong>Student</strong><span>Loading…</span></div><button class="side-link active" data-view="overview" onclick="studentView('overview')">⌂ Overview</button><button class="side-link" data-view="lessons" onclick="studentView('lessons')">▶ Lessons</button><button class="side-link" data-view="quizzes" onclick="studentView('quizzes')">✓ Quizzes</button><button class="side-link" data-view="homework" onclick="studentView('homework')">☰ Homework</button><button class="side-link" data-view="certificates" onclick="studentView('certificates')">▣ Certificates</button><button class="side-link" data-view="notifications" onclick="studentView('notifications')">◌ Notifications</button><button class="side-link" data-view="profile" onclick="studentView('profile')">⚙ Profile</button><button class="side-link" onclick="domaLogout()">↪ Log Out</button></aside><main class="drawer-main"><div class="drawer-top"><div><div class="eyebrow" style="margin-bottom:3px">DOMA ACADEMY • STUDENT</div><h2 id="drawerTitle">Overview</h2><p id="drawerSubtitle">Your learning space.</p></div><button class="btn secondary" onclick="closeDrawer()">Close</button></div><div id="drawerBody" class="drawer-body"><div class="empty">Loading student area…</div></div></main></div></div>
+<div id="toast" class="toast"></div>
 
 <script>
-const courses=[...document.querySelectorAll('.course')];
-function filterEnglish Courses(){
-  const q=document.getElementById('courseSearch').value.toLowerCase().trim();
-  const cat=document.getElementById('courseCategory').value;
-  courses.forEach(c=>{
-    const okQ=!q||c.dataset.search.includes(q)||c.innerText.toLowerCase().includes(q);
-    const okC=cat==='all'||c.dataset.category===cat;
-    c.style.display=okQ&&okC?'block':'none';
-  });
-}
-function enroll(name){
-  localStorage.setItem('doma_last_course',name);
-  showToast('Added to your learning list: '+name);
-}
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
-}
+const DOMA_URL='https://dtptxhkcogpoleftguas.supabase.co';
+const DOMA_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
+const MOBILE_CASH='01006525147';
+const GRADE_PRICES={
+  '1st Preparatory':{monthly:150,annual:150},'2nd Preparatory':{monthly:200,annual:200},'3rd Preparatory':{monthly:250,annual:250},
+  '1st Secondary':{monthly:150,annual:150},'2nd Secondary':{monthly:200,annual:200},'3rd Secondary':{monthly:250,annual:250}
+};
+let sb=null;
+let sessionUser=null;
+let grades=[];
+let currentGrade=null;
+let currentSubscription=null;
+let currentLessons=[];
+let currentQuizzes=[];
+let currentHomework=[];
+let currentLessonIndex=0;
+let currentStudentView='overview';
+let currentQuiz=null;
+let pendingGradeName=null;
+let selectedPlan='monthly';
+let searchTimer=null;
+
+function $(id){return document.getElementById(id)}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function fmtDate(v){if(!v)return '—';try{return new Date(v).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}catch{return '—'}}
+function fmtDateTime(v){if(!v)return '—';try{return new Date(v).toLocaleString('en-US',{year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}catch{return '—'}}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__domaToast);window.__domaToast=setTimeout(()=>t.classList.remove('show'),3000)}
+function showStatus(id,msg,kind='info'){const el=$(id);if(!el)return;el.innerHTML=esc(msg);el.className='status show '+kind}
+function clearStatus(id){const el=$(id);if(el){el.textContent='';el.className='status'}}
 function openModal(type){
-  const m=document.getElementById('modal'), title=document.getElementById('modalTitle'), text=document.getElementById('modalText'), body=document.getElementById('modalBody');
-  if(type==='login'){
-    title.textContent='Welcome back';text.textContent='Log in to continue your learning journey.';
-    body.innerHTML='<div class="formgrid"><input class="field" placeholder="Email address"><input class="field" type="password" placeholder="Password"><button class="btn primary full" onclick="fakeSubmit(\'Welcome back to DOMA ACADEMY.\')">Log In</button></div>';
-  }else if(type==='signup'){
-    title.textContent='Create your account';text.textContent='Start with a free DOMA ACADEMY learner account.';
-    body.innerHTML='<div class="formgrid"><input class="field" placeholder="Full name"><input class="field" placeholder="Email address"><input class="field" type="password" placeholder="Create password"><select class="field"><option>What do you want to learn?</option><option>Technology</option><option>Design</option><option>Marketing</option><option>Business</option><option>Personal Growth</option></select><button class="btn primary full" onclick="fakeSubmit(\'Account created — welcome to DOMA ACADEMY.\')">Create Free Account</button></div>';
-  }else if(type==='search'){
-    title.textContent='Find your next course';text.textContent='Search the course library by skill or topic.';
-    body.innerHTML='<div class="formgrid"><input id="modalSearch" class="field full" placeholder="e.g. Python, marketing, UI/UX" onkeydown="if(event.key===\'Enter\'){document.getElementById(\'courseSearch\').value=this.value;closeModal();filterEnglish Courses();document.getElementById(\'courses\').scrollIntoView()}"><button class="btn primary full" onclick="document.getElementById(\'courseSearch\').value=document.getElementById(\'modalSearch\').value;closeModal();filterEnglish Courses();document.getElementById(\'courses\').scrollIntoView()">Search English Courses</button></div>';
-  }else{
-    title.textContent='Talk to DOMA ACADEMY';text.textContent='Send a message and our team can help with courses, teams or platform access.';
-    body.innerHTML='<div class="formgrid"><input class="field" placeholder="Your name"><input class="field" placeholder="Email address"><textarea class="field full" rows="5" placeholder="How can we help?"></textarea><button class="btn primary full" onclick="fakeSubmit(\'Thanks — your message has been received.\')">Send Message</button></div>';
-  }
-  m.classList.add('show');
+  if(type==='login'||type==='signup'){openAuth(type);return}
+  if(type==='search'){openSearch();return}
 }
-function closeModal(){document.getElementById('modal').classList.remove('show')}
-function fakeSubmit(msg){closeModal();showToast(msg)}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
-</script>
+function closeModal(){ $('modal').classList.remove('show') }
+function closeGradeModal(){ $('gradeModal').classList.remove('show') }
+function toggleMobileMenu(){$('mobileNav').classList.add('show')}
+function closeMobileMenu(){$('mobileNav').classList.remove('show')}
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+$('gradeModal').addEventListener('click',e=>{if(e.target.id==='gradeModal')closeGradeModal()});
+$('mobileNav').addEventListener('click',e=>{if(e.target.id==='mobileNav')closeMobileMenu()});
 
-<div class="course-modal" id="courseModal" aria-hidden="true">
-  <div class="course-shell">
-    <div class="course-top">
-      <div>
-        <div class="eyebrow">DOMA ACADEMY • COURSE</div>
-        <h2 id="courseTitle">Modern Web Development</h2>
-        <p id="courseSubtitle">Build practical skills through guided lessons and projects.</p>
-      </div>
-      <button class="course-close" id="courseClose" aria-label="Close">×</button>
-    </div>
-    <div class="course-grid">
-      <section class="player">
-        <div class="video-box">
-          <div>
-            <div class="play">▶</div>
-            <strong id="lessonTitle">Welcome to the course</strong>
-            <p id="lessonDescription">Your lesson player is ready. Connect your real video URLs later through the backend.</p>
-          </div>
-        </div>
-        <div class="lesson-info">
-          <div>
-            <h3 id="lessonHeading">Lesson 1 — Welcome</h3>
-            <p id="lessonMeta">8 min • Video lesson</p>
-          </div>
-          <strong id="progressText">0%</strong>
-        </div>
-        <div class="progress-wrap">
-          <div class="progress-line"><span id="courseProgress" style="width:0%"></span></div>
-        </div>
-        <div class="lesson-actions">
-          <button class="btn-ghost" id="prevLesson">← Previous</button>
-          <button class="btn-next" id="completeLesson">Mark complete</button>
-          <button class="btn-next" id="nextLesson">Next lesson →</button>
-        </div>
-        <div class="resource-row">
-          <div class="resource">📄 Course notes</div>
-          <div class="resource">📥 Practice files</div>
-          <div class="resource">🧠 Quiz</div>
-        </div>
-        <div class="course-complete" id="courseComplete">
-          <strong>🎉 Course completed!</strong>
-          <p>You finished every lesson. This area is ready for certificate generation when Supabase is connected.</p>
-        </div>
-      </section>
-      <aside class="curriculum">
-        <h3>Course Curriculum</h3>
-        <div class="lesson-list" id="lessonList"></div>
-      </aside>
-    </div>
-  </div>
-</div>
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeGradeModal();closeMobileMenu();if($('drawer').classList.contains('show'))closeDrawer()}});
 
+function openSearch(){
+  $('modalTitle').textContent='Find your English content';
+  $('modalText').textContent='Search the visible grade cards by grade or English skill.';
+  $('modalBody').innerHTML='<div class="formgrid"><input id="modalPublicSearch" class="field full" placeholder="grammar, vocabulary, 3rd secondary…"><button class="btn primary full" onclick="applyModalSearch()">Search Grades</button></div>';
+  $('modal').classList.add('show');setTimeout(()=>$('modalPublicSearch')?.focus(),50);
+}
+function applyModalSearch(){const q=$('modalPublicSearch')?.value.trim()||'';$('publicSearch').value=q;closeModal();filterGrades();$('grades').scrollIntoView({behavior:'smooth'})}
 
-<script id="doma-v2-script">
-(function(){
-  const courses = {
-    "Modern Web Development":{
-      subtitle:"HTML, CSS, JavaScript and practical projects.",
-      lessons:[
-        ["Welcome to Web Development","8 min","Video lesson"],
-        ["HTML Foundations","18 min","Video lesson"],
-        ["CSS Layout & Responsive Design","24 min","Video lesson"],
-        ["JavaScript Essentials","27 min","Video lesson"],
-        ["Build Your First Project","42 min","Project"],
-        ["Final Challenge","35 min","Assessment"]
-      ]
-    },
-    "Digital Marketing Mastery":{
-      subtitle:"Build campaigns, content systems and measurable growth.",
-      lessons:[
-        ["Marketing Foundations","12 min","Video lesson"],
-        ["Audience & Positioning","19 min","Video lesson"],
-        ["Content Strategy","24 min","Workshop"],
-        ["Social Media Campaigns","28 min","Video lesson"],
-        ["Analytics & KPIs","21 min","Video lesson"],
-        ["Final Campaign Project","45 min","Project"]
-      ]
-    },
-    "UI/UX Design from Zero":{
-      subtitle:"Learn research, wireframes, interfaces and design systems.",
-      lessons:[
-        ["UX Mindset","10 min","Video lesson"],
-        ["User Research","22 min","Workshop"],
-        ["Wireframing","20 min","Practice"],
-        ["UI Fundamentals","26 min","Video lesson"],
-        ["Design Systems","25 min","Workshop"],
-        ["Portfolio Project","50 min","Project"]
-      ]
-    },
-    "Start & Grow a Business":{
-      subtitle:"Turn an idea into a practical business roadmap.",
-      lessons:[
-        ["Idea Validation","15 min","Video lesson"],
-        ["Customer Discovery","20 min","Workshop"],
-        ["Business Model","24 min","Workshop"],
-        ["Pricing & Offers","18 min","Video lesson"],
-        ["Marketing Plan","30 min","Project"],
-        ["Launch Checklist","16 min","Assessment"]
-      ]
-    },
-    "Productivity & Focus":{
-      subtitle:"Create a sustainable system for focused work.",
-      lessons:[
-        ["Focus Foundations","9 min","Video lesson"],
-        ["Time Blocking","14 min","Practice"],
-        ["Deep Work","18 min","Video lesson"],
-        ["Planning Systems","16 min","Workshop"],
-        ["Habits & Consistency","20 min","Video lesson"],
-        ["Build Your Weekly System","30 min","Project"]
-      ]
-    },
-    "Python for Data & Automation":{
-      subtitle:"Use Python to automate tasks and work with data.",
-      lessons:[
-        ["Python Setup","12 min","Video lesson"],
-        ["Variables & Logic","22 min","Video lesson"],
-        ["Functions & Modules","25 min","Video lesson"],
-        ["Working With Data","30 min","Practice"],
-        ["Automation Scripts","35 min","Workshop"],
-        ["Final Automation Project","48 min","Project"]
-      ]
-    }
-  };
-
-  const modal=document.getElementById('courseModal');
-  if(!modal) return;
-  const title=document.getElementById('courseTitle');
-  const subtitle=document.getElementById('courseSubtitle');
-  const list=document.getElementById('lessonList');
-  const lessonTitle=document.getElementById('lessonTitle');
-  const lessonHeading=document.getElementById('lessonHeading');
-  const lessonDescription=document.getElementById('lessonDescription');
-  const lessonMeta=document.getElementById('lessonMeta');
-  const progress=document.getElementById('courseProgress');
-  const progressText=document.getElementById('progressText');
-  const completeBox=document.getElementById('courseComplete');
-  let currentCourse=null, current=0, completed=new Set();
-
-  function key(){ return 'doma_course_'+currentCourse; }
-
-  function render(){
-    const c=courses[currentCourse]; if(!c) return;
-    list.innerHTML='';
-    c.lessons.forEach((l,i)=>{
-      const b=document.createElement('button');
-      b.className='lesson-item'+(i===current?' active':'');
-      b.innerHTML='<span class="lesson-num">'+(completed.has(i)?'✓':(i+1))+'</span><span><strong>'+l[0]+'</strong><small>'+l[1]+' • '+l[2]+'</small></span>';
-      b.onclick=()=>{current=i;render();};
-      list.appendChild(b);
-    });
-    const l=c.lessons[current];
-    lessonTitle.textContent=l[0];
-    lessonHeading.textContent='Lesson '+(current+1)+' — '+l[0];
-    lessonMeta.textContent=l[1]+' • '+l[2];
-    lessonDescription.textContent='Follow this lesson, practice the skill, then mark it complete to update your learning progress.';
-    const pct=Math.round((completed.size/c.lessons.length)*100);
-    progress.style.width=pct+'%';
-    progressText.textContent=pct+'%';
-    completeBox.classList.toggle('show', completed.size===c.lessons.length);
-    localStorage.setItem(key(),JSON.stringify([...completed]));
+function openAuth(type){
+  const title=$('modalTitle'),text=$('modalText'),body=$('modalBody');
+  if(type==='login'){
+    title.textContent='Log in to DOMA ACADEMY';text.textContent='Use your student account to open your dashboard and active grade.';
+    body.innerHTML='<div class="formgrid"><input id="loginEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password"><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
+  }else{
+    title.textContent='Create your student account';text.textContent='Create an account first. You can choose your grade and payment plan immediately after signup.';
+    body.innerHTML='<div class="formgrid"><input id="signupName" class="field" placeholder="Full name" autocomplete="name"><input id="signupEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="signupPass" class="field full" type="password" placeholder="Password — at least 6 characters" autocomplete="new-password"><button class="btn primary full" onclick="domaSignup()">Create Account & Continue →</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
   }
+  $('modal').classList.add('show');
+}
 
-  function openCourse(name){
-    currentCourse=courses[name]?name:Object.keys(courses)[0];
-    title.textContent=currentCourse;
-    subtitle.textContent=courses[currentCourse].subtitle;
-    try{completed=new Set(JSON.parse(localStorage.getItem(key())||'[]'));}catch(e){completed=new Set();}
-    current=0; render();
-    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
-    document.body.style.overflow='hidden';
+async function domaLogin(){
+  const email=$('loginEmail')?.value.trim()||'',pass=$('loginPass')?.value||'';
+  if(!email||!pass){showStatus('authStatus','Enter your email and password.','error');return}
+  if(!sb){showStatus('authStatus','Supabase is not ready. Refresh the page and try again.','error');return}
+  showStatus('authStatus','Signing in…');
+  const r=await sb.auth.signInWithPassword({email,password:pass});
+  if(r.error){showStatus('authStatus',r.error.message,'error');return}
+  sessionUser=r.data.user;closeModal();await refreshStudentState();showToast('Welcome back to DOMA ACADEMY.');openDrawer('overview');
+}
+
+async function domaSignup(){
+  const name=$('signupName')?.value.trim()||'',email=$('signupEmail')?.value.trim()||'',pass=$('signupPass')?.value||'';
+  if(!name||!email||pass.length<6){showStatus('authStatus','Enter your full name, email and a password of at least 6 characters.','error');return}
+  if(!sb){showStatus('authStatus','Supabase is not ready. Refresh the page and try again.','error');return}
+  showStatus('authStatus','Creating your student account…');
+  const r=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
+  if(r.error){showStatus('authStatus',r.error.message,'error');return}
+  let user=r.data?.user,session=r.data?.session;
+  if(!session){
+    const l=await sb.auth.signInWithPassword({email,password:pass});
+    if(!l.error){session=l.data?.session;user=l.data?.user}
   }
+  if(!session){showStatus('authStatus','Account created, but no session was returned. In Supabase Authentication → Providers → Email, turn off email confirmation if you want instant access.','error');return}
+  sessionUser=user;
+  try{await sb.from('profiles').upsert({id:user.id,full_name:name,email},{onConflict:'id'});}catch(e){console.warn(e)}
+  closeModal();await refreshStudentState();showToast('Account created successfully.');openDrawer('overview');
+}
 
-  function closeCourse(){
-    modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
+async function domaLogout(){if(sb)await sb.auth.signOut();sessionUser=null;currentGrade=null;currentSubscription=null;currentLessons=[];currentQuizzes=[];currentHomework=[];closeDrawer();updateNav();renderDashboardLoggedOut();showToast('You have been logged out.')}
+
+function updateNav(){
+  if(sessionUser){$('navLogin').textContent='My Account';$('navLogin').onclick=()=>openDrawer('overview');$('navAction').textContent='Log Out';$('navAction').onclick=()=>domaLogout()}
+  else{$('navLogin').textContent='Log In';$('navLogin').onclick=()=>openAuth('login');$('navAction').textContent='Get Started';$('navAction').onclick=()=>openAuth('signup')}
+}
+
+async function getProfile(){
+  if(!sessionUser||!sb)return null;
+  const r=await sb.from('profiles').select('id,full_name,email,role,grade_id,created_at').eq('id',sessionUser.id).maybeSingle();
+  if(r.error){console.warn('profile',r.error);return null}return r.data||null;
+}
+async function getActiveSubscriptions(){
+  if(!sessionUser||!sb)return [];
+  const r=await sb.from('subscriptions').select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at,grades(name)').eq('student_id',sessionUser.id).eq('status','active').order('expires_at',{ascending:false});
+  if(r.error){console.warn('subs',r.error);return []}
+  return (r.data||[]).filter(x=>new Date(x.expires_at)>new Date());
+}
+async function getPendingRequests(){
+  if(!sessionUser||!sb)return [];
+  const r=await sb.from('subscription_requests').select('id,grade_id,plan,amount,status,admin_note,created_at,reviewed_at,grades(name)').eq('student_id',sessionUser.id).order('created_at',{ascending:false});
+  if(r.error){console.warn('requests',r.error);return []}
+  return r.data||[];
+}
+
+async function refreshStudentState(){
+  if(!sessionUser&&sb){const s=await sb.auth.getSession();sessionUser=s.data?.session?.user||null}
+  updateNav();
+  if(!sessionUser){renderDashboardLoggedOut();return}
+  const profile=await getProfile();
+  const subs=await getActiveSubscriptions();
+  const reqs=await getPendingRequests();
+  currentGrade=profile?.grade_id?(grades.find(g=>g.id===profile.grade_id)||null):null;
+  currentSubscription=subs[0]||null;
+  window.domaStudentProfile=profile;window.domaStudentSubscriptions=subs;window.domaStudentRequests=reqs;
+  renderDashboardData(profile,subs,reqs);
+}
+
+function renderDashboardLoggedOut(){
+  $('dashboardGradeProgress').innerHTML='<div class="empty">Log in to load your English progress.</div>';
+  $('dashLessons').textContent='—';$('dashQuizzes').textContent='—';$('dashCerts').textContent='—';$('dashNotice').textContent='Create an account and choose your grade to activate your student dashboard.';
+}
+
+async function renderDashboardData(profile,subs,reqs){
+  const gradeMap=new Map(grades.map(g=>[g.id,g]));
+  if(!profile){$('dashboardGradeProgress').innerHTML='<div class="empty">Your profile is still being created. Refresh once if needed.</div>';return}
+  const grade=profile.grade_id?gradeMap.get(profile.grade_id):null;
+  const sub=subs.find(s=>s.grade_id===profile.grade_id)||subs[0]||null;
+  if(!grade){$('dashboardGradeProgress').innerHTML='<div class="empty">Welcome, '+esc(profile.full_name||'Student')+'. Choose a grade from the Grades section to begin.</div>';}
+  else{
+    const p=await getGradeProgress(grade.id);
+    $('dashboardGradeProgress').innerHTML='<div class="progress-item"><div class="cp"><span>'+esc(grade.name)+'</span><b>'+p.percent+'%</b></div><div class="bar"><i style="width:'+p.percent+'%"></i></div></div><div class="notice">'+(sub?'Active until '+fmtDate(sub.expires_at):'No active subscription for this grade yet. Choose the grade above to request access.')+'</div>';
   }
+  const overview=await getStudentOverview();
+  $('dashLessons').textContent=overview.completedLessons;
+  $('dashQuizzes').textContent=overview.quizAttempts;
+  $('dashCerts').textContent=overview.certificates;
+  if(sub) $('dashNotice').textContent='Active access: '+(sub.grades?.name||'Selected grade')+' until '+fmtDate(sub.expires_at)+'.';
+  else if(reqs.some(r=>r.status==='pending')) $('dashNotice').textContent='You have a pending subscription request. Access will activate after admin approval.';
+  else $('dashNotice').textContent='Choose a grade to start the subscription flow.';
+}
 
-  document.getElementById('courseClose').onclick=closeCourse;
-  modal.addEventListener('click',e=>{if(e.target===modal)closeCourse();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeCourse();});
+async function getStudentOverview(){
+  if(!sessionUser||!sb)return {completedLessons:0,quizAttempts:0,certificates:0};
+  const [p,q,c]=await Promise.all([
+    sb.from('lesson_progress').select('id,completed').eq('student_id',sessionUser.id).eq('completed',true),
+    sb.from('quiz_attempts').select('id').eq('student_id',sessionUser.id),
+    sb.from('certificates').select('id').eq('student_id',sessionUser.id)
+  ]);
+  return {completedLessons:p.data?.length||0,quizAttempts:q.data?.length||0,certificates:c.data?.length||0};
+}
+async function getGradeProgress(gradeId){
+  if(!sessionUser||!sb||!gradeId)return {percent:0,total:0,completed:0};
+  const [l,p]=await Promise.all([
+    sb.from('lessons').select('id').eq('grade_id',gradeId).eq('is_published',true),
+    sb.from('lesson_progress').select('lesson_id,completed').eq('student_id',sessionUser.id).eq('completed',true)
+  ]);
+  if(l.error)return {percent:0,total:0,completed:0};
+  const ids=new Set((l.data||[]).map(x=>x.id));const completed=(p.data||[]).filter(x=>ids.has(x.lesson_id)).length;const total=(l.data||[]).length;return {percent:total?Math.round(completed/total*100):0,total,completed};
+}
 
-  document.getElementById('completeLesson').onclick=()=>{
-    completed.add(current); render();
-    if(current<courses[currentCourse].lessons.length-1) current++;
-    render();
-  };
-  document.getElementById('nextLesson').onclick=()=>{
-    if(current<courses[currentCourse].lessons.length-1){current++;render();}
-  };
-  document.getElementById('prevLesson').onclick=()=>{
-    if(current>0){current--;render();}
-  };
+async function loadGrades(){
+  if(!sb)return;
+  const r=await sb.from('grades').select('id,name,stage,sort_order,is_active').eq('is_active',true).order('sort_order',{ascending:true});
+  if(r.error){$('gradeLoadStatus').textContent='Supabase error';$('gradeGrid').innerHTML='<div class="empty">Could not load grades: '+esc(r.error.message)+'</div>';return}
+  grades=r.data||[];$('gradeLoadStatus').textContent=grades.length+' grades';renderGrades(grades);await refreshStudentState();
+}
+function renderGrades(list){
+  if(!list.length){$('gradeGrid').innerHTML='<div class="empty">No grades are currently published.</div>';return}
+  $('gradeGrid').innerHTML=list.map(g=>{const price=GRADE_PRICES[g.name]||{monthly:0,annual:0};return '<article class="card grade" data-grade-search="'+esc((g.name+' '+g.stage+' grammar vocabulary reading writing listening quizzes homework').toLowerCase())+'"><div class="grade-cover"><div><div class="stage">'+esc(g.stage)+'</div><strong>'+esc(g.name)+'</strong></div><span class="pill">English</span></div><div class="grade-body"><h3>English — '+esc(g.name)+'</h3><p>Grammar, vocabulary, reading, writing, listening, quizzes, homework and exam practice.</p><div class="grade-meta"><span>Monthly: '+price.monthly+' EGP</span><span>Annual: '+price.annual+' EGP</span></div><div class="grade-actions"><button class="btn primary" onclick="domaOpenGrade('+JSON.stringify(g.name)+')">Open Grade →</button><button class="btn secondary" onclick="showGradeInfo('+JSON.stringify(g.name)+')">Details</button></div></div></article>'}).join('');
+}
+function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim();const stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const okQ=!q||card.dataset.gradeSearch.includes(q);const text=card.dataset.gradeSearch;const okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'block':'none'})}
+function showGradeInfo(name){const price=GRADE_PRICES[name];$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Choose an access period. Payment is through Mobile Cash, then you upload your receipt for admin review.';$('gradeModalBody').innerHTML='<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>'+price.monthly+' EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick="domaStartSubscription('+JSON.stringify(name)+',\'monthly\')">Choose Monthly</button></div><div class="card feature"><span class="pill">Annual</span><h3>'+price.annual+' EGP</h3><p>12 months access after approval.</p><button class="btn primary" onclick="domaStartSubscription('+JSON.stringify(name)+',\'annual\')">Choose Annual</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Published lessons, quizzes, homework, results, progress and certificates.</p><button class="btn secondary" onclick="domaOpenGrade('+JSON.stringify(name)+')">Continue →</button></div></div>';$('gradeModal').classList.add('show')}
 
-  // Hook existing course buttons/cards without changing the original markup.
-  document.querySelectorAll('button,a,.course-card,.card').forEach(el=>{
-    const text=(el.textContent||'').trim();
-    const match=Object.keys(courses).find(n=>text.includes(n));
-    if(match && !el.dataset.domaCourseHook){
-      el.dataset.domaCourseHook='1';
-      el.addEventListener('click',e=>{
-        const href=el.getAttribute('href');
-        if(href && href!=='#') return;
-        e.preventDefault(); openCourse(match);
-      });
-    }
-  });
+async function domaOpenGrade(name){
+  pendingGradeName=name;
+  if(!sessionUser){openAuth('signup');return}
+  await domaStartSubscription(name,'monthly');
+}
+async function domaStartSubscription(name,plan){
+  pendingGradeName=name;selectedPlan=plan;closeGradeModal();
+  if(!sessionUser){openAuth('login');return}
+  const grade=grades.find(g=>g.name===name);if(!grade){showToast('Grade is not available right now.');return}
+  const subs=await getActiveSubscriptions();const active=subs.find(s=>s.grade_id===grade.id);
+  const reqs=await getPendingRequests();const pending=reqs.find(r=>r.grade_id===grade.id&&r.status==='pending');
+  if(active){currentGrade=grade;currentSubscription=active;await openStudentAreaForGrade(grade,active);return}
+  $('gradeModalTitle').textContent='Subscribe — '+name;$('gradeModalText').textContent='Send the selected amount to Mobile Cash and upload the receipt.';
+  const price=(GRADE_PRICES[name]||{})[plan]||0;
+  $('gradeModalBody').innerHTML='<div class="card feature"><div class="formgrid"><div class="card feature"><span class="pill">Selected grade</span><h3 style="margin-top:7px">'+esc(name)+'</h3></div><div class="card feature"><span class="pill">Selected plan</span><h3 style="margin-top:7px">'+esc(plan==='monthly'?'Monthly':'Annual')+' — '+price+' EGP</h3></div><div class="card feature full"><span class="pill">Mobile Cash</span><h3 style="font-size:26px;margin-top:5px">'+MOBILE_CASH+'</h3><p>Send '+price+' EGP to this number, then upload a clear receipt image.</p></div><input id="domaSenderPhone" class="field" placeholder="Mobile Cash sender number"><input id="domaReceipt" class="field" type="file" accept="image/*"></div><div id="subStatus" class="status"></div><div class="account-actions"><button class="btn secondary" onclick="closeGradeModal()">Cancel</button><button class="btn primary" onclick="domaSubmitSubscription()">Submit Payment Request</button></div></div>'+(pending?'<div class="notice">You already have a pending request for this grade from '+fmtDate(pending.created_at)+'. You can wait for admin review.</div>':'');
+  $('gradeModal').classList.add('show');
+}
+async function domaSubmitSubscription(){
+  if(!sessionUser){showStatus('subStatus','Please log in first.','error');return}
+  const file=$('domaReceipt')?.files?.[0],phone=$('domaSenderPhone')?.value.trim()||'';
+  if(!file){showStatus('subStatus','Please upload the payment receipt.','error');return}
+  if(!phone){showStatus('subStatus','Please enter the Mobile Cash sender number.','error');return}
+  if(file.size>5*1024*1024){showStatus('subStatus','Receipt must be 5 MB or less.','error');return}
+  const grade=grades.find(g=>g.name===pendingGradeName);if(!grade){showStatus('subStatus','Grade could not be found.','error');return}
+  const price=(GRADE_PRICES[pendingGradeName]||{})[selectedPlan]||0;
+  showStatus('subStatus','Checking grade and uploading receipt…');
+  const path=sessionUser.id+'/'+crypto.randomUUID()+'.'+((file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg');
+  const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});
+  if(up.error){showStatus('subStatus','Receipt upload failed: '+up.error.message,'error');return}
+  const profile=await getProfile();
+  const ins=await sb.from('subscription_requests').insert({student_id:sessionUser.id,grade_id:grade.id,plan:selectedPlan,amount:price,student_name:profile?.full_name||sessionUser.user_metadata?.full_name||'DOMA Student',student_phone:phone,student_email:sessionUser.email||profile?.email||'',proof_path:path,status:'pending'});
+  if(ins.error){await sb.storage.from('payment-proofs').remove([path]);showStatus('subStatus','Request failed: '+ins.error.message,'error');return}
+  showStatus('subStatus','Request submitted successfully. Your request is now Pending. Access will activate after admin approval.','success');
+  $('domaReceipt').value='';$('domaSenderPhone').value='';await refreshStudentState();showToast('Payment request submitted.');
+}
 
-  // Expose for any future course cards.
-  window.DOMAAcademyOpenCourse=openCourse;
-})();
-</script>
+async function verifyGradeAccess(gradeId){
+  if(!sessionUser||!sb)return null;
+  const subs=await getActiveSubscriptions();const sub=subs.find(s=>s.grade_id===gradeId);if(!sub)return null;return sub;
+}
+async function openStudentAreaForGrade(grade,sub){
+  currentGrade=grade;currentSubscription=sub;currentStudentView='overview';updateStudentShell();await openDrawer('overview');
+}
+function updateStudentShell(){
+  const p=window.domaStudentProfile||{};$('userCard').innerHTML='<strong>'+esc(p.full_name||sessionUser?.email||'Student')+'</strong><span>'+esc(p.email||sessionUser?.email||'')+'</span><span style="margin-top:6px;color:#b35a70">'+esc(currentGrade?.name||'No grade selected')+'</span>';
+}
+async function openDrawer(view='overview'){
+  if(!sessionUser){openAuth('login');return}
+  await refreshStudentState();updateStudentShell();$('drawer').classList.add('show');await studentView(view);
+}
+function closeDrawer(){$('drawer').classList.remove('show')}
 
+async function studentView(view){
+  currentStudentView=view;document.querySelectorAll('.side-link[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  const titles={overview:['Overview','Your English learning command center.'],lessons:['Lessons','Published lessons for your active grade.'],quizzes:['Quizzes','Practice and check your understanding.'],homework:['Homework','Assignments and submissions.'],certificates:['Certificates','Your issued completion certificates.'],notifications:['Notifications','Important updates from DOMA ACADEMY.'],profile:['Profile','Manage your student account.']};
+  $('drawerTitle').textContent=titles[view][0];$('drawerSubtitle').textContent=titles[view][1];
+  $('drawerBody').innerHTML='<div class="empty">Loading…</div>';
+  if(view==='overview')await renderStudentOverview();
+  if(view==='lessons')await renderStudentLessons();
+  if(view==='quizzes')await renderStudentQuizzes();
+  if(view==='homework')await renderStudentHomework();
+  if(view==='certificates')await renderStudentCertificates();
+  if(view==='notifications')await renderStudentNotifications();
+  if(view==='profile')await renderStudentProfile();
+}
 
+async function ensureActiveGrade(){
+  if(!sessionUser)return null;
+  const profile=await getProfile();
+  const subs=await getActiveSubscriptions();
+  const profileGrade=profile?.grade_id?grades.find(g=>g.id===profile.grade_id):null;
+  if(profileGrade){const sub=subs.find(s=>s.grade_id===profileGrade.id);if(sub){currentGrade=profileGrade;currentSubscription=sub;return {grade:profileGrade,sub}}}
+  if(subs.length){const s=subs[0],g=grades.find(x=>x.id===s.grade_id);if(g){currentGrade=g;currentSubscription=s;return {grade:g,sub:s}}}
+  return null;
+}
 
-<!-- DOMA ACADEMY — REAL STUDENT AUTH + SUBSCRIPTIONS -->
-<style id="doma-subscription-styles">
-.doma-sub-modal{position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(8px);z-index:12000;display:none;align-items:center;justify-content:center;padding:18px;overflow:auto}.doma-sub-modal.show{display:flex}.doma-sub-box{width:min(760px,100%);max-height:92vh;overflow:auto;background:#100a0d;border:1px solid #5a2534;border-radius:20px;box-shadow:0 30px 100px rgba(0,0,0,.65);padding:24px}.doma-sub-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.doma-sub-head h3{font-size:26px;margin:3px 0 7px}.doma-sub-head p{color:#94878b;font-size:12px}.doma-sub-close{background:none;border:0;color:#aaa;font-size:28px;cursor:pointer}.doma-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.doma-sub-card{border:1px solid #321b23;background:#160e11;border-radius:14px;padding:17px;cursor:pointer}.doma-sub-card.selected{border-color:#b13d58;background:#241117;box-shadow:0 0 0 1px #7b2940}.doma-sub-card h4{margin:0 0 6px}.doma-sub-price{font-size:25px;font-weight:900}.doma-sub-muted{font-size:11px;color:#8e8387}.doma-pay{border:1px solid #342027;background:#0c090a;border-radius:14px;padding:17px;margin-top:12px}.doma-pay strong{color:#d98b9d}.doma-sub-form{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px}.doma-sub-field{background:#090909;color:#fff;border:1px solid #342027;border-radius:9px;padding:12px;width:100%;outline:none}.doma-sub-full{grid-column:1/-1}.doma-sub-status{display:none;margin-top:13px;padding:12px;border-radius:10px;background:#211016;border:1px solid #5a2534;color:#ddd;font-size:12px}.doma-sub-status.show{display:block}.doma-sub-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}.doma-sub-help{color:#777;font-size:10px;margin-top:8px}.doma-auth-switch{margin-top:12px;color:#888;font-size:11px}.doma-auth-switch button{background:none;border:0;color:#d98b9d;cursor:pointer;padding:0}.doma-user-badge{display:none}
-@media(max-width:600px){.doma-plan-grid,.doma-sub-form{grid-template-columns:1fr}.doma-sub-full{grid-column:auto}.doma-sub-box{padding:17px}}
-</style>
-
-<div class="doma-sub-modal" id="domaSubModal">
-  <div class="doma-sub-box">
-    <div class="doma-sub-head">
-      <div><div class="eyebrow">DOMA ACADEMY • ACCESS</div><h3 id="domaSubTitle">Subscribe</h3><p>Choose your access period, pay through Mobile Cash, and upload the payment receipt.</p></div>
-      <button class="doma-sub-close" onclick="domaCloseSub()">×</button>
-    </div>
-    <div id="domaPlanGrid" class="doma-plan-grid"></div>
-    <div class="doma-pay"><strong>Mobile Cash payment</strong><div style="font-size:22px;font-weight:900;margin-top:5px">01006525147</div><div class="doma-sub-help">Send the selected amount to this number, then upload a clear screenshot/photo of your receipt.</div></div>
-    <div class="doma-sub-form">
-      <input id="domaSenderPhone" class="doma-sub-field" placeholder="Mobile Cash sender number">
-      <input id="domaReceipt" class="doma-sub-field" type="file" accept="image/*">
-    </div>
-    <div id="domaSubStatus" class="doma-sub-status"></div>
-    <div class="doma-sub-actions"><button class="btn secondary" onclick="domaCloseSub()">Cancel</button><button class="btn primary" onclick="domaSubmitSubscription()">Submit Payment Request</button></div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script id="doma-real-auth-subscriptions">
-(function(){
-  const URL='https://dtptxhkcogpoleftguas.supabase.co';
-  const KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-  const PHONE='01006525147';
-  const PRICES={
-    '1st Preparatory':{monthly:150,annual:150},
-    '2nd Preparatory':{monthly:200,annual:200},
-    '3rd Preparatory':{monthly:250,annual:250},
-    '1st Secondary':{monthly:150,annual:150},
-    '2nd Secondary':{monthly:200,annual:200},
-    '3rd Secondary':{monthly:250,annual:250}
-  };
-  let sb=null, ready=null, selectedGrade='', selectedPlan='monthly', pendingGrade=null;
-  try{sb=supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});ready=sb.auth.getSession().catch(()=>null);}catch(e){console.error(e)}
-
-  function status(msg,show=true){const el=document.getElementById('domaSubStatus');if(!el)return;el.textContent=msg||'';el.classList.toggle('show',show)}
-  async function user(){
-    if(!sb)return null;
-    try{if(ready)await ready;let r=await sb.auth.getSession();if(r.data&&r.data.session&&r.data.session.user)return r.data.session.user;r=await sb.auth.getUser();return r.data&&r.data.user?r.data.user:null}catch(e){console.error(e);return null}
+async function renderStudentOverview(){
+  const access=await ensureActiveGrade();const p=window.domaStudentProfile||await getProfile();
+  if(!access){
+    const reqs=await getPendingRequests();
+    $('drawerBody').innerHTML='<div class="workspace-grid"><div class="card workspace-card"><span class="pill">Account</span><h3>'+esc(p?.full_name||'Student')+'</h3><p>'+esc(p?.email||sessionUser?.email||'')+'</p></div><div class="card workspace-card"><span class="pill">Grade</span><h3>'+(p?.grade_id?(grades.find(g=>g.id===p.grade_id)?.name||'Selected grade'):'Not selected')+'</h3><p>Choose a grade from the public Grades section to request access.</p></div><div class="card workspace-card"><span class="pill">Access</span><h3>'+ (reqs.find(r=>r.status==='pending')?'Pending review':'Not active')+'</h3><p>'+(reqs.find(r=>r.status==='pending')?'Your latest payment request is waiting for admin approval.':'No active subscription was found.')+'</p></div></div><div class="notice" style="margin-top:14px">Go to <a href="#grades" onclick="closeDrawer()" style="color:#d98ea0">Grades</a> to select your grade and submit a payment request.</div>';
+    return;
   }
-  window.domaEnsureUser=user;
-  window.domaCloseSub=()=>document.getElementById('domaSubModal')?.classList.remove('show');
-  window.domaChoosePlan=function(plan){selectedPlan=plan;document.querySelectorAll('.doma-sub-card').forEach(x=>x.classList.remove('selected'));document.getElementById(plan==='monthly'?'domaPlanMonthly':'domaPlanAnnual')?.classList.add('selected')};
+  const progress=await getGradeProgress(access.grade.id);const overview=await getStudentOverview();const reqs=await getPendingRequests();
+  $('drawerBody').innerHTML='<div class="workspace-grid"><div class="card workspace-card"><span class="pill">Active grade</span><h3>'+esc(access.grade.name)+'</h3><p>Access until '+fmtDate(access.sub.expires_at)+' • '+esc(access.sub.plan)+'</p></div><div class="card workspace-card"><span class="pill">Progress</span><h3>'+progress.percent+'%</h3><p>'+progress.completed+' of '+progress.total+' published lessons completed.</p></div><div class="card workspace-card"><span class="pill">Learning</span><h3>'+overview.completedLessons+' lessons</h3><p>'+overview.quizAttempts+' quiz attempts • '+overview.certificates+' certificates</p></div></div><div class="card dash" style="margin-top:15px"><h3>Continue your English learning</h3><div class="progress-item"><div class="cp"><span>'+esc(access.grade.name)+'</span><b>'+progress.percent+'%</b></div><div class="bar"><i style="width:'+progress.percent+'%"></i></div></div><div class="account-actions"><button class="btn primary" onclick="studentView(\'lessons\')">Open Lessons →</button><button class="btn secondary" onclick="studentView(\'quizzes\')">Take a Quiz</button><button class="btn secondary" onclick="studentView(\'homework\')">Open Homework</button></div></div>'+(reqs.find(r=>r.status==='approved')?'<div class="notice">A previous subscription request was approved successfully.</div>':'');
+}
 
-  async function openSub(grade){
-    selectedGrade=grade;selectedPlan='monthly';
-    const prices=PRICES[grade];if(!prices){alert('This grade has no configured price.');return}
-    document.getElementById('domaSubTitle').textContent='Subscribe — '+grade;
-    document.getElementById('domaPlanGrid').innerHTML='<div id="domaPlanMonthly" class="doma-sub-card selected" onclick="domaChoosePlan(\'monthly\')"><h4>Monthly</h4><div class="doma-sub-price">'+prices.monthly+' EGP</div><div class="doma-sub-muted">30 days access</div></div><div id="domaPlanAnnual" class="doma-sub-card" onclick="domaChoosePlan(\'annual\')"><h4>Annual</h4><div class="doma-sub-price">'+prices.annual+' EGP</div><div class="doma-sub-muted">12 months access</div></div>';
-    document.getElementById('domaSubModal').classList.add('show');status('',false);
-    const u=await user();if(!u){status('You need a student account first. Use Log In or Get Started, then select this grade again.');return}
-    if(sb){const r=await sb.from('subscriptions').select('status,expires_at,grades(name)').eq('student_id',u.id).eq('status','active');if(!r.error){const a=(r.data||[]).find(x=>x.grades?.name===grade&&new Date(x.expires_at)>new Date());if(a)status('You already have active access to this grade until '+new Date(a.expires_at).toLocaleDateString()+'.')}}
-  }
-  window.domaOpenGrade=async function(grade){pendingGrade=grade;const u=await user();if(!u){window.domaPendingGrade=grade;domaCloseSub();openAuth('signup',grade);return}await openSub(grade)};
+async function renderStudentLessons(){
+  const access=await ensureActiveGrade();if(!access){$('drawerBody').innerHTML='<div class="empty">No active grade subscription. Choose a grade and request access first.</div>';return}
+  const l=await sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order').eq('grade_id',access.grade.id).eq('is_published',true).order('sort_order',{ascending:true});
+  if(l.error){$('drawerBody').innerHTML='<div class="empty">Could not load lessons: '+esc(l.error.message)+'</div>';return}
+  currentLessons=l.data||[];if(!currentLessons.length){$('drawerBody').innerHTML='<div class="empty">No published lessons are available for '+esc(access.grade.name)+' yet.</div>';return}
+  const p=await sb.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',sessionUser.id);const prog=new Map((p.data||[]).map(x=>[x.lesson_id,x]));currentLessonIndex=Math.min(currentLessonIndex,currentLessons.length-1);renderLessonWorkspace(prog);
+}
+function renderLessonWorkspace(prog=new Map()){
+  const l=currentLessons[currentLessonIndex];const pct=Math.round((currentLessons.filter(x=>prog.get(x.id)?.completed).length/currentLessons.length)*100);
+  $('drawerBody').innerHTML='<div class="lesson-view"><div class="card lesson-player"><div class="lesson-content"><div class="pill">'+esc(l.lesson_type||'lesson')+' • '+esc(currentGrade?.name||'')+'</div><div class="video-wrap" style="margin-top:12px">'+(l.video_url?'<video controls preload="metadata" src="'+esc(l.video_url)+'"></video>':'<div class="video-placeholder"><b>▶</b><div>No video URL has been published for this lesson.</div><small>Use the Admin page to add a video URL when ready.</small></div>')+'</div><h3>'+esc(l.title)+'</h3><p>'+(esc(l.description||l.content||'Follow the lesson, study the material, then mark it complete.'))+'</p><div class="lesson-bottom"><div><span class="pill">'+(l.duration_minutes||0)+' min</span><span class="pill" style="margin-left:5px">Overall '+pct+'%</span></div><div class="lesson-actions"><button class="btn secondary" onclick="changeLesson(-1)">← Previous</button><button class="btn primary" onclick="completeCurrentLesson()">Mark Complete</button><button class="btn secondary" onclick="changeLesson(1)">Next →</button></div></div><div class="resource-row"><span class="resource">Lesson type: '+esc(l.lesson_type||'lesson')+'</span><button class="resource" onclick="studentView(\'quizzes\')">🧠 Open Quizzes</button><button class="resource" onclick="studentView(\'homework\')">☰ Homework</button></div></div></div><aside class="card lesson-list"><h3 style="font-size:15px;margin-bottom:10px">Curriculum</h3>'+currentLessons.map((x,i)=>'<button class="lesson-btn '+(i===currentLessonIndex?'active':'')+'" onclick="selectLesson('+i+')"><span class="lesson-num">'+(prog.get(x.id)?.completed?'✓':(i+1))+'</span><span><strong>'+esc(x.title)+'</strong><small style="display:block;color:#777;font-size:9px;margin-top:2px">'+esc(x.lesson_type||'lesson')+' • '+(x.duration_minutes||0)+' min</small></span></button>').join('')+'</aside></div>';
+}
+async function selectLesson(i){currentLessonIndex=i;await renderStudentLessons()}
+async function changeLesson(delta){const n=currentLessonIndex+delta;if(n>=0&&n<currentLessons.length){currentLessonIndex=n;await renderStudentLessons()}}
+async function completeCurrentLesson(){
+  const l=currentLessons[currentLessonIndex];if(!l||!sessionUser)return;const r=await sb.from('lesson_progress').upsert({student_id:sessionUser.id,lesson_id:l.id,completed:true,progress_percent:100,last_opened_at:new Date().toISOString(),completed_at:new Date().toISOString()},{onConflict:'student_id,lesson_id'});if(r.error){showToast('Could not save lesson progress: '+r.error.message);return}showToast('Lesson marked complete.');if(currentLessonIndex<currentLessons.length-1)currentLessonIndex++;await renderStudentLessons();await refreshStudentState()
+}
 
-  async function submit(){
-    const u=await user();if(!u){status('Please log in first.');return}
-    const file=document.getElementById('domaReceipt').files[0], phone=document.getElementById('domaSenderPhone').value.trim();
-    if(!file){status('Please upload the payment receipt.');return} if(!phone){status('Please enter the Mobile Cash sender number.');return} if(file.size>5*1024*1024){status('Receipt must be 5 MB or less.');return}
-    status('Checking grade and uploading receipt…');
-    const g=await sb.from('grades').select('id,name').eq('name',selectedGrade).single();if(g.error){status('Grade lookup failed: '+g.error.message);return}
-    const amount=PRICES[selectedGrade][selectedPlan], ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg', path=u.id+'/'+crypto.randomUUID()+'.'+ext;
-    const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});if(up.error){status('Receipt upload failed: '+up.error.message);return}
-    let profile=null;try{const p=await sb.from('profiles').select('full_name,email').eq('id',u.id).maybeSingle();profile=p.data||null}catch(e){}
-    const ins=await sb.from('subscription_requests').insert({student_id:u.id,grade_id:g.data.id,plan:selectedPlan,amount,student_name:profile?.full_name||u.user_metadata?.full_name||'DOMA Student',student_phone:phone,student_email:u.email||profile?.email||'',proof_path:path,status:'pending'});
-    if(ins.error){await sb.storage.from('payment-proofs').remove([path]);status('Request failed: '+ins.error.message);return}
-    status('Request submitted successfully. Your request is now Pending. Access will activate after admin approval.');document.getElementById('domaReceipt').value='';document.getElementById('domaSenderPhone').value='';
-  }
-  window.domaSubmitSubscription=submit;
+async function renderStudentQuizzes(){
+  const access=await ensureActiveGrade();if(!access){$('drawerBody').innerHTML='<div class="empty">No active grade subscription.</div>';return}
+  const r=await sb.from('quizzes').select('id,grade_id,title,description,duration_minutes,is_published,created_at').eq('grade_id',access.grade.id).eq('is_published',true).order('created_at',{ascending:false});
+  if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load quizzes: '+esc(r.error.message)+'</div>';return}
+  currentQuizzes=r.data||[];if(!currentQuizzes.length){$('drawerBody').innerHTML='<div class="empty">No published quizzes are available yet.</div>';return}
+  $('drawerBody').innerHTML='<div class="table-list">'+currentQuizzes.map(q=>'<div class="listrow"><div class="listrow-main"><strong>'+esc(q.title)+'</strong><span>'+esc(q.description||'Test your understanding.')+' • '+(q.duration_minutes||20)+' min</span></div><button class="btn primary" onclick="startQuiz('+JSON.stringify(q.id)+')">Start Quiz →</button></div>').join('')+'</div>';
+}
+async function startQuiz(id){
+  const q=currentQuizzes.find(x=>x.id===id);if(!q)return;const r=await sb.from('quiz_questions').select('id,quiz_id,question,options,correct_answer,points,sort_order').eq('quiz_id',id).order('sort_order',{ascending:true});if(r.error){showToast('Could not load quiz questions: '+r.error.message);return}const qs=r.data||[];if(!qs.length){showToast('This quiz has no questions yet.');return}currentQuiz={quiz:q,questions:qs};renderQuizPage();
+}
+function renderQuizPage(){const q=currentQuiz.quiz,qs=currentQuiz.questions;$('drawerTitle').textContent=q.title;$('drawerSubtitle').textContent=(q.description||'Quiz')+' • '+(q.duration_minutes||20)+' min';$('drawerBody').innerHTML='<div class="card quiz-box"><div class="notice">Choose one answer for each question. Your score is saved to your student account after submission.</div><form id="quizForm">'+qs.map((x,i)=>{let opts=Array.isArray(x.options)?x.options:[];if(!opts.length&&typeof x.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}return '<div class="question"><h4>'+((i+1)+'. ')+esc(x.question)+'</h4>'+opts.map((o,j)=>'<label class="option"><input type="radio" name="q_'+esc(x.id)+'" value="'+esc(String(o))+'"> <span>'+esc(String(o))+'</span></label>').join('')+'</div>'}).join('')+'</form><div class="account-actions"><button class="btn secondary" onclick="studentView(\'quizzes\')">← Back to Quizzes</button><button class="btn primary" onclick="submitQuiz()">Submit Quiz</button></div><div id="quizResult"></div></div>'}
+async function submitQuiz(){
+  if(!currentQuiz)return;const answers={};let score=0,total=0;for(const q of currentQuiz.questions){const selected=document.querySelector('input[name="q_'+CSS.escape(q.id)+'"]:checked');const ans=selected?selected.value:'';answers[q.id]=ans;const pts=Number(q.points||1);total+=pts;if(ans&&String(ans)===String(q.correct_answer))score+=pts}const percent=total?Math.round(score/total*100):0;const r=await sb.from('quiz_attempts').insert({quiz_id:currentQuiz.quiz.id,student_id:sessionUser.id,score:percent,total_points:total,answers,submitted_at:new Date().toISOString()});if(r.error){$('quizResult').innerHTML='<div class="scorebox">Could not save result: '+esc(r.error.message)+'</div>';return}$('quizResult').innerHTML='<div class="scorebox"><strong>Result: '+percent+'%</strong><p style="margin-top:5px;color:#aaa">Your attempt has been saved. You can review your score in the student area.</p></div>';showToast('Quiz submitted.');await refreshStudentState()}
 
-  function openAuth(type,grade){
-    pendingGrade=grade||pendingGrade;const modal=document.getElementById('modal'),title=document.getElementById('modalTitle'),text=document.getElementById('modalText'),body=document.getElementById('modalBody');
-    if(type==='signup'){title.textContent='Create your DOMA ACADEMY account';text.textContent='Create an account first, then you will return to '+(pendingGrade||'your selected grade')+' subscription.';body.innerHTML='<div class="formgrid"><input id="domaSignupName" class="field" placeholder="Full name"><input id="domaSignupEmail" class="field" placeholder="Email address"><input id="domaSignupPass" class="field full" type="password" placeholder="Password — at least 6 characters"><button class="btn primary full" onclick="domaSignup()">Create Account & Continue →</button><div class="doma-auth-switch full">Already have an account? <button onclick="domaOpenLogin()">Log in</button></div></div>'}
-    else{title.textContent='Log in to DOMA ACADEMY';text.textContent='Log in and continue to your selected grade.';body.innerHTML='<div class="formgrid"><input id="domaLoginEmail" class="field" placeholder="Email address"><input id="domaLoginPass" class="field" type="password" placeholder="Password"><button class="btn primary full" onclick="domaLogin()">Log In & Continue →</button><div class="doma-auth-switch full">New student? <button onclick="domaOpenSignup()">Create an account</button></div></div>'}
-    modal.classList.add('show');
-  }
-  window.domaOpenLogin=()=>{const g=pendingGrade||window.domaPendingGrade;pendingGrade=g;openAuth('login',g)};
-  window.domaOpenSignup=()=>{const g=pendingGrade||window.domaPendingGrade;pendingGrade=g;openAuth('signup',g)};
-  window.domaLogin=async function(){const e=document.getElementById('domaLoginEmail')?.value.trim(),p=document.getElementById('domaLoginPass')?.value||'';if(!e||!p){alert('Enter email and password.');return}const r=await sb.auth.signInWithPassword({email:e,password:p});if(r.error){alert(r.error.message);return}closeModal();const g=pendingGrade||window.domaPendingGrade;pendingGrade=null;window.domaPendingGrade=null;showToast('Welcome back to DOMA ACADEMY.');if(g)setTimeout(()=>openSub(g),100)};
-  window.domaSignup=async function(){const n=document.getElementById('domaSignupName')?.value.trim(),e=document.getElementById('domaSignupEmail')?.value.trim(),p=document.getElementById('domaSignupPass')?.value||'';if(!n||!e||p.length<6){alert('Enter your name, email, and a password of at least 6 characters.');return}const r=await sb.auth.signUp({email:e,password:p,options:{data:{full_name:n}}});if(r.error){alert(r.error.message);return}let session=r.data?.session,user=r.data?.user;if(!session){const l=await sb.auth.signInWithPassword({email:e,password:p});if(!l.error){session=l.data?.session;user=l.data?.user}}if(!session){alert('Account created, but no session was returned. In Supabase turn OFF Authentication → Providers → Email → Confirm email, then create a new account.');return}if(user){await sb.from('profiles').upsert({id:user.id,full_name:n,email:e},{onConflict:'id'})}closeModal();const g=pendingGrade||window.domaPendingGrade;pendingGrade=null;window.domaPendingGrade=null;showToast('Account created successfully.');if(g)setTimeout(()=>openSub(g),100)};
+async function renderStudentHomework(){
+  const access=await ensureActiveGrade();if(!access){$('drawerBody').innerHTML='<div class="empty">No active grade subscription.</div>';return}
+  const r=await sb.from('homework').select('id,grade_id,title,description,due_at,is_published,created_at').eq('grade_id',access.grade.id).eq('is_published',true).order('due_at',{ascending:true,nullsFirst:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load homework: '+esc(r.error.message)+'</div>';return}currentHomework=r.data||[];
+  const s=await sb.from('homework_submissions').select('homework_id,status,grade,feedback,submitted_at').eq('student_id',sessionUser.id);const sm=new Map((s.data||[]).map(x=>[x.homework_id,x]));
+  if(!currentHomework.length){$('drawerBody').innerHTML='<div class="empty">No published homework is available yet.</div>';return}
+  $('drawerBody').innerHTML='<div class="table-list">'+currentHomework.map(h=>{const x=sm.get(h.id);return '<div class="card hw-card"><h3>'+esc(h.title)+'</h3><p>'+esc(h.description||'Complete the assignment and submit your answer.')+'</p><div class="hw-meta"><span class="pill">Due '+fmtDate(h.due_at)+'</span>'+(x?'<span class="pill">'+esc(x.status)+'</span>':'<span class="pill">Not submitted</span>')+(x&&x.grade!==null?'<span class="pill">Grade '+esc(x.grade)+'</span>':'')+'</div>'+(x&&x.feedback?'<div class="notice">Feedback: '+esc(x.feedback)+'</div>':'')+'<div class="account-actions"><button class="btn primary" onclick="openHomework('+JSON.stringify(h.id)+')">'+(x?'Update Submission':'Submit Homework')+' →</button></div></div>'}).join('')+'</div>';
+}
+async function openHomework(id){const h=currentHomework.find(x=>x.id===id);if(!h)return;const existing=await sb.from('homework_submissions').select('answer_text').eq('homework_id',id).eq('student_id',sessionUser.id).maybeSingle();const answer=existing.data?.answer_text||'';$('modalTitle').textContent=h.title;$('modalText').textContent='Submit your answer for this homework.';$('modalBody').innerHTML='<textarea id="hwAnswer" class="field full" rows="8" placeholder="Write your answer here…">'+esc(answer)+'</textarea><div id="hwStatus" class="status full"></div><div class="account-actions"><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="submitHomework('+JSON.stringify(id)+')">Save Submission</button></div>';$('modal').classList.add('show')}
+async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';if(!answer){showStatus('hwStatus','Write an answer before submitting.','error');return}const r=await sb.from('homework_submissions').upsert({homework_id:id,student_id:sessionUser.id,answer_text:answer,status:'submitted',submitted_at:new Date().toISOString()},{onConflict:'homework_id,student_id'});if(r.error){showStatus('hwStatus',r.error.message,'error');return}closeModal();showToast('Homework submitted successfully.');await renderStudentHomework()}
 
-  // Override only the auth modal behavior; the rest of the original full homepage remains unchanged.
-  const oldOpen=window.openModal;
-  window.openModal=function(type){if(type==='login'){openAuth('login',window.domaPendingGrade||null);return}if(type==='signup'){openAuth('signup',window.domaPendingGrade||null);return}oldOpen(type)};
-  sb?.auth.onAuthStateChange(()=>{});
-})();
+async function renderStudentCertificates(){
+  const r=await sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',sessionUser.id).order('issued_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load certificates: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];if(!rows.length){$('drawerBody').innerHTML='<div class="empty">No certificates have been issued yet.</div>';return}$('drawerBody').innerHTML='<div class="cert-grid">'+rows.map(c=>'<div class="cert"><span class="pill">Certificate</span><h3 style="font-size:17px;margin-top:9px">'+esc(c.title)+'</h3><p style="font-size:10px;color:#888;margin-top:5px">Issued '+fmtDate(c.issued_at)+'</p><div class="cert-code">'+esc(c.certificate_code)+'</div></div>').join('')+'</div>'}
+
+async function renderStudentNotifications(){
+  const r=await sb.from('notifications').select('id,title,message,is_read,created_at').eq('student_id',sessionUser.id).order('created_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load notifications: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];if(!rows.length){$('drawerBody').innerHTML='<div class="empty">No notifications yet.</div>';return}$('drawerBody').innerHTML='<div class="table-list">'+rows.map(n=>'<div class="notification '+(!n.is_read?'unread':'')+'"><div style="display:flex;justify-content:space-between;gap:10px"><strong>'+esc(n.title)+'</strong><span class="pill">'+fmtDateTime(n.created_at)+'</span></div><p>'+esc(n.message)+'</p>'+(!n.is_read?'<button class="btn secondary" style="margin-top:8px;padding:7px 10px;font-size:10px" onclick="markNotificationRead('+JSON.stringify(n.id)+')">Mark read</button>':'')+'</div>').join('')+'</div>'}
+async function markNotificationRead(id){const r=await sb.from('notifications').update({is_read:true}).eq('id',id).eq('student_id',sessionUser.id);if(r.error){showToast(r.error.message);return}await renderStudentNotifications()}
+
+async function renderStudentProfile(){const p=await getProfile();const active=await getActiveSubscriptions();const reqs=await getPendingRequests();$('drawerBody').innerHTML='<div class="profile-grid"><div class="card workspace-card"><span class="pill">Full name</span><input id="profileName" class="field" style="margin-top:9px" value="'+esc(p?.full_name||'')+'"></div><div class="card workspace-card"><span class="pill">Email</span><input class="field" style="margin-top:9px" value="'+esc(p?.email||sessionUser?.email||'')+'" disabled></div><div class="card workspace-card full"><span class="pill">My grade</span><select id="profileGrade" class="field" style="margin-top:9px"><option value="">Select grade</option>'+grades.map(g=>'<option value="'+esc(g.id)+'" '+(g.id===p?.grade_id?'selected':'')+'>'+esc(g.name)+'</option>').join('')+'</select></div></div><div id="profileStatus" class="status"></div><div class="account-actions"><button class="btn primary" onclick="saveProfile()">Save Profile</button><button class="btn secondary" onclick="refreshStudentState();studentView(\'overview\')">Refresh Dashboard</button></div><div class="notice" style="margin-top:15px">Active subscriptions: '+active.length+' • Requests: '+reqs.length+'</div>'}
+async function saveProfile(){const name=$('profileName')?.value.trim()||'',gradeId=$('profileGrade')?.value||null;if(!name){showStatus('profileStatus','Enter your name.','error');return}const r=await sb.from('profiles').update({full_name:name,grade_id:gradeId,updated_at:new Date().toISOString()}).eq('id',sessionUser.id);if(r.error){showStatus('profileStatus',r.error.message,'error');return}showStatus('profileStatus','Profile saved successfully.','success');await refreshStudentState();updateStudentShell()}
+
+async function boot(){
+  try{sb=supabase.createClient(DOMA_URL,DOMA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(e){console.error(e);$('gradeGrid').innerHTML='<div class="empty">Supabase client could not initialize.</div>';return}
+  const s=await sb.auth.getSession();sessionUser=s.data?.session?.user||null;updateNav();
+  sb.auth.onAuthStateChange((_event,session)=>{sessionUser=session?.user||null;updateNav();if(sessionUser){setTimeout(()=>refreshStudentState(),0)}else{renderDashboardLoggedOut()}});
+  await loadGrades();
+}
+window.domaOpenGrade=domaOpenGrade;window.openAuth=openAuth;window.openModal=openModal;window.closeModal=closeModal;window.filterGrades=filterGrades;window.domaSubmitSubscription=domaSubmitSubscription;window.studentView=studentView;window.domaLogout=domaLogout;window.closeDrawer=closeDrawer;window.openDrawer=openDrawer;
+document.addEventListener('DOMContentLoaded',boot);
 </script>
 </body>
 </html>
