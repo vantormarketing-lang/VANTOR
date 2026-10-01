@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="doma-version" content="Complete LMS Front-End v3">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DOMA ACADEMY — Learning Platform</title>
@@ -101,6 +102,39 @@ section{padding:92px 0}.head{text-align:center;margin-bottom:42px}.head .eyebrow
 @media(max-width:850px){
  .course-modal{padding:12px}.course-grid{grid-template-columns:1fr}.player{border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.course-top h2{font-size:25px}
 }
+</style>
+
+
+<style id="doma-complete-styles">
+/* DOMA ACADEMY COMPLETE LMS */
+.doma-toast{position:fixed;right:22px;bottom:22px;z-index:12000;background:#160e11;border:1px solid rgba(192,82,105,.35);color:#fff;padding:13px 17px;border-radius:12px;box-shadow:0 15px 40px #0008;transform:translateY(30px);opacity:0;pointer-events:none;transition:.25s}
+.doma-toast.show{transform:none;opacity:1}
+.doma-overlay{position:fixed;inset:0;background:rgba(0,0,0,.84);z-index:11000;display:none;overflow:auto;padding:18px}
+.doma-overlay.open{display:block}
+.doma-panel{max-width:1180px;margin:20px auto;background:#100a0d;border:1px solid rgba(192,82,105,.28);border-radius:22px;box-shadow:0 30px 90px #000b;overflow:hidden}
+.doma-panel-head{padding:22px 24px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.doma-panel-head h2{margin:0;font-size:26px}.doma-close{border:1px solid #ffffff18;background:#181013;color:#fff;border-radius:10px;width:40px;height:40px;font-size:21px;cursor:pointer}
+.doma-body{padding:24px}.doma-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.doma-tab{border:1px solid #ffffff12;background:#160e11;color:#ddd;padding:10px 13px;border-radius:10px;cursor:pointer}.doma-tab.active{background:#762337;border-color:#9d304a;color:#fff}
+.doma-view{display:none}.doma-view.active{display:block}
+.doma-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.doma-stat{background:#160e11;border:1px solid #ffffff0d;border-radius:15px;padding:18px}.doma-stat b{display:block;font-size:25px;margin-bottom:4px}.doma-muted{color:#a99ca0}
+.doma-card{background:#160e11;border:1px solid #ffffff0d;border-radius:16px;padding:18px}
+.doma-card h3{margin:0 0 7px}.doma-card p{color:#aaa;margin:0 0 12px}
+.doma-two{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
+.doma-list{display:grid;gap:9px}.doma-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#120b0e;border:1px solid #ffffff0a;padding:12px;border-radius:11px}
+.doma-btn{border:0;border-radius:10px;padding:10px 13px;background:#9d304a;color:#fff;font-weight:700;cursor:pointer}.doma-btn.alt{background:#24171b}.doma-btn.success{background:#385c42}.doma-btn.danger{background:#632433}
+.doma-input{width:100%;box-sizing:border-box;background:#0b090a;color:#fff;border:1px solid #ffffff16;border-radius:10px;padding:12px;margin:6px 0 12px;outline:none}
+.doma-input:focus{border-color:#9d304a}.doma-label{font-size:13px;color:#b9adb1}
+.doma-quiz-q{padding:16px;background:#160e11;border-radius:14px;border:1px solid #ffffff0b;margin-bottom:12px}
+.doma-option{display:block;padding:10px;border:1px solid #ffffff0d;border-radius:9px;margin-top:7px;cursor:pointer}.doma-option:hover{border-color:#9d304a}
+.doma-certificate{background:linear-gradient(135deg,#160e11,#251017);border:1px solid #9d304a55;border-radius:18px;padding:28px;text-align:center}
+.doma-cert-seal{width:80px;height:80px;border:2px solid #c05269;border-radius:50%;display:grid;place-items:center;margin:0 auto 15px;font-size:30px}
+.doma-notify{position:relative}.doma-badge{position:absolute;top:-7px;right:-7px;background:#c05269;color:#fff;border-radius:99px;font-size:10px;min-width:17px;height:17px;display:grid;place-items:center}
+.doma-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.doma-day{min-height:72px;padding:8px;background:#160e11;border-radius:9px;border:1px solid #ffffff08}.doma-day b{font-size:12px}.doma-event{font-size:11px;background:#762337;padding:5px;border-radius:6px;margin-top:6px}
+.doma-progress{height:8px;background:#26171c;border-radius:99px;overflow:hidden}.doma-progress span{height:100%;display:block;background:#9d304a}
+.doma-table{width:100%;border-collapse:collapse}.doma-table th,.doma-table td{padding:11px;text-align:left;border-bottom:1px solid #ffffff0b}.doma-table th{color:#bcaeb2;font-size:13px}
+@media(max-width:900px){.doma-grid{grid-template-columns:repeat(2,1fr)}.doma-two{grid-template-columns:1fr}}
+@media(max-width:560px){.doma-grid{grid-template-columns:1fr}.doma-body{padding:16px}.doma-overlay{padding:8px}.doma-panel-head{padding:17px}.doma-calendar{gap:3px}.doma-day{min-height:60px;padding:5px}}
 </style>
 
 </head>
@@ -583,6 +617,276 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='
 
   // Expose for any future course cards.
   window.DOMAAcademyOpenCourse=openCourse;
+})();
+</script>
+
+
+<div id="domaToast" class="doma-toast"></div>
+
+<!-- Complete LMS Hub -->
+<div class="doma-overlay" id="domaHub" aria-hidden="true">
+ <div class="doma-panel">
+  <div class="doma-panel-head">
+   <div><div class="eyebrow">DOMA ACADEMY</div><h2 id="hubTitle">Student Dashboard</h2></div>
+   <button class="doma-close" data-close-hub>×</button>
+  </div>
+  <div class="doma-body">
+   <div class="doma-tabs">
+    <button class="doma-tab active" data-view="dashboard">Dashboard</button>
+    <button class="doma-tab" data-view="profile">Profile</button>
+    <button class="doma-tab" data-view="wishlist">Wishlist</button>
+    <button class="doma-tab" data-view="certificates">Certificates</button>
+    <button class="doma-tab" data-view="calendar">Calendar</button>
+    <button class="doma-tab" data-view="notifications">Notifications</button>
+    <button class="doma-tab" data-view="community">Community</button>
+   </div>
+
+   <section class="doma-view active" data-section="dashboard">
+    <div class="doma-grid">
+     <div class="doma-stat"><b id="statCourses">3</b><span class="doma-muted">Active courses</span></div>
+     <div class="doma-stat"><b id="statCompleted">0</b><span class="doma-muted">Completed courses</span></div>
+     <div class="doma-stat"><b id="statHours">24h</b><span class="doma-muted">Learning time</span></div>
+     <div class="doma-stat"><b id="statCerts">0</b><span class="doma-muted">Certificates</span></div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="doma-two">
+     <div class="doma-card">
+      <h3>Continue learning</h3><p id="continueText">Pick up where you left off.</p>
+      <div class="doma-progress"><span id="dashProgress" style="width:0%"></span></div>
+      <div style="height:12px"></div><button class="doma-btn" id="continueBtn">Continue course</button>
+     </div>
+     <div class="doma-card"><h3>Weekly goal</h3><p>Keep your learning streak moving.</p>
+      <div class="doma-progress"><span style="width:68%"></span></div>
+      <p style="margin-top:10px">4 of 6 hours completed</p>
+     </div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="doma-card"><h3>My learning</h3><div class="doma-list" id="myLearningList"></div></div>
+   </section>
+
+   <section class="doma-view" data-section="profile">
+    <div class="doma-two">
+     <div class="doma-card">
+      <h3>Student profile</h3>
+      <label class="doma-label">Full name</label><input class="doma-input" id="profileName" value="Doma Student">
+      <label class="doma-label">Email</label><input class="doma-input" id="profileEmail" value="student@example.com">
+      <label class="doma-label">Learning goal</label><input class="doma-input" id="profileGoal" value="Build practical career skills">
+      <button class="doma-btn" id="saveProfile">Save profile</button>
+     </div>
+     <div class="doma-card"><h3>Account</h3><p>Membership: <b>Pro Learner</b></p><p>Member since: 2026</p><button class="doma-btn alt" id="manageAccount">Account settings</button></div>
+    </div>
+   </section>
+
+   <section class="doma-view" data-section="wishlist">
+    <div class="doma-card"><h3>Saved courses</h3><div class="doma-list" id="wishlistList"></div></div>
+   </section>
+
+   <section class="doma-view" data-section="certificates">
+    <div class="doma-certificate">
+     <div class="doma-cert-seal">★</div><h2>DOMA ACADEMY Certificate Center</h2>
+     <p class="doma-muted">Certificates become available automatically when a course reaches 100% completion.</p>
+     <div id="certificateList"></div>
+    </div>
+   </section>
+
+   <section class="doma-view" data-section="calendar">
+    <div class="doma-card"><h3>Learning calendar</h3><p class="doma-muted">Your study plan and upcoming learning events.</p><div class="doma-calendar" id="calendarGrid"></div></div>
+   </section>
+
+   <section class="doma-view" data-section="notifications">
+    <div class="doma-card"><h3>Notifications</h3><div class="doma-list" id="notificationList"></div></div>
+   </section>
+
+   <section class="doma-view" data-section="community">
+    <div class="doma-two">
+     <div class="doma-card"><h3>Community feed</h3><div class="doma-list" id="communityList"></div></div>
+     <div class="doma-card"><h3>Ask the community</h3><textarea class="doma-input" id="communityPost" rows="5" placeholder="Share a question or learning win..."></textarea><button class="doma-btn" id="postCommunity">Post</button></div>
+    </div>
+   </section>
+  </div>
+ </div>
+</div>
+
+<!-- Quiz -->
+<div class="doma-overlay" id="quizModal" aria-hidden="true">
+ <div class="doma-panel">
+  <div class="doma-panel-head"><div><div class="eyebrow">ASSESSMENT</div><h2 id="quizTitle">Course Quiz</h2></div><button class="doma-close" data-close-quiz>×</button></div>
+  <div class="doma-body">
+   <div id="quizBody"></div>
+   <button class="doma-btn" id="submitQuiz">Submit quiz</button>
+   <div id="quizResult" style="margin-top:16px"></div>
+  </div>
+ </div>
+</div>
+
+<!-- Instructor / Admin -->
+<div class="doma-overlay" id="instructorModal" aria-hidden="true">
+ <div class="doma-panel">
+  <div class="doma-panel-head"><div><div class="eyebrow">CREATOR TOOLS</div><h2>Instructor Dashboard</h2></div><button class="doma-close" data-close-instructor>×</button></div>
+  <div class="doma-body">
+   <div class="doma-grid">
+    <div class="doma-stat"><b>12</b><span class="doma-muted">Published courses</span></div><div class="doma-stat"><b>1,248</b><span class="doma-muted">Students</span></div><div class="doma-stat"><b>84%</b><span class="doma-muted">Completion rate</span></div><div class="doma-stat"><b>$8.4k</b><span class="doma-muted">Monthly revenue</span></div>
+   </div><div style="height:16px"></div>
+   <div class="doma-two">
+    <div class="doma-card"><h3>Course management</h3><div class="doma-list">
+     <div class="doma-row"><span>Modern Web Development</span><button class="doma-btn alt">Edit</button></div>
+     <div class="doma-row"><span>Digital Marketing Mastery</span><button class="doma-btn alt">Edit</button></div>
+     <div class="doma-row"><span>UI/UX Design from Zero</span><button class="doma-btn alt">Edit</button></div>
+    </div><div style="height:12px"></div><button class="doma-btn" id="newCourse">+ Create course</button></div>
+    <div class="doma-card"><h3>Recent student activity</h3><div class="doma-list">
+     <div class="doma-row"><span>New enrollment</span><small>2 min ago</small></div><div class="doma-row"><span>Quiz completed</span><small>18 min ago</small></div><div class="doma-row"><span>Certificate issued</span><small>1 hr ago</small></div>
+    </div></div>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+<script id="doma-complete-script">
+(function(){
+  const courseNames=["Modern Web Development","Digital Marketing Mastery","UI/UX Design from Zero","Start & Grow a Business","Productivity & Focus","Python for Data & Automation"];
+  const qs=[
+   ["What is HTML primarily used for?",["Structuring web pages","Styling web pages","Managing databases","Editing videos"],0],
+   ["Which CSS feature is commonly used for responsive layouts?",["Flexbox","SQL","Python","Git"],0],
+   ["What does a JavaScript function do?",["Encapsulates reusable logic","Stores images only","Creates a database server","Replaces HTML"],0]
+  ];
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const toast=(m)=>{let t=$("#domaToast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)};
+  const hub=$("#domaHub"), quiz=$("#quizModal"), instructor=$("#instructorModal");
+
+  const state={
+    get profile(){return JSON.parse(localStorage.getItem("doma_profile")||'{"name":"Doma Student","email":"student@example.com","goal":"Build practical career skills"}')},
+    set profile(v){localStorage.setItem("doma_profile",JSON.stringify(v))},
+    get wishlist(){return JSON.parse(localStorage.getItem("doma_wishlist")||"[]")},
+    set wishlist(v){localStorage.setItem("doma_wishlist",JSON.stringify(v))}
+  };
+
+  function coursePct(name){
+    // Compatible with the lesson-player storage from v2.
+    try{
+      const a=JSON.parse(localStorage.getItem("doma_course_"+name)||"[]");
+      const n=6; return Math.min(100,Math.round(a.length/n*100));
+    }catch(e){return 0}
+  }
+  function renderDashboard(){
+    const active=courseNames.filter(n=>coursePct(n)>0 && coursePct(n)<100);
+    $("#statCompleted").textContent=courseNames.filter(n=>coursePct(n)>=100).length;
+    $("#statCerts").textContent=courseNames.filter(n=>coursePct(n)>=100).length;
+    const current=active[0]||courseNames[0], pct=coursePct(current);
+    $("#continueText").textContent=current+" • "+pct+"% complete";
+    $("#dashProgress").style.width=pct+"%";
+    $("#myLearningList").innerHTML=courseNames.slice(0,4).map(n=>{
+      const p=coursePct(n); return '<div class="doma-row"><span><strong>'+n+'</strong><br><small class="doma-muted">'+p+'% complete</small></span><button class="doma-btn alt" data-open-course="'+n.replaceAll('"','&quot;')+'">Open</button></div>';
+    }).join("");
+    $$("[data-open-course]").forEach(b=>b.onclick=()=>window.DOMAAcademyOpenCourse&&window.DOMAAcademyOpenCourse(b.dataset.openCourse));
+    $("#continueBtn").onclick=()=>window.DOMAAcademyOpenCourse&&window.DOMAAcademyOpenCourse(current);
+  }
+  function renderProfile(){
+    const p=state.profile; $("#profileName").value=p.name;$("#profileEmail").value=p.email;$("#profileGoal").value=p.goal;
+  }
+  function renderWishlist(){
+    const w=state.wishlist;
+    $("#wishlistList").innerHTML=w.length?w.map(n=>'<div class="doma-row"><span>'+n+'</span><button class="doma-btn danger" data-remove-wish="'+n+'">Remove</button></div>').join(""):'<p class="doma-muted">No saved courses yet. Save courses you want to study later.</p>';
+    $$("[data-remove-wish]").forEach(b=>b.onclick=()=>{state.wishlist=state.wishlist.filter(x=>x!==b.dataset.removeWish);renderWishlist();toast("Removed from wishlist");});
+  }
+  function renderCerts(){
+    const c=courseNames.filter(n=>coursePct(n)>=100);
+    $("#certificateList").innerHTML=c.length?c.map(n=>'<div class="doma-row" style="margin-top:12px"><span><strong>'+n+'</strong><br><small class="doma-muted">Certificate earned</small></span><button class="doma-btn" data-cert="'+n+'">View / Print</button></div>').join(""):'<p class="doma-muted">Complete a course to unlock your certificate.</p>';
+    $$("[data-cert]").forEach(b=>b.onclick=()=>printCertificate(b.dataset.cert));
+  }
+  function printCertificate(course){
+    const p=state.profile; const w=window.open("","_blank");
+    if(!w){toast("Allow pop-ups to print your certificate");return}
+    w.document.write('<!doctype html><html><head><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;background:#f7f1f3;padding:50px;text-align:center;color:#201014}.box{border:8px double #762337;padding:60px;max-width:850px;margin:auto}h1{font-size:44px;color:#762337}h2{font-size:30px}p{font-size:18px}.seal{font-size:45px}</style></head><body><div class="box"><div class="seal">★</div><h1>DOMA ACADEMY</h1><h2>Certificate of Completion</h2><p>This certifies that</p><h2>'+p.name+'</h2><p>has successfully completed</p><h2>'+course+'</h2><p>Learning Platform • DOMA ACADEMY</p><p>'+new Date().toLocaleDateString()+'</p></div><script>window.print()<\/script></body></html>');w.document.close();
+  }
+  function renderCalendar(){
+    const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], arr=[];
+    for(let i=0;i<35;i++){let d=i-2;let num=d>0?d:"";let ev=(d===6||d===14||d===22)?"Study session":"";arr.push('<div class="doma-day"><b>'+days[i%7]+' '+num+'</b>'+(ev?'<div class="doma-event">'+ev+'</div>':"")+'</div>')}
+    $("#calendarGrid").innerHTML=arr.join("");
+  }
+  function renderNotifications(){
+    const n=[["Welcome to DOMA ACADEMY","Your student dashboard is ready.","Just now"],["New lesson available","A new lesson has been added to your active course.","Today"],["Weekly goal","You are 68% toward your weekly learning goal.","Today"],["Certificate center","Complete a course to unlock your certificate.","This week"]];
+    $("#notificationList").innerHTML=n.map(x=>'<div class="doma-row"><span><strong>'+x[0]+'</strong><br><small class="doma-muted">'+x[1]+'</small></span><small class="doma-muted">'+x[2]+'</small></div>').join("");
+  }
+  function renderCommunity(){
+    const posts=JSON.parse(localStorage.getItem("doma_community")||"[]");
+    const base=[["Maya","Finished my first JavaScript project today! 🎉"],["Omar","Any tips for staying consistent with learning?"]];
+    const all=posts.concat(base);
+    $("#communityList").innerHTML=all.map(x=>'<div class="doma-card"><strong>'+x[0]+'</strong><p>'+x[1]+'</p></div>').join("");
+  }
+  function openHub(view="dashboard"){
+    hub.classList.add("open");hub.setAttribute("aria-hidden","false");
+    $$(".doma-tab").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+    $$(".doma-view").forEach(s=>s.classList.toggle("active",s.dataset.section===view));
+    renderDashboard();renderProfile();renderWishlist();renderCerts();renderCalendar();renderNotifications();renderCommunity();
+  }
+  function close(el){el.classList.remove("open");el.setAttribute("aria-hidden","true")}
+  $$("[data-close-hub]").forEach(b=>b.onclick=()=>close(hub));
+  $$("[data-close-quiz]").forEach(b=>b.onclick=()=>close(quiz));
+  $$("[data-close-instructor]").forEach(b=>b.onclick=()=>close(instructor));
+  [hub,quiz,instructor].forEach(el=>el.addEventListener("click",e=>{if(e.target===el)close(el)}));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape") [hub,quiz,instructor].forEach(close)});
+
+  $$(".doma-tab").forEach(b=>b.onclick=()=>{
+    $$(".doma-tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+    $$(".doma-view").forEach(s=>s.classList.toggle("active",s.dataset.section===b.dataset.view));
+    $("#hubTitle").textContent=b.textContent.trim();
+  });
+  $("#saveProfile").onclick=()=>{state.profile={name:$("#profileName").value.trim()||"Doma Student",email:$("#profileEmail").value.trim(),goal:$("#profileGoal").value.trim()};toast("Profile saved");};
+  $("#manageAccount").onclick=()=>toast("Account settings are ready for backend connection");
+  $("#postCommunity").onclick=()=>{let v=$("#communityPost").value.trim();if(!v)return;let a=JSON.parse(localStorage.getItem("doma_community")||"[]");a.unshift([state.profile.name,v]);localStorage.setItem("doma_community",JSON.stringify(a.slice(0,12)));$("#communityPost").value="";renderCommunity();toast("Posted to community");};
+
+  // Quiz for any course: 3 demo questions; structure is ready for a full question bank.
+  function openQuiz(name){
+    quiz.classList.add("open");quiz.setAttribute("aria-hidden","false");$("#quizTitle").textContent=name+" • Quiz";$("#quizResult").innerHTML="";
+    $("#quizBody").innerHTML=qs.map((q,i)=>'<div class="doma-quiz-q"><strong>'+(i+1)+'. '+q[0]+'</strong>'+q[1].map((o,j)=>'<label class="doma-option"><input type="radio" name="q'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");
+    $("#submitQuiz").onclick=()=>{
+      let score=0;qs.forEach((q,i)=>{let x=document.querySelector('input[name="q'+i+'"]:checked');if(x&&+x.value===q[2])score++});
+      let pct=Math.round(score/qs.length*100);
+      $("#quizResult").innerHTML='<div class="doma-card"><h3>Score: '+pct+'%</h3><p>'+score+' of '+qs.length+' answers correct.</p><button class="doma-btn '+(pct>=70?'success':'danger')+'" id="quizAgain">'+(pct>=70?'Passed — Continue learning':'Try again')+'</button></div>';
+      $("#quizAgain").onclick=()=>openQuiz(name);
+      toast(pct>=70?"Quiz passed!":"Review the lesson and try again.");
+    };
+  }
+
+  // Create a clear entry point for wishlist and quiz without requiring changes to every card.
+  window.DOMAAcademyOpenQuiz=openQuiz;
+  window.DOMAAcademyOpenHub=openHub;
+
+  // Add utility actions to existing navigation based on visible labels.
+  $$("a,button").forEach(el=>{
+    const t=(el.textContent||"").trim().toLowerCase();
+    if(t==="my learning" || t==="dashboard"){
+      el.addEventListener("click",e=>{e.preventDefault();openHub("dashboard")});
+    }
+    if(t==="instructors"){
+      el.addEventListener("click",e=>{e.preventDefault();instructor.classList.add("open")});
+    }
+  });
+
+  // Add wishlist buttons to recognizable course cards where possible.
+  courseNames.forEach(name=>{
+    $$("article,.course-card,.card,section,div").filter(el=>{
+      const txt=(el.textContent||"").trim();
+      return txt.includes(name) && txt.length<1200;
+    }).slice(0,1).forEach(card=>{
+      if(card.querySelector('[data-wishlist="'+name+'"]')) return;
+      const b=document.createElement("button");b.className="doma-btn alt";b.textContent="♡ Save";b.dataset.wishlist=name;
+      b.style.marginTop="8px";
+      b.onclick=(e)=>{e.preventDefault();e.stopPropagation();let w=state.wishlist;if(!w.includes(name)){w.push(name);state.wishlist=w;toast("Saved to wishlist")}else toast("Already saved")};
+      card.appendChild(b);
+    });
+  });
+
+  // Give existing "Quiz" buttons a real action.
+  $$("a,button").forEach(el=>{
+    if((el.textContent||"").trim().toLowerCase().includes("quiz") && !el.dataset.quizHook){
+      el.dataset.quizHook="1";el.addEventListener("click",e=>{e.preventDefault();openQuiz(courseNames[0])});
+    }
+  });
+
+  // Global shortcut: press D for dashboard.
+  document.addEventListener("keydown",e=>{if(e.key.toLowerCase()==="d" && !/input|textarea/i.test(e.target.tagName))openHub("dashboard")});
 })();
 </script>
 
