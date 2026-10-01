@@ -1669,6 +1669,7 @@ textarea{
   Exams & Quizzes
 </button>
 <button class="side-link" data-section="student-manager"><span class="side-icon">◎</span> Students</button>
+<button class="side-link" data-section="subscriptions"><span class="side-icon">₿</span> Subscription Requests</button>
 <button class="side-link" data-section="homework"><span class="side-icon">✎</span> Homework</button>
 <button class="side-link" data-section="results"><span class="side-icon">▤</span> Results</button>
 <button class="side-link" data-section="progress"><span class="side-icon">◔</span> Progress</button>
@@ -9085,6 +9086,26 @@ domaCmsInit();
       b.addEventListener('click',()=>activateDomaV6Section(b.dataset.section));
     }
   });
+})();
+</script>
+
+<section class="admin-section" id="section-subscriptions" data-section="subscriptions" style="display:none">
+  <div class="section-head"><div><div class="eyebrow">PAYMENT VERIFICATION</div><h2>Subscription Requests</h2><p>Review Mobile Cash receipts and activate student access.</p></div><button class="table-btn" id="domaSubRefresh">Refresh</button></div>
+  <div id="domaSubTable" class="academy-admin-card" style="overflow:auto"><div style="padding:20px;color:#777">Loading subscription requests…</div></div>
+</section>
+<style>
+.doma-receipt-img{max-width:180px;max-height:180px;border-radius:10px;border:1px solid #382028;display:block;margin-top:8px}.doma-actions{display:flex;gap:7px;flex-wrap:wrap}.doma-actions button{border:0;border-radius:8px;padding:8px 11px;cursor:pointer}.doma-ok{background:#214d37;color:#fff}.doma-no{background:#5b2532;color:#fff}
+</style>
+<script>
+(function(){
+ const SB=()=>window.domaCMS||window.supabaseClient||window.supabase;
+ const $=id=>document.getElementById(id); const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ async function loadSubs(){const c=SB(),box=$('domaSubTable');if(!c){box.innerHTML='<div style="padding:20px">Supabase client unavailable.</div>';return}const r=await c.from('subscriptions').select('id,student_id,grade_id,plan_type,amount,payment_method,sender_phone,receipt_path,status,admin_note,starts_at,expires_at,created_at,profiles(full_name,email),grades(name)').order('created_at',{ascending:false});if(r.error){box.innerHTML='<div style="padding:20px;color:#c05269">'+esc(r.error.message)+'</div>';return}const rows=r.data||[];if(!rows.length){box.innerHTML='<div style="padding:20px;color:#777">No subscription requests yet.</div>';return}box.innerHTML='<table><thead><tr><th>Student</th><th>Grade</th><th>Plan</th><th>Amount</th><th>Payment</th><th>Receipt</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.profiles?.full_name||'Student')}</b><div style="color:#777;font-size:11px">${esc(x.profiles?.email||'')}</div></td><td>${esc(x.grades?.name||'')}</td><td>${esc(x.plan_type)}</td><td>${x.amount} EGP</td><td>${esc(x.payment_method)}<div style="color:#777;font-size:11px">${esc(x.sender_phone||'')}</div></td><td>${x.receipt_path?'<button class="table-btn" onclick="DOMAViewReceipt(\''+x.id+'\')">View</button>':'—'}</td><td><b>${esc(x.status)}</b>${x.expires_at?'<div style="font-size:10px;color:#777">Until '+new Date(x.expires_at).toLocaleDateString()+'</div>':''}</td><td><div class="doma-actions">${x.status==='pending'?`<button class="doma-ok" onclick="DOMAApproveSub('${x.id}')">Accept</button><button class="doma-no" onclick="DOMARejectSub('${x.id}')">Reject</button>`:'—'}</div></td></tr>`).join('')+'</tbody></table>'}
+ window.DOMAViewReceipt=async id=>{const c=SB();const r=await c.from('subscriptions').select('receipt_path').eq('id',id).single();if(r.error||!r.data?.receipt_path)return alert('Receipt not found.');const s=await c.storage.from('payment-receipts').createSignedUrl(r.data.receipt_path,300);if(s.error)return alert(s.error.message);const w=window.open('','_blank');if(w)w.document.write('<title>DOMA Receipt</title><img src="'+s.data.signedUrl+'" style="max-width:100%;height:auto;background:#111">')}
+ window.DOMAApproveSub=async id=>{if(!confirm('Accept this subscription and activate access?'))return;const c=SB();const q=await c.from('subscriptions').select('plan_type').eq('id',id).single();if(q.error)return alert(q.error.message);const days=q.data.plan_type==='annual'?365:30;const now=new Date();const exp=new Date(now.getTime()+days*86400000);const r=await c.from('subscriptions').update({status:'approved',starts_at:now.toISOString(),expires_at:exp.toISOString(),reviewed_at:now.toISOString(),reviewed_by:(await c.auth.getUser()).data?.user?.id||null}).eq('id',id);if(r.error)return alert(r.error.message);loadSubs()}
+ window.DOMARejectSub=async id=>{const note=prompt('Reason for rejection (optional):','Payment receipt could not be verified.');if(note===null)return;const c=SB();const r=await c.from('subscriptions').update({status:'rejected',admin_note:note,reviewed_at:new Date().toISOString(),reviewed_by:(await c.auth.getUser()).data?.user?.id||null}).eq('id',id);if(r.error)return alert(r.error.message);loadSubs()}
+ function init(){ $('domaSubRefresh')?.addEventListener('click',loadSubs);document.querySelectorAll('.side-link[data-section="subscriptions"]').forEach(b=>b.addEventListener('click',()=>setTimeout(loadSubs,50)));setTimeout(loadSubs,1000)}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 </body>
