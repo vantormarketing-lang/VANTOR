@@ -1669,6 +1669,10 @@ textarea{
   Exams & Quizzes
 </button>
 <button class="side-link" data-section="student-manager"><span class="side-icon">◎</span> Students</button>
+<button class="side-link" data-section="homework"><span class="side-icon">✎</span> Homework</button>
+<button class="side-link" data-section="results"><span class="side-icon">▤</span> Results</button>
+<button class="side-link" data-section="progress"><span class="side-icon">◔</span> Progress</button>
+
 
 <button
             class="side-link"
@@ -8979,6 +8983,108 @@ domaCmsInit();
     setTimeout(loadStudents,700);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<script>
+/* DOMA ACADEMY V6 — Homework / Results / Progress */
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  const sb=()=>window.domaCMS||window.supabaseClient||window.supabase||window.domaSB||window.sb;
+
+  async function grades(){
+    const c=sb(); if(!c) return [];
+    const r=await c.from('grades').select('id,name').order('sort_order');
+    return r.data||[];
+  }
+  async function fillGrades(){
+    const gs=await grades();
+    const a=$('domaV6HomeworkGrade'),b=$('domaV6HwGrade');
+    if(a) a.innerHTML='<option value="">All Grades</option>'+gs.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('');
+    if(b) b.innerHTML='<option value="">Select grade</option>'+gs.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('');
+  }
+  function open(id){$(id).style.display='flex';}
+  function close(id){$(id).style.display='none';}
+
+  async function homeworkLoad(){
+    const box=$('domaV6HomeworkTable'),c=sb(); if(!c)return;
+    let q=c.from('homework').select('id,title,description,due_at,is_published,grade_id,grades(name)').order('created_at',{ascending:false});
+    const f=$('domaV6HomeworkGrade').value;if(f)q=q.eq('grade_id',f);
+    const r=await q;if(r.error){box.innerHTML='<div style="padding:20px;color:#c05269">'+esc(r.error.message)+'</div>';return;}
+    box.innerHTML=(r.data||[]).length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Due</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
+      r.data.map(x=>`<tr><td><b>${esc(x.title)}</b><div style="color:#777;font-size:11px">${esc(x.description||'')}</div></td><td>${esc(x.grades?.name||'')}</td><td>${x.due_at?new Date(x.due_at).toLocaleString():'No due date'}</td><td>${x.is_published?'Published':'Draft'}</td><td><button class="table-btn danger" onclick="DOMAV6DeleteHomework('${x.id}')">Delete</button></td></tr>`).join('')+
+      '</tbody></table>':'<div style="padding:20px;color:#777">No homework yet.</div>';
+  }
+  async function saveHomework(e){
+    e.preventDefault();const c=sb();
+    const payload={grade_id:$('domaV6HwGrade').value,title:$('domaV6HwTitle').value.trim(),description:$('domaV6HwDesc').value.trim(),due_at:$('domaV6HwDue').value?new Date($('domaV6HwDue').value).toISOString():null,is_published:$('domaV6HwPublished').value==='true'};
+    if(!payload.grade_id||!payload.title)return alert('Choose a grade and enter a title.');
+    const r=await c.from('homework').insert(payload);if(r.error)return alert(r.error.message);
+    close('domaV6HomeworkModal');e.target.reset();homeworkLoad();
+  }
+  window.DOMAV6DeleteHomework=async id=>{
+    if(!confirm('Delete this homework permanently?'))return;
+    const r=await sb().from('homework').delete().eq('id',id);if(r.error)return alert(r.error.message);homeworkLoad();
+  };
+
+  async function resultsLoad(){
+    const box=$('domaV6ResultsTable'),c=sb();if(!c)return;
+    const r=await c.from('quiz_attempts').select('id,score,total_points,submitted_at,quiz_id,student_id,quizzes(title),profiles(full_name,email)').order('submitted_at',{ascending:false}).limit(200);
+    if(r.error){box.innerHTML='<div style="padding:20px;color:#c05269">'+esc(r.error.message)+'</div>';return;}
+    const rows=r.data||[];
+    $('domaV6ResultsQuiz').innerHTML='<option value="">All Exams</option>'+[...new Map(rows.map(x=>[x.quiz_id,x.quizzes?.title||'Exam'])).entries()].map(([id,t])=>`<option value="${id}">${esc(t)}</option>`).join('');
+    const filter=$('domaV6ResultsQuiz').value;
+    const data=filter?rows.filter(x=>x.quiz_id===filter):rows;
+    box.innerHTML=data.length?'<table><thead><tr><th>Student</th><th>Exam</th><th>Score</th><th>Submitted</th></tr></thead><tbody>'+
+      data.map(x=>`<tr><td><b>${esc(x.profiles?.full_name||'Student')}</b><div style="color:#777;font-size:11px">${esc(x.profiles?.email||'')}</div></td><td>${esc(x.quizzes?.title||'')}</td><td>${x.score}/${x.total_points}</td><td>${new Date(x.submitted_at).toLocaleString()}</td></tr>`).join('')+
+      '</tbody></table>':'<div style="padding:20px;color:#777">No quiz results yet.</div>';
+  }
+
+  async function progressLoad(){
+    const box=$('domaV6ProgressTable'),c=sb();if(!c)return;
+    const r=await c.from('lesson_progress').select('student_id,lesson_id,completed,progress_percent,last_opened_at,profiles(full_name,email),lessons(title,grades(name))').order('last_opened_at',{ascending:false}).limit(300);
+    if(r.error){box.innerHTML='<div style="padding:20px;color:#c05269">'+esc(r.error.message)+'</div>';return;}
+    const rows=r.data||[];
+    box.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Lesson</th><th>Grade</th><th>Progress</th><th>Last Opened</th></tr></thead><tbody>'+
+      rows.map(x=>`<tr><td><b>${esc(x.profiles?.full_name||'Student')}</b><div style="color:#777;font-size:11px">${esc(x.profiles?.email||'')}</div></td><td>${esc(x.lessons?.title||'')}</td><td>${esc(x.lessons?.grades?.name||'')}</td><td>${x.completed?'100%':(x.progress_percent||0)+'%'}</td><td>${x.last_opened_at?new Date(x.last_opened_at).toLocaleString():''}</td></tr>`).join('')+
+      '</tbody></table>':'<div style="padding:20px;color:#777">No lesson progress yet.</div>';
+  }
+
+  function init(){
+    fillGrades();
+    $('domaV6NewHomework')?.addEventListener('click',()=>open('domaV6HomeworkModal'));
+    $('domaV6HwClose')?.addEventListener('click',()=>close('domaV6HomeworkModal'));
+    $('domaV6HwCancel')?.addEventListener('click',()=>close('domaV6HomeworkModal'));
+    $('domaV6HomeworkForm')?.addEventListener('submit',saveHomework);
+    $('domaV6HomeworkRefresh')?.addEventListener('click',homeworkLoad);
+    $('domaV6HomeworkGrade')?.addEventListener('change',homeworkLoad);
+    $('domaV6ResultsRefresh')?.addEventListener('click',resultsLoad);
+    $('domaV6ResultsQuiz')?.addEventListener('change',resultsLoad);
+    $('domaV6ProgressRefresh')?.addEventListener('click',progressLoad);
+    document.querySelectorAll('.side-link[data-section="homework"]').forEach(b=>b.addEventListener('click',()=>setTimeout(homeworkLoad,50)));
+    document.querySelectorAll('.side-link[data-section="results"]').forEach(b=>b.addEventListener('click',()=>setTimeout(resultsLoad,50)));
+    document.querySelectorAll('.side-link[data-section="progress"]').forEach(b=>b.addEventListener('click',()=>setTimeout(progressLoad,50)));
+    setTimeout(()=>{homeworkLoad();resultsLoad();progressLoad()},800);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<script>
+(function(){
+  function activateDomaV6Section(name){
+    const target=document.getElementById('section-'+name);
+    if(!target)return;
+    document.querySelectorAll('.admin-section').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.admin-section').forEach(x=>x.style.display='none');
+    target.classList.add('active');target.style.display='block';
+  }
+  document.querySelectorAll('.side-link[data-section]').forEach(b=>{
+    if(['homework','results','progress'].includes(b.dataset.section)){
+      b.addEventListener('click',()=>activateDomaV6Section(b.dataset.section));
+    }
+  });
 })();
 </script>
 </body>
