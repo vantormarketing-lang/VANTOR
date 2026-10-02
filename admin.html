@@ -201,7 +201,7 @@
   </div>
   <div class="card" style="margin-bottom:14px">
     <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-      <div><b>Daily Words — 100 words per day</b><p class="muted" style="margin:5px 0 0">Students see only published words. Audio can be supplied by URL; the student page has browser speech fallback.</p></div>
+      <div><b>Daily Words — 100 words per day</b><p class="muted" style="margin:5px 0 0">Students see only published words. You can upload the real MP3 files here; the audio is stored in Supabase Storage and the student plays the file directly.</p></div>
       <span id="dailyWordsCount" class="pill">0 words</span>
     </div>
   </div>
@@ -545,11 +545,28 @@ loadThirdSecondarySummary();loadThirdSecondarySummary();loadThirdSecondarySummar
   }
   function dailyWordForm(title,x=null){
     const d=x?.day_date||$('dailyWordsDate')?.value||today();
-    openModal(title,'<form id="dailyWordForm"><div class="daily-form-note" style="margin-bottom:12px">Use positions 1–100. The student page reads published rows from the <b>daily_words</b> table. If an audio URL is empty, the student page can use browser speech automatically.</div><div class="form-grid"><div class="form-row"><label>Date</label><input id="dwDate" type="date" value="'+esc(d)+'" required></div><div class="form-row"><label>Position (1–100)</label><input id="dwPosition" type="number" min="1" max="100" value="'+Number(x?.position||1)+'" required></div><div class="form-row"><label>English Word</label><input id="dwWord" value="'+esc(x?.word||'')+'" required placeholder="achieve"></div><div class="form-row"><label>Arabic Translation</label><input id="dwTranslation" value="'+esc(x?.translation||'')+'" required placeholder="يحقق"></div><div class="form-row full"><label>Example Sentence</label><textarea id="dwSentence" required>'+esc(x?.sentence||'')+'</textarea></div><div class="form-row full"><label>Arabic Sentence Translation</label><textarea id="dwSentenceTranslation" required>'+esc(x?.sentence_translation||'')+'</textarea></div><div class="form-row full"><label>Word Audio URL</label><input id="dwWordAudio" type="url" value="'+esc(x?.word_audio_url||'')+'" placeholder="https://…"></div><div class="form-row full"><label>Sentence Audio URL</label><input id="dwSentenceAudio" type="url" value="'+esc(x?.sentence_audio_url||'')+'" placeholder="https://…"></div><div class="form-row"><label>Publishing</label><select id="dwPublished"><option value="true" '+(x?.is_published!==false?'selected':'')+'>Published</option><option value="false" '+(x?.is_published===false?'selected':'')+'>Draft</option></select></div></div><button class="btn full">Save Daily Word</button></form>');
+    openModal(title,'<form id="dailyWordForm"><div class="daily-form-note" style="margin-bottom:12px">Use positions 1–100. The student page reads published rows from the <b>daily_words</b> table. If an audio URL is empty, the student page can use browser speech automatically.</div><div class="form-grid"><div class="form-row"><label>Date</label><input id="dwDate" type="date" value="'+esc(d)+'" required></div><div class="form-row"><label>Position (1–100)</label><input id="dwPosition" type="number" min="1" max="100" value="'+Number(x?.position||1)+'" required></div><div class="form-row"><label>English Word</label><input id="dwWord" value="'+esc(x?.word||'')+'" required placeholder="achieve"></div><div class="form-row"><label>Arabic Translation</label><input id="dwTranslation" value="'+esc(x?.translation||'')+'" required placeholder="يحقق"></div><div class="form-row full"><label>Example Sentence</label><textarea id="dwSentence" required>'+esc(x?.sentence||'')+'</textarea></div><div class="form-row full"><label>Arabic Sentence Translation</label><textarea id="dwSentenceTranslation" required>'+esc(x?.sentence_translation||'')+'</textarea></div><div class="form-row full"><label>Word Audio MP3</label><input id="dwWordAudioFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav"><div class="mini-status">'+(x?.word_audio_url?'Current audio is already connected. Choose a file only if you want to replace it.':'Upload the MP3 for the word.')+'</div><input id="dwWordAudio" type="hidden" value="'+esc(x?.word_audio_url||'')+'"></div><div class="form-row full"><label>Sentence Audio MP3</label><input id="dwSentenceAudioFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav"><div class="mini-status">'+(x?.sentence_audio_url?'Current audio is already connected. Choose a file only if you want to replace it.':'Upload the MP3 for the sentence.')+'</div><input id="dwSentenceAudio" type="hidden" value="'+esc(x?.sentence_audio_url||'')+'"></div><div class="form-row"><label>Publishing</label><select id="dwPublished"><option value="true" '+(x?.is_published!==false?'selected':'')+'>Published</option><option value="false" '+(x?.is_published===false?'selected':'')+'>Draft</option></select></div></div><button class="btn full">Save Daily Word</button></form>');
     $('dailyWordForm').onsubmit=async e=>{
       e.preventDefault();
-      const p={day_date:$('dwDate').value,position:Number($('dwPosition').value),word:$('dwWord').value.trim(),translation:$('dwTranslation').value.trim(),sentence:$('dwSentence').value.trim(),sentence_translation:$('dwSentenceTranslation').value.trim(),word_audio_url:$('dwWordAudio').value.trim()||null,sentence_audio_url:$('dwSentenceAudio').value.trim()||null,is_published:$('dwPublished').value==='true'};
-      if(p.position<1||p.position>100)return toast('Position must be between 1 and 100.');
+      let wordAudioUrl=$('dwWordAudio').value.trim()||null;
+      let sentenceAudioUrl=$('dwSentenceAudio').value.trim()||null;
+      const day=$('dwDate').value; const pos=Number($('dwPosition').value);
+      async function uploadDailyAudio(inputId,type,currentUrl){
+        const file=$(inputId)?.files?.[0];
+        if(!file)return currentUrl;
+        if(file.size>10*1024*1024)throw new Error('Audio file must be 10 MB or less.');
+        const ext=(file.name.split('.').pop()||'mp3').toLowerCase().replace(/[^a-z0-9]/g,'')||'mp3';
+        const path=day+'/'+String(pos).padStart(3,'0')+'-'+type+'.'+ext;
+        const up=await db.storage.from('daily-words-audio').upload(path,file,{contentType:file.type||'audio/mpeg',upsert:true});
+        if(up.error)throw new Error('Audio upload failed: '+up.error.message);
+        const pub=db.storage.from('daily-words-audio').getPublicUrl(path);
+        return pub.data?.publicUrl||currentUrl;
+      }
+      try{
+        wordAudioUrl=await uploadDailyAudio('dwWordAudioFile','word',wordAudioUrl);
+        sentenceAudioUrl=await uploadDailyAudio('dwSentenceAudioFile','sentence',sentenceAudioUrl);
+      }catch(err){return toast(err.message||'Audio upload failed.')}
+      const p={day_date:day,position:pos,word:$('dwWord').value.trim(),translation:$('dwTranslation').value.trim(),sentence:$('dwSentence').value.trim(),sentence_translation:$('dwSentenceTranslation').value.trim(),word_audio_url:wordAudioUrl,sentence_audio_url:sentenceAudioUrl,is_published:$('dwPublished').value==='true'};
       const r=x?await db.from('daily_words').update(p).eq('id',x.id).select('id'):await db.from('daily_words').insert(p).select('id');
       if(r.error)return toast('Save failed: '+r.error.message);
       closeModal();toast('Daily Word saved.');$('dailyWordsDate').value=p.day_date;await loadDailyWords();
