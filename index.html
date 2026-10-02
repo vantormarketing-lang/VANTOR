@@ -1166,38 +1166,42 @@ function daily100LoadVoices(){
   daily100Voices=window.speechSynthesis.getVoices()||[];
 }
 if('speechSynthesis' in window){daily100LoadVoices();window.speechSynthesis.onvoiceschanged=daily100LoadVoices;}
+function daily100GoogleAudioUrl(text){
+  return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-US&q='+encodeURIComponent(String(text||'').trim());
+}
 function daily100Speak(text){
   const value=String(text||'').trim();
   if(!value)return;
   try{
-    if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')throw new Error('Speech synthesis is not supported');
+    if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')return;
     const synth=window.speechSynthesis;
-    synth.cancel();
+    try{synth.cancel();}catch(e){}
     const u=new SpeechSynthesisUtterance(value);
     u.lang='en-US'; u.rate=.88; u.pitch=1; u.volume=1;
-    const voices=daily100Voices.length?daily100Voices:(synth.getVoices()||[]);
-    const voice=voices.find(v=>/^en-US$/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang));
+    const voices=synth.getVoices()||[];
+    const voice=voices.find(v=>String(v.lang||'').toLowerCase()==='en-us')||voices.find(v=>/^en(-|_)/i.test(v.lang||''));
     if(voice)u.voice=voice;
-    u.onerror=()=>{try{synth.cancel();}catch(e){}};
+    u.onend=()=>{};
+    u.onerror=()=>{};
     synth.resume();
     synth.speak(u);
-    setTimeout(()=>{try{if(synth.paused)synth.resume();}catch(e){}},120);
-  }catch(e){
-    // Final fallback: use the browser's native speech command again after a short delay.
-    try{setTimeout(()=>{const u=new SpeechSynthesisUtterance(value);u.lang='en-US';u.rate=.9;window.speechSynthesis.speak(u)},80)}catch(_e){}
-  }
+    setTimeout(()=>{try{if(synth.paused)synth.resume();}catch(e){}},150);
+  }catch(e){}
 }
 window.playDailyWordsStudentAudio=function(text,url){
   const value=String(text||'').trim();
   if(!value)return;
-  if(url){
-    const a=new Audio(); a.preload='auto'; a.src=url;
-    window.__daily100Audio=a;
-    const fallback=()=>daily100Speak(value);
-    a.addEventListener('error',fallback,{once:true});
-    const p=a.play();
-    if(p&&typeof p.catch==='function')p.catch(fallback);
-  }else daily100Speak(value);
+  try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}
+  const source=String(url||'').trim()||daily100GoogleAudioUrl(value);
+  const audio=new Audio(source);
+  audio.preload='auto'; audio.volume=1;
+  window.__daily100Audio=audio;
+  let finished=false;
+  const fallback=()=>{if(finished)return;finished=true;daily100Speak(value)};
+  audio.addEventListener('ended',()=>{finished=true},{once:true});
+  audio.addEventListener('error',fallback,{once:true});
+  const playPromise=audio.play();
+  if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(fallback);
 };
 async function loadDailyWordsStudent(){
  const body=document.getElementById('drawerBody'); if(!body)return;
