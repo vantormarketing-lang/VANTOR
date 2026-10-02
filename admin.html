@@ -97,31 +97,9 @@
           </div>
         </div>
 
-        <div class="card" id="thirdSecondaryPanel" style="margin-top:14px;border-color:#6f2940">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-            <div><b>3rd Secondary — 2026/2027</b><p class="muted" id="thirdSecondaryStatus">Content status will load from Supabase.</p></div>
-            <button class="btn secondary" id="openThirdSecondary">Open 3rd Secondary Lessons</button>
-          </div>
-          <div class="grid" style="margin-top:10px">
-            <div class="card stat"><div class="muted">Units</div><div id="tsUnits" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons</div><div id="tsLessons" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Quizzes</div><div id="tsQuizzes" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons with Video</div><div id="tsVideoLessons" class="num">—</div></div>
-          </div>
-        </div>
+        
 
-        <div class="card" id="thirdSecondaryPanel" style="margin-top:14px;border-color:#6f2940">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-            <div><b>3rd Secondary — 2026/2027</b><p class="muted" id="thirdSecondaryStatus">Content status will load from Supabase.</p></div>
-            <button class="btn secondary" id="openThirdSecondary">Open 3rd Secondary Lessons</button>
-          </div>
-          <div class="grid" style="margin-top:10px">
-            <div class="card stat"><div class="muted">Units</div><div id="tsUnits" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons</div><div id="tsLessons" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Quizzes</div><div id="tsQuizzes" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons with Video</div><div id="tsVideoLessons" class="num">—</div></div>
-          </div>
-        </div>
+        
 
         <div class="grid" style="margin-top:14px">
           <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
@@ -184,7 +162,7 @@
 
       <section id="section-question-bank" class="section"><div class="head"><div><h2>Question Bank</h2><p>Reusable questions. Scroll inside the list to view all questions.</p></div><button class="btn" id="newBankQuestion">+ New Question</button></div><div class="toolbar"><select id="bankGrade"><option value="">All Grades</option></select><input id="bankSearch" placeholder="Search questions…"><button class="btn secondary" id="bankRefresh">Refresh</button></div><div class="qbank-scroll"><div id="questionBankTable"></div></div><div class="qbank-footer"><span id="questionBankCount" class="qbank-count">0 questions</span><span class="muted" style="font-size:10px">Use the mouse wheel or scrollbar inside the Question Bank list.</span></div></section>
 <section id="section-activity" class="section"><div class="head"><div><h2>Activity & Attendance</h2><p>Engagement log for logins, lesson opens/completions, quizzes, homework and subscription activity.</p></div><button class="btn secondary" id="activityRefresh">Refresh</button></div><div class="toolbar"><input id="activitySearch" placeholder="Search student or activity…"><button class="btn secondary" id="activityRefresh2">Refresh</button></div><div id="activityTable" class="table-wrap"></div></section>
-<section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
+<section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">Staff CRUD is protected by Supabase RLS. Deletes are executed first and then verified separately so a blocked DELETE cannot look like a successful action. Student quiz scoring should remain server-side so correct_answer is not exposed to the browser.</div></section>
     </div>
   </main>
 </div>
@@ -216,7 +194,7 @@ function show(name){current=name;document.querySelectorAll('.section').forEach(s
 $('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
 
-aSync=async()=>{};
+const aSync=async()=>{};
 async function authUser(){return (await db.auth.getUser()).data.user}
 async function getStaffProfile(){const u=await authUser();if(!u)return null;const r=await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle();if(r.error||!r.data)return null;return ['admin','teacher'].includes(r.data.role)?r.data:null}
 
@@ -250,13 +228,11 @@ $('newUnit').onclick=()=>unitForm('New Unit');
 async function editUnit(id){const r=await db.from('units').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);unitForm('Edit Unit',r.data)}
 async function deletePersisted(table,id,label,after){
   if(!confirm('Delete '+label+' permanently?')) return;
-  const r=await db.from(table).delete().eq('id',id).select('id');
+  const r=await db.from(table).delete().eq('id',id);
   if(r.error) return toast('Delete failed: '+r.error.message);
-  const returned=Array.isArray(r.data) && r.data.some(row=>row.id===id);
-  if(!returned) return toast('Nothing was deleted. Check DELETE RLS/permissions.');
   const verify=await db.from(table).select('id').eq('id',id).maybeSingle();
   if(verify.error) return toast('Delete verification failed: '+verify.error.message);
-  if(verify.data) return toast('Delete did not persist. The row still exists.');
+  if(verify.data) return toast('Delete did not persist. Check the Admin/Teacher DELETE RLS policy for this table.');
   toast(label+' deleted permanently.');
   if(typeof after==='function') await after();
 }
@@ -281,7 +257,7 @@ async function deleteQuiz(id){await deletePersisted('quizzes',id,'Quiz',loadQuiz
 async function manageQuestions(quizId){const q=await db.from('quizzes').select('id,title').eq('id',quizId).single();if(q.error)return toast(q.error.message);const r=await db.from('quiz_questions').select('id,question,options,correct_answer,points,sort_order').eq('quiz_id',quizId).order('sort_order',{ascending:true});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Questions — '+q.data.title,`<div class="info-box" style="margin-bottom:12px">Students receive only question, options and points through the secure quiz RPC. The correct answer stays server-side.</div><div id="questionList">${rows.length?rows.map(x=>questionRow(quizId,x)).join(''):'<div class="empty">No questions yet.</div>'}</div><button class="btn" style="margin-top:12px" onclick="editQuestion('${quizId}','')">+ Add Question</button>`)}
 function questionRow(quizId,x){let opts=Array.isArray(x.options)?x.options:[];if(typeof x.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}return `<div class="card" style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;gap:10px"><div><b>${esc(x.question)}</b><div class="muted" style="font-size:10px;margin-top:4px">Points: ${x.points} • Options: ${esc(opts.join(' | '))}</div></div><div class="actions"><button class="btn secondary small" onclick="editQuestion('${quizId}','${x.id}')">Edit</button><button class="btn danger small" onclick="deleteQuestion('${quizId}','${x.id}')">Delete</button></div></div></div>`}
 async function editQuestion(quizId,id){let x=null;if(id){const r=await db.from('quiz_questions').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);x=r.data}let opts=Array.isArray(x?.options)?x.options:[];if(typeof x?.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}openModal(id?'Edit Question':'New Question',`<form id="questionForm"><div class="form-row"><label>Question</label><textarea id="qqQuestion" required>${esc(x?.question||'')}</textarea></div><div class="form-row"><label>Options (one per line)</label><textarea id="qqOptions" required>${esc(opts.join('\n'))}</textarea></div><div class="form-row"><label>Correct answer (exactly one option)</label><input id="qqCorrect" value="${esc(x?.correct_answer||'')}" required></div><div class="form-grid"><div class="form-row"><label>Points</label><input id="qqPoints" type="number" min="1" value="${Number(x?.points||1)}"></div><div class="form-row"><label>Sort order</label><input id="qqSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div></div><button class="btn">Save Question</button></form>`);$('questionForm').onsubmit=async e=>{e.preventDefault();const options=$('qqOptions').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);const correct=$('qqCorrect').value.trim();if(!options.length||!options.includes(correct))return toast('Correct answer must exactly match one option.');const p={quiz_id:quizId,question:$('qqQuestion').value.trim(),options,correct_answer:correct,points:Number($('qqPoints').value||1),sort_order:Number($('qqSort').value||0)};const r=id?await db.from('quiz_questions').update(p).eq('id',id).select('id'):await db.from('quiz_questions').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);closeModal();await manageQuestions(quizId)}}
-async function deleteQuestion(quizId,id){if(!confirm('Delete this question?'))return;const r=await db.from('quiz_questions').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);await manageQuestions(quizId)}
+async function deleteQuestion(quizId,id){if(!confirm('Delete this question?'))return;const r=await db.from('quiz_questions').delete().eq('id',id);if(r.error)return toast('Delete failed: '+r.error.message);const verify=await db.from('quiz_questions').select('id').eq('id',id).maybeSingle();if(verify.error)return toast('Delete verification failed: '+verify.error.message);if(verify.data)return toast('Delete did not persist. Check quiz_questions DELETE RLS.');await manageQuestions(quizId)}
 
 async function loadHomework(){let q=db.from('homework').select('id,grade_id,title,description,due_at,is_free,is_published,created_at').order('created_at',{ascending:false});const g=$('hwGrade').value;if(g)q=q.eq('grade_id',g);const r=await q;if(r.error)return $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('hwSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.description||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${fmt(x.due_at)}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework('${x.id}')">Edit</button><button class="btn danger small" onclick="deleteHomework('${x.id}')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions('${x.id}')">Submissions</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No homework found.</div>'}
 function homeworkForm(title,x=null){const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);$('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true'};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);closeModal();toast('Homework saved.');await loadHomework()}}
@@ -412,47 +388,11 @@ async function loadThirdSecondarySummary(){
 }
 
 
-async function loadThirdSecondarySummary(){
-  if(typeof db==='undefined')return;
-  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
-  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
-  const id=g.data.id;
-  const [u,l,q]=await Promise.all([
-    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
-    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
-    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
-  ]);
-  const ls=l.data||[];
-  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
-  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
-  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
-  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
-  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
-  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
-}
 
 
-async function loadThirdSecondarySummary(){
-  if(typeof db==='undefined')return;
-  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
-  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
-  const id=g.data.id;
-  const [u,l,q]=await Promise.all([
-    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
-    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
-    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
-  ]);
-  const ls=l.data||[];
-  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
-  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
-  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
-  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
-  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
-  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
-}
 
 loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
-loadThirdSecondarySummary();loadThirdSecondarySummary();loadThirdSecondarySummary();$('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
+loadThirdSecondarySummary();$('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
 <script id="doma-admin-all-upgrades-script">
