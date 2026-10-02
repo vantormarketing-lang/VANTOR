@@ -122,11 +122,6 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 @media(max-width:900px){.student-command-bar{grid-template-columns:1fr 1fr}.home-learning-grid{grid-template-columns:1fr}.home-quick-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.lesson-toolbar-pro{grid-template-columns:1fr}.lesson-toolbar-actions{justify-content:flex-start}.lesson-checklist{grid-template-columns:1fr}.student-command-bar{grid-template-columns:1fr}.profile-grid{grid-template-columns:1fr!important}.profile-avatar-wrap{align-items:flex-start}.home-quick-grid{grid-template-columns:1fr 1fr}}
 </style>
-
-<style id="doma-100words-styles">
-.words100-home{padding:24px;display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(145deg,#140c10,#0d090a);border-color:#4b222f}.words100-home h3{font-size:20px;margin:8px 0 5px}.words100-home p{font-size:11px;color:#857c80}.words100-page{display:grid;gap:14px}.words100-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}.words100-title h3{font-size:22px;margin-top:4px}.words100-title p{font-size:10px;color:#81797c;margin-top:5px;max-width:760px}.words100-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.words100-stat{padding:14px;border-radius:12px;background:#100a0c;border:1px solid #2d181f}.words100-stat b{font-size:24px}.words100-stat span{display:block;color:#777;font-size:9px;margin-top:3px;text-transform:uppercase;letter-spacing:1px}.words100-toolbar{display:grid;grid-template-columns:1fr 220px auto;gap:9px}.words100-list{display:grid;gap:10px;max-height:610px;overflow:auto;padding-right:4px}.words100-row{display:grid;grid-template-columns:54px minmax(0,.85fr) minmax(0,1.15fr);gap:12px;padding:15px;background:#100b0d;border:1px solid #2d181f;border-radius:12px}.words100-num{width:40px;height:40px;border-radius:9px;background:#251018;border:1px solid #45222f;display:grid;place-items:center;color:#d98ea0;font-weight:900}.words100-word strong{display:block;font-size:14px}.words100-word span{display:block;font-size:10px;color:#d39aaa;margin-top:3px}.words100-example strong{display:block;font-size:11px;color:#d8d1d3}.words100-example span{display:block;font-size:10px;color:#8d8588;margin-top:3px;line-height:1.65}.words100-unit{display:inline-flex;margin-top:7px;font-size:8px;padding:4px 6px;border-radius:5px;background:#1b1014;color:#a98b94;border:1px solid #362029}
-@media(max-width:760px){.words100-home{flex-direction:column;align-items:flex-start}.words100-stats{grid-template-columns:1fr 1fr}.words100-toolbar{grid-template-columns:1fr}.words100-row{grid-template-columns:45px 1fr}.words100-example{grid-column:2}.words100-list{max-height:none}}
-</style>
 </head>
 <body>
 <nav class="nav">
@@ -136,7 +131,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <div class="nav-actions"><button class="iconbtn" onclick="openSearch()">⌕</button><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary" id="navAction" onclick="openAuth(\'signup\')">Get Started</button><button class="menu" onclick="toggleMobileMenu()">☰</button></div>
 </div>
 </nav>
-<div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>DOMA ACADEMY</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#words-100" onclick="closeMobileMenu();openStudentTool('vocab100');return false">100 Words</a><a class="side-link" href="#subjects" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#teachers" onclick="closeMobileMenu()">Learning Areas</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
+<div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>DOMA ACADEMY</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#subjects" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#teachers" onclick="closeMobileMenu()">Learning Areas</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
 <header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Master English with <span>a clear path.</span></h1><p>DOMA ACADEMY is built for Egyptian preparatory and secondary students: grade-based lessons, grammar, vocabulary, reading, writing, listening, quizzes, homework, progress and certificates — all in one place.</p><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a><button class="btn secondary" onclick="openAuth(\'signup\')">Create Student Account</button></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory &amp; Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>Access</strong><span>After payment approval</span></div></div></div><div class="hero-card"><div class="hero-panel"><div class="hero-panel-top"><div><div class="eyebrow">Student Learning Hub</div><div class="hero-logo">D<span>O</span>MA</div></div><span class="pill">Secure Student Area</span></div><div><h3>Study. Practice. Track. Improve.</h3><p>Your account becomes your personal English study space after you choose a grade and activate access.</p><div class="hero-stat"><button type="button" class="hero-stat-btn" onclick="openStudentTool('lessons')"><b>Lessons</b><span>Grammar • Vocabulary • Reading</span></button><button type="button" class="hero-stat-btn" onclick="openStudentTool('quizzes')"><b>Assessment</b><span>Quizzes • Homework • Exams</span></button></div></div></div></div></div></header>
 <div class="container searchbar"><div class="searchbox"><input class="field" id="publicSearch" oninput="filterGrades()" placeholder="Search grades, grammar, vocabulary, reading..."/><select class="field" id="publicStage" onchange="filterGrades()"><option value="all">All stages</option><option value="preparatory">Preparatory</option><option value="secondary">Secondary</option></select><button class="btn primary" onclick="filterGrades()">Search</button></div></div>
 
@@ -211,15 +206,14 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     </div>
     <div class="curriculum-detail">
       <div class="curriculum-detail-head"><div><div class="eyebrow" style="margin-bottom:4px">Curriculum Explorer</div><h3>Units & Lessons</h3><p>Students can preview the structure here; the full protected lesson content opens after active access.</p></div><div class="curriculum-counts"><span class="curriculum-count">6 units</span><span class="curriculum-count">36 lessons</span><span class="curriculum-count">6 quizzes</span><span class="curriculum-count">8 homework</span></div></div>
-      <div class="prep-accordion"><details class="prep-unit" open><summary><div class="unit-title-wrap"><div class="unit-index">1</div><div class="unit-summary"><strong>Unit 1: Life in a Digital World</strong><span>Digital life, healthy technology habits and everyday routines.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: A Day in My Digital Life</strong><span class="lesson-type">lesson</span></div><p>Understand a short blog-style text about daily digital habits and identify the main idea and details.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: A Day in My Digital Life')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Digital Vocabulary</strong><span class="lesson-type">vocabulary</span></div><p>Build a practical vocabulary set for devices, apps and online actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Digital Vocabulary')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Present Simple and Adverbs of Frequency</strong><span class="lesson-type">grammar</span></div><p>Use the present simple and adverbs of frequency to talk about routines.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Present Simple and Adverbs of Frequency')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: The Smart Classroom</strong><span class="lesson-type">reading</span></div><p>Read and understand a short passage about responsible technology use at school.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: The Smart Classroom')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Digital Routine</strong><span class="lesson-type">writing</span></div><p>Write a short, organized paragraph about a normal digital day.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Digital Routine')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Listening — A School Day Online</strong><span class="lesson-type">listening</span></div><p>Listen for specific details about when and why a student uses technology.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Listening — A School Day Online')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">2</div><div class="unit-summary"><strong>Unit 2: Learning to Learn</strong><span>Study skills, learning tools, asking for help and planning revision.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: How I Learn</strong><span class="lesson-type">lesson</span></div><p>Understand different ways of learning and choose useful study habits.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: How I Learn')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Learning Tools</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary for books, notes, flashcards and digital learning tools.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Learning Tools')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Possession and Requests</strong><span class="lesson-type">grammar</span></div><p>Use possessive adjectives and simple can/will requests in classroom situations.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Possession and Requests')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: My Study Plan</strong><span class="lesson-type">reading</span></div><p>Read a simple weekly study plan and identify priorities and free time.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: My Study Plan')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: Good Study Habits</strong><span class="lesson-type">writing</span></div><p>Write a clear weekly English study plan using time expressions and goals.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: Good Study Habits')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Listening — Before the Test</strong><span class="lesson-type">listening</span></div><p>Listen for sequence and identify what a student does before an English test.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Listening — Before the Test')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">3</div><div class="unit-summary"><strong>Unit 3: Role Models</strong><span>People who inspire us, their actions, achievements and qualities.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: People Who Inspire Us</strong><span class="lesson-type">lesson</span></div><p>Talk about qualities and actions that make a person a useful role model.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: People Who Inspire Us')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Role Model Vocabulary</strong><span class="lesson-type">vocabulary</span></div><p>Build vocabulary for qualities, achievements and community action.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Role Model Vocabulary')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Present Continuous and Pronouns</strong><span class="lesson-type">grammar</span></div><p>Describe actions happening now and use subject/object pronouns correctly.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Present Continuous and Pronouns')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: A Young Volunteer</strong><span class="lesson-type">reading</span></div><p>Read about a student volunteer and identify actions, qualities and reasons for helping.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: A Young Volunteer')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Role Model</strong><span class="lesson-type">writing</span></div><p>Write a short paragraph describing a person you admire and what they are doing now.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Role Model')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Listening — An Interview with a Role Model</strong><span class="lesson-type">listening</span></div><p>Listen to an interview and identify personal information, qualities and current actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Listening — An Interview with a Role Model')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">4</div><div class="unit-summary"><strong>Unit 4: Smart Choices</strong><span>Healthy, safe and responsible choices at school and at home.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Smart Everyday Choices</strong><span class="lesson-type">lesson</span></div><p>Understand the idea of making healthy, safe and responsible choices.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Smart Everyday Choices')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Smart Choices Vocabulary</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary related to health, safety, recycling and saving resources.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Smart Choices Vocabulary')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Imperatives and Zero Conditional</strong><span class="lesson-type">grammar</span></div><p>Give instructions with imperatives and explain general results with the zero conditional.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Imperatives and Zero Conditional')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: If We Recycle...</strong><span class="lesson-type">reading</span></div><p>Read about recycling habits and identify actions and their results.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: If We Recycle...')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Smart Choices</strong><span class="lesson-type">writing</span></div><p>Write a short practical guide with rules and zero-conditional results.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Smart Choices')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Listening — Making a Good Choice</strong><span class="lesson-type">listening</span></div><p>Listen to a short conversation and identify the problem, the choice and the result.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Listening — Making a Good Choice')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">5</div><div class="unit-summary"><strong>Unit 5: Future Dreams</strong><span>Jobs, talents, future plans and choosing a useful path.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Dreams for the Future</strong><span class="lesson-type">lesson</span></div><p>Talk about future goals, jobs and the skills needed to achieve them.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Dreams for the Future')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Jobs and Skills</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary for careers, talents and personal skills.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Jobs and Skills')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Comparatives, Superlatives and Articles</strong><span class="lesson-type">grammar</span></div><p>Compare people and things and use a/an/the in simple contexts.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Comparatives, Superlatives and Articles')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Choosing the Right Career</strong><span class="lesson-type">reading</span></div><p>Read a short text about matching interests and skills with future plans.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Choosing the Right Career')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Future Plan</strong><span class="lesson-type">writing</span></div><p>Write a personal future plan using reasons, skills and target actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Future Plan')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Listening — Future Plans</strong><span class="lesson-type">listening</span></div><p>Listen for future goals and the steps students plan to take.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Listening — Future Plans')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">6</div><div class="unit-summary"><strong>Unit 6: Global Citizen</strong><span>Community, responsibility, cooperation and living in a connected world.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: One World</strong><span class="lesson-type">lesson</span></div><p>Understand what it means to be a responsible member of a local and global community.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: One World')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Global Citizen Vocabulary</strong><span class="lesson-type">vocabulary</span></div><p>Build vocabulary for community action, cooperation and cultural respect.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Global Citizen Vocabulary')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Past-Simple Questions</strong><span class="lesson-type">grammar</span></div><p>Ask and answer Wh- questions about completed actions in the past.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Past-Simple Questions')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Around the World, Together</strong><span class="lesson-type">reading</span></div><p>Read about students working together on a community project.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Around the World, Together')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: How I Can Help My Community</strong><span class="lesson-type">writing</span></div><p>Write about practical actions you can take as a responsible citizen.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: How I Can Help My Community')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Listening — A Global Team</strong><span class="lesson-type">listening</span></div><p>Listen to a short report and identify people, actions, time and place.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Listening — A Global Team')">Open Lesson →</button></div></div></details></div>
+      <div class="prep-accordion"><details class="prep-unit" open><summary><div class="unit-title-wrap"><div class="unit-index">1</div><div class="unit-summary"><strong>Unit 1: Life in a Digital World</strong><span>Digital life, healthy technology habits and everyday routines.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: A Day in My Digital Life</strong><span class="lesson-type">lesson</span></div><p>Understand a short blog-style text about daily digital habits and identify the main idea and details.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: A Day in My Digital Life')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: How We Use Technology</strong><span class="lesson-type">vocabulary</span></div><p>Build a practical vocabulary set for devices, apps and online actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: How We Use Technology')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Digital Devices</strong><span class="lesson-type">grammar</span></div><p>Use the present simple and adverbs of frequency to talk about routines.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Digital Devices')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read and understand a short passage about responsible technology use at school.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: An Email to a Friend</strong><span class="lesson-type">writing</span></div><p>Write a short, organized paragraph about a normal digital day.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: An Email to a Friend')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen for specific details about when and why a student uses technology.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">2</div><div class="unit-summary"><strong>Unit 2: Learning to Learn</strong><span>Study skills, learning tools, asking for help and planning revision.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: My Learning Journey</strong><span class="lesson-type">lesson</span></div><p>Understand different ways of learning and choose useful study habits.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: My Learning Journey')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Learning Challenges and Solutions</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary for books, notes, flashcards and digital learning tools.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Learning Challenges and Solutions')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Benefits of Learning Together</strong><span class="lesson-type">grammar</span></div><p>Use possessive adjectives and simple can/will requests in classroom situations.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Benefits of Learning Together')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read a simple weekly study plan and identify priorities and free time.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Learning Plan</strong><span class="lesson-type">writing</span></div><p>Write a clear weekly English study plan using time expressions and goals.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Learning Plan')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen for sequence and identify what a student does before an English test.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">3</div><div class="unit-summary"><strong>Unit 3: Role Models</strong><span>People who inspire us, their actions, achievements and qualities.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: An Egyptian Hero</strong><span class="lesson-type">lesson</span></div><p>Talk about qualities and actions that make a person a useful role model.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: An Egyptian Hero')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Heroes and Role Models</strong><span class="lesson-type">vocabulary</span></div><p>Build vocabulary for qualities, achievements and community action.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Heroes and Role Models')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: A Great Egyptian Thinker Dr. Gamal Hemdan</strong><span class="lesson-type">grammar</span></div><p>Describe actions happening now and use subject/object pronouns correctly.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: A Great Egyptian Thinker Dr. Gamal Hemdan')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read about a student volunteer and identify actions, qualities and reasons for helping.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: A Hero Who Made a Difference - Dr Mohamed Ghoniem</strong><span class="lesson-type">writing</span></div><p>Write a short paragraph describing a person you admire and what they are doing now.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: A Hero Who Made a Difference - Dr Mohamed Ghoniem')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen to an interview and identify personal information, qualities and current actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">4</div><div class="unit-summary"><strong>Unit 4: Smart Choices</strong><span>Healthy, safe and responsible choices at school and at home.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Think Before You Choose</strong><span class="lesson-type">lesson</span></div><p>Understand the idea of making healthy, safe and responsible choices.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Think Before You Choose')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Decisions and Consequences</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary related to health, safety, recycling and saving resources.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Decisions and Consequences')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: An Interview with an Athlete</strong><span class="lesson-type">grammar</span></div><p>Give instructions with imperatives and explain general results with the zero conditional.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: An Interview with an Athlete')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read about recycling habits and identify actions and their results.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: Asking for and Giving Advice</strong><span class="lesson-type">writing</span></div><p>Write a short practical guide with rules and zero-conditional results.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: Asking for and Giving Advice')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen to a short conversation and identify the problem, the choice and the result.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">5</div><div class="unit-summary"><strong>Unit 5: Future Dreams</strong><span>Jobs, talents, future plans and choosing a useful path.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Discover Your Future!</strong><span class="lesson-type">lesson</span></div><p>Talk about future goals, jobs and the skills needed to achieve them.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Discover Your Future!')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: An Interview with a Scientist</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary for careers, talents and personal skills.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: An Interview with a Scientist')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: My Plan for a Future Career</strong><span class="lesson-type">grammar</span></div><p>Compare people and things and use a/an/the in simple contexts.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: My Plan for a Future Career')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read a short text about matching interests and skills with future plans.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Dream Job!</strong><span class="lesson-type">writing</span></div><p>Write a personal future plan using reasons, skills and target actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Dream Job!')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen for future goals and the steps students plan to take.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit" ><summary><div class="unit-title-wrap"><div class="unit-index">6</div><div class="unit-summary"><strong>Unit 6: Global Citizens</strong><span>Community, responsibility, cooperation and living in a connected world.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Being a Global Citizen</strong><span class="lesson-type">lesson</span></div><p>Understand what it means to be a responsible member of a local and global community.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Being a Global Citizen')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Global Citizen Talk</strong><span class="lesson-type">vocabulary</span></div><p>Build vocabulary for community action, cooperation and cultural respect.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Global Citizen Talk')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Ocean Circle</strong><span class="lesson-type">grammar</span></div><p>Ask and answer Wh- questions about completed actions in the past.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Ocean Circle')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read about students working together on a community project.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: Let’s Make a Difference</strong><span class="lesson-type">writing</span></div><p>Write about practical actions you can take as a responsible citizen.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: Let’s Make a Difference')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen to a short report and identify people, actions, time and place.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details></div>
       <div class="curriculum-detail-head" style="margin-top:18px"><div><div class="eyebrow" style="margin-bottom:4px">Grammar Map</div><h3>Core grammar by unit</h3></div></div>
       <div class="grammar-map"><div class="mini-card"><b>Unit 1</b><span>Present simple + adverbs of frequency</span></div><div class="mini-card"><b>Unit 2</b><span>Possessive adjectives + can/will requests</span></div><div class="mini-card"><b>Unit 3</b><span>Present continuous + pronouns</span></div><div class="mini-card"><b>Unit 4</b><span>Imperatives + zero conditional</span></div><div class="mini-card"><b>Unit 5</b><span>Comparatives + superlatives + articles</span></div><div class="mini-card"><b>Unit 6</b><span>Past-simple Wh- questions</span></div></div>
       <div class="assessment-strip"><div class="assessment-box"><h4>Unit Quizzes</h4><p>Six published assessments, one for each unit.</p><div class="assessment-list"><div>✓ Quiz 1 — Life in a Digital World</div><div>✓ Quiz 2 — Learning to Learn</div><div>✓ Quiz 3 — Role Models</div><div>✓ Quiz 4 — Smart Choices</div><div>✓ Quiz 5 — Future Dreams</div><div>✓ Quiz 6 — Global Citizen</div></div></div><div class="assessment-box"><h4>Homework & Revision</h4><p>Six unit tasks plus two mixed review tasks.</p><div class="assessment-list"><div>✎ Homework 1 — My Digital Routine</div><div>✎ Homework 2 — My Weekly Study Plan</div><div>✎ Homework 3 — My Role Model</div><div>✎ Homework 4 — Smart Choices Guide</div><div>✎ Homework 5 — My Future Plan</div><div>✎ Homework 6 — Global Citizen</div><div>✎ Review Homework 1 — Units 1–3</div><div>✎ Review Homework 2 — Units 4–6</div></div></div></div>
     </div>
   </div>
 </div></section>
-<section id="subjects"><div class="container"><div class="head"><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2><p>Open any learning area directly. Sign in when the content belongs to your active grade.</p></div><div class="tools"><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')" onkeydown="if(event.key==='Enter'||event.key===' ')openStudentTool('lessons')"><div class="tool-icon">A</div><h3>Grammar</h3><p>Open your grade lessons and filter grammar content.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">V</div><h3>Vocabulary</h3><p>Open unit vocabulary lessons and revision.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">R</div><h3>Reading</h3><p>Open reading lessons and comprehension practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">W</div><h3>Writing</h3><p>Open writing lessons and guided practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">L</div><h3>Listening</h3><p>Open listening lessons and media.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('quizzes')"><div class="tool-icon">Q</div><h3>Quizzes</h3><p>Open your published quizzes and start one.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('homework')"><div class="tool-icon">H</div><h3>Homework</h3><p>Open assignments and submit your answers.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('vocab100')"><div class="tool-icon">100</div><h3>100 Words</h3><p>Revise 100 English words with Arabic meanings and example sentences.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('certificates')"><div class="tool-icon">C</div><h3>Certificates</h3><p>Open certificates issued to your account.</p></div></div></div></section>
-<section id="words-100"><div class="container"><div class="head"><div class="eyebrow">3rd Secondary Revision</div><h2>100 Words + 100 Example Sentences.</h2><p>Revise the bilingual vocabulary bank managed from Admin. Log in with an active 3rd Secondary subscription to open the full list.</p></div><div class="card words100-home"><div><span class="pill">Bilingual Vocabulary</span><h3>English → Arabic → Example → Arabic</h3><p>One place for the 100-word revision bank already managed from Admin.</p></div><button class="btn primary" type="button" onclick="openStudentTool('vocab100')">Open 100 Words →</button></div></div></section>
+<section id="subjects"><div class="container"><div class="head"><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2><p>Open any learning area directly. Sign in when the content belongs to your active grade.</p></div><div class="tools"><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')" onkeydown="if(event.key==='Enter'||event.key===' ')openStudentTool('lessons')"><div class="tool-icon">A</div><h3>Grammar</h3><p>Open your grade lessons and filter grammar content.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">V</div><h3>Vocabulary</h3><p>Open unit vocabulary lessons and revision.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">R</div><h3>Reading</h3><p>Open reading lessons and comprehension practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">W</div><h3>Writing</h3><p>Open writing lessons and guided practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">L</div><h3>Listening</h3><p>Open listening lessons and media.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('quizzes')"><div class="tool-icon">Q</div><h3>Quizzes</h3><p>Open your published quizzes and start one.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('homework')"><div class="tool-icon">H</div><h3>Homework</h3><p>Open assignments and submit your answers.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('certificates')"><div class="tool-icon">C</div><h3>Certificates</h3><p>Open certificates issued to your account.</p></div></div></div></section>
 <section id="dashboard"><div class="container">
   <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Track your English progress, jump back into lessons, review quizzes and manage your student account.</p></div>
   <div class="dashboard-grid-pro">
@@ -269,7 +263,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <footer class="footer"><div class="container"><div class="footgrid"><div><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>BY ADHAM</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div><div><h4>Platform</h4><a href="#grades">Grades</a><a href="#first-prep">1st Preparatory</a><a href="#subjects">Learning</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div><div><h4>Learning</h4><a href="#subjects">Grammar</a><a href="#subjects">Vocabulary</a><a href="#subjects">Reading</a><a href="#subjects">Writing</a></div><div><h4>Account</h4><a href="#" onclick="openAuth('login');return false">Log In</a><a href="#" onclick="openAuth('signup');return false">Create Account</a><a href="#dashboard">My Progress</a><a href="#faq">FAQ</a></div></div><div class="copy"><span>© 2026 DOMA ACADEMY — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div></div></footer>
 <div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h3 id="modalTitle">DOMA ACADEMY</h3><button class="close" onclick="closeModal()">×</button></div><p id="modalText"></p><div id="modalBody"></div></div></div>
 <div class="modal" id="gradeModal"><div class="modalbox"><div class="modalhead"><h3 id="gradeModalTitle">Grade Access</h3><button class="close" onclick="closeGradeModal()">×</button></div><p id="gradeModalText"></p><div id="gradeModalBody"></div></div></div>
-<div class="drawer" id="drawer"><div class="drawer-shell"><aside class="drawer-side"><div class="drawer-brand"><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>STUDENT AREA</small></span></a></div><div class="user-card" id="userCard"><strong>Student</strong><span>Loading…</span></div><button class="side-link active" data-view="overview" onclick="studentView('overview')">⌂ Overview</button><button class="side-link" data-view="lessons" onclick="studentView('lessons')">▶ Lessons</button><button class="side-link" data-view="quizzes" onclick="studentView('quizzes')">✓ Quizzes</button><button class="side-link" data-view="homework" onclick="studentView('homework')">☰ Homework</button><button class="side-link" data-view="certificates" onclick="studentView('certificates')">▣ Certificates</button><button class="side-link" data-view="notifications" onclick="studentView('notifications')">◌ Notifications</button><button class="side-link" data-view="profile" onclick="studentView('profile')">⚙ Profile</button><button class="side-link" data-view="vocab100" onclick="studentView('vocab100')">Aa 100 Words</button><button class="side-link" onclick="domaLogout()">↪ Log Out</button></aside><main class="drawer-main"><div class="drawer-top"><div><div class="eyebrow" style="margin-bottom:3px">DOMA ACADEMY • STUDENT</div><h2 id="drawerTitle">Overview</h2><p id="drawerSubtitle">Your learning space.</p></div><button class="btn secondary" onclick="closeDrawer()">Close</button></div><div class="drawer-body" id="drawerBody"><div class="empty">Loading student area…</div></div></main></div></div>
+<div class="drawer" id="drawer"><div class="drawer-shell"><aside class="drawer-side"><div class="drawer-brand"><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>STUDENT AREA</small></span></a></div><div class="user-card" id="userCard"><strong>Student</strong><span>Loading…</span></div><button class="side-link active" data-view="overview" onclick="studentView('overview')">⌂ Overview</button><button class="side-link" data-view="lessons" onclick="studentView('lessons')">▶ Lessons</button><button class="side-link" data-view="quizzes" onclick="studentView('quizzes')">✓ Quizzes</button><button class="side-link" data-view="homework" onclick="studentView('homework')">☰ Homework</button><button class="side-link" data-view="certificates" onclick="studentView('certificates')">▣ Certificates</button><button class="side-link" data-view="notifications" onclick="studentView('notifications')">◌ Notifications</button><button class="side-link" data-view="profile" onclick="studentView('profile')">⚙ Profile</button><button class="side-link" onclick="domaLogout()">↪ Log Out</button></aside><main class="drawer-main"><div class="drawer-top"><div><div class="eyebrow" style="margin-bottom:3px">DOMA ACADEMY • STUDENT</div><h2 id="drawerTitle">Overview</h2><p id="drawerSubtitle">Your learning space.</p></div><button class="btn secondary" onclick="closeDrawer()">Close</button></div><div class="drawer-body" id="drawerBody"><div class="empty">Loading student area…</div></div></main></div></div>
 <div class="toast" id="toast"></div>
 <script>const DOMA_URL='https://dtptxhkcogpoleftguas.supabase.co';
 const DOMA_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
@@ -519,6 +513,20 @@ async function renderStudentOverview(){
 }
 
 function openStudentTool(view){if(!sessionUser){openAuth('login');return}openDrawer(view)}
+const DOMA_1ST_PREP_LESSON_TITLES = {
+  1:['A Day in My Digital Life','How We Use Technology','Digital Devices','Story Time','An Email to a Friend','Team-Project Roundtable'],
+  2:['My Learning Journey','Learning Challenges and Solutions','Benefits of Learning Together','Story Time','My Learning Plan','Team-Project Roundtable'],
+  3:['An Egyptian Hero','Heroes and Role Models','A Great Egyptian Thinker Dr. Gamal Hemdan','Story Time','A Hero Who Made a Difference - Dr Mohamed Ghoniem','Team-Project Roundtable'],
+  4:['Think Before You Choose','Decisions and Consequences','An Interview with an Athlete','Story Time','Asking for and Giving Advice','Team-Project Roundtable'],
+  5:['Discover Your Future!','An Interview with a Scientist','My Plan for a Future Career','Story Time','My Dream Job!','Team-Project Roundtable'],
+  6:['Being a Global Citizen','Global Citizen Talk','Ocean Circle','Story Time','Let’s Make a Difference','Team-Project Roundtable']
+};
+function domaLessonDisplayTitle(lesson,unitMap){
+  const unitNumber=Number(unitMap?.get(lesson?.unit_id)?.unit_number ?? unitMap?.get(lesson?.unit_id) ?? 0);
+  const no=Number(lesson?.sort_order ?? 0);
+  return DOMA_1ST_PREP_LESSON_TITLES[unitNumber]?.[no-1] || lesson?.title || 'Lesson';
+}
+
 async function openPublicLesson(title){
   if(!sessionUser){openAuth('login');showToast('Log in to open the lesson and watch its video.');return}
   $('drawer').classList.add('show');
@@ -526,7 +534,7 @@ async function openPublicLesson(title){
   try{
     await studentView('lessons');
     const wanted=String(title||'').trim().toLowerCase();
-    const idx=currentLessons.findIndex(x=>String(x.title||'').trim().toLowerCase()===wanted);
+    const idx=currentLessons.findIndex(x=>String(x._displayTitle||x.title||'').trim().toLowerCase()===wanted || String(x.title||'').trim().toLowerCase()===wanted);
     if(idx>=0){await selectLesson(idx)}
     else{showToast('This lesson is not published for your active grade yet.')}
   }catch(e){console.error(e);showToast(e?.message||'Could not open lesson.')}
@@ -576,21 +584,23 @@ async function renderStudentLessons(){
   if(token!==lessonsLoadToken)return;
   currentLessonProgress=new Map((p.data||[]).map(x=>[x.lesson_id,x]));
   currentLessonUnits=new Map((u.data||[]).map(x=>[x.id,x]));
-  currentLessons=loadedLessons
-    .map(x=>({...x,_unit:currentLessonUnits.get(x.unit_id)||null}))
-    .sort((a,b)=>{
-      const au=Number.isFinite(Number(a._unit?.unit_number))?Number(a._unit.unit_number):999999;
-      const bu=Number.isFinite(Number(b._unit?.unit_number))?Number(b._unit.unit_number):999999;
-      if(au!==bu)return au-bu;
-      const as=Number.isFinite(Number(a.sort_order))?Number(a.sort_order):999999;
-      const bs=Number.isFinite(Number(b.sort_order))?Number(b.sort_order):999999;
-      if(as!==bs)return as-bs;
-      const ac=String(a.created_at||'');
-      const bc=String(b.created_at||'');
-      if(ac!==bc)return ac.localeCompare(bc);
-      return String(a.title||'').localeCompare(String(b.title||''));
-    })
-    .map((x,i)=>({...x,_index:i}));
+
+  // IMPORTANT: the database stores lesson order inside each Unit.
+  // Sorting only by sort_order would produce Lesson 1 from every Unit first.
+  loadedLessons.sort((a,b)=>{
+    const ua=Number(currentLessonUnits.get(a.unit_id)?.unit_number ?? 999);
+    const ub=Number(currentLessonUnits.get(b.unit_id)?.unit_number ?? 999);
+    if(ua!==ub) return ua-ub;
+    const sa=Number(a.sort_order ?? 999);
+    const sb=Number(b.sort_order ?? 999);
+    if(sa!==sb) return sa-sb;
+    return String(a.title||'').localeCompare(String(b.title||''));
+  });
+
+  currentLessons=loadedLessons.map((x,i)=>{
+    const unit=currentLessonUnits.get(x.unit_id)||null;
+    return {...x,_index:i,_unit:unit,_displayTitle:domaLessonDisplayTitle(x,currentLessonUnits)};
+  });
   currentLessonIndex=Math.max(0,Math.min(Number(currentLessonIndex)||0,currentLessons.length-1));
   renderLessonWorkspace(currentLessonProgress);
 }
@@ -600,11 +610,11 @@ function renderLessonWorkspace(prog){
   const hasSub=!!currentSubscription;
   const grouped=[],groups=new Map();
   currentLessons.forEach((x,i)=>{const key=x.unit_id||'__no_unit__';if(!groups.has(key)){const head=x._unit||{title:'General Lessons',unit_number:'',description:''};const g={unit:head,items:[]};groups.set(key,g);grouped.push(g)}groups.get(key).items.push({...x,_realIndex:i})});
-  const listHtml=grouped.map(g=>'<div class="lesson-group"><div class="lesson-group-head"><strong>'+esc((g.unit.unit_number?'Unit '+g.unit.unit_number+': ':'')+(g.unit.title||'Lessons'))+'</strong><span>'+g.items.length+' lessons</span></div><div class="lesson-group-body">'+g.items.map(x=>'<button type="button" class="lesson-btn '+(x._realIndex===currentLessonIndex?'active':'')+'" data-action="select-lesson" data-lesson-index="'+x._realIndex+'"><span class="lesson-num">'+(prog.get(x.id)?.completed?'✓':(x._realIndex+1))+'</span><span style="min-width:0;flex:1"><strong style="display:block">'+esc(x.title)+'</strong><small style="display:block;color:#777;font-size:9px;margin-top:2px">'+esc(x.lesson_type||'lesson')+' • '+(x.duration_minutes||0)+' min</small></span>'+(x.video_url?'<span class="pill" style="margin-left:auto">Video</span>':'')+'</button>').join('')+'</div></div>').join('');
+  const listHtml=grouped.map(g=>'<div class="lesson-group"><div class="lesson-group-head"><strong>'+esc((g.unit.unit_number?'Unit '+g.unit.unit_number+': ':'')+(g.unit.title||'Lessons'))+'</strong><span>'+g.items.length+' lessons</span></div><div class="lesson-group-body">'+g.items.map((x,j)=>'<button type="button" class="lesson-btn '+(x._realIndex===currentLessonIndex?'active':'')+'" data-action="select-lesson" data-lesson-index="'+x._realIndex+'"><span class="lesson-num">'+(prog.get(x.id)?.completed?'✓':(j+1))+'</span><span style="min-width:0;flex:1"><strong style="display:block">'+esc(x._displayTitle||x.title)+'</strong><small style="display:block;color:#777;font-size:9px;margin-top:2px">'+esc(x.lesson_type||'lesson')+' • '+(x.duration_minutes||0)+' min</small></span>'+(x.video_url?'<span class="pill" style="margin-left:auto">Video</span>':'')+'</button>').join('')+'</div></div>').join('');
   const accessNote=hasSub?'Full lesson access is active for your grade.':'Free preview mode: free lessons are available now. Subscription unlocks the complete curriculum.';
   const lessonVideoUrl=effectiveLessonVideo(l);
   const videoLabel=lessonVideoUrl?'Curriculum video':'Video will be added from Admin → Lessons';
-  $('drawerBody').innerHTML='<div class="student-grade-banner"><span class="pill">'+(hasSub?'Active grade':'Preview')+'</span><h3>'+esc(currentGrade?.name||'')+'</h3><p>'+esc(l._unit?.title||'English curriculum')+' • '+done+' of '+currentLessons.length+' published lessons available</p><div class="notice" style="margin-top:9px">'+esc(accessNote)+'</div></div><div class="lesson-view"><div class="card lesson-player"><div class="lesson-content"><div class="pill">'+esc(l.lesson_type||'lesson')+' • '+esc(currentGrade?.name||'')+'</div><div class="video-wrap" style="margin-top:12px">'+(lessonVideoUrl?renderVideoEmbed(lessonVideoUrl):'<div class="video-placeholder"><b>▶</b><div>No video URL has been published for this lesson yet.</div><small>Open Admin → Lessons and add the YouTube, Google Drive, or direct video URL.</small></div>')+'</div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px"><span class="pill">'+esc(videoLabel)+'</span>'+(lessonVideoUrl?'<a class="video-open-link" href="'+esc(lessonVideoUrl)+'" target="_blank" rel="noopener noreferrer">Open video in new tab ↗</a>':'')+'</div><h3>'+esc(l.title)+'</h3><div class="lesson-rich-content">'+esc(l.content||l.description||'Follow the lesson, study the material, then mark it complete.')+'</div><div class="lesson-bottom"><div><span class="pill">'+(l.duration_minutes||0)+' min</span><span class="pill" style="margin-left:5px">Overall '+pct+'%</span></div><div class="lesson-actions"><button class="btn secondary" onclick="changeLesson(-1)">← Previous</button><button class="btn primary" onclick="completeCurrentLesson()" '+(l.is_free||hasSub?'':'disabled')+'>Mark Complete</button><button class="btn secondary" onclick="changeLesson(1)">Next →</button></div></div></div></div><aside class="card lesson-list"><h3 style="font-size:15px;margin-bottom:5px">'+esc(currentGrade?.name||'')+' Curriculum</h3><div class="muted" style="font-size:9px;margin-bottom:9px">Click any lesson to open its content and video.</div>'+listHtml+'</aside></div>'
+  $('drawerBody').innerHTML='<div class="student-grade-banner"><span class="pill">'+(hasSub?'Active grade':'Preview')+'</span><h3>'+esc(currentGrade?.name||'')+'</h3><p>'+esc(l._unit?.title||'English curriculum')+' • '+done+' of '+currentLessons.length+' published lessons available</p><div class="notice" style="margin-top:9px">'+esc(accessNote)+'</div></div><div class="lesson-view"><div class="card lesson-player"><div class="lesson-content"><div class="pill">'+esc(l.lesson_type||'lesson')+' • '+esc(currentGrade?.name||'')+'</div><div class="video-wrap" style="margin-top:12px">'+(lessonVideoUrl?renderVideoEmbed(lessonVideoUrl):'<div class="video-placeholder"><b>▶</b><div>No video URL has been published for this lesson yet.</div><small>Open Admin → Lessons and add the YouTube, Google Drive, or direct video URL.</small></div>')+'</div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px"><span class="pill">'+esc(videoLabel)+'</span>'+(lessonVideoUrl?'<a class="video-open-link" href="'+esc(lessonVideoUrl)+'" target="_blank" rel="noopener noreferrer">Open video in new tab ↗</a>':'')+'</div><h3>'+esc(l._displayTitle||l.title)+'</h3><div class="lesson-rich-content">'+esc(l.content||l.description||'Follow the lesson, study the material, then mark it complete.')+'</div><div class="lesson-bottom"><div><span class="pill">'+(l.duration_minutes||0)+' min</span><span class="pill" style="margin-left:5px">Overall '+pct+'%</span></div><div class="lesson-actions"><button class="btn secondary" onclick="changeLesson(-1)">← Previous</button><button class="btn primary" onclick="completeCurrentLesson()" '+(l.is_free||hasSub?'':'disabled')+'>Mark Complete</button><button class="btn secondary" onclick="changeLesson(1)">Next →</button></div></div></div></div><aside class="card lesson-list"><h3 style="font-size:15px;margin-bottom:5px">'+esc(currentGrade?.name||'')+' Curriculum</h3><div class="muted" style="font-size:9px;margin-bottom:9px">Click any lesson to open its content and video.</div>'+listHtml+'</aside></div>'
 }
 
 async function selectLesson(i){
@@ -899,12 +909,16 @@ document.addEventListener('DOMContentLoaded',boot);</script>
       try{
         const gid=currentGrade?.id||null;
         if(gid){
-          const r=await sb.from('lessons').select('id,title,lesson_type,description,unit_id').eq('grade_id',gid).eq('is_published',true).order('sort_order',{ascending:true}).limit(30);
-          lessonMatches=(r.data||[]).filter(l=>(String(l.title||'')+' '+String(l.description||'')+' '+String(l.lesson_type||'')).toLowerCase().includes(q)).slice(0,10);
+          const r=await sb.from('lessons').select('id,title,lesson_type,description,unit_id,sort_order').eq('grade_id',gid).eq('is_published',true).order('sort_order',{ascending:true}).limit(100);
+          const searchRows=r.data||[];
+          const unitRows=await sb.from('units').select('id,unit_number').eq('grade_id',gid);
+          const unitMap=new Map((unitRows.data||[]).map(u=>[u.id,{unit_number:Number(u.unit_number)||999}]));
+          searchRows.sort((a,b)=>(unitMap.get(a.unit_id)?.unit_number||999)-(unitMap.get(b.unit_id)?.unit_number||999)||Number(a.sort_order||999)-Number(b.sort_order||999));
+          lessonMatches=searchRows.map(l=>({...l,_displayTitle:domaLessonDisplayTitle(l,unitMap)})).filter(l=>(String(l._displayTitle||'')+' '+String(l.description||'')+' '+String(l.lesson_type||'')).toLowerCase().includes(q)).slice(0,10);
         }
       }catch(e){}
       const gradeHtml=gradeMatches.slice(0,6).map(g=>'<div class="global-result"><div class="global-result-main"><strong>'+esc(g.name)+'</strong><span>Grade access • '+esc(g.stage||'English curriculum')+'</span></div><button class="mini-open" type="button" data-global-grade="'+esc(g.name)+'">Open Grade →</button></div>').join('');
-      const lessonHtml=lessonMatches.map(l=>'<div class="global-result"><div class="global-result-main"><strong>'+esc(l.title)+'</strong><span>'+esc(l.lesson_type||'lesson')+' • '+esc(l.description||'Published lesson')+'</span></div><button class="mini-open" type="button" data-global-lesson="'+esc(l.title)+'">Open Lesson →</button></div>').join('');
+      const lessonHtml=lessonMatches.map(l=>'<div class="global-result"><div class="global-result-main"><strong>'+esc(l._displayTitle||l.title)+'</strong><span>'+esc(l.lesson_type||'lesson')+' • '+esc(l.description||'Published lesson')+'</span></div><button class="mini-open" type="button" data-global-lesson="'+esc(l._displayTitle||l.title)+'">Open Lesson →</button></div>').join('');
       box.innerHTML=(gradeHtml+lessonHtml)||'<div class="empty">No matching content found.</div>';
       box.querySelectorAll('[data-global-grade]').forEach(b=>b.onclick=()=>{closeModal();domaOpenGrade(b.dataset.globalGrade)});
       box.querySelectorAll('[data-global-lesson]').forEach(b=>b.onclick=()=>{closeModal();openPublicLesson(b.dataset.globalLesson)});
@@ -918,7 +932,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
     const result=await originalSelectLesson(i);
     try{
       const l=currentLessons?.[currentLessonIndex];
-      if(l){const s=getLocal();s.recentLesson={id:l.id,title:l.title,unitTitle:l._unit?.title||'English curriculum',gradeId:currentGrade?.id||null,at:new Date().toISOString()};setLocal(s);addStudyDay();}
+      if(l){const s=getLocal();s.recentLesson={id:l.id,title:l._displayTitle||l.title,unitTitle:l._unit?.title||'English curriculum',gradeId:currentGrade?.id||null,at:new Date().toISOString()};setLocal(s);addStudyDay();}
     }catch(e){}
     setTimeout(enhanceLessonWorkspace,0);
     updateHomePersonal();
@@ -929,7 +943,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
     const before=currentLessons?.[currentLessonIndex];
     const result=await originalCompleteLesson();
     addStudyDay();
-    try{if(before){const s=getLocal();s.recentLesson={id:before.id,title:before.title,unitTitle:before._unit?.title||'English curriculum',gradeId:currentGrade?.id||null,at:new Date().toISOString()};setLocal(s)}}catch(e){}
+    try{if(before){const s=getLocal();s.recentLesson={id:before.id,title:before._displayTitle||before.title,unitTitle:before._unit?.title||'English curriculum',gradeId:currentGrade?.id||null,at:new Date().toISOString()};setLocal(s)}}catch(e){}
     setTimeout(enhanceLessonWorkspace,0);updateHomePersonal();return result;
   };
 
@@ -1133,271 +1147,6 @@ document.addEventListener('DOMContentLoaded',boot);</script>
     const host=document.querySelector('.home-learning-grid');if(host||!sessionUser)return;
   }
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{enhanceStudentShell();patchNavNotificationBadge()},400));
-})();
-</script>
-<script id="doma-vocab100-view-fix">
-(function(){
-  'use strict';
-  const baseStudentView = window.studentView;
-  const baseOpenStudentTool = window.openStudentTool;
-  if (typeof baseStudentView !== 'function') return;
-
-  function setActive(view){
-    document.querySelectorAll('.side-link[data-view]').forEach(function(b){
-      b.classList.toggle('active', b.dataset.view===view);
-    });
-  }
-
-  function renderRow(x){
-    const search = String([x.word,x.translation_ar,x.example_en,x.example_ar,x.unit_title].join(' ')).toLowerCase();
-    return '<article class="words100-row" data-search="'+esc(search)+'" data-unit="'+esc(x.unit_title||'')+'">'
-      +'<div class="words100-num">'+esc(x.sort_order)+'</div>'
-      +'<div class="words100-word"><strong>'+esc(x.word)+'</strong><span>'+esc(x.translation_ar)+'</span><span class="words100-unit">'+esc(x.unit_title||'Vocabulary')+'</span></div>'
-      +'<div class="words100-example"><strong>'+esc(x.example_en)+'</strong><span>'+esc(x.example_ar)+'</span></div>'
-      +'</article>';
-  }
-
-  async function renderVocab100(){
-    if(typeof sessionUser === 'undefined' || !sessionUser){
-      $('drawerBody').innerHTML='<div class="empty">Log in to open the 100-word revision bank.</div>';
-      return;
-    }
-    currentStudentView='vocab100';
-    setActive('vocab100');
-    $('drawerTitle').textContent='100 Words';
-    $('drawerSubtitle').textContent='3rd Secondary bilingual vocabulary revision.';
-    $('drawerBody').innerHTML='<div class="empty">Loading the 100-word bank…</div>';
-
-    const active=await ensureActiveGrade();
-    const grade=active?.grade || currentGrade;
-    if(!grade){
-      $('drawerBody').innerHTML='<div class="empty">Choose and activate a grade first.</div>';
-      return;
-    }
-    if(String(grade.name||'').toLowerCase()!=='3rd secondary'){
-      $('drawerBody').innerHTML='<div class="card dash"><span class="pill">3rd Secondary</span><h3 style="margin-top:8px">100 Words is for 3rd Secondary.</h3><p style="font-size:11px;color:#888;margin-top:6px;line-height:1.7">The Admin vocabulary bank is linked to the 3rd Secondary track. Switch your active grade to open it.</p></div>';
-      return;
-    }
-
-    const r=await sb.from('bilingual_vocab').select('id,unit_title,word,translation_ar,example_en,example_ar,sort_order,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true});
-    if(r.error){
-      $('drawerBody').innerHTML='<div class="empty">Could not load the 100-word bank: '+esc(r.error.message)+'</div>';
-      return;
-    }
-
-    const rows=(r.data||[]).sort((a,b)=>Number(a.sort_order||999)-Number(b.sort_order||999));
-    if(!rows.length){
-      $('drawerBody').innerHTML='<div class="empty">No published 100-word entries were found yet. Open Admin → Vocabulary & Sentences and use “Seed 100 Entries”.</div>';
-      return;
-    }
-
-    const units=[...new Set(rows.map(x=>String(x.unit_title||'').trim()).filter(Boolean))];
-    const unitOptions='<option value="">All Units</option>'+units.map(function(u){return '<option value="'+esc(u)+'">'+esc(u)+'</option>'}).join('');
-
-    $('drawerBody').innerHTML='<div class="words100-page">'
-      +'<div class="words100-head"><div class="words100-title"><span class="pill">Bilingual Revision Bank</span><h3>100 Words + 100 Example Sentences</h3><p>English word, Arabic meaning, original example sentence and Arabic translation.</p></div><button type="button" class="btn secondary" id="w100Back">← Back to Lessons</button></div>'
-      +'<div class="words100-stats"><div class="words100-stat"><b id="w100Total">'+rows.length+'</b><span>Total entries</span></div><div class="words100-stat"><b id="w100Visible">'+rows.length+'</b><span>Showing</span></div><div class="words100-stat"><b>3rd</b><span>Secondary</span></div></div>'
-      +'<div class="card" style="padding:12px"><div class="words100-toolbar"><input id="w100Search" class="field" placeholder="Search English or Arabic…"><select id="w100Unit" class="field">'+unitOptions+'</select><button type="button" class="btn primary" id="w100Reset">Reset</button></div></div>'
-      +'<div id="w100List" class="words100-list">'+rows.map(renderRow).join('')+'</div>'
-      +'</div>';
-
-    $('w100Back')?.addEventListener('click',function(){baseStudentView('lessons')});
-    const search=$('w100Search'),unit=$('w100Unit'),list=$('w100List'),visible=$('w100Visible');
-    function apply(){
-      const q=String(search?.value||'').trim().toLowerCase();
-      const u=String(unit?.value||'');
-      let count=0;
-      list.querySelectorAll('.words100-row').forEach(function(row){
-        const okQ=!q || String(row.dataset.search||'').includes(q);
-        const okU=!u || row.dataset.unit===u;
-        const show=okQ&&okU;
-        row.style.display=show?'grid':'none';
-        if(show)count++;
-      });
-      if(visible)visible.textContent=count;
-    }
-    search?.addEventListener('input',apply);
-    unit?.addEventListener('change',apply);
-    $('w100Reset')?.addEventListener('click',function(){
-      if(search)search.value='';
-      if(unit)unit.value='';
-      apply();
-    });
-  }
-
-  window.studentView = async function(view){
-    if(view==='vocab100') return renderVocab100();
-    return baseStudentView(view);
-  };
-
-  window.openStudentTool = function(view){
-    if(view==='vocab100'){
-      if(typeof sessionUser === 'undefined' || !sessionUser){ openAuth('login'); return; }
-      $('drawer').classList.add('show');
-      document.body.style.overflow='hidden';
-      return renderVocab100();
-    }
-    return baseOpenStudentTool(view);
-  };
-
-  window.renderVocab100=renderVocab100;
-})();
-</script>
-
-<script id="doma-vocab100-final-click-fix">
-(function(){
-  'use strict';
-
-  const previousOpenStudentTool = window.openStudentTool;
-  const previousStudentView = window.studentView;
-
-  function fail(message){
-    const body=document.getElementById('drawerBody');
-    if(body) body.innerHTML='<div class="empty">'+esc(message)+'</div>';
-    else if(typeof showToast==='function') showToast(message);
-  }
-
-  function setNavActive(view){
-    document.querySelectorAll('.side-link[data-view]').forEach(function(btn){
-      btn.classList.toggle('active',btn.dataset.view===view);
-    });
-  }
-
-  async function load100Words(){
-    try{
-      if(typeof sessionUser==='undefined' || !sessionUser){
-        if(typeof openAuth==='function') openAuth('login');
-        return;
-      }
-      const drawer=document.getElementById('drawer');
-      const body=document.getElementById('drawerBody');
-      if(!drawer||!body) return fail('Student Area is not available on this page.');
-      drawer.classList.add('show');
-      document.body.style.overflow='hidden';
-      window.currentStudentView='vocab100';
-      setNavActive('vocab100');
-      document.getElementById('drawerTitle').textContent='100 Words';
-      document.getElementById('drawerSubtitle').textContent='3rd Secondary bilingual vocabulary revision.';
-      body.innerHTML='<div class="empty">Loading the 100-word bank…</div>';
-
-      if(typeof sb==='undefined' || !sb){
-        return fail('Supabase is not connected yet. Refresh the page and try again.');
-      }
-
-      let grade=(Array.isArray(window.grades)?window.grades:[]).find(function(g){
-        return String(g.name||'').trim().toLowerCase()==='3rd secondary';
-      });
-      if(!grade){
-        const gr=await sb.from('grades').select('id,name,stage,is_active').eq('name','3rd Secondary').maybeSingle();
-        if(gr.error) return fail('Could not load 3rd Secondary: '+gr.error.message);
-        grade=gr.data;
-      }
-      if(!grade||!grade.id) return fail('3rd Secondary grade was not found.');
-
-      let profileGradeId=window.currentGrade?.id||null;
-      try{
-        const pr=await sb.from('profiles').select('grade_id').eq('id',sessionUser.id).maybeSingle();
-        if(!pr.error && pr.data?.grade_id) profileGradeId=pr.data.grade_id;
-      }catch(e){}
-
-      if(profileGradeId!==grade.id){
-        body.innerHTML='<div class="card dash" style="padding:22px"><span class="pill">3rd Secondary</span><h3 style="margin-top:8px">100 Words is for 3rd Secondary.</h3><p style="font-size:11px;color:#8b8084;margin-top:7px;line-height:1.7">Your current account is linked to another grade. Open your Profile or choose an active 3rd Secondary subscription to use this revision bank.</p><div class="account-actions"><button type="button" class="btn primary" id="goProfile100">Open Profile</button><button type="button" class="btn secondary" id="close100NoGrade">Close</button></div></div>';
-        document.getElementById('goProfile100')?.addEventListener('click',function(){
-          if(typeof previousStudentView==='function') previousStudentView('profile');
-        });
-        document.getElementById('close100NoGrade')?.addEventListener('click',function(){
-          if(typeof closeDrawer==='function') closeDrawer();
-        });
-        return;
-      }
-
-      const r=await sb.from('bilingual_vocab')
-        .select('id,unit_title,word,translation_ar,example_en,example_ar,sort_order,is_published')
-        .eq('grade_id',grade.id)
-        .eq('is_published',true)
-        .order('sort_order',{ascending:true});
-
-      if(r.error){
-        return fail('Could not load the 100-word bank: '+r.error.message);
-      }
-
-      const rows=(r.data||[]).sort(function(a,b){return Number(a.sort_order||999)-Number(b.sort_order||999)});
-      if(!rows.length){
-        return fail('The 100-word bank is empty. Open Admin → Vocabulary & Sentences and press “Seed 100 Entries”.');
-      }
-
-      const units=[...new Set(rows.map(function(x){return String(x.unit_title||'').trim();}).filter(Boolean))];
-      const unitOptions='<option value="">All Units</option>'+units.map(function(u){return '<option value="'+esc(u)+'">'+esc(u)+'</option>';}).join('');
-
-      body.innerHTML='<div class="words100-page">'
-        +'<div class="words100-head"><div class="words100-title"><span class="pill">Bilingual Revision Bank</span><h3>100 Words + 100 Example Sentences</h3><p>English word, Arabic meaning, original example sentence and Arabic translation.</p></div><button type="button" class="btn secondary" id="w100BackFinal">← Back</button></div>'
-        +'<div class="words100-stats"><div class="words100-stat"><b>'+rows.length+'</b><span>Total entries</span></div><div class="words100-stat"><b id="w100VisibleFinal">'+rows.length+'</b><span>Showing</span></div><div class="words100-stat"><b>3rd</b><span>Secondary</span></div></div>'
-        +'<div class="card" style="padding:12px"><div class="words100-toolbar"><input id="w100SearchFinal" class="field" placeholder="Search English or Arabic…"><select id="w100UnitFinal" class="field">'+unitOptions+'</select><button type="button" class="btn primary" id="w100ResetFinal">Reset</button></div></div>'
-        +'<div id="w100ListFinal" class="words100-list">'+rows.map(function(x){
-          const search=String([x.word,x.translation_ar,x.example_en,x.example_ar,x.unit_title].join(' ')).toLowerCase();
-          return '<article class="words100-row" data-search="'+esc(search)+'" data-unit="'+esc(x.unit_title||'')+'">'
-            +'<div class="words100-num">'+esc(x.sort_order)+'</div>'
-            +'<div class="words100-word"><strong>'+esc(x.word)+'</strong><span>'+esc(x.translation_ar)+'</span><span class="words100-unit">'+esc(x.unit_title||'Vocabulary')+'</span></div>'
-            +'<div class="words100-example"><strong>'+esc(x.example_en)+'</strong><span>'+esc(x.example_ar)+'</span></div>'
-            +'</article>';
-        }).join('')+'</div>'
-        +'</div>';
-
-      document.getElementById('w100BackFinal')?.addEventListener('click',function(){
-        if(typeof previousStudentView==='function') previousStudentView('lessons');
-      });
-
-      const search=document.getElementById('w100SearchFinal');
-      const unit=document.getElementById('w100UnitFinal');
-      const list=document.getElementById('w100ListFinal');
-      const visible=document.getElementById('w100VisibleFinal');
-      function apply(){
-        const q=String(search?.value||'').trim().toLowerCase();
-        const u=String(unit?.value||'');
-        let count=0;
-        list?.querySelectorAll('.words100-row').forEach(function(row){
-          const show=(!q||String(row.dataset.search||'').includes(q))&&(!u||row.dataset.unit===u);
-          row.style.display=show?'grid':'none';
-          if(show)count++;
-        });
-        if(visible) visible.textContent=String(count);
-      }
-      search?.addEventListener('input',apply);
-      unit?.addEventListener('change',apply);
-      document.getElementById('w100ResetFinal')?.addEventListener('click',function(){
-        if(search) search.value='';
-        if(unit) unit.value='';
-        apply();
-      });
-    }catch(err){
-      console.error('DOMA 100 Words final fix:',err);
-      fail('100 Words could not open: '+(err?.message||String(err)));
-    }
-  }
-
-  window.openStudentTool=function(view){
-    if(view==='vocab100') return load100Words();
-    if(typeof previousOpenStudentTool==='function') return previousOpenStudentTool(view);
-  };
-
-  window.studentView=function(view){
-    if(view==='vocab100') return load100Words();
-    if(typeof previousStudentView==='function') return previousStudentView(view);
-  };
-
-  window.openVocab100=load100Words;
-
-  // Capture the click before old inline handlers so the 100 Words tile can never be ignored.
-  document.addEventListener('click',function(e){
-    const target=e.target.closest('button,a,.tool,.clickable-tool');
-    if(!target) return;
-    const text=String(target.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
-    const is100=target.dataset?.view==='vocab100' || text.includes('100 words') || text.includes('100 word');
-    if(!is100) return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    load100Words();
-  },true);
 })();
 </script>
 </body>
