@@ -18,11 +18,6 @@
 @media(max-width:900px){.admin-upgrade-summary{grid-template-columns:1fr 1fr}}@media(max-width:600px){.admin-upgrade-summary{grid-template-columns:1fr}}
 </style>
 
-
-<style id="doma-third-secondary-css">
-.third-summary{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.third-summary .card{padding:15px}.bigstat{font-size:24px;font-weight:900;margin-top:5px}.third-toolbar{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.third-video-ok{color:#9de1ba}.third-video-missing{color:#e0a7b3}.third-secondary-table .video-cell{max-width:320px;word-break:break-all}
-@media(max-width:1200px){.third-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:650px){.third-summary{grid-template-columns:1fr 1fr}}
-</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -50,7 +45,7 @@
       <button class="nav-btn" data-section="lessons">▣ Lessons</button>
       <button class="nav-btn" data-section="quizzes">✓ Exams & Quizzes</button>
       <button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
-      <button class="nav-btn" data-section="third-secondary">🎓 3rd Secondary Studio</button>
+      <button class="nav-btn" data-section="daily100">🔤 Daily 100 Words</button>
       <button class="nav-btn" data-section="homework">✎ Homework</button>
       <div class="nav-title">Students</div>
       <button class="nav-btn" data-section="students">◎ Students</button>
@@ -121,12 +116,12 @@
         <div id="quizzesTable" class="table-wrap"></div>
       </section>
 
-      <section id="section-third-secondary" class="section">
-        <div class="head"><div><h2>3rd Secondary Studio</h2><p>Dedicated tools for building and checking the 3rd Secondary English course without touching other grades.</p></div><div class="actions"><button class="btn secondary" id="thirdSecondaryRefresh">Refresh</button><button class="btn" id="thirdSecondaryOpenLessons">Open Lessons</button></div></div>
-        <div class="third-summary" id="thirdSecondarySummary"><div class="card"><div class="muted">Grade</div><div id="tsGradeStatus" class="bigstat">Checking…</div></div><div class="card"><div class="muted">Units</div><div id="tsUnits" class="bigstat">—</div></div><div class="card"><div class="muted">Lessons</div><div id="tsLessons" class="bigstat">—</div></div><div class="card"><div class="muted">With Video</div><div id="tsVideos" class="bigstat">—</div></div><div class="card"><div class="muted">Quizzes</div><div id="tsQuizzes" class="bigstat">—</div></div><div class="card"><div class="muted">Homework</div><div id="tsHomework" class="bigstat">—</div></div></div>
-        <div class="third-toolbar card"><div><b>Course setup</b><div class="muted" style="font-size:10px;margin-top:4px">Creates only missing units for 3rd Secondary. Existing units are preserved.</div></div><button class="btn" id="thirdSecondaryEnsureUnits">Create / repair 3rd Secondary units</button></div>
-        <div class="card" style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:end;flex-wrap:wrap"><div><b>3rd Secondary video status</b><div class="muted" style="font-size:10px;margin-top:4px">Every row shows whether a real video URL is saved. Use Edit to add or replace the video.</div></div><input id="thirdSecondaryLessonSearch" class="field" style="max-width:320px" placeholder="Search 3rd Secondary lessons…"></div><div id="thirdSecondaryLessonsTable" class="table-wrap" style="margin-top:12px"></div></div>
-        <div class="info-box" style="margin-top:14px">The studio uses the existing Supabase lesson/quiz/homework tables and the same staff session as the main Admin. It does not create a second login or a second database connection.</div>
+      <section id="section-daily100" class="section">
+        <div class="head"><div><h2>Daily 100 Words</h2><p>Manage the daily 100-word + 100-sentence practice sets shown to students.</p></div><div class="actions"><button class="btn secondary" id="d100Seed">Seed Day 1</button><button class="btn" id="d100New">+ New Word</button></div></div>
+        <div class="toolbar"><select id="d100Day"><option value="">All Days</option></select><input id="d100Search" placeholder="Search word, translation or sentence…"><button class="btn secondary" id="d100Refresh">Refresh</button></div>
+        <div class="daily100-admin-summary"><div class="daily100-admin-card"><b id="d100Count">—</b><span>Total entries</span></div><div class="daily100-admin-card"><b id="d100Days">—</b><span>Days</span></div><div class="daily100-admin-card"><b id="d100Published">—</b><span>Published</span></div><div class="daily100-admin-card"><b id="d100Missing">—</b><span>Missing sentences</span></div></div>
+        <div class="daily100-admin-note">Students see published entries from this section. Use <b>New Word</b> to create another entry, or <b>Seed Day 1</b> after running the SQL patch to populate the default 100 words.</div>
+        <div id="daily100Table" class="table-wrap daily100-admin-table"></div>
       </section>
 
       <section id="section-homework" class="section">
@@ -366,8 +361,65 @@ async function loadActivity(){
   let rows=r.data||[];const t=($('activitySearch')?.value||'').trim().toLowerCase();if(t)rows=rows.filter(x=>(x.profiles?.full_name||'').toLowerCase().includes(t)||(x.activity_type||'').toLowerCase().includes(t));
   $('activityTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Activity</th><th>Details</th><th>Date</th><th>WhatsApp</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.profiles?.full_name||'Student')+'</b><div class="muted">'+esc(x.profiles?.email||'')+'</div></td><td><span class="activity-chip">'+esc(x.activity_type)+'</span></td><td>'+esc(x.metadata?.title||x.metadata?.name||'')+'</td><td>'+esc(fmt(x.created_at))+'</td><td>'+(x.profiles?.phone?'<a class="wa" target="_blank" href="https://wa.me/20'+esc(x.profiles.phone).replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')+'">Open</a>':'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No activity records yet.</div>';
 }
-loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
+loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,daily100:loadDaily100,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
 $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
+</script>
+
+<script id="doma-admin-daily100-script">
+(function(){
+  function dayOptions(selected){
+    const days=[...new Set((window.__d100Rows||[]).map(x=>Number(x.day_number||1)))].sort((a,b)=>a-b);
+    return '<option value="">All Days</option>'+days.map(d=>'<option value="'+d+'" '+(String(d)===String(selected||'')?'selected':'')+'>Day '+d+'</option>').join('');
+  }
+  async function loadDaily100(){
+    const box=$('daily100Table');
+    if(!box)return;
+    box.innerHTML='<div class="empty">Loading Daily 100…</div>';
+    const r=await db.from('daily_100').select('id,day_number,word,translation,sentence,sort_order,is_published,created_at,updated_at').order('day_number',{ascending:true}).order('sort_order',{ascending:true}).limit(5000);
+    if(r.error){
+      box.innerHTML='<div class="empty">Could not load Daily 100: '+esc(r.error.message)+'</div>';
+      return;
+    }
+    const all=r.data||[];
+    window.__d100Rows=all;
+    const selectedDay=String($('d100Day')?.value||'');
+    const q=String($('d100Search')?.value||'').trim().toLowerCase();
+    let rows=all;
+    if(selectedDay)rows=rows.filter(x=>String(x.day_number)===selectedDay);
+    if(q)rows=rows.filter(x=>String(x.word||'').toLowerCase().includes(q)||String(x.translation||'').toLowerCase().includes(q)||String(x.sentence||'').toLowerCase().includes(q));
+    if($('d100Count'))$('d100Count').textContent=all.length;
+    if($('d100Days'))$('d100Days').textContent=new Set(all.map(x=>Number(x.day_number||1))).size;
+    if($('d100Published'))$('d100Published').textContent=all.filter(x=>x.is_published).length;
+    if($('d100Missing'))$('d100Missing').textContent=all.filter(x=>!String(x.sentence||'').trim()).length;
+    if($('d100Day'))$('d100Day').innerHTML=dayOptions(selectedDay);
+    box.innerHTML=rows.length?`<table><thead><tr><th>#</th><th>Day</th><th>Word</th><th>Arabic</th><th>Sentence</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${Number(x.sort_order||0)}</td><td>Day ${Number(x.day_number||1)}</td><td><div class="daily100-admin-word">${esc(x.word||'')}</div></td><td><div class="daily100-admin-ar">${esc(x.translation||'')}</div></td><td><div class="daily100-admin-sentence">${esc(x.sentence||'')}</div></td><td><span class="pill ${x.is_published?'d100-published':'d100-draft'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" data-d100-edit="${esc(x.id)}">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" data-d100-toggle="${esc(x.id)}" data-d100-value="${x.is_published?'false':'true'}">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" data-d100-delete="${esc(x.id)}">Delete</button></div></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No Daily 100 entries found.</div>';
+    box.querySelectorAll('[data-d100-edit]').forEach(b=>b.onclick=()=>editDaily100(b.dataset.d100Edit));
+    box.querySelectorAll('[data-d100-toggle]').forEach(b=>b.onclick=()=>toggleDaily100(b.dataset.d100Toggle,b.dataset.d100Value==='true'));
+    box.querySelectorAll('[data-d100-delete]').forEach(b=>b.onclick=()=>deleteDaily100(b.dataset.d100Delete));
+  }
+  window.loadDaily100=loadDaily100;
+  function openDaily100Form(title,x){
+    openModal(title,`<form id="d100Form"><div class="form-grid"><div class="form-row"><label>Day number</label><input id="d100DayNo" type="number" min="1" value="${Number(x?.day_number||1)}" required></div><div class="form-row"><label>Order (1–100)</label><input id="d100Order" type="number" min="1" max="100" value="${Number(x?.sort_order||1)}" required></div><div class="form-row"><label>English word</label><input id="d100Word" value="${esc(x?.word||'')}" required></div><div class="form-row"><label>Arabic translation</label><input id="d100Translation" value="${esc(x?.translation||'')}" required></div><div class="form-row full"><label>Example sentence</label><textarea id="d100Sentence" required>${esc(x?.sentence||'')}</textarea></div><div class="form-row full"><label>Publishing</label><select id="d100Published"><option value="true" ${x?.is_published!==false?'selected':''}>Published</option><option value="false" ${x?.is_published===false?'selected':''}>Draft</option></select></div></div><button class="btn full">Save Word</button></form>`);
+    $('d100Form').onsubmit=async e=>{
+      e.preventDefault();
+      const p={day_number:Number($('d100DayNo').value||1),sort_order:Number($('d100Order').value||1),word:$('d100Word').value.trim(),translation:$('d100Translation').value.trim(),sentence:$('d100Sentence').value.trim(),is_published:$('d100Published').value==='true',updated_at:new Date().toISOString()};
+      const existing=await db.from('daily_100').select('id').eq('day_number',p.day_number).eq('sort_order',p.sort_order).limit(1);
+      if(existing.error)return toast(existing.error.message);
+      if(!x&&existing.data?.length)return toast('That order number is already used for this day.');
+      const r=x?await db.from('daily_100').update(p).eq('id',x.id).select('id'):await db.from('daily_100').insert(p).select('id');
+      if(r.error)return toast('Save failed: '+r.error.message);
+      closeModal();toast('Daily 100 word saved.');loadDaily100();
+    };
+  }
+  window.editDaily100=async id=>{const r=await db.from('daily_100').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);openDaily100Form('Edit Daily 100 Word',r.data)};
+  window.toggleDaily100=async(id,v)=>{const r=await db.from('daily_100').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id');if(r.error)return toast(r.error.message);loadDaily100()};
+  window.deleteDaily100=async id=>{if(!confirm('Delete this Daily 100 word?'))return;const r=await db.from('daily_100').delete().eq('id',id).select('id');if(r.error)return toast(r.error.message);if(!r.data?.length)return toast('Delete did not persist.');toast('Daily 100 word deleted.');loadDaily100()};
+  $('d100New')?.addEventListener('click',()=>openDaily100Form('New Daily 100 Word',null));
+  $('d100Seed')?.addEventListener('click',()=>toast('Run the Daily 100 SQL patch once to seed the default 100 words.'));
+  $('d100Refresh')?.addEventListener('click',loadDaily100);
+  $('d100Day')?.addEventListener('change',loadDaily100);
+  $('d100Search')?.addEventListener('input',loadDaily100);
+})();
 </script>
 
 <script id="doma-admin-all-upgrades-script">
@@ -413,95 +465,5 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
 })();
 </script>
 
-
-<script id="doma-third-secondary-studio">
-(function(){
-  'use strict';
-  const UNIT_TITLES=[
-    'Inside the World of Care',
-    'The Power of Machines',
-    'Protect Nature, Protect Future',
-    'Marine Life',
-    'From Muscles to Mindset',
-    "Let's Hang Out!"
-  ];
-  let thirdGrade=null;
-  let thirdLessons=[];
-
-  function findThirdGrade(){
-    return grades.find(g=>String(g.name||'').trim().toLowerCase()==='3rd secondary');
-  }
-  async function resolveGrade(){
-    if(!grades.length) await loadGrades();
-    thirdGrade=findThirdGrade();
-    if(!thirdGrade){
-      $('tsGradeStatus').textContent='Grade not found';
-      return null;
-    }
-    $('tsGradeStatus').textContent=thirdGrade.name;
-    return thirdGrade;
-  }
-
-  async function loadThirdSecondaryStudio(){
-    const g=await resolveGrade();
-    if(!g)return;
-    const [u,l,q,h]=await Promise.all([
-      db.from('units').select('id,title,unit_number').eq('grade_id',g.id).order('unit_number',{ascending:true}),
-      db.from('lessons').select('id,title,lesson_type,video_url,unit_id,is_published,duration_minutes,sort_order').eq('grade_id',g.id).order('sort_order',{ascending:true}).order('created_at',{ascending:true}),
-      db.from('quizzes').select('id,title,is_published').eq('grade_id',g.id),
-      db.from('homework').select('id,title,is_published').eq('grade_id',g.id)
-    ]);
-    if(u.error||l.error||q.error||h.error){
-      const er=u.error||l.error||q.error||h.error;
-      $('thirdSecondaryLessonsTable').innerHTML='<div class="empty">'+esc(er.message)+'</div>';
-      return;
-    }
-    thirdLessons=l.data||[];
-    $('tsUnits').textContent=(u.data||[]).length;
-    $('tsLessons').textContent=thirdLessons.length;
-    $('tsVideos').textContent=thirdLessons.filter(x=>String(x.video_url||'').trim()).length;
-    $('tsQuizzes').textContent=(q.data||[]).length;
-    $('tsHomework').textContent=(h.data||[]).length;
-    renderThirdLessons();
-  }
-
-  function renderThirdLessons(){
-    const q=($('thirdSecondaryLessonSearch')?.value||'').trim().toLowerCase();
-    const rows=thirdLessons.filter(x=>!q || (String(x.title||'')+' '+String(x.lesson_type||'')).toLowerCase().includes(q));
-    $('thirdSecondaryLessonsTable').innerHTML=rows.length?'<table class="third-secondary-table"><thead><tr><th>Lesson</th><th>Type</th><th>Duration</th><th>Video</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
-      const has=String(x.video_url||'').trim();
-      return '<tr><td><b>'+esc(x.title)+'</b><div class="muted">Sort '+Number(x.sort_order||0)+'</div></td><td>'+esc(x.lesson_type||'lesson')+'</td><td>'+Number(x.duration_minutes||0)+' min</td><td class="video-cell">'+(has?'<a class="third-video-ok" target="_blank" rel="noopener" href="'+esc(x.video_url)+'">Video ↗</a>':'<span class="third-video-missing">No video saved</span>')+'</td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Draft')+'</span></td><td><div class="actions"><button class="btn secondary small" type="button" onclick="editLesson('+JSON.stringify(x.id)+')">Edit</button></div></td></tr>';
-    }).join('')+'</tbody></table>':'<div class="empty">No 3rd Secondary lessons match your search.</div>';
-  }
-
-  async function ensureThirdUnits(){
-    const g=await resolveGrade();
-    if(!g)return;
-    let {data:existing,error}=await db.from('units').select('id,unit_number,title').eq('grade_id',g.id);
-    if(error)return toast('Could not read 3rd Secondary units: '+error.message);
-    existing=existing||[];
-    const missing=UNIT_TITLES.map((title,i)=>({grade_id:g.id,unit_number:i+1,title,description:'3rd Secondary English curriculum unit.'})).filter(x=>!existing.some(e=>Number(e.unit_number)===x.unit_number));
-    if(!missing.length){toast('3rd Secondary units are already set.');await loadUnitsCache();await loadThirdSecondaryStudio();return;}
-    const ins=await db.from('units').insert(missing).select('id');
-    if(ins.error)return toast('Unit setup failed: '+ins.error.message);
-    toast('3rd Secondary units created: '+missing.length);
-    await loadUnitsCache();
-    await loadThirdSecondaryStudio();
-  }
-
-  document.addEventListener('DOMContentLoaded',function(){
-    $('thirdSecondaryRefresh')?.addEventListener('click',loadThirdSecondaryStudio);
-    $('thirdSecondaryEnsureUnits')?.addEventListener('click',ensureThirdUnits);
-    $('thirdSecondaryLessonSearch')?.addEventListener('input',renderThirdLessons);
-    $('thirdSecondaryOpenLessons')?.addEventListener('click',()=>show('lessons'));
-  });
-
-  const oldLoadSection=window.loadSection;
-  window.loadSection=function(name){
-    if(typeof oldLoadSection==='function') oldLoadSection(name);
-    if(name==='third-secondary')setTimeout(loadThirdSecondaryStudio,50);
-  };
-})();
-</script>
 </body>
 </html>
