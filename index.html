@@ -1243,4 +1243,161 @@ document.addEventListener('DOMContentLoaded',boot);</script>
   window.renderVocab100=renderVocab100;
 })();
 </script>
+
+<script id="doma-vocab100-final-click-fix">
+(function(){
+  'use strict';
+
+  const previousOpenStudentTool = window.openStudentTool;
+  const previousStudentView = window.studentView;
+
+  function fail(message){
+    const body=document.getElementById('drawerBody');
+    if(body) body.innerHTML='<div class="empty">'+esc(message)+'</div>';
+    else if(typeof showToast==='function') showToast(message);
+  }
+
+  function setNavActive(view){
+    document.querySelectorAll('.side-link[data-view]').forEach(function(btn){
+      btn.classList.toggle('active',btn.dataset.view===view);
+    });
+  }
+
+  async function load100Words(){
+    try{
+      if(typeof sessionUser==='undefined' || !sessionUser){
+        if(typeof openAuth==='function') openAuth('login');
+        return;
+      }
+      const drawer=document.getElementById('drawer');
+      const body=document.getElementById('drawerBody');
+      if(!drawer||!body) return fail('Student Area is not available on this page.');
+      drawer.classList.add('show');
+      document.body.style.overflow='hidden';
+      window.currentStudentView='vocab100';
+      setNavActive('vocab100');
+      document.getElementById('drawerTitle').textContent='100 Words';
+      document.getElementById('drawerSubtitle').textContent='3rd Secondary bilingual vocabulary revision.';
+      body.innerHTML='<div class="empty">Loading the 100-word bank…</div>';
+
+      if(typeof sb==='undefined' || !sb){
+        return fail('Supabase is not connected yet. Refresh the page and try again.');
+      }
+
+      let grade=(Array.isArray(window.grades)?window.grades:[]).find(function(g){
+        return String(g.name||'').trim().toLowerCase()==='3rd secondary';
+      });
+      if(!grade){
+        const gr=await sb.from('grades').select('id,name,stage,is_active').eq('name','3rd Secondary').maybeSingle();
+        if(gr.error) return fail('Could not load 3rd Secondary: '+gr.error.message);
+        grade=gr.data;
+      }
+      if(!grade||!grade.id) return fail('3rd Secondary grade was not found.');
+
+      let profileGradeId=window.currentGrade?.id||null;
+      try{
+        const pr=await sb.from('profiles').select('grade_id').eq('id',sessionUser.id).maybeSingle();
+        if(!pr.error && pr.data?.grade_id) profileGradeId=pr.data.grade_id;
+      }catch(e){}
+
+      if(profileGradeId!==grade.id){
+        body.innerHTML='<div class="card dash" style="padding:22px"><span class="pill">3rd Secondary</span><h3 style="margin-top:8px">100 Words is for 3rd Secondary.</h3><p style="font-size:11px;color:#8b8084;margin-top:7px;line-height:1.7">Your current account is linked to another grade. Open your Profile or choose an active 3rd Secondary subscription to use this revision bank.</p><div class="account-actions"><button type="button" class="btn primary" id="goProfile100">Open Profile</button><button type="button" class="btn secondary" id="close100NoGrade">Close</button></div></div>';
+        document.getElementById('goProfile100')?.addEventListener('click',function(){
+          if(typeof previousStudentView==='function') previousStudentView('profile');
+        });
+        document.getElementById('close100NoGrade')?.addEventListener('click',function(){
+          if(typeof closeDrawer==='function') closeDrawer();
+        });
+        return;
+      }
+
+      const r=await sb.from('bilingual_vocab')
+        .select('id,unit_title,word,translation_ar,example_en,example_ar,sort_order,is_published')
+        .eq('grade_id',grade.id)
+        .eq('is_published',true)
+        .order('sort_order',{ascending:true});
+
+      if(r.error){
+        return fail('Could not load the 100-word bank: '+r.error.message);
+      }
+
+      const rows=(r.data||[]).sort(function(a,b){return Number(a.sort_order||999)-Number(b.sort_order||999)});
+      if(!rows.length){
+        return fail('The 100-word bank is empty. Open Admin → Vocabulary & Sentences and press “Seed 100 Entries”.');
+      }
+
+      const units=[...new Set(rows.map(function(x){return String(x.unit_title||'').trim();}).filter(Boolean))];
+      const unitOptions='<option value="">All Units</option>'+units.map(function(u){return '<option value="'+esc(u)+'">'+esc(u)+'</option>';}).join('');
+
+      body.innerHTML='<div class="words100-page">'
+        +'<div class="words100-head"><div class="words100-title"><span class="pill">Bilingual Revision Bank</span><h3>100 Words + 100 Example Sentences</h3><p>English word, Arabic meaning, original example sentence and Arabic translation.</p></div><button type="button" class="btn secondary" id="w100BackFinal">← Back</button></div>'
+        +'<div class="words100-stats"><div class="words100-stat"><b>'+rows.length+'</b><span>Total entries</span></div><div class="words100-stat"><b id="w100VisibleFinal">'+rows.length+'</b><span>Showing</span></div><div class="words100-stat"><b>3rd</b><span>Secondary</span></div></div>'
+        +'<div class="card" style="padding:12px"><div class="words100-toolbar"><input id="w100SearchFinal" class="field" placeholder="Search English or Arabic…"><select id="w100UnitFinal" class="field">'+unitOptions+'</select><button type="button" class="btn primary" id="w100ResetFinal">Reset</button></div></div>'
+        +'<div id="w100ListFinal" class="words100-list">'+rows.map(function(x){
+          const search=String([x.word,x.translation_ar,x.example_en,x.example_ar,x.unit_title].join(' ')).toLowerCase();
+          return '<article class="words100-row" data-search="'+esc(search)+'" data-unit="'+esc(x.unit_title||'')+'">'
+            +'<div class="words100-num">'+esc(x.sort_order)+'</div>'
+            +'<div class="words100-word"><strong>'+esc(x.word)+'</strong><span>'+esc(x.translation_ar)+'</span><span class="words100-unit">'+esc(x.unit_title||'Vocabulary')+'</span></div>'
+            +'<div class="words100-example"><strong>'+esc(x.example_en)+'</strong><span>'+esc(x.example_ar)+'</span></div>'
+            +'</article>';
+        }).join('')+'</div>'
+        +'</div>';
+
+      document.getElementById('w100BackFinal')?.addEventListener('click',function(){
+        if(typeof previousStudentView==='function') previousStudentView('lessons');
+      });
+
+      const search=document.getElementById('w100SearchFinal');
+      const unit=document.getElementById('w100UnitFinal');
+      const list=document.getElementById('w100ListFinal');
+      const visible=document.getElementById('w100VisibleFinal');
+      function apply(){
+        const q=String(search?.value||'').trim().toLowerCase();
+        const u=String(unit?.value||'');
+        let count=0;
+        list?.querySelectorAll('.words100-row').forEach(function(row){
+          const show=(!q||String(row.dataset.search||'').includes(q))&&(!u||row.dataset.unit===u);
+          row.style.display=show?'grid':'none';
+          if(show)count++;
+        });
+        if(visible) visible.textContent=String(count);
+      }
+      search?.addEventListener('input',apply);
+      unit?.addEventListener('change',apply);
+      document.getElementById('w100ResetFinal')?.addEventListener('click',function(){
+        if(search) search.value='';
+        if(unit) unit.value='';
+        apply();
+      });
+    }catch(err){
+      console.error('DOMA 100 Words final fix:',err);
+      fail('100 Words could not open: '+(err?.message||String(err)));
+    }
+  }
+
+  window.openStudentTool=function(view){
+    if(view==='vocab100') return load100Words();
+    if(typeof previousOpenStudentTool==='function') return previousOpenStudentTool(view);
+  };
+
+  window.studentView=function(view){
+    if(view==='vocab100') return load100Words();
+    if(typeof previousStudentView==='function') return previousStudentView(view);
+  };
+
+  window.openVocab100=load100Words;
+
+  // Capture the click before old inline handlers so the 100 Words tile can never be ignored.
+  document.addEventListener('click',function(e){
+    const target=e.target.closest('button,a,.tool,.clickable-tool');
+    if(!target) return;
+    const text=String(target.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    const is100=target.dataset?.view==='vocab100' || text.includes('100 words') || text.includes('100 word');
+    if(!is100) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    load100Words();
+  },true);
+})();
+</script>
 </body>
