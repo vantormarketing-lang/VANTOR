@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>DOMA ACADEMY — Admin • Master Content Control</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DOMA ACADEMY — Admin • One-Step Final</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -13,168 +12,163 @@
 .app{display:none;min-height:100vh}.sidebar{position:fixed;left:0;top:0;bottom:0;width:252px;background:#100b0d;border-right:1px solid var(--line);padding:20px 14px;overflow:auto}.side-logo{padding:0 10px 20px}.side-logo small{display:block;margin-top:5px}.nav-title{text-transform:uppercase;font-size:10px;color:#74666c;letter-spacing:.15em;padding:15px 10px 7px}.nav-btn{width:100%;text-align:left;border:0;background:transparent;color:#c1b3b8;padding:11px 12px;border-radius:9px;margin:2px 0;font-size:12px}.nav-btn:hover,.nav-btn.active{background:var(--panel2);color:#fff}.main{margin-left:252px;min-height:100vh}.top{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;background:#0b0809ee;backdrop-filter:blur(12px);z-index:10}.top h1{font-size:20px;margin:0}.mobile-menu{display:none;border:0;background:transparent;color:#fff;font-size:22px}.content{padding:26px;max-width:1600px;margin:auto}.section{display:none}.section.active{display:block}.head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:20px}.head h2{margin:0 0 5px;font-size:25px}.head p{margin:0;color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px}.stat .num{font-size:30px;font-weight:900;margin-top:7px}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{max-width:260px}.field,input,select,textarea{width:100%;background:#0d090a;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}.field:focus,input:focus,select:focus,textarea:focus{border-color:#784055}textarea{min-height:100px;resize:vertical}.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:#fff;font-weight:700}.btn:hover{background:var(--accent2)}.btn.secondary{background:#302025}.btn.ok{background:var(--ok)}.btn.warn{background:var(--warn)}.btn.danger{background:var(--danger)}.btn.small{padding:7px 10px;font-size:11px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:left;padding:12px 13px;border-bottom:1px solid var(--line);font-size:12px;vertical-align:top}th{font-size:10px;color:#9c8c92;text-transform:uppercase;letter-spacing:.08em}tr:last-child td{border-bottom:0}.actions{display:flex;gap:6px;flex-wrap:wrap}.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:#302025;color:#e9dde1;font-size:10px}.pill.ok{background:#173b2b;color:#a7e5c3}.pill.warn{background:#493915;color:#f1d681}.pill.bad{background:#481b27;color:#ff9caf}.pill.free{background:#173b2b;color:#a7e5c3}.empty{padding:30px;text-align:center;color:var(--muted)}.connection{display:inline-flex;gap:7px;align-items:center;color:var(--muted);font-size:11px}.dot{width:8px;height:8px;border-radius:50%;background:#777}.dot.ok{background:#55c98a}.dot.bad{background:#e66b7f}.modal{display:none;position:fixed;inset:0;background:#000b;z-index:100;place-items:center;padding:18px}.modal.open{display:grid}.modal-card{width:min(760px,100%);max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.modal-head h3{margin:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.form-row{margin-bottom:11px}.form-row label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.toast{position:fixed;right:18px;bottom:18px;background:#23171c;border:1px solid var(--line);padding:12px 15px;border-radius:10px;display:none;z-index:200}.toast.show{display:block}.info-box{padding:13px;border-radius:11px;background:#1b1115;border:1px solid #4a2732;color:#c7b8bd;font-size:11px}.mobile-close{display:none}
 @media(max-width:960px){.sidebar{transform:translateX(-100%);transition:.2s;z-index:50}.sidebar.open{transform:none}.main{margin-left:0}.mobile-menu{display:block}.top{padding:0 16px}.content{padding:17px}.grid{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.mobile-close{display:block}}@media(max-width:560px){.grid{grid-template-columns:1fr}.head{flex-direction:column}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.toolbar input,.toolbar select{max-width:none;width:100%}}
 .qbank-card{padding:13px;background:#0d090b;border:1px solid #2b171e;border-radius:12px;margin-bottom:8px}.qbank-card b{font-size:12px}.qbank-card small{display:block;color:#777;margin-top:3px}.activity-chip{display:inline-flex;padding:4px 8px;border-radius:999px;background:#2f1e25;font-size:9px}.wa{color:#8ed7ad}.qbank-scroll{max-height:calc(100vh - 285px);min-height:240px;overflow-y:auto;overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.qbank-scroll table{margin:0}.qbank-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px}.qbank-count{font-size:11px;color:var(--muted)}</style>
+
 <style id="doma-admin-all-upgrades-css">
 .admin-upgrade-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-top:14px}.admin-upgrade-card{padding:14px;background:linear-gradient(145deg,#130c0f,#0b090a);border:1px solid #321b23;border-radius:12px}.admin-upgrade-card small{display:block;color:#766c71;font-size:8px;text-transform:uppercase;letter-spacing:1px}.admin-upgrade-card b{display:block;font-size:22px;margin-top:4px}.admin-upgrade-card span{display:block;color:#81777b;font-size:9px;margin-top:3px}.admin-video-link{display:inline-flex;margin-top:5px;color:#d99aac;font-size:9px}.admin-health{margin-top:15px;padding:14px;background:#100a0c;border:1px solid #2c1921;border-radius:12px}.admin-health h3{font-size:14px;margin-bottom:5px}.admin-health p{font-size:10px;color:#80767a;line-height:1.6}.hw-attachment-admin{display:block;margin-top:8px;font-size:9px;color:#d59aaa}.hw-attachment-admin a{color:#efb1bf}.mini-status{font-size:8px;padding:4px 6px;border-radius:6px;background:#171014;border:1px solid #3a222b;color:#aaa}
 @media(max-width:900px){.admin-upgrade-summary{grid-template-columns:1fr 1fr}}@media(max-width:600px){.admin-upgrade-summary{grid-template-columns:1fr}}
 </style>
 
-<style id="doma-final-admin-css">
-.lesson-editor-note{padding:10px 12px;border:1px dashed #4b2b34;border-radius:10px;background:#130b0e;color:#9e8b90;font-size:10px;line-height:1.6;margin-bottom:12px}.field-hint{display:block;margin-top:5px;color:#776c71;font-size:9px}.video-preview-btn{margin-top:7px}.video-preview-box{background:#070607;border:1px solid #302027;border-radius:12px;overflow:hidden}.video-preview-box iframe,.video-preview-box video{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
-</style>
 
-
-<style id="doma-admin-lesson-navigation-upgrade">
-/* Easier global navigation */
-.quick-nav{display:flex;gap:7px;overflow:auto;white-space:nowrap;padding:8px 26px;border-bottom:1px solid #24161b;background:#0b0809}.quick-nav button{border:1px solid #332028;background:#120c0f;color:#bfaeb4;border-radius:999px;padding:7px 10px;font-size:10px}.quick-nav button:hover,.quick-nav button.active{background:#291018;color:#fff;border-color:#713044}.lesson-toolbar-pro{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}.lesson-toolbar-pro select,.lesson-toolbar-pro input{max-width:210px}.lesson-filter-note{font-size:9px;color:#766d72;margin:2px 0 12px}.lesson-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);max-height:calc(100vh - 300px)}.lesson-table-wrap table{min-width:1240px}.lesson-order-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:7px;background:#1b1115;border:1px solid #39212a;color:#d2a3b0;font-size:9px}.video-cell{min-width:180px}.lesson-video-mini{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:#241018;border:1px solid #4a222f;color:#efb4c2;font-size:9px}.lesson-video-mini.missing{background:#111011;color:#8b8185;border-color:#302127}.lesson-video-thumb{width:105px;height:59px;border-radius:7px;object-fit:cover;display:block;border:1px solid #38202a;margin-bottom:6px}.lesson-row-title{display:flex;align-items:flex-start;gap:10px}.lesson-index-circle{width:30px;height:30px;min-width:30px;border-radius:8px;display:grid;place-items:center;background:#26141a;border:1px solid #4a222f;color:#e1a4b2;font-weight:900;font-size:10px}.lesson-row-title strong{display:block}.lesson-row-title small{display:block;margin-top:3px}.lesson-video-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.lesson-package{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.package-pill{font-size:8px;padding:4px 6px;border-radius:6px;background:#161013;border:1px solid #302027;color:#8e8186}.package-pill.ready{color:#9ed9b8;border-color:#29523e;background:#102018}.package-pill.missing{color:#e0b37a;border-color:#59432a;background:#21190f}.content-helper{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 0 14px}.content-helper-card{padding:11px;border:1px solid #302027;border-radius:10px;background:#100a0c}.content-helper-card b{display:block;font-size:10px}.content-helper-card span{display:block;color:#786f73;font-size:8px;margin-top:3px;line-height:1.5}.lesson-jump{display:grid;grid-template-columns:180px 1fr auto;gap:8px;align-items:end;margin-bottom:13px;padding:12px;border:1px solid #39202a;border-radius:12px;background:#100a0c}.lesson-jump label{display:block;color:#8b7d83;font-size:9px;margin-bottom:5px}.video-quick-form{display:grid;gap:10px}.video-preview-card{padding:10px;border:1px solid #372029;background:#0b0809;border-radius:12px}.video-preview-card iframe,.video-preview-card video{width:100%;aspect-ratio:16/9;border:0;border-radius:9px;background:#000;display:block}.order-note{padding:10px 12px;border-radius:10px;border:1px dashed #4b2b34;background:#140b0f;color:#9b8c91;font-size:9px;line-height:1.6;margin:0 0 12px}
-@media(max-width:900px){.quick-nav{padding:8px 16px}.content-helper{grid-template-columns:1fr}.lesson-jump{grid-template-columns:1fr}.lesson-table-wrap{max-height:none}.lesson-toolbar-pro select,.lesson-toolbar-pro input{max-width:none;width:100%}}
+<style id="doma-bilingual-admin-css">
+.bilingual-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-bottom:15px}.bilingual-card{background:linear-gradient(145deg,#160d11,#0d090a);border:1px solid #3b2029;border-radius:14px;padding:17px}.bilingual-card h3{margin:0 0 6px;font-size:15px}.bilingual-card p{margin:0;color:#84787e;font-size:10px;line-height:1.7}.bilingual-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.bilingual-stat{padding:11px;background:#0a0809;border:1px solid #27151b;border-radius:10px}.bilingual-stat b{display:block;font-size:21px}.bilingual-stat span{display:block;font-size:8px;color:#756b70;text-transform:uppercase;letter-spacing:1px}.bilingual-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px}.bilingual-toolbar>*{max-width:240px}.bilingual-scroll{max-height:calc(100vh - 330px);min-height:280px;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.bilingual-scroll table{min-width:1120px}.bilingual-word{font-weight:800}.bilingual-ar{direction:rtl;text-align:right;color:#e2c0ca}.bilingual-example{white-space:pre-wrap;color:#b2a6ab;font-size:10px;line-height:1.55}.bilingual-actions{display:flex;gap:6px;flex-wrap:wrap}.bilingual-note{margin-top:10px;padding:10px 12px;border:1px dashed #40222c;background:#100a0c;border-radius:10px;color:#8e8287;font-size:9px;line-height:1.6}.bilingual-badge{display:inline-flex;padding:4px 7px;border-radius:999px;background:#211016;border:1px solid #4d2632;color:#d99aaa;font-size:9px}@media(max-width:850px){.bilingual-hero{grid-template-columns:1fr}.bilingual-stat-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.bilingual-stat-grid{grid-template-columns:1fr}.bilingual-toolbar>*{max-width:none;width:100%}}
 </style>
 
 </head>
 <body>
-<div class="login" id="login">
-<form class="login-card" id="loginForm">
-<div class="logo">DOMA <span>ACADEMY</span></div>
-<div class="muted" style="font-size:12px">Production Admin Control Panel</div>
-<h1>Staff Login</h1>
-<label>Email</label><input autocomplete="username" id="email" placeholder="admin@domaacademy.com" required="" type="email"/>
-<label>Password</label><input autocomplete="current-password" id="password" required="" type="password"/>
-<button class="btn" style="width:100%;margin-top:18px">Login</button>
-<div class="error" id="loginError"></div>
-<div class="muted" style="font-size:10px;margin-top:10px">Access requires a valid Supabase Auth session with profiles.role = admin or teacher.</div>
-</form>
+<div id="login" class="login">
+  <form id="loginForm" class="login-card">
+    <div class="logo">DOMA <span>ACADEMY</span></div>
+    <div class="muted" style="font-size:12px">Production Admin Control Panel</div>
+    <h1>Staff Login</h1>
+    <label>Email</label><input id="email" type="email" autocomplete="username" required placeholder="admin@domaacademy.com">
+    <label>Password</label><input id="password" type="password" autocomplete="current-password" required>
+    <button class="btn" style="width:100%;margin-top:18px">Login</button>
+    <div id="loginError" class="error"></div>
+    <div class="muted" style="font-size:10px;margin-top:10px">Access requires a valid Supabase Auth session with profiles.role = admin or teacher.</div>
+  </form>
 </div>
-<div class="app" id="app">
-<aside class="sidebar" id="sidebar">
-<div class="side-logo"><div class="logo">DOMA <span>ACADEMY</span></div><small class="muted">Production Admin</small></div>
-<nav>
-<div class="nav-title">Main</div>
-<button class="nav-btn" data-section="dashboard">▦ Dashboard</button>
-<div class="nav-title">Content</div>
-<button class="nav-btn" data-section="grades">⌘ Grades</button>
-<button class="nav-btn" data-section="units">▤ Units</button>
-<button class="nav-btn" data-section="lessons">▣ Lessons</button>
-<button class="nav-btn" data-section="quizzes">✓ Exams &amp; Quizzes</button>
-<button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
-<button class="nav-btn" data-section="homework">✎ Homework</button>
-<div class="nav-title">Students</div>
-<button class="nav-btn" data-section="students">◎ Students</button>
-<button class="nav-btn" data-section="activity">◉ Activity &amp; Attendance</button>
-<button class="nav-btn" data-section="progress">◔ Progress</button>
-<button class="nav-btn" data-section="results">▤ Results</button>
-<button class="nav-btn" data-section="certificates">🏆 Certificates</button>
-<div class="nav-title">Sales</div>
-<button class="nav-btn" data-section="sales">₿ Sales &amp; Subscriptions</button>
-<div class="nav-title">Communication</div>
-<button class="nav-btn" data-section="notifications">✉ Notifications</button>
-<button class="nav-btn" data-section="reviews">★ Reviews</button>
-<div class="nav-title">System</div>
-<button class="nav-btn" data-section="settings">⚙ Settings</button>
-<button class="nav-btn" id="logout">↪ Logout</button>
-</nav>
-</aside>
-<main class="main">
-<header class="top">
-<div style="display:flex;align-items:center;gap:12px">
-<button class="mobile-menu" id="mobileMenu">☰</button>
-<div><h1 id="pageTitle">Dashboard</h1><small class="muted">DOMA ACADEMY</small></div>
-</div>
-<div style="display:flex;align-items:center;gap:10px">
-<span class="connection"><i class="dot" id="connectionDot"></i><span id="connectionText">Checking…</span></span>
-<button class="btn secondary" id="openSite">Open Website ↗</button>
-</div>
-</header>
-<div class="quick-nav" id="quickNav">
-  <button type="button" data-quick-section="dashboard">▦ Dashboard</button>
-  <button type="button" data-quick-section="grades">Grades</button>
-  <button type="button" data-quick-section="units">Units</button>
-  <button type="button" data-quick-section="lessons">▣ Lessons</button>
-  <button type="button" data-quick-section="quizzes">✓ Quizzes</button>
-  <button type="button" data-quick-section="question-bank">Question Bank</button>
-  <button type="button" data-quick-section="homework">Homework</button>
-  <button type="button" data-quick-section="students">Students</button>
-  <button type="button" data-quick-section="sales">Sales</button>
-</div>
-<div class="content">
-<section class="section active" id="section-dashboard">
-<div class="head"><div><h2>Academy Dashboard</h2><p>Live counts and quick access to the main academy systems.</p></div><button class="btn secondary" id="dashboardRefresh">Refresh</button></div>
-<div class="grid">
-<div class="card stat"><div class="muted">Students</div><div class="num" id="stStudents">—</div></div>
-<div class="card stat"><div class="muted">Published Lessons</div><div class="num" id="stLessons">—</div></div>
-<div class="card stat"><div class="muted">Pending Requests</div><div class="num" id="stPending">—</div></div>
-<div class="card stat"><div class="muted">Active Subscriptions</div><div class="num" id="stActive">—</div></div>
-</div>
-<div class="grid" style="margin-top:14px">
-<div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
-<div class="card"><b>Assessment</b><p class="muted">Create quizzes, keep answers private, review attempts and homework.</p></div>
-<div class="card"><b>Students</b><p class="muted">See student profiles, grade, progress and certificates.</p></div>
-<div class="card"><b>Sales</b><p class="muted">Verify Mobile Cash receipts and approve or reject access requests.</p></div>
-</div>
+
+<div id="app" class="app">
+  <aside id="sidebar" class="sidebar">
+    <div class="side-logo"><div class="logo">DOMA <span>ACADEMY</span></div><small class="muted">Production Admin</small></div>
+    <nav>
+      <div class="nav-title">Main</div>
+      <button class="nav-btn" data-section="dashboard">▦ Dashboard</button>
+      <div class="nav-title">Content</div>
+      <button class="nav-btn" data-section="grades">⌘ Grades</button>
+      <button class="nav-btn" data-section="units">▤ Units</button>
+      <button class="nav-btn" data-section="lessons">▣ Lessons</button>
+      <button class="nav-btn" data-section="quizzes">✓ Exams & Quizzes</button>
+      <button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
+      <button class="nav-btn" data-section="bilingual-vocab">Aa Vocabulary & Sentences</button>
+      <button class="nav-btn" data-section="homework">✎ Homework</button>
+      <div class="nav-title">Students</div>
+      <button class="nav-btn" data-section="students">◎ Students</button>
+      <button class="nav-btn" data-section="activity">◉ Activity & Attendance</button>
+      <button class="nav-btn" data-section="progress">◔ Progress</button>
+      <button class="nav-btn" data-section="results">▤ Results</button>
+      <button class="nav-btn" data-section="certificates">🏆 Certificates</button>
+      <div class="nav-title">Sales</div>
+      <button class="nav-btn" data-section="sales">₿ Sales & Subscriptions</button>
+      <div class="nav-title">Communication</div>
+      <button class="nav-btn" data-section="notifications">✉ Notifications</button>
+      <button class="nav-btn" data-section="reviews">★ Reviews</button>
+      <div class="nav-title">System</div>
+      <button class="nav-btn" data-section="settings">⚙ Settings</button>
+      <button class="nav-btn" id="logout">↪ Logout</button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button id="mobileMenu" class="mobile-menu">☰</button>
+        <div><h1 id="pageTitle">Dashboard</h1><small class="muted">DOMA ACADEMY</small></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="connection"><i id="connectionDot" class="dot"></i><span id="connectionText">Checking…</span></span>
+        <button class="btn secondary" id="openSite">Open Website ↗</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="section-dashboard" class="section active">
+        <div class="head"><div><h2>Academy Dashboard</h2><p>Live counts and quick access to the main academy systems.</p></div><button class="btn secondary" id="dashboardRefresh">Refresh</button></div>
+        <div class="grid">
+          <div class="card stat"><div class="muted">Students</div><div id="stStudents" class="num">—</div></div>
+          <div class="card stat"><div class="muted">Published Lessons</div><div id="stLessons" class="num">—</div></div>
+          <div class="card stat"><div class="muted">Pending Requests</div><div id="stPending" class="num">—</div></div>
+          <div class="card stat"><div class="muted">Active Subscriptions</div><div id="stActive" class="num">—</div></div>
+        </div>
+        <div class="grid" style="margin-top:14px">
+          <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
+          <div class="card"><b>Assessment</b><p class="muted">Create quizzes, keep answers private, review attempts and homework.</p></div>
+          <div class="card"><b>Students</b><p class="muted">See student profiles, grade, progress and certificates.</p></div>
+          <div class="card"><b>Sales</b><p class="muted">Verify Mobile Cash receipts and approve or reject access requests.</p></div>
+        </div>
+      </section>
+
+      <section id="section-grades" class="section">
+        <div class="head"><div><h2>Grades</h2><p>Activate or deactivate the six academy grades.</p></div><button class="btn secondary" id="gradesRefresh">Refresh</button></div>
+        <div id="gradesTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-units" class="section">
+        <div class="head"><div><h2>Units</h2><p>Create unit structure for each grade.</p></div><button class="btn" id="newUnit">+ New Unit</button></div>
+        <div class="toolbar"><select id="unitGrade"><option value="">All Grades</option></select><input id="unitSearch" placeholder="Search units…"><button class="btn secondary" id="unitRefresh">Refresh</button></div>
+        <div id="unitsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-lessons" class="section">
+        <div class="head"><div><h2>Lessons</h2><p>Manage English lessons, media, publishing and free/paid access.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
+        <div class="toolbar"><select id="lessonGrade"><option value="">All Grades</option></select><select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select><input id="lessonSearch" placeholder="Search lessons…"><button class="btn secondary" id="lessonRefresh">Refresh</button></div>
+        <div id="lessonsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-quizzes" class="section">
+        <div class="head"><div><h2>Exams & Quizzes</h2><p>Create assessments and manage questions. Correct answers are never sent to students directly.</p></div><button class="btn" id="newQuiz">+ New Quiz</button></div>
+        <div class="toolbar"><select id="quizGrade"><option value="">All Grades</option></select><input id="quizSearch" placeholder="Search quizzes…"><button class="btn secondary" id="quizRefresh">Refresh</button></div>
+        <div id="quizzesTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-homework" class="section">
+        <div class="head"><div><h2>Homework</h2><p>Create assignments and review student submissions.</p></div><button class="btn" id="newHomework">+ New Homework</button></div>
+        <div class="toolbar"><select id="hwGrade"><option value="">All Grades</option></select><input id="hwSearch" placeholder="Search homework…"><button class="btn secondary" id="hwRefresh">Refresh</button></div>
+        <div id="homeworkTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-students" class="section">
+        <div class="head"><div><h2>Students</h2><p>Student accounts and grade information.</p></div><div class="toolbar"><input id="studentSearch" placeholder="Search students…"><button class="btn secondary" id="studentsRefresh">Refresh</button></div></div>
+        <div id="studentsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-progress" class="section"><div class="head"><div><h2>Progress</h2><p>Lesson completion records from student accounts.</p></div><button class="btn secondary" id="progressRefresh">Refresh</button></div><div id="progressTable" class="table-wrap"></div></section>
+      <section id="section-results" class="section"><div class="head"><div><h2>Results</h2><p>Quiz attempts and scores.</p></div><button class="btn secondary" id="resultsRefresh">Refresh</button></div><div id="resultsTable" class="table-wrap"></div></section>
+      <section id="section-certificates" class="section"><div class="head"><div><h2>Certificates</h2><p>Issue and review certificates.</p></div><button class="btn" id="newCertificate">+ Issue Certificate</button></div><div id="certTable" class="table-wrap"></div></section>
+
+      <section id="section-sales" class="section">
+        <div class="head"><div><h2>Sales & Subscriptions</h2><p>Verify Mobile Cash requests and activate student access.</p></div><div class="toolbar"><input id="salesSearch" placeholder="Search requests…"><button class="btn secondary" id="salesRefresh">Refresh</button></div></div>
+        <div class="grid" style="margin-bottom:14px"><div class="card stat"><div class="muted">Pending</div><div id="salesPending" class="num">—</div></div><div class="card stat"><div class="muted">Approved</div><div id="salesApproved" class="num">—</div></div><div class="card stat"><div class="muted">Rejected</div><div id="salesRejected" class="num">—</div></div><div class="card stat"><div class="muted">Active</div><div id="salesActive" class="num">—</div></div></div>
+        <div id="salesTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-notifications" class="section">
+        <div class="head"><div><h2>Notifications</h2><p>Send a notification to one student or all students.</p></div><button class="btn" id="newNotification">+ New Notification</button></div>
+        <div id="notifTable" class="table-wrap"></div>
+      </section>
+
+      <section id="section-reviews" class="section"><div class="head"><div><h2>Reviews</h2><p>Publish, hide and remove student reviews.</p></div><button class="btn secondary" id="reviewsRefresh">Refresh</button></div><div id="reviewsTable" class="table-wrap"></div></section>
+
+      <section id="section-question-bank" class="section"><div class="head"><div><h2>Question Bank</h2><p>Reusable questions. Scroll inside the list to view all questions.</p></div><button class="btn" id="newBankQuestion">+ New Question</button></div><div class="toolbar"><select id="bankGrade"><option value="">All Grades</option></select><input id="bankSearch" placeholder="Search questions…"><button class="btn secondary" id="bankRefresh">Refresh</button></div><div class="qbank-scroll"><div id="questionBankTable"></div></div><div class="qbank-footer"><span id="questionBankCount" class="qbank-count">0 questions</span><span class="muted" style="font-size:10px">Use the mouse wheel or scrollbar inside the Question Bank list.</span></div></section>
+<section id="section-bilingual-vocab" class="section">
+  <div class="head"><div><h2>Vocabulary & Sentences</h2><p>3rd Secondary bilingual revision bank: 100 words with Arabic meanings and 100 original example sentences with Arabic translations.</p></div><div class="actions"><button class="btn" id="seedBilingualBtn">Seed 100 Entries</button><button class="btn secondary" id="newBilingualBtn">+ New Entry</button></div></div>
+  <div class="bilingual-hero">
+    <div class="bilingual-card"><h3>100 Words + 100 Sentences</h3><p>Each entry contains the English word or phrase, its Arabic meaning, one original English example sentence, and the Arabic translation of that sentence.</p><div class="bilingual-stat-grid"><div class="bilingual-stat"><b id="bilingualCount">0</b><span>Total entries</span></div><div class="bilingual-stat"><b id="bilingualPublished">0</b><span>Published</span></div><div class="bilingual-stat"><b>3rd</b><span>Secondary</span></div></div></div>
+    <div class="bilingual-card"><h3>Current curriculum themes</h3><p>Unit 1 — Inside the World of Care<br>Unit 2 — The Power of Machines<br>Unit 3 — Protect Nature, Protect Future<br>Unit 4 — Marine Life<br>Unit 5 — From Muscles to Mindset<br>Unit 6 — Let’s Hang Out!</p><div class="bilingual-note">The 100 sentences are newly written for DOMA ACADEMY practice. They are not copied from the textbook.</div></div>
+  </div>
+  <div class="bilingual-toolbar"><select id="bilingualUnit"><option value="">All Units</option></select><input id="bilingualSearch" placeholder="Search English or Arabic…"><select id="bilingualPublishedFilter"><option value="">All statuses</option><option value="true">Published</option><option value="false">Draft</option></select><button class="btn secondary" id="bilingualRefresh">Refresh</button></div>
+  <div class="bilingual-scroll"><div id="bilingualTable"></div></div>
 </section>
-<section class="section" id="section-grades">
-<div class="head"><div><h2>Grades</h2><p>Activate or deactivate the six academy grades.</p></div><button class="btn secondary" id="gradesRefresh">Refresh</button></div>
-<div class="table-wrap" id="gradesTable"></div>
-</section>
-<section class="section" id="section-units">
-<div class="head"><div><h2>Units</h2><p>Create unit structure for each grade.</p></div><button class="btn" id="newUnit">+ New Unit</button></div>
-<div class="toolbar"><select id="unitGrade"><option value="">All Grades</option></select><input id="unitSearch" placeholder="Search units…"/><button class="btn secondary" id="unitRefresh">Refresh</button></div>
-<div class="table-wrap" id="unitsTable"></div>
-</section>
-<section class="section" id="section-lessons">
-<div class="head"><div><h2>Lessons</h2><p>Organize by Grade → Unit → Lesson. Every lesson has its own video, 100 Key Words and 100-word task.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
-<div class="content-helper">
-  <div class="content-helper-card"><b>01 • Pick Grade</b><span>Filter the lessons by school grade first.</span></div>
-  <div class="content-helper-card"><b>02 • Pick Unit</b><span>Then move directly to one unit and its lesson order.</span></div>
-  <div class="content-helper-card"><b>03 • Edit / Video</b><span>Edit the lesson or preview/update its video from the row.</span></div>
+
+<section id="section-activity" class="section"><div class="head"><div><h2>Activity & Attendance</h2><p>Engagement log for logins, lesson opens/completions, quizzes, homework and subscription activity.</p></div><button class="btn secondary" id="activityRefresh">Refresh</button></div><div class="toolbar"><input id="activitySearch" placeholder="Search student or activity…"><button class="btn secondary" id="activityRefresh2">Refresh</button></div><div id="activityTable" class="table-wrap"></div></section>
+<section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
+    </div>
+  </main>
 </div>
-<div class="lesson-jump">
-  <div><label>Grade</label><select id="lessonGrade"><option value="">All Grades</option></select></div>
-  <div><label>Unit</label><select id="lessonUnit"><option value="">All Units</option></select></div>
-  <div><button class="btn secondary" id="normalizeLessonOrder">↕ Fix Lesson Order</button></div>
-</div>
-<div class="lesson-toolbar-pro">
-  <select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select>
-  <select id="lessonVideoStatus"><option value="">All Video Status</option><option value="ready">Video Ready</option><option value="missing">Video Missing</option></select>
-  <input id="lessonSearch" placeholder="Search lesson, unit or grade…"/>
-  <button class="btn secondary" id="lessonRefresh">Refresh</button>
-</div>
-<div class="lesson-filter-note">Lesson list order: Grade order → Unit number → Lesson sort order → creation time. Use “Fix Lesson Order” after adding or moving lessons.</div>
-<div class="lesson-table-wrap" id="lessonsTable"></div>
-</section>
-<section class="section" id="section-quizzes">
-<div class="head"><div><h2>Exams &amp; Quizzes</h2><p>Create assessments and manage questions. Correct answers are never sent to students directly.</p></div><button class="btn" id="newQuiz">+ New Quiz</button></div>
-<div class="toolbar"><select id="quizGrade"><option value="">All Grades</option></select><input id="quizSearch" placeholder="Search quizzes…"/><button class="btn secondary" id="quizRefresh">Refresh</button></div>
-<div class="table-wrap" id="quizzesTable"></div>
-</section>
-<section class="section" id="section-homework">
-<div class="head"><div><h2>Homework</h2><p>Create assignments and review student submissions.</p></div><button class="btn" id="newHomework">+ New Homework</button></div>
-<div class="toolbar"><select id="hwGrade"><option value="">All Grades</option></select><input id="hwSearch" placeholder="Search homework…"/><button class="btn secondary" id="hwRefresh">Refresh</button></div>
-<div class="table-wrap" id="homeworkTable"></div>
-</section>
-<section class="section" id="section-students">
-<div class="head"><div><h2>Students</h2><p>Student accounts and grade information.</p></div><div class="toolbar"><input id="studentSearch" placeholder="Search students…"/><button class="btn secondary" id="studentsRefresh">Refresh</button></div></div>
-<div class="table-wrap" id="studentsTable"></div>
-</section>
-<section class="section" id="section-progress"><div class="head"><div><h2>Progress</h2><p>Lesson completion records from student accounts.</p></div><button class="btn secondary" id="progressRefresh">Refresh</button></div><div class="table-wrap" id="progressTable"></div></section>
-<section class="section" id="section-results"><div class="head"><div><h2>Results</h2><p>Quiz attempts and scores.</p></div><button class="btn secondary" id="resultsRefresh">Refresh</button></div><div class="table-wrap" id="resultsTable"></div></section>
-<section class="section" id="section-certificates"><div class="head"><div><h2>Certificates</h2><p>Issue and review certificates.</p></div><button class="btn" id="newCertificate">+ Issue Certificate</button></div><div class="table-wrap" id="certTable"></div></section>
-<section class="section" id="section-sales">
-<div class="head"><div><h2>Sales &amp; Subscriptions</h2><p>Verify Mobile Cash requests and activate student access.</p></div><div class="toolbar"><input id="salesSearch" placeholder="Search requests…"/><button class="btn secondary" id="salesRefresh">Refresh</button></div></div>
-<div class="grid" style="margin-bottom:14px"><div class="card stat"><div class="muted">Pending</div><div class="num" id="salesPending">—</div></div><div class="card stat"><div class="muted">Approved</div><div class="num" id="salesApproved">—</div></div><div class="card stat"><div class="muted">Rejected</div><div class="num" id="salesRejected">—</div></div><div class="card stat"><div class="muted">Active</div><div class="num" id="salesActive">—</div></div></div>
-<div class="table-wrap" id="salesTable"></div>
-</section>
-<section class="section" id="section-notifications">
-<div class="head"><div><h2>Notifications</h2><p>Send a notification to one student or all students.</p></div><button class="btn" id="newNotification">+ New Notification</button></div>
-<div class="table-wrap" id="notifTable"></div>
-</section>
-<section class="section" id="section-reviews"><div class="head"><div><h2>Reviews</h2><p>Publish, hide and remove student reviews.</p></div><button class="btn secondary" id="reviewsRefresh">Refresh</button></div><div class="table-wrap" id="reviewsTable"></div></section>
-<section class="section" id="section-question-bank"><div class="head"><div><h2>Question Bank</h2><p>Reusable questions. Scroll inside the list to view all questions.</p></div><button class="btn" id="newBankQuestion">+ New Question</button></div><div class="toolbar"><select id="bankGrade"><option value="">All Grades</option></select><input id="bankSearch" placeholder="Search questions…"/><button class="btn secondary" id="bankRefresh">Refresh</button></div><div class="qbank-scroll"><div id="questionBankTable"></div></div><div class="qbank-footer"><span class="qbank-count" id="questionBankCount">0 questions</span><span class="muted" style="font-size:10px">Use the mouse wheel or scrollbar inside the Question Bank list.</span></div></section>
-<section class="section" id="section-activity"><div class="head"><div><h2>Activity &amp; Attendance</h2><p>Engagement log for logins, lesson opens/completions, quizzes, homework and subscription activity.</p></div><button class="btn secondary" id="activityRefresh">Refresh</button></div><div class="toolbar"><input id="activitySearch" placeholder="Search student or activity…"/><button class="btn secondary" id="activityRefresh2">Refresh</button></div><div class="table-wrap" id="activityTable"></div></section>
-<section class="section" id="section-settings"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
-</div>
-</main>
-</div>
-<div class="modal" id="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Edit</h3><button class="btn secondary" id="closeModal">Close</button></div><div id="modalBody"></div></div></div>
-<div class="toast" id="toast"></div>
+
+<div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Edit</h3><button class="btn secondary" id="closeModal">Close</button></div><div id="modalBody"></div></div></div>
+<div id="toast" class="toast"></div>
+
 <script>
 const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';
 const SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
@@ -210,7 +204,6 @@ async function loadGrades(){
   ['unitGrade','lessonGrade','quizGrade','hwGrade'].forEach(id=>{if($(id))$(id).innerHTML='<option value="">All Grades</option>'+grades.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('')});
 }
 async function loadUnitsCache(){const r=await db.from('units').select('id,grade_id,title,unit_number,description,created_at').order('unit_number',{ascending:true});if(!r.error)units=r.data||[]}
-function refreshLessonUnitFilter(){const g=$('lessonGrade')?.value||'';const opts=units.filter(u=>!g||u.grade_id===g).sort((a,b)=>Number(a.unit_number||0)-Number(b.unit_number||0)).map(u=>`<option value="${u.id}">Unit ${Number(u.unit_number||0)} — ${esc(u.title)}</option>`).join('');if($('lessonUnit'))$('lessonUnit').innerHTML='<option value="">All Units</option>'+opts}
 
 async function loadDashboard(){
   const [students,lessons,pending,active]=await Promise.all([
@@ -248,168 +241,9 @@ async function deletePersisted(table,id,label,after){
 async function deleteUnit(id){await deletePersisted('units',id,'Unit',loadUnits)}
 
 async function loadLessons(){
-  const box=$('lessonsTable');
-  if(!box)return;
-  box.innerHTML='<div class="empty">Loading lessons…</div>';
-  const r=await db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,vocabulary_100,grammar_focus,writing_100,duration_minutes,sort_order,is_free,is_published,created_at').order('created_at',{ascending:false});
-  if(r.error)return box.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
-  let rows=r.data||[];
-  const g=$('lessonGrade')?.value||'', u=$('lessonUnit')?.value||'', t=$('lessonType')?.value||'', v=$('lessonVideoStatus')?.value||'', term=($('lessonSearch')?.value||'').trim().toLowerCase();
-  if(g)rows=rows.filter(x=>x.grade_id===g);
-  if(u)rows=rows.filter(x=>x.unit_id===u);
-  if(t)rows=rows.filter(x=>x.lesson_type===t);
-  if(v==='ready')rows=rows.filter(x=>String(x.video_url||'').trim());
-  if(v==='missing')rows=rows.filter(x=>!String(x.video_url||'').trim());
-  if(term)rows=rows.filter(x=>{
-    const unit=units.find(z=>z.id===x.unit_id); const hay=[x.title,x.lesson_type,x.description,gradeName(x.grade_id),unit?.title||'',String(unit?.unit_number||'')].join(' ').toLowerCase();
-    return hay.includes(term);
-  });
-  rows.sort((a,b)=>{
-    const ga=(grades.find(z=>z.id===a.grade_id)?.sort_order??9999), gb=(grades.find(z=>z.id===b.grade_id)?.sort_order??9999);
-    if(ga!==gb)return ga-gb;
-    const ua=(units.find(z=>z.id===a.unit_id)?.unit_number??9999), ub=(units.find(z=>z.id===b.unit_id)?.unit_number??9999);
-    if(ua!==ub)return ua-ub;
-    const sa=Number(a.sort_order||0), sb=Number(b.sort_order||0); if(sa!==sb)return sa-sb;
-    return new Date(a.created_at||0)-new Date(b.created_at||0);
-  });
-  if(!rows.length){box.innerHTML='<div class="empty">No lessons match these filters.</div>';return;}
-  let lastGroup='';
-  const body=rows.map(x=>{
-    const unit=units.find(z=>z.id===x.unit_id), group=(gradeName(x.grade_id)+' • Unit '+(unit?.unit_number||'—')+' • '+(unit?.title||'No unit'));
-    const same=group===lastGroup; lastGroup=group;
-    const video=String(x.video_url||'').trim(), thumb=lessonYoutubeThumb(video);
-    const vocab=String(x.vocabulary_100||'').trim(), writing=String(x.writing_100||'').trim(), grammar=String(x.grammar_focus||'').trim();
-    return `<tr${same?'':' style="border-top:2px solid #43222e"'}>
-      <td><div class="lesson-row-title"><span class="lesson-index-circle">${Number(x.sort_order||0)||'—'}</span><div><strong>${esc(x.title)}</strong><small class="muted">${esc(group)}</small><div class="lesson-package"><span class="package-pill ${video?'ready':'missing'}">${video?'Video ready':'Video missing'}</span><span class="package-pill ${vocab?'ready':'missing'}">${vocab?'100 Keys ready':'100 Keys empty'}</span><span class="package-pill ${writing?'ready':'missing'}">${writing?'100-word ready':'100-word empty'}</span><span class="package-pill ${grammar?'ready':'missing'}">${grammar?'Grammar ready':'Grammar empty'}</span></div></div></div></td>
-      <td><span class="lesson-order-badge">Unit ${Number(unit?.unit_number||0)||'—'}</span></td>
-      <td>${esc(x.lesson_type)}</td>
-      <td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td>
-      <td class="video-cell">${video?(thumb?`<img class="lesson-video-thumb" src="${thumb}" alt="Video thumbnail" loading="lazy">`:'')+`<div class="lesson-video-actions"><button class="lesson-video-mini" type="button" onclick="previewLessonVideo(${JSON.stringify(video)})">▶ Preview</button><a class="lesson-video-mini" href="${esc(video)}" target="_blank" rel="noopener">↗ Open</a><button class="lesson-video-mini" type="button" onclick="quickVideoEdit(${JSON.stringify(x.id)},${JSON.stringify(x.title)},${JSON.stringify(video)})">✎ Edit</button></div>`:`<span class="mini-status">No video</span><div class="lesson-video-actions"><button class="lesson-video-mini missing" type="button" onclick="quickVideoEdit(${JSON.stringify(x.id)},${JSON.stringify(x.title)},'')">＋ Add Video</button></div>`}</td>
-      <td>${vocab?'<span class="pill ok">100 Keys</span>':'<span class="pill warn">Missing</span>'}</td>
-      <td>${writing?'<span class="pill ok">100 Words</span>':'<span class="pill warn">Missing</span>'}</td>
-      <td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td>
-      <td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td>
-    </tr>`;
-  }).join('');
-  box.innerHTML='<table><thead><tr><th>Lesson</th><th>Unit</th><th>Type</th><th>Access</th><th>Video</th><th>100 Key Words</th><th>100-Word Task</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+body+'</tbody></table>';
+  let q=db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published,created_at').order('sort_order',{ascending:true}).order('created_at',{ascending:false});const g=$('lessonGrade').value,t=$('lessonType').value;if(g)q=q.eq('grade_id',g);if(t)q=q.eq('lesson_type',t);const r=await q;if(r.error)return $('lessonsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('lessonSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.lesson_type||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('lessonsTable').innerHTML=rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${esc(units.find(u=>u.id===x.unit_id)?.title||'—')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.lesson_type)}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons found.</div>';
 }
-
-function lessonYoutubeThumb(url){
-  try{
-    const u=new URL(String(url||'')); const h=u.hostname.replace(/^www\./,'').toLowerCase(); let id='';
-    if(h==='youtu.be')id=u.pathname.split('/').filter(Boolean)[0]||'';
-    else if(h==='youtube.com'||h==='m.youtube.com'){ if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/').filter(Boolean)[1]||''; else id=u.searchParams.get('v')||''; }
-    return id?'https://img.youtube.com/vi/'+encodeURIComponent(id)+'/mqdefault.jpg':'';
-  }catch(e){return ''}
-}
-
-async function quickVideoEdit(id,title,url=''){
-  const current=String(url||'');
-  openModal('Lesson Video — '+esc(title),`<div class="video-quick-form"><div class="info-box">Update the exact video for this lesson. YouTube, Google Drive preview and direct MP4/WebM/OGG links are supported.</div><div><label>Video URL</label><input id="quickLessonVideo" class="field" value="${esc(current)}" placeholder="https://www.youtube.com/watch?v=..."></div><div id="quickVideoPreviewHost"></div><div class="actions"><button type="button" class="btn secondary" id="quickPreviewBtn">▶ Preview</button><button type="button" class="btn" id="quickSaveVideo">Save Video</button></div></div>`);
-  $('quickPreviewBtn').onclick=()=>{
-    const raw=$('quickLessonVideo').value.trim();
-    if(!raw)return toast('Enter a video URL first.');
-    try{$('quickVideoPreviewHost').innerHTML=buildVideoEmbed(raw)}catch(e){$('quickVideoPreviewHost').innerHTML='<div class="video-preview-card"><div class="empty">This link will be saved and opened in a new tab by students.</div></div>'}
-  };
-  $('quickSaveVideo').onclick=async()=>{
-    const raw=$('quickLessonVideo').value.trim();
-    const r=await db.from('lessons').update({video_url:raw,updated_at:new Date().toISOString()}).eq('id',id).select('id');
-    if(r.error)return toast('Video save failed: '+r.error.message);
-    closeModal();toast('Lesson video updated.');await loadLessons();
-  };
-}
-
-function buildVideoEmbed(raw){
-  const u=new URL(raw),h=u.hostname.replace(/^www\./,'').toLowerCase();let embed='';
-  if(h==='youtu.be'||h==='youtube.com'||h==='m.youtube.com'){
-    let id='';if(h==='youtu.be')id=u.pathname.split('/').filter(Boolean)[0]||'';else if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/').filter(Boolean)[1]||'';else id=u.searchParams.get('v')||'';
-    if(id)embed='<iframe src="https://www.youtube.com/embed/'+encodeURIComponent(id)+'" title="Lesson video" allowfullscreen></iframe>';
-  }else if(h==='drive.google.com'){
-    const m=u.pathname.match(/\/file\/d\/([^/]+)/);if(m?.[1])embed='<iframe src="https://drive.google.com/file/d/'+encodeURIComponent(m[1])+'/preview" title="Lesson video" allow="autoplay" allowfullscreen></iframe>';
-  }else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(u.pathname+u.search))embed='<video controls playsinline src="'+esc(raw)+'"></video>';
-  if(!embed)embed='<div class="empty">The link will be saved. It cannot be embedded automatically.</div>';
-  return '<div class="video-preview-card">'+embed+'</div><div class="lesson-video-actions" style="margin-top:8px"><a class="lesson-video-mini" href="'+esc(raw)+'" target="_blank" rel="noopener">Open video ↗</a></div>';
-}
-
-async function normalizeLessonOrder(){
-  const gradeId=$('lessonGrade')?.value||'', unitId=$('lessonUnit')?.value||'';
-  if(!gradeId && !unitId)return toast('Choose a Grade, or choose a Grade + Unit, before fixing order.');
-  let q=db.from('lessons').select('id,grade_id,unit_id,sort_order,created_at,title').order('created_at',{ascending:true});
-  if(gradeId)q=q.eq('grade_id',gradeId); if(unitId)q=q.eq('unit_id',unitId);
-  const r=await q;if(r.error)return toast('Could not read lessons: '+r.error.message);
-  const rows=(r.data||[]).sort((a,b)=>{const ua=units.find(x=>x.id===a.unit_id)?.unit_number??9999,ub=units.find(x=>x.id===b.unit_id)?.unit_number??9999;if(ua!==ub)return ua-ub;const sa=Number(a.sort_order||0),sb=Number(b.sort_order||0);if(sa!==sb)return sa-sb;return new Date(a.created_at||0)-new Date(b.created_at||0)});
-  if(!rows.length)return toast('No lessons found for this selection.');
-  const btn=$('normalizeLessonOrder');if(btn){btn.disabled=true;btn.textContent='Fixing…'}
-  try{
-    // When a whole grade is selected, reset each unit independently.
-    const groups={}; rows.forEach(x=>{(groups[x.unit_id||'none']??=[]).push(x)});
-    for(const list of Object.values(groups)){
-      for(let i=0;i<list.length;i++){
-        const id=list[i].id, order=i+1, up=await db.from('lessons').update({sort_order:order,updated_at:new Date().toISOString()}).eq('id',id).select('id');
-        if(up.error)throw new Error(up.error.message);
-      }
-    }
-    toast('Lesson order fixed by unit.');await loadLessons();
-  }catch(e){toast('Fix order failed: '+e.message)}
-  finally{if(btn){btn.disabled=false;btn.textContent='↕ Fix Lesson Order'}}
-}
-
-function lessonForm(title,x=null){
-  const selectedGrade=x?.grade_id||'';
-  const video=String(x?.video_url||'');
-  openModal(title,`<form id="lessonForm">
-    <div class="lesson-editor-note">Fill the complete lesson package here: lesson content, 100 Key Words / Vocabulary, Grammar Focus, 100-Word Writing / Paragraph and the lesson Video URL. These fields are shown to students inside the lesson page.</div>
-    <div class="form-grid">
-      <div class="form-row"><label>Grade</label><select id="lGrade" required>${gradeOptions(selectedGrade)}</select></div>
-      <div class="form-row"><label>Unit</label><select id="lUnit">${unitOptions(selectedGrade,x?.unit_id||'')}</select></div>
-      <div class="form-row"><label>Title</label><input id="lTitle" value="${esc(x?.title||'')}" required></div>
-      <div class="form-row"><label>Type</label><select id="lType">${['lesson','grammar','vocabulary','reading','writing','listening'].map(v=>`<option ${v===(x?.lesson_type||'lesson')?'selected':''}>${v}</option>`).join('')}</select></div>
-      <div class="form-row"><label>Duration (minutes)</label><input id="lDuration" type="number" min="0" value="${Number(x?.duration_minutes||0)}"></div>
-      <div class="form-row"><label>Sort order</label><input id="lSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div>
-      <div class="form-row"><label>Access</label><select id="lFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free lesson</option></select></div>
-      <div class="form-row"><label>Publishing</label><select id="lPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div>
-      <div class="form-row full"><label>Description</label><textarea id="lDesc">${esc(x?.description||'')}</textarea></div>
-      <div class="form-row full"><label>Lesson content</label><textarea id="lContent" style="min-height:170px">${esc(x?.content||'')}</textarea><span class="field-hint">Main explanation, examples, practice instructions and lesson notes.</span></div>
-      <div class="form-row full"><label>100 Key Words / Vocabulary <span class="pill" style="margin-left:6px">100 Words</span></label><textarea id="lVocab" style="min-height:150px" placeholder="Paste the 100 key words / vocabulary for this lesson">${esc(x?.vocabulary_100||'')}</textarea><span class="field-hint" id="lVocabCount">0 words • recommended: 100 key words</span></div>
-      <div class="form-row"><label>Grammar Focus</label><input id="lGrammar" value="${esc(x?.grammar_focus||'')}" placeholder="e.g. Present Perfect"><span class="field-hint">The exact target grammar for the lesson.</span></div>
-      <div class="form-row"><label>100-Word Writing / Paragraph <span class="pill" style="margin-left:6px">100 Words</span></label><textarea id="lWriting" style="min-height:130px" placeholder="Writing prompt or model of about 100 words">${esc(x?.writing_100||'')}</textarea><span class="field-hint" id="lWritingCount">0 words • target about 100 words</span></div>
-      <div class="form-row full"><label>Video URL</label><input id="lVideo" value="${esc(video)}" placeholder="YouTube / Google Drive / MP4 URL"><span class="field-hint">Supported: YouTube, Google Drive preview links and direct MP4/WebM/OGG links.</span><button type="button" class="btn secondary small video-preview-btn" id="previewLessonVideo">▶ Preview Video</button></div>
-    </div>
-    <button class="btn">Save Lesson</button>
-  </form>`);
-  $('lGrade').onchange=()=>{$('lUnit').innerHTML=unitOptions($('lGrade').value,'')};
-  function wordCount(v){return String(v||'').trim()?String(v).trim().split(/\s+/).length:0}
-  const updateCounts=()=>{if($('lVocabCount'))$('lVocabCount').textContent=wordCount($('lVocab').value)+' words • recommended: 100 key words';if($('lWritingCount'))$('lWritingCount').textContent=wordCount($('lWriting').value)+' words • target about 100 words'};
-  $('lVocab')?.addEventListener('input',updateCounts);$('lWriting')?.addEventListener('input',updateCounts);updateCounts();
-  $('previewLessonVideo')?.addEventListener('click',()=>previewLessonVideo($('lVideo')?.value||''));
-  $('lessonForm').onsubmit=async e=>{
-    e.preventDefault();
-    const p={grade_id:$('lGrade').value,unit_id:$('lUnit').value||null,title:$('lTitle').value.trim(),lesson_type:$('lType').value,duration_minutes:Number($('lDuration').value||0),sort_order:Number($('lSort').value||0),is_free:$('lFree').value==='true',is_published:$('lPub').value==='true',description:$('lDesc').value.trim(),content:$('lContent').value.trim(),vocabulary_100:$('lVocab').value.trim(),grammar_focus:$('lGrammar').value.trim(),writing_100:$('lWriting').value.trim(),video_url:$('lVideo').value.trim(),updated_at:new Date().toISOString()};
-    let r=x?await db.from('lessons').update(p).eq('id',x.id).select('id'):await db.from('lessons').insert(p).select('id');
-    if(r.error){
-      const msg=r.error.message||'';
-      if(/vocabulary_100|writing_100|grammar_focus/i.test(msg)) return toast('Lesson save failed because the lesson-fields columns are missing. Run the latest lesson-fields SQL patch first.');
-      return toast('Save failed: '+msg);
-    }
-    closeModal();toast('Lesson saved.');await loadLessons();await loadDashboard()
-  }
-}
-function previewLessonVideo(url){
-  const raw=String(url||'').trim();
-  if(!raw)return toast('Enter a video URL first.');
-  let embed='';
-  try{
-    const u=new URL(raw),host=u.hostname.replace(/^www\./,'').toLowerCase();
-    if(host==='youtube.com'||host==='m.youtube.com'||host==='youtu.be'){
-      let id='';if(host==='youtu.be')id=u.pathname.split('/').filter(Boolean)[0]||'';else if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/').filter(Boolean)[1]||'';else id=u.searchParams.get('v')||'';
-      if(id)embed='<iframe src="https://www.youtube.com/embed/'+encodeURIComponent(id)+'" title="Lesson video" allowfullscreen></iframe>';
-    }else if(host==='drive.google.com'){
-      const m=u.pathname.match(/\/file\/d\/([^/]+)/);if(m?.[1])embed='<iframe src="https://drive.google.com/file/d/'+encodeURIComponent(m[1])+'/preview" title="Lesson video" allow="autoplay" allowfullscreen></iframe>';
-    }else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(u.pathname+u.search))embed='<video controls playsinline src="'+esc(raw)+'"></video>';
-  }catch(e){}
-  if(!embed)embed='<div class="empty">This link can still be saved, but it cannot be embedded automatically. The student can open it in a new tab.</div>';
-  openModal('Video Preview','<div class="video-preview-box">'+embed+'</div><div class="actions" style="margin-top:10px"><a class="btn secondary" href="'+esc(raw)+'" target="_blank" rel="noopener">Open video in new tab ↗</a></div>');
-}
+function lessonForm(title,x=null){const selectedGrade=x?.grade_id||'';openModal(title,`<form id="lessonForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="lGrade" required>${gradeOptions(selectedGrade)}</select></div><div class="form-row"><label>Unit</label><select id="lUnit">${unitOptions(selectedGrade,x?.unit_id||'')}</select></div><div class="form-row"><label>Title</label><input id="lTitle" value="${esc(x?.title||'')}" required></div><div class="form-row"><label>Type</label><select id="lType">${['lesson','grammar','vocabulary','reading','writing','listening'].map(v=>`<option ${v===(x?.lesson_type||'lesson')?'selected':''}>${v}</option>`).join('')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="lDuration" type="number" min="0" value="${Number(x?.duration_minutes||0)}"></div><div class="form-row"><label>Sort order</label><input id="lSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div><div class="form-row"><label>Access</label><select id="lFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free lesson</option></select></div><div class="form-row"><label>Publishing</label><select id="lPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div><div class="form-row full"><label>Description</label><textarea id="lDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Lesson content</label><textarea id="lContent" style="min-height:170px">${esc(x?.content||'')}</textarea></div><div class="form-row full"><label>Video URL</label><input id="lVideo" value="${esc(x?.video_url||'')}" placeholder="https://…"></div></div><button class="btn">Save Lesson</button></form>`);$('lGrade').onchange=()=>{$('lUnit').innerHTML=unitOptions($('lGrade').value,'')};$('lessonForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('lGrade').value,unit_id:$('lUnit').value||null,title:$('lTitle').value.trim(),lesson_type:$('lType').value,duration_minutes:Number($('lDuration').value||0),sort_order:Number($('lSort').value||0),is_free:$('lFree').value==='true',is_published:$('lPub').value==='true',description:$('lDesc').value.trim(),content:$('lContent').value.trim(),video_url:$('lVideo').value.trim(),updated_at:new Date().toISOString()};const r=x?await db.from('lessons').update(p).eq('id',x.id).select('id'):await db.from('lessons').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);closeModal();toast('Lesson saved.');await loadLessons();await loadDashboard()}}
 $('newLesson').onclick=()=>lessonForm('New Lesson');
 async function editLesson(id){const r=await db.from('lessons').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);lessonForm('Edit Lesson',r.data)}
 async function toggleLessonPublish(id,v){const r=await db.from('lessons').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id');if(r.error)return toast(r.error.message);await loadLessons();await loadDashboard()}
@@ -457,19 +291,20 @@ async function deleteReview(id){await deletePersisted('reviews',id,'Review',load
 
 function loadSection(n){({dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,homework:loadHomework,students:loadStudents,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews}[n]||(()=>{}))()}
 
-$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=loadLessons;$('lessonSearch').oninput=loadLessons;$('lessonGrade').onchange=()=>{refreshLessonUnitFilter();loadLessons()};$('lessonUnit').onchange=loadLessons;$('lessonType').onchange=loadLessons;$('lessonVideoStatus')?.addEventListener('change',loadLessons);$('normalizeLessonOrder')?.addEventListener('click',normalizeLessonOrder);$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=loadSales;$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
+$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=loadLessons;$('lessonSearch').oninput=loadLessons;$('lessonGrade').onchange=loadLessons;$('lessonType').onchange=loadLessons;$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=loadSales;$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
 
 async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Supabase connected':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
 
 async function start(){
   if(state.started)return true;if(state.startPromise)return state.startPromise;
-  state.startPromise=(async()=>{try{const s=await db.auth.getSession();if(!s.data.session)return false;const staff=await getStaffProfile();if(!staff){await db.auth.signOut();$('loginError').textContent='This account is not an academy admin/teacher, or the profiles row cannot be read.';return false}$('login').style.display='none';$('app').style.display='block';await loadGrades();await loadUnitsCache();refreshLessonUnitFilter();state.started=true;show('dashboard');await checkConnection();return true}catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}finally{state.startPromise=null}})();return state.startPromise}
+  state.startPromise=(async()=>{try{const s=await db.auth.getSession();if(!s.data.session)return false;const staff=await getStaffProfile();if(!staff){await db.auth.signOut();$('loginError').textContent='This account is not an academy admin/teacher, or the profiles row cannot be read.';return false}$('login').style.display='none';$('app').style.display='block';await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();return true}catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}finally{state.startPromise=null}})();return state.startPromise}
 
 $('loginForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter;const email=$('email').value.trim(),password=$('password').value;if(btn){btn.disabled=true;btn.textContent='Signing in…'}$('loginError').textContent='';try{const r=await db.auth.signInWithPassword({email,password});if(r.error){$('loginError').textContent='Login error: '+r.error.message;return}if(!(await start()))$('loginError').textContent=$('loginError').textContent||'Login succeeded, but staff verification failed.'}catch(ex){$('loginError').textContent='Unexpected error: '+(ex?.message||String(ex))}finally{if(btn){btn.disabled=false;btn.textContent='Login'}}};
 $('logout').onclick=async()=>{await db.auth.signOut();location.reload()};db.auth.onAuthStateChange(()=>setTimeout(checkConnection,0));
 
 (async()=>{const s=await db.auth.getSession();if(s.data.session)await start();else await checkConnection()})();
 </script>
+
 <script>
 /* DOMA V2 admin enhancements */
 async function loadQuestionBank(){
@@ -537,37 +372,119 @@ loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,u
 $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
-
-
-<script id="doma-admin-quick-navigation">
-(function(){
-  document.querySelectorAll('[data-quick-section]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const n=btn.dataset.quickSection;
-      if(typeof show==='function')show(n);
-      document.querySelectorAll('#quickNav [data-quick-section]').forEach(x=>x.classList.toggle('active',x.dataset.quickSection===n));
-    });
-  });
-})();
-</script>
-
-<script id="doma-admin-stable-content-health">
+<script id="doma-admin-all-upgrades-script">
 (function(){
   'use strict';
-  async function refresh(){
-    if(typeof db==='undefined')return;
+  function showAdminUpgradePanel(){
     const host=document.querySelector('#section-dashboard .panel-body')||document.querySelector('#section-dashboard');
-    if(!host)return;
-    if(!document.getElementById('domaStableHealth')){
-      const d=document.createElement('div');d.id='domaStableHealth';d.className='panel doma-panel';d.style.marginTop='18px';d.innerHTML='<div class="panel-head"><div><h3>Content Health</h3><span>Published lessons, videos and 100-word resources</span></div></div><div class="panel-body"><div id="domaStableHealthGrid" class="featuregrid"><div class="feature"><b>Loading…</b><p>Checking academy content.</p></div></div></div>';host.appendChild(d)
-    }
-    const r=await db.from('lessons').select('id,video_url,vocabulary_100,writing_100,is_published').eq('is_published',true).limit(5000);if(r.error)return;
-    const rows=r.data||[],videos=rows.filter(x=>String(x.video_url||'').trim()).length,vocab=rows.filter(x=>String(x.vocabulary_100||'').trim()).length,writing=rows.filter(x=>String(x.writing_100||'').trim()).length;
-    const g=document.getElementById('domaStableHealthGrid');if(g)g.innerHTML='<div class="feature"><b>'+rows.length+'</b><p>Published lessons</p></div><div class="feature"><b>'+videos+'</b><p>Lessons with video URL</p></div><div class="feature"><b>'+vocab+'</b><p>Lessons with vocabulary</p></div><div class="feature"><b>'+writing+'</b><p>Lessons with 100-word task</p></div>'
+    if(!host||document.getElementById('adminUpgradePanel'))return;
+    const wrap=document.createElement('div');wrap.id='adminUpgradePanel';
+    wrap.innerHTML='<div class="admin-health"><h3>DOMA ACADEMY — Live Content Health</h3><p>Quick checks for published lessons, videos, homework resources and student activity. These cards read the same Supabase data used by the main Admin dashboard.</p><div class="admin-upgrade-summary"><div class="admin-upgrade-card"><small>Published lessons</small><b id="upPublishedLessons">—</b><span>All grades</span></div><div class="admin-upgrade-card"><small>Lessons with video</small><b id="upVideoLessons">—</b><span>video_url filled</span></div><div class="admin-upgrade-card"><small>Published homework</small><b id="upPublishedHomework">—</b><span>All grades</span></div><div class="admin-upgrade-card"><small>Homework with files</small><b id="upHomeworkFiles">—</b><span>attachment_url filled</span></div></div></div>';
+    host.appendChild(wrap);
+    refreshHealth();
   }
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(refresh,900));
-  setInterval(refresh,15000);
+  async function refreshHealth(){
+    if(typeof db==='undefined')return;
+    const [l,h]=await Promise.all([
+      db.from('lessons').select('id,video_url',{count:'exact'}).eq('is_published',true),
+      db.from('homework').select('*').eq('is_published',true)
+    ]);
+    const ls=l.data||[],hs=h.data||[];
+    const el=id=>document.getElementById(id); if(el('upPublishedLessons'))el('upPublishedLessons').textContent=l.count??ls.length; if(el('upVideoLessons'))el('upVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length; if(el('upPublishedHomework'))el('upPublishedHomework').textContent=h.count??hs.length; if(el('upHomeworkFiles'))el('upHomeworkFiles').textContent=hs.filter(x=>String(x.attachment_url||'').trim()).length;
+  }
+  async function loadHomeworkUpgraded(){
+    let q=db.from('homework').select('*').order('created_at',{ascending:false});
+    const g=$('hwGrade').value;if(g)q=q.eq('grade_id',g);const r=await q;if(r.error)return $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+    let rows=r.data||[];const term=$('hwSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.description||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));
+    $('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Resource</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${fmt(x.due_at)}</td><td>${x.attachment_url?`<a class="admin-video-link" href="${esc(x.attachment_url)}" target="_blank" rel="noopener">Open file ↗</a>`:'<span class="mini-status">No file</span>'}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework('${x.id}')">Edit</button><button class="btn danger small" onclick="deleteHomework('${x.id}')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions('${x.id}')">Submissions</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No homework found.</div>';
+  }
+  function homeworkFormUpgraded(title,x=null){
+    const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';
+    openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Attachment / Resource URL</label><input id="hAttachment" value="${esc(x?.attachment_url||'')}" placeholder="https://… PDF / worksheet / image / resource"></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);
+    $('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true',attachment_url:$('hAttachment').value.trim()||null};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error){toast('Save failed: '+r.error.message);return}closeModal();toast('Homework saved.');await loadHomeworkUpgraded();await loadDashboard();refreshHealth()};
+  }
+  async function reviewSubmissionUpgraded(subId,hwId){
+    const r=await db.from('homework_submissions').select('*').eq('id',subId).single();if(r.error)return toast(r.error.message);const x=r.data;
+    openModal('Review Homework',`<form id="reviewForm"><div class="info-box" style="white-space:pre-wrap;margin-bottom:12px">${esc(x.answer_text||'')}</div><div class="form-grid"><div class="form-row"><label>Status</label><select id="rsStatus"><option ${x.status==='submitted'?'selected':''}>submitted</option><option ${x.status==='reviewed'?'selected':''}>reviewed</option><option ${x.status==='returned'?'selected':''}>returned</option></select></div><div class="form-row"><label>Grade</label><input id="rsGrade" type="number" min="0" value="${x.grade??''}"></div><div class="form-row full"><label>Feedback</label><textarea id="rsFeedback">${esc(x.feedback||'')}</textarea></div></div><button class="btn">Save Review</button></form>`);
+    $('reviewForm').onsubmit=async e=>{e.preventDefault();const status=$('rsStatus').value,grade=$('rsGrade').value===''?null:Number($('rsGrade').value),feedback=$('rsFeedback').value.trim();const u=await db.from('homework_submissions').update({status,grade,feedback}).eq('id',subId).select('id,student_id');if(u.error)return toast('Review failed: '+u.error.message);const studentId=u.data?.[0]?.student_id||x.student_id;if(studentId){await db.from('notifications').insert({student_id:studentId,title:'Homework reviewed',message:grade===null?'Your homework has been reviewed.':'Your homework has been reviewed. Grade: '+String(grade)+'/'+100+'.'}).catch(()=>{});}closeModal();toast('Submission reviewed.');await viewHomeworkSubmissions(hwId)}
+  }
+  // Replace only the homework-related functions; the rest of the existing production admin stays intact.
+  window.loadHomework=loadHomeworkUpgraded;window.homeworkForm=homeworkFormUpgraded;window.editHomework=async function(id){const r=await db.from('homework').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);homeworkFormUpgraded('Edit Homework',r.data)};window.reviewSubmission=reviewSubmissionUpgraded;
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(showAdminUpgradePanel,450));
+  window.addEventListener('load',()=>setTimeout(showAdminUpgradePanel,250));
 })();
 </script>
+
+<script id="doma-bilingual-admin-script">
+(function(){
+  'use strict';
+  const LOCAL_KEY='doma_bilingual_vocab_3sec_v1';
+  const SEED=[{"sort_order":1,"unit_title":"Unit 1: Inside the World of Care","word":"administer","translation_ar":"يعطي أو يطبق علاجًا","example_en":"The nurse administered the medicine carefully.","example_ar":"أعطت الممرضة الدواء بعناية.","is_published":true},{"sort_order":2,"unit_title":"Unit 1: Inside the World of Care","word":"attention","translation_ar":"انتباه / تركيز","example_en":"Pay close attention to the patient’s symptoms.","example_ar":"انتبه جيدًا إلى أعراض المريض.","is_published":true},{"sort_order":3,"unit_title":"Unit 1: Inside the World of Care","word":"chaos","translation_ar":"فوضى / ارتباك","example_en":"The emergency room was full of chaos after the accident.","example_ar":"كانت غرفة الطوارئ مليئة بالفوضى بعد الحادث.","is_published":true},{"sort_order":4,"unit_title":"Unit 1: Inside the World of Care","word":"collapse","translation_ar":"ينهار / يسقط فجأة","example_en":"The man collapsed near the hospital entrance.","example_ar":"انهار الرجل بالقرب من مدخل المستشفى.","is_published":true},{"sort_order":5,"unit_title":"Unit 1: Inside the World of Care","word":"consciousness","translation_ar":"وعي / إدراك","example_en":"The patient slowly regained consciousness.","example_ar":"استعاد المريض وعيه ببطء.","is_published":true},{"sort_order":6,"unit_title":"Unit 1: Inside the World of Care","word":"emergency","translation_ar":"حالة طارئة","example_en":"The doctor was called to an emergency.","example_ar":"تم استدعاء الطبيب لحالة طارئة.","is_published":true},{"sort_order":7,"unit_title":"Unit 1: Inside the World of Care","word":"grab","translation_ar":"يمسك بسرعة","example_en":"The paramedic grabbed the medical bag.","example_ar":"أمسك المسعف الحقيبة الطبية بسرعة.","is_published":true},{"sort_order":8,"unit_title":"Unit 1: Inside the World of Care","word":"heartbreaking","translation_ar":"مفجع / محزن جدًا","example_en":"The story of the injured child was heartbreaking.","example_ar":"كانت قصة الطفل المصاب مفجعة.","is_published":true},{"sort_order":9,"unit_title":"Unit 1: Inside the World of Care","word":"paramedic","translation_ar":"مسعف","example_en":"A paramedic arrived within minutes.","example_ar":"وصل مسعف خلال دقائق.","is_published":true},{"sort_order":10,"unit_title":"Unit 1: Inside the World of Care","word":"pulse","translation_ar":"نبض","example_en":"The doctor checked the patient’s pulse.","example_ar":"فحص الطبيب نبض المريض.","is_published":true},{"sort_order":11,"unit_title":"Unit 1: Inside the World of Care","word":"rewarding","translation_ar":"مُجزٍ / يمنح رضا","example_en":"Helping others can be a rewarding experience.","example_ar":"يمكن أن تكون مساعدة الآخرين تجربة مُجزية.","is_published":true},{"sort_order":12,"unit_title":"Unit 1: Inside the World of Care","word":"shift","translation_ar":"فترة عمل / نوبة","example_en":"She works the night shift at the hospital.","example_ar":"تعمل في النوبة الليلية في المستشفى.","is_published":true},{"sort_order":13,"unit_title":"Unit 1: Inside the World of Care","word":"victim","translation_ar":"ضحية / مصاب","example_en":"The victim received first aid immediately.","example_ar":"تلقى المصاب الإسعافات الأولية فورًا.","is_published":true},{"sort_order":14,"unit_title":"Unit 1: Inside the World of Care","word":"symptom","translation_ar":"عرض مرضي","example_en":"A high fever can be a symptom of infection.","example_ar":"يمكن أن تكون الحمى الشديدة عرضًا للعدوى.","is_published":true},{"sort_order":15,"unit_title":"Unit 1: Inside the World of Care","word":"prescription","translation_ar":"روشتة / وصفة طبية","example_en":"The doctor wrote a prescription for the medicine.","example_ar":"كتب الطبيب روشتة للدواء.","is_published":true},{"sort_order":16,"unit_title":"Unit 1: Inside the World of Care","word":"urgent","translation_ar":"عاجل","example_en":"This patient needs urgent medical attention.","example_ar":"يحتاج هذا المريض إلى رعاية طبية عاجلة.","is_published":true},{"sort_order":17,"unit_title":"Unit 1: Inside the World of Care","word":"respond","translation_ar":"يستجيب / يرد","example_en":"The team responded quickly to the emergency.","example_ar":"استجاب الفريق بسرعة للحالة الطارئة.","is_published":true},{"sort_order":18,"unit_title":"Unit 2: The Power of Machines","word":"automation","translation_ar":"الأتمتة","example_en":"Automation has changed many modern factories.","example_ar":"لقد غيّرت الأتمتة كثيرًا من المصانع الحديثة.","is_published":true},{"sort_order":19,"unit_title":"Unit 2: The Power of Machines","word":"device","translation_ar":"جهاز","example_en":"This device can save time and energy.","example_ar":"يمكن لهذا الجهاز توفير الوقت والطاقة.","is_published":true},{"sort_order":20,"unit_title":"Unit 2: The Power of Machines","word":"efficient","translation_ar":"فعّال","example_en":"The new machine is more efficient than the old one.","example_ar":"الآلة الجديدة أكثر كفاءة من القديمة.","is_published":true},{"sort_order":21,"unit_title":"Unit 2: The Power of Machines","word":"innovation","translation_ar":"ابتكار","example_en":"Innovation often begins with a simple idea.","example_ar":"غالبًا ما يبدأ الابتكار بفكرة بسيطة.","is_published":true},{"sort_order":22,"unit_title":"Unit 2: The Power of Machines","word":"sophisticated","translation_ar":"متطور / معقد","example_en":"The laboratory uses sophisticated equipment.","example_ar":"يستخدم المعمل معدات متطورة.","is_published":true},{"sort_order":23,"unit_title":"Unit 2: The Power of Machines","word":"dynasty","translation_ar":"سلالة / أسرة حاكمة","example_en":"The museum displays objects from an ancient dynasty.","example_ar":"يعرض المتحف مقتنيات من سلالة حاكمة قديمة.","is_published":true},{"sort_order":24,"unit_title":"Unit 2: The Power of Machines","word":"robotics","translation_ar":"علم الروبوتات","example_en":"Robotics is becoming important in education and industry.","example_ar":"أصبح علم الروبوتات مهمًا في التعليم والصناعة.","is_published":true},{"sort_order":25,"unit_title":"Unit 2: The Power of Machines","word":"mechanical","translation_ar":"ميكانيكي","example_en":"He studied mechanical engineering at university.","example_ar":"درس الهندسة الميكانيكية في الجامعة.","is_published":true},{"sort_order":26,"unit_title":"Unit 2: The Power of Machines","word":"engineer","translation_ar":"مهندس","example_en":"The engineer designed a safer machine.","example_ar":"صمم المهندس آلة أكثر أمانًا.","is_published":true},{"sort_order":27,"unit_title":"Unit 2: The Power of Machines","word":"manufacture","translation_ar":"يصنع / تصنيع","example_en":"The company manufactures smart devices.","example_ar":"تصنع الشركة أجهزة ذكية.","is_published":true},{"sort_order":28,"unit_title":"Unit 2: The Power of Machines","word":"prototype","translation_ar":"نموذج أولي","example_en":"The team tested a prototype before production.","example_ar":"اختبر الفريق نموذجًا أوليًا قبل الإنتاج.","is_published":true},{"sort_order":29,"unit_title":"Unit 2: The Power of Machines","word":"upgrade","translation_ar":"يطور / ترقية","example_en":"We need to upgrade the computer system.","example_ar":"نحتاج إلى تطوير نظام الكمبيوتر.","is_published":true},{"sort_order":30,"unit_title":"Unit 2: The Power of Machines","word":"technology","translation_ar":"تكنولوجيا / تقنية","example_en":"Technology can improve the quality of life.","example_ar":"يمكن للتكنولوجيا تحسين جودة الحياة.","is_published":true},{"sort_order":31,"unit_title":"Unit 2: The Power of Machines","word":"programmable","translation_ar":"قابل للبرمجة","example_en":"The robot is programmable and easy to control.","example_ar":"الروبوت قابل للبرمجة وسهل التحكم فيه.","is_published":true},{"sort_order":32,"unit_title":"Unit 2: The Power of Machines","word":"precision","translation_ar":"دقة","example_en":"The machine cuts the material with great precision.","example_ar":"تقطع الآلة المادة بدقة كبيرة.","is_published":true},{"sort_order":33,"unit_title":"Unit 2: The Power of Machines","word":"productivity","translation_ar":"إنتاجية","example_en":"New tools can increase workers’ productivity.","example_ar":"يمكن للأدوات الجديدة زيادة إنتاجية العمال.","is_published":true},{"sort_order":34,"unit_title":"Unit 2: The Power of Machines","word":"artificial","translation_ar":"اصطناعي","example_en":"Artificial intelligence is changing the workplace.","example_ar":"يغيّر الذكاء الاصطناعي بيئة العمل.","is_published":true},{"sort_order":35,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"conservation","translation_ar":"حماية / صون الموارد","example_en":"Wildlife conservation protects endangered species.","example_ar":"تحمي حماية الحياة البرية الأنواع المهددة بالانقراض.","is_published":true},{"sort_order":36,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"biodiversity","translation_ar":"تنوع بيولوجي","example_en":"Biodiversity is essential for healthy ecosystems.","example_ar":"التنوع البيولوجي ضروري للنظم البيئية الصحية.","is_published":true},{"sort_order":37,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"habitat","translation_ar":"موطن طبيعي","example_en":"Pollution can destroy the habitat of many animals.","example_ar":"يمكن أن يدمّر التلوث الموطن الطبيعي لكثير من الحيوانات.","is_published":true},{"sort_order":38,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"endangered","translation_ar":"مهدد بالانقراض","example_en":"The sea turtle is an endangered animal.","example_ar":"السلحفاة البحرية حيوان مهدد بالانقراض.","is_published":true},{"sort_order":39,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"sustainable","translation_ar":"مستدام","example_en":"We need sustainable solutions for future generations.","example_ar":"نحتاج إلى حلول مستدامة للأجيال القادمة.","is_published":true},{"sort_order":40,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"renewable","translation_ar":"متجدد","example_en":"Solar power is a renewable source of energy.","example_ar":"الطاقة الشمسية مصدر متجدد للطاقة.","is_published":true},{"sort_order":41,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"pollution","translation_ar":"تلوث","example_en":"Air pollution affects people in large cities.","example_ar":"يؤثر تلوث الهواء على الناس في المدن الكبيرة.","is_published":true},{"sort_order":42,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"recycle","translation_ar":"يعيد التدوير","example_en":"Students recycle paper at school.","example_ar":"يعيد الطلاب تدوير الورق في المدرسة.","is_published":true},{"sort_order":43,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"emission","translation_ar":"انبعاث","example_en":"Governments are trying to reduce carbon emissions.","example_ar":"تحاول الحكومات تقليل انبعاثات الكربون.","is_published":true},{"sort_order":44,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"climate","translation_ar":"مناخ","example_en":"Climate change is a global challenge.","example_ar":"تغير المناخ تحدٍ عالمي.","is_published":true},{"sort_order":45,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"ecosystem","translation_ar":"نظام بيئي","example_en":"Every species has a role in its ecosystem.","example_ar":"لكل نوع دور في نظامه البيئي.","is_published":true},{"sort_order":46,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"preserve","translation_ar":"يحافظ على","example_en":"We must preserve natural resources.","example_ar":"يجب أن نحافظ على الموارد الطبيعية.","is_published":true},{"sort_order":47,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"deforestation","translation_ar":"إزالة الغابات","example_en":"Deforestation can increase soil erosion.","example_ar":"يمكن أن تؤدي إزالة الغابات إلى زيادة تآكل التربة.","is_published":true},{"sort_order":48,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"drought","translation_ar":"جفاف","example_en":"The region suffered from a long drought.","example_ar":"عانت المنطقة من جفاف طويل.","is_published":true},{"sort_order":49,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"flood","translation_ar":"فيضان","example_en":"Heavy rain caused a flood in the village.","example_ar":"تسببت الأمطار الغزيرة في فيضان بالقرية.","is_published":true},{"sort_order":50,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"waste","translation_ar":"مخلفات / هدر","example_en":"Reducing waste helps protect the environment.","example_ar":"يساعد تقليل المخلفات على حماية البيئة.","is_published":true},{"sort_order":51,"unit_title":"Unit 3: Protect Nature, Protect Future","word":"awareness","translation_ar":"وعي","example_en":"Schools can raise environmental awareness.","example_ar":"يمكن للمدارس رفع الوعي البيئي.","is_published":true},{"sort_order":52,"unit_title":"Unit 4: Marine Life","word":"marine","translation_ar":"بحري","example_en":"Marine life is affected by water pollution.","example_ar":"تتأثر الحياة البحرية بتلوث المياه.","is_published":true},{"sort_order":53,"unit_title":"Unit 4: Marine Life","word":"coral reef","translation_ar":"شعاب مرجانية","example_en":"Coral reefs provide shelter for many fish.","example_ar":"توفر الشعاب المرجانية مأوى لكثير من الأسماك.","is_published":true},{"sort_order":54,"unit_title":"Unit 4: Marine Life","word":"species","translation_ar":"نوع من الكائنات","example_en":"Many marine species need clean water to survive.","example_ar":"تحتاج أنواع بحرية كثيرة إلى مياه نظيفة للبقاء.","is_published":true},{"sort_order":55,"unit_title":"Unit 4: Marine Life","word":"ocean","translation_ar":"محيط","example_en":"The ocean covers most of the Earth’s surface.","example_ar":"يغطي المحيط معظم سطح الأرض.","is_published":true},{"sort_order":56,"unit_title":"Unit 4: Marine Life","word":"coast","translation_ar":"ساحل","example_en":"We walked along the coast at sunset.","example_ar":"مشينا على طول الساحل عند غروب الشمس.","is_published":true},{"sort_order":57,"unit_title":"Unit 4: Marine Life","word":"current","translation_ar":"تيار مائي","example_en":"Strong ocean currents can be dangerous.","example_ar":"يمكن أن تكون التيارات البحرية القوية خطيرة.","is_published":true},{"sort_order":58,"unit_title":"Unit 4: Marine Life","word":"predator","translation_ar":"حيوان مفترس","example_en":"The shark is a powerful marine predator.","example_ar":"القرش حيوان مفترس بحري قوي.","is_published":true},{"sort_order":59,"unit_title":"Unit 4: Marine Life","word":"prey","translation_ar":"فريسة","example_en":"Small fish may become prey for larger animals.","example_ar":"قد تصبح الأسماك الصغيرة فريسة للحيوانات الأكبر.","is_published":true},{"sort_order":60,"unit_title":"Unit 4: Marine Life","word":"reef","translation_ar":"شعاب صخرية / مرجانية","example_en":"Divers explored the colorful reef.","example_ar":"استكشف الغواصون الشعاب الملونة.","is_published":true},{"sort_order":61,"unit_title":"Unit 4: Marine Life","word":"depth","translation_ar":"عمق","example_en":"Some sea creatures live at great depths.","example_ar":"تعيش بعض الكائنات البحرية في أعماق كبيرة.","is_published":true},{"sort_order":62,"unit_title":"Unit 4: Marine Life","word":"dolphin","translation_ar":"دولفين","example_en":"The dolphin moved quickly through the water.","example_ar":"تحرك الدولفين بسرعة في الماء.","is_published":true},{"sort_order":63,"unit_title":"Unit 4: Marine Life","word":"whale","translation_ar":"حوت","example_en":"The whale is one of the largest animals on Earth.","example_ar":"الحوت واحد من أكبر الحيوانات على الأرض.","is_published":true},{"sort_order":64,"unit_title":"Unit 4: Marine Life","word":"protect","translation_ar":"يحمي","example_en":"We must protect marine habitats.","example_ar":"يجب أن نحمي المواطن البحرية.","is_published":true},{"sort_order":65,"unit_title":"Unit 4: Marine Life","word":"oceanic","translation_ar":"محيطي","example_en":"Scientists study oceanic ecosystems.","example_ar":"يدرس العلماء النظم البيئية المحيطية.","is_published":true},{"sort_order":66,"unit_title":"Unit 4: Marine Life","word":"explore","translation_ar":"يستكشف","example_en":"Researchers explore the deep ocean.","example_ar":"يستكشف الباحثون أعماق المحيط.","is_published":true},{"sort_order":67,"unit_title":"Unit 4: Marine Life","word":"underwater","translation_ar":"تحت الماء","example_en":"The camera recorded an underwater scene.","example_ar":"سجلت الكاميرا مشهدًا تحت الماء.","is_published":true},{"sort_order":68,"unit_title":"Unit 4: Marine Life","word":"conservationist","translation_ar":"ناشط في حماية البيئة","example_en":"The conservationist works to protect sea turtles.","example_ar":"يعمل الناشط البيئي على حماية السلاحف البحرية.","is_published":true},{"sort_order":69,"unit_title":"Unit 5: From Muscles to Mindset","word":"muscle","translation_ar":"عضلة","example_en":"Regular exercise can strengthen every muscle.","example_ar":"يمكن لممارسة الرياضة بانتظام تقوية كل عضلة.","is_published":true},{"sort_order":70,"unit_title":"Unit 5: From Muscles to Mindset","word":"mindset","translation_ar":"عقلية / طريقة تفكير","example_en":"A positive mindset helps students face challenges.","example_ar":"تساعد العقلية الإيجابية الطلاب على مواجهة التحديات.","is_published":true},{"sort_order":71,"unit_title":"Unit 5: From Muscles to Mindset","word":"discipline","translation_ar":"انضباط","example_en":"Success in sport requires discipline.","example_ar":"النجاح في الرياضة يحتاج إلى انضباط.","is_published":true},{"sort_order":72,"unit_title":"Unit 5: From Muscles to Mindset","word":"motivation","translation_ar":"دافع / تحفيز","example_en":"Good teachers can increase students’ motivation.","example_ar":"يمكن للمعلمين الجيدين زيادة دافع الطلاب.","is_published":true},{"sort_order":73,"unit_title":"Unit 5: From Muscles to Mindset","word":"endurance","translation_ar":"قدرة على التحمل","example_en":"Running regularly improves endurance.","example_ar":"يساعد الجري بانتظام على تحسين القدرة على التحمل.","is_published":true},{"sort_order":74,"unit_title":"Unit 5: From Muscles to Mindset","word":"stamina","translation_ar":"تحمل / قوة بدنية","example_en":"The athlete built his stamina through training.","example_ar":"بنى اللاعب قدرته على التحمل من خلال التدريب.","is_published":true},{"sort_order":75,"unit_title":"Unit 5: From Muscles to Mindset","word":"performance","translation_ar":"أداء","example_en":"Sleep can improve your mental and physical performance.","example_ar":"يمكن للنوم تحسين أدائك العقلي والبدني.","is_published":true},{"sort_order":76,"unit_title":"Unit 5: From Muscles to Mindset","word":"achieve","translation_ar":"يحقق","example_en":"She worked hard to achieve her goal.","example_ar":"عملت بجد لتحقق هدفها.","is_published":true},{"sort_order":77,"unit_title":"Unit 5: From Muscles to Mindset","word":"resilient","translation_ar":"مرن وقادر على التعافي","example_en":"Resilient people learn from failure.","example_ar":"يتعلم الأشخاص القادرون على التعافي من الفشل.","is_published":true},{"sort_order":78,"unit_title":"Unit 5: From Muscles to Mindset","word":"pressure","translation_ar":"ضغط","example_en":"Students often feel pressure before exams.","example_ar":"غالبًا ما يشعر الطلاب بالضغط قبل الامتحانات.","is_published":true},{"sort_order":79,"unit_title":"Unit 5: From Muscles to Mindset","word":"well-being","translation_ar":"رفاهية / صحة عامة","example_en":"Exercise supports both physical and mental well-being.","example_ar":"تدعم الرياضة الصحة الجسدية والنفسية.","is_published":true},{"sort_order":80,"unit_title":"Unit 5: From Muscles to Mindset","word":"routine","translation_ar":"روتين","example_en":"A healthy routine can improve your daily life.","example_ar":"يمكن أن يحسن الروتين الصحي حياتك اليومية.","is_published":true},{"sort_order":81,"unit_title":"Unit 5: From Muscles to Mindset","word":"recover","translation_ar":"يتعافى","example_en":"The player needs time to recover after the injury.","example_ar":"يحتاج اللاعب وقتًا للتعافي بعد الإصابة.","is_published":true},{"sort_order":82,"unit_title":"Unit 5: From Muscles to Mindset","word":"focus","translation_ar":"تركيز","example_en":"Take a short break and then focus on your task.","example_ar":"خذ استراحة قصيرة ثم ركز على مهمتك.","is_published":true},{"sort_order":83,"unit_title":"Unit 5: From Muscles to Mindset","word":"challenge","translation_ar":"تحدٍ","example_en":"Every challenge can teach us something useful.","example_ar":"يمكن لكل تحدٍ أن يعلمنا شيئًا مفيدًا.","is_published":true},{"sort_order":84,"unit_title":"Unit 5: From Muscles to Mindset","word":"confidence","translation_ar":"ثقة بالنفس","example_en":"Practice can build confidence before an exam.","example_ar":"يمكن أن تبني الممارسة الثقة بالنفس قبل الامتحان.","is_published":true},{"sort_order":85,"unit_title":"Unit 6: Let's Hang Out!","word":"hang out","translation_ar":"يقضي وقتًا مع الأصدقاء","example_en":"We usually hang out after school.","example_ar":"عادةً ما نقضي وقتًا معًا بعد المدرسة.","is_published":true},{"sort_order":86,"unit_title":"Unit 6: Let's Hang Out!","word":"get together","translation_ar":"يجتمع","example_en":"Our friends get together every Friday.","example_ar":"يجتمع أصدقاؤنا كل يوم جمعة.","is_published":true},{"sort_order":87,"unit_title":"Unit 6: Let's Hang Out!","word":"socialize","translation_ar":"يتواصل اجتماعيًا","example_en":"Students need opportunities to socialize with others.","example_ar":"يحتاج الطلاب إلى فرص للتواصل الاجتماعي مع الآخرين.","is_published":true},{"sort_order":88,"unit_title":"Unit 6: Let's Hang Out!","word":"catch up","translation_ar":"يتبادل الأخبار بعد غياب","example_en":"I called my friend to catch up.","example_ar":"اتصلت بصديقي لنتبادل الأخبار بعد الغياب.","is_published":true},{"sort_order":89,"unit_title":"Unit 6: Let's Hang Out!","word":"acquaintance","translation_ar":"معرفة / شخص تعرفه","example_en":"He is an old acquaintance from school.","example_ar":"إنه شخص قديم أعرفه من المدرسة.","is_published":true},{"sort_order":90,"unit_title":"Unit 6: Let's Hang Out!","word":"outing","translation_ar":"نزهة / خروجة","example_en":"We planned an outing to the museum.","example_ar":"خططنا لنزهة إلى المتحف.","is_published":true},{"sort_order":91,"unit_title":"Unit 6: Let's Hang Out!","word":"invitation","translation_ar":"دعوة","example_en":"She sent me an invitation to her birthday party.","example_ar":"أرسلت لي دعوة إلى حفلة عيد ميلادها.","is_published":true},{"sort_order":92,"unit_title":"Unit 6: Let's Hang Out!","word":"gather","translation_ar":"يجتمع / يجمع","example_en":"Families often gather during holidays.","example_ar":"غالبًا ما تجتمع العائلات في الإجازات.","is_published":true},{"sort_order":93,"unit_title":"Unit 6: Let's Hang Out!","word":"friendship","translation_ar":"صداقة","example_en":"True friendship is based on trust and respect.","example_ar":"الصداقة الحقيقية تقوم على الثقة والاحترام.","is_published":true},{"sort_order":94,"unit_title":"Unit 6: Let's Hang Out!","word":"companion","translation_ar":"رفيق / صاحب","example_en":"A good companion can make a trip more enjoyable.","example_ar":"يمكن لرفيق جيد أن يجعل الرحلة أكثر متعة.","is_published":true},{"sort_order":95,"unit_title":"Unit 6: Let's Hang Out!","word":"neighborhood","translation_ar":"حي","example_en":"People in our neighborhood know each other well.","example_ar":"يعرف الناس في حيّنا بعضهم جيدًا.","is_published":true},{"sort_order":96,"unit_title":"Unit 6: Let's Hang Out!","word":"event","translation_ar":"فعالية / حدث","example_en":"The school organized a cultural event.","example_ar":"نظمت المدرسة فعالية ثقافية.","is_published":true},{"sort_order":97,"unit_title":"Unit 6: Let's Hang Out!","word":"appointment","translation_ar":"موعد","example_en":"I have an appointment with my teacher tomorrow.","example_ar":"لدي موعد مع معلمي غدًا.","is_published":true},{"sort_order":98,"unit_title":"Unit 6: Let's Hang Out!","word":"conversation","translation_ar":"محادثة","example_en":"We had an interesting conversation about travel.","example_ar":"أجرينا محادثة ممتعة عن السفر.","is_published":true},{"sort_order":99,"unit_title":"Unit 6: Let's Hang Out!","word":"connection","translation_ar":"علاقة / صلة","example_en":"Regular communication strengthens social connections.","example_ar":"يقوي التواصل المنتظم العلاقات الاجتماعية.","is_published":true},{"sort_order":100,"unit_title":"Unit 6: Let's Hang Out!","word":"respectful","translation_ar":"محترم","example_en":"Good friends are honest and respectful.","example_ar":"الأصدقاء الجيدون صادقون ومحترمون.","is_published":true}];
+  const UNITS=[...new Set(SEED.map(x=>x.unit_title))];
+  let localRows=[];
+  try{localRows=JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');}catch(e){localRows=[];}
+  if(!Array.isArray(localRows)||!localRows.length){localRows=SEED.map((x,i)=>({id:'local-'+(i+1),...x}));localStorage.setItem(LOCAL_KEY,JSON.stringify(localRows));}
+  let useLocal=false;
+  function escB(v){return esc(v)}
+  function saveLocal(){localStorage.setItem(LOCAL_KEY,JSON.stringify(localRows));}
+  function fillUnits(){const s=document.getElementById('bilingualUnit');if(!s)return;s.innerHTML='<option value="">All Units</option>'+UNITS.map(u=>'<option value="'+escB(u)+'">'+escB(u)+'</option>').join('');}
+  function statusPill(v){return '<span class="pill '+(v?'ok':'warn')+'">'+(v?'Published':'Draft')+'</span>'}
+  async function dbRows(){
+    const unit=document.getElementById('bilingualUnit')?.value||'';
+    let q=db.from('bilingual_vocab').select('id,grade_id,unit_title,word,translation_ar,example_en,example_ar,sort_order,is_published,created_at,updated_at').eq('grade_id',(grades||[]).find(g=>g.name==='3rd Secondary')?.id||'').order('sort_order',{ascending:true});
+    if(unit)q=q.eq('unit_title',unit);
+    const pub=document.getElementById('bilingualPublishedFilter')?.value||'';if(pub)q=q.eq('is_published',pub==='true');
+    const r=await q;
+    if(r.error){useLocal=true;return null;}
+    useLocal=false;return r.data||[];
+  }
+  function filteredLocal(){
+    const unit=document.getElementById('bilingualUnit')?.value||'', pub=document.getElementById('bilingualPublishedFilter')?.value||'', term=(document.getElementById('bilingualSearch')?.value||'').trim().toLowerCase();
+    return localRows.filter(x=>(!unit||x.unit_title===unit)&&(!pub||String(!!x.is_published)===pub)&&(!term||[x.word,x.translation_ar,x.example_en,x.example_ar,x.unit_title].join(' ').toLowerCase().includes(term)));
+  }
+  async function loadBilingual(){
+    if(document.querySelector('#section-bilingual-vocab')?.classList.contains('active')===false)return;
+    fillUnits();
+    const dbData=await dbRows();
+    let rows=dbData;
+    if(!rows)rows=filteredLocal();
+    const term=(document.getElementById('bilingualSearch')?.value||'').trim().toLowerCase();if(term)rows=rows.filter(x=>[x.word,x.translation_ar,x.example_en,x.example_ar,x.unit_title].join(' ').toLowerCase().includes(term));
+    document.getElementById('bilingualCount').textContent=rows.length;
+    document.getElementById('bilingualPublished').textContent=rows.filter(x=>x.is_published).length;
+    document.getElementById('bilingualTable').innerHTML=rows.length?'<table><thead><tr><th>#</th><th>Unit</th><th>Word / Phrase</th><th>Arabic</th><th>Example Sentence</th><th>Arabic Translation</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map((x,i)=>'<tr><td>'+escB(x.sort_order??(i+1))+'</td><td><span class="bilingual-badge">'+escB((x.unit_title||'').replace(/^Unit /,''))+'</span></td><td><div class="bilingual-word">'+escB(x.word)+'</div></td><td class="bilingual-ar">'+escB(x.translation_ar)+'</td><td class="bilingual-example">'+escB(x.example_en)+'</td><td class="bilingual-ar bilingual-example">'+escB(x.example_ar)+'</td><td>'+statusPill(x.is_published)+'</td><td><div class="bilingual-actions"><button class="btn secondary small bilingual-edit" data-id="'+escB(x.id)+'">Edit</button><button class="btn danger small bilingual-delete" data-id="'+escB(x.id)+'">Delete</button></div></td></tr>').join('')+'</tbody></table>':'<div class="empty">No bilingual entries found.</div>';
+    document.querySelectorAll('.bilingual-edit').forEach(b=>b.onclick=()=>editBilingualEntry(b.dataset.id));
+    document.querySelectorAll('.bilingual-delete').forEach(b=>b.onclick=()=>deleteBilingualEntry(b.dataset.id));
+  }
+  function nextLocalOrder(){return localRows.reduce((m,x)=>Math.max(m,Number(x.sort_order)||0),0)+1;}
+  function bilingualForm(title,x=null){
+    openModal(title,`<form id="bilingualForm"><div class="form-grid"><div class="form-row full"><label>Unit / Topic</label><select id="bUnit" required>${UNITS.map(u=>`<option ${u===(x?.unit_title||UNITS[0])?'selected':''}>${escB(u)}</option>`).join('')}</select></div><div class="form-row"><label>English word / phrase</label><input id="bWord" value="${escB(x?.word||'')}" required></div><div class="form-row"><label>Arabic translation</label><input id="bAr" dir="rtl" value="${escB(x?.translation_ar||'')}" required></div><div class="form-row full"><label>English example sentence</label><textarea id="bExample" required>${escB(x?.example_en||'')}</textarea></div><div class="form-row full"><label>Arabic sentence translation</label><textarea id="bExampleAr" dir="rtl" required>${escB(x?.example_ar||'')}</textarea></div><div class="form-row"><label>Order</label><input id="bOrder" type="number" min="1" value="${Number(x?.sort_order||nextLocalOrder())}"></div><div class="form-row"><label>Status</label><select id="bPub"><option value="true" ${x?.is_published!==false?'selected':''}>Published</option><option value="false" ${x?.is_published===false?'selected':''}>Draft</option></select></div></div><button class="btn">Save Entry</button></form>`);
+    document.getElementById('bilingualForm').onsubmit=async e=>{e.preventDefault();const p={unit_title:document.getElementById('bUnit').value,word:document.getElementById('bWord').value.trim(),translation_ar:document.getElementById('bAr').value.trim(),example_en:document.getElementById('bExample').value.trim(),example_ar:document.getElementById('bExampleAr').value.trim(),sort_order:Number(document.getElementById('bOrder').value||1),is_published:document.getElementById('bPub').value==='true',updated_at:new Date().toISOString()};
+      if(!useLocal){const gradeId=(grades||[]).find(g=>g.name==='3rd Secondary')?.id;const payload={...p,grade_id:gradeId};const r=x?await db.from('bilingual_vocab').update(payload).eq('id',x.id).select('id'):await db.from('bilingual_vocab').insert(payload).select('id');if(r.error){toast('Save failed: '+r.error.message);return}closeModal();toast('Bilingual entry saved.');await loadBilingual();return;}
+      const row={id:x?.id||('local-'+Date.now()),...p};if(x){const idx=localRows.findIndex(z=>z.id===x.id);if(idx>=0)localRows[idx]=row;}else localRows.push(row);saveLocal();closeModal();toast('Bilingual entry saved on this device. Run the SQL patch to store it in Supabase.');await loadBilingual();
+    };
+  }
+  async function editBilingualEntry(id){if(useLocal){const x=localRows.find(r=>r.id===id);if(x)bilingualForm('Edit Bilingual Entry',x);return;}const r=await db.from('bilingual_vocab').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);bilingualForm('Edit Bilingual Entry',r.data)}
+  async function deleteBilingualEntry(id){if(useLocal){if(!confirm('Delete this bilingual entry?'))return;localRows=localRows.filter(r=>r.id!==id);saveLocal();toast('Bilingual entry deleted.');return loadBilingual();}await deletePersisted('bilingual_vocab',id,'Bilingual entry',loadBilingual)}
+  async function seedBilingual(){
+    if(!confirm('Seed the 100 prepared 3rd Secondary bilingual entries? Existing rows with the same sort order will be updated.'))return;
+    const gradeId=(grades||[]).find(g=>g.name==='3rd Secondary')?.id;if(!gradeId)return toast('3rd Secondary grade was not found.');
+    const payload=SEED.map(x=>({...x,grade_id:gradeId}));
+    const r=await db.from('bilingual_vocab').upsert(payload,{onConflict:'grade_id,sort_order'});
+    if(r.error){useLocal=true;localRows=SEED.map((x,i)=>({id:'local-'+(i+1),...x}));saveLocal();toast('Supabase table is not ready yet; loaded all 100 entries locally. Run the bilingual SQL patch.');await loadBilingual();return;}
+    useLocal=false;toast('100 bilingual entries are ready in Supabase.');await loadBilingual();
+  }
+  window.loadBilingualVocab=loadBilingual;window.editBilingualEntry=editBilingualEntry;window.deleteBilingualEntry=deleteBilingualEntry;
+  document.getElementById('newBilingualBtn')?.addEventListener('click',()=>bilingualForm('New Bilingual Entry'));
+  document.getElementById('seedBilingualBtn')?.addEventListener('click',seedBilingual);
+  document.getElementById('bilingualRefresh')?.addEventListener('click',loadBilingual);
+  document.getElementById('bilingualSearch')?.addEventListener('input',loadBilingual);
+  document.getElementById('bilingualUnit')?.addEventListener('change',loadBilingual);
+  document.getElementById('bilingualPublishedFilter')?.addEventListener('change',loadBilingual);
+  const oldLoadSection=window.loadSection;
+  window.loadSection=function(name){if(typeof oldLoadSection==='function')oldLoadSection(name);if(name==='bilingual-vocab')setTimeout(loadBilingual,0);};
+  setTimeout(()=>{if(document.querySelector('#section-bilingual-vocab')?.classList.contains('active'))loadBilingual();},150);
+})();
+</script>
+
 </body>
 </html>
