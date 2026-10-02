@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>DOMA ACADEMY — Admin • One-Step Final</title>
+<title>DOMA ACADEMY — Admin • Master Content Control</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -20,6 +20,13 @@
 
 <style id="doma-final-admin-css">
 .lesson-editor-note{padding:10px 12px;border:1px dashed #4b2b34;border-radius:10px;background:#130b0e;color:#9e8b90;font-size:10px;line-height:1.6;margin-bottom:12px}.field-hint{display:block;margin-top:5px;color:#776c71;font-size:9px}.video-preview-btn{margin-top:7px}.video-preview-box{background:#070607;border:1px solid #302027;border-radius:12px;overflow:hidden}.video-preview-box iframe,.video-preview-box video{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+</style>
+
+
+<style id="doma-admin-lesson-navigation-upgrade">
+/* Easier global navigation */
+.quick-nav{display:flex;gap:7px;overflow:auto;white-space:nowrap;padding:8px 26px;border-bottom:1px solid #24161b;background:#0b0809}.quick-nav button{border:1px solid #332028;background:#120c0f;color:#bfaeb4;border-radius:999px;padding:7px 10px;font-size:10px}.quick-nav button:hover,.quick-nav button.active{background:#291018;color:#fff;border-color:#713044}.lesson-toolbar-pro{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}.lesson-toolbar-pro select,.lesson-toolbar-pro input{max-width:210px}.lesson-filter-note{font-size:9px;color:#766d72;margin:2px 0 12px}.lesson-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);max-height:calc(100vh - 300px)}.lesson-table-wrap table{min-width:1240px}.lesson-order-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:7px;background:#1b1115;border:1px solid #39212a;color:#d2a3b0;font-size:9px}.video-cell{min-width:180px}.lesson-video-mini{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:#241018;border:1px solid #4a222f;color:#efb4c2;font-size:9px}.lesson-video-mini.missing{background:#111011;color:#8b8185;border-color:#302127}.lesson-video-thumb{width:105px;height:59px;border-radius:7px;object-fit:cover;display:block;border:1px solid #38202a;margin-bottom:6px}.lesson-row-title{display:flex;align-items:flex-start;gap:10px}.lesson-index-circle{width:30px;height:30px;min-width:30px;border-radius:8px;display:grid;place-items:center;background:#26141a;border:1px solid #4a222f;color:#e1a4b2;font-weight:900;font-size:10px}.lesson-row-title strong{display:block}.lesson-row-title small{display:block;margin-top:3px}.lesson-video-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.lesson-package{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.package-pill{font-size:8px;padding:4px 6px;border-radius:6px;background:#161013;border:1px solid #302027;color:#8e8186}.package-pill.ready{color:#9ed9b8;border-color:#29523e;background:#102018}.package-pill.missing{color:#e0b37a;border-color:#59432a;background:#21190f}.content-helper{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 0 14px}.content-helper-card{padding:11px;border:1px solid #302027;border-radius:10px;background:#100a0c}.content-helper-card b{display:block;font-size:10px}.content-helper-card span{display:block;color:#786f73;font-size:8px;margin-top:3px;line-height:1.5}.lesson-jump{display:grid;grid-template-columns:180px 1fr auto;gap:8px;align-items:end;margin-bottom:13px;padding:12px;border:1px solid #39202a;border-radius:12px;background:#100a0c}.lesson-jump label{display:block;color:#8b7d83;font-size:9px;margin-bottom:5px}.video-quick-form{display:grid;gap:10px}.video-preview-card{padding:10px;border:1px solid #372029;background:#0b0809;border-radius:12px}.video-preview-card iframe,.video-preview-card video{width:100%;aspect-ratio:16/9;border:0;border-radius:9px;background:#000;display:block}.order-note{padding:10px 12px;border-radius:10px;border:1px dashed #4b2b34;background:#140b0f;color:#9b8c91;font-size:9px;line-height:1.6;margin:0 0 12px}
+@media(max-width:900px){.quick-nav{padding:8px 16px}.content-helper{grid-template-columns:1fr}.lesson-jump{grid-template-columns:1fr}.lesson-table-wrap{max-height:none}.lesson-toolbar-pro select,.lesson-toolbar-pro input{max-width:none;width:100%}}
 </style>
 
 </head>
@@ -76,6 +83,17 @@
 <button class="btn secondary" id="openSite">Open Website ↗</button>
 </div>
 </header>
+<div class="quick-nav" id="quickNav">
+  <button type="button" data-quick-section="dashboard">▦ Dashboard</button>
+  <button type="button" data-quick-section="grades">Grades</button>
+  <button type="button" data-quick-section="units">Units</button>
+  <button type="button" data-quick-section="lessons">▣ Lessons</button>
+  <button type="button" data-quick-section="quizzes">✓ Quizzes</button>
+  <button type="button" data-quick-section="question-bank">Question Bank</button>
+  <button type="button" data-quick-section="homework">Homework</button>
+  <button type="button" data-quick-section="students">Students</button>
+  <button type="button" data-quick-section="sales">Sales</button>
+</div>
 <div class="content">
 <section class="section active" id="section-dashboard">
 <div class="head"><div><h2>Academy Dashboard</h2><p>Live counts and quick access to the main academy systems.</p></div><button class="btn secondary" id="dashboardRefresh">Refresh</button></div>
@@ -102,9 +120,25 @@
 <div class="table-wrap" id="unitsTable"></div>
 </section>
 <section class="section" id="section-lessons">
-<div class="head"><div><h2>Lessons</h2><p>Manage English lessons, media, publishing and free/paid access.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
-<div class="toolbar"><select id="lessonGrade"><option value="">All Grades</option></select><select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select><select id="lessonVideoStatus"><option value="">All Video Status</option><option value="ready">Video Ready</option><option value="missing">Video Missing</option></select><input id="lessonSearch" placeholder="Search lessons…"/><button class="btn secondary" id="lessonRefresh">Refresh</button></div>
-<div class="table-wrap" id="lessonsTable"></div>
+<div class="head"><div><h2>Lessons</h2><p>Organize by Grade → Unit → Lesson. Every lesson has its own video, 100 Key Words and 100-word task.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
+<div class="content-helper">
+  <div class="content-helper-card"><b>01 • Pick Grade</b><span>Filter the lessons by school grade first.</span></div>
+  <div class="content-helper-card"><b>02 • Pick Unit</b><span>Then move directly to one unit and its lesson order.</span></div>
+  <div class="content-helper-card"><b>03 • Edit / Video</b><span>Edit the lesson or preview/update its video from the row.</span></div>
+</div>
+<div class="lesson-jump">
+  <div><label>Grade</label><select id="lessonGrade"><option value="">All Grades</option></select></div>
+  <div><label>Unit</label><select id="lessonUnit"><option value="">All Units</option></select></div>
+  <div><button class="btn secondary" id="normalizeLessonOrder">↕ Fix Lesson Order</button></div>
+</div>
+<div class="lesson-toolbar-pro">
+  <select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select>
+  <select id="lessonVideoStatus"><option value="">All Video Status</option><option value="ready">Video Ready</option><option value="missing">Video Missing</option></select>
+  <input id="lessonSearch" placeholder="Search lesson, unit or grade…"/>
+  <button class="btn secondary" id="lessonRefresh">Refresh</button>
+</div>
+<div class="lesson-filter-note">Lesson list order: Grade order → Unit number → Lesson sort order → creation time. Use “Fix Lesson Order” after adding or moving lessons.</div>
+<div class="lesson-table-wrap" id="lessonsTable"></div>
 </section>
 <section class="section" id="section-quizzes">
 <div class="head"><div><h2>Exams &amp; Quizzes</h2><p>Create assessments and manage questions. Correct answers are never sent to students directly.</p></div><button class="btn" id="newQuiz">+ New Quiz</button></div>
@@ -176,6 +210,7 @@ async function loadGrades(){
   ['unitGrade','lessonGrade','quizGrade','hwGrade'].forEach(id=>{if($(id))$(id).innerHTML='<option value="">All Grades</option>'+grades.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('')});
 }
 async function loadUnitsCache(){const r=await db.from('units').select('id,grade_id,title,unit_number,description,created_at').order('unit_number',{ascending:true});if(!r.error)units=r.data||[]}
+function refreshLessonUnitFilter(){const g=$('lessonGrade')?.value||'';const opts=units.filter(u=>!g||u.grade_id===g).sort((a,b)=>Number(a.unit_number||0)-Number(b.unit_number||0)).map(u=>`<option value="${u.id}">Unit ${Number(u.unit_number||0)} — ${esc(u.title)}</option>`).join('');if($('lessonUnit'))$('lessonUnit').innerHTML='<option value="">All Units</option>'+opts}
 
 async function loadDashboard(){
   const [students,lessons,pending,active]=await Promise.all([
@@ -213,8 +248,112 @@ async function deletePersisted(table,id,label,after){
 async function deleteUnit(id){await deletePersisted('units',id,'Unit',loadUnits)}
 
 async function loadLessons(){
-  let q=db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,vocabulary_100,grammar_focus,writing_100,duration_minutes,sort_order,is_free,is_published,created_at').order('sort_order',{ascending:true}).order('created_at',{ascending:false});const g=$('lessonGrade').value,t=$('lessonType').value,v=$('lessonVideoStatus')?.value||'';if(g)q=q.eq('grade_id',g);if(t)q=q.eq('lesson_type',t);const r=await q;if(r.error)return $('lessonsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];if(v==='ready')rows=rows.filter(x=>String(x.video_url||'').trim());if(v==='missing')rows=rows.filter(x=>!String(x.video_url||'').trim());const term=$('lessonSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.lesson_type||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('lessonsTable').innerHTML=rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Access</th><th>Video</th><th>100 Words</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${esc(units.find(u=>u.id===x.unit_id)?.title||'—')}</div><div class="muted">${x.writing_100?'100-word task ready':'100-word task empty'} • ${x.vocabulary_100?'Vocabulary ready':'Vocabulary empty'}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.lesson_type)}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${x.video_url?`<a class="admin-video-link" href="${esc(x.video_url)}" target="_blank" rel="noopener">Ready ↗</a>`:'<span class="mini-status">Missing</span>'}</td><td>${(x.writing_100||x.vocabulary_100)?'<span class="pill ok">Ready</span>':'<span class="pill warn">Empty</span>'}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons found.</div>';
+  const box=$('lessonsTable');
+  if(!box)return;
+  box.innerHTML='<div class="empty">Loading lessons…</div>';
+  const r=await db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,vocabulary_100,grammar_focus,writing_100,duration_minutes,sort_order,is_free,is_published,created_at').order('created_at',{ascending:false});
+  if(r.error)return box.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+  let rows=r.data||[];
+  const g=$('lessonGrade')?.value||'', u=$('lessonUnit')?.value||'', t=$('lessonType')?.value||'', v=$('lessonVideoStatus')?.value||'', term=($('lessonSearch')?.value||'').trim().toLowerCase();
+  if(g)rows=rows.filter(x=>x.grade_id===g);
+  if(u)rows=rows.filter(x=>x.unit_id===u);
+  if(t)rows=rows.filter(x=>x.lesson_type===t);
+  if(v==='ready')rows=rows.filter(x=>String(x.video_url||'').trim());
+  if(v==='missing')rows=rows.filter(x=>!String(x.video_url||'').trim());
+  if(term)rows=rows.filter(x=>{
+    const unit=units.find(z=>z.id===x.unit_id); const hay=[x.title,x.lesson_type,x.description,gradeName(x.grade_id),unit?.title||'',String(unit?.unit_number||'')].join(' ').toLowerCase();
+    return hay.includes(term);
+  });
+  rows.sort((a,b)=>{
+    const ga=(grades.find(z=>z.id===a.grade_id)?.sort_order??9999), gb=(grades.find(z=>z.id===b.grade_id)?.sort_order??9999);
+    if(ga!==gb)return ga-gb;
+    const ua=(units.find(z=>z.id===a.unit_id)?.unit_number??9999), ub=(units.find(z=>z.id===b.unit_id)?.unit_number??9999);
+    if(ua!==ub)return ua-ub;
+    const sa=Number(a.sort_order||0), sb=Number(b.sort_order||0); if(sa!==sb)return sa-sb;
+    return new Date(a.created_at||0)-new Date(b.created_at||0);
+  });
+  if(!rows.length){box.innerHTML='<div class="empty">No lessons match these filters.</div>';return;}
+  let lastGroup='';
+  const body=rows.map(x=>{
+    const unit=units.find(z=>z.id===x.unit_id), group=(gradeName(x.grade_id)+' • Unit '+(unit?.unit_number||'—')+' • '+(unit?.title||'No unit'));
+    const same=group===lastGroup; lastGroup=group;
+    const video=String(x.video_url||'').trim(), thumb=lessonYoutubeThumb(video);
+    const vocab=String(x.vocabulary_100||'').trim(), writing=String(x.writing_100||'').trim(), grammar=String(x.grammar_focus||'').trim();
+    return `<tr${same?'':' style="border-top:2px solid #43222e"'}>
+      <td><div class="lesson-row-title"><span class="lesson-index-circle">${Number(x.sort_order||0)||'—'}</span><div><strong>${esc(x.title)}</strong><small class="muted">${esc(group)}</small><div class="lesson-package"><span class="package-pill ${video?'ready':'missing'}">${video?'Video ready':'Video missing'}</span><span class="package-pill ${vocab?'ready':'missing'}">${vocab?'100 Keys ready':'100 Keys empty'}</span><span class="package-pill ${writing?'ready':'missing'}">${writing?'100-word ready':'100-word empty'}</span><span class="package-pill ${grammar?'ready':'missing'}">${grammar?'Grammar ready':'Grammar empty'}</span></div></div></div></td>
+      <td><span class="lesson-order-badge">Unit ${Number(unit?.unit_number||0)||'—'}</span></td>
+      <td>${esc(x.lesson_type)}</td>
+      <td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td>
+      <td class="video-cell">${video?(thumb?`<img class="lesson-video-thumb" src="${thumb}" alt="Video thumbnail" loading="lazy">`:'')+`<div class="lesson-video-actions"><button class="lesson-video-mini" type="button" onclick="previewLessonVideo(${JSON.stringify(video)})">▶ Preview</button><a class="lesson-video-mini" href="${esc(video)}" target="_blank" rel="noopener">↗ Open</a><button class="lesson-video-mini" type="button" onclick="quickVideoEdit(${JSON.stringify(x.id)},${JSON.stringify(x.title)},${JSON.stringify(video)})">✎ Edit</button></div>`:`<span class="mini-status">No video</span><div class="lesson-video-actions"><button class="lesson-video-mini missing" type="button" onclick="quickVideoEdit(${JSON.stringify(x.id)},${JSON.stringify(x.title)},'')">＋ Add Video</button></div>`}</td>
+      <td>${vocab?'<span class="pill ok">100 Keys</span>':'<span class="pill warn">Missing</span>'}</td>
+      <td>${writing?'<span class="pill ok">100 Words</span>':'<span class="pill warn">Missing</span>'}</td>
+      <td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td>
+      <td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td>
+    </tr>`;
+  }).join('');
+  box.innerHTML='<table><thead><tr><th>Lesson</th><th>Unit</th><th>Type</th><th>Access</th><th>Video</th><th>100 Key Words</th><th>100-Word Task</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+body+'</tbody></table>';
 }
+
+function lessonYoutubeThumb(url){
+  try{
+    const u=new URL(String(url||'')); const h=u.hostname.replace(/^www\./,'').toLowerCase(); let id='';
+    if(h==='youtu.be')id=u.pathname.split('/').filter(Boolean)[0]||'';
+    else if(h==='youtube.com'||h==='m.youtube.com'){ if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/').filter(Boolean)[1]||''; else id=u.searchParams.get('v')||''; }
+    return id?'https://img.youtube.com/vi/'+encodeURIComponent(id)+'/mqdefault.jpg':'';
+  }catch(e){return ''}
+}
+
+async function quickVideoEdit(id,title,url=''){
+  const current=String(url||'');
+  openModal('Lesson Video — '+esc(title),`<div class="video-quick-form"><div class="info-box">Update the exact video for this lesson. YouTube, Google Drive preview and direct MP4/WebM/OGG links are supported.</div><div><label>Video URL</label><input id="quickLessonVideo" class="field" value="${esc(current)}" placeholder="https://www.youtube.com/watch?v=..."></div><div id="quickVideoPreviewHost"></div><div class="actions"><button type="button" class="btn secondary" id="quickPreviewBtn">▶ Preview</button><button type="button" class="btn" id="quickSaveVideo">Save Video</button></div></div>`);
+  $('quickPreviewBtn').onclick=()=>{
+    const raw=$('quickLessonVideo').value.trim();
+    if(!raw)return toast('Enter a video URL first.');
+    try{$('quickVideoPreviewHost').innerHTML=buildVideoEmbed(raw)}catch(e){$('quickVideoPreviewHost').innerHTML='<div class="video-preview-card"><div class="empty">This link will be saved and opened in a new tab by students.</div></div>'}
+  };
+  $('quickSaveVideo').onclick=async()=>{
+    const raw=$('quickLessonVideo').value.trim();
+    const r=await db.from('lessons').update({video_url:raw,updated_at:new Date().toISOString()}).eq('id',id).select('id');
+    if(r.error)return toast('Video save failed: '+r.error.message);
+    closeModal();toast('Lesson video updated.');await loadLessons();
+  };
+}
+
+function buildVideoEmbed(raw){
+  const u=new URL(raw),h=u.hostname.replace(/^www\./,'').toLowerCase();let embed='';
+  if(h==='youtu.be'||h==='youtube.com'||h==='m.youtube.com'){
+    let id='';if(h==='youtu.be')id=u.pathname.split('/').filter(Boolean)[0]||'';else if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/').filter(Boolean)[1]||'';else id=u.searchParams.get('v')||'';
+    if(id)embed='<iframe src="https://www.youtube.com/embed/'+encodeURIComponent(id)+'" title="Lesson video" allowfullscreen></iframe>';
+  }else if(h==='drive.google.com'){
+    const m=u.pathname.match(/\/file\/d\/([^/]+)/);if(m?.[1])embed='<iframe src="https://drive.google.com/file/d/'+encodeURIComponent(m[1])+'/preview" title="Lesson video" allow="autoplay" allowfullscreen></iframe>';
+  }else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(u.pathname+u.search))embed='<video controls playsinline src="'+esc(raw)+'"></video>';
+  if(!embed)embed='<div class="empty">The link will be saved. It cannot be embedded automatically.</div>';
+  return '<div class="video-preview-card">'+embed+'</div><div class="lesson-video-actions" style="margin-top:8px"><a class="lesson-video-mini" href="'+esc(raw)+'" target="_blank" rel="noopener">Open video ↗</a></div>';
+}
+
+async function normalizeLessonOrder(){
+  const gradeId=$('lessonGrade')?.value||'', unitId=$('lessonUnit')?.value||'';
+  if(!gradeId && !unitId)return toast('Choose a Grade, or choose a Grade + Unit, before fixing order.');
+  let q=db.from('lessons').select('id,grade_id,unit_id,sort_order,created_at,title').order('created_at',{ascending:true});
+  if(gradeId)q=q.eq('grade_id',gradeId); if(unitId)q=q.eq('unit_id',unitId);
+  const r=await q;if(r.error)return toast('Could not read lessons: '+r.error.message);
+  const rows=(r.data||[]).sort((a,b)=>{const ua=units.find(x=>x.id===a.unit_id)?.unit_number??9999,ub=units.find(x=>x.id===b.unit_id)?.unit_number??9999;if(ua!==ub)return ua-ub;const sa=Number(a.sort_order||0),sb=Number(b.sort_order||0);if(sa!==sb)return sa-sb;return new Date(a.created_at||0)-new Date(b.created_at||0)});
+  if(!rows.length)return toast('No lessons found for this selection.');
+  const btn=$('normalizeLessonOrder');if(btn){btn.disabled=true;btn.textContent='Fixing…'}
+  try{
+    // When a whole grade is selected, reset each unit independently.
+    const groups={}; rows.forEach(x=>{(groups[x.unit_id||'none']??=[]).push(x)});
+    for(const list of Object.values(groups)){
+      for(let i=0;i<list.length;i++){
+        const id=list[i].id, order=i+1, up=await db.from('lessons').update({sort_order:order,updated_at:new Date().toISOString()}).eq('id',id).select('id');
+        if(up.error)throw new Error(up.error.message);
+      }
+    }
+    toast('Lesson order fixed by unit.');await loadLessons();
+  }catch(e){toast('Fix order failed: '+e.message)}
+  finally{if(btn){btn.disabled=false;btn.textContent='↕ Fix Lesson Order'}}
+}
+
 function lessonForm(title,x=null){
   const selectedGrade=x?.grade_id||'';
   const video=String(x?.video_url||'');
@@ -231,9 +370,9 @@ function lessonForm(title,x=null){
       <div class="form-row"><label>Publishing</label><select id="lPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div>
       <div class="form-row full"><label>Description</label><textarea id="lDesc">${esc(x?.description||'')}</textarea></div>
       <div class="form-row full"><label>Lesson content</label><textarea id="lContent" style="min-height:170px">${esc(x?.content||'')}</textarea><span class="field-hint">Main explanation, examples, practice instructions and lesson notes.</span></div>
-      <div class="form-row full"><label>100 Key Words / Vocabulary</label><textarea id="lVocab" style="min-height:150px" placeholder="Paste the 100 key words / vocabulary for this lesson">${esc(x?.vocabulary_100||'')}</textarea><span class="field-hint" id="lVocabCount">0 words • recommended: 100 key words</span></div>
+      <div class="form-row full"><label>100 Key Words / Vocabulary <span class="pill" style="margin-left:6px">100 Words</span></label><textarea id="lVocab" style="min-height:150px" placeholder="Paste the 100 key words / vocabulary for this lesson">${esc(x?.vocabulary_100||'')}</textarea><span class="field-hint" id="lVocabCount">0 words • recommended: 100 key words</span></div>
       <div class="form-row"><label>Grammar Focus</label><input id="lGrammar" value="${esc(x?.grammar_focus||'')}" placeholder="e.g. Present Perfect"><span class="field-hint">The exact target grammar for the lesson.</span></div>
-      <div class="form-row"><label>100-Word Writing / Paragraph</label><textarea id="lWriting" style="min-height:130px" placeholder="Writing prompt or model of about 100 words">${esc(x?.writing_100||'')}</textarea><span class="field-hint" id="lWritingCount">0 words • target about 100 words</span></div>
+      <div class="form-row"><label>100-Word Writing / Paragraph <span class="pill" style="margin-left:6px">100 Words</span></label><textarea id="lWriting" style="min-height:130px" placeholder="Writing prompt or model of about 100 words">${esc(x?.writing_100||'')}</textarea><span class="field-hint" id="lWritingCount">0 words • target about 100 words</span></div>
       <div class="form-row full"><label>Video URL</label><input id="lVideo" value="${esc(video)}" placeholder="YouTube / Google Drive / MP4 URL"><span class="field-hint">Supported: YouTube, Google Drive preview links and direct MP4/WebM/OGG links.</span><button type="button" class="btn secondary small video-preview-btn" id="previewLessonVideo">▶ Preview Video</button></div>
     </div>
     <button class="btn">Save Lesson</button>
@@ -318,13 +457,13 @@ async function deleteReview(id){await deletePersisted('reviews',id,'Review',load
 
 function loadSection(n){({dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,homework:loadHomework,students:loadStudents,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews}[n]||(()=>{}))()}
 
-$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=loadLessons;$('lessonSearch').oninput=loadLessons;$('lessonGrade').onchange=loadLessons;$('lessonType').onchange=loadLessons;$('lessonVideoStatus')?.addEventListener('change',loadLessons);$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=loadSales;$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
+$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=loadLessons;$('lessonSearch').oninput=loadLessons;$('lessonGrade').onchange=()=>{refreshLessonUnitFilter();loadLessons()};$('lessonUnit').onchange=loadLessons;$('lessonType').onchange=loadLessons;$('lessonVideoStatus')?.addEventListener('change',loadLessons);$('normalizeLessonOrder')?.addEventListener('click',normalizeLessonOrder);$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=loadSales;$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
 
 async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Supabase connected':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
 
 async function start(){
   if(state.started)return true;if(state.startPromise)return state.startPromise;
-  state.startPromise=(async()=>{try{const s=await db.auth.getSession();if(!s.data.session)return false;const staff=await getStaffProfile();if(!staff){await db.auth.signOut();$('loginError').textContent='This account is not an academy admin/teacher, or the profiles row cannot be read.';return false}$('login').style.display='none';$('app').style.display='block';await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();return true}catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}finally{state.startPromise=null}})();return state.startPromise}
+  state.startPromise=(async()=>{try{const s=await db.auth.getSession();if(!s.data.session)return false;const staff=await getStaffProfile();if(!staff){await db.auth.signOut();$('loginError').textContent='This account is not an academy admin/teacher, or the profiles row cannot be read.';return false}$('login').style.display='none';$('app').style.display='block';await loadGrades();await loadUnitsCache();refreshLessonUnitFilter();state.started=true;show('dashboard');await checkConnection();return true}catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}finally{state.startPromise=null}})();return state.startPromise}
 
 $('loginForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter;const email=$('email').value.trim(),password=$('password').value;if(btn){btn.disabled=true;btn.textContent='Signing in…'}$('loginError').textContent='';try{const r=await db.auth.signInWithPassword({email,password});if(r.error){$('loginError').textContent='Login error: '+r.error.message;return}if(!(await start()))$('loginError').textContent=$('loginError').textContent||'Login succeeded, but staff verification failed.'}catch(ex){$('loginError').textContent='Unexpected error: '+(ex?.message||String(ex))}finally{if(btn){btn.disabled=false;btn.textContent='Login'}}};
 $('logout').onclick=async()=>{await db.auth.signOut();location.reload()};db.auth.onAuthStateChange(()=>setTimeout(checkConnection,0));
@@ -398,6 +537,19 @@ loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,u
 $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
+
+
+<script id="doma-admin-quick-navigation">
+(function(){
+  document.querySelectorAll('[data-quick-section]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const n=btn.dataset.quickSection;
+      if(typeof show==='function')show(n);
+      document.querySelectorAll('#quickNav [data-quick-section]').forEach(x=>x.classList.toggle('active',x.dataset.quickSection===n));
+    });
+  });
+})();
+</script>
 
 <script id="doma-admin-stable-content-health">
 (function(){
