@@ -1165,14 +1165,16 @@ function daily100LocalDate(){
   const d=new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+function daily100AudioPath(day,position,type){
+  const safeDay=String(day||daily100LocalDate()).trim();
+  const safePos=String(Number(position)||0).padStart(3,'0');
+  const fileType=String(type||'word').toLowerCase()==='sentence'?'sentence':'word';
+  return safeDay+'/'+fileType+'-'+safePos+'.mp3';
+}
 function daily100AudioUrl(day,position,type,provided){
   const given=String(provided||'').trim();
   if(given)return given;
-  const safeDay=String(day||daily100LocalDate()).trim();
-  const safePos=String(Number(position)||0).padStart(3,'0');
-  if(!safePos||safePos==='000')return '';
-  const fileType=String(type||'word').toLowerCase()==='sentence'?'sentence':'word';
-  return DAILY_WORDS_BUCKET_BASE+encodeURIComponent(safeDay)+'/'+fileType+'-'+safePos+'.mp3';
+  return DAILY_WORDS_BUCKET_BASE+daily100AudioPath(day,position,type);
 }
 function daily100SetStatus(message,ok){
   const el=document.getElementById('daily100AudioStatus');
@@ -1185,38 +1187,66 @@ function daily100SetStatus(message,ok){
 function daily100Stop(){
   try{if(window.__daily100Audio){window.__daily100Audio.pause();window.__daily100Audio.currentTime=0;}}catch(e){}
 }
-window.playDailyWordsStudentAudio=function(text,url,button){
+function daily100SpeakFallback(text,button){
+  try{
+    if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')throw new Error('Speech synthesis is not available in this browser.');
+    const synth=window.speechSynthesis;
+    synth.cancel();
+    const u=new SpeechSynthesisUtterance(String(text||''));
+    u.lang='en-US';u.rate=.88;u.pitch=1;u.volume=1;
+    const voices=synth.getVoices?synth.getVoices():[];
+    const voice=voices.find(v=>String(v.lang||'').toLowerCase()==='en-us')||voices.find(v=>/^en(-|_)/i.test(v.lang||''));
+    if(voice)u.voice=voice;
+    u.onend=()=>{if(button){button.disabled=false;button.textContent=button.dataset.label||'🔊 تشغيل'};daily100SetStatus('تم تشغيل الصوت من صوت المتصفح.',true)};
+    u.onerror=()=>{if(button){button.disabled=false;button.textContent=button.dataset.label||'🔊 تشغيل'};daily100SetStatus('تعذر تشغيل الصوت. تأكد من صلاحية الصوت في المتصفح.',false)};
+    synth.resume();synth.speak(u);
+    setTimeout(()=>{try{synth.resume()}catch(e){}},120);
+    return true;
+  }catch(e){console.error(e);return false}
+}
+async function daily100ResolveAudioUrl(text,provided,day,position,type){
+  const given=String(provided||'').trim();
+  const path=daily100AudioPath(day,position,type);
+  const publicUrl=DAILY_WORDS_BUCKET_BASE+path;
+  const candidates=[];
+  if(given)candidates.push(given);
+  candidates.push(publicUrl);
+  // If the bucket is private, ask Supabase Storage for a temporary signed URL.
+  try{
+    if(typeof sb!=='undefined'&&sb?.storage?.from){
+      const r=await sb.storage.from('daily-words-audio').createSignedUrl(path,3600);
+      if(!r.error&&r.data?.signedUrl)candidates.unshift(r.data.signedUrl);
+    }
+  }catch(e){console.warn('Signed audio URL failed',e)}
+  return [...new Set(candidates.filter(Boolean))];
+}
+window.playDailyWordsStudentAudio=async function(text,url,button,day,position,type){
   const value=String(text||'').trim();
   if(!value)return;
   daily100Stop();
-  try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}
-  const explicit=String(url||'').trim();
-  const candidates=[];
-  if(explicit)candidates.push(explicit);
-  const m=explicit.match(/\/(\d{4}-\d{2}-\d{2})\/(?:word|sentence)-(\d{3})\.mp3(?:\?.*)?$/i);
-  if(m){
-    const day=m[1],pos=m[2],type=/\/sentence-/.test(explicit)?'sentence':'word';
-    candidates.push(DAILY_WORDS_BUCKET_BASE+encodeURIComponent(day)+'/'+pos+'-'+type+'.mp3');
-    candidates.push(DAILY_WORDS_BUCKET_BASE+type+'-'+pos+'.mp3');
-  }
+  try{if(window.speechSynthesis)window.speechSynthesis.cancel()}catch(e){}
+  if(button){button.disabled=true;button.textContent='⏳ تشغيل...'}
+  daily100SetStatus('جاري تجهيز الصوت…',true);
+  const candidates=await daily100ResolveAudioUrl(value,url,day||daily100LocalDate(),position||1,type||'word');
   let index=0;
-  if(button){button.disabled=true;button.textContent='⏳ تشغيل...';}
-  daily100SetStatus('جاري تشغيل الصوت…',true);
-  const restore=()=>{if(button){button.disabled=false;button.textContent=button.dataset.label||'🔊 تشغيل';}};
+  const restore=()=>{if(button){button.disabled=false;button.textContent=button.dataset.label||'🔊 تشغيل'}};
   const tryNext=()=>{
     if(index>=candidates.length){
-      restore();
-      daily100SetStatus('ملف الصوت غير موجود في Storage. تأكد أن الاسم مثل word-001.mp3 أو sentence-001.mp3 داخل مجلد 2026-10-03.',false);
+      // The click itself is a user gesture, so browser TTS is a reliable last fallback.
+      const usedFallback=daily100SpeakFallback(value,button);
+      if(usedFallback){daily100SetStatus('ملف MP3 لم يعمل، تم تشغيل النطق من المتصفح.',true)}
+      else{restore();daily100SetStatus('تعذر تشغيل ملف الصوت. تأكد أن Bucket daily-words-audio يسمح بالقراءة وأن الملف موجود.',false)}
       return;
     }
     const source=candidates[index++];
-    const audio=new Audio(source);
-    audio.preload='auto'; audio.volume=1;
-    window.__daily100Audio=audio;
+    const audio=new Audio();
+    audio.preload='auto';audio.volume=1;window.__daily100Audio=audio;
+    audio.addEventListener('canplaythrough',()=>{daily100SetStatus('جاري تشغيل الصوت…',true)},{once:true});
     audio.addEventListener('ended',()=>{restore();daily100SetStatus('تم تشغيل الصوت.',true)},{once:true});
     audio.addEventListener('error',()=>{tryNext()},{once:true});
+    audio.src=source;
     const playPromise=audio.play();
-    if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(()=>{tryNext()});
+    if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(()=>tryNext());
   };
   tryNext();
 };
@@ -1244,7 +1274,7 @@ async function loadDailyWordsStudent(){
    const pos=Number(x.position)||i+1;
    const wordUrl=daily100AudioUrl(day,pos,'word',x.word_audio_url);
    const sentenceUrl=daily100AudioUrl(day,pos,'sentence',x.sentence_audio_url);
-   return '<article class="daily100-student-item"><div class="daily100-student-top"><div><div class="daily100-student-number">WORD '+String(pos).padStart(3,'0')+'</div><div class="daily100-student-word">'+daily100Esc(x.word)+'</div><div class="daily100-student-translation">'+daily100Esc(x.translation)+'</div></div><div class="daily100-student-audio"><button type="button" data-label="🔊 الكلمة" onclick="playDailyWordsStudentAudio('+JSON.stringify(x.word||'')+','+JSON.stringify(wordUrl)+',this)">🔊 الكلمة</button></div></div><div class="daily100-student-sentence"><b>'+daily100Esc(x.sentence)+'</b><div class="daily100-student-trans">'+daily100Esc(x.sentence_translation)+'</div><div class="daily100-student-audio"><button type="button" data-label="🔊 الجملة" onclick="playDailyWordsStudentAudio('+JSON.stringify(x.sentence||'')+','+JSON.stringify(sentenceUrl)+',this)">🔊 الجملة</button></div></div></article>';
+   return '<article class="daily100-student-item"><div class="daily100-student-top"><div><div class="daily100-student-number">WORD '+String(pos).padStart(3,'0')+'</div><div class="daily100-student-word">'+daily100Esc(x.word)+'</div><div class="daily100-student-translation">'+daily100Esc(x.translation)+'</div></div><div class="daily100-student-audio"><button type="button" data-label="🔊 الكلمة" onclick="playDailyWordsStudentAudio('+JSON.stringify(x.word||'')+','+JSON.stringify(wordUrl)+',this,'+JSON.stringify(day)+','+pos+','+JSON.stringify('word')+')">🔊 الكلمة</button></div></div><div class="daily100-student-sentence"><b>'+daily100Esc(x.sentence)+'</b><div class="daily100-student-trans">'+daily100Esc(x.sentence_translation)+'</div><div class="daily100-student-audio"><button type="button" data-label="🔊 الجملة" onclick="playDailyWordsStudentAudio('+JSON.stringify(x.sentence||'')+','+JSON.stringify(sentenceUrl)+',this,'+JSON.stringify(day)+','+pos+','+JSON.stringify('sentence')+')">🔊 الجملة</button></div></div></article>';
  }).join('');
 }
 window.renderDailyWordsStudent=loadDailyWordsStudent;
