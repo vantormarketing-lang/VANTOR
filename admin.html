@@ -18,6 +18,7 @@
 @media(max-width:900px){.admin-upgrade-summary{grid-template-columns:1fr 1fr}}@media(max-width:600px){.admin-upgrade-summary{grid-template-columns:1fr}}
 </style>
 
+<style id="doma-daily-100-admin-css">.daily100-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.daily100-admin-table{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:14px}.daily100-admin-table table{min-width:1000px}.daily100-day-status{display:inline-flex;padding:4px 8px;border-radius:999px;background:#302025;font-size:9px}.daily100-day-status.ok{background:#173b2b;color:#a7e5c3}.daily100-editor{min-height:480px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;line-height:1.65}.daily100-admin-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.daily100-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:360px;overflow:auto;margin-top:10px}.daily100-preview-item{padding:9px;border:1px solid #2c1a21;border-radius:9px;background:#0d090a;font-size:10px}.daily100-preview-item b{display:block;font-size:11px}.daily100-preview-item span{display:block;color:#91858a;margin-top:2px}.daily100-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.daily100-stat{padding:12px;background:#100b0d;border:1px solid #2b181f;border-radius:10px}.daily100-stat b{font-size:22px;display:block;margin-top:4px}@media(max-width:850px){.daily100-preview-grid{grid-template-columns:1fr}.daily100-stats{grid-template-columns:1fr}}</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -45,7 +46,7 @@
       <button class="nav-btn" data-section="lessons">▣ Lessons</button>
       <button class="nav-btn" data-section="quizzes">✓ Exams & Quizzes</button>
       <button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
-      <button class="nav-btn" data-section="homework">✎ Homework</button>
+      <button class="nav-btn" data-section="homework">✎ Homework</button><button class="nav-btn" data-section="daily-100">🔤 المية كلمة</button>
       <div class="nav-title">Students</div>
       <button class="nav-btn" data-section="students">◎ Students</button>
       <button class="nav-btn" data-section="activity">◉ Activity & Attendance</button>
@@ -97,9 +98,31 @@
           </div>
         </div>
 
-        
+        <div class="card" id="thirdSecondaryPanel" style="margin-top:14px;border-color:#6f2940">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+            <div><b>3rd Secondary — 2026/2027</b><p class="muted" id="thirdSecondaryStatus">Content status will load from Supabase.</p></div>
+            <button class="btn secondary" id="openThirdSecondary">Open 3rd Secondary Lessons</button>
+          </div>
+          <div class="grid" style="margin-top:10px">
+            <div class="card stat"><div class="muted">Units</div><div id="tsUnits" class="num">—</div></div>
+            <div class="card stat"><div class="muted">Lessons</div><div id="tsLessons" class="num">—</div></div>
+            <div class="card stat"><div class="muted">Quizzes</div><div id="tsQuizzes" class="num">—</div></div>
+            <div class="card stat"><div class="muted">Lessons with Video</div><div id="tsVideoLessons" class="num">—</div></div>
+          </div>
+        </div>
 
-        
+        <div class="card" id="thirdSecondaryPanel" style="margin-top:14px;border-color:#6f2940">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+            <div><b>3rd Secondary — 2026/2027</b><p class="muted" id="thirdSecondaryStatus">Content status will load from Supabase.</p></div>
+            <button class="btn secondary" id="openThirdSecondary">Open 3rd Secondary Lessons</button>
+          </div>
+          <div class="grid" style="margin-top:10px">
+            <div class="card stat"><div class="muted">Units</div><div id="tsUnits" class="num">—</div></div>
+            <div class="card stat"><div class="muted">Lessons</div><div id="tsLessons" class="num">—</div></div>
+            <div class="card stat"><div class="muted">Quizzes</div><div id="tsQuizzes" class="num">—</div></div>
+            <div class="card stat"><div class="muted">Lessons with Video</div><div id="tsVideoLessons" class="num">—</div></div>
+          </div>
+        </div>
 
         <div class="grid" style="margin-top:14px">
           <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
@@ -138,7 +161,8 @@
         <div id="homeworkTable" class="table-wrap"></div>
       </section>
 
-      <section id="section-students" class="section">
+      <section id="section-daily-100" class="section"><div class="head"><div><h2>المية كلمة</h2><p>إدارة 100 كلمة + 100 جملة يوميًا، مع الترجمة وروابط الصوت الاختيارية.</p></div><div class="toolbar"><button class="btn" id="newDaily100">+ يوم جديد</button><button class="btn secondary" id="daily100Refresh">Refresh</button></div></div><div class="daily100-stats"><div class="daily100-stat"><div class="muted">الأيام المنشورة</div><b id="daily100AdminDays">—</b></div><div class="daily100-stat"><div class="muted">إجمالي العناصر</div><b id="daily100AdminItems">—</b></div><div class="daily100-stat"><div class="muted">أقرب يوم</div><b id="daily100AdminNext">—</b></div></div><div id="daily100DaysTable" class="daily100-admin-table"></div></section>
+<section id="section-students" class="section">
         <div class="head"><div><h2>Students</h2><p>Student accounts and grade information.</p></div><div class="toolbar"><input id="studentSearch" placeholder="Search students…"><button class="btn secondary" id="studentsRefresh">Refresh</button></div></div>
         <div id="studentsTable" class="table-wrap"></div>
       </section>
@@ -162,7 +186,7 @@
 
       <section id="section-question-bank" class="section"><div class="head"><div><h2>Question Bank</h2><p>Reusable questions. Scroll inside the list to view all questions.</p></div><button class="btn" id="newBankQuestion">+ New Question</button></div><div class="toolbar"><select id="bankGrade"><option value="">All Grades</option></select><input id="bankSearch" placeholder="Search questions…"><button class="btn secondary" id="bankRefresh">Refresh</button></div><div class="qbank-scroll"><div id="questionBankTable"></div></div><div class="qbank-footer"><span id="questionBankCount" class="qbank-count">0 questions</span><span class="muted" style="font-size:10px">Use the mouse wheel or scrollbar inside the Question Bank list.</span></div></section>
 <section id="section-activity" class="section"><div class="head"><div><h2>Activity & Attendance</h2><p>Engagement log for logins, lesson opens/completions, quizzes, homework and subscription activity.</p></div><button class="btn secondary" id="activityRefresh">Refresh</button></div><div class="toolbar"><input id="activitySearch" placeholder="Search student or activity…"><button class="btn secondary" id="activityRefresh2">Refresh</button></div><div id="activityTable" class="table-wrap"></div></section>
-<section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">Staff CRUD is protected by Supabase RLS. Deletes are executed first and then verified separately so a blocked DELETE cannot look like a successful action. Student quiz scoring should remain server-side so correct_answer is not exposed to the browser.</div></section>
+<section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
     </div>
   </main>
 </div>
@@ -194,7 +218,7 @@ function show(name){current=name;document.querySelectorAll('.section').forEach(s
 $('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
 
-const aSync=async()=>{};
+aSync=async()=>{};
 async function authUser(){return (await db.auth.getUser()).data.user}
 async function getStaffProfile(){const u=await authUser();if(!u)return null;const r=await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle();if(r.error||!r.data)return null;return ['admin','teacher'].includes(r.data.role)?r.data:null}
 
@@ -228,11 +252,13 @@ $('newUnit').onclick=()=>unitForm('New Unit');
 async function editUnit(id){const r=await db.from('units').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);unitForm('Edit Unit',r.data)}
 async function deletePersisted(table,id,label,after){
   if(!confirm('Delete '+label+' permanently?')) return;
-  const r=await db.from(table).delete().eq('id',id);
+  const r=await db.from(table).delete().eq('id',id).select('id');
   if(r.error) return toast('Delete failed: '+r.error.message);
+  const returned=Array.isArray(r.data) && r.data.some(row=>row.id===id);
+  if(!returned) return toast('Nothing was deleted. Check DELETE RLS/permissions.');
   const verify=await db.from(table).select('id').eq('id',id).maybeSingle();
   if(verify.error) return toast('Delete verification failed: '+verify.error.message);
-  if(verify.data) return toast('Delete did not persist. Check the Admin/Teacher DELETE RLS policy for this table.');
+  if(verify.data) return toast('Delete did not persist. The row still exists.');
   toast(label+' deleted permanently.');
   if(typeof after==='function') await after();
 }
@@ -257,7 +283,7 @@ async function deleteQuiz(id){await deletePersisted('quizzes',id,'Quiz',loadQuiz
 async function manageQuestions(quizId){const q=await db.from('quizzes').select('id,title').eq('id',quizId).single();if(q.error)return toast(q.error.message);const r=await db.from('quiz_questions').select('id,question,options,correct_answer,points,sort_order').eq('quiz_id',quizId).order('sort_order',{ascending:true});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Questions — '+q.data.title,`<div class="info-box" style="margin-bottom:12px">Students receive only question, options and points through the secure quiz RPC. The correct answer stays server-side.</div><div id="questionList">${rows.length?rows.map(x=>questionRow(quizId,x)).join(''):'<div class="empty">No questions yet.</div>'}</div><button class="btn" style="margin-top:12px" onclick="editQuestion('${quizId}','')">+ Add Question</button>`)}
 function questionRow(quizId,x){let opts=Array.isArray(x.options)?x.options:[];if(typeof x.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}return `<div class="card" style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;gap:10px"><div><b>${esc(x.question)}</b><div class="muted" style="font-size:10px;margin-top:4px">Points: ${x.points} • Options: ${esc(opts.join(' | '))}</div></div><div class="actions"><button class="btn secondary small" onclick="editQuestion('${quizId}','${x.id}')">Edit</button><button class="btn danger small" onclick="deleteQuestion('${quizId}','${x.id}')">Delete</button></div></div></div>`}
 async function editQuestion(quizId,id){let x=null;if(id){const r=await db.from('quiz_questions').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);x=r.data}let opts=Array.isArray(x?.options)?x.options:[];if(typeof x?.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}openModal(id?'Edit Question':'New Question',`<form id="questionForm"><div class="form-row"><label>Question</label><textarea id="qqQuestion" required>${esc(x?.question||'')}</textarea></div><div class="form-row"><label>Options (one per line)</label><textarea id="qqOptions" required>${esc(opts.join('\n'))}</textarea></div><div class="form-row"><label>Correct answer (exactly one option)</label><input id="qqCorrect" value="${esc(x?.correct_answer||'')}" required></div><div class="form-grid"><div class="form-row"><label>Points</label><input id="qqPoints" type="number" min="1" value="${Number(x?.points||1)}"></div><div class="form-row"><label>Sort order</label><input id="qqSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div></div><button class="btn">Save Question</button></form>`);$('questionForm').onsubmit=async e=>{e.preventDefault();const options=$('qqOptions').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);const correct=$('qqCorrect').value.trim();if(!options.length||!options.includes(correct))return toast('Correct answer must exactly match one option.');const p={quiz_id:quizId,question:$('qqQuestion').value.trim(),options,correct_answer:correct,points:Number($('qqPoints').value||1),sort_order:Number($('qqSort').value||0)};const r=id?await db.from('quiz_questions').update(p).eq('id',id).select('id'):await db.from('quiz_questions').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);closeModal();await manageQuestions(quizId)}}
-async function deleteQuestion(quizId,id){if(!confirm('Delete this question?'))return;const r=await db.from('quiz_questions').delete().eq('id',id);if(r.error)return toast('Delete failed: '+r.error.message);const verify=await db.from('quiz_questions').select('id').eq('id',id).maybeSingle();if(verify.error)return toast('Delete verification failed: '+verify.error.message);if(verify.data)return toast('Delete did not persist. Check quiz_questions DELETE RLS.');await manageQuestions(quizId)}
+async function deleteQuestion(quizId,id){if(!confirm('Delete this question?'))return;const r=await db.from('quiz_questions').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);await manageQuestions(quizId)}
 
 async function loadHomework(){let q=db.from('homework').select('id,grade_id,title,description,due_at,is_free,is_published,created_at').order('created_at',{ascending:false});const g=$('hwGrade').value;if(g)q=q.eq('grade_id',g);const r=await q;if(r.error)return $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('hwSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.description||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${fmt(x.due_at)}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework('${x.id}')">Edit</button><button class="btn danger small" onclick="deleteHomework('${x.id}')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions('${x.id}')">Submissions</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No homework found.</div>'}
 function homeworkForm(title,x=null){const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);$('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true'};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);closeModal();toast('Homework saved.');await loadHomework()}}
@@ -388,11 +414,47 @@ async function loadThirdSecondarySummary(){
 }
 
 
+async function loadThirdSecondarySummary(){
+  if(typeof db==='undefined')return;
+  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
+  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
+  const id=g.data.id;
+  const [u,l,q]=await Promise.all([
+    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
+    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
+    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
+  ]);
+  const ls=l.data||[];
+  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
+  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
+  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
+  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
+  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
+  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
+}
 
 
+async function loadThirdSecondarySummary(){
+  if(typeof db==='undefined')return;
+  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
+  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
+  const id=g.data.id;
+  const [u,l,q]=await Promise.all([
+    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
+    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
+    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
+  ]);
+  const ls=l.data||[];
+  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
+  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
+  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
+  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
+  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
+  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
+}
 
 loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
-loadThirdSecondarySummary();$('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
+loadThirdSecondarySummary();loadThirdSecondarySummary();loadThirdSecondarySummary();$('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
 <script id="doma-admin-all-upgrades-script">
@@ -438,5 +500,70 @@ loadThirdSecondarySummary();$('bankRefresh')?.addEventListener('click',()=>{cons
 })();
 </script>
 
+<script id="doma-daily-100-admin-script">(function(){
+'use strict';
+function rowsFromText(text){
+  return String(text||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean).filter(x=>!x.startsWith('#')).map(function(line,i){
+    var p=line.split('|').map(function(x){return x.trim()});
+    return {position:i+1,word:p[0]||'',translation:p[1]||'',sentence:p[2]||'',sentence_translation:p[3]||'',word_audio_url:p[4]||null,sentence_audio_url:p[5]||null};
+  });
+}
+function rowsToText(rows){
+  return (rows||[]).slice().sort(function(a,b){return a.position-b.position}).map(function(x){return [x.word,x.translation,x.sentence,x.sentence_translation,x.word_audio_url||'',x.sentence_audio_url||''].join(' | ')}).join('\n');
+}
+async function loadDaily100Admin(){
+  var host=$('daily100DaysTable');
+  if(!host)return;
+  var r=await db.from('daily_words').select('day_date,position,word,translation,sentence,sentence_translation,is_published').order('day_date',{ascending:false}).order('position',{ascending:true});
+  if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return;}
+  var rows=r.data||[],days={};
+  rows.forEach(function(x){if(!days[x.day_date])days[x.day_date]=[];days[x.day_date].push(x)});
+  var keys=Object.keys(days);
+  $('daily100AdminDays').textContent=keys.filter(function(k){return days[k].some(function(x){return x.is_published})}).length;
+  $('daily100AdminItems').textContent=rows.length;
+  $('daily100AdminNext').textContent=keys.sort()[0]||'—';
+  if(!keys.length){host.innerHTML='<div class="empty">مفيش أيام لسه. اضغط «يوم جديد» لإضافة أول مجموعة.</div>';return;}
+  host.innerHTML='<table><thead><tr><th>التاريخ</th><th>العناصر</th><th>الحالة</th><th>أول كلمة</th><th>الإجراء</th></tr></thead><tbody>'+keys.map(function(day){
+    var a=days[day],pub=a.some(function(x){return x.is_published});
+    return '<tr><td><b>'+esc(day)+'</b></td><td>'+a.length+' / 100</td><td><span class="daily100-day-status '+(pub?'ok':'')+'">'+(pub?'Published':'Draft')+'</span></td><td>'+esc(a[0]&&a[0].word||'—')+'</td><td><div class="actions"><button class="btn secondary small" onclick="editDaily100(\''+day+'\')">Edit</button><button class="btn danger small" onclick="deleteDaily100(\''+day+'\')">Delete</button></div></td></tr>';
+  }).join('')+'</tbody></table>';
+}
+function daily100Form(title,day,rows,published){
+  var date=day||new Date().toISOString().slice(0,10);
+  var text=rowsToText(rows||[]);
+  var body='<form id="daily100Form"><div class="form-grid">'
+    +'<div class="form-row"><label>Day date</label><input id="d100Date" type="date" value="'+esc(date)+'" required></div>'
+    +'<div class="form-row"><label>Publishing</label><select id="d100Pub"><option value="true" '+(published!==false?'selected':'')+'>Published</option><option value="false" '+(published===false?'selected':'')+'>Draft</option></select></div>'
+    +'<div class="form-row full"><label>المحتوى — سطر لكل كلمة</label><div class="info-box">اكتب 100 سطر. الصيغة: <b>Word | الترجمة | English sentence | ترجمة الجملة | Word audio URL اختياري | Sentence audio URL اختياري</b><br>لو تركت روابط الصوت، الموقع سيستخدم نطق المتصفح تلقائيًا.</div>'
+    +'<textarea id="d100Text" class="daily100-editor" required placeholder="book | كتاب | I read a book. | أنا أقرأ كتابًا. — ثم أضف باقي السطور بنفس الصيغة">'+esc(text)+'</textarea></div></div>'
+    +'<div id="d100Preview"></div><div class="daily100-admin-actions"><button type="button" class="btn secondary" id="d100PreviewBtn">Preview</button><button class="btn" type="submit">Save Daily Set</button></div></form>';
+  openModal(title,body);
+  var preview=function(){
+    var rs=rowsFromText($('d100Text').value);
+    $('d100Preview').innerHTML='<div class="info-box" style="margin-top:10px">عدد السطور: <b>'+rs.length+'</b> '+(rs.length===100?'✓ جاهز للحفظ':'— لازم يكونوا 100 بالضبط')+'</div>'
+      +(rs.length?'<div class="daily100-preview-grid">'+rs.slice(0,12).map(function(x){return '<div class="daily100-preview-item"><b>#'+x.position+' '+esc(x.word)+'</b><span>'+esc(x.translation)+'</span><span>'+esc(x.sentence)+'</span><span>'+esc(x.sentence_translation)+'</span></div>'}).join('')+'</div>':'');
+  };
+  $('d100PreviewBtn').onclick=preview;preview();
+  $('daily100Form').onsubmit=async function(e){
+    e.preventDefault();
+    var rs=rowsFromText($('d100Text').value),date=$('d100Date').value,pub=$('d100Pub').value==='true';
+    if(rs.length!==100)return toast('لازم تدخل 100 سطر بالضبط. الحالي: '+rs.length);
+    if(rs.some(function(x){return !x.word||!x.translation||!x.sentence||!x.sentence_translation}))return toast('كل سطر لازم يحتوي الكلمة والترجمة والجملة وترجمة الجملة.');
+    var r=await db.rpc('doma_save_daily_words',{p_day_date:date,p_is_published:pub,p_rows:rs});
+    if(r.error)return toast('Save failed: '+r.error.message);
+    closeModal();toast('تم حفظ المية كلمة لليوم '+date);await loadDaily100Admin();
+  };
+}
+window.editDaily100=async function(day){var r=await db.from('daily_words').select('*').eq('day_date',day).order('position',{ascending:true});if(r.error)return toast(r.error.message);var rows=r.data||[];daily100Form('Edit — '+day,day,rows,rows.some(function(x){return x.is_published}))};
+window.deleteDaily100=async function(day){if(!confirm('Delete the complete daily set for '+day+' permanently?'))return;var r=await db.rpc('doma_delete_daily_words',{p_day_date:day});if(r.error)return toast('Delete failed: '+r.error.message);toast('Daily set deleted.');await loadDaily100Admin()};
+window.openNewDaily100=function(){daily100Form('New Daily 100')};
+window.loadDaily100Admin=loadDaily100Admin;
+document.addEventListener('DOMContentLoaded',function(){setTimeout(loadDaily100Admin,300)});
+$('newDaily100')&&$('newDaily100').addEventListener('click',openNewDaily100);
+$('daily100Refresh')&&$('daily100Refresh').addEventListener('click',loadDaily100Admin);
+var oldShow=window.show;
+window.show=function(name){if(typeof oldShow==='function')oldShow(name);if(name==='daily-100')setTimeout(loadDaily100Admin,0)};
+})();
+</script>
 </body>
 </html>
