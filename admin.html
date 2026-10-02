@@ -18,7 +18,10 @@
 @media(max-width:900px){.admin-upgrade-summary{grid-template-columns:1fr 1fr}}@media(max-width:600px){.admin-upgrade-summary{grid-template-columns:1fr}}
 </style>
 
-<style id="doma-daily-100-admin-css">.daily100-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.daily100-admin-table{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:14px}.daily100-admin-table table{min-width:1000px}.daily100-day-status{display:inline-flex;padding:4px 8px;border-radius:999px;background:#302025;font-size:9px}.daily100-day-status.ok{background:#173b2b;color:#a7e5c3}.daily100-editor{min-height:480px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;line-height:1.65}.daily100-admin-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.daily100-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:360px;overflow:auto;margin-top:10px}.daily100-preview-item{padding:9px;border:1px solid #2c1a21;border-radius:9px;background:#0d090a;font-size:10px}.daily100-preview-item b{display:block;font-size:11px}.daily100-preview-item span{display:block;color:#91858a;margin-top:2px}.daily100-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.daily100-stat{padding:12px;background:#100b0d;border:1px solid #2b181f;border-radius:10px}.daily100-stat b{font-size:22px;display:block;margin-top:4px}@media(max-width:850px){.daily100-preview-grid{grid-template-columns:1fr}.daily100-stats{grid-template-columns:1fr}}</style>
+
+<style id="doma-daily-words-admin-css">
+.daily-word-preview{font-size:11px;line-height:1.55;max-width:330px}.daily-word-preview b{font-size:13px}.daily-word-preview .ar{color:#d7a9b5}.daily-word-preview .sentence{margin-top:4px;color:#c7b8bd}.audio-link{display:inline-flex;margin-top:5px;color:#e2a7b7;font-size:10px}.daily-actions{display:flex;gap:6px;flex-wrap:wrap}.daily-position{font-size:18px;font-weight:900}.daily-form-note{padding:10px;border:1px solid #432530;background:#160d11;border-radius:10px;color:#b9aab0;font-size:10px;line-height:1.5}
+</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -46,7 +49,7 @@
       <button class="nav-btn" data-section="lessons">▣ Lessons</button>
       <button class="nav-btn" data-section="quizzes">✓ Exams & Quizzes</button>
       <button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
-      <button class="nav-btn" data-section="homework">✎ Homework</button><button class="nav-btn" data-section="daily-100">🔤 المية كلمة</button>
+      <button class="nav-btn" data-section="homework">✎ Homework</button>
       <div class="nav-title">Students</div>
       <button class="nav-btn" data-section="students">◎ Students</button>
       <button class="nav-btn" data-section="activity">◉ Activity & Attendance</button>
@@ -58,6 +61,8 @@
       <div class="nav-title">Communication</div>
       <button class="nav-btn" data-section="notifications">✉ Notifications</button>
       <button class="nav-btn" data-section="reviews">★ Reviews</button>
+      <div class="nav-title">Learning Tools</div>
+      <button class="nav-btn" data-section="daily-words">🔊 Daily Words</button>
       <div class="nav-title">System</div>
       <button class="nav-btn" data-section="settings">⚙ Settings</button>
       <button class="nav-btn" id="logout">↪ Logout</button>
@@ -161,8 +166,7 @@
         <div id="homeworkTable" class="table-wrap"></div>
       </section>
 
-      <section id="section-daily-100" class="section"><div class="head"><div><h2>المية كلمة</h2><p>إدارة 100 كلمة + 100 جملة يوميًا، مع الترجمة وروابط الصوت الاختيارية.</p></div><div class="toolbar"><button class="btn" id="newDaily100">+ يوم جديد</button><button class="btn secondary" id="daily100Refresh">Refresh</button></div></div><div class="daily100-stats"><div class="daily100-stat"><div class="muted">الأيام المنشورة</div><b id="daily100AdminDays">—</b></div><div class="daily100-stat"><div class="muted">إجمالي العناصر</div><b id="daily100AdminItems">—</b></div><div class="daily100-stat"><div class="muted">أقرب يوم</div><b id="daily100AdminNext">—</b></div></div><div id="daily100DaysTable" class="daily100-admin-table"></div></section>
-<section id="section-students" class="section">
+      <section id="section-students" class="section">
         <div class="head"><div><h2>Students</h2><p>Student accounts and grade information.</p></div><div class="toolbar"><input id="studentSearch" placeholder="Search students…"><button class="btn secondary" id="studentsRefresh">Refresh</button></div></div>
         <div id="studentsTable" class="table-wrap"></div>
       </section>
@@ -186,6 +190,24 @@
 
       <section id="section-question-bank" class="section"><div class="head"><div><h2>Question Bank</h2><p>Reusable questions. Scroll inside the list to view all questions.</p></div><button class="btn" id="newBankQuestion">+ New Question</button></div><div class="toolbar"><select id="bankGrade"><option value="">All Grades</option></select><input id="bankSearch" placeholder="Search questions…"><button class="btn secondary" id="bankRefresh">Refresh</button></div><div class="qbank-scroll"><div id="questionBankTable"></div></div><div class="qbank-footer"><span id="questionBankCount" class="qbank-count">0 questions</span><span class="muted" style="font-size:10px">Use the mouse wheel or scrollbar inside the Question Bank list.</span></div></section>
 <section id="section-activity" class="section"><div class="head"><div><h2>Activity & Attendance</h2><p>Engagement log for logins, lesson opens/completions, quizzes, homework and subscription activity.</p></div><button class="btn secondary" id="activityRefresh">Refresh</button></div><div class="toolbar"><input id="activitySearch" placeholder="Search student or activity…"><button class="btn secondary" id="activityRefresh2">Refresh</button></div><div id="activityTable" class="table-wrap"></div></section>
+<section id="section-daily-words" class="section">
+  <div class="head"><div><h2>Daily Words</h2><p>Manage the daily vocabulary shown inside the student area.</p></div><button class="btn" id="newDailyWord">+ New Word</button></div>
+  <div class="toolbar">
+    <input id="dailyWordsDate" type="date">
+    <input id="dailyWordsSearch" placeholder="Search word, translation or sentence…">
+    <select id="dailyWordsPublished"><option value="">All Status</option><option value="true">Published</option><option value="false">Draft</option></select>
+    <button class="btn secondary" id="dailyWordsToday">Today</button>
+    <button class="btn secondary" id="dailyWordsRefresh">Refresh</button>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+      <div><b>Daily Words — 100 words per day</b><p class="muted" style="margin:5px 0 0">Students see only published words. Audio can be supplied by URL; the student page has browser speech fallback.</p></div>
+      <span id="dailyWordsCount" class="pill">0 words</span>
+    </div>
+  </div>
+  <div id="dailyWordsTable" class="table-wrap"></div>
+</section>
+
 <section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
     </div>
   </main>
@@ -500,70 +522,49 @@ loadThirdSecondarySummary();loadThirdSecondarySummary();loadThirdSecondarySummar
 })();
 </script>
 
-<script id="doma-daily-100-admin-script">(function(){
-'use strict';
-function rowsFromText(text){
-  return String(text||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean).filter(x=>!x.startsWith('#')).map(function(line,i){
-    var p=line.split('|').map(function(x){return x.trim()});
-    return {position:i+1,word:p[0]||'',translation:p[1]||'',sentence:p[2]||'',sentence_translation:p[3]||'',word_audio_url:p[4]||null,sentence_audio_url:p[5]||null};
-  });
-}
-function rowsToText(rows){
-  return (rows||[]).slice().sort(function(a,b){return a.position-b.position}).map(function(x){return [x.word,x.translation,x.sentence,x.sentence_translation,x.word_audio_url||'',x.sentence_audio_url||''].join(' | ')}).join('\n');
-}
-async function loadDaily100Admin(){
-  var host=$('daily100DaysTable');
-  if(!host)return;
-  var r=await db.from('daily_words').select('day_date,position,word,translation,sentence,sentence_translation,is_published').order('day_date',{ascending:false}).order('position',{ascending:true});
-  if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return;}
-  var rows=r.data||[],days={};
-  rows.forEach(function(x){if(!days[x.day_date])days[x.day_date]=[];days[x.day_date].push(x)});
-  var keys=Object.keys(days);
-  $('daily100AdminDays').textContent=keys.filter(function(k){return days[k].some(function(x){return x.is_published})}).length;
-  $('daily100AdminItems').textContent=rows.length;
-  $('daily100AdminNext').textContent=keys.sort()[0]||'—';
-  if(!keys.length){host.innerHTML='<div class="empty">مفيش أيام لسه. اضغط «يوم جديد» لإضافة أول مجموعة.</div>';return;}
-  host.innerHTML='<table><thead><tr><th>التاريخ</th><th>العناصر</th><th>الحالة</th><th>أول كلمة</th><th>الإجراء</th></tr></thead><tbody>'+keys.map(function(day){
-    var a=days[day],pub=a.some(function(x){return x.is_published});
-    return '<tr><td><b>'+esc(day)+'</b></td><td>'+a.length+' / 100</td><td><span class="daily100-day-status '+(pub?'ok':'')+'">'+(pub?'Published':'Draft')+'</span></td><td>'+esc(a[0]&&a[0].word||'—')+'</td><td><div class="actions"><button class="btn secondary small" onclick="editDaily100(\''+day+'\')">Edit</button><button class="btn danger small" onclick="deleteDaily100(\''+day+'\')">Delete</button></div></td></tr>';
-  }).join('')+'</tbody></table>';
-}
-function daily100Form(title,day,rows,published){
-  var date=day||new Date().toISOString().slice(0,10);
-  var text=rowsToText(rows||[]);
-  var body='<form id="daily100Form"><div class="form-grid">'
-    +'<div class="form-row"><label>Day date</label><input id="d100Date" type="date" value="'+esc(date)+'" required></div>'
-    +'<div class="form-row"><label>Publishing</label><select id="d100Pub"><option value="true" '+(published!==false?'selected':'')+'>Published</option><option value="false" '+(published===false?'selected':'')+'>Draft</option></select></div>'
-    +'<div class="form-row full"><label>المحتوى — سطر لكل كلمة</label><div class="info-box">اكتب 100 سطر. الصيغة: <b>Word | الترجمة | English sentence | ترجمة الجملة | Word audio URL اختياري | Sentence audio URL اختياري</b><br>لو تركت روابط الصوت، الموقع سيستخدم نطق المتصفح تلقائيًا.</div>'
-    +'<textarea id="d100Text" class="daily100-editor" required placeholder="book | كتاب | I read a book. | أنا أقرأ كتابًا. — ثم أضف باقي السطور بنفس الصيغة">'+esc(text)+'</textarea></div></div>'
-    +'<div id="d100Preview"></div><div class="daily100-admin-actions"><button type="button" class="btn secondary" id="d100PreviewBtn">Preview</button><button class="btn" type="submit">Save Daily Set</button></div></form>';
-  openModal(title,body);
-  var preview=function(){
-    var rs=rowsFromText($('d100Text').value);
-    $('d100Preview').innerHTML='<div class="info-box" style="margin-top:10px">عدد السطور: <b>'+rs.length+'</b> '+(rs.length===100?'✓ جاهز للحفظ':'— لازم يكونوا 100 بالضبط')+'</div>'
-      +(rs.length?'<div class="daily100-preview-grid">'+rs.slice(0,12).map(function(x){return '<div class="daily100-preview-item"><b>#'+x.position+' '+esc(x.word)+'</b><span>'+esc(x.translation)+'</span><span>'+esc(x.sentence)+'</span><span>'+esc(x.sentence_translation)+'</span></div>'}).join('')+'</div>':'');
-  };
-  $('d100PreviewBtn').onclick=preview;preview();
-  $('daily100Form').onsubmit=async function(e){
-    e.preventDefault();
-    var rs=rowsFromText($('d100Text').value),date=$('d100Date').value,pub=$('d100Pub').value==='true';
-    if(rs.length!==100)return toast('لازم تدخل 100 سطر بالضبط. الحالي: '+rs.length);
-    if(rs.some(function(x){return !x.word||!x.translation||!x.sentence||!x.sentence_translation}))return toast('كل سطر لازم يحتوي الكلمة والترجمة والجملة وترجمة الجملة.');
-    var r=await db.rpc('doma_save_daily_words',{p_day_date:date,p_is_published:pub,p_rows:rs});
-    if(r.error)return toast('Save failed: '+r.error.message);
-    closeModal();toast('تم حفظ المية كلمة لليوم '+date);await loadDaily100Admin();
-  };
-}
-window.editDaily100=async function(day){var r=await db.from('daily_words').select('*').eq('day_date',day).order('position',{ascending:true});if(r.error)return toast(r.error.message);var rows=r.data||[];daily100Form('Edit — '+day,day,rows,rows.some(function(x){return x.is_published}))};
-window.deleteDaily100=async function(day){if(!confirm('Delete the complete daily set for '+day+' permanently?'))return;var r=await db.rpc('doma_delete_daily_words',{p_day_date:day});if(r.error)return toast('Delete failed: '+r.error.message);toast('Daily set deleted.');await loadDaily100Admin()};
-window.openNewDaily100=function(){daily100Form('New Daily 100')};
-window.loadDaily100Admin=loadDaily100Admin;
-document.addEventListener('DOMContentLoaded',function(){setTimeout(loadDaily100Admin,300)});
-$('newDaily100')&&$('newDaily100').addEventListener('click',openNewDaily100);
-$('daily100Refresh')&&$('daily100Refresh').addEventListener('click',loadDaily100Admin);
-var oldShow=window.show;
-window.show=function(name){if(typeof oldShow==='function')oldShow(name);if(name==='daily-100')setTimeout(loadDaily100Admin,0)};
+\n<script id="doma-daily-words-admin-script">
+(function(){
+  'use strict';
+  const today=()=>new Date().toISOString().slice(0,10);
+  function ensureDate(){if($('dailyWordsDate')&&!$('dailyWordsDate').value)$('dailyWordsDate').value=today()}
+  function dailyQuery(){
+    let q=db.from('daily_words').select('*').order('position',{ascending:true});
+    const d=$('dailyWordsDate')?.value;if(d)q=q.eq('day_date',d);
+    const pub=$('dailyWordsPublished')?.value;if(pub!=='')q=q.eq('is_published',pub==='true');
+    return q;
+  }
+  async function loadDailyWords(){
+    ensureDate();
+    const box=$('dailyWordsTable');if(!box)return;
+    const r=await dailyQuery();
+    if(r.error){$('dailyWordsCount').textContent='Table not ready';box.innerHTML='<div class="empty">Could not load Daily Words: '+esc(r.error.message)+'</div>';return}
+    let rows=r.data||[];const term=($('dailyWordsSearch')?.value||'').trim().toLowerCase();
+    if(term)rows=rows.filter(x=>[x.word,x.translation,x.sentence,x.sentence_translation].some(v=>String(v||'').toLowerCase().includes(term)));
+    $('dailyWordsCount').textContent=rows.length+' word'+(rows.length===1?'':'s');
+    box.innerHTML=rows.length?'<table><thead><tr><th>#</th><th>Word</th><th>Translation</th><th>Example Sentence</th><th>Audio</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><span class="daily-position">'+Number(x.position||0)+'</span></td><td><div class="daily-word-preview"><b>'+esc(x.word||'')+'</b></div></td><td><div class="daily-word-preview"><span class="ar">'+esc(x.translation||'')+'</span></div></td><td><div class="daily-word-preview"><div class="sentence">'+esc(x.sentence||'')+'</div><div class="ar">'+esc(x.sentence_translation||'')+'</div></div></td><td>'+(x.word_audio_url?'<a class="audio-link" target="_blank" rel="noopener" href="'+esc(x.word_audio_url)+'">Word audio ↗</a>':'<span class="mini-status">Word: browser voice</span>')+(x.sentence_audio_url?'<br><a class="audio-link" target="_blank" rel="noopener" href="'+esc(x.sentence_audio_url)+'">Sentence audio ↗</a>':'<br><span class="mini-status">Sentence: browser voice</span>')+'</td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Draft')+'</span></td><td><div class="daily-actions"><button class="btn secondary small" onclick="editDailyWord('+JSON.stringify(x.id)+')">Edit</button><button class="btn danger small" onclick="deleteDailyWord('+JSON.stringify(x.id)+')">Delete</button><button class="btn '+(x.is_published?'warn':'ok')+' small" onclick="toggleDailyWord('+JSON.stringify(x.id)+','+(!x.is_published)+')">'+(x.is_published?'Unpublish':'Publish')+'</button></div></td></tr>').join('')+'</tbody></table>':'<div class="empty">No Daily Words found for this date/filter.</div>';
+  }
+  function dailyWordForm(title,x=null){
+    const d=x?.day_date||$('dailyWordsDate')?.value||today();
+    openModal(title,'<form id="dailyWordForm"><div class="daily-form-note" style="margin-bottom:12px">Use positions 1–100. The student page reads published rows from the <b>daily_words</b> table. If an audio URL is empty, the student page can use browser speech automatically.</div><div class="form-grid"><div class="form-row"><label>Date</label><input id="dwDate" type="date" value="'+esc(d)+'" required></div><div class="form-row"><label>Position (1–100)</label><input id="dwPosition" type="number" min="1" max="100" value="'+Number(x?.position||1)+'" required></div><div class="form-row"><label>English Word</label><input id="dwWord" value="'+esc(x?.word||'')+'" required placeholder="achieve"></div><div class="form-row"><label>Arabic Translation</label><input id="dwTranslation" value="'+esc(x?.translation||'')+'" required placeholder="يحقق"></div><div class="form-row full"><label>Example Sentence</label><textarea id="dwSentence" required>'+esc(x?.sentence||'')+'</textarea></div><div class="form-row full"><label>Arabic Sentence Translation</label><textarea id="dwSentenceTranslation" required>'+esc(x?.sentence_translation||'')+'</textarea></div><div class="form-row full"><label>Word Audio URL</label><input id="dwWordAudio" type="url" value="'+esc(x?.word_audio_url||'')+'" placeholder="https://…"></div><div class="form-row full"><label>Sentence Audio URL</label><input id="dwSentenceAudio" type="url" value="'+esc(x?.sentence_audio_url||'')+'" placeholder="https://…"></div><div class="form-row"><label>Publishing</label><select id="dwPublished"><option value="true" '+(x?.is_published!==false?'selected':'')+'>Published</option><option value="false" '+(x?.is_published===false?'selected':'')+'>Draft</option></select></div></div><button class="btn full">Save Daily Word</button></form>');
+    $('dailyWordForm').onsubmit=async e=>{
+      e.preventDefault();
+      const p={day_date:$('dwDate').value,position:Number($('dwPosition').value),word:$('dwWord').value.trim(),translation:$('dwTranslation').value.trim(),sentence:$('dwSentence').value.trim(),sentence_translation:$('dwSentenceTranslation').value.trim(),word_audio_url:$('dwWordAudio').value.trim()||null,sentence_audio_url:$('dwSentenceAudio').value.trim()||null,is_published:$('dwPublished').value==='true'};
+      if(p.position<1||p.position>100)return toast('Position must be between 1 and 100.');
+      const r=x?await db.from('daily_words').update(p).eq('id',x.id).select('id'):await db.from('daily_words').insert(p).select('id');
+      if(r.error)return toast('Save failed: '+r.error.message);
+      closeModal();toast('Daily Word saved.');$('dailyWordsDate').value=p.day_date;await loadDailyWords();
+    };
+  }
+  window.editDailyWord=async function(id){const r=await db.from('daily_words').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);dailyWordForm('Edit Daily Word',r.data)};
+  window.deleteDailyWord=async function(id){if(!confirm('Delete this Daily Word permanently?'))return;const r=await db.from('daily_words').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);if(!r.data?.length)return toast('Delete was not confirmed. Check the Supabase DELETE policy.');toast('Daily Word deleted.');await loadDailyWords()};
+  window.toggleDailyWord=async function(id,value){const r=await db.from('daily_words').update({is_published:value}).eq('id',id).select('id');if(r.error)return toast('Update failed: '+r.error.message);await loadDailyWords()};
+  $('newDailyWord')?.addEventListener('click',()=>dailyWordForm('New Daily Word'));
+  $('dailyWordsRefresh')?.addEventListener('click',loadDailyWords);
+  $('dailyWordsToday')?.addEventListener('click',()=>{$('dailyWordsDate').value=today();loadDailyWords()});
+  $('dailyWordsDate')?.addEventListener('change',loadDailyWords);
+  $('dailyWordsSearch')?.addEventListener('input',loadDailyWords);
+  $('dailyWordsPublished')?.addEventListener('change',loadDailyWords);
+  window.loadDailyWords=loadDailyWords;
 })();
-</script>
-</body>
+</script>\n</body>
 </html>
