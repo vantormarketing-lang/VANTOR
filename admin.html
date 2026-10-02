@@ -1,8 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>DOMA ACADEMY — Admin • One-Step Final</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -12,147 +13,134 @@
 .app{display:none;min-height:100vh}.sidebar{position:fixed;left:0;top:0;bottom:0;width:252px;background:#100b0d;border-right:1px solid var(--line);padding:20px 14px;overflow:auto}.side-logo{padding:0 10px 20px}.side-logo small{display:block;margin-top:5px}.nav-title{text-transform:uppercase;font-size:10px;color:#74666c;letter-spacing:.15em;padding:15px 10px 7px}.nav-btn{width:100%;text-align:left;border:0;background:transparent;color:#c1b3b8;padding:11px 12px;border-radius:9px;margin:2px 0;font-size:12px}.nav-btn:hover,.nav-btn.active{background:var(--panel2);color:#fff}.main{margin-left:252px;min-height:100vh}.top{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;background:#0b0809ee;backdrop-filter:blur(12px);z-index:10}.top h1{font-size:20px;margin:0}.mobile-menu{display:none;border:0;background:transparent;color:#fff;font-size:22px}.content{padding:26px;max-width:1600px;margin:auto}.section{display:none}.section.active{display:block}.head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:20px}.head h2{margin:0 0 5px;font-size:25px}.head p{margin:0;color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px}.stat .num{font-size:30px;font-weight:900;margin-top:7px}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{max-width:260px}.field,input,select,textarea{width:100%;background:#0d090a;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}.field:focus,input:focus,select:focus,textarea:focus{border-color:#784055}textarea{min-height:100px;resize:vertical}.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:#fff;font-weight:700}.btn:hover{background:var(--accent2)}.btn.secondary{background:#302025}.btn.ok{background:var(--ok)}.btn.warn{background:var(--warn)}.btn.danger{background:var(--danger)}.btn.small{padding:7px 10px;font-size:11px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:left;padding:12px 13px;border-bottom:1px solid var(--line);font-size:12px;vertical-align:top}th{font-size:10px;color:#9c8c92;text-transform:uppercase;letter-spacing:.08em}tr:last-child td{border-bottom:0}.actions{display:flex;gap:6px;flex-wrap:wrap}.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:#302025;color:#e9dde1;font-size:10px}.pill.ok{background:#173b2b;color:#a7e5c3}.pill.warn{background:#493915;color:#f1d681}.pill.bad{background:#481b27;color:#ff9caf}.pill.free{background:#173b2b;color:#a7e5c3}.empty{padding:30px;text-align:center;color:var(--muted)}.connection{display:inline-flex;gap:7px;align-items:center;color:var(--muted);font-size:11px}.dot{width:8px;height:8px;border-radius:50%;background:#777}.dot.ok{background:#55c98a}.dot.bad{background:#e66b7f}.modal{display:none;position:fixed;inset:0;background:#000b;z-index:100;place-items:center;padding:18px}.modal.open{display:grid}.modal-card{width:min(760px,100%);max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.modal-head h3{margin:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.form-row{margin-bottom:11px}.form-row label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.toast{position:fixed;right:18px;bottom:18px;background:#23171c;border:1px solid var(--line);padding:12px 15px;border-radius:10px;display:none;z-index:200}.toast.show{display:block}.info-box{padding:13px;border-radius:11px;background:#1b1115;border:1px solid #4a2732;color:#c7b8bd;font-size:11px}.mobile-close{display:none}
 @media(max-width:960px){.sidebar{transform:translateX(-100%);transition:.2s;z-index:50}.sidebar.open{transform:none}.main{margin-left:0}.mobile-menu{display:block}.top{padding:0 16px}.content{padding:17px}.grid{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.mobile-close{display:block}}@media(max-width:560px){.grid{grid-template-columns:1fr}.head{flex-direction:column}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.toolbar input,.toolbar select{max-width:none;width:100%}}
 .qbank-card{padding:13px;background:#0d090b;border:1px solid #2b171e;border-radius:12px;margin-bottom:8px}.qbank-card b{font-size:12px}.qbank-card small{display:block;color:#777;margin-top:3px}.activity-chip{display:inline-flex;padding:4px 8px;border-radius:999px;background:#2f1e25;font-size:9px}.wa{color:#8ed7ad}.qbank-scroll{max-height:calc(100vh - 285px);min-height:240px;overflow-y:auto;overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.qbank-scroll table{margin:0}.qbank-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px}.qbank-count{font-size:11px;color:var(--muted)}</style>
-
 <style id="doma-admin-all-upgrades-css">
 .admin-upgrade-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-top:14px}.admin-upgrade-card{padding:14px;background:linear-gradient(145deg,#130c0f,#0b090a);border:1px solid #321b23;border-radius:12px}.admin-upgrade-card small{display:block;color:#766c71;font-size:8px;text-transform:uppercase;letter-spacing:1px}.admin-upgrade-card b{display:block;font-size:22px;margin-top:4px}.admin-upgrade-card span{display:block;color:#81777b;font-size:9px;margin-top:3px}.admin-video-link{display:inline-flex;margin-top:5px;color:#d99aac;font-size:9px}.admin-health{margin-top:15px;padding:14px;background:#100a0c;border:1px solid #2c1921;border-radius:12px}.admin-health h3{font-size:14px;margin-bottom:5px}.admin-health p{font-size:10px;color:#80767a;line-height:1.6}.hw-attachment-admin{display:block;margin-top:8px;font-size:9px;color:#d59aaa}.hw-attachment-admin a{color:#efb1bf}.mini-status{font-size:8px;padding:4px 6px;border-radius:6px;background:#171014;border:1px solid #3a222b;color:#aaa}
 @media(max-width:900px){.admin-upgrade-summary{grid-template-columns:1fr 1fr}}@media(max-width:600px){.admin-upgrade-summary{grid-template-columns:1fr}}
 </style>
 
+<style id="doma-final-admin-css">
+.lesson-editor-note{padding:10px 12px;border:1px dashed #4b2b34;border-radius:10px;background:#130b0e;color:#9e8b90;font-size:10px;line-height:1.6;margin-bottom:12px}.field-hint{display:block;margin-top:5px;color:#776c71;font-size:9px}.video-preview-btn{margin-top:7px}.video-preview-box{background:#070607;border:1px solid #302027;border-radius:12px;overflow:hidden}.video-preview-box iframe,.video-preview-box video{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+</style>
+
 </head>
 <body>
-<div id="login" class="login">
-  <form id="loginForm" class="login-card">
-    <div class="logo">DOMA <span>ACADEMY</span></div>
-    <div class="muted" style="font-size:12px">Production Admin Control Panel</div>
-    <h1>Staff Login</h1>
-    <label>Email</label><input id="email" type="email" autocomplete="username" required placeholder="admin@domaacademy.com">
-    <label>Password</label><input id="password" type="password" autocomplete="current-password" required>
-    <button class="btn" style="width:100%;margin-top:18px">Login</button>
-    <div id="loginError" class="error"></div>
-    <div class="muted" style="font-size:10px;margin-top:10px">Access requires a valid Supabase Auth session with profiles.role = admin or teacher.</div>
-  </form>
+<div class="login" id="login">
+<form class="login-card" id="loginForm">
+<div class="logo">DOMA <span>ACADEMY</span></div>
+<div class="muted" style="font-size:12px">Production Admin Control Panel</div>
+<h1>Staff Login</h1>
+<label>Email</label><input autocomplete="username" id="email" placeholder="admin@domaacademy.com" required="" type="email"/>
+<label>Password</label><input autocomplete="current-password" id="password" required="" type="password"/>
+<button class="btn" style="width:100%;margin-top:18px">Login</button>
+<div class="error" id="loginError"></div>
+<div class="muted" style="font-size:10px;margin-top:10px">Access requires a valid Supabase Auth session with profiles.role = admin or teacher.</div>
+</form>
 </div>
-
-<div id="app" class="app">
-  <aside id="sidebar" class="sidebar">
-    <div class="side-logo"><div class="logo">DOMA <span>ACADEMY</span></div><small class="muted">Production Admin</small></div>
-    <nav>
-      <div class="nav-title">Main</div>
-      <button class="nav-btn" data-section="dashboard">▦ Dashboard</button>
-      <div class="nav-title">Content</div>
-      <button class="nav-btn" data-section="grades">⌘ Grades</button>
-      <button class="nav-btn" data-section="units">▤ Units</button>
-      <button class="nav-btn" data-section="lessons">▣ Lessons</button>
-      <button class="nav-btn" data-section="quizzes">✓ Exams & Quizzes</button>
-      <button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
-      <button class="nav-btn" data-section="homework">✎ Homework</button>
-      <div class="nav-title">Students</div>
-      <button class="nav-btn" data-section="students">◎ Students</button>
-      <button class="nav-btn" data-section="activity">◉ Activity & Attendance</button>
-      <button class="nav-btn" data-section="progress">◔ Progress</button>
-      <button class="nav-btn" data-section="results">▤ Results</button>
-      <button class="nav-btn" data-section="certificates">🏆 Certificates</button>
-      <div class="nav-title">Sales</div>
-      <button class="nav-btn" data-section="sales">₿ Sales & Subscriptions</button>
-      <div class="nav-title">Communication</div>
-      <button class="nav-btn" data-section="notifications">✉ Notifications</button>
-      <button class="nav-btn" data-section="reviews">★ Reviews</button>
-      <div class="nav-title">System</div>
-      <button class="nav-btn" data-section="settings">⚙ Settings</button>
-      <button class="nav-btn" id="logout">↪ Logout</button>
-    </nav>
-  </aside>
-
-  <main class="main">
-    <header class="top">
-      <div style="display:flex;align-items:center;gap:12px">
-        <button id="mobileMenu" class="mobile-menu">☰</button>
-        <div><h1 id="pageTitle">Dashboard</h1><small class="muted">DOMA ACADEMY</small></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="connection"><i id="connectionDot" class="dot"></i><span id="connectionText">Checking…</span></span>
-        <button class="btn secondary" id="openSite">Open Website ↗</button>
-      </div>
-    </header>
-
-    <div class="content">
-      <section id="section-dashboard" class="section active">
-        <div class="head"><div><h2>Academy Dashboard</h2><p>Live counts and quick access to the main academy systems.</p></div><button class="btn secondary" id="dashboardRefresh">Refresh</button></div>
-        <div class="grid">
-          <div class="card stat"><div class="muted">Students</div><div id="stStudents" class="num">—</div></div>
-          <div class="card stat"><div class="muted">Published Lessons</div><div id="stLessons" class="num">—</div></div>
-          <div class="card stat"><div class="muted">Pending Requests</div><div id="stPending" class="num">—</div></div>
-          <div class="card stat"><div class="muted">Active Subscriptions</div><div id="stActive" class="num">—</div></div>
-        </div>
-        <div class="grid" style="margin-top:14px">
-          <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
-          <div class="card"><b>Assessment</b><p class="muted">Create quizzes, keep answers private, review attempts and homework.</p></div>
-          <div class="card"><b>Students</b><p class="muted">See student profiles, grade, progress and certificates.</p></div>
-          <div class="card"><b>Sales</b><p class="muted">Verify Mobile Cash receipts and approve or reject access requests.</p></div>
-        </div>
-      </section>
-
-      <section id="section-grades" class="section">
-        <div class="head"><div><h2>Grades</h2><p>Activate or deactivate the six academy grades.</p></div><button class="btn secondary" id="gradesRefresh">Refresh</button></div>
-        <div id="gradesTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-units" class="section">
-        <div class="head"><div><h2>Units</h2><p>Create unit structure for each grade.</p></div><button class="btn" id="newUnit">+ New Unit</button></div>
-        <div class="toolbar"><select id="unitGrade"><option value="">All Grades</option></select><input id="unitSearch" placeholder="Search units…"><button class="btn secondary" id="unitRefresh">Refresh</button></div>
-        <div id="unitsTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-lessons" class="section">
-        <div class="head"><div><h2>Lessons</h2><p>Manage English lessons, media, publishing and free/paid access.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
-        <div class="toolbar"><select id="lessonGrade"><option value="">All Grades</option></select><select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select><input id="lessonSearch" placeholder="Search lessons…"><button class="btn secondary" id="lessonRefresh">Refresh</button></div>
-        <div id="lessonsTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-quizzes" class="section">
-        <div class="head"><div><h2>Exams & Quizzes</h2><p>Create assessments and manage questions. Correct answers are never sent to students directly.</p></div><button class="btn" id="newQuiz">+ New Quiz</button></div>
-        <div class="toolbar"><select id="quizGrade"><option value="">All Grades</option></select><input id="quizSearch" placeholder="Search quizzes…"><button class="btn secondary" id="quizRefresh">Refresh</button></div>
-        <div id="quizzesTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-homework" class="section">
-        <div class="head"><div><h2>Homework</h2><p>Create assignments and review student submissions.</p></div><button class="btn" id="newHomework">+ New Homework</button></div>
-        <div class="toolbar"><select id="hwGrade"><option value="">All Grades</option></select><input id="hwSearch" placeholder="Search homework…"><button class="btn secondary" id="hwRefresh">Refresh</button></div>
-        <div id="homeworkTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-students" class="section">
-        <div class="head"><div><h2>Students</h2><p>Student accounts and grade information.</p></div><div class="toolbar"><input id="studentSearch" placeholder="Search students…"><button class="btn secondary" id="studentsRefresh">Refresh</button></div></div>
-        <div id="studentsTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-progress" class="section"><div class="head"><div><h2>Progress</h2><p>Lesson completion records from student accounts.</p></div><button class="btn secondary" id="progressRefresh">Refresh</button></div><div id="progressTable" class="table-wrap"></div></section>
-      <section id="section-results" class="section"><div class="head"><div><h2>Results</h2><p>Quiz attempts and scores.</p></div><button class="btn secondary" id="resultsRefresh">Refresh</button></div><div id="resultsTable" class="table-wrap"></div></section>
-      <section id="section-certificates" class="section"><div class="head"><div><h2>Certificates</h2><p>Issue and review certificates.</p></div><button class="btn" id="newCertificate">+ Issue Certificate</button></div><div id="certTable" class="table-wrap"></div></section>
-
-      <section id="section-sales" class="section">
-        <div class="head"><div><h2>Sales & Subscriptions</h2><p>Verify Mobile Cash requests and activate student access.</p></div><div class="toolbar"><input id="salesSearch" placeholder="Search requests…"><button class="btn secondary" id="salesRefresh">Refresh</button></div></div>
-        <div class="grid" style="margin-bottom:14px"><div class="card stat"><div class="muted">Pending</div><div id="salesPending" class="num">—</div></div><div class="card stat"><div class="muted">Approved</div><div id="salesApproved" class="num">—</div></div><div class="card stat"><div class="muted">Rejected</div><div id="salesRejected" class="num">—</div></div><div class="card stat"><div class="muted">Active</div><div id="salesActive" class="num">—</div></div></div>
-        <div id="salesTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-notifications" class="section">
-        <div class="head"><div><h2>Notifications</h2><p>Send a notification to one student or all students.</p></div><button class="btn" id="newNotification">+ New Notification</button></div>
-        <div id="notifTable" class="table-wrap"></div>
-      </section>
-
-      <section id="section-reviews" class="section"><div class="head"><div><h2>Reviews</h2><p>Publish, hide and remove student reviews.</p></div><button class="btn secondary" id="reviewsRefresh">Refresh</button></div><div id="reviewsTable" class="table-wrap"></div></section>
-
-      <section id="section-question-bank" class="section"><div class="head"><div><h2>Question Bank</h2><p>Reusable questions. Scroll inside the list to view all questions.</p></div><button class="btn" id="newBankQuestion">+ New Question</button></div><div class="toolbar"><select id="bankGrade"><option value="">All Grades</option></select><input id="bankSearch" placeholder="Search questions…"><button class="btn secondary" id="bankRefresh">Refresh</button></div><div class="qbank-scroll"><div id="questionBankTable"></div></div><div class="qbank-footer"><span id="questionBankCount" class="qbank-count">0 questions</span><span class="muted" style="font-size:10px">Use the mouse wheel or scrollbar inside the Question Bank list.</span></div></section>
-<section id="section-activity" class="section"><div class="head"><div><h2>Activity & Attendance</h2><p>Engagement log for logins, lesson opens/completions, quizzes, homework and subscription activity.</p></div><button class="btn secondary" id="activityRefresh">Refresh</button></div><div class="toolbar"><input id="activitySearch" placeholder="Search student or activity…"><button class="btn secondary" id="activityRefresh2">Refresh</button></div><div id="activityTable" class="table-wrap"></div></section>
-<section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
-    </div>
-  </main>
+<div class="app" id="app">
+<aside class="sidebar" id="sidebar">
+<div class="side-logo"><div class="logo">DOMA <span>ACADEMY</span></div><small class="muted">Production Admin</small></div>
+<nav>
+<div class="nav-title">Main</div>
+<button class="nav-btn" data-section="dashboard">▦ Dashboard</button>
+<div class="nav-title">Content</div>
+<button class="nav-btn" data-section="grades">⌘ Grades</button>
+<button class="nav-btn" data-section="units">▤ Units</button>
+<button class="nav-btn" data-section="lessons">▣ Lessons</button>
+<button class="nav-btn" data-section="quizzes">✓ Exams &amp; Quizzes</button>
+<button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
+<button class="nav-btn" data-section="homework">✎ Homework</button>
+<div class="nav-title">Students</div>
+<button class="nav-btn" data-section="students">◎ Students</button>
+<button class="nav-btn" data-section="activity">◉ Activity &amp; Attendance</button>
+<button class="nav-btn" data-section="progress">◔ Progress</button>
+<button class="nav-btn" data-section="results">▤ Results</button>
+<button class="nav-btn" data-section="certificates">🏆 Certificates</button>
+<div class="nav-title">Sales</div>
+<button class="nav-btn" data-section="sales">₿ Sales &amp; Subscriptions</button>
+<div class="nav-title">Communication</div>
+<button class="nav-btn" data-section="notifications">✉ Notifications</button>
+<button class="nav-btn" data-section="reviews">★ Reviews</button>
+<div class="nav-title">System</div>
+<button class="nav-btn" data-section="settings">⚙ Settings</button>
+<button class="nav-btn" id="logout">↪ Logout</button>
+</nav>
+</aside>
+<main class="main">
+<header class="top">
+<div style="display:flex;align-items:center;gap:12px">
+<button class="mobile-menu" id="mobileMenu">☰</button>
+<div><h1 id="pageTitle">Dashboard</h1><small class="muted">DOMA ACADEMY</small></div>
 </div>
-
-<div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Edit</h3><button class="btn secondary" id="closeModal">Close</button></div><div id="modalBody"></div></div></div>
-<div id="toast" class="toast"></div>
-
+<div style="display:flex;align-items:center;gap:10px">
+<span class="connection"><i class="dot" id="connectionDot"></i><span id="connectionText">Checking…</span></span>
+<button class="btn secondary" id="openSite">Open Website ↗</button>
+</div>
+</header>
+<div class="content">
+<section class="section active" id="section-dashboard">
+<div class="head"><div><h2>Academy Dashboard</h2><p>Live counts and quick access to the main academy systems.</p></div><button class="btn secondary" id="dashboardRefresh">Refresh</button></div>
+<div class="grid">
+<div class="card stat"><div class="muted">Students</div><div class="num" id="stStudents">—</div></div>
+<div class="card stat"><div class="muted">Published Lessons</div><div class="num" id="stLessons">—</div></div>
+<div class="card stat"><div class="muted">Pending Requests</div><div class="num" id="stPending">—</div></div>
+<div class="card stat"><div class="muted">Active Subscriptions</div><div class="num" id="stActive">—</div></div>
+</div>
+<div class="grid" style="margin-top:14px">
+<div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
+<div class="card"><b>Assessment</b><p class="muted">Create quizzes, keep answers private, review attempts and homework.</p></div>
+<div class="card"><b>Students</b><p class="muted">See student profiles, grade, progress and certificates.</p></div>
+<div class="card"><b>Sales</b><p class="muted">Verify Mobile Cash receipts and approve or reject access requests.</p></div>
+</div>
+</section>
+<section class="section" id="section-grades">
+<div class="head"><div><h2>Grades</h2><p>Activate or deactivate the six academy grades.</p></div><button class="btn secondary" id="gradesRefresh">Refresh</button></div>
+<div class="table-wrap" id="gradesTable"></div>
+</section>
+<section class="section" id="section-units">
+<div class="head"><div><h2>Units</h2><p>Create unit structure for each grade.</p></div><button class="btn" id="newUnit">+ New Unit</button></div>
+<div class="toolbar"><select id="unitGrade"><option value="">All Grades</option></select><input id="unitSearch" placeholder="Search units…"/><button class="btn secondary" id="unitRefresh">Refresh</button></div>
+<div class="table-wrap" id="unitsTable"></div>
+</section>
+<section class="section" id="section-lessons">
+<div class="head"><div><h2>Lessons</h2><p>Manage English lessons, media, publishing and free/paid access.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
+<div class="toolbar"><select id="lessonGrade"><option value="">All Grades</option></select><select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select><select id="lessonVideoStatus"><option value="">All Video Status</option><option value="ready">Video Ready</option><option value="missing">Video Missing</option></select><input id="lessonSearch" placeholder="Search lessons…"/><button class="btn secondary" id="lessonRefresh">Refresh</button></div>
+<div class="table-wrap" id="lessonsTable"></div>
+</section>
+<section class="section" id="section-quizzes">
+<div class="head"><div><h2>Exams &amp; Quizzes</h2><p>Create assessments and manage questions. Correct answers are never sent to students directly.</p></div><button class="btn" id="newQuiz">+ New Quiz</button></div>
+<div class="toolbar"><select id="quizGrade"><option value="">All Grades</option></select><input id="quizSearch" placeholder="Search quizzes…"/><button class="btn secondary" id="quizRefresh">Refresh</button></div>
+<div class="table-wrap" id="quizzesTable"></div>
+</section>
+<section class="section" id="section-homework">
+<div class="head"><div><h2>Homework</h2><p>Create assignments and review student submissions.</p></div><button class="btn" id="newHomework">+ New Homework</button></div>
+<div class="toolbar"><select id="hwGrade"><option value="">All Grades</option></select><input id="hwSearch" placeholder="Search homework…"/><button class="btn secondary" id="hwRefresh">Refresh</button></div>
+<div class="table-wrap" id="homeworkTable"></div>
+</section>
+<section class="section" id="section-students">
+<div class="head"><div><h2>Students</h2><p>Student accounts and grade information.</p></div><div class="toolbar"><input id="studentSearch" placeholder="Search students…"/><button class="btn secondary" id="studentsRefresh">Refresh</button></div></div>
+<div class="table-wrap" id="studentsTable"></div>
+</section>
+<section class="section" id="section-progress"><div class="head"><div><h2>Progress</h2><p>Lesson completion records from student accounts.</p></div><button class="btn secondary" id="progressRefresh">Refresh</button></div><div class="table-wrap" id="progressTable"></div></section>
+<section class="section" id="section-results"><div class="head"><div><h2>Results</h2><p>Quiz attempts and scores.</p></div><button class="btn secondary" id="resultsRefresh">Refresh</button></div><div class="table-wrap" id="resultsTable"></div></section>
+<section class="section" id="section-certificates"><div class="head"><div><h2>Certificates</h2><p>Issue and review certificates.</p></div><button class="btn" id="newCertificate">+ Issue Certificate</button></div><div class="table-wrap" id="certTable"></div></section>
+<section class="section" id="section-sales">
+<div class="head"><div><h2>Sales &amp; Subscriptions</h2><p>Verify Mobile Cash requests and activate student access.</p></div><div class="toolbar"><input id="salesSearch" placeholder="Search requests…"/><button class="btn secondary" id="salesRefresh">Refresh</button></div></div>
+<div class="grid" style="margin-bottom:14px"><div class="card stat"><div class="muted">Pending</div><div class="num" id="salesPending">—</div></div><div class="card stat"><div class="muted">Approved</div><div class="num" id="salesApproved">—</div></div><div class="card stat"><div class="muted">Rejected</div><div class="num" id="salesRejected">—</div></div><div class="card stat"><div class="muted">Active</div><div class="num" id="salesActive">—</div></div></div>
+<div class="table-wrap" id="salesTable"></div>
+</section>
+<section class="section" id="section-notifications">
+<div class="head"><div><h2>Notifications</h2><p>Send a notification to one student or all students.</p></div><button class="btn" id="newNotification">+ New Notification</button></div>
+<div class="table-wrap" id="notifTable"></div>
+</section>
+<section class="section" id="section-reviews"><div class="head"><div><h2>Reviews</h2><p>Publish, hide and remove student reviews.</p></div><button class="btn secondary" id="reviewsRefresh">Refresh</button></div><div class="table-wrap" id="reviewsTable"></div></section>
+<section class="section" id="section-question-bank"><div class="head"><div><h2>Question Bank</h2><p>Reusable questions. Scroll inside the list to view all questions.</p></div><button class="btn" id="newBankQuestion">+ New Question</button></div><div class="toolbar"><select id="bankGrade"><option value="">All Grades</option></select><input id="bankSearch" placeholder="Search questions…"/><button class="btn secondary" id="bankRefresh">Refresh</button></div><div class="qbank-scroll"><div id="questionBankTable"></div></div><div class="qbank-footer"><span class="qbank-count" id="questionBankCount">0 questions</span><span class="muted" style="font-size:10px">Use the mouse wheel or scrollbar inside the Question Bank list.</span></div></section>
+<section class="section" id="section-activity"><div class="head"><div><h2>Activity &amp; Attendance</h2><p>Engagement log for logins, lesson opens/completions, quizzes, homework and subscription activity.</p></div><button class="btn secondary" id="activityRefresh">Refresh</button></div><div class="toolbar"><input id="activitySearch" placeholder="Search student or activity…"/><button class="btn secondary" id="activityRefresh2">Refresh</button></div><div class="table-wrap" id="activityTable"></div></section>
+<section class="section" id="section-settings"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 1st 150 · 2nd 200 · 3rd 250 EGP. Annual uses the configured annual amount on the student page.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
+</div>
+</main>
+</div>
+<div class="modal" id="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Edit</h3><button class="btn secondary" id="closeModal">Close</button></div><div id="modalBody"></div></div></div>
+<div class="toast" id="toast"></div>
 <script>
 const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';
 const SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
@@ -225,9 +213,64 @@ async function deletePersisted(table,id,label,after){
 async function deleteUnit(id){await deletePersisted('units',id,'Unit',loadUnits)}
 
 async function loadLessons(){
-  let q=db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published,created_at').order('sort_order',{ascending:true}).order('created_at',{ascending:false});const g=$('lessonGrade').value,t=$('lessonType').value;if(g)q=q.eq('grade_id',g);if(t)q=q.eq('lesson_type',t);const r=await q;if(r.error)return $('lessonsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('lessonSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.lesson_type||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('lessonsTable').innerHTML=rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Video</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${esc(units.find(u=>u.id===x.unit_id)?.title||'—')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.lesson_type)}</td><td>${x.video_url?`<a class="btn secondary small" href="${esc(x.video_url)}" target="_blank" rel="noopener noreferrer">▶ Video</a>`:'<span class="pill warn">No video</span>'}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons found.</div>';
+  let q=db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,vocabulary_100,grammar_focus,writing_100,duration_minutes,sort_order,is_free,is_published,created_at').order('sort_order',{ascending:true}).order('created_at',{ascending:false});const g=$('lessonGrade').value,t=$('lessonType').value,v=$('lessonVideoStatus')?.value||'';if(g)q=q.eq('grade_id',g);if(t)q=q.eq('lesson_type',t);const r=await q;if(r.error)return $('lessonsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];if(v==='ready')rows=rows.filter(x=>String(x.video_url||'').trim());if(v==='missing')rows=rows.filter(x=>!String(x.video_url||'').trim());const term=$('lessonSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.lesson_type||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('lessonsTable').innerHTML=rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Access</th><th>Video</th><th>100 Words</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${esc(units.find(u=>u.id===x.unit_id)?.title||'—')}</div><div class="muted">${x.writing_100?'100-word task ready':'100-word task empty'} • ${x.vocabulary_100?'Vocabulary ready':'Vocabulary empty'}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.lesson_type)}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${x.video_url?`<a class="admin-video-link" href="${esc(x.video_url)}" target="_blank" rel="noopener">Ready ↗</a>`:'<span class="mini-status">Missing</span>'}</td><td>${(x.writing_100||x.vocabulary_100)?'<span class="pill ok">Ready</span>':'<span class="pill warn">Empty</span>'}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons found.</div>';
 }
-function lessonForm(title,x=null){const selectedGrade=x?.grade_id||'';openModal(title,`<form id="lessonForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="lGrade" required>${gradeOptions(selectedGrade)}</select></div><div class="form-row"><label>Unit</label><select id="lUnit">${unitOptions(selectedGrade,x?.unit_id||'')}</select></div><div class="form-row"><label>Title</label><input id="lTitle" value="${esc(x?.title||'')}" required></div><div class="form-row"><label>Type</label><select id="lType">${['lesson','grammar','vocabulary','reading','writing','listening'].map(v=>`<option ${v===(x?.lesson_type||'lesson')?'selected':''}>${v}</option>`).join('')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="lDuration" type="number" min="0" value="${Number(x?.duration_minutes||0)}"></div><div class="form-row"><label>Sort order</label><input id="lSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div><div class="form-row"><label>Access</label><select id="lFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free lesson</option></select></div><div class="form-row"><label>Publishing</label><select id="lPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div><div class="form-row full"><label>Description</label><textarea id="lDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Lesson content</label><textarea id="lContent" style="min-height:170px">${esc(x?.content||'')}</textarea></div><div class="form-row full"><label>Video URL</label><input id="lVideo" value="${esc(x?.video_url||'')}" placeholder="https://youtu.be/... or https://www.youtube.com/watch?v=..."></div></div><button class="btn">Save Lesson</button></form>`);$('lGrade').onchange=()=>{$('lUnit').innerHTML=unitOptions($('lGrade').value,'')};$('lessonForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('lGrade').value,unit_id:$('lUnit').value||null,title:$('lTitle').value.trim(),lesson_type:$('lType').value,duration_minutes:Number($('lDuration').value||0),sort_order:Number($('lSort').value||0),is_free:$('lFree').value==='true',is_published:$('lPub').value==='true',description:$('lDesc').value.trim(),content:$('lContent').value.trim(),video_url:$('lVideo').value.trim(),updated_at:new Date().toISOString()};const r=x?await db.from('lessons').update(p).eq('id',x.id).select('id'):await db.from('lessons').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);closeModal();toast('Lesson saved.');await loadLessons();await loadDashboard()}}
+function lessonForm(title,x=null){
+  const selectedGrade=x?.grade_id||'';
+  const video=String(x?.video_url||'');
+  openModal(title,`<form id="lessonForm">
+    <div class="lesson-editor-note">Fill the complete lesson package here: lesson content, 100 Key Words / Vocabulary, Grammar Focus, 100-Word Writing / Paragraph and the lesson Video URL. These fields are shown to students inside the lesson page.</div>
+    <div class="form-grid">
+      <div class="form-row"><label>Grade</label><select id="lGrade" required>${gradeOptions(selectedGrade)}</select></div>
+      <div class="form-row"><label>Unit</label><select id="lUnit">${unitOptions(selectedGrade,x?.unit_id||'')}</select></div>
+      <div class="form-row"><label>Title</label><input id="lTitle" value="${esc(x?.title||'')}" required></div>
+      <div class="form-row"><label>Type</label><select id="lType">${['lesson','grammar','vocabulary','reading','writing','listening'].map(v=>`<option ${v===(x?.lesson_type||'lesson')?'selected':''}>${v}</option>`).join('')}</select></div>
+      <div class="form-row"><label>Duration (minutes)</label><input id="lDuration" type="number" min="0" value="${Number(x?.duration_minutes||0)}"></div>
+      <div class="form-row"><label>Sort order</label><input id="lSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div>
+      <div class="form-row"><label>Access</label><select id="lFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free lesson</option></select></div>
+      <div class="form-row"><label>Publishing</label><select id="lPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div>
+      <div class="form-row full"><label>Description</label><textarea id="lDesc">${esc(x?.description||'')}</textarea></div>
+      <div class="form-row full"><label>Lesson content</label><textarea id="lContent" style="min-height:170px">${esc(x?.content||'')}</textarea><span class="field-hint">Main explanation, examples, practice instructions and lesson notes.</span></div>
+      <div class="form-row full"><label>100 Key Words / Vocabulary</label><textarea id="lVocab" style="min-height:150px" placeholder="Paste the 100 key words / vocabulary for this lesson">${esc(x?.vocabulary_100||'')}</textarea><span class="field-hint" id="lVocabCount">0 words • recommended: 100 key words</span></div>
+      <div class="form-row"><label>Grammar Focus</label><input id="lGrammar" value="${esc(x?.grammar_focus||'')}" placeholder="e.g. Present Perfect"><span class="field-hint">The exact target grammar for the lesson.</span></div>
+      <div class="form-row"><label>100-Word Writing / Paragraph</label><textarea id="lWriting" style="min-height:130px" placeholder="Writing prompt or model of about 100 words">${esc(x?.writing_100||'')}</textarea><span class="field-hint" id="lWritingCount">0 words • target about 100 words</span></div>
+      <div class="form-row full"><label>Video URL</label><input id="lVideo" value="${esc(video)}" placeholder="YouTube / Google Drive / MP4 URL"><span class="field-hint">Supported: YouTube, Google Drive preview links and direct MP4/WebM/OGG links.</span><button type="button" class="btn secondary small video-preview-btn" id="previewLessonVideo">▶ Preview Video</button></div>
+    </div>
+    <button class="btn">Save Lesson</button>
+  </form>`);
+  $('lGrade').onchange=()=>{$('lUnit').innerHTML=unitOptions($('lGrade').value,'')};
+  function wordCount(v){return String(v||'').trim()?String(v).trim().split(/\s+/).length:0}
+  const updateCounts=()=>{if($('lVocabCount'))$('lVocabCount').textContent=wordCount($('lVocab').value)+' words • recommended: 100 key words';if($('lWritingCount'))$('lWritingCount').textContent=wordCount($('lWriting').value)+' words • target about 100 words'};
+  $('lVocab')?.addEventListener('input',updateCounts);$('lWriting')?.addEventListener('input',updateCounts);updateCounts();
+  $('previewLessonVideo')?.addEventListener('click',()=>previewLessonVideo($('lVideo')?.value||''));
+  $('lessonForm').onsubmit=async e=>{
+    e.preventDefault();
+    const p={grade_id:$('lGrade').value,unit_id:$('lUnit').value||null,title:$('lTitle').value.trim(),lesson_type:$('lType').value,duration_minutes:Number($('lDuration').value||0),sort_order:Number($('lSort').value||0),is_free:$('lFree').value==='true',is_published:$('lPub').value==='true',description:$('lDesc').value.trim(),content:$('lContent').value.trim(),vocabulary_100:$('lVocab').value.trim(),grammar_focus:$('lGrammar').value.trim(),writing_100:$('lWriting').value.trim(),video_url:$('lVideo').value.trim(),updated_at:new Date().toISOString()};
+    let r=x?await db.from('lessons').update(p).eq('id',x.id).select('id'):await db.from('lessons').insert(p).select('id');
+    if(r.error){
+      const msg=r.error.message||'';
+      if(/vocabulary_100|writing_100|grammar_focus/i.test(msg)) return toast('Lesson save failed because the lesson-fields columns are missing. Run the latest lesson-fields SQL patch first.');
+      return toast('Save failed: '+msg);
+    }
+    closeModal();toast('Lesson saved.');await loadLessons();await loadDashboard()
+  }
+}
+function previewLessonVideo(url){
+  const raw=String(url||'').trim();
+  if(!raw)return toast('Enter a video URL first.');
+  let embed='';
+  try{
+    const u=new URL(raw),host=u.hostname.replace(/^www\./,'').toLowerCase();
+    if(host==='youtube.com'||host==='m.youtube.com'||host==='youtu.be'){
+      let id='';if(host==='youtu.be')id=u.pathname.split('/').filter(Boolean)[0]||'';else if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/').filter(Boolean)[1]||'';else id=u.searchParams.get('v')||'';
+      if(id)embed='<iframe src="https://www.youtube.com/embed/'+encodeURIComponent(id)+'" title="Lesson video" allowfullscreen></iframe>';
+    }else if(host==='drive.google.com'){
+      const m=u.pathname.match(/\/file\/d\/([^/]+)/);if(m?.[1])embed='<iframe src="https://drive.google.com/file/d/'+encodeURIComponent(m[1])+'/preview" title="Lesson video" allow="autoplay" allowfullscreen></iframe>';
+    }else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(u.pathname+u.search))embed='<video controls playsinline src="'+esc(raw)+'"></video>';
+  }catch(e){}
+  if(!embed)embed='<div class="empty">This link can still be saved, but it cannot be embedded automatically. The student can open it in a new tab.</div>';
+  openModal('Video Preview','<div class="video-preview-box">'+embed+'</div><div class="actions" style="margin-top:10px"><a class="btn secondary" href="'+esc(raw)+'" target="_blank" rel="noopener">Open video in new tab ↗</a></div>');
+}
 $('newLesson').onclick=()=>lessonForm('New Lesson');
 async function editLesson(id){const r=await db.from('lessons').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);lessonForm('Edit Lesson',r.data)}
 async function toggleLessonPublish(id,v){const r=await db.from('lessons').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id');if(r.error)return toast(r.error.message);await loadLessons();await loadDashboard()}
@@ -275,7 +318,7 @@ async function deleteReview(id){await deletePersisted('reviews',id,'Review',load
 
 function loadSection(n){({dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,homework:loadHomework,students:loadStudents,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews}[n]||(()=>{}))()}
 
-$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=loadLessons;$('lessonSearch').oninput=loadLessons;$('lessonGrade').onchange=loadLessons;$('lessonType').onchange=loadLessons;$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=loadSales;$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
+$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=loadLessons;$('lessonSearch').oninput=loadLessons;$('lessonGrade').onchange=loadLessons;$('lessonType').onchange=loadLessons;$('lessonVideoStatus')?.addEventListener('change',loadLessons);$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=loadSales;$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
 
 async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Supabase connected':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
 
@@ -288,7 +331,6 @@ $('logout').onclick=async()=>{await db.auth.signOut();location.reload()};db.auth
 
 (async()=>{const s=await db.auth.getSession();if(s.data.session)await start();else await checkConnection()})();
 </script>
-
 <script>
 /* DOMA V2 admin enhancements */
 async function loadQuestionBank(){
@@ -356,48 +398,24 @@ loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,u
 $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
-<script id="doma-admin-all-upgrades-script">
+
+<script id="doma-admin-stable-content-health">
 (function(){
   'use strict';
-  function showAdminUpgradePanel(){
-    const host=document.querySelector('#section-dashboard .panel-body')||document.querySelector('#section-dashboard');
-    if(!host||document.getElementById('adminUpgradePanel'))return;
-    const wrap=document.createElement('div');wrap.id='adminUpgradePanel';
-    wrap.innerHTML='<div class="admin-health"><h3>DOMA ACADEMY — Live Content Health</h3><p>Quick checks for published lessons, videos, homework resources and student activity. These cards read the same Supabase data used by the main Admin dashboard.</p><div class="admin-upgrade-summary"><div class="admin-upgrade-card"><small>Published lessons</small><b id="upPublishedLessons">—</b><span>All grades</span></div><div class="admin-upgrade-card"><small>Lessons with video</small><b id="upVideoLessons">—</b><span>video_url filled</span></div><div class="admin-upgrade-card"><small>Published homework</small><b id="upPublishedHomework">—</b><span>All grades</span></div><div class="admin-upgrade-card"><small>Homework with files</small><b id="upHomeworkFiles">—</b><span>attachment_url filled</span></div></div></div>';
-    host.appendChild(wrap);
-    refreshHealth();
-  }
-  async function refreshHealth(){
+  async function refresh(){
     if(typeof db==='undefined')return;
-    const [l,h]=await Promise.all([
-      db.from('lessons').select('id,video_url',{count:'exact'}).eq('is_published',true),
-      db.from('homework').select('*').eq('is_published',true)
-    ]);
-    const ls=l.data||[],hs=h.data||[];
-    const el=id=>document.getElementById(id); if(el('upPublishedLessons'))el('upPublishedLessons').textContent=l.count??ls.length; if(el('upVideoLessons'))el('upVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length; if(el('upPublishedHomework'))el('upPublishedHomework').textContent=h.count??hs.length; if(el('upHomeworkFiles'))el('upHomeworkFiles').textContent=hs.filter(x=>String(x.attachment_url||'').trim()).length;
+    const host=document.querySelector('#section-dashboard .panel-body')||document.querySelector('#section-dashboard');
+    if(!host)return;
+    if(!document.getElementById('domaStableHealth')){
+      const d=document.createElement('div');d.id='domaStableHealth';d.className='panel doma-panel';d.style.marginTop='18px';d.innerHTML='<div class="panel-head"><div><h3>Content Health</h3><span>Published lessons, videos and 100-word resources</span></div></div><div class="panel-body"><div id="domaStableHealthGrid" class="featuregrid"><div class="feature"><b>Loading…</b><p>Checking academy content.</p></div></div></div>';host.appendChild(d)
+    }
+    const r=await db.from('lessons').select('id,video_url,vocabulary_100,writing_100,is_published').eq('is_published',true).limit(5000);if(r.error)return;
+    const rows=r.data||[],videos=rows.filter(x=>String(x.video_url||'').trim()).length,vocab=rows.filter(x=>String(x.vocabulary_100||'').trim()).length,writing=rows.filter(x=>String(x.writing_100||'').trim()).length;
+    const g=document.getElementById('domaStableHealthGrid');if(g)g.innerHTML='<div class="feature"><b>'+rows.length+'</b><p>Published lessons</p></div><div class="feature"><b>'+videos+'</b><p>Lessons with video URL</p></div><div class="feature"><b>'+vocab+'</b><p>Lessons with vocabulary</p></div><div class="feature"><b>'+writing+'</b><p>Lessons with 100-word task</p></div>'
   }
-  async function loadHomeworkUpgraded(){
-    let q=db.from('homework').select('*').order('created_at',{ascending:false});
-    const g=$('hwGrade').value;if(g)q=q.eq('grade_id',g);const r=await q;if(r.error)return $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
-    let rows=r.data||[];const term=$('hwSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.description||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));
-    $('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Resource</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${fmt(x.due_at)}</td><td>${x.attachment_url?`<a class="admin-video-link" href="${esc(x.attachment_url)}" target="_blank" rel="noopener">Open file ↗</a>`:'<span class="mini-status">No file</span>'}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework('${x.id}')">Edit</button><button class="btn danger small" onclick="deleteHomework('${x.id}')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions('${x.id}')">Submissions</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No homework found.</div>';
-  }
-  function homeworkFormUpgraded(title,x=null){
-    const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';
-    openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Attachment / Resource URL</label><input id="hAttachment" value="${esc(x?.attachment_url||'')}" placeholder="https://… PDF / worksheet / image / resource"></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);
-    $('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true',attachment_url:$('hAttachment').value.trim()||null};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error){toast('Save failed: '+r.error.message);return}closeModal();toast('Homework saved.');await loadHomeworkUpgraded();await loadDashboard();refreshHealth()};
-  }
-  async function reviewSubmissionUpgraded(subId,hwId){
-    const r=await db.from('homework_submissions').select('*').eq('id',subId).single();if(r.error)return toast(r.error.message);const x=r.data;
-    openModal('Review Homework',`<form id="reviewForm"><div class="info-box" style="white-space:pre-wrap;margin-bottom:12px">${esc(x.answer_text||'')}</div><div class="form-grid"><div class="form-row"><label>Status</label><select id="rsStatus"><option ${x.status==='submitted'?'selected':''}>submitted</option><option ${x.status==='reviewed'?'selected':''}>reviewed</option><option ${x.status==='returned'?'selected':''}>returned</option></select></div><div class="form-row"><label>Grade</label><input id="rsGrade" type="number" min="0" value="${x.grade??''}"></div><div class="form-row full"><label>Feedback</label><textarea id="rsFeedback">${esc(x.feedback||'')}</textarea></div></div><button class="btn">Save Review</button></form>`);
-    $('reviewForm').onsubmit=async e=>{e.preventDefault();const status=$('rsStatus').value,grade=$('rsGrade').value===''?null:Number($('rsGrade').value),feedback=$('rsFeedback').value.trim();const u=await db.from('homework_submissions').update({status,grade,feedback}).eq('id',subId).select('id,student_id');if(u.error)return toast('Review failed: '+u.error.message);const studentId=u.data?.[0]?.student_id||x.student_id;if(studentId){await db.from('notifications').insert({student_id:studentId,title:'Homework reviewed',message:grade===null?'Your homework has been reviewed.':'Your homework has been reviewed. Grade: '+String(grade)+'/'+100+'.'}).catch(()=>{});}closeModal();toast('Submission reviewed.');await viewHomeworkSubmissions(hwId)}
-  }
-  // Replace only the homework-related functions; the rest of the existing production admin stays intact.
-  window.loadHomework=loadHomeworkUpgraded;window.homeworkForm=homeworkFormUpgraded;window.editHomework=async function(id){const r=await db.from('homework').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);homeworkFormUpgraded('Edit Homework',r.data)};window.reviewSubmission=reviewSubmissionUpgraded;
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(showAdminUpgradePanel,450));
-  window.addEventListener('load',()=>setTimeout(showAdminUpgradePanel,250));
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(refresh,900));
+  setInterval(refresh,15000);
 })();
 </script>
-
 </body>
 </html>
