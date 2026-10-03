@@ -388,10 +388,7 @@ async function loadGrades(){
   grades=(g.data||[]).filter(x=>x.is_active!==false);gradePrices={};
   const p=await sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount');
   if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:Number(x.monthly_amount)||150,annual:Number(x.annual_amount)||150})}
-  for(const g of grades){
-    if(!gradePrices[g.id]&&DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]};
-    if(!gradePrices[g.id])gradePrices[g.id]={monthly:150,annual:150};
-  }
+  for(const g of grades){if(!gradePrices[g.id]&&DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]}}
   $('gradeLoadStatus').textContent=grades.length+' grades';renderGrades();updatePricingRange();await refreshStudentState()
 }
 function updatePricingRange(){const values=Object.values(gradePrices);if(!values.length)return;const m=values.map(x=>x.monthly),a=values.map(x=>x.annual);document.querySelectorAll('[data-pricing-range]').forEach(el=>el.textContent=Math.min(...m)+'–'+Math.max(...m));document.querySelectorAll('[data-pricing-range-annual]').forEach(el=>el.textContent=Math.min(...a)+'–'+Math.max(...a))}
