@@ -208,6 +208,7 @@ function show(name){current=name;document.querySelectorAll('.section').forEach(s
 $('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
 
+aSync=async()=>{};
 async function authUser(){return (await db.auth.getUser()).data.user}
 async function getStaffProfile(){const u=await authUser();if(!u)return null;const r=await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle();if(r.error||!r.data)return null;return ['admin','teacher'].includes(r.data.role)?r.data:null}
 
@@ -308,7 +309,7 @@ async function deleteHomework(id){await deletePersisted('homework',id,'Homework'
 async function viewHomeworkSubmissions(id){const h=await db.from('homework').select('title').eq('id',id).single();if(h.error)return toast(h.error.message);const r=await db.from('homework_submissions').select('id,student_id,answer_text,status,grade,feedback,submitted_at,profiles(full_name,email)').eq('homework_id',id).order('submitted_at',{ascending:false});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Submissions — '+h.data.title,rows.length?'<table><thead><tr><th>Student</th><th>Answer</th><th>Status</th><th>Grade</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}<div class="muted">${esc(x.profiles?.email||'')}</div></td><td style="white-space:pre-wrap">${esc(x.answer_text||'')}</td><td>${esc(x.status)}</td><td>${x.grade??'—'}</td><td><button class="btn secondary small" onclick="reviewSubmission('${x.id}','${id}')">Review</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No submissions yet.</div>')}
 async function reviewSubmission(subId,hwId){const r=await db.from('homework_submissions').select('*').eq('id',subId).single();if(r.error)return toast(r.error.message);const x=r.data;openModal('Review Homework',`<form id="reviewForm"><div class="info-box" style="white-space:pre-wrap;margin-bottom:12px">${esc(x.answer_text||'')}</div><div class="form-grid"><div class="form-row"><label>Status</label><select id="rsStatus"><option ${x.status==='submitted'?'selected':''}>submitted</option><option ${x.status==='reviewed'?'selected':''}>reviewed</option><option ${x.status==='returned'?'selected':''}>returned</option></select></div><div class="form-row"><label>Grade</label><input id="rsGrade" type="number" min="0" value="${x.grade??''}"></div><div class="form-row full"><label>Feedback</label><textarea id="rsFeedback">${esc(x.feedback||'')}</textarea></div></div><button class="btn">Save Review</button></form>`);$('reviewForm').onsubmit=async e=>{e.preventDefault();const p={status:$('rsStatus').value,grade:$('rsGrade').value===''?null:Number($('rsGrade').value),feedback:$('rsFeedback').value.trim()};const u=await db.from('homework_submissions').update(p).eq('id',subId).select('id');if(u.error)return toast('Review failed: '+u.error.message);if(!Array.isArray(u.data)||!u.data.some(x=>x.id===subId))return toast('Review update was not confirmed. Check UPDATE RLS/permissions.');closeModal();toast('Submission reviewed.');await viewHomeworkSubmissions(hwId)}}
 
-async function loadStudents(){const r=await db.from('profiles').select('id,full_name,email,role,grade_id,created_at').eq('role','student').order('created_at',{ascending:false});if(r.error)return $('studentsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('studentSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.full_name||'').toLowerCase().includes(term)||(x.email||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('studentsTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Joined</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.full_name||'Student')}</b><div class="muted">${esc(x.email||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn secondary small" onclick="studentDetails('${x.id}')">Details</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No students found.</div>'}
+async function loadStudents(){const r=await db.from('profiles').select('id,full_name,email,role,grade_id,created_at').eq('role','student').order('created_at',{ascending:false});if(r.error)return $('studentsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('studentSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.full_name||'').toLowerCase().includes(term)||(x.email||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('studentsTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Joined</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.full_name||'Student')}</b><div class="muted">${esc(x.email||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${fmtDate(x.created_at)}</td><td><div class="actions"><button class="btn secondary small" onclick="studentDetails('${x.id}')">Details</button><button class="btn danger small" onclick="deleteStudentAccount('${x.id}',${JSON.stringify(x.email||x.full_name||'Student')})">Delete permanently</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No students found.</div>'}
 async function studentDetails(id){const [p,s,pr]=await Promise.all([db.from('profiles').select('id,full_name,email,grade_id,created_at').eq('id',id).single(),db.from('subscriptions').select('id,grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',id).order('expires_at',{ascending:false}),db.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at,lessons(title)').eq('student_id',id).order('last_opened_at',{ascending:false}).limit(100)]);if(p.error)return toast(p.error.message);openModal('Student Details',`<div class="grid-2"><div class="card"><b>${esc(p.data.full_name||'Student')}</b><p class="muted">${esc(p.data.email||'')}</p><p>Grade: ${esc(gradeName(p.data.grade_id))}</p></div><div class="card"><b>Subscriptions</b><p class="muted">${(s.data||[]).map(x=>esc(gradeName(x.grade_id)+' · '+x.plan+' · '+x.status+' · '+fmtDate(x.expires_at))).join('<br>')||'None'}</p></div></div><div class="card" style="margin-top:12px"><b>Recent Progress</b><p class="muted">${(pr.data||[]).slice(0,15).map(x=>esc((x.lessons?.title||'Lesson')+' · '+x.progress_percent+'% · '+(x.completed?'Completed':'In progress'))).join('<br>')||'No progress yet.'}</p></div>`)}
 
 async function loadSales(){
@@ -332,7 +333,7 @@ async function loadSales(){
     const sx=subByStudent[x.student_id];
     let expiry='—', badge='';
     if(sx){const d=Math.ceil((new Date(sx.expires_at)-Date.now())/86400000);expiry=fmtDate(sx.expires_at);if(sx.status==='active'&&d>=0&&d<=7)badge='<span class="expiry-badge">'+(d<=1?'Expires tomorrow':d+' days left')+'</span>';else if(sx.status==='active'&&d<0)badge='<span class="expiry-badge">Expired</span>'}
-    return `<tr><td><b>${esc(x.student_name)}</b><div class="muted">${esc(x.student_email)}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.plan||'Monthly')}</td><td>${x.amount} EGP</td><td><a style="color:#8fd4a9" target="_blank" rel="noopener" href="https://wa.me/20${esc(x.student_phone).replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')}">${esc(x.student_phone)}</a></td><td>${sx?`<div>${esc(sx.status||'')} · ${expiry}</div>${badge}`:'—'}</td><td>${x.proof_path?`<button class="btn secondary small" onclick="viewReceipt('${x.id}')">View</button>`:'—'}</td><td><span class="pill ${x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn'}">${esc(x.status)}</span></td><td>${x.status==='pending'?`<div class="actions"><button class="btn ok small" onclick="approveSub('${x.id}')">Accept</button><button class="btn danger small" onclick="rejectSub('${x.id}')">Reject</button></div>`:'—'}</td></tr>`;
+    return `<tr><td><b>${esc(x.student_name)}</b><div class="muted">${esc(x.student_email)}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.plan||'Monthly')}</td><td>${x.amount} EGP</td><td><a style="color:#8fd4a9" target="_blank" rel="noopener" href="https://wa.me/20${esc(x.student_phone).replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')}">${esc(x.student_phone)}</a></td><td>${sx?`<div>${esc(sx.status||'')} · ${expiry}</div>${badge}`:'—'}</td><td>${x.proof_path?`<button class="btn secondary small" onclick="viewReceipt('${x.id}')">View</button>`:'—'}</td><td><span class="pill ${x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn'}">${esc(x.status)}</span></td><td>${x.status==='pending'?`<div class="actions"><button class="btn ok small" onclick="approveSub('${x.id}')">Accept</button><button class="btn danger small" onclick="rejectSub('${x.id}')">Reject</button></div>`:x.status==='approved'?`<div class="actions"><button class="btn danger small" onclick="deleteStudentAccount('${x.student_id}',${JSON.stringify(x.student_email||x.student_name||'Student')})">Delete student</button></div>`:'—'}</td></tr>`;
   }).join('')+'</tbody></table>':'<div class="empty">No subscription requests yet.</div>'
 }
 async function viewReceipt(id){const r=await db.from('subscription_requests').select('proof_path').eq('id',id).single();if(r.error||!r.data?.proof_path)return toast('Receipt not found.');const s=await db.storage.from('payment-proofs').createSignedUrl(r.data.proof_path,300);if(s.error)return toast('Receipt error: '+s.error.message);window.open(s.data.signedUrl,'_blank')}
@@ -452,8 +453,47 @@ async function loadThirdSecondarySummary(){
 }
 
 
+async function loadThirdSecondarySummary(){
+  if(typeof db==='undefined')return;
+  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
+  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
+  const id=g.data.id;
+  const [u,l,q]=await Promise.all([
+    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
+    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
+    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
+  ]);
+  const ls=l.data||[];
+  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
+  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
+  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
+  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
+  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
+  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
+}
 
 
+async function loadThirdSecondarySummary(){
+  if(typeof db==='undefined')return;
+  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
+  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
+  const id=g.data.id;
+  const [u,l,q]=await Promise.all([
+    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
+    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
+    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
+  ]);
+  const ls=l.data||[];
+  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
+  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
+  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
+  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
+  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
+  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
+}
+
+loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
+$('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
 <script id="doma-admin-all-upgrades-script">
@@ -552,14 +592,13 @@ async function loadThirdSecondarySummary(){
   window.editDailyWord=async function(id){const r=await db.from('daily_words').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);dailyWordForm('Edit Daily Word',r.data)};
   window.deleteDailyWord=async function(id){
     if(!confirm('Delete this Daily Word permanently?'))return;
-    const before=await db.from('daily_words').select('id').eq('id',id).maybeSingle();
-    if(before.error)return toast('Cannot check Daily Word: '+before.error.message);
-    if(!before.data)return toast('Daily Word was not found, or SELECT RLS is blocking access.');
-    const r=await db.from('daily_words').delete().eq('id',id);
+    const r=await db.from('daily_words').delete().eq('id',id).select('id');
     if(r.error)return toast('Delete failed: '+r.error.message);
+    const returned=Array.isArray(r.data)&&r.data.some(row=>row.id===id);
+    if(!returned)return toast('Nothing was deleted. Check DELETE RLS/permissions.');
     const verify=await db.from('daily_words').select('id').eq('id',id).maybeSingle();
-    if(verify.error)return toast('Delete ran, but verification failed: '+verify.error.message);
-    if(verify.data)return toast('Delete was blocked by database permissions or did not persist. Check DELETE RLS.');
+    if(verify.error)return toast('Delete verification failed: '+verify.error.message);
+    if(verify.data)return toast('Delete did not persist. The Daily Word still exists.');
     toast('Daily Word deleted permanently.');
     await loadDailyWords();
   };
@@ -601,22 +640,32 @@ async function deleteAndVerify(table,column,value){
   }catch(e){return e}
 }
 async function robustDelete(table,id,label,after){
- if(!confirm('Delete '+label+' permanently? This removes dependent records where supported.'))return;
- const before=await db.from(table).select('id').eq('id',id).maybeSingle();
- if(before.error)return toast('Cannot check '+label+': '+before.error.message);
- if(!before.data)return toast(label+' was not found, or SELECT RLS is blocking access.');
- const deps={grades:[['units','grade_id'],['lessons','grade_id'],['quizzes','grade_id'],['homework','grade_id'],['certificates','grade_id']],units:[['lessons','unit_id']],lessons:[['lesson_progress','lesson_id']],quizzes:[['quiz_questions','quiz_id'],['quiz_attempts','quiz_id']],homework:[['homework_submissions','homework_id']],certificates:[],reviews:[]};
- for(const [child,col] of (deps[table]||[])){
-   const e=await deleteRows(child,col,id);
-   if(e)return toast('Delete stopped at '+child+': '+e.message);
- }
- const r=await db.from(table).delete().eq('id',id);
- if(r.error)return toast('Delete failed: '+r.error.message);
- const afterDelete=await db.from(table).select('id').eq('id',id).maybeSingle();
- if(afterDelete.error)return toast('Delete ran, but verification failed: '+afterDelete.error.message);
- if(afterDelete.data)return toast('Delete was blocked by database permissions or did not persist. Check DELETE RLS for '+table+'.');
- toast(label+' deleted permanently.');
- if(typeof after==='function')await after();
+  if(!confirm('Delete '+label+' permanently? This removes dependent records where supported.'))return;
+  const deps={
+    grades:[['units','grade_id'],['lessons','grade_id'],['quizzes','grade_id'],['homework','grade_id'],['certificates','grade_id']],
+    units:[['lessons','unit_id']],
+    lessons:[['lesson_progress','lesson_id']],
+    quizzes:[['quiz_questions','quiz_id'],['quiz_attempts','quiz_id']],
+    homework:[['homework_submissions','homework_id']],
+    certificates:[],
+    reviews:[]
+  };
+  const errors=[];
+  for(const [child,col] of (deps[table]||[])){
+    const e=await deleteAndVerify(child,col,id);
+    if(e)errors.push(child+': '+(e.message||String(e)));
+  }
+  if(errors.length){
+    toast('Delete stopped. Check related-table DELETE RLS/foreign keys: '+errors.join(' | '));
+    return;
+  }
+  const e=await deleteAndVerify(table,'id',id);
+  if(e){
+    if(e.code==='DELETE_NOT_PERSISTED')return toast('Delete was not persisted. Check DELETE RLS/policies for '+table+'.');
+    return toast('Delete failed: '+(e.message||String(e)));
+  }
+  toast(label+' deleted permanently.');
+  if(typeof after==='function')await after();
 }
 window.deletePersisted=robustDelete;
 window.deleteUnit=id=>robustDelete('units',id,'Unit',loadUnits);
@@ -625,6 +674,21 @@ window.deleteQuiz=id=>robustDelete('quizzes',id,'Quiz',loadQuizzes);
 window.deleteHomework=id=>robustDelete('homework',id,'Homework',loadHomework);
 window.deleteCertificate=id=>robustDelete('certificates',id,'Certificate',loadCertificates);
 window.deleteReview=id=>robustDelete('reviews',id,'Review',loadReviews);
+
+window.deleteStudentAccount=async function(id,label){
+  const name=String(label||'this student');
+  if(!confirm('FINAL DELETE\n\nThis will permanently delete the student account '+name+' from Supabase Auth and remove the linked profile, subscriptions, requests, progress, quiz attempts, homework submissions, certificates and notifications where the database cascade applies.\n\nThis cannot be undone.\n\nContinue?'))return;
+  const typed=prompt('Type DELETE to confirm permanent account deletion:');
+  if(typed!=='DELETE')return toast('Deletion cancelled.');
+  const r=await db.rpc('doma_delete_student',{p_student_id:id});
+  if(r.error)return toast('Permanent deletion failed: '+r.error.message);
+  toast('Student account deleted permanently.');
+  closeModal();
+  await loadStudents();
+  await loadSales();
+  await loadDashboard();
+};
+
 window.studentDetails=async function(id){
  const p=await db.from('profiles').select('id,full_name,email,phone,grade_id,role,created_at,last_login_at,is_suspended').eq('id',id).single();if(p.error)return toast(p.error.message);
  const [subs,prog,attempts,hw,certs,activity]=await Promise.all([
@@ -639,7 +703,7 @@ window.studentDetails=async function(id){
  const days=active?Math.ceil((new Date(active.expires_at)-Date.now())/86400000):null;const expiry=active?(days<=1?'1 day':days<=3?days+' days':days<=7?days+' days':'Active'):'No active subscription';
  const history=s.map(x=>'<div class="history-row"><strong>'+esc(gradeName(x.grade_id))+' • '+esc(x.plan||'Monthly')+' • '+esc(String(x.amount||0))+' EGP</strong><br><span>'+fmtDate(x.starts_at)+' → '+fmtDate(x.expires_at)+' • '+esc(x.status||'')+'</span></div>').join('');
  const act=(activity.data||[]).map(x=>'<div class="history-row"><strong>'+esc(String(x.activity_type||'Activity').replace(/_/g,' '))+'</strong><br><span>'+esc(x.metadata?.title||'Student activity')+' • '+fmt(x.created_at)+'</span></div>').join('');
- openModal('Student Profile',`<div><div class="head" style="margin-bottom:8px"><div><h3>${esc(p.data.full_name||'Student')}</h3><p>${esc(p.data.email||'')}</p></div><div class="actions"><button class="btn wa-btn small" onclick="openStudentWhatsApp('${esc(p.data.phone||'')}')">WhatsApp</button><button class="btn secondary small" onclick="studentExtendSubscription('${id}')">Extend</button><button class="btn warn small" onclick="studentToggleSuspend('${id}',${!p.data.is_suspended})">${p.data.is_suspended?'Unsuspend':'Suspend'}</button></div></div><div class="student-pro-grid"><div class="student-pro-stat"><small>Grade</small><b>${esc(gradeName(p.data.grade_id)||'—')}</b></div><div class="student-pro-stat"><small>Progress</small><b>${progress}%</b></div><div class="student-pro-stat"><small>Quiz average</small><b>${avg}%</b></div><div class="student-pro-stat"><small>Tests</small><b>${at.length}</b></div></div><div class="student-pro-grid"><div class="student-pro-stat"><small>Completed lessons</small><b>${completed}</b></div><div class="student-pro-stat"><small>Homework</small><b>${h.length}</b></div><div class="student-pro-stat"><small>Certificates</small><b>${(certs.data||[]).length}</b></div><div class="student-pro-stat"><small>Subscription</small><b>${esc(expiry)}</b></div></div><div class="info-box"><b>Registration:</b> ${fmt(p.data.created_at)} &nbsp; <b>Last login:</b> ${fmt(p.data.last_login_at)} &nbsp; <b>Phone:</b> ${esc(p.data.phone||'—')}</div><h4 style="margin:15px 0 8px">Subscription History</h4>${history||'<div class="empty">No subscription history.</div>'}<h4 style="margin:15px 0 8px">Recent Activity</h4>${act||'<div class="empty">No activity recorded.</div>'}</div>`);
+ openModal('Student Profile',`<div><div class="head" style="margin-bottom:8px"><div><h3>${esc(p.data.full_name||'Student')}</h3><p>${esc(p.data.email||'')}</p></div><div class="actions"><button class="btn wa-btn small" onclick="openStudentWhatsApp('${esc(p.data.phone||'')}')">WhatsApp</button><button class="btn secondary small" onclick="studentExtendSubscription('${id}')">Extend</button><button class="btn warn small" onclick="studentToggleSuspend('${id}',${!p.data.is_suspended})">${p.data.is_suspended?'Unsuspend':'Suspend'}</button><button class="btn danger small" onclick="deleteStudentAccount('${id}',${JSON.stringify(p.data.email||p.data.full_name||'Student')})">Delete permanently</button></div></div><div class="student-pro-grid"><div class="student-pro-stat"><small>Grade</small><b>${esc(gradeName(p.data.grade_id)||'—')}</b></div><div class="student-pro-stat"><small>Progress</small><b>${progress}%</b></div><div class="student-pro-stat"><small>Quiz average</small><b>${avg}%</b></div><div class="student-pro-stat"><small>Tests</small><b>${at.length}</b></div></div><div class="student-pro-grid"><div class="student-pro-stat"><small>Completed lessons</small><b>${completed}</b></div><div class="student-pro-stat"><small>Homework</small><b>${h.length}</b></div><div class="student-pro-stat"><small>Certificates</small><b>${(certs.data||[]).length}</b></div><div class="student-pro-stat"><small>Subscription</small><b>${esc(expiry)}</b></div></div><div class="info-box"><b>Registration:</b> ${fmt(p.data.created_at)} &nbsp; <b>Last login:</b> ${fmt(p.data.last_login_at)} &nbsp; <b>Phone:</b> ${esc(p.data.phone||'—')}</div><h4 style="margin:15px 0 8px">Subscription History</h4>${history||'<div class="empty">No subscription history.</div>'}<h4 style="margin:15px 0 8px">Recent Activity</h4>${act||'<div class="empty">No activity recorded.</div>'}</div>`);
 };
 window.studentToggleSuspend=async function(id,v){const r=await db.from('profiles').update({is_suspended:v}).eq('id',id).select('id,is_suspended');if(r.error)return toast('Could not change account status: '+r.error.message);if(!r.data?.length)return toast('Account status update was not confirmed. Check UPDATE RLS.');toast(v?'Student suspended.':'Student reactivated.');await studentDetails(id);await loadStudents()};
 window.studentExtendSubscription=async function(id){const r=await db.from('subscriptions').select('*').eq('student_id',id).eq('status','active').order('expires_at',{ascending:false}).limit(1).maybeSingle();if(r.error||!r.data)return toast('No active subscription found.');const old=new Date(r.data.expires_at),base=old>Date.now()?old:new Date();base.setDate(base.getDate()+30);const u=await db.from('subscriptions').update({expires_at:base.toISOString(),status:'active'}).eq('id',r.data.id).select('id,expires_at');if(u.error)return toast('Extension failed: '+u.error.message);if(!u.data?.length)return toast('Extension was not confirmed. Check UPDATE RLS.');toast('Subscription extended by 30 days.');await studentDetails(id);await loadSales();};
