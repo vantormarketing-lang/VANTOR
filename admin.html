@@ -82,60 +82,7 @@
     </header>
 
     <div class="content">
-      <section id="section-dashboard" class="section active">
-        <div class="head"><div><h2>Academy Dashboard</h2><p>Live counts and quick access to the main academy systems.</p></div><button class="btn secondary" id="dashboardRefresh">Refresh</button></div>
-        <div class="grid">
-          <div class="card stat"><div class="muted">Students</div><div id="stStudents" class="num">—</div></div>
-          <div class="card stat"><div class="muted">Published Lessons</div><div id="stLessons" class="num">—</div></div>
-          <div class="card stat"><div class="muted">Pending Requests</div><div id="stPending" class="num">—</div></div>
-          <div class="card stat"><div class="muted">Active Subscriptions</div><div id="stActive" class="num">—</div></div>
-        </div>
-        <div class="card" id="thirdSecondaryPanel" style="margin-top:14px;border-color:#6f2940">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-            <div><b>3rd Secondary — 2026/2027</b><p class="muted" id="thirdSecondaryStatus">Content status will load from Supabase.</p></div>
-            <button class="btn secondary" id="openThirdSecondary">Open 3rd Secondary Lessons</button>
-          </div>
-          <div class="grid" style="margin-top:10px">
-            <div class="card stat"><div class="muted">Units</div><div id="tsUnits" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons</div><div id="tsLessons" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Quizzes</div><div id="tsQuizzes" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons with Video</div><div id="tsVideoLessons" class="num">—</div></div>
-          </div>
-        </div>
-
-        <div class="card" id="thirdSecondaryPanel2" style="margin-top:14px;border-color:#6f2940">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-            <div><b>3rd Secondary — 2026/2027</b><p class="muted" id="thirdSecondaryStatus2">Content status will load from Supabase.</p></div>
-            <button class="btn secondary" id="openThirdSecondary2">Open 3rd Secondary Lessons</button>
-          </div>
-          <div class="grid" style="margin-top:10px">
-            <div class="card stat"><div class="muted">Units</div><div id="tsUnits2" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons</div><div id="tsLessons2" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Quizzes</div><div id="tsQuizzes2" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons with Video</div><div id="tsVideoLessons2" class="num">—</div></div>
-          </div>
-        </div>
-
-        <div class="card" id="thirdSecondaryPanel3" style="margin-top:14px;border-color:#6f2940">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-            <div><b>3rd Secondary — 2026/2027</b><p class="muted" id="thirdSecondaryStatus3">Content status will load from Supabase.</p></div>
-            <button class="btn secondary" id="openThirdSecondary3">Open 3rd Secondary Lessons</button>
-          </div>
-          <div class="grid" style="margin-top:10px">
-            <div class="card stat"><div class="muted">Units</div><div id="tsUnits3" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons</div><div id="tsLessons3" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Quizzes</div><div id="tsQuizzes3" class="num">—</div></div>
-            <div class="card stat"><div class="muted">Lessons with Video</div><div id="tsVideoLessons3" class="num">—</div></div>
-          </div>
-        </div>
-
-        <div class="grid" style="margin-top:14px">
-          <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
-          <div class="card"><b>Assessment</b><p class="muted">Create quizzes, keep answers private, review attempts and homework.</p></div>
-          <div class="card"><b>Students</b><p class="muted">See student profiles, grade, progress and certificates.</p></div>
-          <div class="card"><b>Sales</b><p class="muted">Verify Mobile Cash receipts and approve or reject access requests.</p></div>
-        </div>
-      </section>
+      
 
       <section id="section-grades" class="section">
         <div class="head"><div><h2>Grades</h2><p>Activate or deactivate the six academy grades.</p></div><button class="btn secondary" id="gradesRefresh">Refresh</button></div>
@@ -419,12 +366,12 @@ async function loadActivity(){
 async function loadThirdSecondarySummary(){
   if(typeof db==='undefined')return;
   const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
-  const statusEls=[document.getElementById('thirdSecondaryStatus'),document.getElementById('thirdSecondaryStatus2'),document.getElementById('thirdSecondaryStatus3')].filter(Boolean);
-  const unitEls=[document.getElementById('tsUnits'),document.getElementById('tsUnits2'),document.getElementById('tsUnits3')].filter(Boolean);
-  const lessonEls=[document.getElementById('tsLessons'),document.getElementById('tsLessons2'),document.getElementById('tsLessons3')].filter(Boolean);
-  const quizEls=[document.getElementById('tsQuizzes'),document.getElementById('tsQuizzes2'),document.getElementById('tsQuizzes3')].filter(Boolean);
-  const videoEls=[document.getElementById('tsVideoLessons'),document.getElementById('tsVideoLessons2'),document.getElementById('tsVideoLessons3')].filter(Boolean);
-  const openBtns=[document.getElementById('openThirdSecondary'),document.getElementById('openThirdSecondary2'),document.getElementById('openThirdSecondary3')].filter(Boolean);
+  const statusEls=[document.getElementById('thirdSecondaryStatus')].filter(Boolean);
+  const unitEls=[document.getElementById('tsUnits')].filter(Boolean);
+  const lessonEls=[document.getElementById('tsLessons')].filter(Boolean);
+  const quizEls=[document.getElementById('tsQuizzes')].filter(Boolean);
+  const videoEls=[document.getElementById('tsVideoLessons')].filter(Boolean);
+  const openBtns=[document.getElementById('openThirdSecondary')].filter(Boolean);
   if(g.error||!g.data){statusEls.forEach(el=>el.textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.');return}
   const id=g.data.id;
   const [u,l,q]=await Promise.all([
