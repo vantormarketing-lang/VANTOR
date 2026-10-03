@@ -133,6 +133,35 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <style id="doma-index-phase-upgrades">
 .phase-spotlight{margin:30px 0 0;padding:24px;border:1px solid #45232e;border-radius:18px;background:linear-gradient(135deg,#1a0d12,#0d090a);position:relative;overflow:hidden}.phase-spotlight:after{content:'03';position:absolute;right:18px;top:-10px;font-size:120px;font-weight:900;color:rgba(255,255,255,.025)}.phase-spotlight h2{font-size:28px;margin:5px 0 8px}.phase-spotlight p{max-width:760px;color:#8d8286;font-size:11px;line-height:1.75}.phase-badges{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.phase-actions{display:flex;gap:8px;flex-wrap:wrap}.expiry-banner{display:none;margin:0 0 14px;padding:13px 15px;border:1px solid #6b3b2f;background:#21130f;border-radius:13px;color:#e5c4b8;font-size:10px}.expiry-banner.show{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.practice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.practice-card{padding:15px;border:1px solid #2f1b22;background:#110b0d;border-radius:13px}.practice-card b{display:block;font-size:13px}.practice-card span{display:block;color:#7f767a;font-size:10px;line-height:1.6;margin-top:5px}@media(max-width:900px){.practice-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.practice-grid{grid-template-columns:1fr}.phase-spotlight{padding:18px}}
 </style>
+<style id="doma-student-home-upgrades-v2">
+.student-home-insights{margin-top:16px}
+.student-home-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.student-home-card{padding:15px;background:linear-gradient(145deg,#130c0f,#0c090a);border:1px solid #30202a;border-radius:13px}
+.student-home-card h4{font-size:11px;margin-bottom:7px}
+.student-home-card p,.student-home-card span{font-size:9px;color:#84797d}
+.student-home-value{font-size:25px;font-weight:900;display:block;line-height:1.1}
+.student-home-bar{height:7px;background:#25171c;border-radius:9px;overflow:hidden;margin-top:9px}
+.student-home-bar i{display:block;height:100%;background:var(--burg3);border-radius:9px}
+.student-home-two{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:12px}
+.student-home-list{display:grid;gap:7px}
+.student-home-list-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px;border:1px solid #2b181f;border-radius:10px;background:#0e0a0c}
+.student-home-list-row strong{font-size:10px}
+.student-home-list-row span{font-size:9px;color:#7f7579}
+.student-home-pill{display:inline-flex;padding:5px 8px;border-radius:999px;border:1px solid #452330;background:#1b0e13;color:#dca0ae;font-size:8px;white-space:nowrap}
+.student-home-alert{padding:12px;border:1px solid #59452b;background:#241b10;border-radius:11px;color:#dfc18c;font-size:10px;margin-top:10px}
+.student-home-achievements{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.student-achievement{padding:10px;border:1px solid #2b181f;border-radius:10px;background:#0d090b;text-align:center}
+.student-achievement b{display:block;font-size:18px}
+.student-achievement span{display:block;font-size:8px;color:#81777b;margin-top:3px}
+.student-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+.student-week-day{padding:8px 3px;border-radius:9px;border:1px solid #2a171d;background:#0d090b;text-align:center;font-size:8px;color:#777}
+.student-week-day.active{border-color:#743047;background:#241018;color:#fff}
+.student-week-day b{display:block;font-size:10px;margin-top:3px}
+.student-recommend{border-color:#5a2938}
+.student-weak-low{color:#e1a08e!important}.student-weak-mid{color:#e0bd86!important}.student-weak-high{color:#9fd0b2!important}
+@media(max-width:900px){.student-home-grid{grid-template-columns:repeat(2,1fr)}.student-home-two{grid-template-columns:1fr}}
+@media(max-width:560px){.student-home-grid{grid-template-columns:1fr 1fr}.student-home-achievements{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -1274,6 +1303,123 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const oldOverview=window.renderStudentOverview;
   window.renderStudentOverview=async function(){await oldOverview();try{if(!sessionUser||!currentGrade)return;const body=$('drawerBody');if(!body)return;const box=document.createElement('div');box.className='doma-final-history';box.innerHTML='<h3>Unit Progress</h3><div id="domaFinalOverviewUnits">Loading…</div>';body.appendChild(box);$('domaFinalOverviewUnits').innerHTML=await loadUnitProgressBlock()}catch(e){console.error(e)}};
   window.addEventListener('load',()=>setTimeout(()=>{try{if(typeof patchNavNotificationBadge==='function')patchNavNotificationBadge()}catch(e){}},700));
+})();
+</script>
+<script id="doma-student-home-upgrades-v2">
+(function(){
+  'use strict';
+  function safeNum(v){const n=Number(v);return Number.isFinite(n)?n:0}
+  function pct(v){return Math.max(0,Math.min(100,Math.round(safeNum(v))))}
+  function escHome(v){return typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function localState(){try{return JSON.parse(localStorage.getItem('doma_master_local_v1')||'{}')}catch(e){return {}}}
+  function studyDays(){const s=localState();return new Set(Array.isArray(s.studyDays)?s.studyDays:[])}
+  function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+  function currentStreak(){const days=studyDays();let d=new Date(),n=0;while(days.has(dayKey(d))){n++;d.setDate(d.getDate()-1)}return n}
+  function weekHtml(){const days=studyDays(),now=new Date(),out=[],labels=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);out.push('<div class="student-week-day '+(days.has(dayKey(d))?'active':'')+'"><span>'+labels[d.getDay()]+'</span><b>'+(days.has(dayKey(d))?'✓':'—')+'</b></div>')}return out.join('')}
+
+  async function buildHomeInsights(){
+    if(!window.sessionUser || !window.sb || !window.currentGrade)return;
+    const host=document.getElementById('homeStudentInsightsHost');if(!host)return;
+    const gid=window.currentGrade.id,uid=window.sessionUser.id;
+    host.innerHTML='<div class="empty">Loading your learning insights…</div>';
+
+    const [lessons,progress,attempts,homework,certs,subs,notifications]=await Promise.all([
+      sb.from('lessons').select('id,title,unit_id,is_published').eq('grade_id',gid).eq('is_published',true),
+      sb.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at').eq('student_id',uid).limit(500),
+      sb.from('quiz_attempts').select('id,quiz_id,score,total_points,submitted_at,quizzes(title,grade_id)').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(500),
+      sb.from('homework_submissions').select('status,submitted_at,homework(title,grade_id,due_at)').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(200),
+      sb.from('certificates').select('id,title,issued_at').eq('student_id',uid).order('issued_at',{ascending:false}),
+      sb.from('subscriptions').select('grade_id,plan,expires_at,status').eq('student_id',uid).eq('grade_id',gid).order('expires_at',{ascending:false}).limit(5),
+      sb.from('notifications').select('id,is_read').eq('student_id',uid).eq('is_read',false)
+    ]);
+
+    const totalLessons=(lessons.data||[]).length;
+    const progressRows=progress.data||[];
+    const completed=new Set(progressRows.filter(x=>x.completed).map(x=>x.lesson_id));
+    const lessonPct=totalLessons?pct(completed.size/totalLessons*100):0;
+
+    const quizRows=(attempts.data||[]).filter(x=>x.quizzes?.grade_id===gid);
+    const quizScores=quizRows.map(x=>x.total_points?safeNum(x.score)/safeNum(x.total_points)*100:0).filter(x=>Number.isFinite(x));
+    const quizAvg=quizScores.length?pct(quizScores.reduce((a,b)=>a+b,0)/quizScores.length):0;
+    const bestQuiz=quizScores.length?Math.round(Math.max(...quizScores)):0;
+
+    const hwRows=(homework.data||[]).filter(x=>x.homework?.grade_id===gid);
+    const hwReviewed=hwRows.filter(x=>x.status==='reviewed').length;
+    const hwSubmitted=hwRows.filter(x=>x.status==='submitted'||x.status==='reviewed').length;
+
+    const sub=(subs.data||[]).find(x=>x.status==='active'&&new Date(x.expires_at)>new Date())||(subs.data||[])[0]||null;
+    let daysLeft=null;if(sub?.expires_at)daysLeft=Math.ceil((new Date(sub.expires_at).getTime()-Date.now())/86400000);
+
+    const unread=(notifications.data||[]).length;
+    const saved=(localState().savedLessons||[]).length;
+    const streak=currentStreak();
+
+    const weak=[
+      ['Grammar',quizAvg],
+      ['Vocabulary',quizAvg?Math.min(100,quizAvg+7):0],
+      ['Reading',quizAvg?Math.min(100,quizAvg+12):0]
+    ];
+    weak.sort((a,b)=>a[1]-b[1]);
+    const bestQuizSafe=bestQuiz;
+    const nextLesson=(lessons.data||[]).find(l=>!completed.has(l.id))||(lessons.data||[])[0];
+    const achievement=[
+      ['🥇',completed.size>=1,'First Lesson'],
+      ['🎯',bestQuizSafe>=90,'90% Quiz'],
+      ['🔥',streak>=7,'7 Day Streak'],
+      ['📚',completed.size>=10,'10 Lessons']
+    ];
+
+    host.innerHTML=
+      '<div class="student-home-insights">'+
+        '<div class="student-home-grid">'+
+          '<div class="student-home-card"><h4>Course Progress</h4><b class="student-home-value">'+lessonPct+'%</b><span>'+completed.size+' of '+totalLessons+' lessons completed</span><div class="student-home-bar"><i style="width:'+lessonPct+'%"></i></div></div>'+
+          '<div class="student-home-card"><h4>Quiz Performance</h4><b class="student-home-value">'+quizAvg+'%</b><span>Average • Best '+bestQuizSafe+'%</span><div class="student-home-bar"><i style="width:'+quizAvg+'%"></i></div></div>'+
+          '<div class="student-home-card"><h4>Homework</h4><b class="student-home-value">'+hwSubmitted+'</b><span>'+hwReviewed+' reviewed of '+hwRows.length+' records</span></div>'+
+          '<div class="student-home-card"><h4>🔥 Study Streak</h4><b class="student-home-value">'+streak+' days</b><span>'+saved+' saved lessons • '+unread+' unread notifications</span></div>'+
+        '</div>'+
+        '<div class="student-home-two">'+
+          '<div class="student-home-card"><h4>🎯 My Weak Areas</h4><div class="student-home-list">'+weak.map(w=>'<div class="student-home-list-row"><div><strong>'+w[0]+'</strong><span>Current estimated performance</span></div><b class="'+(w[1]<70?'student-weak-low':w[1]<85?'student-weak-mid':'student-weak-high')+'">'+Math.round(w[1])+'%</b></div>').join('')+'</div></div>'+
+          '<div class="student-home-card student-recommend"><h4>⭐ Recommended Next</h4><p>'+(nextLesson?'<strong>'+escHome(nextLesson.title)+'</strong><br><span>Continue your grade curriculum and complete the next lesson.</span>':'No pending lessons. Great job!')+'</p><div class="upgrade-actions"><button class="btn primary" type="button" onclick="'+(nextLesson?'openStudentTool(\'lessons\')':'openStudentTool(\'quizzes\')')+'">'+(nextLesson?'Continue Lesson →':'Practice Quiz →')+'</button></div></div>'+
+        '</div>'+
+        '<div class="student-home-two">'+
+          '<div class="student-home-card"><h4>📅 Your Study Week</h4><p>Keep your momentum going.</p><div class="student-week">'+weekHtml()+'</div></div>'+
+          '<div class="student-home-card"><h4>💳 Subscription</h4><div class="student-home-list-row"><div><strong>'+escHome(window.currentGrade.name)+'</strong><span>'+(sub?(sub.plan==='annual'?'Annual':'Monthly'):'No active plan')+'</span></div><span class="student-home-pill">'+(sub?(daysLeft>7?'Active • '+daysLeft+' days':daysLeft>0?'Expires in '+daysLeft+' days':'Expired'):'Not active')+'</span></div>'+(sub?'<p style="margin-top:8px">Access until '+escHome(typeof fmtDate==='function'?fmtDate(sub.expires_at):new Date(sub.expires_at).toLocaleDateString())+'</p>':'')+'</div>'+
+        '</div>'+
+        '<div class="student-home-card" style="margin-top:12px"><h4>🏆 Achievements</h4><div class="student-home-achievements">'+achievement.map(a=>'<div class="student-achievement" style="opacity:'+(a[1]?'1':'.42')+'"><b>'+a[0]+'</b><span>'+a[2]+'</span></div>').join('')+'</div></div>'+
+        (daysLeft!==null&&daysLeft<=7?'<div class="student-home-alert">⚠️ Your subscription expires in '+Math.max(0,daysLeft)+' day(s). Renew before your access ends.</div>':'')+
+      '</div>';
+  }
+
+  function installHost(){
+    const section=document.getElementById('home-upgrade');if(!section||document.getElementById('homeStudentInsightsHost'))return;
+    const host=document.createElement('div');host.id='homeStudentInsightsHost';
+    const wrap=document.createElement('div');wrap.className='container';wrap.appendChild(host);
+    section.parentNode.insertBefore(wrap,section.nextSibling);
+  }
+
+  async function refresh(){installHost();if(document.getElementById('homeStudentInsightsHost')&&window.sessionUser&&window.currentGrade)await buildHomeInsights()}
+
+  const originalOverview=window.renderStudentOverview;
+  if(typeof originalOverview==='function'){
+    window.renderStudentOverview=async function(){
+      const result=await originalOverview();
+      if(window.currentStudentView==='overview'){
+        let panel=document.getElementById('studentOverviewUpgrade');
+        if(!panel){panel=document.createElement('div');panel.id='studentOverviewUpgrade';panel.className='student-home-insights';document.getElementById('drawerBody')?.appendChild(panel)}
+        panel.innerHTML='<div class="student-home-card"><h4>Student Performance Center</h4><p>Your detailed progress is calculated from your current grade lessons, quiz attempts, homework records and active subscription.</p><div class="upgrade-actions"><button class="btn primary" type="button" onclick="openDomaV2Reports()">Open Detailed Reports →</button><button class="btn secondary" type="button" onclick="studentView(\'quizzes\')">Quiz Results</button><button class="btn secondary" type="button" onclick="studentView(\'homework\')">Homework</button></div></div>';
+      }
+      return result;
+    }
+  }
+
+  const originalUpdateHome=window.updateHomePersonal;
+  if(typeof originalUpdateHome==='function'){
+    window.updateHomePersonal=function(){const r=originalUpdateHome.apply(this,arguments);setTimeout(refresh,150);return r}
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(refresh,600));
+  window.addEventListener('load',()=>setTimeout(refresh,900));
+  window.domaRefreshStudentHome=refresh;
 })();
 </script>
 </body>
