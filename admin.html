@@ -542,7 +542,7 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
 \n<script id="doma-daily-words-admin-script">
 (function(){
   'use strict';
-  const today=()=>new Date().toISOString().slice(0,10);
+  const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Cairo'}).format(new Date());
   function ensureDate(){if($('dailyWordsDate')&&!$('dailyWordsDate').value)$('dailyWordsDate').value=today()}
   function dailyQuery(){
     let q=db.from('daily_words').select('*').order('position',{ascending:true});
@@ -622,19 +622,50 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
 const _oldStudentDetails=window.studentDetails;
 function normEGPhone(v){let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0020'))d=d.slice(2);if(d.startsWith('0'))d='20'+d.slice(1);if(!d.startsWith('20'))d='20'+d;return d}
 window.openStudentWhatsApp=function(phone){const d=normEGPhone(phone);if(d.length<12)return toast('Student phone number is not valid.');window.open('https://wa.me/'+d,'_blank','noopener,noreferrer')};
-async function deleteRows(table,column,value){try{const r=await db.from(table).delete().eq(column,value);return r.error||null}catch(e){return e}}
+async function deleteAndVerify(table,column,value){
+  try{
+    const r=await db.from(table).delete().eq(column,value);
+    if(r.error)return r.error;
+    // A successful HTTP request can still affect zero rows when DELETE RLS blocks the row.
+    // Verify the row is actually gone instead of trusting the DELETE response.
+    for(let attempt=0;attempt<2;attempt++){
+      const v=await db.from(table).select('id').eq(column,value).limit(1);
+      if(v.error)return v.error;
+      if(!Array.isArray(v.data)||v.data.length===0)return null;
+      if(attempt===0)await new Promise(resolve=>setTimeout(resolve,180));
+    }
+    const e=new Error('Delete did not persist; the row is still present.');
+    e.code='DELETE_NOT_PERSISTED';
+    return e;
+  }catch(e){return e}
+}
 async function robustDelete(table,id,label,after){
- if(!confirm('Delete '+label+' permanently? This removes dependent records where supported.'))return;
- const deps={grades:[['units','grade_id'],['lessons','grade_id'],['quizzes','grade_id'],['homework','grade_id'],['certificates','grade_id']],units:[['lessons','unit_id']],lessons:[['lesson_progress','lesson_id']],quizzes:[['quiz_questions','quiz_id'],['quiz_attempts','quiz_id']],homework:[['homework_submissions','homework_id']],certificates:[],reviews:[]};
- const errors=[];for(const [child,col] of (deps[table]||[])){const e=await deleteRows(child,col,id);if(e)errors.push(child+': '+e.message)}
- if(errors.length){toast('Delete stopped: '+errors.join(' | '));return}
- const r=await db.from(table).delete().eq('id',id).select('id');
- if(r.error)return toast('Delete failed: '+r.error.message);
- if(!Array.isArray(r.data)||!r.data.some(x=>String(x.id)===String(id)))return toast('Nothing was deleted. Check DELETE RLS/policies for '+table+'.');
- const v=await db.from(table).select('id').eq('id',id).maybeSingle();
- if(v.error)return toast('Delete verification failed: '+v.error.message);
- if(v.data)return toast('Delete did not persist. The database still contains this row.');
- toast(label+' deleted permanently.');if(typeof after==='function')await after();
+  if(!confirm('Delete '+label+' permanently? This removes dependent records where supported.'))return;
+  const deps={
+    grades:[['units','grade_id'],['lessons','grade_id'],['quizzes','grade_id'],['homework','grade_id'],['certificates','grade_id']],
+    units:[['lessons','unit_id']],
+    lessons:[['lesson_progress','lesson_id']],
+    quizzes:[['quiz_questions','quiz_id'],['quiz_attempts','quiz_id']],
+    homework:[['homework_submissions','homework_id']],
+    certificates:[],
+    reviews:[]
+  };
+  const errors=[];
+  for(const [child,col] of (deps[table]||[])){
+    const e=await deleteAndVerify(child,col,id);
+    if(e)errors.push(child+': '+(e.message||String(e)));
+  }
+  if(errors.length){
+    toast('Delete stopped. Check related-table DELETE RLS/foreign keys: '+errors.join(' | '));
+    return;
+  }
+  const e=await deleteAndVerify(table,'id',id);
+  if(e){
+    if(e.code==='DELETE_NOT_PERSISTED')return toast('Delete was not persisted. Check DELETE RLS/policies for '+table+'.');
+    return toast('Delete failed: '+(e.message||String(e)));
+  }
+  toast(label+' deleted permanently.');
+  if(typeof after==='function')await after();
 }
 window.deletePersisted=robustDelete;
 window.deleteUnit=id=>robustDelete('units',id,'Unit',loadUnits);
