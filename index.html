@@ -315,11 +315,11 @@ function openAuth(type){
   if(type==='login'){
     title.textContent='Log in to DOMA ACADEMY';
     text.textContent='Use your student account to open your dashboard and active grade.';
-    body.innerHTML='<div class="formgrid"><input id="loginEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password"><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
+    body.innerHTML='<div class="formgrid"><input id="loginEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password"><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatusLogin" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
   }else{
     title.textContent='Create your student account';
     text.textContent='Create an account first, then choose your grade and access plan.';
-    body.innerHTML='<div class="formgrid"><input id="signupName" class="field" placeholder="Full name" autocomplete="name"><input id="signupEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="signupPass" class="field full" type="password" placeholder="Password — at least 6 characters" autocomplete="new-password"><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
+    body.innerHTML='<div class="formgrid"><input id="signupName" class="field" placeholder="Full name" autocomplete="name"><input id="signupEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="signupPass" class="field full" type="password" placeholder="Password — at least 6 characters" autocomplete="new-password"><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatusSignup" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
   }
   $('modal').classList.add('show')
 }
@@ -336,22 +336,22 @@ async function ensureProfile(user,name=''){
 
 async function domaLogin(){
   const email=$('loginEmail')?.value.trim()||'',pass=$('loginPass')?.value||'';
-  if(!email||!pass)return showStatus('authStatus','Enter your email and password.','error');
-  showStatus('authStatus','Signing in…');
+  if(!email||!pass)return showStatus('authStatusLogin','Enter your email and password.','error');
+  showStatus('authStatusLogin','Signing in…');
   const r=await sb.auth.signInWithPassword({email,password:pass});
-  if(r.error)return showStatus('authStatus',r.error.message,'error');
+  if(r.error)return showStatus('authStatusLogin',r.error.message,'error');
   sessionUser=r.data.user;await ensureProfile(sessionUser);closeModal();await refreshStudentState();showToast('Welcome back to DOMA ACADEMY.');openDrawer('overview')
 }
 
 async function domaSignup(){
   const name=$('signupName')?.value.trim()||'',email=$('signupEmail')?.value.trim()||'',pass=$('signupPass')?.value||'';
-  if(!name||!email||pass.length<6)return showStatus('authStatus','Enter your full name, email and a password of at least 6 characters.','error');
-  showStatus('authStatus','Creating your student account…');
+  if(!name||!email||pass.length<6)return showStatus('authStatusSignup','Enter your full name, email and a password of at least 6 characters.','error');
+  showStatus('authStatusSignup','Creating your student account…');
   const r=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
-  if(r.error)return showStatus('authStatus',r.error.message,'error');
+  if(r.error)return showStatus('authStatusSignup',r.error.message,'error');
   let user=r.data?.user||null,session=r.data?.session||null;
   if(!session){const l=await sb.auth.signInWithPassword({email,password:pass});if(!l.error){user=l.data?.user||user;session=l.data?.session||null}}
-  if(!session)return showStatus('authStatus','Account created, but no active session was returned. Disable email confirmation in Supabase Authentication → Providers → Email for instant signup.','error');
+  if(!session)return showStatus('authStatusSignup','Account created, but no active session was returned. Disable email confirmation in Supabase Authentication → Providers → Email for instant signup.','error');
   sessionUser=user;await ensureProfile(user,name);
   closeModal();await refreshStudentState();showToast('Account created successfully.');openDrawer('overview')
 }
