@@ -1,786 +1,581 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>DOMA ACADEMY — English Learning Platform</title>
-<meta content="DOMA ACADEMY — English learning for Egyptian preparatory and secondary students with lessons, quizzes, homework, progress and certificates." name="description"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--bg:#080808;--bg2:#0d090b;--card:#120b0e;--card2:#171014;--line:#2d181f;--burg:#762337;--burg2:#9d304a;--burg3:#c05269;--text:#f5f2f3;--muted:#9b9396;--green:#5fc99a;--gold:#d7ad61;--shadow:0 22px 60px rgba(0,0,0,.35)}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}button{cursor:pointer}.container{width:min(1180px,92%);margin:auto}
-.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,.9);backdrop-filter:blur(16px);border-bottom:1px solid #171214}.navin{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:2px}.mark{width:40px;height:40px;border:1px solid #713044;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#1a0b10,#090909);box-shadow:0 8px 25px #000}.mark svg{width:27px;height:27px}.brand small{display:block;font-size:8px;color:#9b8f93;letter-spacing:3px;font-weight:700}.links{display:flex;gap:20px;align-items:center}.links a{font-size:12px;color:#aaa;transition:.2s}.links a:hover{color:#fff}.nav-actions{display:flex;gap:8px;align-items:center}.iconbtn,.menu{border:1px solid #302024;background:#110b0d;color:#ddd;border-radius:8px;padding:9px 11px}.menu{display:none}
-.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:99px;padding:12px 20px;font-size:13px;font-weight:800;border:1px solid transparent;transition:.2s;gap:8px}.primary{background:var(--burg);border-color:#8d2a40;color:#fff}.primary:hover{background:#92304a;transform:translateY(-2px)}.secondary{background:#151012;border-color:#3c222a;color:#ddd}.secondary:hover{border-color:#703045}.ghost{background:#0f0b0d;border-color:#2d1b21;color:#ccc}
-.hero{padding:150px 0 85px;min-height:720px;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 34%,rgba(118,35,55,.28),transparent 34%),linear-gradient(180deg,#080808,#0b0809)}.hero:after{content:"";position:absolute;width:620px;height:620px;right:-220px;top:100px;border-radius:50%;border:1px solid #3b1c26;box-shadow:0 0 0 70px rgba(118,35,55,.03),0 0 0 140px rgba(118,35,55,.025)}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:55px;align-items:center;position:relative;z-index:2}.eyebrow{color:var(--burg3);text-transform:uppercase;letter-spacing:4px;font-size:10px;font-weight:800;margin-bottom:14px}.hero h1{font-size:clamp(48px,6.5vw,82px);line-height:.98;letter-spacing:-4px;margin-bottom:22px}.hero h1 span{color:var(--burg3)}.hero p{color:var(--muted);max-width:660px;font-size:16px;line-height:1.85;margin-bottom:28px}.actions{display:flex;gap:10px;flex-wrap:wrap}.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e0a5b2;background:#2b1119;padding:6px 8px;border-radius:5px}.mini-proof{display:flex;gap:24px;margin-top:32px;flex-wrap:wrap}.proof strong{font-size:21px}.proof span{display:block;color:#777;font-size:10px}.hero-card{background:linear-gradient(150deg,#171014,#0d0a0b);border:1px solid #38202a;border-radius:20px;padding:18px;box-shadow:var(--shadow)}.hero-panel{min-height:375px;border-radius:15px;background:linear-gradient(135deg,#221017,#0b090a);border:1px solid #2f1820;padding:22px;display:flex;flex-direction:column;justify-content:space-between}.hero-panel-top{display:flex;justify-content:space-between;gap:10px}.hero-logo{font-size:58px;font-weight:900;letter-spacing:-4px;color:#fff}.hero-logo span{color:var(--burg3)}.hero-panel h3{font-size:25px;margin-top:15px}.hero-panel p{font-size:12px;margin:7px 0 0;color:#8e8387}.hero-stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}.hero-stat div{background:#0a0909;border:1px solid #24161a;border-radius:11px;padding:13px}.hero-stat b{font-size:20px}.hero-stat span{display:block;color:#777;font-size:10px}
-section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow{margin-bottom:7px}.head h2{font-size:38px;letter-spacing:-1.5px;margin-bottom:10px}.head p{max-width:690px;margin:auto;color:#888;font-size:14px}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:22px}.section-head h2{font-size:32px;letter-spacing:-1px}.section-head p{color:#888;font-size:12px;margin-top:5px}
-.searchbar{margin-top:-40px;position:relative;z-index:5}.searchbox{background:#100b0d;border:1px solid #3a2028;border-radius:14px;padding:12px;display:grid;grid-template-columns:1fr 220px auto;gap:10px;box-shadow:var(--shadow)}.field{background:#090909;border:1px solid #2b181e;color:#fff;border-radius:9px;padding:12px;outline:none;width:100%}.field:focus{border-color:#703045}.field::placeholder{color:#666}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card{background:#100b0d;border:1px solid #2d181f;border-radius:15px}.feature{padding:21px}.feature b{font-size:27px}.feature h3{font-size:15px;margin:8px 0 5px}.feature p{color:#7f787b;font-size:11px}.grade{overflow:hidden;transition:.2s}.grade:hover{transform:translateY(-4px);border-color:#673041}.grade-cover{height:150px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(135deg,#291018,#0d0b0c)}.grade-cover strong{font-size:28px;letter-spacing:-1px}.stage{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e0a5b2;background:#2b1119;padding:6px 8px;border-radius:5px}.grade-body{padding:18px}.grade-body h3{font-size:18px}.grade-body p{color:#858083;font-size:11px;min-height:42px;margin:7px 0 15px}.grade-meta{display:flex;gap:10px;flex-wrap:wrap;color:#777;font-size:10px;margin-bottom:15px}.grade-actions{display:flex;gap:8px;flex-wrap:wrap}
-.dashboard{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.dash{padding:22px}.dash h3{font-size:17px;margin-bottom:14px}.progress-item{margin:13px 0}.cp{display:flex;justify-content:space-between;font-size:11px;color:#aaa}.bar{height:8px;background:#26171c;border-radius:8px;margin-top:7px;overflow:hidden}.bar i{display:block;height:100%;background:var(--burg3);border-radius:8px}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:14px;background:#0a0909;border:1px solid #24161a;border-radius:10px}.stat strong{font-size:24px}.stat span{display:block;color:#777;font-size:10px}.notice{margin-top:14px;padding:12px;border-radius:10px;background:#211016;border:1px solid #42212b;color:#aaa;font-size:11px}
-.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.tool{padding:21px}.tool-icon{width:38px;height:38px;border-radius:10px;background:#281018;border:1px solid #49202c;display:grid;place-items:center;color:#d98ea0;font-weight:900}.tool h3{font-size:15px;margin:11px 0 5px}.tool p{color:#7f787b;font-size:11px}
-.teachers{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.teacher{padding:18px;text-align:center}.avatar{width:66px;height:66px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(145deg,#7d2740,#251016);font-weight:900;font-size:20px}.teacher h3{font-size:14px}.teacher p{color:#777;font-size:10px;margin-top:4px}.teacher small{display:block;color:#5d5558;margin-top:7px;font-size:9px}
-.pricing{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.plan{padding:24px}.plan h3{font-size:20px;margin:7px 0}.money{font-size:31px;font-weight:900}.money small{font-size:10px;color:#777;font-weight:400}.plan ul{list-style:none;margin:17px 0}.plan li{font-size:11px;color:#aaa;padding:7px 0;border-bottom:1px solid #201318}.plan li:before{content:"✓";color:#a13a52;margin-right:8px}
-.faq{max-width:850px;margin:auto}.faq details{background:#100b0d;border:1px solid #2d181f;border-radius:10px;margin-bottom:9px;padding:15px 17px}.faq summary{cursor:pointer;font-size:13px;font-weight:700}.faq p{color:#858083;font-size:11px;padding-top:10px}.cta{background:linear-gradient(135deg,#35121d,#11090c);border:1px solid #6b2739;border-radius:20px;padding:45px;text-align:center}.cta h2{font-size:39px;margin-bottom:10px}.cta p{color:#9d9295;max-width:650px;margin:0 auto 22px}.footer{border-top:1px solid #1d1216;padding:42px 0 24px;background:#060606}.footgrid{display:grid;grid-template-columns:1.45fr 1fr 1fr 1fr;gap:24px}.footer h4{font-size:12px;margin-bottom:12px}.footer a,.footer p{display:block;color:#777;font-size:11px;margin:7px 0}.copy{border-top:1px solid #171013;margin-top:28px;padding-top:17px;color:#555;font-size:10px;display:flex;justify-content:space-between}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;z-index:9000;padding:18px}.modal.show{display:flex}.modalbox{width:min(760px,100%);max-height:92vh;overflow:auto;background:#110b0d;border:1px solid #512331;border-radius:18px;padding:24px;box-shadow:var(--shadow)}.modalhead{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:16px}.close{background:none;border:0;color:#999;font-size:25px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.full{grid-column:1/-1}.modalbox>p{color:#888;font-size:12px;margin-bottom:14px}.status{display:none;margin-top:12px;padding:11px 12px;border-radius:10px;background:#211016;border:1px solid #5a2534;color:#ddd;font-size:11px}.status.show{display:block}.error{color:#ef9cac}.success{color:#89e2be}
-.drawer{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(7px);display:none;z-index:5500;padding:12px;overflow:auto}.drawer.show{display:block}.drawer-shell{height:auto;min-height:calc(100vh - 24px);max-height:none;max-width:1220px;margin:auto;background:#0d090b;border:1px solid #3d1d28;border-radius:20px;overflow:hidden;display:grid;grid-template-columns:250px 1fr}.drawer-main{min-height:0}.drawer-body{min-height:0;overscroll-behavior:contain}.drawer-side{background:#0a0809;border-right:1px solid #27151b;padding:18px;overflow:auto}.drawer-brand{margin-bottom:19px}.user-card{padding:13px;background:#130c0f;border:1px solid #2d181f;border-radius:12px;margin-bottom:15px}.user-card strong{display:block;font-size:14px}.user-card span{display:block;color:#777;font-size:10px;margin-top:2px}.side-link{display:flex;align-items:center;gap:9px;width:100%;background:transparent;border:0;color:#aaa;padding:10px 11px;border-radius:9px;text-align:left;font-size:11px;margin-bottom:4px}.side-link:hover,.side-link.active{background:#211016;color:#fff}.drawer-main{display:flex;flex-direction:column;min-width:0}.drawer-top{padding:18px 22px;border-bottom:1px solid #27151b;display:flex;justify-content:space-between;align-items:center;gap:15px}.drawer-top h2{font-size:24px}.drawer-top p{font-size:11px;color:#777}.drawer-body{padding:22px;overflow:auto}.workspace-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.workspace-card{padding:17px}.workspace-card h3{font-size:14px;margin-bottom:6px}.workspace-card p{font-size:10px;color:#777}.table-list{display:grid;gap:9px}.listrow{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#110b0d;border:1px solid #2d181f;border-radius:12px;padding:12px}.listrow-main strong{font-size:12px}.listrow-main span{display:block;color:#777;font-size:10px}.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:99px;background:#1c1014;color:#c98b9b;border:1px solid #40222c;font-size:9px}.empty{padding:28px;text-align:center;color:#777;background:#100b0d;border:1px dashed #321c23;border-radius:13px}.lesson-view{display:grid;grid-template-columns:1.45fr .75fr;gap:17px}.lesson-player{padding:20px}.lesson-list{padding:15px;max-height:650px;overflow:auto}.lesson-btn{cursor:pointer;touch-action:manipulation;width:100%;background:#120c0f;color:#ddd;border:1px solid #2a191f;border-radius:10px;padding:11px;text-align:left;display:flex;gap:10px;align-items:center;margin-bottom:7px}.lesson-btn.active{border-color:#9d304a;background:#211016}.lesson-num{width:28px;height:28px;min-width:28px;border-radius:7px;background:#25171c;display:grid;place-items:center;color:#d98ea0;font-weight:800;font-size:10px}.lesson-content{background:#0a0909;border:1px solid #24161a;border-radius:13px;padding:18px}.video-wrap{aspect-ratio:16/9;background:#160d10;border:1px solid #341b24;border-radius:12px;display:grid;place-items:center;overflow:hidden}.video-wrap video,.video-wrap iframe{width:100%;height:100%;object-fit:contain;background:#000;border:0}.video-open-link{display:inline-flex;margin-top:10px;padding:8px 11px;border-radius:8px;background:#211016;border:1px solid #45222f;color:#d99aac;font-size:10px}.quiz-scroll{max-height:calc(100vh - 235px);overflow-y:auto;padding:2px 8px 4px 2px;overscroll-behavior:contain}.quiz-scroll::-webkit-scrollbar{width:8px}.quiz-scroll::-webkit-scrollbar-track{background:#100b0d;border-radius:99px}.quiz-scroll::-webkit-scrollbar-thumb{background:#4f2734;border-radius:99px}.question-count{font-size:10px;color:#8f8287;margin:8px 0 12px}.clickable-tool{cursor:pointer;transition:transform .15s,border-color .15s}.clickable-tool:hover{transform:translateY(-2px);border-color:#693043}.hero-stat-btn{border:1px solid #301820;background:#130c10;color:#ddd;border-radius:10px;padding:11px;text-align:left;cursor:pointer;display:block;width:100%}.hero-stat-btn b{display:block;font-size:11px}.hero-stat-btn span{display:block;color:#777;font-size:9px;margin-top:3px}.homework-hint{font-size:9px;color:#8f8287;margin-top:8px}.video-placeholder{text-align:center;color:#817579;padding:30px}.video-placeholder b{display:block;font-size:30px;color:#bc5068;margin-bottom:5px}.lesson-content h3{font-size:18px;margin:16px 0 7px}.lesson-content p{font-size:11px;color:#9a9295;white-space:pre-wrap}.lesson-rich-content{font-size:11px;color:#9a9295;white-space:pre-wrap;line-height:1.75;margin-top:7px}.lesson-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}.lesson-actions{display:flex;gap:8px;flex-wrap:wrap}.resource-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.resource{padding:8px 10px;background:#160e11;border:1px solid #2e1b22;border-radius:8px;color:#aaa;font-size:10px}.quiz-box{padding:19px}.question{padding:15px;border:1px solid #2a191f;border-radius:12px;background:#0c090a;margin-bottom:11px}.question h4{font-size:12px;margin-bottom:9px}.option{display:flex;gap:7px;align-items:flex-start;padding:7px 0;color:#aaa;font-size:11px}.scorebox{padding:16px;border:1px solid #4a222f;background:#211016;border-radius:12px;margin-top:12px}.hw-card{padding:18px}.hw-card h3{font-size:15px}.hw-card p{color:#888;font-size:11px;margin:7px 0}.hw-meta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.hw-page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:15px}.hw-page-head h3{font-size:22px;margin:3px 0 5px}.hw-page-head p{font-size:10px;color:#7f777a;max-width:700px}.hw-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:15px}.hw-stat{padding:14px;background:linear-gradient(145deg,#130c0f,#0d090a);border:1px solid #2e1a21;border-radius:12px}.hw-stat b{display:block;font-size:22px;line-height:1}.hw-stat span{display:block;font-size:9px;color:#81777b;margin-top:5px;text-transform:uppercase;letter-spacing:1px}.hw-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}.hw-filter{border:1px solid #2f1b22;background:#120c0f;color:#aaa;border-radius:999px;padding:7px 11px;font-size:9px;cursor:pointer}.hw-filter.active{background:#291018;color:#fff;border-color:#7f2f45}.hw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.hw-card-pro{padding:18px;background:linear-gradient(145deg,#120c0f,#0b090a);border:1px solid #2d1a21;border-radius:14px;position:relative;overflow:hidden}.hw-card-pro::after{content:'';position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg,#7f2f45,transparent)}.hw-card-pro h3{font-size:16px;line-height:1.35;margin:9px 0 7px}.hw-card-pro .desc{font-size:10px;color:#8f878a;line-height:1.7;min-height:35px}.hw-topline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.hw-status{font-size:8px;text-transform:uppercase;letter-spacing:1px;padding:5px 7px;border-radius:6px;border:1px solid #3c232b;background:#1b1014;color:#d8a0ad}.hw-status.pending{color:#e0bd86;border-color:#59452b;background:#241b10}.hw-status.submitted{color:#a5c6d6;border-color:#2b4653;background:#101c22}.hw-status.reviewed{color:#a9d2b4;border-color:#2e5338;background:#0f2116}.hw-due{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.hw-due .pill.urgent{border-color:#6e3a33;color:#e3ac9c;background:#251411}.hw-feedback{margin-top:11px;padding:10px 11px;border-radius:10px;background:#171014;border:1px solid #33202a;color:#b2a7ab;font-size:10px;line-height:1.6}.hw-submission-line{font-size:9px;color:#766e72;margin-top:8px}.hw-card-pro .account-actions{margin-top:13px}.hw-empty-note{margin-bottom:12px}.hw-instructions{margin-top:10px;padding:12px;border:1px dashed #3b242c;border-radius:10px;background:#100a0c;color:#8f878a;font-size:10px;line-height:1.7}.cert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.cert{padding:18px;background:linear-gradient(145deg,#171014,#0c090a);border:1px solid #3c2029;border-radius:14px}.cert-code{font-family:monospace;font-size:10px;color:#d98ea0;margin-top:8px}.notification{padding:14px;border-radius:12px;background:#120c0f;border:1px solid #2d181f}.notification.unread{border-color:#6a2a3d}.notification strong{font-size:12px}.notification p{font-size:10px;color:#888;margin-top:4px}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.account-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-.student-progress-hero{display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:center}
-.progress-ring{width:160px;height:160px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#b44361 calc(var(--p,0)*1%),#24151b 0);position:relative}
-.progress-ring::after{content:'';position:absolute;inset:11px;background:#0d090b;border-radius:50%}
-.progress-ring .ring-inner{position:relative;z-index:1;text-align:center}.progress-ring strong{display:block;font-size:34px;line-height:1}.progress-ring span{display:block;margin-top:5px;color:#8b8084;font-size:9px;text-transform:uppercase;letter-spacing:1px}
-.progress-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:13px}
-.progress-mini{padding:11px;background:#0f0a0c;border:1px solid #29171e;border-radius:10px}.progress-mini b{display:block;font-size:18px}.progress-mini span{display:block;color:#797174;font-size:9px;margin-top:3px}
-.dashboard-grid-pro{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
-.dash-pro-card{padding:18px;background:linear-gradient(145deg,#140c10,#0c090a);border:1px solid #2f1a21;border-radius:14px}
-.dash-pro-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:13px}.dash-pro-head h3{font-size:15px}.dash-pro-head p{font-size:9px;color:#797174;margin-top:4px}
-.activity-list{display:grid;gap:8px}.activity-row{display:flex;justify-content:space-between;gap:12px;padding:10px;border-radius:10px;background:#100b0d;border:1px solid #26161c}.activity-row strong{display:block;font-size:10px}.activity-row span{display:block;color:#756d70;font-size:9px;margin-top:2px}.activity-row time{font-size:9px;color:#a78992;white-space:nowrap}
-.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.quick-card{padding:12px;text-align:left;border:1px solid #2c1820;background:#100b0d;color:#ddd;border-radius:10px;cursor:pointer}.quick-card:hover{border-color:#703046}.quick-card b{display:block;font-size:11px}.quick-card span{display:block;color:#766e71;font-size:9px;margin-top:3px}
-.report-bars{display:grid;gap:10px}.report-line{display:grid;grid-template-columns:105px 1fr 38px;gap:8px;align-items:center}.report-line label{font-size:9px;color:#8a8084}.report-line .rbar{height:7px;background:#24151b;border-radius:10px;overflow:hidden}.report-line .rbar i{display:block;height:100%;background:#9f3851;border-radius:10px}.report-line b{font-size:9px;text-align:right;color:#d3a0ab}
-@media(max-width:1000px){.student-progress-hero{grid-template-columns:1fr}.progress-ring{margin:auto}.dashboard-grid-pro{grid-template-columns:1fr}.progress-summary{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:620px){.progress-summary{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.report-line{grid-template-columns:85px 1fr 32px}}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOMA ACADEMY - منصة اللغة الإنجليزية للمرحلة الإعدادية</title>
 
-.toast{position:fixed;right:18px;bottom:18px;background:#151014;border:1px solid #653044;color:#eee;padding:12px 15px;border-radius:9px;display:none;z-index:7000;font-size:12px;max-width:min(420px,calc(100% - 36px))}.toast.show{display:block}
-@media(max-width:1000px){.links{display:none}.menu{display:block}.nav-actions .login{display:none}.hero-grid{grid-template-columns:1fr}.grid6{grid-template-columns:repeat(3,1fr)}.grid4,.tools,.teachers{grid-template-columns:repeat(2,1fr)}.dashboard{grid-template-columns:1fr}.footgrid{grid-template-columns:1fr 1fr}.drawer-shell{grid-template-columns:210px 1fr}.lesson-view{grid-template-columns:1fr}.hw-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hw-grid{grid-template-columns:1fr}}
-@media(max-width:700px){.navin{height:70px}.hero{padding-top:125px}.hero h1{font-size:48px}.searchbox{grid-template-columns:1fr}.grid3,.pricing,.cert-grid{grid-template-columns:1fr}.grid6{grid-template-columns:repeat(2,1fr)}.grid4,.tools,.teachers{grid-template-columns:1fr}.footgrid{grid-template-columns:1fr}.copy{flex-direction:column;gap:7px}.formgrid,.profile-grid{grid-template-columns:1fr}.full{grid-column:auto}.drawer{padding:0}.drawer-shell{border-radius:0;border:0;grid-template-columns:1fr}.drawer-side{display:none}.drawer-top{padding:15px}.drawer-body{padding:15px}.workspace-grid{grid-template-columns:1fr}.hero-stat{grid-template-columns:1fr 1fr}.cta{padding:30px 20px}.cta h2{font-size:29px}.section-head{align-items:start;flex-direction:column}}
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-.curriculum-detail{margin-top:18px;background:linear-gradient(145deg,#120b0e,#0c090a);border:1px solid #38202a;border-radius:18px;padding:18px}.curriculum-detail-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}.curriculum-detail-head h3{font-size:20px;margin:3px 0 5px}.curriculum-detail-head p{font-size:11px;color:#7f777a;max-width:720px}.curriculum-counts{display:flex;gap:8px;flex-wrap:wrap}.curriculum-count{padding:7px 10px;border-radius:999px;background:#1d1015;border:1px solid #40222c;color:#dba0ae;font-size:9px}.prep-accordion{display:grid;gap:10px;margin-top:15px}.prep-unit{border:1px solid #2e1a21;border-radius:13px;background:#0d090a;overflow:hidden}.prep-unit summary{list-style:none;cursor:pointer;padding:14px 15px;display:flex;justify-content:space-between;gap:12px;align-items:center}.prep-unit summary::-webkit-details-marker{display:none}.prep-unit summary:hover{background:#130c10}.unit-title-wrap{display:flex;gap:10px;align-items:center}.unit-index{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#271019;border:1px solid #4a2431;color:#d98ea0;font-weight:900;font-size:11px}.unit-summary strong{font-size:13px}.unit-summary span{display:block;color:#756c70;font-size:9px;margin-top:2px}.chev{color:#9b7480;font-size:14px}.prep-lessons{padding:0 15px 14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.prep-lesson{padding:11px 12px;border:1px solid #24151b;border-radius:10px;background:#100a0c}.prep-lesson .lesson-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.lesson-type{font-size:8px;text-transform:uppercase;letter-spacing:1.3px;color:#d18c9e;background:#241018;border:1px solid #3e202a;padding:4px 6px;border-radius:5px}.prep-lesson strong{font-size:11px;line-height:1.35}.prep-lesson p{font-size:9px;color:#797174;margin-top:5px;line-height:1.6}.prep-lesson .mini-open{margin-top:8px;font-size:9px;color:#d9a0ad;background:none;border:0;padding:0}.grammar-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}.grammar-map .mini-card{padding:12px;border:1px solid #24151b;border-radius:10px;background:#100a0c}.grammar-map b{font-size:10px}.grammar-map span{display:block;color:#797174;font-size:9px;margin-top:3px}.assessment-strip{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.assessment-box{padding:15px;border:1px solid #2a171e;border-radius:12px;background:#100a0c}.assessment-box h4{font-size:12px;margin-bottom:6px}.assessment-box p{font-size:9px;color:#797174;margin-bottom:7px}.assessment-list{display:grid;gap:5px}.assessment-list div{font-size:9px;color:#bdb2b6;padding:6px 8px;border-radius:7px;background:#160e11;border:1px solid #25161c}
-@media(max-width:800px){.prep-lessons{grid-template-columns:1fr}.grammar-map{grid-template-columns:1fr 1fr}.assessment-strip{grid-template-columns:1fr}}@media(max-width:520px){.grammar-map{grid-template-columns:1fr}}
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-</style>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
-<style id="doma-v2-css">
-.doma-v2-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.doma-v2-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.doma-v2-card{padding:16px;border-radius:14px;background:#130c0f;border:1px solid #38232c}.doma-v2-card strong{display:block;font-size:24px;font-weight:900}.doma-v2-card span{display:block;margin-top:5px;color:#a6969d;font-size:10px}.doma-v2-sub{margin-top:12px;padding:16px;border-radius:14px;background:#130c0f;border:1px solid #38232c}.doma-v2-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #2a1a20;font-size:11px}.doma-v2-row:last-child{border-bottom:0}.doma-v2-row>span:last-child{color:#d5c7cc;text-align:right}.activity-chip{display:inline-flex;padding:4px 8px;border-radius:999px;background:#2f1e25;font-size:9px}.wa{color:#8ed7ad}@media(max-width:760px){.doma-v2-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.doma-v2-row{flex-direction:column}.doma-v2-row>span:last-child{text-align:left}}@media(max-width:500px){.doma-v2-grid{grid-template-columns:1fr}}
-</style>
-<style id="doma-master-upgrade">
-/* =========================================================
-   DOMA ACADEMY — MASTER HOMEPAGE / STUDENT EXPERIENCE UPGRADE
-========================================================= */
-.home-upgrade{padding:44px 0 22px;background:linear-gradient(180deg,#0b0809 0%,#0c080a 100%);border-top:1px solid #171014;border-bottom:1px solid #211419}
-.home-upgrade-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
-.upgrade-card{border:1px solid #2b191f;background:linear-gradient(145deg,#130b0f,#0e090b);border-radius:16px;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.22)}
-.upgrade-card h3{font-size:18px}.upgrade-card p{font-size:11px;color:#8f8589;line-height:1.7;margin-top:5px}
-.upgrade-kicker{display:flex;align-items:center;justify-content:space-between;gap:12px}.upgrade-kicker .eyebrow{margin-bottom:0}
-.upgrade-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.upgrade-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:15px}
-.upgrade-metric{padding:12px;border:1px solid #2a171d;border-radius:11px;background:#0c090a}.upgrade-metric b{display:block;font-size:18px}.upgrade-metric span{display:block;color:#81777b;font-size:9px;margin-top:2px}
-.home-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.home-status .pill{margin:0}.home-status-text{font-size:10px;color:#8e8588}
-.home-shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
-.home-shortcut{padding:13px;text-align:left;border-radius:12px;border:1px solid #2b181f;background:#0d0a0c;color:#fff;cursor:pointer;transition:.2s}
-.home-shortcut:hover{transform:translateY(-2px);border-color:#783047;background:#120b0e}.home-shortcut b{display:block;font-size:12px}.home-shortcut span{display:block;font-size:9px;color:#777;margin-top:4px}
-.continue-card{position:relative;overflow:hidden}.continue-card:after{content:"";position:absolute;width:160px;height:160px;right:-75px;bottom:-80px;border-radius:50%;border:1px solid #3b1b25;box-shadow:0 0 0 35px rgba(118,35,55,.04)}
-.continue-lesson{display:flex;align-items:center;gap:13px;margin-top:13px;padding:13px;border:1px solid #2c191f;border-radius:12px;background:#0b090a;position:relative;z-index:1}
-.continue-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#7a253b,#2d101a);display:grid;place-items:center;font-weight:900;box-shadow:0 10px 20px rgba(96,20,40,.2)}
-.continue-lesson strong{display:block;font-size:12px}.continue-lesson span{display:block;font-size:9px;color:#7d7477;margin-top:3px}
-.how-it-works{padding:56px 0}.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
-.how-card{position:relative;padding:18px;border:1px solid #2c181f;background:#100b0d;border-radius:14px}.how-card b{display:block;font-size:11px;margin-top:28px}.how-card p{font-size:9px;color:#7f7579;line-height:1.7;margin-top:5px}.step-no{position:absolute;top:14px;left:14px;width:27px;height:27px;border-radius:9px;border:1px solid #633041;color:#d8899c;display:grid;place-items:center;font-weight:900;font-size:10px;background:#170b10}
-.why-section{padding:16px 0 55px}.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.why-card{padding:18px;border:1px solid #2b181f;border-radius:14px;background:linear-gradient(145deg,#120c0e,#0c090a)}.why-card .why-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#170b10;border:1px solid #5e2a3b;color:#d98b9d;font-weight:900}.why-card h3{font-size:13px;margin-top:12px}.why-card p{font-size:10px;color:#81777b;line-height:1.7;margin-top:5px}
-.prep-tools{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.prep-search{min-width:230px}
-.back-top{position:fixed;right:18px;bottom:18px;z-index:9500;width:42px;height:42px;border-radius:13px;border:1px solid #4c2632;background:#120a0d;color:#fff;display:none;place-items:center;box-shadow:0 16px 35px rgba(0,0,0,.35)}.back-top.show{display:grid}
-.global-search-results{display:grid;gap:8px;margin-top:12px}.global-result{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border:1px solid #2a171d;border-radius:11px;background:#0e0a0c}.global-result-main strong{display:block;font-size:11px}.global-result-main span{display:block;font-size:9px;color:#7f7579;margin-top:2px}.global-result .mini-open{white-space:nowrap}
-.local-insights{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.local-insight{padding:11px;border:1px solid #2a171d;border-radius:11px;background:#0d090b}.local-insight b{display:block;font-size:16px}.local-insight span{display:block;color:#777;font-size:8px;margin-top:2px}
-.lesson-toolbar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}.lesson-toolbar .field{min-width:220px;max-width:360px}.save-lesson-btn.saved{border-color:#874052;background:#1a0c11;color:#f1b7c4}
-.quiz-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}.quiz-tool-count{font-size:9px;color:#7c7377}
-.streak-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid #5a2c39;background:#160b0f;color:#e4a5b3;border-radius:999px;font-size:9px;font-weight:800}
-@media(max-width:900px){.home-upgrade-grid{grid-template-columns:1fr}.how-grid{grid-template-columns:1fr 1fr}.why-grid{grid-template-columns:1fr 1fr}.upgrade-metrics{grid-template-columns:1fr 1fr 1fr}}
-@media(max-width:640px){.home-upgrade{padding-top:30px}.how-grid,.why-grid{grid-template-columns:1fr}.upgrade-metrics{gap:7px}.upgrade-metric{padding:10px}.upgrade-metric b{font-size:15px}.prep-search{min-width:0;width:100%}.local-insights{grid-template-columns:1fr 1fr 1fr}.continue-lesson{align-items:flex-start}.home-shortcuts{grid-template-columns:1fr}.back-top{right:12px;bottom:12px}}
-</style>
-<style id="doma-all-upgrades-css">
-/* DOMA ACADEMY — all-in-one student experience upgrade */
-.student-command-bar{display:grid;grid-template-columns:1.25fr repeat(3,minmax(110px,.35fr));gap:10px;margin-bottom:14px}
-.student-command-card{padding:14px 15px;background:linear-gradient(145deg,#150c10,#0b090a);border:1px solid #321b23;border-radius:12px}
-.student-command-card small{display:block;color:#756c70;font-size:9px;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px}
-.student-command-card strong{display:block;font-size:18px;line-height:1.15}
-.student-command-card span{display:block;color:#91878b;font-size:9px;margin-top:4px}
-.lesson-toolbar-pro{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:12px;padding:10px;background:#0e090b;border:1px solid #27151b;border-radius:11px}
-.lesson-toolbar-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
-.lesson-checklist{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.lesson-check{display:flex;align-items:center;gap:7px;padding:8px 9px;border-radius:9px;background:#110b0d;border:1px solid #2b181f;color:#9c9296;font-size:9px;cursor:pointer;user-select:none}
-.lesson-check input{accent-color:#b44361}
-.lesson-check.done{border-color:#4a2833;color:#d6bcc3;background:#1a0f13}
-.lesson-notes{margin-top:12px;padding:12px;border:1px solid #2b181f;background:#0e090b;border-radius:11px}
-.lesson-notes-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
-.lesson-notes textarea{min-height:95px;resize:vertical}
-.lesson-save-state{font-size:9px;color:#736a6e}
-.lesson-media-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
-.lesson-unit-breadcrumb{font-size:9px;color:#80767a;margin:5px 0 10px}
-.lesson-resource-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.profile-avatar-wrap{display:flex;align-items:center;gap:14px;padding:16px;background:linear-gradient(145deg,#150c10,#0c090a);border:1px solid #301a22;border-radius:13px;margin-bottom:13px}
-.profile-avatar{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#8e3049,#2a1018);border:2px solid #5b2535;overflow:hidden;flex:none;font-weight:900;font-size:24px;color:#fff}
-.profile-avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.profile-avatar-copy strong{display:block;font-size:13px}.profile-avatar-copy span{display:block;color:#7c7377;font-size:9px;margin-top:3px}
-.notification-badge{display:inline-grid;place-items:center;min-width:17px;height:17px;padding:0 5px;border-radius:99px;background:#9d304a;color:#fff;font-size:8px;margin-left:auto}
-.side-link{position:relative}
-.hw-attachment{margin-top:10px;padding:10px 11px;border-radius:10px;background:#0f0a0c;border:1px dashed #39212a;color:#9d8e94;font-size:9px;line-height:1.5}
-.hw-attachment a{color:#d99aac;font-weight:800}
-.study-streak-line{display:flex;align-items:center;gap:8px;margin-top:8px;color:#9c8c92;font-size:9px}
-.study-streak-dot{width:8px;height:8px;border-radius:50%;background:#b44361;box-shadow:0 0 0 4px rgba(180,67,97,.10)}
-.home-learning-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:15px}
-.home-continue-card,.home-feature-card{padding:20px;background:linear-gradient(145deg,#150c10,#0b090a);border:1px solid #321b24;border-radius:16px}
-.home-continue-card h3,.home-feature-card h3{font-size:16px;margin:7px 0 5px}.home-continue-card p,.home-feature-card p{font-size:10px;color:#81777b;line-height:1.7}
-.home-quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:13px}.home-quick{padding:12px;border:1px solid #2c1a21;border-radius:11px;background:#100b0d;text-align:left}.home-quick b{display:block;font-size:11px}.home-quick span{display:block;color:#746b70;font-size:8px;margin-top:3px}
-.global-search-results{display:grid;gap:8px;max-height:54vh;overflow:auto}.global-result{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:11px 12px;background:#0f0a0c;border:1px solid #2b181f;border-radius:10px}.global-result-main{min-width:0}.global-result-main strong{font-size:11px;display:block}.global-result-main span{font-size:9px;color:#786f73;display:block;margin-top:3px}.mini-open{padding:7px 9px;border:1px solid #43222c;background:#1b0f14;color:#d7a2af;border-radius:8px;font-size:8px;white-space:nowrap}
-@media(max-width:900px){.student-command-bar{grid-template-columns:1fr 1fr}.home-learning-grid{grid-template-columns:1fr}.home-quick-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.lesson-toolbar-pro{grid-template-columns:1fr}.lesson-toolbar-actions{justify-content:flex-start}.lesson-checklist{grid-template-columns:1fr}.student-command-bar{grid-template-columns:1fr}.profile-grid{grid-template-columns:1fr!important}.profile-avatar-wrap{align-items:flex-start}.home-quick-grid{grid-template-columns:1fr 1fr}}
-</style>
-<style id="doma-daily100-student-css">
-.daily100-student-wrap{margin:0;padding:20px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#160c10,#0d090b);box-shadow:0 18px 45px rgba(0,0,0,.2)}
-.daily100-student-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:16px}.daily100-student-head h3{margin:5px 0 6px}.daily100-student-head p{margin:0;color:var(--muted)}
-.daily100-student-meta{display:flex;gap:7px;flex-wrap:wrap}.daily100-student-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-height:680px;overflow:auto;padding-right:3px}
-.daily100-student-item{padding:14px;border:1px solid #39202a;border-radius:14px;background:#100a0d}.daily100-student-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.daily100-student-number{font-size:9px;color:#806f76;letter-spacing:.12em}.daily100-student-word{font-size:19px;font-weight:900;margin-top:3px}.daily100-student-translation{font-size:12px;color:#d2bdc4;margin-top:2px}.daily100-student-sentence{margin-top:12px;padding-top:11px;border-top:1px solid #2c1a21;font-size:12px;line-height:1.65}.daily100-student-trans{color:#b9a9ae;margin-top:4px}.daily100-student-audio{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.daily100-student-audio button{border:1px solid #5b2939;background:#25121a;color:#fff;border-radius:9px;padding:7px 9px;font-size:10px;cursor:pointer}.daily100-student-audio button:hover{background:#321722}.daily100-student-empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px;grid-column:1/-1}
-@media(max-width:760px){.daily100-student-list{grid-template-columns:1fr}.daily100-student-wrap{padding:16px}}
-</style>
-<style id="doma-monthly-only-css">.annual,.plan.annual,[data-annual],.annual-option{display:none!important}</style></head>
-<body>
-<nav class="nav">
-<div class="container navin">
-<a class="brand" href="#home"><span aria-label="DOMA ACADEMY logo" class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>ENGLISH LEARNING • BY ADHAM</small></span></a>
-<div class="links"><a href="#grades">Grades</a><a href="#subjects">Learning</a><a href="#dashboard">Dashboard</a><a href="#teachers">Learning Areas</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
-<div class="nav-actions"><button class="iconbtn" onclick="openSearch()">⌕</button><button class="btn secondary login" id="navLogin" onclick="openAuth('login')">Log In</button><button class="btn primary" id="navAction" onclick="openAuth('signup')">Get Started</button><button class="menu" onclick="toggleMobileMenu()">☰</button></div>
-</div>
-</nav>
-<div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>DOMA ACADEMY</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#subjects" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#teachers" onclick="closeMobileMenu()">Learning Areas</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
-<header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Master English with <span>a clear path.</span></h1><p>DOMA ACADEMY is built for Egyptian preparatory and secondary students: grade-based lessons, grammar, vocabulary, reading, writing, listening, quizzes, homework, progress and certificates — all in one place.</p><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a><button class="btn secondary" onclick="openAuth('signup')">Create Student Account</button></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory &amp; Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>Access</strong><span>After payment approval</span></div></div></div><div class="hero-card"><div class="hero-panel"><div class="hero-panel-top"><div><div class="eyebrow">Student Learning Hub</div><div class="hero-logo">D<span>O</span>MA</div></div><span class="pill">Secure Student Area</span></div><div><h3>Study. Practice. Track. Improve.</h3><p>Your account becomes your personal English study space after you choose a grade and activate access.</p><div class="hero-stat"><button type="button" class="hero-stat-btn" onclick="openStudentTool('lessons')"><b>Lessons</b><span>Grammar • Vocabulary • Reading</span></button><button type="button" class="hero-stat-btn" onclick="openStudentTool('quizzes')"><b>Assessment</b><span>Quizzes • Homework • Exams</span></button></div></div></div></div></div></header>
-<div class="container searchbar"><div class="searchbox"><input class="field" id="publicSearch" oninput="filterGrades()" placeholder="Search grades, grammar, vocabulary, reading..."/><select class="field" id="publicStage" onchange="filterGrades()"><option value="all">All stages</option><option value="preparatory">Preparatory</option><option value="secondary">Secondary</option></select><button class="btn primary" onclick="filterGrades()">Search</button></div></div>
-
-<section class="home-upgrade" id="home-upgrade">
-  <div class="container">
-    <div class="home-upgrade-grid">
-      <div class="upgrade-card continue-card">
-        <div class="upgrade-kicker">
-          <div class="eyebrow">Your next step</div>
-          <span class="streak-badge" id="homeStreakBadge">🔥 0-day streak</span>
-        </div>
-        <h3 id="homeContinueTitle" style="margin-top:8px">Start your English journey.</h3>
-        <p id="homeContinueText">Create your account, choose a grade, and open your first lesson.</p>
-        <div id="homeContinueLesson" class="continue-lesson" style="display:none"></div>
-        <div class="upgrade-actions" id="homeContinueActions">
-          <button class="btn primary" type="button" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Your Grade →</button>
-          <button class="btn secondary" type="button" onclick="openAuth('signup')">Create Account</button>
-        </div>
-        <div class="upgrade-metrics">
-          <div class="upgrade-metric"><b>36</b><span>1st Prep lessons</span></div>
-          <div class="upgrade-metric"><b>9</b><span>1st Prep quizzes</span></div>
-          <div class="upgrade-metric"><b>8</b><span>1st Prep homework</span></div>
-        </div>
-      </div>
-      <div class="upgrade-card">
-        <div class="upgrade-kicker"><div><div class="eyebrow">Student shortcuts</div><h3 style="margin-top:6px">Everything in one place.</h3></div><span class="pill">DOMA ACADEMY</span></div>
-        <div class="home-status" id="homeAccountStatus" style="margin-top:12px"><span class="pill">Guest</span><span class="home-status-text">Log in to personalize your learning space.</span></div>
-        <div class="home-shortcuts">
-          <button class="home-shortcut" type="button" onclick="openStudentTool('lessons')"><b>▶ Lessons</b><span>Videos, content and progress</span></button>
-          <button class="home-shortcut" type="button" onclick="openStudentTool('quizzes')"><b>✓ Quizzes</b><span>Practice and check results</span></button>
-          <button class="home-shortcut" type="button" onclick="openStudentTool('homework')"><b>☰ Homework</b><span>Submit and view feedback</span></button>
-          <button class="home-shortcut" type="button" onclick="openStudentTool('certificates')"><b>▣ Certificates</b><span>View issued certificates</span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="how-it-works" id="how-it-works">
-  <div class="container">
-    <div class="head"><div class="eyebrow">How it works</div><h2>Simple steps from signup to progress.</h2><p>Everything is organized around the grade you study at school.</p></div>
-    <div class="how-grid">
-      <div class="how-card"><div class="step-no">01</div><b>Create your student account</b><p>Use your email and profile details to create your private learning space.</p></div>
-      <div class="how-card"><div class="step-no">02</div><b>Choose your grade</b><p>Select the school grade you are studying and review the access options.</p></div>
-      <div class="how-card"><div class="step-no">03</div><b>Activate your access</b><p>Send the payment proof and wait for the admin approval message.</p></div>
-      <div class="how-card"><div class="step-no">04</div><b>Study and track</b><p>Open lessons, watch videos, take quizzes, submit homework and follow your progress.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="why-section" id="why-doma">
-  <div class="container">
-    <div class="head"><div class="eyebrow">Built for students</div><h2>One learning space for your English year.</h2><p>Designed to keep lessons, practice, feedback and progress connected.</p></div>
-    <div class="why-grid">
-      <div class="why-card"><div class="why-icon">V</div><h3>Real lesson videos</h3><p>Lessons can include YouTube, Google Drive or direct video links managed from Admin.</p></div>
-      <div class="why-card"><div class="why-icon">P</div><h3>Live progress</h3><p>Your completed lessons, quiz attempts and certificates are connected to your student account.</p></div>
-      <div class="why-card"><div class="why-icon">H</div><h3>Homework feedback</h3><p>Submit assignments in the platform and return later to see grades and teacher feedback.</p></div>
-      <div class="why-card"><div class="why-icon">Q</div><h3>Secure assessments</h3><p>Quiz questions and scoring use the secure Supabase RPC flow already connected to DOMA ACADEMY.</p></div>
-      <div class="why-card"><div class="why-icon">C</div><h3>Certificates</h3><p>Eligible completed learning can produce a certificate that students can print or save as PDF.</p></div>
-      <div class="why-card"><div class="why-icon">M</div><h3>Mobile-friendly</h3><p>The student area adapts for desktop and mobile screens so students can learn anywhere.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="grades"><div class="container"><div class="section-head"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade.</h2><p>Select your school grade to see access options and start your English journey.</p></div><span class="pill" id="gradeLoadStatus">Loading grades…</span></div><div class="grid3" id="gradeGrid"><div class="empty">Loading grades from DOMA ACADEMY…</div></div></div></section>
-
-<section id="first-prep"><div class="container">
-  <div class="curriculum-spotlight">
-    <div class="curriculum-top">
-      <div><div class="eyebrow">Featured Grade</div><h2>1st Preparatory English — Full Curriculum</h2><p>The full Grade 1 Preparatory structure used by DOMA ACADEMY: six units, 36 lessons, grammar, vocabulary, reading, writing, listening, quizzes and homework. Lesson titles and descriptions below match the Admin content set.</p><div class="curriculum-badges"><span class="pill">6 Units</span><span class="pill">36 Lessons</span><span class="pill">6 Unit Quizzes</span><span class="pill">8 Homework Tasks</span><span class="pill">Progress Tracking</span></div></div>
-      <button class="btn primary" onclick='domaOpenGrade("1st Preparatory")'>Open 1st Preparatory →</button>
-    </div>
-    <div class="curriculum-detail">
-      <div class="curriculum-detail-head"><div><div class="eyebrow" style="margin-bottom:4px">Curriculum Explorer</div><h3>Units & Lessons</h3><p>Students can preview the structure here; the full protected lesson content opens after active access.</p></div><div class="curriculum-counts"><span class="curriculum-count">6 units</span><span class="curriculum-count">36 lessons</span><span class="curriculum-count">6 quizzes</span><span class="curriculum-count">8 homework</span></div></div>
-      <div class="prep-accordion"><details class="prep-unit" open><summary><div class="unit-title-wrap"><div class="unit-index">1</div><div class="unit-summary"><strong>Unit 1: Life in a Digital World</strong><span>Digital life, healthy technology habits and everyday routines.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: A Day in My Digital Life</strong><span class="lesson-type">lesson</span></div><p>Understand a short blog-style text about daily digital habits and identify the main idea and details.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: A Day in My Digital Life')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: How We Use Technology</strong><span class="lesson-type">vocabulary</span></div><p>Build a practical vocabulary set for devices, apps and online actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: How We Use Technology')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Digital Devices</strong><span class="lesson-type">grammar</span></div><p>Use the present simple and adverbs of frequency to talk about routines.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Digital Devices')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read and understand a short passage about responsible technology use at school.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: An Email to a Friend</strong><span class="lesson-type">writing</span></div><p>Write a short, organized paragraph about a normal digital day.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: An Email to a Friend')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen for specific details about when and why a student uses technology.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit"><summary><div class="unit-title-wrap"><div class="unit-index">2</div><div class="unit-summary"><strong>Unit 2: Learning to Learn</strong><span>Study skills, learning tools, asking for help and planning revision.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: My Learning Journey</strong><span class="lesson-type">lesson</span></div><p>Understand different ways of learning and choose useful study habits.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: My Learning Journey')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Learning Challenges and Solutions</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary for books, notes, flashcards and digital learning tools.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Learning Challenges and Solutions')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Benefits of Learning Together</strong><span class="lesson-type">grammar</span></div><p>Use possessive adjectives and simple can/will requests in classroom situations.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Benefits of Learning Together')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read a simple weekly study plan and identify priorities and free time.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Learning Plan</strong><span class="lesson-type">writing</span></div><p>Write a clear weekly English study plan using time expressions and goals.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Learning Plan')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen for sequence and identify what a student does before an English test.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit"><summary><div class="unit-title-wrap"><div class="unit-index">3</div><div class="unit-summary"><strong>Unit 3: Role Models</strong><span>People who inspire us, their actions, achievements and qualities.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: An Egyptian Hero</strong><span class="lesson-type">lesson</span></div><p>Talk about qualities and actions that make a person a useful role model.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: An Egyptian Hero')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Heroes and Role Models</strong><span class="lesson-type">vocabulary</span></div><p>Build vocabulary for qualities, achievements and community action.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Heroes and Role Models')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: A Great Egyptian Thinker Dr. Gamal Hemdan</strong><span class="lesson-type">grammar</span></div><p>Describe actions happening now and use subject/object pronouns correctly.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: A Great Egyptian Thinker Dr. Gamal Hemdan')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read about a student volunteer and identify actions, qualities and reasons for helping.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: A Hero Who Made a Difference - Dr Mohamed Ghoniem</strong><span class="lesson-type">writing</span></div><p>Write a short paragraph describing a person you admire and what they are doing now.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: A Hero Who Made a Difference - Dr Mohamed Ghoniem')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen to an interview and identify personal information, qualities and current actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit"><summary><div class="unit-title-wrap"><div class="unit-index">4</div><div class="unit-summary"><strong>Unit 4: Smart Choices</strong><span>Healthy, safe and responsible choices at school and at home.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Think Before You Choose</strong><span class="lesson-type">lesson</span></div><p>Understand the idea of making healthy, safe and responsible choices.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Think Before You Choose')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Decisions and Consequences</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary related to health, safety, recycling and saving resources.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Decisions and Consequences')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: An Interview with an Athlete</strong><span class="lesson-type">grammar</span></div><p>Give instructions with imperatives and explain general results with the zero conditional.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: An Interview with an Athlete')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read about recycling habits and identify actions and their results.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: Asking for and Giving Advice</strong><span class="lesson-type">writing</span></div><p>Write a short practical guide with rules and zero-conditional results.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: Asking for and Giving Advice')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen to a short conversation and identify the problem, the choice and the result.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit"><summary><div class="unit-title-wrap"><div class="unit-index">5</div><div class="unit-summary"><strong>Unit 5: Future Dreams</strong><span>Jobs, talents, future plans and choosing a useful path.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Discover Your Future!</strong><span class="lesson-type">lesson</span></div><p>Talk about future goals, jobs and the skills needed to achieve them.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Discover Your Future!')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: An Interview with a Scientist</strong><span class="lesson-type">vocabulary</span></div><p>Learn vocabulary for careers, talents and personal skills.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: An Interview with a Scientist')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: My Plan for a Future Career</strong><span class="lesson-type">grammar</span></div><p>Compare people and things and use a/an/the in simple contexts.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: My Plan for a Future Career')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read a short text about matching interests and skills with future plans.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: My Dream Job!</strong><span class="lesson-type">writing</span></div><p>Write a personal future plan using reasons, skills and target actions.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: My Dream Job!')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen for future goals and the steps students plan to take.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details><details class="prep-unit"><summary><div class="unit-title-wrap"><div class="unit-index">6</div><div class="unit-summary"><strong>Unit 6: Global Citizens</strong><span>Community, responsibility, cooperation and living in a connected world.</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons"><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 1: Being a Global Citizen</strong><span class="lesson-type">lesson</span></div><p>Understand what it means to be a responsible member of a local and global community.</p><button class="mini-open" onclick="openPublicLesson('Lesson 1: Being a Global Citizen')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 2: Global Citizen Talk</strong><span class="lesson-type">vocabulary</span></div><p>Build vocabulary for community action, cooperation and cultural respect.</p><button class="mini-open" onclick="openPublicLesson('Lesson 2: Global Citizen Talk')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 3: Ocean Circle</strong><span class="lesson-type">grammar</span></div><p>Ask and answer Wh- questions about completed actions in the past.</p><button class="mini-open" onclick="openPublicLesson('Lesson 3: Ocean Circle')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 4: Story Time</strong><span class="lesson-type">reading</span></div><p>Read about students working together on a community project.</p><button class="mini-open" onclick="openPublicLesson('Lesson 4: Story Time')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 5: Let’s Make a Difference</strong><span class="lesson-type">writing</span></div><p>Write about practical actions you can take as a responsible citizen.</p><button class="mini-open" onclick="openPublicLesson('Lesson 5: Let’s Make a Difference')">Open Lesson →</button></div><div class="prep-lesson"><div class="lesson-top"><strong>Lesson 6: Team-Project Roundtable</strong><span class="lesson-type">listening</span></div><p>Listen to a short report and identify people, actions, time and place.</p><button class="mini-open" onclick="openPublicLesson('Lesson 6: Team-Project Roundtable')">Open Lesson →</button></div></div></details></div>
-      <div class="curriculum-detail-head" style="margin-top:18px"><div><div class="eyebrow" style="margin-bottom:4px">Grammar Map</div><h3>Core grammar by unit</h3></div></div>
-      <div class="grammar-map"><div class="mini-card"><b>Unit 1</b><span>Present simple + adverbs of frequency</span></div><div class="mini-card"><b>Unit 2</b><span>Possessive adjectives + can/will requests</span></div><div class="mini-card"><b>Unit 3</b><span>Present continuous + pronouns</span></div><div class="mini-card"><b>Unit 4</b><span>Imperatives + zero conditional</span></div><div class="mini-card"><b>Unit 5</b><span>Comparatives + superlatives + articles</span></div><div class="mini-card"><b>Unit 6</b><span>Past-simple Wh- questions</span></div></div>
-      <div class="assessment-strip"><div class="assessment-box"><h4>Unit Quizzes</h4><p>Six published assessments, one for each unit.</p><div class="assessment-list"><div>✓ Quiz 1 — Life in a Digital World</div><div>✓ Quiz 2 — Learning to Learn</div><div>✓ Quiz 3 — Role Models</div><div>✓ Quiz 4 — Smart Choices</div><div>✓ Quiz 5 — Future Dreams</div><div>✓ Quiz 6 — Global Citizen</div></div></div><div class="assessment-box"><h4>Homework & Revision</h4><p>Six unit tasks plus two mixed review tasks.</p><div class="assessment-list"><div>✎ Homework 1 — My Digital Routine</div><div>✎ Homework 2 — My Weekly Study Plan</div><div>✎ Homework 3 — My Role Model</div><div>✎ Homework 4 — Smart Choices Guide</div><div>✎ Homework 5 — My Future Plan</div><div>✎ Homework 6 — Global Citizen</div><div>✎ Review Homework 1 — Units 1–3</div><div>✎ Review Homework 2 — Units 4–6</div></div></div></div>
-    </div>
-  </div>
-</div></section>
-<section id="subjects"><div class="container"><div class="head"><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2><p>Open any learning area directly. Sign in when the content belongs to your active grade.</p></div><div class="tools"><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')" onkeydown="if(event.key==='Enter'||event.key===' ')openStudentTool('lessons')"><div class="tool-icon">A</div><h3>Grammar</h3><p>Open your grade lessons and filter grammar content.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">V</div><h3>Vocabulary</h3><p>Open unit vocabulary lessons and revision.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">R</div><h3>Reading</h3><p>Open reading lessons and comprehension practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">W</div><h3>Writing</h3><p>Open writing lessons and guided practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">L</div><h3>Listening</h3><p>Open listening lessons and media.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('quizzes')"><div class="tool-icon">Q</div><h3>Quizzes</h3><p>Open your published quizzes and start one.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('homework')"><div class="tool-icon">H</div><h3>Homework</h3><p>Open assignments and submit your answers.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('certificates')"><div class="tool-icon">C</div><h3>Certificates</h3><p>Open certificates issued to your account.</p></div></div></div></section>
-<section id="dashboard"><div class="container">
-  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Track your English progress, jump back into lessons, review quizzes and manage your student account.</p></div>
-  <div class="dashboard-grid-pro">
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>My English Progress</h3><p id="dashGradeLabel">Log in to load your active grade.</p></div><span class="pill" id="dashAccessPill">Student</span></div><div id="dashboardGradeProgress"><div class="empty">Log in to load your English progress.</div></div></div>
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Quick Actions</h3><p>Open the part of your course you need.</p></div></div><div class="quick-grid"><button class="quick-card" onclick="openStudentTool('lessons')"><b>Lessons</b><span>Watch videos and study content</span></button><button class="quick-card" onclick="openStudentTool('quizzes')"><b>Quizzes</b><span>Practice and check your score</span></button><button class="quick-card" onclick="openStudentTool('homework')"><b>Homework</b><span>Submit assignments and view feedback</span></button><button class="quick-card" onclick="openDomaV2Reports()"><b>Reports</b><span>See your full learning history</span></button></div></div>
-  </div>
-  <div class="progress-summary" style="margin-top:15px">
-    <div class="progress-mini"><b id="dashLessons">—</b><span>Lessons completed</span></div>
-    <div class="progress-mini"><b id="dashQuizzes">—</b><span>Quiz attempts</span></div>
-    <div class="progress-mini"><b id="dashCerts">—</b><span>Certificates</span></div>
-  </div>
-  <div class="dashboard-grid-pro" style="margin-top:15px">
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Learning Breakdown</h3><p>Live activity from your student account.</p></div></div><div id="dashBreakdown"><div class="empty">Log in to load your learning breakdown.</div></div></div>
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Recent Activity</h3><p>Your latest study actions.</p></div></div><div id="dashActivity"><div class="empty">Log in to load recent activity.</div></div></div>
-  </div>
-  <div class="notice" id="dashNotice" style="margin-top:15px">Your personalized dashboard appears after login.</div>
-  <div class="doma-v2-actions"><button class="btn secondary" onclick="openDomaV2Reports()">Open Detailed Reports</button><button class="btn secondary" onclick="openDomaV2Notifications()">My Notifications</button></div>
-</div></section>
-<section id="teachers"><div class="container"><div class="head"><div class="eyebrow">Learning areas</div><h2>Everything you need for English.</h2><p>Study the skills that matter for your school English curriculum, all inside your grade area.</p></div><div class="teachers"><div class="card teacher"><div class="avatar">G</div><h3>Grammar</h3><p>Rules, examples &amp; practice</p><small>Build accurate English sentences.</small></div><div class="card teacher"><div class="avatar">V</div><h3>Vocabulary</h3><p>Words, meanings &amp; usage</p><small>Revise key words by unit.</small></div><div class="card teacher"><div class="avatar">R</div><h3>Reading</h3><p>Comprehension &amp; questions</p><small>Practice school-style reading.</small></div><div class="card teacher"><div class="avatar">W</div><h3>Writing</h3><p>Models &amp; guided practice</p><small>Improve structure and expression.</small></div><div class="card teacher"><div class="avatar">L</div><h3>Listening</h3><p>Audio &amp; comprehension</p><small>Train your listening skills.</small></div><div class="card teacher"><div class="avatar">Q</div><h3>Quizzes &amp; Homework</h3><p>Practice &amp; feedback</p><small>Check your learning and results.</small></div></div></div></section>
-<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div><h2>One plan. 150 EGP per month.</h2><p>All six grades use the same monthly subscription price.</p></div><div class="pricing"><div class="card plan" style="border-color:#7d2940;max-width:560px;margin:auto"><span class="pill">MONTHLY</span><h3>Complete Grade Access</h3><div class="money">150 <small>EGP / month</small></div><ul><li>Access for your selected grade</li><li>Lessons, videos and curriculum</li><li>Grammar, vocabulary, reading & listening</li><li>Quizzes, homework and progress</li><li>Certificates and student notifications</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div></div></div></section>
-<section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq"><details><summary>How do I start learning?</summary><p>Create a student account, choose your grade, select monthly access, send the payment through Mobile Cash, and upload the receipt. Access starts after admin approval.</p></details><details><summary>Which grades are supported?</summary><p>1st, 2nd and 3rd Preparatory plus 1st, 2nd and 3rd Secondary.</p></details><details><summary>What can I study?</summary><p>Published content can include grammar, vocabulary, reading, writing, listening, quizzes and homework for your selected grade.</p></details><details><summary>Where do I see my progress?</summary><p>Use the Student Dashboard to track completed lessons, quiz attempts, certificates, homework and notifications.</p></details><details><summary>Can I study from my phone?</summary><p>Yes. The student interface is responsive and works on desktop and mobile browsers.</p></details></div></div></section>
-<section><div class="container"><div class="cta"><div class="eyebrow">Your next English lesson starts here</div><h2>Build stronger English, one lesson at a time.</h2><p>Create your student account and choose the grade that matches your school year.</p><button class="btn primary" onclick="openAuth('signup')">Create Student Account →</button></div></div></section>
-<section id="study-hub" class="study-hub-section">
-  <div class="container">
-    <div class="section-head"><div><div class="eyebrow">Student Hub</div><h2>Your next study step.</h2><p>Open your learning space, continue the current lesson, or jump straight to practice.</p></div><span class="pill">DOMA ACADEMY</span></div>
-    <div class="home-learning-grid">
-      <div class="home-continue-card">
-        <div class="eyebrow" style="margin-bottom:6px">Continue Learning</div>
-        <h3 id="homeMasterContinueTitle">Build your learning routine.</h3>
-        <p id="homeMasterContinueText">Log in to see your latest lesson, saved lessons, progress and study streak.</p>
-        <div class="account-actions"><button type="button" class="btn primary" onclick="openStudentTool('overview')">Open Student Area →</button><button type="button" class="btn secondary" onclick="openStudentTool('lessons')">Open Lessons</button></div>
-      </div>
-      <div class="home-feature-card">
-        <div class="eyebrow" style="margin-bottom:6px">Learning Tools</div>
-        <h3>Everything in one place.</h3>
-        <p>Lessons, quizzes, homework, certificates and notifications stay connected to your student account.</p>
-        <div class="home-quick-grid">
-          <button type="button" class="home-quick" onclick="openStudentTool('lessons')"><b>Lessons</b><span>Watch & study</span></button>
-          <button type="button" class="home-quick" onclick="openStudentTool('quizzes')"><b>Quizzes</b><span>Test yourself</span></button>
-          <button type="button" class="home-quick" onclick="openStudentTool('homework')"><b>Homework</b><span>Submit work</span></button>
-          <button type="button" class="home-quick" onclick="openDomaV2Reports()"><b>Reports</b><span>Track progress</span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<footer class="footer"><div class="container"><div class="footgrid"><div><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>BY ADHAM</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div><div><h4>Platform</h4><a href="#grades">Grades</a><a href="#first-prep">1st Preparatory</a><a href="#subjects">Learning</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div><div><h4>Learning</h4><a href="#subjects">Grammar</a><a href="#subjects">Vocabulary</a><a href="#subjects">Reading</a><a href="#subjects">Writing</a></div><div><h4>Account</h4><a href="#" onclick="openAuth('login');return false">Log In</a><a href="#" onclick="openAuth('signup');return false">Create Account</a><a href="#dashboard">My Progress</a><a href="#faq">FAQ</a></div></div><div class="copy"><span>© 2026 DOMA ACADEMY — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div></div></footer>
-<div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h3 id="modalTitle">DOMA ACADEMY</h3><button class="close" onclick="closeModal()">×</button></div><p id="modalText"></p><div id="modalBody"></div></div></div>
-<div class="modal" id="gradeModal"><div class="modalbox"><div class="modalhead"><h3 id="gradeModalTitle">Grade Access</h3><button class="close" onclick="closeGradeModal()">×</button></div><p id="gradeModalText"></p><div id="gradeModalBody"></div></div></div>
-<div class="drawer" id="drawer"><div class="drawer-shell"><aside class="drawer-side"><div class="drawer-brand"><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>STUDENT AREA</small></span></a></div><div class="user-card" id="userCard"><strong>Student</strong><span>Loading…</span></div><button class="side-link active" data-view="overview" onclick="studentView('overview')">⌂ Overview</button><button class="side-link" data-view="lessons" onclick="studentView('lessons')">▶ Lessons</button><button class="side-link" data-view="daily100" onclick="studentView('daily100')">🔤 Daily Words</button><button class="side-link" data-view="quizzes" onclick="studentView('quizzes')">✓ Quizzes</button><button class="side-link" data-view="homework" onclick="studentView('homework')">☰ Homework</button><button class="side-link" data-view="certificates" onclick="studentView('certificates')">▣ Certificates</button><button class="side-link" data-view="notifications" onclick="studentView('notifications')">◌ Notifications</button><button class="side-link" data-view="profile" onclick="studentView('profile')">⚙ Profile</button><button class="side-link" onclick="domaLogout()">↪ Log Out</button></aside><main class="drawer-main"><div class="drawer-top"><div><div class="eyebrow" style="margin-bottom:3px">DOMA ACADEMY • STUDENT</div><h2 id="drawerTitle">Overview</h2><p id="drawerSubtitle">Your learning space.</p></div><button class="btn secondary" onclick="closeDrawer()">Close</button></div><div class="drawer-body" id="drawerBody"><div class="empty">Loading student area…</div></div></main></div></div>
-<div class="toast" id="toast"></div>
-
-<script>
-const DOMA_URL = 'https://dtptxhkcogpoleftguas.supabase.co';
-const DOMA_KEY = 'sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-const MOBILE_CASH = '01006525147';
-
-let sb = null, sessionUser = null, grades = [], gradePrices = {};
-const DEFAULT_PRICES = {
-  '1st Preparatory': { monthly: 150, annual: 150 },
-  '2nd Preparatory': { monthly: 200, annual: 200 },
-  '3rd Preparatory': { monthly: 250, annual: 250 },
-  '1st Secondary': { monthly: 150, annual: 150 },
-  '2nd Secondary': { monthly: 200, annual: 200 },
-  '3rd Secondary': { monthly: 250, annual: 250 }
-};
-
-let currentGrade = null, currentSubscription = null, currentLessons = [], currentQuizzes = [], currentHomework = [], currentLessonIndex = 0, currentStudentView = 'overview', currentQuiz = null, pendingGradeName = null, selectedPlan = 'monthly';
-
-const $ = id => document.getElementById(id);
-const esc = v => String(v ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-const fmtDate = v => v ? new Date(v).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
-const fmtDateTime = v => v ? new Date(v).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '—';
-
-function showToast(msg) {
-  const t = $('toast');
-  t.textContent = msg || '';
-  t.classList.add('show');
-  clearTimeout(window.__domaToast);
-  window.__domaToast = setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-function showStatus(id, msg, kind = 'info') {
-  const el = $(id);
-  if (!el) return;
-  el.textContent = msg || '';
-  el.className = 'status show ' + kind;
-}
-
-function closeModal() { $('modal').classList.remove('show'); }
-function closeGradeModal() { $('gradeModal').classList.remove('show'); }
-function toggleMobileMenu() { $('mobileNav').classList.add('show'); }
-function closeMobileMenu() { $('mobileNav').classList.remove('show'); }
-function openModal(type) {
-  if (type === 'login' || type === 'signup') { openAuth(type); return; }
-  if (type === 'search') { openSearch(); return; }
-}
-
-$('modal').addEventListener('click', e => { if (e.target === $('modal')) closeModal(); });
-$('gradeModal').addEventListener('click', e => { if (e.target === $('gradeModal')) closeGradeModal(); });
-$('mobileNav').addEventListener('click', e => { if (e.target === $('mobileNav')) closeMobileMenu(); });
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeModal();
-    closeGradeModal();
-    closeMobileMenu();
-    if ($('drawer').classList.contains('show')) closeDrawer();
-  }
-});
-
-function openSearch() {
-  $('modalTitle').textContent = 'Find your English content';
-  $('modalText').textContent = 'Search the visible grades by school stage, grade or English skill.';
-  $('modalBody').innerHTML = '<div class="formgrid"><input id="modalPublicSearch" class="field full" placeholder="grammar, vocabulary, 3rd secondary…"><button class="btn primary full" onclick="applyModalSearch()">Search Grades</button></div>';
-  $('modal').classList.add('show');
-  setTimeout(() => $('modalPublicSearch')?.focus(), 50);
-}
-
-function applyModalSearch() {
-  const q = $('modalPublicSearch')?.value.trim() || '';
-  $('publicSearch').value = q;
-  closeModal();
-  filterGrades();
-  $('grades').scrollIntoView({ behavior: 'smooth' });
-}
-
-function openAuth(type) {
-  const title = $('modalTitle'), text = $('modalText'), body = $('modalBody');
-  if (type === 'login') {
-    title.textContent = 'Log in to DOMA ACADEMY';
-    text.textContent = 'Use your student account to open your dashboard and active grade.';
-    body.innerHTML = '<div class="formgrid"><input id="loginEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password"><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
-  } else {
-    title.textContent = 'Create your student account';
-    text.textContent = 'Create an account first, then choose your grade and access plan.';
-    body.innerHTML = '<div class="formgrid"><input id="signupName" class="field" placeholder="Full name" autocomplete="name"><input id="signupEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="signupPass" class="field full" type="password" placeholder="Password — at least 6 characters" autocomplete="new-password"><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
-  }
-  $('modal').classList.add('show');
-}
-
-async function ensureProfile(user, name = '') {
-  if (!user || !sb) return null;
-  const r = await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id', user.id).maybeSingle();
-  if (!r.error && r.data) return r.data;
-  const payload = { id: user.id, full_name: name || user.user_metadata?.full_name || '', email: user.email || '', role: 'student' };
-  const ins = await sb.from('profiles').insert(payload).select('id,full_name,email,phone,role,grade_id,created_at').maybeSingle();
-  if (!ins.error) return ins.data || payload;
-  return payload;
-}
-
-async function domaLogin() {
-  const email = $('loginEmail')?.value.trim() || '', pass = $('loginPass')?.value || '';
-  if (!email || !pass) return showStatus('authStatus', 'Enter your email and password.', 'error');
-  showStatus('authStatus', 'Signing in…');
-  const r = await sb.auth.signInWithPassword({ email, password: pass });
-  if (r.error) return showStatus('authStatus', r.error.message, 'error');
-  sessionUser = r.data.user;
-  await ensureProfile(sessionUser);
-  closeModal();
-  await refreshStudentState();
-  showToast('Welcome back to DOMA ACADEMY.');
-  openDrawer('overview');
-}
-
-async function domaSignup() {
-  const name = $('signupName')?.value.trim() || '', email = $('signupEmail')?.value.trim() || '', pass = $('signupPass')?.value || '';
-  if (!name || !email || pass.length < 6) return showStatus('authStatus', 'Enter your full name, email and a password of at least 6 characters.', 'error');
-  showStatus('authStatus', 'Creating your student account…');
-  const r = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name } } });
-  if (r.error) return showStatus('authStatus', r.error.message, 'error');
-  let user = r.data?.user || null, session = r.data?.session || null;
-  if (!session) {
-    const l = await sb.auth.signInWithPassword({ email, password: pass });
-    if (!l.error) { user = l.data?.user || user; session = l.data?.session || null; }
-  }
-  if (!session) return showStatus('authStatus', 'Account created, but no active session was returned. Disable email confirmation in Supabase Authentication → Providers → Email for instant signup.', 'error');
-  sessionUser = user;
-  await ensureProfile(user, name);
-  closeModal();
-  await refreshStudentState();
-  showToast('Account created successfully.');
-  openDrawer('overview');
-}
-
-async function domaLogout() {
-  if (sb) await sb.auth.signOut();
-  sessionUser = null;
-  currentGrade = null;
-  currentSubscription = null;
-  window.domaStudentProfile = null;
-  closeDrawer();
-  updateNav();
-  renderDashboardLoggedOut();
-  showToast('You have been logged out.');
-}
-
-function updateNav() {
-  if (sessionUser) {
-    $('navLogin').textContent = 'My Account';
-    $('navLogin').onclick = () => openDrawer('overview');
-    $('navAction').textContent = 'Log Out';
-    $('navAction').onclick = domaLogout;
-  } else {
-    $('navLogin').textContent = 'Log In';
-    $('navLogin').onclick = () => openAuth('login');
-    $('navAction').textContent = 'Get Started';
-    $('navAction').onclick = () => openAuth('signup');
-  }
-}
-
-async function getProfile() {
-  if (!sessionUser) return null;
-  const r = await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id', sessionUser.id).maybeSingle();
-  if (r.error) { console.warn(r.error); return await ensureProfile(sessionUser); }
-  return r.data || await ensureProfile(sessionUser);
-}
-
-async function getActiveSubscriptions() {
-  if (!sessionUser) return [];
-  const r = await sb.from('subscriptions').select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at').eq('student_id', sessionUser.id).eq('status', 'active').order('expires_at', { ascending: false });
-  if (r.error) { console.warn(r.error); return []; }
-  return (r.data || []).filter(x => new Date(x.expires_at) > new Date()).map(x => ({ ...x, grades: { name: grades.find(g => g.id === x.grade_id)?.name || '' } }));
-}
-
-async function getRequests() {
-  if (!sessionUser) return [];
-  const r = await sb.from('subscription_requests').select('id,grade_id,plan,amount,status,admin_note,created_at,reviewed_at').eq('student_id', sessionUser.id).order('created_at', { ascending: false });
-  if (r.error) { console.warn(r.error); return []; }
-  return r.data || [];
-}
-
-async function fetchGrades() {
-  if (!sb) return;
-  const r = await sb.from('grades').select('id,name,stage,description,display_order,monthly_price,annual_price').order('display_order', { ascending: true });
-  if (!r.error && r.data && r.data.length > 0) {
-    grades = r.data;
-    grades.forEach(g => {
-      gradePrices[g.name] = {
-        monthly: g.monthly_price || DEFAULT_PRICES[g.name]?.monthly || 150,
-        annual: g.annual_price || DEFAULT_PRICES[g.name]?.annual || 150
-      };
-    });
-  } else {
-    grades = [
-      { id: '1', name: '1st Preparatory', stage: 'preparatory', description: 'English skills, grammar, reading and vocabulary for Grade 1 Preparatory.' },
-      { id: '2', name: '2nd Preparatory', stage: 'preparatory', description: 'English lessons, quizzes and homework for Grade 2 Preparatory.' },
-      { id: '3', name: '3rd Preparatory', stage: 'preparatory', description: 'Complete prep English curriculum with structured tests and practice.' },
-      { id: '4', name: '1st Secondary', stage: 'secondary', description: 'Secondary English foundation, literature, grammar and writing.' },
-      { id: '5', name: '2nd Secondary', stage: 'secondary', description: 'Advanced secondary English lessons, comprehension and tests.' },
-      { id: '6', name: '3rd Secondary', stage: 'secondary', description: 'Thorough preparation for 3rd Secondary English exam requirements.' }
-    ];
-    grades.forEach(g => { gradePrices[g.name] = DEFAULT_PRICES[g.name]; });
-  }
-  renderGrades();
-}
-
-function renderGrades() {
-  const container = $('gradeGrid');
-  if (!container) return;
-  container.innerHTML = grades.map(g => `
-    <div class="card grade">
-      <div class="grade-cover">
-        <div>
-          <strong>${esc(g.name)}</strong>
-          <span class="stage">${esc(g.stage)}</span>
-        </div>
-      </div>
-      <div class="grade-body">
-        <h3>${esc(g.name)}</h3>
-        <p>${esc(g.description)}</p>
-        <div class="grade-meta">
-          <span>150 EGP / month</span>
-        </div>
-        <div class="grade-actions">
-          <button class="btn primary" onclick="domaOpenGrade('${esc(g.name)}')">Open Grade →</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-  $('gradeLoadStatus').textContent = 'Ready';
-}
-
-function filterGrades() {
-  const q = $('publicSearch')?.value.toLowerCase().trim() || '';
-  const stage = $('publicStage')?.value || 'all';
-  const filtered = grades.filter(g => {
-    const matchStage = stage === 'all' || g.stage.toLowerCase() === stage.toLowerCase();
-    const matchQuery = !q || g.name.toLowerCase().includes(q) || g.description.toLowerCase().includes(q);
-    return matchStage && matchQuery;
-  });
-  const container = $('gradeGrid');
-  if (!container) return;
-  if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty">No grades match your search criteria.</div>';
-    return;
-  }
-  container.innerHTML = filtered.map(g => `
-    <div class="card grade">
-      <div class="grade-cover">
-        <div>
-          <strong>${esc(g.name)}</strong>
-          <span class="stage">${esc(g.stage)}</span>
-        </div>
-      </div>
-      <div class="grade-body">
-        <h3>${esc(g.name)}</h3>
-        <p>${esc(g.description)}</p>
-        <div class="grade-meta">
-          <span>150 EGP / month</span>
-        </div>
-        <div class="grade-actions">
-          <button class="btn primary" onclick="domaOpenGrade('${esc(g.name)}')">Open Grade →</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function domaOpenGrade(gradeName) {
-  pendingGradeName = gradeName;
-  if (!sessionUser) {
-    openAuth('login');
-    return;
-  }
-  openGradeModal(gradeName);
-}
-
-function openGradeModal(gradeName) {
-  const g = grades.find(x => x.name === gradeName) || { name: gradeName };
-  const price = gradePrices[gradeName]?.monthly || 150;
-  $('gradeModalTitle').textContent = gradeName;
-  $('gradeModalText').textContent = 'Activate your grade access using Mobile Cash.';$('gradeModalBody').innerHTML = `
-    <div style="display:grid;gap:12px">
-      <div class="notice">
-        <b>Subscription Plan:</b> 150 EGP / Month<br>
-        <b>Send Payment To:</b> ${MOBILE_CASH} (Mobile Cash)
-      </div>
-      <div class="formgrid">
-        <input id="reqSenderPhone" class="field full" placeholder="Sender Mobile Cash Number">
-        <input id="reqTxId" class="field full" placeholder="Transaction Reference / Note">
-        <button class="btn primary full" onclick="submitSubscriptionRequest('${esc(g.id || '')}', '${esc(gradeName)}')">Submit Access Request</button>
-        <div id="subReqStatus" class="status full"></div>
-      </div>
-    </div>
-  `;
-  $('gradeModal').classList.add('show');
-}
-
-async function submitSubscriptionRequest(gradeId, gradeName) {
-  if (!sessionUser) return openAuth('login');
-  const phone = $('reqSenderPhone')?.value.trim();
-  const txId = $('reqTxId')?.value.trim();
-  if (!phone) return showStatus('subReqStatus', 'Please enter your Mobile Cash number.', 'error');
-  
-  showStatus('subReqStatus', 'Submitting your request…');
-  let targetGradeId = gradeId;
-  if (!targetGradeId) {
-    const found = grades.find(g => g.name === gradeName);
-    targetGradeId = found ? found.id : null;
-  }
-  
-  const payload = {
-    student_id: sessionUser.id,
-    grade_id: targetGradeId,
-    plan: 'monthly',
-    amount: gradePrices[gradeName]?.monthly || 150,
-    status: 'pending',
-    sender_phone: phone,
-    transaction_id: txId
-  };
-
-  const r = await sb.from('subscription_requests').insert(payload);
-  if (r.error) return showStatus('subReqStatus', r.error.message, 'error');
-  
-  showStatus('subReqStatus', 'Request submitted! Access will activate upon admin approval.', 'success');
-  setTimeout(() => {
-    closeGradeModal();
-    openDrawer('overview');
-  }, 1500);
-}
-
-function openDrawer(view = 'overview') {
-  currentStudentView = view;
-  $('drawer').classList.add('show');
-  document.querySelectorAll('.side-link').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.view === view);
-  });
-  renderStudentView(view);
-}
-
-function closeDrawer() { $('drawer').classList.remove('show'); }
-function studentView(view) { openDrawer(view); }
-
-function openStudentTool(tool) {
-  if (!sessionUser) return openAuth('login');
-  openDrawer(tool);
-}
-
-function openPublicLesson(title) {
-  if (!sessionUser) return openAuth('login');
-  openDrawer('lessons');
-}
-
-async function refreshStudentState() {
-  updateNav();
-  if (!sessionUser) return;
-  const profile = await getProfile();
-  window.domaStudentProfile = profile;
-  const subs = await getActiveSubscriptions();
-  if (subs.length > 0) {
-    currentSubscription = subs[0];
-    currentGrade = grades.find(g => g.id === currentSubscription.grade_id) || null;
-  }
-  updateDashboardUI();
-}
-
-function renderDashboardLoggedOut() {
-  $('dashGradeLabel').textContent = 'Log in to load your active grade.';
-  $('dashAccessPill').textContent = 'Guest';$('dashboardGradeProgress').innerHTML = '<div class="empty">Log in to load your English progress.</div>';
-  $('dashLessons').textContent = '—';$('dashQuizzes').textContent = '—';
-  $('dashCerts').textContent = '—';$('dashBreakdown').innerHTML = '<div class="empty">Log in to load your learning breakdown.</div>';
-  $('dashActivity').innerHTML = '<div class="empty">Log in to load recent activity.</div>';
-}
-
-function updateDashboardUI() {
-  if (!sessionUser) return renderDashboardLoggedOut();
-  const profile = window.domaStudentProfile;
-  $('dashGradeLabel').textContent = currentGrade ? currentGrade.name : 'No Active Subscription';
-  $('dashAccessPill').textContent = currentSubscription ? 'Active Student' : 'Pending/Inactive';
-  $('dashNotice').textContent = `Welcome, ${profile?.full_name || 'Student'}! Track your progress and jump into lessons below.`;
-}
-
-function renderStudentView(view) {
-  const body = $('drawerBody');
-  const title = $('drawerTitle');
-  const subtitle = $('drawerSubtitle');
-  const profile = window.domaStudentProfile || {};
-  $('userCard').innerHTML = `<strong>${esc(profile.full_name || 'Student')}</strong><span>${esc(profile.email || '')}</span>`;
-
-  if (view === 'overview') {
-    title.textContent = 'Overview';
-    subtitle.textContent = 'Your learning space & status.';
-    body.innerHTML = `
-      <div class="workspace-grid">
-        <div class="card workspace-card">
-          <h3>Active Grade</h3>
-          <p>${esc(currentGrade ? currentGrade.name : 'None selected')}</p>
-        </div>
-        <div class="card workspace-card">
-          <h3>Subscription</h3>
-          <p>${esc(currentSubscription ? 'Active (' + currentSubscription.plan + ')' : 'No active subscription')}</p>
-        </div>
-        <div class="card workspace-card">
-          <h3>Quick Start</h3>
-          <button class="btn primary" style="margin-top:8px;padding:6px 12px;font-size:10px" onclick="studentView('lessons')">Go to Lessons</button>
-        </div>
-      </div>
-    `;
-  } else if (view === 'lessons') {
-    title.textContent = 'Lessons';
-    subtitle.textContent = 'Watch video lessons and read core materials.';
-    body.innerHTML = '<div class="empty">Loading grade lessons…</div>';
-    loadStudentLessons();
-  } else if (view === 'quizzes') {
-    title.textContent = 'Quizzes';
-    subtitle.textContent = 'Assess your understanding and practice.';
-    body.innerHTML = '<div class="empty">No active quizzes available for this grade yet.</div>';
-  } else if (view === 'homework') {
-    title.textContent = 'Homework';
-    subtitle.textContent = 'Assignments and teacher feedback.';
-    body.innerHTML = '<div class="empty">No homework assignments posted yet.</div>';
-  } else if (view === 'certificates') {
-    title.textContent = 'Certificates';
-    subtitle.textContent = 'Earned certificates of completion.';
-    body.innerHTML = '<div class="empty">Complete course milestones to earn certificates.</div>';
-  } else if (view === 'notifications') {
-    title.textContent = 'Notifications';
-    subtitle.textContent = 'Updates and messages.';
-    body.innerHTML = '<div class="empty">No new notifications.</div>';
-  } else if (view === 'profile') {
-    title.textContent = 'Profile';
-    subtitle.textContent = 'Manage your account details.';
-    body.innerHTML = `
-      <div class="card" style="padding:20px;max-width:500px">
-        <div class="formgrid">
-          <input class="field full" value="${esc(profile.full_name || '')}" readonly>
-          <input class="field full" value="${esc(profile.email || '')}" readonly>
-        </div>
-      </div>
-    `;
-  } else if (view === 'daily100') {
-    title.textContent = 'Daily Words';
-    subtitle.textContent = 'Vocabulary booster & sentence examples.';
-    body.innerHTML = '<div class="empty">Daily vocabulary lists will be available soon.</div>';
-  }
-}
-
-async function loadStudentLessons() {
-  const body = $('drawerBody');
-  if (!currentGrade) {
-    body.innerHTML = '<div class="empty">Please select and activate a grade subscription to view lessons.</div>';
-    return;
-  }
-  const r = await sb.from('lessons').select('id,title,description,video_url,rich_content,created_at').eq('grade_id', currentGrade.id).order('created_at', { ascending: true });
-  if (r.error || !r.data || r.data.length === 0) {
-    body.innerHTML = '<div class="empty">No published lessons found for this grade yet.</div>';
-    return;
-  }
-  currentLessons = r.data;
-  renderLessonViewer(0);
-}
-
-function renderLessonViewer(index) {
-  currentLessonIndex = index;
-  const l = currentLessons[index];
-  const body = $('drawerBody');
-  body.innerHTML = `
-    <div class="lesson-view">
-      <div class="card lesson-player">
-        <div class="video-wrap">
-          ${l.video_url ? `<iframe src="${esc(l.video_url)}" allowfullscreen></iframe>` : '<div class="video-placeholder"><b>▶</b>No video attached</div>'}
-        </div>
-        <div class="lesson-content">
-          <h3>${esc(l.title)}</h3>
-          <p>${esc(l.description || '')}</p>
-          <div class="lesson-rich-content">${esc(l.rich_content || '')}</div>
-        </div>
-      </div>
-      <div class="card lesson-list">
-        <h4 style="margin-bottom:10px;font-size:12px">Lessons in this Grade</h4>
-        ${currentLessons.map((item, idx) => `
-          <button class="lesson-btn ${idx === index ? 'active' : ''}" onclick="renderLessonViewer(${idx})">
-            <span class="lesson-num">${idx + 1}</span>
-            <span style="font-size:11px">${esc(item.title)}</span>
-          </button>
-        `).join('')}
-      </div>
-    </div>
-  `;
-}
-
-function openDomaV2Reports() {
-  openDrawer('overview');
-}
-
-function openDomaV2Notifications() {
-  openDrawer('notifications');
-}
-
-window.addEventListener('DOMContentLoaded', async () => {
-  if (window.supabase) {
-    sb = window.supabase.createClient(DOMA_URL, DOMA_KEY);
-    const s = await sb.auth.getSession();
-    if (s.data?.session) {
-      sessionUser = s.data.session.user;
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --accent: #f59e0b;
+      --bg-main: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
     }
-  }
-  await fetchGrades();
-  await refreshStudentState();
-});
-</script>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      font-size: 2rem;
+      color: var(--accent);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text p {
+      font-size: 0.8rem;
+      color: #93c5fd;
+    }
+
+    nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius);
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background-color: #d97706;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #ffffff33;
+      color: #fff;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #fff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .hero-section {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .hero-section h2 {
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .hero-section p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .grades-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .grade-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .grade-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-light);
+    }
+
+    .grade-title {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .units-list {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .unit-item {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .unit-item:last-child {
+      border-bottom: none;
+    }
+
+    .unit-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 2.5rem;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 450px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary-light);
+    }
+
+    .status-msg {
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .status-msg.error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    .status-msg.success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .status-msg.info {
+      background: #e0f2fe;
+      color: #075985;
+      display: block;
+    }
+
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <i class="fa-solid fa-graduation-cap logo-icon"></i>
+      <div class="logo-text">
+        <h1>DOMA ACADEMY</h1>
+        <p>المنصة المتميزة لتعلم اللغة الإنجليزية</p>
+      </div>
+    </div>
+    <nav>
+      <button class="btn btn-outline" onclick="openAuth('login')">
+        <i class="fa-solid fa-right-to-bracket"></i> دخول
+      </button>
+      <button class="btn btn-primary" onclick="openAuth('signup')">
+        <i class="fa-solid fa-user-plus"></i> حساب جديد
+      </button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero-section">
+      <h2>مرحباً بك في DOMA ACADEMY</h2>
+      <p>منصة تفاعلية مخصصة لشرح وتطوير مهارات اللغة الإنجليزية للمرحلة الإعدادية وفقاً لأحدث المناهج التعليمية.</p>
+    </section>
+
+    <!-- الصفوف الدراسية -->
+    <div class="grades-grid">
+      <div class="grade-card">
+        <div class="grade-title">
+          <i class="fa-solid fa-book-open"></i> الصف الأول الإعدادي
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">منهج اللغة الإنجليزية الحديث مع تدريبات وشروحات مكثفة.</p>
+      </div>
+      <div class="grade-card">
+        <div class="grade-title">
+          <i class="fa-solid fa-book-open"></i> الصف الثاني الإعدادي
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">تغطية شاملة لقواعد اللغة والكلمات والمهارات الرئيسية.</p>
+      </div>
+      <div class="grade-card">
+        <div class="grade-title">
+          <i class="fa-solid fa-book-open"></i> الصف الثالث الإعدادي
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">مراجعات وإعداد شامل للامتحانات النهائية للشهادة الإعدادية.</p>
+      </div>
+    </div>
+
+    <!-- وحدات منهج الصف الأول إعدادي -->
+    <div class="units-list">
+      <h3 style="color: var(--primary); margin-bottom: 1.5rem;">منهج الصف الأول الإعدادي (1st Preparatory Curriculum)</h3>
+      
+      <div class="unit-item">
+        <div class="unit-title">Unit 1: Family and Me</div>
+        <p style="color: var(--text-muted);">الشرح، مفردات العائلة، والقواعد الخاطفة حول الضمائر وصفات الملكية.</p>
+      </div>
+      
+      <div class="unit-item">
+        <div class="unit-title">Unit 2: It's my favorite subject</div>
+        <p style="color: var(--text-muted);">المواد الدراسية، الأنشطة اليومية، وقواعد زمن المضارع البسيط (Present Simple).</p>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-title">Unit 3: Different People</div>
+        <p style="color: var(--text-muted);">وصف المظهر والشخصية، واستخدام can / can't / have got / has got.</p>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-title">Unit 4: We're using technology</div>
+        <p style="color: var(--text-muted);">مفردات التكنولوجيا والتطبيقات، وقواعد زمن المضارع المستمر (Present Continuous).</p>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-title">Unit 5: Holiday skills</div>
+        <p style="color: var(--text-muted);">الأنشطة والرحلات، وقواعد زمن الماضي البسيط (Past Simple).</p>
+      </div>
+
+      <div class="unit-item">
+        <div class="unit-title">Unit 6: Let's eat</div>
+        <p style="color: var(--text-muted);">الأطعمة والمشروبات، وقواعد الأسماء التي تُعد والأسماء التي لا تُعد (Countable & Uncountable).</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Auth Modal -->
+  <div class="modal" id="authModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      
+      <div id="authStatus" class="status-msg"></div>
+
+      <!-- Login Form -->
+      <div id="loginForm">
+        <h3 style="margin-bottom: 1.5rem; color: var(--primary);">تسجيل الدخول</h3>
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="loginEmail" placeholder="example@domain.com" />
+        </div>
+        <div class="form-group">
+          <label>كلمة المرور</label>
+          <input type="password" id="loginPass" placeholder="******" />
+        </div>
+        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="domaLogin()">تسجيل الدخول</button>
+      </div>
+
+      <!-- Signup Form -->
+      <div id="signupForm" style="display: none;">
+        <h3 style="margin-bottom: 1.5rem; color: var(--primary);">إنشاء حساب جديد</h3>
+        <div class="form-group">
+          <label>الاسم بالكامل</label>
+          <input type="text" id="signupName" placeholder="الاسم الثلاثي" />
+        </div>
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="signupEmail" placeholder="example@domain.com" />
+        </div>
+        <div class="form-group">
+          <label>كلمة المرور</label>
+          <input type="password" id="signupPass" placeholder="******" />
+        </div>
+        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="domaSignup()">إنشاء الحساب</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 DOMA ACADEMY. جميع الحقوق محفوظة.</p>
+  </footer>
+
+  <script>
+    // إعدادات Supabase
+    const DOMA_URL = "https://your-supabase-url.supabase.co";
+    const DOMA_KEY = "your-anon-key";
+    
+    let sb = null;
+    let sessionUser = null;
+
+    const $ = id => document.getElementById(id);
+
+    function openAuth(mode) {
+      $('authModal').classList.add('active');
+      if (mode === 'login') {
+        $('loginForm').style.display = 'block';$('signupForm').style.display = 'none';
+      } else {
+        $('loginForm').style.display = 'none';$('signupForm').style.display = 'block';
+      }
+      hideStatus('authStatus');
+    }
+
+    function closeModal() {
+      $('authModal').classList.remove('active');
+    }
+
+    function showStatus(elemId, msg, type) {
+      const el = $(elemId);
+      if (!el) return;
+      el.textContent = msg;
+      el.className = `status-msg ${type}`;
+    }
+
+    function hideStatus(elemId) {
+      const el = $(elemId);
+      if (!el) return;
+      el.className = 'status-msg';
+      el.style.display = 'none';
+    }
+
+    // دالة إنشاء وتحديث الملف الشخصي كاملة
+    async function ensureProfile(user, name = '') {
+      if (!user || !sb) return null;
+      
+      const r = await sb.from('profiles')
+        .select('id, full_name, email, phone, role, grade_id, created_at')
+        .eq('id', user.id)
+        .maybeSingle();
+        
+      if (!r.error && r.data) return r.data;
+      
+      const payload = {
+        id: user.id,
+        full_name: name || user.user_metadata?.full_name || '',
+        email: user.email || '',
+        role: 'student'
+      };
+      
+      const ins = await sb.from('profiles').insert([payload]).select().single();
+      if (ins.error) {
+        console.error('خطأ في إنشاء الملف الشخصي:', ins.error);
+        return null;
+      }
+      return ins.data;
+    }
+
+    // دالة تسجيل الدخول
+    async function domaLogin() {
+      const email = $('loginEmail')?.value.trim();
+      const password = $('loginPass')?.value.trim();
+      
+      if (!email || !password) {
+        showStatus('authStatus', 'يرجى إدخال البريد الإلكتروني وكلمة المرور.', 'error');
+        return;
+      }
+      
+      showStatus('authStatus', 'جاري تسجيل الدخول...', 'info');
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      
+      if (error) {
+        showStatus('authStatus', 'فشل تسجيل الدخول: ' + error.message, 'error');
+      } else {
+        sessionUser = data.user;
+        await ensureProfile(sessionUser);
+        showStatus('authStatus', 'تم تسجيل الدخول بنجاح!', 'success');
+        setTimeout(() => {
+          closeModal();
+          location.reload();
+        }, 1000);
+      }
+    }
+
+    // دالة إنشاء حساب جديد
+    async function domaSignup() {
+      const name = $('signupName')?.value.trim();
+      const email = $('signupEmail')?.value.trim();
+      const password = $('signupPass')?.value.trim();
+      
+      if (!name || !email || !password) {
+        showStatus('authStatus', 'يرجى ملء جميع الحقول المطلوبة.', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showStatus('authStatus', 'يجب أن تكون كلمة المرور 6 أحرف على الأقل.', 'error');
+        return;
+      }
+      
+      showStatus('authStatus', 'جاري إنشاء الحساب...', 'info');
+      const { data, error } = await sb.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: name } }
+      });
+      
+      if (error) {
+        showStatus('authStatus', 'فشل إنشاء الحساب: ' + error.message, 'error');
+      } else {
+        if (data.user) {
+          await ensureProfile(data.user, name);
+        }
+        showStatus('authStatus', 'تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.', 'success');
+        setTimeout(() => {
+          openAuth('login');
+        }, 1500);
+      }
+    }
+
+    // تهيئة Supabase عند تحميل الصفحة
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.supabase) {
+        sb = window.supabase.createClient(DOMA_URL, DOMA_KEY);
+        
+        sb.auth.getSession().then(({ data }) => {
+          if (data?.session) {
+            sessionUser = data.session.user;
+            ensureProfile(sessionUser);
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
