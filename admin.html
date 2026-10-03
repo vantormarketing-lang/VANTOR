@@ -676,17 +676,29 @@ window.deleteCertificate=id=>robustDelete('certificates',id,'Certificate',loadCe
 window.deleteReview=id=>robustDelete('reviews',id,'Review',loadReviews);
 
 window.deleteStudentAccount=async function(id,label){
-  const name=String(label||'this student');
-  if(!confirm('FINAL DELETE\n\nThis will permanently delete the student account '+name+' from Supabase Auth and remove the linked profile, subscriptions, requests, progress, quiz attempts, homework submissions, certificates and notifications where the database cascade applies.\n\nThis cannot be undone.\n\nContinue?'))return;
-  const typed=prompt('Type DELETE to confirm permanent account deletion:');
-  if(typed!=='DELETE')return toast('Deletion cancelled.');
-  const r=await db.rpc('doma_delete_student',{p_student_id:id});
-  if(r.error)return toast('Permanent deletion failed: '+r.error.message);
-  toast('Student account deleted permanently.');
-  closeModal();
-  await loadStudents();
-  await loadSales();
-  await loadDashboard();
+  try{
+    const name=String(label||'this student');
+    if(!id)return toast('Permanent deletion failed: student ID is missing.');
+    if(!confirm('FINAL DELETE\n\nThis will permanently delete the student account '+name+' from Supabase Auth and remove the linked profile, subscriptions, requests, progress, quiz attempts, homework submissions, certificates and notifications where the database cascade applies.\n\nThis cannot be undone.\n\nContinue?'))return;
+    const typed=prompt('Type DELETE to confirm permanent account deletion:');
+    if(typed!=='DELETE')return toast('Deletion cancelled.');
+    toast('Deleting student account…');
+    const r=await db.rpc('doma_delete_student',{p_student_id:id});
+    if(r?.error){
+      console.error('doma_delete_student RPC error:',r.error);
+      return toast('Permanent deletion failed: '+(r.error.message||r.error.details||r.error.hint||'Supabase RPC error'));
+    }
+    if(!r || !r.data || r.data.ok!==true){
+      console.error('Unexpected doma_delete_student response:',r);
+      return toast('Deletion was not confirmed by Supabase. Make sure the SQL RPC was installed.');
+    }
+    toast('Student account deleted permanently.');
+    closeModal();
+    await Promise.all([loadStudents(),loadSales(),loadDashboard()]);
+  }catch(e){
+    console.error('Permanent student deletion exception:',e);
+    toast('Permanent deletion failed: '+(e?.message||String(e)));
+  }
 };
 
 window.studentDetails=async function(id){
