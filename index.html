@@ -1225,4 +1225,55 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+<style id="doma-final-upgrades-css">
+.doma-final-history{margin-top:16px;padding:17px;background:#100b0d;border:1px solid #2d181f;border-radius:14px}.doma-final-history h3{font-size:15px;margin-bottom:10px}.doma-final-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #211318}.doma-final-row:last-child{border-bottom:0}.doma-final-row small{display:block;color:#777;margin-top:2px}.doma-final-score{font-weight:900;color:#e0a5b2;white-space:nowrap}.doma-final-unit{margin-top:9px}.doma-final-unit-head{display:flex;justify-content:space-between;gap:10px;font-size:10px;color:#aaa}.doma-final-unit-bar{height:7px;background:#26171c;border-radius:99px;overflow:hidden;margin-top:5px}.doma-final-unit-bar i{display:block;height:100%;background:#b44361;border-radius:99px}.doma-final-note{padding:10px 12px;border:1px dashed #43232e;border-radius:10px;color:#8e8387;font-size:10px;margin-top:10px}
+@media(max-width:700px){.doma-final-row{align-items:flex-start;flex-direction:column}.doma-final-score{white-space:normal}}
+</style>
+
+<script id="doma-final-student-upgrades">
+(function(){
+  'use strict';
+  function pct(score,total){return total?Math.round(Number(score||0)/Number(total||0)*100):0}
+  async function loadUnitProgressBlock(){
+    if(!sessionUser||!currentGrade)return '<div class="doma-final-note">Choose an active grade to see unit-by-unit progress.</div>';
+    const [u,p]=await Promise.all([
+      sb.from('units').select('id,title,unit_number').eq('grade_id',currentGrade.id).order('unit_number',{ascending:true}),
+      sb.from('lesson_progress').select('lesson_id,completed,progress_percent,lessons!inner(id,grade_id,unit_id)').eq('student_id',sessionUser.id).eq('lessons.grade_id',currentGrade.id).limit(1000)
+    ]);
+    if(u.error||p.error)return '<div class="doma-final-note">Unit progress is temporarily unavailable.</div>';
+    const units=u.data||[], rows=p.data||[];
+    return units.length?units.map(unit=>{
+      const lessonRows=rows.filter(x=>x.lessons?.unit_id===unit.id);
+      const avg=lessonRows.length?Math.round(lessonRows.reduce((a,x)=>a+Number(x.progress_percent||0),0)/lessonRows.length):0;
+      const done=lessonRows.filter(x=>x.completed).length;
+      return '<div class="doma-final-unit"><div class="doma-final-unit-head"><span>'+esc('Unit '+unit.unit_number+' — '+unit.title)+'</span><b>'+avg+'%</b></div><div class="doma-final-unit-bar"><i style="width:'+avg+'%"></i></div><small style="display:block;color:#777;margin-top:3px;font-size:9px">'+done+' of '+lessonRows.length+' tracked lessons completed</small></div>';
+    }).join(''):'<div class="doma-final-note">No units are available for this grade yet.</div>';
+  }
+  const oldReports=window.openDomaV2Reports;
+  window.openDomaV2Reports=async function(){
+    await oldReports();
+    try{
+      const body=$('drawerBody');if(!body||!sessionUser)return;
+      const box=document.createElement('div');box.className='doma-final-history';box.innerHTML='<h3>Progress by Unit</h3><div id="domaFinalUnitProgress">Loading…</div>';
+      body.appendChild(box);$('domaFinalUnitProgress').innerHTML=await loadUnitProgressBlock();
+    }catch(e){console.error(e)}
+  };
+  const oldQuizzes=window.renderStudentQuizzes;
+  window.renderStudentQuizzes=async function(){
+    await oldQuizzes();
+    try{
+      if(!sessionUser||!currentGrade)return;
+      const r=await sb.from('quiz_attempts').select('id,score,total_points,submitted_at,quizzes!inner(title,grade_id)').eq('student_id',sessionUser.id).eq('quizzes.grade_id',currentGrade.id).order('submitted_at',{ascending:false}).limit(20);
+      if(r.error)return;
+      const rows=r.data||[];const box=document.createElement('div');box.className='doma-final-history';
+      box.innerHTML='<h3>Your Quiz History</h3>'+(rows.length?rows.map(x=>'<div class="doma-final-row"><div><b>'+esc(x.quizzes?.title||'Quiz')+'</b><small>'+fmtDateTime(x.submitted_at)+'</small></div><div class="doma-final-score">'+pct(x.score,x.total_points)+'% <button type="button" class="btn secondary" style="padding:5px 8px;font-size:9px;margin-left:6px" data-action="attempt-review" data-attempt-id="'+esc(x.id)+'">Review</button></div></div>').join(''):'<div class="doma-final-note">No quiz attempts for this grade yet.</div>');
+      $('drawerBody').appendChild(box);
+    }catch(e){console.error(e)}
+  };
+  const oldOverview=window.renderStudentOverview;
+  window.renderStudentOverview=async function(){await oldOverview();try{if(!sessionUser||!currentGrade)return;const body=$('drawerBody');if(!body)return;const box=document.createElement('div');box.className='doma-final-history';box.innerHTML='<h3>Unit Progress</h3><div id="domaFinalOverviewUnits">Loading…</div>';body.appendChild(box);$('domaFinalOverviewUnits').innerHTML=await loadUnitProgressBlock()}catch(e){console.error(e)}};
+  window.addEventListener('load',()=>setTimeout(()=>{try{if(typeof patchNavNotificationBadge==='function')patchNavNotificationBadge()}catch(e){}},700));
+})();
+</script>
 </body>
