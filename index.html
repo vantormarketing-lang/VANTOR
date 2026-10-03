@@ -1422,4 +1422,157 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   window.domaRefreshStudentHome=refresh;
 })();
 </script>
+
+<style id="doma-student-gamification-v1">
+.student-gami{margin-top:16px}.student-gami-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.student-gami-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.student-gami-card h4{margin:0 0 8px}.student-gami-muted{opacity:.72;font-size:.9rem}.student-gami-progress{height:10px;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden;margin:10px 0}.student-gami-progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#62d4ff,#8d7cff);border-radius:999px}.student-gami-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.student-gami-stat{padding:11px;border-radius:13px;background:rgba(255,255,255,.055);text-align:center}.student-gami-stat b{display:block;font-size:1.15rem}.student-gami-list{display:grid;gap:8px;margin-top:10px}.student-gami-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.045)}.student-gami-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.student-gami-badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.student-gami-badge{padding:12px 8px;text-align:center;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}.student-gami-badge.locked{opacity:.35}.student-gami-badge .ico{font-size:1.55rem;display:block;margin-bottom:5px}.student-gami-table{width:100%;border-collapse:collapse;margin-top:8px}.student-gami-table td,.student-gami-table th{padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left}.student-gami-rank{width:34px;font-weight:800}.student-gami-me{background:rgba(98,212,255,.08)}.student-gami-skill{display:grid;grid-template-columns:95px 1fr 45px;align-items:center;gap:8px;margin:9px 0}.student-gami-skill .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.student-gami-skill .bar i{display:block;height:100%;border-radius:99px;background:#62d4ff}.student-gami-center{margin-top:14px}.student-gami-center .student-gami-card{height:100%}@media(max-width:850px){.student-gami-grid{grid-template-columns:1fr}.student-gami-stats{grid-template-columns:repeat(2,1fr)}.student-gami-badges{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<script id="doma-student-gamification-v1">
+(function(){
+  'use strict';
+  const escG=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const moneyG=n=>Number(n||0).toLocaleString('en-US');
+  const pctG=n=>Math.max(0,Math.min(100,Math.round(Number(n)||0)));
+  const dayKeyG=d=>{const x=new Date(d);return isNaN(x)?null:x.toISOString().slice(0,10)};
+  const stateG=()=>{try{return JSON.parse(localStorage.getItem('doma_master_local_v1')||'{}')}catch(e){return {}}};
+
+  function levelG(xp){
+    const levels=[
+      [0,'Starter'],[200,'Learner'],[500,'Achiever'],[900,'Expert'],[1400,'Master'],[2200,'Legend']
+    ];
+    let cur=levels[0],next=null;
+    for(let i=0;i<levels.length;i++){if(xp>=levels[i][0])cur=levels[i];else{next=levels[i];break}}
+    return {name:cur[1],min:cur[0],next};
+  }
+  function xpG(data){
+    const lessons=(data.lp||[]).filter(x=>x.completed).length;
+    const quizBest={};
+    (data.attempts||[]).forEach(a=>{
+      const total=Number(a.total_points||0),score=Number(a.score||0);
+      const p=total?Math.round(score/total*100):0;
+      if(!quizBest[a.quiz_id]||p>quizBest[a.quiz_id])quizBest[a.quiz_id]=p;
+    });
+    const quizXP=Object.values(quizBest).reduce((s,p)=>s+Math.min(100,Math.max(0,Math.round(p))),0);
+    const hw=(data.hw||[]).length*20;
+    const cert=(data.certs||[]).length*100;
+    const sub=(data.subs||[]).some(s=>s.status==='active'&&new Date(s.expires_at)>new Date())?50:0;
+    return {xp:lessons*20+quizXP+hw+cert+sub,lessons,quizXP,hw,cert,sub};
+  }
+  function installG(){
+    if(document.getElementById('studentGamificationHost'))return document.getElementById('studentGamificationHost');
+    const marker=document.getElementById('homeStudentInsightsHost')||document.getElementById('home-upgrade');
+    if(!marker)return null;
+    const host=document.createElement('div');host.id='studentGamificationHost';host.className='student-gami';
+    const parent=marker.parentNode;parent.insertBefore(host,marker.nextSibling);return host;
+  }
+
+  async function buildG(){
+    const host=installG(); if(!host||!window.sb||!window.sessionUser||!window.currentGrade)return;
+    const uid=window.sessionUser.id, gid=window.currentGrade.id;
+    const [lp,att,hw,cert,subs,lessons,notifs]=await Promise.all([
+      sb.from('lesson_progress').select('lesson_id,completed,progress_percent,completed_at,last_opened_at').eq('student_id',uid),
+      sb.from('quiz_attempts').select('id,quiz_id,score,total_points,submitted_at').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(500),
+      sb.from('homework_submissions').select('id,homework_id,status,grade,submitted_at').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(500),
+      sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',uid).order('issued_at',{ascending:false}).limit(100),
+      sb.from('subscriptions').select('id,plan,amount,status,starts_at,expires_at,grade_id').eq('student_id',uid).order('expires_at',{ascending:false}).limit(50),
+      sb.from('lessons').select('id,title,lesson_type,unit_id,sort_order').eq('grade_id',gid).eq('is_published',true).order('sort_order',{ascending:true}),
+      sb.from('notifications').select('id,is_read,created_at').eq('student_id',uid).order('created_at',{ascending:false}).limit(100)
+    ]);
+    const data={lp:lp.data||[],attempts:att.data||[],hw:hw.data||[],certs:cert.data||[],subs:subs.data||[],lessons:lessons.data||[],notifs:notifs.data||[]};
+    const x=xpG(data), lv=levelG(x.xp);
+    const progressToNext=lv.next?Math.round((x.xp-lv.min)/(lv.next[0]-lv.min)*100):100;
+    const s=stateG(), studyDays=Array.isArray(s.studyDays)?s.studyDays:[];
+    const activeSub=data.subs.find(z=>z.grade_id===gid&&z.status==='active'&&new Date(z.expires_at)>new Date());
+    const bestByQuiz={};
+    data.attempts.forEach(a=>{const p=Number(a.total_points)?Number(a.score)/Number(a.total_points)*100:0;if(!bestByQuiz[a.quiz_id]||p>bestByQuiz[a.quiz_id])bestByQuiz[a.quiz_id]=p});
+    const quizScores=Object.values(bestByQuiz), quizAvg=quizScores.length?Math.round(quizScores.reduce((a,b)=>a+b,0)/quizScores.length):0;
+    const incomplete=data.lessons.filter(l=>!data.lp.some(p=>p.lesson_id===l.id&&p.completed));
+    const typeMap={};
+    data.lessons.forEach(l=>{const t=(l.lesson_type||'lesson').toLowerCase();typeMap[t]??={total:0,done:0};typeMap[t].total++;if(data.lp.some(p=>p.lesson_id===l.id&&p.completed))typeMap[t].done++});
+    const skillNames={grammar:'Grammar',vocabulary:'Vocabulary',reading:'Reading',writing:'Writing',listening:'Listening',lesson:'Lessons'};
+    const weak=Object.entries(typeMap).map(([k,v])=>({name:skillNames[k]||k,score:v.total?Math.round(v.done/v.total*100):0})).sort((a,b)=>a.score-b.score).slice(0,3);
+    const unlocked=[
+      ['🎯','First Lesson',x.lessons>=1],
+      ['⚡','200 XP',x.xp>=200],
+      ['🔥','7 Day Streak',studyDays.length>=7],
+      ['📚','10 Lessons',x.lessons>=10],
+      ['💯','90% Quiz',quizAvg>=90],
+      ['🏆','Certificate',x.cert>=1]
+    ];
+    const unread=data.notifs.filter(n=>!n.is_read).length;
+    const streak=window.getDomaStudyStreak?window.getDomaStudyStreak():0;
+
+    let leaderboard=[];
+    try{
+      const r=await sb.rpc('doma_student_leaderboard',{p_grade_id:gid,p_limit:10});
+      if(!r.error)leaderboard=r.data||[];
+    }catch(e){}
+
+    host.innerHTML=
+      '<div class="student-gami-grid">'+
+        '<div class="student-gami-card">'+
+          '<h4>🎮 Your Level — '+escG(lv.name)+'</h4>'+
+          '<div class="student-gami-muted">'+moneyG(x.xp)+' XP'+(lv.next?' • '+moneyG(lv.next[0]-x.xp)+' XP to '+escG(lv.next[1]):' • Maximum level reached')+'</div>'+
+          '<div class="student-gami-progress"><i style="width:'+progressToNext+'%"></i></div>'+
+          '<div class="student-gami-stats">'+
+            '<div class="student-gami-stat"><b>'+x.lessons+'</b><span>Lessons</span></div>'+
+            '<div class="student-gami-stat"><b>'+moneyG(x.quizXP)+'</b><span>Quiz XP</span></div>'+
+            '<div class="student-gami-stat"><b>'+x.hw+'</b><span>Homework</span></div>'+
+            '<div class="student-gami-stat"><b>'+streak+'</b><span>Day Streak</span></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="student-gami-card">'+
+          '<h4>📚 Learning Center</h4>'+
+          '<div class="student-gami-list">'+
+            '<div class="student-gami-row"><span>Lessons</span><b>'+data.lessons.length+'</b></div>'+
+            '<div class="student-gami-row"><span>Quizzes</span><b>'+quizScores.length+'</b></div>'+
+            '<div class="student-gami-row"><span>Certificates</span><b>'+x.cert+'</b></div>'+
+            '<div class="student-gami-row"><span>Unread notifications</span><b>'+unread+'</b></div>'+
+          '</div>'+
+          '<div class="student-gami-actions">'+
+            '<button class="btn secondary" type="button" onclick="studentView(\'lessons\')">Lessons</button>'+
+            '<button class="btn secondary" type="button" onclick="studentView(\'quizzes\')">Quizzes</button>'+
+            '<button class="btn secondary" type="button" onclick="studentView(\'homework\')">Homework</button>'+
+            '<button class="btn secondary" type="button" onclick="studentView(\'certificates\')">Certificates</button>'+
+            '<button class="btn secondary" type="button" onclick="openDomaV2Notifications()">Notifications</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="student-gami-grid student-gami-center">'+
+        '<div class="student-gami-card">'+
+          '<h4>🏅 Achievements</h4>'+
+          '<div class="student-gami-badges">'+unlocked.map(a=>'<div class="student-gami-badge '+(a[2]?'':'locked')+'"><span class="ico">'+a[0]+'</span><b>'+escG(a[1])+'</b></div>').join('')+'</div>'+
+        '</div>'+
+        '<div class="student-gami-card">'+
+          '<h4>🎯 Areas to Improve</h4>'+
+          (weak.length?weak.map(w=>'<div class="student-gami-skill"><span>'+escG(w.name)+'</span><div class="bar"><i style="width:'+pctG(w.score)+'%"></i></div><b>'+w.score+'%</b></div>').join(''):'<p class="student-gami-muted">Complete more lessons to unlock learning-area analysis.</p>')+
+        '</div>'+
+      '</div>'+
+      '<div class="student-gami-card student-gami-center">'+
+        '<h4>🏆 Class Leaderboard</h4>'+
+        (leaderboard.length?
+          '<table class="student-gami-table"><thead><tr><th>#</th><th>Student</th><th>Level</th><th>XP</th></tr></thead><tbody>'+
+          leaderboard.map((r,i)=>'<tr class="'+(r.student_id===uid?'student-gami-me':'')+'"><td class="student-gami-rank">'+(i+1)+'</td><td>'+escG(r.full_name||'Student')+(r.student_id===uid?' <b>(You)</b>':'')+'</td><td>'+escG(r.level_name||levelG(Number(r.xp||0)).name)+'</td><td><b>'+moneyG(r.xp)+'</b></td></tr>').join('')+
+          '</tbody></table>'
+          :'<p class="student-gami-muted">Leaderboard becomes available after the admin runs the gamification SQL patch.</p>')+
+      '</div>'+
+      '<div class="student-gami-card student-gami-center">'+
+        '<h4>📊 Quiz Performance</h4>'+
+        '<p class="student-gami-muted">Best-result average: <b>'+quizAvg+'%</b> • '+quizScores.length+' quiz'+(quizScores.length===1?'':'zes')+' attempted</p>'+
+        '<div class="student-gami-actions"><button class="btn primary" type="button" onclick="studentView(\'quizzes\')">Open Quiz Results →</button>'+(data.attempts.length?'<button class="btn secondary" type="button" onclick="openAttemptReview(\''+escG(data.attempts[0].id)+'\')">Review Latest Attempt</button>':'')+'</div>'+
+      '</div>';
+
+    window.__domaGamificationData=data;
+  }
+
+  const oldRefresh=window.domaRefreshStudentHome;
+  window.domaRefreshStudentHome=async function(){
+    if(typeof oldRefresh==='function')await oldRefresh();
+    await buildG();
+  };
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(buildG,1100));
+  window.addEventListener('load',()=>setTimeout(buildG,1400));
+  window.domaRefreshGamification=buildG;
+})();
+</script>
 </body>
