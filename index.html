@@ -383,36 +383,23 @@ async function getRequests(){
 }
 
 async function loadGrades(){
-  if(!sb){$('gradeLoadStatus').textContent='Connection not ready';return}
-  $('gradeLoadStatus').textContent='Loading grades…';
   const g=await sb.from('grades').select('id,name,stage,sort_order,is_active').order('sort_order',{ascending:true});
-  if(g.error){
-    console.error('Grades load failed:',g.error);
-    $('gradeLoadStatus').textContent='Grades could not be loaded';
-    $('gradeGrid').innerHTML='<div class="empty">Could not load grades right now. Please refresh the page.</div>';
-    return;
-  }
-  const allGrades=Array.isArray(g.data)?g.data:[];
-  grades=allGrades.filter(x=>x.is_active!==false);
-  gradePrices={};
+  if(g.error){$('gradeLoadStatus').textContent='Supabase error';$('gradeGrid').innerHTML='<div class="empty">Could not load grades: '+esc(g.error.message)+'</div>';return}
+  grades=(g.data||[]).filter(x=>x.is_active!==false);gradePrices={};
   const p=await sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount');
-  if(!p.error){(p.data||[]).forEach(x=>{gradePrices[x.grade_id]={monthly:Number(x.monthly_amount)||150,annual:Number(x.annual_amount)||150}})}
-  for(const grade of grades){
-    if(!gradePrices[grade.id]&&DEFAULT_PRICES[grade.name])gradePrices[grade.id]={...DEFAULT_PRICES[grade.name]};
-    if(!gradePrices[grade.id])gradePrices[grade.id]={monthly:150,annual:150};
+  if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:Number(x.monthly_amount)||150,annual:Number(x.annual_amount)||150})}
+  for(const g of grades){
+    if(!gradePrices[g.id]&&DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]};
+    if(!gradePrices[g.id])gradePrices[g.id]={monthly:150,annual:150};
   }
-  $('gradeLoadStatus').textContent=grades.length+' grades';
-  renderGrades();
-  updatePricingRange();
-  await refreshStudentState();
+  $('gradeLoadStatus').textContent=grades.length+' grades';renderGrades();updatePricingRange();await refreshStudentState()
 }
 function updatePricingRange(){const values=Object.values(gradePrices);if(!values.length)return;const m=values.map(x=>x.monthly),a=values.map(x=>x.annual);document.querySelectorAll('[data-pricing-range]').forEach(el=>el.textContent=Math.min(...m)+'–'+Math.max(...m));document.querySelectorAll('[data-pricing-range-annual]').forEach(el=>el.textContent=Math.min(...a)+'–'+Math.max(...a))}
 function renderGrades(list=grades){
-  const target=$('gradeGrid');if(!target)return;
-  target.innerHTML=list.length?list.map(g=>{const pr=gradePrices[g.id]||{monthly:150,annual:150};return `<article class="card grade" data-grade-search="${esc((g.name+' '+g.stage+' grammar vocabulary reading writing listening quizzes homework').toLowerCase())}"><div class="grade-cover"><div><div class="stage">${esc(g.stage||'Grade')}</div><strong>${esc(g.name)}</strong></div><span class="pill">English</span></div><div class="grade-body"><h3>English — ${esc(g.name)}</h3><p>Grammar, vocabulary, reading, writing, listening, quizzes, homework and exam practice.</p><div class="grade-meta"><span>Monthly: ${pr.monthly||150} EGP</span></div><div class="grade-actions"><button class="btn primary" onclick='domaOpenGrade(${JSON.stringify(g.name)})'>Open Grade →</button><button class="btn secondary" onclick='showGradeInfo(${JSON.stringify(g.name)})'>Details</button></div></div></article>`}).join(''):'<div class="empty">No active grades are available.</div>'
+  $('gradeGrid').innerHTML=list.length?list.map(g=>{const pr={monthly:150,annual:150};return `<article class="card grade" data-grade-search="${esc((g.name+' '+g.stage+' grammar vocabulary reading writing listening quizzes homework').toLowerCase())}"><div class="grade-cover"><div><div class="stage">${esc(g.stage)}</div><strong>${esc(g.name)}</strong></div><span class="pill">English</span></div><div class="grade-body"><h3>English — ${esc(g.name)}</h3><p>Grammar, vocabulary, reading, writing, listening, quizzes, homework and exam practice.</p><div class="grade-meta"><span>Monthly: ${pr.monthly||150} EGP</span></div><div class="grade-actions"><button class="btn primary" onclick='domaOpenGrade(${JSON.stringify(g.name)})'>Open Grade →</button><button class="btn secondary" onclick='showGradeInfo(${JSON.stringify(g.name)})'>Details</button></div></div></article>`}).join(''):'<div class="empty">No active grades are available.</div>'
 }
 function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim(),stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const text=(card.dataset.gradeSearch||''),okQ=!q||text.includes(q),okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'block':'none'})}
-function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>${Number(pr.monthly)||150} EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${JSON.stringify(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${JSON.stringify(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
+function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>150 EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${JSON.stringify(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${JSON.stringify(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
 
 async function domaOpenGrade(name){pendingGradeName=name;if(!sessionUser){openAuth('signup');return}const g=grades.find(x=>x.name===name);if(!g)return showToast('Grade is not available right now.');const subs=await getActiveSubscriptions();const active=subs.find(s=>s.grade_id===g.id);if(active){currentGrade=g;currentSubscription=active;await openDrawer('overview');return}showGradeInfo(name)}
 async function domaStartSubscription(name,plan){
