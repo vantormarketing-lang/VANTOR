@@ -22,6 +22,10 @@
 <style id="doma-daily-words-admin-css">
 .daily-word-preview{font-size:11px;line-height:1.55;max-width:330px}.daily-word-preview b{font-size:13px}.daily-word-preview .ar{color:#d7a9b5}.daily-word-preview .sentence{margin-top:4px;color:#c7b8bd}.audio-link{display:inline-flex;margin-top:5px;color:#e2a7b7;font-size:10px}.daily-actions{display:flex;gap:6px;flex-wrap:wrap}.daily-position{font-size:18px;font-weight:900}.daily-form-note{padding:10px;border:1px solid #432530;background:#160d11;border-radius:10px;color:#b9aab0;font-size:10px;line-height:1.5}
 </style>
+
+<style id="doma-admin-phase-upgrades">
+.phase-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.phase-card{background:linear-gradient(145deg,#160d11,#0e090b);border:1px solid #38202a;border-radius:14px;padding:15px}.phase-card small{display:block;color:#8f7e84;font-size:9px;text-transform:uppercase;letter-spacing:.12em}.phase-card b{display:block;font-size:26px;margin-top:7px}.phase-card span{display:block;color:#766a6f;font-size:10px;margin-top:5px;line-height:1.5}.phase-card.alert{border-color:#70402d}.phase-card.good{border-color:#2d5b43}.wa-mini{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#173b2b;color:#a7e5c3;border-radius:8px;padding:7px 9px;font-size:10px}.expiry-mini{display:block;font-size:9px;color:#c9a7b1;margin-top:3px}.admin-note{margin-top:14px;padding:12px 14px;border-radius:12px;background:#171014;border:1px dashed #4b2934;color:#a99ba0;font-size:10px;line-height:1.6}.third-hub{margin-top:14px;background:linear-gradient(135deg,#211016,#100b0d);border:1px solid #4b2632;border-radius:16px;padding:18px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}.third-hub h3{margin:0 0 5px;font-size:16px}.third-hub p{margin:0;color:#8d8085;font-size:10px;line-height:1.6}.third-hub-actions{display:flex;gap:8px;flex-wrap:wrap}@media(max-width:1000px){.phase-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.phase-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -95,6 +99,18 @@
         
 
         
+
+        <div class="phase-grid" id="adminPhaseMetrics">
+          <div class="phase-card"><small>Pending payments</small><b id="phasePending">—</b><span>Subscription requests waiting for review.</span></div>
+          <div class="phase-card"><small>Expiring in 7 days</small><b id="phaseExpiring">—</b><span>Active subscriptions ending soon.</span></div>
+          <div class="phase-card"><small>Lessons without video</small><b id="phaseNoVideo">—</b><span>Published lessons that still need video.</span></div>
+          <div class="phase-card"><small>Homework submissions</small><b id="phaseSubmissions">—</b><span>Recent student submissions to review.</span></div>
+        </div>
+        <div class="third-hub">
+          <div><h3>3rd Secondary Hub</h3><p>Keep the final-secondary curriculum organized: lessons, videos, quizzes, question bank, homework and progress.</p></div>
+          <div class="third-hub-actions"><button class="btn secondary" id="openThirdSecondaryPhase">Open Lessons</button><button class="btn" id="openThirdQuestionBankPhase">Question Bank</button></div>
+        </div>
+        <div class="admin-note">Delete actions now verify the database row after deletion. If an item reappears, the toast will identify whether the problem is DELETE permission/RLS, a database constraint, or a row that still exists.</div>
 
         <div class="grid" style="margin-top:14px">
           <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
@@ -220,13 +236,24 @@ async function loadGrades(){
 async function loadUnitsCache(){const r=await db.from('units').select('id,grade_id,title,unit_number,description,created_at').order('unit_number',{ascending:true});if(!r.error)units=r.data||[]}
 
 async function loadDashboard(){
-  const [students,lessons,pending,active]=await Promise.all([
+  const now=new Date(),soon=new Date(now.getTime()+7*86400000).toISOString();
+  const [students,lessons,pending,active,expiring,noVideo,submissions]=await Promise.all([
     db.from('profiles').select('id',{count:'exact',head:true}).eq('role','student'),
     db.from('lessons').select('id',{count:'exact',head:true}).eq('is_published',true),
     db.from('subscription_requests').select('id',{count:'exact',head:true}).eq('status','pending'),
-    db.from('subscriptions').select('id',{count:'exact',head:true}).eq('status','active').gt('expires_at',new Date().toISOString())
+    db.from('subscriptions').select('id',{count:'exact',head:true}).eq('status','active').gt('expires_at',now.toISOString()),
+    db.from('subscriptions').select('id',{count:'exact',head:true}).eq('status','active').gt('expires_at',now.toISOString()).lte('expires_at',soon),
+    db.from('lessons').select('id',{count:'exact',head:true}).eq('is_published',true).or('video_url.is.null,video_url.eq.'),
+    db.from('homework_submissions').select('id',{count:'exact',head:true}).order('submitted_at',{ascending:false}).limit(1)
   ]);
   $('stStudents').textContent=students.count??0;$('stLessons').textContent=lessons.count??0;$('stPending').textContent=pending.count??0;$('stActive').textContent=active.count??0;
+  if($('phasePending'))$('phasePending').textContent=pending.count??0;
+  if($('phaseExpiring'))$('phaseExpiring').textContent=expiring.count??0;
+  if($('phaseNoVideo'))$('phaseNoVideo').textContent=noVideo.count??0;
+  if($('phaseSubmissions'))$('phaseSubmissions').textContent=submissions.error?'—':(submissions.count??0);
+  if($('phasePending'))$('phasePending').parentElement.classList.toggle('alert',(pending.count||0)>0);
+  if($('phaseExpiring'))$('phaseExpiring').parentElement.classList.toggle('alert',(expiring.count||0)>0);
+  if($('phaseNoVideo'))$('phaseNoVideo').parentElement.classList.toggle('alert',(noVideo.count||0)>0);
 }
 
 async function loadGradesTable(){
@@ -241,15 +268,18 @@ $('newUnit').onclick=()=>unitForm('New Unit');
 async function editUnit(id){const r=await db.from('units').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);unitForm('Edit Unit',r.data)}
 async function deletePersisted(table,id,label,after){
   if(!confirm('Delete '+label+' permanently?')) return;
+  const before=await db.from(table).select('id').eq('id',id).maybeSingle();
+  if(before.error)return toast('Delete check failed: '+before.error.message);
+  if(!before.data)return toast(label+' was already removed or is hidden by RLS. Refresh and try again.');
   const r=await db.from(table).delete().eq('id',id).select('id');
-  if(r.error) return toast('Delete failed: '+r.error.message);
-  const returned=Array.isArray(r.data) && r.data.some(row=>row.id===id);
-  if(!returned) return toast('Nothing was deleted. Check DELETE RLS/permissions.');
+  if(r.error)return toast('Delete failed: '+r.error.message+' — check DELETE RLS/policies and related rows.');
+  const returned=Array.isArray(r.data)&&r.data.some(row=>String(row.id)===String(id));
+  if(!returned)return toast('Delete was not confirmed by Supabase. Check DELETE RLS/policies.');
   const verify=await db.from(table).select('id').eq('id',id).maybeSingle();
-  if(verify.error) return toast('Delete verification failed: '+verify.error.message);
-  if(verify.data) return toast('Delete did not persist. The row still exists.');
-  toast(label+' deleted permanently.');
-  if(typeof after==='function') await after();
+  if(verify.error)return toast('Delete verification failed: '+verify.error.message);
+  if(verify.data)return toast('Delete did not persist: the row still exists in Supabase.');
+  toast(label+' deleted permanently from Supabase.');
+  if(typeof after==='function')await after();
 }
 
 async function deleteUnit(id){await deletePersisted('units',id,'Unit',loadUnits)}
@@ -308,7 +338,7 @@ async function deleteHomework(id){await deletePersisted('homework',id,'Homework'
 async function viewHomeworkSubmissions(id){const h=await db.from('homework').select('title').eq('id',id).single();if(h.error)return toast(h.error.message);const r=await db.from('homework_submissions').select('id,student_id,answer_text,status,grade,feedback,submitted_at,profiles(full_name,email)').eq('homework_id',id).order('submitted_at',{ascending:false});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Submissions — '+h.data.title,rows.length?'<table><thead><tr><th>Student</th><th>Answer</th><th>Status</th><th>Grade</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}<div class="muted">${esc(x.profiles?.email||'')}</div></td><td style="white-space:pre-wrap">${esc(x.answer_text||'')}</td><td>${esc(x.status)}</td><td>${x.grade??'—'}</td><td><button class="btn secondary small" onclick="reviewSubmission('${x.id}','${id}')">Review</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No submissions yet.</div>')}
 async function reviewSubmission(subId,hwId){const r=await db.from('homework_submissions').select('*').eq('id',subId).single();if(r.error)return toast(r.error.message);const x=r.data;openModal('Review Homework',`<form id="reviewForm"><div class="info-box" style="white-space:pre-wrap;margin-bottom:12px">${esc(x.answer_text||'')}</div><div class="form-grid"><div class="form-row"><label>Status</label><select id="rsStatus"><option ${x.status==='submitted'?'selected':''}>submitted</option><option ${x.status==='reviewed'?'selected':''}>reviewed</option><option ${x.status==='returned'?'selected':''}>returned</option></select></div><div class="form-row"><label>Grade</label><input id="rsGrade" type="number" min="0" value="${x.grade??''}"></div><div class="form-row full"><label>Feedback</label><textarea id="rsFeedback">${esc(x.feedback||'')}</textarea></div></div><button class="btn">Save Review</button></form>`);$('reviewForm').onsubmit=async e=>{e.preventDefault();const p={status:$('rsStatus').value,grade:$('rsGrade').value===''?null:Number($('rsGrade').value),feedback:$('rsFeedback').value.trim()};const u=await db.from('homework_submissions').update(p).eq('id',subId).select('id');if(u.error)return toast('Review failed: '+u.error.message);if(!Array.isArray(u.data)||!u.data.some(x=>x.id===subId))return toast('Review update was not confirmed. Check UPDATE RLS/permissions.');closeModal();toast('Submission reviewed.');await viewHomeworkSubmissions(hwId)}}
 
-async function loadStudents(){const r=await db.from('profiles').select('id,full_name,email,role,grade_id,created_at').eq('role','student').order('created_at',{ascending:false});if(r.error)return $('studentsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('studentSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.full_name||'').toLowerCase().includes(term)||(x.email||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('studentsTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Joined</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.full_name||'Student')}</b><div class="muted">${esc(x.email||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn secondary small" onclick="studentDetails('${x.id}')">Details</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No students found.</div>'}
+async function loadStudents(){const r=await db.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('role','student').order('created_at',{ascending:false});if(r.error)return $('studentsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('studentSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.full_name||'').toLowerCase().includes(term)||(x.email||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('studentsTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Phone</th><th>Joined</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{const digits=String(x.phone||'').replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'');const wa=digits?'<a class="wa-mini" target="_blank" rel="noopener" href="https://wa.me/20'+digits+'">WhatsApp</a>':'<span class="muted">—</span>';return `<tr><td><b>${esc(x.full_name||'Student')}</b><div class="muted">${esc(x.email||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.phone||'')}<div style="margin-top:5px">${wa}</div></td><td>${fmtDate(x.created_at)}</td><td><button class="btn secondary small" onclick="studentDetails('${x.id}')">Details</button></td></tr>`}).join('')+'</tbody></table>':'<div class="empty">No students found.</div>'}
 async function studentDetails(id){const [p,s,pr]=await Promise.all([db.from('profiles').select('id,full_name,email,grade_id,created_at').eq('id',id).single(),db.from('subscriptions').select('id,grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',id).order('expires_at',{ascending:false}),db.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at,lessons(title)').eq('student_id',id).order('last_opened_at',{ascending:false}).limit(100)]);if(p.error)return toast(p.error.message);openModal('Student Details',`<div class="grid-2"><div class="card"><b>${esc(p.data.full_name||'Student')}</b><p class="muted">${esc(p.data.email||'')}</p><p>Grade: ${esc(gradeName(p.data.grade_id))}</p></div><div class="card"><b>Subscriptions</b><p class="muted">${(s.data||[]).map(x=>esc(gradeName(x.grade_id)+' · '+x.plan+' · '+x.status+' · '+fmtDate(x.expires_at))).join('<br>')||'None'}</p></div></div><div class="card" style="margin-top:12px"><b>Recent Progress</b><p class="muted">${(pr.data||[]).slice(0,15).map(x=>esc((x.lessons?.title||'Lesson')+' · '+x.progress_percent+'% · '+(x.completed?'Completed':'In progress'))).join('<br>')||'No progress yet.'}</p></div>`)}
 
 async function loadSales(){const [rq,sub]=await Promise.all([db.from('subscription_requests').select('id,student_id,grade_id,plan,amount,student_name,student_phone,student_email,proof_path,status,admin_note,created_at').order('created_at',{ascending:false}),db.from('subscriptions').select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at').order('created_at',{ascending:false})]);if(rq.error)return $('salesTable').innerHTML='<div class="empty">'+esc(rq.error.message)+'</div>';const all=rq.data||[];let rows=all.slice();const term=$('salesSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.student_name||'').toLowerCase().includes(term)||(x.student_email||'').toLowerCase().includes(term)||(x.student_phone||'').toLowerCase().includes(term)||(x.status||'').toLowerCase().includes(term));$('salesPending').textContent=all.filter(x=>x.status==='pending').length;$('salesApproved').textContent=all.filter(x=>x.status==='approved').length;$('salesRejected').textContent=all.filter(x=>x.status==='rejected').length;$('salesActive').textContent=(sub.data||[]).filter(x=>x.status==='active'&&new Date(x.expires_at)>new Date()).length;$('salesTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Plan</th><th>Amount</th><th>Phone</th><th>Receipt</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.student_name)}</b><div class="muted">${esc(x.student_email)}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.plan)}</td><td>${x.amount} EGP</td><td><a style="color:#8fd4a9" target="_blank" href="https://wa.me/20${esc(x.student_phone).replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')}">${esc(x.student_phone)}</a></td><td>${x.proof_path?`<button class="btn secondary small" onclick="viewReceipt('${x.id}')">View</button>`:'—'}</td><td><span class="pill ${x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn'}">${esc(x.status)}</span></td><td>${x.status==='pending'?`<div class="actions"><button class="btn ok small" onclick="approveSub('${x.id}')">Accept</button><button class="btn danger small" onclick="rejectSub('${x.id}')">Reject</button></div>`:'—'}</td></tr>`).join('')+'</tbody></table>':'<div class="empty">No subscription requests yet.</div>'}
@@ -587,5 +617,14 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
   $('dailyWordsPublished')?.addEventListener('change',loadDailyWords);
   window.loadDailyWords=loadDailyWords;
 })();
-</script>\n</body>
+</script>\n
+<script id="doma-admin-phase-hooks">
+document.addEventListener('DOMContentLoaded',function(){
+  const lessonBtn=document.getElementById('openThirdSecondaryPhase');
+  if(lessonBtn)lessonBtn.onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();const g=grades.find(x=>x.name==='3rd Secondary');if(g&&$('lessonGrade')){$('lessonGrade').value=g.id;await loadLessons()}};
+  const bankBtn=document.getElementById('openThirdQuestionBankPhase');
+  if(bankBtn)bankBtn.onclick=async()=>{document.querySelector('[data-section="question-bank"]')?.click();await loadQuestionBank();const g=grades.find(x=>x.name==='3rd Secondary');if(g&&$('bankGrade')){$('bankGrade').value=g.id;await loadQuestionBank()}};
+});
+</script>
+</body>
 </html>
