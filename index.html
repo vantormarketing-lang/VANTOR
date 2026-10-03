@@ -387,7 +387,7 @@ async function loadGrades(){
   if(g.error){$('gradeLoadStatus').textContent='Supabase error';$('gradeGrid').innerHTML='<div class="empty">Could not load grades: '+esc(g.error.message)+'</div>';return}
   grades=(g.data||[]).filter(x=>x.is_active!==false);gradePrices={};
   const p=await sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount');
-  if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:Number(x.monthly_amount)||150,annual:Number(x.annual_amount)||150})}
+  if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:150,annual:150})}
   for(const g of grades){if(!gradePrices[g.id]&&DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]}}
   $('gradeLoadStatus').textContent=grades.length+' grades';renderGrades();updatePricingRange();await refreshStudentState()
 }
@@ -760,8 +760,7 @@ function printCertificate(title,code,issued){const w=window.open('','_blank','wi
   setInterval(expiryAlert,15000);
 })();
 </script>
-</body></html>');w.document.close();w.print()}
-
+<script id="doma-index-student-functions-repair">
 async function renderStudentNotifications(){if(!sessionUser?.id){$('drawerBody').innerHTML='<div class=\"empty\">Please log in to view notifications.</div>';return}const r=await sb.from('notifications').select('id,student_id,title,message,is_read,created_at').eq('student_id',sessionUser.id).order('created_at',{ascending:false}).limit(200);if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load notifications: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];$('drawerBody').innerHTML=rows.length?'<div class="table-list">'+rows.map(n=>'<div class="notification '+(!n.is_read?'unread':'')+'"><div style="display:flex;justify-content:space-between;gap:10px"><strong>'+esc(n.title)+'</strong><span class="pill">'+fmtDateTime(n.created_at)+'</span></div><p>'+esc(n.message)+'</p>'+(!n.is_read&&n.student_id===sessionUser.id?'<button type="button" class="btn secondary" style="margin-top:8px;padding:7px 10px;font-size:10px" data-action="mark-read" data-notification-id="'+esc(n.id)+'">Mark read</button>':'')+'</div>').join('')+'</div>':'<div class="empty">No notifications yet.</div>'}
 async function markNotificationRead(id){const r=await sb.from('notifications').update({is_read:true}).eq('id',id).eq('student_id',sessionUser.id);if(r.error)return showToast(r.error.message);await renderStudentNotifications()}
 
@@ -840,6 +839,9 @@ document.addEventListener('DOMContentLoaded',boot);</script>
 
 
 <button class="back-top" id="domaBackTop" type="button" aria-label="Back to top">↑</button>
+
+
+</script>
 
 <script id="doma-master-upgrade-script">
 (function(){
