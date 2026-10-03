@@ -680,8 +680,6 @@ window.deleteStudentAccount=async function(id,label){
     const name=String(label||'this student');
     if(!id)return toast('Permanent deletion failed: student ID is missing.');
     if(!confirm('FINAL DELETE\n\nThis will permanently delete the student account '+name+' from Supabase Auth and remove the linked profile, subscriptions, requests, progress, quiz attempts, homework submissions, certificates and notifications where the database cascade applies.\n\nThis cannot be undone.\n\nContinue?'))return;
-    const typed=prompt('Type DELETE to confirm permanent account deletion:');
-    if(typed!=='DELETE')return toast('Deletion cancelled.');
     toast('Deleting student account…');
     const r=await db.rpc('doma_delete_student',{p_student_id:id});
     if(r?.error){
