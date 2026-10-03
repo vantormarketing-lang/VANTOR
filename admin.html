@@ -733,5 +733,67 @@ window.studentToggleSuspend=async function(id,v){const r=await db.from('profiles
 window.studentExtendSubscription=async function(id){const r=await db.from('subscriptions').select('*').eq('student_id',id).eq('status','active').order('expires_at',{ascending:false}).limit(1).maybeSingle();if(r.error||!r.data)return toast('No active subscription found.');const old=new Date(r.data.expires_at),base=old>Date.now()?old:new Date();base.setDate(base.getDate()+30);const u=await db.from('subscriptions').update({expires_at:base.toISOString(),status:'active'}).eq('id',r.data.id).select('id,expires_at');if(u.error)return toast('Extension failed: '+u.error.message);if(!u.data?.length)return toast('Extension was not confirmed. Check UPDATE RLS.');toast('Subscription extended by 30 days.');await studentDetails(id);await loadSales();};
 })();
 </script>
+
+<style id="doma-final-admin-css">
+.doma-final-admin-panel{margin-top:14px}.doma-final-admin-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.doma-final-admin-card{padding:13px;background:linear-gradient(145deg,#130c0f,#0b090a);border:1px solid #321b23;border-radius:12px}.doma-final-admin-card small{display:block;color:#766c71;font-size:8px;text-transform:uppercase;letter-spacing:1px}.doma-final-admin-card b{display:block;font-size:21px;margin-top:4px}.doma-final-admin-card span{display:block;color:#81777b;font-size:9px;margin-top:3px}.doma-final-filter{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.doma-final-filter>*{max-width:280px}.doma-final-review{max-width:900px}.doma-final-review-row{padding:12px;border:1px solid #30202a;background:#0d090a;border-radius:11px;margin-bottom:8px}.doma-final-review-row b{font-size:12px}.doma-final-review-row p{font-size:10px;color:#aaa;margin:5px 0}.doma-final-correct{color:#8ed7ad}.doma-final-wrong{color:#ff9caf}.doma-final-print{margin-left:6px}@media(max-width:1100px){.doma-final-admin-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.doma-final-admin-grid{grid-template-columns:repeat(2,1fr)}.doma-final-filter>*{max-width:none;width:100%}}
+</style>
+
+<script id="doma-final-admin-upgrades">
+(function(){
+  'use strict';
+  const originalDashboard=window.loadDashboard;
+  async function finalDashboard(){
+    await originalDashboard();
+    const host=document.querySelector('#section-dashboard');if(!host)return;
+    let panel=document.getElementById('domaFinalAdminPanel');
+    if(!panel){panel=document.createElement('div');panel.id='domaFinalAdminPanel';panel.className='doma-final-admin-panel';host.appendChild(panel)}
+    panel.innerHTML='<div class="admin-health"><h3>Academy Performance Snapshot</h3><p>Live learning indicators from the current Supabase data.</p><div class="doma-final-admin-grid"><div class="doma-final-admin-card"><small>Tracked progress</small><b id="faProgress">—</b><span>completed lesson records</span></div><div class="doma-final-admin-card"><small>Quiz attempts</small><b id="faAttempts">—</b><span>all students</span></div><div class="doma-final-admin-card"><small>Quiz average</small><b id="faQuizAvg">—</b><span>best available snapshot</span></div><div class="doma-final-admin-card"><small>Homework submissions</small><b id="faHomework">—</b><span>all students</span></div><div class="doma-final-admin-card"><small>Certificates</small><b id="faCertificates">—</b><span>issued</span></div><div class="doma-final-admin-card"><small>Expiring ≤ 7 days</small><b id="faExpiring">—</b><span>active subscriptions</span></div></div></div>';
+    const [p,a,h,c,s]=await Promise.all([
+      db.from('lesson_progress').select('completed,progress_percent',{count:'exact'}),
+      db.from('quiz_attempts').select('score,total_points',{count:'exact'}),
+      db.from('homework_submissions').select('id',{count:'exact',head:true}),
+      db.from('certificates').select('id',{count:'exact',head:true}),
+      db.from('subscriptions').select('id,expires_at,status').eq('status','active').gt('expires_at',new Date().toISOString())
+    ]);
+    const pr=p.data||[],ar=a.data||[];const avg=ar.length?Math.round(ar.reduce((x,v)=>x+(Number(v.total_points)?Number(v.score)/Number(v.total_points)*100:0),0)/ar.length):0;const exp=(s.data||[]).filter(x=>new Date(x.expires_at).getTime()-Date.now()<=7*86400000).length;
+    const set=(id,v)=>{const e=$(id);if(e)e.textContent=v};set('faProgress',pr.length?Math.round(pr.reduce((x,v)=>x+Number(v.progress_percent||0),0)/pr.length)+'%':'0%');set('faAttempts',a.count??ar.length);set('faQuizAvg',avg+'%');set('faHomework',h.count??0);set('faCertificates',c.count??0);set('faExpiring',exp);
+  }
+  window.loadDashboard=finalDashboard;
+
+  const oldProgress=window.loadProgress;
+  window.loadProgress=async function(){
+    const host=$('progressTable');if(!host)return;
+    if(!document.getElementById('domaProgressFilters')){
+      const wrap=document.createElement('div');wrap.id='domaProgressFilters';wrap.className='doma-final-filter';wrap.innerHTML='<input id="finalProgressSearch" class="field" placeholder="Search student or lesson…"><select id="finalProgressGrade" class="field"><option value="">All Grades</option>'+grades.map(g=>'<option value="'+esc(g.id)+'">'+esc(g.name)+'</option>').join('')+'</select>';
+      host.parentNode.insertBefore(wrap,host);
+      $('finalProgressSearch').addEventListener('input',window.loadProgress);$('finalProgressGrade').addEventListener('change',window.loadProgress);
+    }
+    const r=await db.from('lesson_progress').select('student_id,lesson_id,completed,progress_percent,last_opened_at,profiles(full_name,email),lessons(title,grade_id)').order('last_opened_at',{ascending:false}).limit(1000);
+    if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+    const term=$('finalProgressSearch').value.trim().toLowerCase(),gid=$('finalProgressGrade').value;let rows=(r.data||[]).filter(x=>(!gid||x.lessons?.grade_id===gid)&&(!term||((x.profiles?.full_name||'')+' '+(x.profiles?.email||'')+' '+(x.lessons?.title||'')+' '+gradeName(x.lessons?.grade_id)).toLowerCase().includes(term)));
+    host.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Lesson</th><th>Grade</th><th>Progress</th><th>Status</th><th>Last opened</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.profiles?.full_name||'Student')+'</b><div class="muted">'+esc(x.profiles?.email||'')+'</div></td><td>'+esc(x.lessons?.title||'')+'</td><td>'+esc(gradeName(x.lessons?.grade_id))+'</td><td>'+Number(x.progress_percent||0)+'%</td><td><span class="pill '+(x.completed?'ok':'warn')+'">'+(x.completed?'Completed':'In progress')+'</span></td><td>'+fmt(x.last_opened_at)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No progress records match the selected filters.</div>';
+  };
+
+  const oldResults=window.loadResults;
+  window.loadResults=async function(){
+    const host=$('resultsTable');if(!host)return;const r=await db.from('quiz_attempts').select('id,score,total_points,submitted_at,student_id,quiz_id,profiles(full_name,email),quizzes(title,grade_id)').order('submitted_at',{ascending:false}).limit(1000);
+    if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+    const rows=r.data||[],avg=rows.length?Math.round(rows.reduce((a,x)=>a+(Number(x.total_points)?Number(x.score)/Number(x.total_points)*100:0),0)/rows.length):0;
+    host.innerHTML='<div class="info-box" style="margin-bottom:12px"><b>Current attempt average:</b> '+avg+'% &nbsp; • &nbsp; <b>Total attempts:</b> '+rows.length+'</div>'+(rows.length?'<table><thead><tr><th>Student</th><th>Quiz</th><th>Grade</th><th>Score</th><th>Percent</th><th>Submitted</th><th>Review</th></tr></thead><tbody>'+rows.map(x=>{const total=Number(x.total_points||0),score=Number(x.score||0),pct=total?Math.round(score/total*100):0;return '<tr><td><b>'+esc(x.profiles?.full_name||'Student')+'</b><div class="muted">'+esc(x.profiles?.email||'')+'</div></td><td>'+esc(x.quizzes?.title||'')+'</td><td>'+esc(gradeName(x.quizzes?.grade_id))+'</td><td>'+score+'/'+total+'</td><td>'+pct+'%</td><td>'+fmt(x.submitted_at)+'</td><td><button class="btn secondary small" type="button" onclick="reviewQuizAttemptAdmin(\''+esc(x.id)+'\')">Review</button></td></tr>'}).join('')+'</tbody></table>':'<div class="empty">No quiz results yet.</div>');
+  };
+  window.reviewQuizAttemptAdmin=async function(id){
+    const r=await db.rpc('doma_get_attempt_review',{p_attempt_id:id});if(r.error)return toast('Review failed: '+r.error.message);
+    const rows=r.data||[];openModal('Quiz Attempt Review','<div class="doma-final-review">'+(rows.length?rows.map((x,i)=>'<div class="doma-final-review-row"><b>'+(i+1)+'. '+esc(x.question||'Question')+'</b><p>Student answer: '+esc(x.selected_answer||'Not answered')+'</p><p>Correct answer: '+esc(x.correct_answer||'—')+'</p><span class="'+(x.is_correct?'doma-final-correct':'doma-final-wrong')+'">'+(x.is_correct?'Correct':'Incorrect')+' • '+esc(String(x.points||1))+' point(s)</span></div>').join(''):'<div class="empty">No questions found for this attempt.</div>')+'</div>');
+  };
+
+  const oldCert=window.loadCertificates;
+  window.loadCertificates=async function(){
+    const host=$('certTable');if(!host)return;const r=await db.from('certificates').select('id,title,issued_at,certificate_code,student_id,profiles(full_name,email)').order('issued_at',{ascending:false});if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+    const rows=r.data||[];host.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Certificate</th><th>Code</th><th>Issued</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.profiles?.full_name||'Student')+'</b><div class="muted">'+esc(x.profiles?.email||'')+'</div></td><td>'+esc(x.title)+'</td><td>'+esc(x.certificate_code)+'</td><td>'+fmtDate(x.issued_at)+'</td><td><button class="btn secondary small" onclick="printAdminCertificate(\''+esc(x.title)+'\',\''+esc(x.certificate_code)+'\',\''+esc(x.issued_at)+'\')">Print</button><button class="btn danger small" onclick="deleteCertificate(\''+x.id+'\')">Delete</button></td></tr>').join('')+'</tbody></table>':'<div class="empty">No certificates yet.</div>';
+  };
+  window.printAdminCertificate=function(title,code,issued){const w=window.open('','_blank','width=1000,height=700');if(!w)return;const safe=t=>String(t??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));w.document.write('<!doctype html><html><head><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee}.cert{width:850px;padding:65px;text-align:center;background:#fff;border:12px double #762337}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>');w.document.close();w.focus();w.print()};
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
+})();
+</script>
 </body>
 </html>
