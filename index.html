@@ -1940,4 +1940,129 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   window.domaPro7={renderLiveClasses,renderRoadmap,renderRevision,renderSupport,renderParent};
 })();
 </script>
+
+<script id="doma-lessons-videos-reliable-loader">
+(function(){
+  'use strict';
+
+  async function domaResolveStudentGrade(){
+    if(!sessionUser || !sb) return {grade:null, sub:null, profile:null, error:null};
+    let profile=null, subs=[];
+    try{
+      profile = window.domaStudentProfile || await getProfile();
+    }catch(e){
+      return {grade:null, sub:null, profile:null, error:e};
+    }
+    try{
+      subs = await getActiveSubscriptions();
+    }catch(e){
+      console.warn('DOMA subscription lookup failed:', e);
+      subs=[];
+    }
+    const preferredGrade = profile?.grade_id ? (grades||[]).find(g=>g.id===profile.grade_id) || null : null;
+    const preferredSub = preferredGrade ? subs.find(s=>s.grade_id===preferredGrade.id) || null : null;
+    const sub = preferredSub || subs[0] || null;
+    const grade = sub ? ((grades||[]).find(g=>g.id===sub.grade_id)||null) : preferredGrade;
+    return {grade,sub,profile,error:null};
+  }
+
+  window.ensureActiveGrade = async function(){
+    if(!sessionUser) return null;
+    const state = await domaResolveStudentGrade();
+    if(!state.grade) return null;
+    currentGrade=state.grade;
+    currentSubscription=state.sub||null;
+    window.currentGrade=currentGrade;
+    window.currentSubscription=currentSubscription;
+    return {grade:state.grade,sub:state.sub||null,profile:state.profile||null};
+  };
+
+  window.renderStudentLessons = async function(){
+    if(!sessionUser){
+      $('drawerBody').innerHTML='<div class="empty">Log in to open your lessons.</div>';
+      return;
+    }
+    const token=++lessonsLoadToken;
+    const state=await domaResolveStudentGrade();
+    if(token!==lessonsLoadToken)return;
+    if(!state.grade){
+      currentLessons=[];currentLessonProgress=new Map();
+      $('drawerBody').innerHTML='<div class="empty">Choose a school grade in your profile first. Your existing Supabase lessons will then load from that grade.</div>';
+      return;
+    }
+    const grade=state.grade, sub=state.sub;
+    currentGrade=grade;
+    currentSubscription=sub||null;
+    window.currentGrade=currentGrade;
+    window.currentSubscription=currentSubscription;
+
+    // Read the real lesson rows exactly as stored in Supabase.
+    // RLS still decides whether a student may see free or paid rows.
+    const r=await sb.from('lessons')
+      .select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published',{count:'exact'})
+      .eq('grade_id',grade.id)
+      .eq('is_published',true)
+      .order('sort_order',{ascending:true})
+      .order('created_at',{ascending:true})
+      .range(0,1999);
+    if(token!==lessonsLoadToken)return;
+    if(r.error){
+      currentLessons=[];currentLessonProgress=new Map();
+      $('drawerBody').innerHTML='<div class="empty"><b>Lessons could not be loaded.</b><br><small>'+esc(r.error.message||'Supabase read error')+'</small><br><small>Database content is present, so this points to the current student access/RLS session rather than missing lessons.</small></div>';
+      return;
+    }
+
+    const loadedLessons=r.data||[];
+    if(!loadedLessons.length){
+      currentLessons=[];currentLessonProgress=new Map();
+      const accessText=sub
+        ? 'Your grade subscription is detected, but Supabase returned 0 readable published lessons for this grade.'
+        : 'Your grade is detected, but this account has no active subscription. Supabase will only return lessons allowed by the published/free-content policy.';
+      $('drawerBody').innerHTML='<div class="empty"><b>No lessons are currently readable for '+esc(grade.name)+'.</b><br><small>'+esc(accessText)+'</small><br><small>Check the account grade and lesson RLS; do not reseed the 622 existing lessons.</small></div>';
+      return;
+    }
+
+    const p=await sb.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',sessionUser.id);
+    const u=await sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true});
+    if(token!==lessonsLoadToken)return;
+    if(p.error)console.warn('Lesson progress read failed:',p.error);
+    if(u.error)console.warn('Unit read failed:',u.error);
+    currentLessonProgress=new Map((p.data||[]).map(x=>[x.lesson_id,x]));
+    currentLessonUnits=new Map((u.data||[]).map(x=>[x.id,x]));
+
+    loadedLessons.sort((a,b)=>{
+      const ua=Number(currentLessonUnits.get(a.unit_id)?.unit_number ?? 999);
+      const ub=Number(currentLessonUnits.get(b.unit_id)?.unit_number ?? 999);
+      if(ua!==ub)return ua-ub;
+      const sa=Number(a.sort_order ?? 999), sb=Number(b.sort_order ?? 999);
+      if(sa!==sb)return sa-sb;
+      return String(a.title||'').localeCompare(String(b.title||''));
+    });
+
+    currentLessons=loadedLessons.map((x,i)=>{
+      const unit=currentLessonUnits.get(x.unit_id)||null;
+      return {...x,_index:i,_unit:unit,_displayTitle:domaLessonDisplayTitle(x,currentLessonUnits)};
+    });
+    currentLessonIndex=Math.max(0,Math.min(Number(currentLessonIndex)||0,currentLessons.length-1));
+    renderLessonWorkspace(currentLessonProgress);
+  };
+
+  // Make the existing video renderer a little more tolerant without exposing new data.
+  const originalVideoRenderer=window.renderVideoEmbed;
+  if(typeof originalVideoRenderer==='function'){
+    window.renderVideoEmbed=function(url){
+      const raw=String(url||'').trim();
+      if(!raw) return originalVideoRenderer(url);
+      try{
+        const u=new URL(raw);
+        const host=u.hostname.replace(/^www\./,'').toLowerCase();
+        if(host==='youtube.com'||host==='m.youtube.com'||host==='youtu.be') return originalVideoRenderer(raw);
+        if(host==='drive.google.com') return originalVideoRenderer(raw);
+        if(/^https?:$/i.test(u.protocol)) return originalVideoRenderer(raw);
+      }catch(e){ return '<div class="video-placeholder"><b>▶</b><div>Invalid video URL.</div></div>'; }
+      return originalVideoRenderer(raw);
+    };
+  }
+})();
+</script>
 </body>
