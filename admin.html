@@ -208,7 +208,6 @@ function show(name){current=name;document.querySelectorAll('.section').forEach(s
 $('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
 
-aSync=async()=>{};
 async function authUser(){return (await db.auth.getUser()).data.user}
 async function getStaffProfile(){const u=await authUser();if(!u)return null;const r=await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle();if(r.error||!r.data)return null;return ['admin','teacher'].includes(r.data.role)?r.data:null}
 
@@ -240,21 +239,6 @@ async function loadUnits(){await loadUnitsCache();const g=$('unitGrade').value,t
 function unitForm(title,x=null){openModal(title,`<form id="unitForm"><div class="form-row"><label>Grade</label><select id="uGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Unit number</label><input id="uNumber" type="number" min="1" value="${Number(x?.unit_number||1)}" required></div><div class="form-row"><label>Title</label><input id="uTitle" value="${esc(x?.title||'')}" required></div><div class="form-row"><label>Description</label><textarea id="uDesc">${esc(x?.description||'')}</textarea></div><button class="btn">Save Unit</button></form>`);$('unitForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('uGrade').value,unit_number:Number($('uNumber').value||1),title:$('uTitle').value.trim(),description:$('uDesc').value.trim()};const r=x?await db.from('units').update(p).eq('id',x.id).select('id'):await db.from('units').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Unit save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Unit saved.');await loadUnits()}}
 $('newUnit').onclick=()=>unitForm('New Unit');
 async function editUnit(id){const r=await db.from('units').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);unitForm('Edit Unit',r.data)}
-async function deletePersisted(table,id,label,after){
-  if(!confirm('Delete '+label+' permanently?')) return;
-  const r=await db.from(table).delete().eq('id',id).select('id');
-  if(r.error) return toast('Delete failed: '+r.error.message);
-  const returned=Array.isArray(r.data) && r.data.some(row=>row.id===id);
-  if(!returned) return toast('Nothing was deleted. Check DELETE RLS/permissions.');
-  const verify=await db.from(table).select('id').eq('id',id).maybeSingle();
-  if(verify.error) return toast('Delete verification failed: '+verify.error.message);
-  if(verify.data) return toast('Delete did not persist. The row still exists.');
-  toast(label+' deleted permanently.');
-  if(typeof after==='function') await after();
-}
-
-async function deleteUnit(id){await deletePersisted('units',id,'Unit',loadUnits)}
-
 const LESSON_VIDEO_BUCKET='lesson-videos';
 function lessonVideoExt(file){return String(file?.name||'').split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'')||'mp4'}
 async function uploadLessonVideo(file,gradeId,lessonId){
@@ -453,46 +437,7 @@ async function loadThirdSecondarySummary(){
 }
 
 
-async function loadThirdSecondarySummary(){
-  if(typeof db==='undefined')return;
-  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
-  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
-  const id=g.data.id;
-  const [u,l,q]=await Promise.all([
-    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
-    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
-    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
-  ]);
-  const ls=l.data||[];
-  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
-  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
-  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
-  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
-  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
-  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
-}
-
-
-async function loadThirdSecondarySummary(){
-  if(typeof db==='undefined')return;
-  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
-  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
-  const id=g.data.id;
-  const [u,l,q]=await Promise.all([
-    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
-    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
-    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
-  ]);
-  const ls=l.data||[];
-  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
-  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
-  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
-  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
-  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
-  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
-}
-
-loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
+window.loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
 $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
@@ -539,7 +484,7 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
 })();
 </script>
 
-\n<script id="doma-daily-words-admin-script">
+<script id="doma-daily-words-admin-script">
 (function(){
   'use strict';
   const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Cairo'}).format(new Date());
@@ -591,17 +536,8 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
   }
   window.editDailyWord=async function(id){const r=await db.from('daily_words').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);dailyWordForm('Edit Daily Word',r.data)};
   window.deleteDailyWord=async function(id){
-    if(!confirm('Delete this Daily Word permanently?'))return;
-    const r=await db.from('daily_words').delete().eq('id',id).select('id');
-    if(r.error)return toast('Delete failed: '+r.error.message);
-    const returned=Array.isArray(r.data)&&r.data.some(row=>row.id===id);
-    if(!returned)return toast('Nothing was deleted. Check DELETE RLS/permissions.');
-    const verify=await db.from('daily_words').select('id').eq('id',id).maybeSingle();
-    if(verify.error)return toast('Delete verification failed: '+verify.error.message);
-    if(verify.data)return toast('Delete did not persist. The Daily Word still exists.');
-    toast('Daily Word deleted permanently.');
-    await loadDailyWords();
-  };
+     await window.deletePersisted('daily_words',id,'Daily Word',loadDailyWords);
+   };
   window.toggleDailyWord=async function(id,value){const r=await db.from('daily_words').update({is_published:value}).eq('id',id).select('id,is_published');if(r.error)return toast('Update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===value))return toast('Daily Word update was not confirmed. Check UPDATE RLS/permissions.');await loadDailyWords()};
   $('newDailyWord')?.addEventListener('click',()=>dailyWordForm('New Daily Word'));
   $('dailyWordsRefresh')?.addEventListener('click',loadDailyWords);
@@ -611,7 +547,8 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
   $('dailyWordsPublished')?.addEventListener('change',loadDailyWords);
   window.loadDailyWords=loadDailyWords;
 })();
-</script>\n
+</script>
+
 <style id="doma-pro-admin-v3-css">
 .student-pro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.student-pro-stat{background:#100a0c;border:1px solid #33202a;border-radius:11px;padding:12px}.student-pro-stat small{display:block;color:#82767b;font-size:9px;text-transform:uppercase}.student-pro-stat b{display:block;font-size:18px;margin-top:5px}.history-row{padding:10px;border:1px solid #30202a;border-radius:10px;background:#0d090a;margin-bottom:7px}.history-row strong{font-size:12px}.history-row span{font-size:10px;color:#8d8186}.expiry-badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;background:#422d12;color:#f0cf79}.expiry-badge.ok{background:#173b2b;color:#a7e5c3}.wa-btn{background:#1d6d48!important}.admin-logo-mark{width:34px;height:34px;border-radius:10px;border:1px solid #432530;display:inline-grid;place-items:center;background:#180d12;margin-right:8px;vertical-align:middle}
 @media(max-width:900px){.student-pro-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.student-pro-grid{grid-template-columns:1fr}}
