@@ -477,10 +477,12 @@ async function refreshStudentState(){
   updateNav();
   if(!sessionUser){currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaStudentProfile=null;window.domaStudentSubscriptions=[];window.domaStudentRequests=[];renderDashboardLoggedOut();return}
   const profile=await getProfile(),subs=await getActiveSubscriptions(),reqs=await getRequests();
-  const preferredGrade=profile?.grade_id?grades.find(g=>g.id===profile.grade_id)||null:null;
-  const preferredSub=preferredGrade?subs.find(s=>s.grade_id===preferredGrade.id):null;
-  currentSubscription=preferredSub||subs[0]||null;
-  currentGrade=currentSubscription?grades.find(g=>g.id===currentSubscription.grade_id)||null:null;
+  const selectedGradeId = currentGrade?.id ? String(currentGrade.id) : '';
+  const selectedSub = selectedGradeId ? (subs.find(s=>String(s.grade_id)===selectedGradeId)||null) : null;
+  const preferredGrade=profile?.grade_id?grades.find(g=>String(g.id)===String(profile.grade_id))||null:null;
+  const preferredSub=preferredGrade?subs.find(s=>String(s.grade_id)===String(preferredGrade.id)):null;
+  currentSubscription=selectedSub||preferredSub||subs[0]||null;
+  currentGrade=currentSubscription?grades.find(g=>String(g.id)===String(currentSubscription.grade_id))||null:null;
   // Expose the active state for the expiry reminder and UI enhancement scripts.
   window.currentSubscription=currentSubscription;
   window.currentGrade=currentGrade;
@@ -583,6 +585,10 @@ const DOMA_1ST_PREP_LESSON_TITLES = {
   6:['Being a Global Citizen','Global Citizen Talk','Ocean Circle','Story Time','Let’s Make a Difference','Team-Project Roundtable']
 };
 function domaLessonDisplayTitle(lesson,unitMap){
+  const gradeName = grades.find(g=>String(g.id)===String(lesson?.grade_id))?.name || currentGrade?.name || '';
+  if(gradeName!=='1st Preparatory'){
+    return lesson?.title || 'Lesson';
+  }
   const unitNumber=Number(unitMap?.get(lesson?.unit_id)?.unit_number ?? unitMap?.get(lesson?.unit_id) ?? 0);
   const no=Number(lesson?.sort_order ?? 0);
   return DOMA_1ST_PREP_LESSON_TITLES[unitNumber]?.[no-1] || lesson?.title || 'Lesson';
@@ -658,7 +664,9 @@ async function renderStudentLessons(){
     return String(a.title||'').localeCompare(String(b.title||''));
   });
 
-  currentLessons=loadedLessons.map((x,i)=>{
+  // Grade isolation guard: every rendered lesson must belong to the selected grade.
+  const isolatedLessons = loadedLessons.filter(x=>String(x.grade_id)===String(grade.id));
+  currentLessons=isolatedLessons.map((x,i)=>{
     const unit=currentLessonUnits.get(x.unit_id)||null;
     return {...x,_index:i,_unit:unit,_displayTitle:domaLessonDisplayTitle(x,currentLessonUnits)};
   });
