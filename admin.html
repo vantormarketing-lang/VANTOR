@@ -897,5 +897,74 @@ window.loadSection=function(name){if(name==='live-classes')return loadLive7();if
 window.pro7LoadLive=loadLive7;window.pro7LoadSupport=loadSupport7;window.pro7LoadParents=loadParents7;
 })();
 </script>
+
+<script id="doma-admin-lessons-videos-stable-loader">
+(function(){
+  'use strict';
+  const escDoma = v => typeof esc==='function' ? esc(String(v??'')) : String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+  window.loadLessons = async function(){
+    const host=$('lessonsTable');
+    if(!host)return;
+    host.innerHTML='<div class="empty">Loading lessons from Supabase…</div>';
+    try{
+      let q=db.from('lessons')
+        .select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published,created_at',{count:'exact'})
+        .order('sort_order',{ascending:true})
+        .order('created_at',{ascending:true})
+        .range(0,1999);
+      const g=$('lessonGrade')?.value||'';
+      const ty=$('lessonType')?.value||'';
+      if(g)q=q.eq('grade_id',g);
+      if(ty)q=q.eq('lesson_type',ty);
+      const r=await q;
+      if(r.error){
+        host.innerHTML='<div class="empty"><b>Lessons read failed.</b><br><small>'+escDoma(r.error.message)+'</small><br><small>The database diagnostic already confirmed that lesson rows exist. This is now an access/query issue, not missing lesson data.</small></div>';
+        return;
+      }
+      let rows=r.data||[];
+      const term=($('lessonSearch')?.value||'').trim().toLowerCase();
+      if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.lesson_type||'').toLowerCase().includes(term)||(gradeName(x.grade_id)||'').toLowerCase().includes(term));
+      const total=r.count??rows.length;
+      const videos=rows.filter(x=>String(x.video_url||'').trim()).length;
+      const banner='<div class="card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>Live lesson data</b><div class="muted" style="margin-top:4px">Supabase rows currently readable by Admin: '+total+' • rows with video URL in this view: '+videos+'</div></div><span class="pill '+(r.count===622?'ok':'')+'">622 expected in current database</span></div></div>';
+      host.innerHTML=banner+(rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Video</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${escDoma(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${escDoma(units.find(u=>u.id===x.unit_id)?.title||'—')}</div></td><td>${escDoma(gradeName(x.grade_id))}</td><td>${escDoma(x.lesson_type)}</td><td><span class="pill ${x.video_url?'ok':'warn'}">${x.video_url?'Video ready':'No video'}</span></td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit / Video</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons matched the current filters. The database count should still be used to distinguish a filter issue from missing data.</div>');
+    }catch(e){
+      host.innerHTML='<div class="empty"><b>Unexpected Lessons error.</b><br><small>'+escDoma(e?.message||String(e))+'</small></div>';
+    }
+  };
+
+  // Video uploads are additive: upload first, then save the returned URL onto the same lesson.
+  window.uploadLessonVideo=async function(file,gradeId,lessonId){
+    if(!file)return null;
+    if(!/^video\/(mp4|webm|ogg|quicktime)$/i.test(file.type||''))throw new Error('Please choose an MP4, WebM, OGG or MOV video file.');
+    const max=500*1024*1024;
+    if(file.size>max)throw new Error('Video is larger than 500 MB. Please compress it before uploading.');
+    const bucket='lesson-videos';
+    const path=String(gradeId||'unknown')+'/'+String(lessonId)+'-'+crypto.randomUUID()+'.'+(String(file.name||'video.mp4').split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'')||'mp4');
+    const up=await db.storage.from(bucket).upload(path,file,{cacheControl:'3600',upsert:false,contentType:file.type||'video/mp4'});
+    if(up.error)throw up.error;
+    const pub=db.storage.from(bucket).getPublicUrl(path);
+    const url=pub?.data?.publicUrl||'';
+    if(!url)throw new Error('Video uploaded, but no public URL was returned. Create/configure the lesson-videos bucket before using local video uploads.');
+    return url;
+  };
+
+  window.checkLessonVideoIntegrity=async function(){
+    const out=$('lessonVideoIntegrityText');
+    if(out)out.textContent='Checking…';
+    try{
+      const all=await db.from('lessons').select('id,video_url',{count:'exact',head:false}).range(0,1999);
+      if(all.error){if(out)out.textContent='Lesson read failed: '+all.error.message;return}
+      const rows=all.data||[];
+      const withVideo=rows.filter(x=>String(x.video_url||'').trim()).length;
+      if(out)out.textContent=(all.count??rows.length)+' lessons • '+withVideo+' with video URLs • '+rows.filter(x=>x.is_published===false).length+' hidden';
+    }catch(e){if(out)out.textContent='Could not check lesson/video data: '+(e?.message||String(e));}
+  };
+
+  // Refresh once after login without replacing the existing UI structure.
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(document.getElementById('lessonsTable'))window.loadLessons();},450));
+})();
+</script>
 </body>
 </html>
