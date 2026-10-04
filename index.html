@@ -163,6 +163,17 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 @media(max-width:560px){.student-home-grid{grid-template-columns:1fr 1fr}.student-home-achievements{grid-template-columns:repeat(2,1fr)}}
 </style>
 <style id="doma-daily100-audio-fix-style">.daily100-audio-btn{min-height:40px;margin-bottom:7px}@media(max-width:760px){.daily100-student-audio{display:flex;flex-direction:column;align-items:flex-start;gap:6px}}</style>
+<style id="doma-review-fixes-css">
+.drawer-shell{position:relative}
+.mobile-nav-toggle{display:none!important}
+@media(max-width:700px){
+  .mobile-nav-toggle{display:inline-flex!important}
+  .drawer-side{display:block!important;position:absolute;top:0;left:0;bottom:0;width:266px;z-index:90;background:rgba(10,8,9,.99);border-right:1px solid #27151b;box-shadow:0 24px 70px rgba(0,0,0,.55);transform:translateX(-106%);transition:transform .2s ease}
+  .drawer-side.mobile-open{transform:none}
+}
+.live-pill{border-color:#2f7f59!important;color:#a7e5c3!important;background:#10231a!important}
+</style>
+<base target="_blank">
 </head>
 <body>
 <nav class="nav">
@@ -306,7 +317,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <footer class="footer"><div class="container"><div class="footgrid"><div><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>BY ADHAM</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div><div><h4>Platform</h4><a href="#grades">Grades</a><a href="#first-prep">1st Preparatory</a><a href="#subjects">Learning</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div><div><h4>Learning</h4><a href="#subjects">Grammar</a><a href="#subjects">Vocabulary</a><a href="#subjects">Reading</a><a href="#subjects">Writing</a></div><div><h4>Account</h4><a href="#" onclick="openAuth('login');return false">Log In</a><a href="#" onclick="openAuth('signup');return false">Create Account</a><a href="#dashboard">My Progress</a><a href="#faq">FAQ</a></div></div><div class="copy"><span>© 2026 DOMA ACADEMY — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div></div></footer>
 <div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h3 id="modalTitle">DOMA ACADEMY</h3><button class="close" onclick="closeModal()">×</button></div><p id="modalText"></p><div id="modalBody"></div></div></div>
 <div class="modal" id="gradeModal"><div class="modalbox"><div class="modalhead"><h3 id="gradeModalTitle">Grade Access</h3><button class="close" onclick="closeGradeModal()">×</button></div><p id="gradeModalText"></p><div id="gradeModalBody"></div></div></div>
-<div class="drawer" id="drawer"><div class="drawer-shell"><aside class="drawer-side"><div class="drawer-brand"><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>STUDENT AREA</small></span></a></div><div class="user-card" id="userCard"><strong>Student</strong><span>Loading…</span></div><button class="side-link active" data-view="overview" onclick="studentView('overview')">⌂ Overview</button><button class="side-link" data-view="lessons" onclick="studentView('lessons')">▶ Lessons</button><button class="side-link" data-view="daily100" onclick="studentView('daily100')">🔤 Daily Words</button><button class="side-link" data-view="quizzes" onclick="studentView('quizzes')">✓ Quizzes</button><button class="side-link" data-view="homework" onclick="studentView('homework')">☰ Homework</button><button class="side-link" data-view="certificates" onclick="studentView('certificates')">▣ Certificates</button><button class="side-link" data-view="notifications" onclick="studentView('notifications')">◌ Notifications</button><button class="side-link" data-view="profile" onclick="studentView('profile')">⚙ Profile</button><button class="side-link" data-view="assistant" onclick="studentView('assistant')">🤖 Study Assistant</button><button class="side-link" data-view="questionbank" onclick="studentView('questionbank')">🧠 Question Bank</button><button class="side-link" data-view="analytics" onclick="studentView('analytics')">📈 My Analytics</button><button class="side-link" data-view="timer" onclick="studentView('timer')">⏱ Study Timer</button><button class="side-link" data-view="challenge" onclick="studentView('challenge')">🎯 Daily Challenge</button><button class="side-link" onclick="domaLogout()">↪ Log Out</button></aside><main class="drawer-main"><div class="drawer-top"><div><div class="eyebrow" style="margin-bottom:3px">DOMA ACADEMY • STUDENT</div><h2 id="drawerTitle">Overview</h2><p id="drawerSubtitle">Your learning space.</p></div><button class="btn secondary" onclick="closeDrawer()">Close</button></div><div class="drawer-body" id="drawerBody"><div class="empty">Loading student area…</div></div></main></div></div>
+<div class="drawer" id="drawer"><div class="drawer-shell"><aside class="drawer-side"><div class="drawer-brand"><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>DOMA ACADEMY<small>STUDENT AREA</small></span></a></div><div class="user-card" id="userCard"><strong>Student</strong><span>Loading…</span></div><button class="side-link active" data-view="overview" onclick="studentView('overview')">⌂ Overview</button><button class="side-link" data-view="lessons" onclick="studentView('lessons')">▶ Lessons</button><button class="side-link" data-view="daily100" onclick="studentView('daily100')">🔤 Daily Words</button><button class="side-link" data-view="quizzes" onclick="studentView('quizzes')">✓ Quizzes</button><button class="side-link" data-view="homework" onclick="studentView('homework')">☰ Homework</button><button class="side-link" data-view="certificates" onclick="studentView('certificates')">▣ Certificates</button><button class="side-link" data-view="notifications" onclick="studentView('notifications')">◌ Notifications</button><button class="side-link" data-view="profile" onclick="studentView('profile')">⚙ Profile</button><button class="side-link" data-view="assistant" onclick="studentView('assistant')">🤖 Study Assistant</button><button class="side-link" data-view="questionbank" onclick="studentView('questionbank')">🧠 Question Bank</button><button class="side-link" data-view="analytics" onclick="studentView('analytics')">📈 My Analytics</button><button class="side-link" data-view="timer" onclick="studentView('timer')">⏱ Study Timer</button><button class="side-link" data-view="challenge" onclick="studentView('challenge')">🎯 Daily Challenge</button><button class="side-link" data-view="live" onclick="studentView('live')">📺 Live Classes</button><button class="side-link" data-view="support" onclick="studentView('support')">🎤 Support</button><button class="side-link" onclick="domaLogout()">↪ Log Out</button></aside><main class="drawer-main"><div class="drawer-top"><div><div class="eyebrow" style="margin-bottom:3px">DOMA ACADEMY • STUDENT</div><h2 id="drawerTitle">Overview</h2><p id="drawerSubtitle">Your learning space.</p></div><button class="btn secondary mobile-nav-toggle" id="drawerMobileNavBtn" type="button" aria-label="Menu">☰ Menu</button><button class="btn secondary" onclick="closeDrawer()">Close</button></div><div class="drawer-body" id="drawerBody"><div class="empty">Loading student area…</div></div></main></div></div>
 <div class="toast" id="toast"></div>
 <script>const DOMA_URL='https://dtptxhkcogpoleftguas.supabase.co';
 const DOMA_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
@@ -356,7 +367,7 @@ function openAuth(type){
   if(type==='login'){
     title.textContent='Log in to DOMA ACADEMY';
     text.textContent='Use your student account to open your dashboard and active grade.';
-    body.innerHTML='<div class="formgrid"><input id="loginEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password"><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
+    body.innerHTML='<div class="formgrid"><input id="loginEmail" class="field" type="email" placeholder="Email address" autocomplete="email"><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password"><div class="full" style="text-align:right;margin-top:-4px"><button type="button" style="background:none;border:0;color:#d98b9d;cursor:pointer;font-size:10px" onclick="domaForgotPassword()">Forgot password?</button></div><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
   }else{
     title.textContent='Create your student account';
     text.textContent='Create an account first, then choose your grade and access plan.';
@@ -422,7 +433,7 @@ async function loadGrades(){
   if(g.error){$('gradeLoadStatus').textContent='Supabase error';$('gradeGrid').innerHTML='<div class="empty">Could not load grades: '+esc(g.error.message)+'</div>';return}
   grades=(g.data||[]).filter(x=>x.is_active!==false);gradePrices={};
   const p=await sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount');
-  if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:150,annual:150})}
+  if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:Number(x.monthly_amount)||150,annual:Number(x.annual_amount)||150})}
   for(const g of grades){if(!gradePrices[g.id]&&DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]}}
   $('gradeLoadStatus').textContent=grades.length+' grades';renderGrades();updatePricingRange();await refreshStudentState()
 }
@@ -642,11 +653,13 @@ async function renderStudentLessons(){
   if(!grade){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">Choose a grade first. Free lesson previews will be available after you set your grade.</div>';return}
   currentGrade=grade;
   if(active?.sub)currentSubscription=active.sub;
-  const r=await sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true});
+  let r=null;
+  if(active?.sub){r=await sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true});}
+  else{r=await sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).eq('is_free',true).order('sort_order',{ascending:true});}
   if(token!==lessonsLoadToken)return;
   if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load lessons: '+esc(r.error.message)+'</div>';return}
   const loadedLessons=r.data||[];
-  if(!loadedLessons.length){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">No published lessons are available for '+esc(grade.name)+' yet.</div>';return}
+  if(!loadedLessons.length){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">'+(!active?.sub?'No free preview lessons are available for '+esc(grade.name)+' yet. Activate your subscription to unlock the full curriculum.':'No published lessons are available for '+esc(grade.name)+' yet.')+'</div>';return}
   const p=await sb.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',sessionUser.id);
   const u=await sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true});
   if(token!==lessonsLoadToken)return;
@@ -706,8 +719,8 @@ async function changeLesson(d){
 async function completeCurrentLesson(){const l=currentLessons[currentLessonIndex];if(!l||!sessionUser)return;const r=await sb.rpc('doma_mark_lesson_complete',{p_lesson_id:l.id});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showToast('Could not save progress: '+r.error.message+hint)}showToast('Lesson marked complete.');if(currentLessonIndex<currentLessons.length-1)currentLessonIndex++;await refreshStudentState();await renderStudentLessons()}
 
 async function renderStudentQuizzes(){const access=await ensureActiveGrade();if(!access){$('drawerBody').innerHTML='<div class="empty">No active grade subscription.</div>';return}const r=await sb.from('quizzes').select('id,grade_id,title,description,duration_minutes,is_published,created_at').eq('grade_id',access.grade.id).eq('is_published',true).order('created_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load quizzes: '+esc(r.error.message)+'</div>';return}currentQuizzes=r.data||[];$('drawerBody').innerHTML=currentQuizzes.length?'<div class="table-list">'+currentQuizzes.map(q=>'<div class="listrow"><div class="listrow-main"><strong>'+esc(q.title)+'</strong><span>'+esc(q.description||'Test your understanding.')+' • '+(q.duration_minutes||20)+' min</span></div><button type="button" class="btn primary" data-action="start-quiz" data-quiz-id="'+esc(q.id)+'">Start Quiz →</button></div>').join('')+'</div>':'<div class="empty">No published quizzes are available yet.</div>'}
-async function startQuiz(id){const q=currentQuizzes.find(x=>x.id===id);if(!q)return;const r=await sb.rpc('doma_get_quiz_questions',{p_quiz_id:id});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showToast('Could not load quiz questions: '+r.error.message+hint)}const qs=r.data||[];if(!qs.length)return showToast('This quiz has no questions yet.');currentQuiz={quiz:q,questions:qs};renderQuizPage()}
-function renderQuizPage(){const q=currentQuiz.quiz,qs=currentQuiz.questions;$('drawerTitle').textContent=q.title;$('drawerSubtitle').textContent=(q.description||'Quiz')+' • '+(q.duration_minutes||20)+' min';$('drawerBody').innerHTML='<div class="card quiz-box"><div class="notice">Choose one answer for each question. Your score is calculated securely on the server.</div><div class="question-count">'+qs.length+' question'+(qs.length===1?'':'s')+' in this quiz</div><div class="quiz-scroll"><form id="quizForm">'+qs.map((x,i)=>{let opts=Array.isArray(x.options)?x.options:[];return '<div class="question"><h4>'+((i+1)+'. ')+esc(x.question)+'</h4>'+opts.map(o=>'<label class="option"><input type="radio" data-question-id="'+esc(String(x.id))+'" name="q_'+esc(String(x.id))+'" value="'+esc(String(o))+'"><span>'+esc(String(o))+'</span></label>').join('')+'</div>'}).join('')+'</form></div><div class="account-actions"><button type="button" class="btn secondary" onclick="studentView(\'quizzes\')">← Back to Quizzes</button><button type="button" class="btn primary" onclick="submitQuiz()">Submit Quiz</button></div><div id="quizResult"></div></div>'}
+async function startQuiz(id){const q=currentQuizzes.find(x=>x.id===id);if(!q)return;let pro={};try{const ps=await sb.from('quiz_pro_settings').select('*').eq('quiz_id',id).maybeSingle();if(!ps.error&&ps.data)pro=ps.data;}catch(e){}const limit=Number(pro.attempts_limit||0);if(limit>0&&sessionUser){const cnt=await sb.from('quiz_attempts').select('id',{count:'exact',head:true}).eq('quiz_id',id).eq('student_id',sessionUser.id);if(!cnt.error&&(cnt.count||0)>=limit)return showToast('Attempt limit reached for this quiz ('+limit+' attempt'+(limit===1?'':'s')+'). Contact your teacher.')}const r=await sb.rpc('doma_get_quiz_questions',{p_quiz_id:id});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showToast('Could not load quiz questions: '+r.error.message+hint)}let qs=r.data||[];if(!qs.length)return showToast('This quiz has no questions yet.');if(pro.shuffle_questions&&qs.length>1){qs=qs.slice();for(let i=qs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=qs[i];qs[i]=qs[j];qs[j]=t;}}if(pro.shuffle_options){qs=qs.map(x=>{const o=Array.isArray(x.options)?x.options.slice():[];if(o.length>1){for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t;}}return{...x,options:o};});}currentQuiz={quiz:q,questions:qs,pro:pro,endsAt:pro.time_limit_minutes?Date.now()+Number(pro.time_limit_minutes)*60000:null};renderQuizPage()}
+function renderQuizPage(){const q=currentQuiz.quiz,qs=currentQuiz.questions;$('drawerTitle').textContent=q.title;$('drawerSubtitle').textContent=(q.description||'Quiz')+' • '+(q.duration_minutes||20)+' min';$('drawerBody').innerHTML='<div class="card quiz-box"><div class="quiz-tools"><span class="pill" id="quizTimer"></span><span class="quiz-tool-count" id="quizTimerLabel"></span></div><div class="notice">Choose one answer for each question. Your score is calculated securely on the server.</div><div class="question-count">'+qs.length+' question'+(qs.length===1?'':'s')+' in this quiz</div><div class="quiz-scroll"><form id="quizForm">'+qs.map((x,i)=>{let opts=Array.isArray(x.options)?x.options:[];return '<div class="question"><h4>'+((i+1)+'. ')+esc(x.question)+'</h4>'+opts.map(o=>'<label class="option"><input type="radio" data-question-id="'+esc(String(x.id))+'" name="q_'+esc(String(x.id))+'" value="'+esc(String(o))+'"><span>'+esc(String(o))+'</span></label>').join('')+'</div>'}).join('')+'</form></div><div class="account-actions"><button type="button" class="btn secondary" onclick="studentView(\'quizzes\')">← Back to Quizzes</button><button type="button" class="btn primary" onclick="submitQuiz()">Submit Quiz</button></div><div id="quizResult"></div></div>'}
 async function submitQuiz(){if(!currentQuiz||!sessionUser)return;const answers={};document.querySelectorAll('#quizForm input[type=radio][data-question-id]:checked').forEach(input=>{answers[input.dataset.questionId]=input.value});const r=await sb.rpc('doma_submit_quiz',{p_quiz_id:currentQuiz.quiz.id,p_answers:answers});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_V2_COMPLETE.sql in Supabase SQL Editor first.':'';$('quizResult').innerHTML='<div class="scorebox">Could not save result: '+esc(r.error.message+hint)+'</div>';return}const x=r.data?.[0]||r.data;const pct=Number(x?.percentage||0),score=Number(x?.score||0),total=Number(x?.total_points||0);$('quizResult').innerHTML='<div class="scorebox"><strong>Result: '+pct+'%</strong><p style="margin-top:5px;color:#aaa">Score: '+score+' / '+total+'. Your attempt has been saved.</p><div class="account-actions"><button type="button" class="btn secondary" data-action="attempt-review" data-attempt-id="'+esc(x?.attempt_id||'')+'">Review Attempt</button></div></div>';$('quizForm').querySelectorAll('input').forEach(i=>i.disabled=true);showToast('Quiz submitted.');await refreshStudentState()}
 
 function homeworkState(submission){
@@ -784,7 +797,7 @@ async function openHomework(id){
   if(!h){showToast('This homework could not be opened.');return}
   $('modalTitle').textContent=h.title||'Homework Assignment';
   $('modalText').textContent='Read the assignment below, write your answer, then save your submission.';
-  $('modalBody').innerHTML='<div class="doma-hw-modal-task" style="padding:12px;border:1px solid #2d181f;border-radius:10px;background:#0c090a;margin-bottom:12px;color:#b7adb1;font-size:11px;line-height:1.7"><strong style="display:block;color:#fff;margin-bottom:5px">Assignment</strong>'+esc(h.description||'Complete this assignment and submit your answer.')+'</div><textarea id="hwAnswer" class="field full" rows="10" placeholder="Write your answer here…"></textarea><div id="hwStatus" class="status full"></div><div class="account-actions"><button type="button" class="btn secondary" id="cancelHwBtn">Cancel</button><button type="button" class="btn primary" id="saveHwBtn">Save Submission</button></div>';
+  $('modalBody').innerHTML='<div class="doma-hw-modal-task" style="padding:12px;border:1px solid #2d181f;border-radius:10px;background:#0c090a;margin-bottom:12px;color:#b7adb1;font-size:11px;line-height:1.7"><strong style="display:block;color:#fff;margin-bottom:5px">Assignment</strong>'+esc(h.description||'Complete this assignment and submit your answer.')+'</div><textarea id="hwAnswer" class="field full" rows="10" placeholder="Write your answer here…"></textarea><input id="hwFile" class="field full" type="file" accept="image/*,application/pdf" style="margin-top:8px"><small class="muted full" style="font-size:9px">Optional: attach a photo or PDF (max 10 MB).</small><div id="hwStatus" class="status full"></div><div class="account-actions"><button type="button" class="btn secondary" id="cancelHwBtn">Cancel</button><button type="button" class="btn primary" id="saveHwBtn">Save Submission</button></div>';
   const r=await sb.from('homework_submissions').select('answer_text').eq('homework_id',homeworkId).eq('student_id',sessionUser.id).maybeSingle();
   if(r.error){showStatus('hwStatus','Could not load your previous answer: '+r.error.message,'error')}
   else if($('hwAnswer'))$('hwAnswer').value=r.data?.answer_text||'';
@@ -793,7 +806,7 @@ async function openHomework(id){
   $('modal').classList.add('show');
   setTimeout(()=>$('hwAnswer')?.focus(),50);
 }
-async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';if(!answer)return showStatus('hwStatus','Write an answer before submitting.','error');const r=await sb.rpc('doma_submit_homework',{p_homework_id:id,p_answer_text:answer});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showStatus('hwStatus',r.error.message+hint,'error')}closeModal();showToast('Homework submitted successfully.');await renderStudentHomework();await refreshStudentState()}
+async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';const file=$('hwFile')?.files?.[0]||null;if(!answer&&!file)return showStatus('hwStatus','Write an answer or attach a file before submitting.','error');if(file&&file.size>10*1024*1024)return showStatus('hwStatus','File must be 10 MB or less.','error');showStatus('hwStatus','Submitting…');let finalAnswer=answer;if(file){try{const ext=(file.name.split('.').pop()||'pdf').replace(/[^a-z0-9]/gi,'').toLowerCase()||'pdf';const path=sessionUser.id+'/'+id+'-'+Date.now()+'.'+ext;const up=await sb.storage.from('homework-submissions').upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});if(up.error)throw new Error(up.error.message);const pub=sb.storage.from('homework-submissions').getPublicUrl(path);const url=pub?.data?.publicUrl||'';if(url)finalAnswer=(answer?answer+'\n\n':'')+'Attached file: '+url;}catch(e){const msg=(e?.message||String(e));return showStatus('hwStatus','File upload failed: '+msg+(/bucket/i.test(msg)?' — create the "homework-submissions" bucket in Supabase Storage.':''),'error')}}const r=await sb.rpc('doma_submit_homework',{p_homework_id:id,p_answer_text:finalAnswer});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showStatus('hwStatus',r.error.message+hint,'error')}closeModal();showToast('Homework submitted successfully.');await renderStudentHomework();await refreshStudentState()}
 
 async function renderStudentCertificates(){const r=await sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',sessionUser.id).order('issued_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load certificates: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];$('drawerBody').innerHTML=rows.length?'<div class="cert-grid">'+rows.map(c=>'<div class="cert"><span class="pill">Certificate</span><h3 style="font-size:17px;margin-top:9px">'+esc(c.title)+'</h3><p style="font-size:10px;color:#888;margin-top:5px">Issued '+fmtDate(c.issued_at)+'</p><div class="cert-code">'+esc(c.certificate_code)+'</div><button type="button" class="btn secondary" style="margin-top:12px" data-action="print-certificate" data-title="'+esc(c.title)+'" data-code="'+esc(c.certificate_code)+'" data-issued="'+esc(c.issued_at)+'">Print / Save PDF</button></div>').join('')+'</div>':'<div class="empty">No certificates have been issued yet.</div>'}
 function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">BY ADHAM</p></div></body></html>');w.document.close();w.print()}
@@ -826,7 +839,7 @@ function printCertificate(title,code,issued){const w=window.open('','_blank','wi
    let lessons=[];if(access){const r=await sb.from('lessons').select('id,title,description,lesson_type,unit_id,sort_order').eq('grade_id',access.grade.id).eq('is_published',true).order('sort_order',{ascending:true});lessons=r.data||[]}
    const notes=read('notes',{});const savedRows=lessons.filter(l=>saved.includes(l.id));
    host.innerHTML='<div class="pro5-grid"><div class="pro5-card"><h3>🔖 Saved Lessons</h3><p class="pro5-muted">Your saved lessons stay on this device and can be opened again quickly.</p><div class="pro5-list">'+(savedRows.length?savedRows.map(l=>'<div class="pro5-row"><div><strong>'+E(l.title)+'</strong><small>'+E(l.lesson_type||'Lesson')+'</small></div><button class="btn secondary" data-open-lib="'+escId(l.id)+'">Open</button></div>').join(''):'<div class="pro5-empty">No saved lessons yet. Open Lessons and tap Save Lesson.</div>')+'</div></div><div class="pro5-card"><h3>📝 Personal Notes</h3><p class="pro5-muted">Write notes linked to lessons. Notes are private to this browser.</p><div class="pro5-list">'+(Object.keys(notes).length?Object.entries(notes).slice(0,20).map(([id,n])=>{const l=lessons.find(x=>x.id===id);return '<div class="pro5-note"><strong>'+E(l?.title||'Saved lesson')+'</strong><br><span>'+E(n.text||'')+'</span><div class="pro5-toolbar"><button class="btn secondary" data-edit-note="'+escId(id)+'">Edit</button><button class="btn secondary" data-del-note="'+escId(id)+'">Delete</button></div></div>'}).join(''):'<div class="pro5-empty">No personal notes yet.</div>')+'</div></div></div><div class="pro5-card" style="margin-top:14px"><h3>Add / Edit Note</h3><select id="pro5NoteLesson" class="pro5-input"><option value="">Select a lesson</option>'+lessons.map(l=>'<option value="'+escId(l.id)+'">'+E(l.title)+'</option>').join('')+'</select><textarea id="pro5NoteText" class="pro5-input pro5-textarea" style="margin-top:10px" placeholder="Write your note…"></textarea><div class="pro5-toolbar"><button class="btn primary" id="pro5SaveNote">Save Note</button><button class="btn secondary" id="pro5ClearNote">Clear</button></div></div>';
-   host.querySelectorAll('[data-open-lib]').forEach(b=>b.onclick=()=>{const l=lessons.find(x=>x.id===b.dataset.openLib);if(l&&typeof selectLesson==='function'){window.studentView('lessons').then?.(()=>{});setTimeout(()=>{try{selectLesson(l.id)}catch(e){}},500)}});
+   host.querySelectorAll('[data-open-lib]').forEach(b=>b.onclick=()=>{const l=lessons.find(x=>x.id===b.dataset.openLib);if(l&&typeof selectLesson==='function'){window.studentView('lessons').then?.(()=>{});setTimeout(()=>{try{const __i=(typeof currentLessons!=='undefined'?currentLessons:[]).findIndex(x=>x.id===l.id);if(__i>=0)selectLesson(__i);else showToast('Open this lesson from the Lessons list.')}catch(e){}},600)}});
    host.querySelectorAll('[data-edit-note]').forEach(b=>b.onclick=()=>{const id=b.dataset.editNote;$('pro5NoteLesson').value=id;$('pro5NoteText').value=notes[id]?.text||'';$('pro5NoteText').focus()});
    host.querySelectorAll('[data-del-note]').forEach(b=>b.onclick=()=>{delete notes[b.dataset.delNote];write('notes',notes);libraryRender();showToast('Note deleted.')});
    $('pro5SaveNote').onclick=()=>{const id=$('pro5NoteLesson').value,text=($('pro5NoteText').value||'').trim();if(!id||!text)return showToast('Select a lesson and write a note first.');notes[id]={text,updated_at:new Date().toISOString()};write('notes',notes);$('pro5NoteText').value='';libraryRender();showToast('Note saved.')};
@@ -884,7 +897,7 @@ async function renderStudentProfile(){
   if(p.error){$('drawerBody').innerHTML='<div class="empty">Could not load profile: '+esc(p.error.message)+'</div>';return}
   const reqs=await sb.from('subscription_requests').select('id,grade_id,plan,status,admin_note,created_at').eq('student_id',sessionUser.id).order('created_at',{ascending:false}).limit(10);
   $('drawerTitle').textContent='Profile';$('drawerSubtitle').textContent='Your student information and subscription requests.';
-  $('drawerBody').innerHTML='<div class="profile-grid"><div class="card workspace-card"><span class="pill">Full name</span><input id="profileName" class="field" style="margin-top:9px" value="'+esc(p.data?.full_name||'')+'"></div><div class="card workspace-card"><span class="pill">Phone / WhatsApp</span><input id="profilePhone" class="field" style="margin-top:9px" value="'+esc(p.data?.phone||'')+'" placeholder="01xxxxxxxxx" inputmode="tel"></div><div class="card workspace-card full"><span class="pill">Email</span><input class="field" style="margin-top:9px" value="'+esc(p.data?.email||sessionUser.email||'')+'" disabled></div><div class="card workspace-card full"><span class="pill">School grade</span><select id="profileGrade" class="field" style="margin-top:9px"><option value="">Select grade</option>'+grades.map(g=>'<option value="'+g.id+'" '+(g.id===p.data?.grade_id?'selected':'')+'>'+esc(g.name)+'</option>').join('')+'</select></div></div><div id="profileStatus" class="status"></div><div class="account-actions"><button class="btn primary" onclick="saveProfile()">Save Profile</button><button class="btn secondary" onclick="openDomaV2Reports()">Detailed Reports</button></div><div class="notice" style="margin-top:14px">Your phone number is stored for payment/contact purposes and is available to Admin for WhatsApp contact.</div><div class="table-list" style="margin-top:12px">'+(reqs.data||[]).map(r=>'<div class="listrow"><div class="listrow-main"><strong>'+esc(gradeName(r.grade_id))+' • '+esc(r.plan)+'</strong><span>'+esc(r.status)+(r.admin_note?' • '+esc(r.admin_note):'')+'</span></div><span class="pill">'+fmtDate(r.created_at)+'</span></div>').join('')+'</div>';
+  $('drawerBody').innerHTML='<div class="profile-grid"><div class="card workspace-card"><span class="pill">Full name</span><input id="profileName" class="field" style="margin-top:9px" value="'+esc(p.data?.full_name||'')+'"></div><div class="card workspace-card"><span class="pill">Phone / WhatsApp</span><input id="profilePhone" class="field" style="margin-top:9px" value="'+esc(p.data?.phone||'')+'" placeholder="01xxxxxxxxx" inputmode="tel"></div><div class="card workspace-card full"><span class="pill">Email</span><input class="field" style="margin-top:9px" value="'+esc(p.data?.email||sessionUser.email||'')+'" disabled></div><div class="card workspace-card full"><span class="pill">School grade</span><select id="profileGrade" class="field" style="margin-top:9px"><option value="">Select grade</option>'+grades.map(g=>'<option value="'+g.id+'" '+(g.id===p.data?.grade_id?'selected':'')+'>'+esc(g.name)+'</option>').join('')+'</select></div></div><div class="card workspace-card full" style="margin-top:11px"><span class="pill">New password</span><input id="profileNewPass" class="field" style="margin-top:9px" type="password" placeholder="At least 6 characters — leave empty to keep current password" autocomplete="new-password"></div></div><div id="profileStatus" class="status"></div><div class="account-actions"><button class="btn primary" onclick="saveProfile()">Save Profile</button><button class="btn secondary" onclick="openDomaV2Reports()">Detailed Reports</button></div><div class="notice" style="margin-top:14px">Your phone number is stored for payment/contact purposes and is available to Admin for WhatsApp contact.</div><div class="table-list" style="margin-top:12px">'+(reqs.data||[]).map(r=>'<div class="listrow"><div class="listrow-main"><strong>'+esc(gradeName(r.grade_id))+' • '+esc(r.plan)+'</strong><span>'+esc(r.status)+(r.admin_note?' • '+esc(r.admin_note):'')+'</span></div><span class="pill">'+fmtDate(r.created_at)+'</span></div>').join('')+'</div>';
 }
 async function saveProfile(){
   const name=$('profileName')?.value.trim()||'',phone=$('profilePhone')?.value.trim()||'',gradeId=$('profileGrade')?.value||null;
@@ -892,6 +905,8 @@ async function saveProfile(){
   if(phone && !/^01\d{9}$/.test(phone))return showStatus('profileStatus','Enter a valid Egyptian mobile number, e.g. 01012345678.','error');
   const r=await sb.from('profiles').update({full_name:name,phone,grade_id:gradeId,updated_at:new Date().toISOString()}).eq('id',sessionUser.id).select('id');
   if(r.error)return showStatus('profileStatus',r.error.message,'error');
+  const newPass=$('profileNewPass')?.value||'';
+  if(newPass){if(newPass.length<6)return showStatus('profileStatus','Password must be at least 6 characters.','error');const pr=await sb.auth.updateUser({password:newPass});if(pr.error)return showStatus('profileStatus','Profile saved, but password change failed: '+pr.error.message,'error');}
   await sb.rpc('doma_log_activity',{p_activity_type:'profile_update',p_entity_id:null,p_metadata:{grade_id:gradeId}}).catch(()=>{});
   await refreshStudentState();updateStudentShell();showStatus('profileStatus','Profile saved successfully.','success');
 }function openReviewForm(){$('modalTitle').textContent='Leave a Review';$('modalText').textContent='Share your experience with DOMA ACADEMY.';$('modalBody').innerHTML='<div class="formgrid"><select id="reviewRating" class="field"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select><textarea id="reviewText" class="field full" rows="6" placeholder="Your review"></textarea><div id="reviewStatus" class="status full"></div><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="submitReview()">Send Review</button></div>';$('modal').classList.add('show')}
@@ -1010,7 +1025,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
       if(title)title.textContent='Continue where you left off.';
       if(textEl)textEl.textContent=(rl.title||'Your recent lesson')+' • '+(rl.unitTitle||'English lesson');
       if(box){box.style.display='flex';box.innerHTML='<div class="continue-icon">▶</div><div style="min-width:0;flex:1"><strong>'+esc(rl.title||'Recent lesson')+'</strong><span>'+esc(rl.unitTitle||'English curriculum')+'</span></div><button class="btn primary" type="button" onclick="openPublicLesson('+JSON.stringify(rl.title||'')+')">Resume →</button>'}
-      if(actions)actions.innerHTML='<button class="btn secondary" type="button" onclick="openStudentTool(\'lessons\')">Open Lessons</button><button class="btn secondary" type="button" onclick="openStudentTool(\'dashboard\')">Open Dashboard</button>';
+      if(actions)actions.innerHTML='<button class="btn secondary" type="button" onclick="openStudentTool(\'lessons\')">Open Lessons</button><button class="btn secondary" type="button" onclick="openStudentTool(\'overview\')">Open Dashboard</button>';
     }else{
       const name=profile.full_name?String(profile.full_name).split(' ')[0]:'Student';
       if(title)title.textContent='Welcome back'+(name?' , '+name:'')+'.';
@@ -1644,7 +1659,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    const access=await ensureActiveGrade();if(!access){host.innerHTML='<div class="empty">Choose an active grade first.</div>';return}
    const qs=await sb.from('quizzes').select('id,title').eq('grade_id',access.grade.id).eq('is_published',true).order('created_at',{ascending:false});if(qs.error){host.innerHTML='<div class="empty">Could not load quizzes: '+e5(qs.error.message)+'</div>';return}
    const ids=(qs.data||[]).map(q=>q.id);if(!ids.length){host.innerHTML='<div class="empty">No published quiz questions are available yet.</div>';return}
-   const qr=await sb.from('quiz_questions').select('id,quiz_id,question,options,points,sort_order').in('quiz_id',ids).order('sort_order',{ascending:true});if(qr.error){host.innerHTML='<div class="empty">Question Bank is not available for students yet. '+e5(qr.error.message)+'</div>';return}
+   let qr=null;try{const __rpc=await sb.rpc('doma_get_question_bank',{p_quiz_ids:ids});if(!__rpc.error&&Array.isArray(__rpc.data))qr={data:__rpc.data};}catch(e){}if(!qr)qr=await sb.from('quiz_questions').select('id,quiz_id,question,options,points,sort_order').in('quiz_id',ids).order('sort_order',{ascending:true});if(qr.error){host.innerHTML='<div class="empty">Question Bank is not available for students yet. '+e5(qr.error.message)+'</div>';return}
    const qmap=Object.fromEntries((qs.data||[]).map(q=>[q.id,q.title]));let rows=qr.data||[];const render=()=>{const term=($('plus5QBSearch')?.value||'').trim().toLowerCase();const quiz=($('plus5QBQuiz')?.value||'');const list=rows.filter(q=>(!quiz||q.quiz_id===quiz)&&(!term||String(q.question||'').toLowerCase().includes(term)));$('plus5QBList').innerHTML=list.length?list.slice(0,80).map((q,i)=>'<div class="plus5-q"><strong>'+e5((i+1)+'. '+q.question)+'</strong><span class="plus5-small">'+e5(qmap[q.quiz_id]||'Quiz')+' • '+n5(q.points||1)+' point'+(n5(q.points||1)===1?'':'s')+'</span><div>'+((Array.isArray(q.options)?q.options:[]).map((o,j)=>'<label><input type="radio" name="plus5q_'+e5(q.id)+'" value="'+e5(String(o))+'"> '+e5(String(o))+'</label>').join(''))+'</div></div>').join(''):'<div class="empty">No matching questions.</div>'};
    host.innerHTML='<div class="student-plus5-card"><h3>🧠 Smart Question Bank</h3><p class="student-plus5-muted">Search and practice questions from your published quizzes. This is practice mode; it does not submit an official quiz attempt.</p><div class="plus5-toolbar"><input id="plus5QBSearch" class="field" style="flex:1" placeholder="Search a question…"><select id="plus5QBQuiz" class="field"><option value="">All quizzes</option>'+qs.data.map(q=>'<option value="'+e5(q.id)+'">'+e5(q.title)+'</option>').join('')+'</select><button class="btn secondary" type="button" id="plus5QBRandom">Random</button></div><div id="plus5QBList" class="plus5-list"></div><div class="account-actions"><button class="btn primary" type="button" id="plus5QBOfficial">Open Official Quizzes</button><span id="plus5QBScore" class="pill">Practice mode</span></div></div>';
    render();$('plus5QBSearch').oninput=render;$('plus5QBQuiz').onchange=render;$('plus5QBRandom').onclick=()=>{const pool=rows.filter(q=>!$('plus5QBQuiz').value||q.quiz_id===$('plus5QBQuiz').value);if(!pool.length)return;const q=pool[Math.floor(Math.random()*pool.length)];$('plus5QBSearch').value=String(q.question||'').slice(0,80);render()};   $('plus5QBOfficial').onclick=()=>studentView('quizzes');
@@ -1853,6 +1868,134 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   document.addEventListener('DOMContentLoaded',()=>setTimeout(buildG,1100));
   window.addEventListener('load',()=>setTimeout(buildG,1400));
   window.domaRefreshGamification=buildG;
+})();
+</script>
+<script id="doma-review-fixes-js">
+(function(){
+'use strict';
+function __setChrome(view,title,sub){document.querySelectorAll('.side-link[data-view]').forEach(function(b){b.classList.toggle('active',b.dataset.view===view);});var t=document.getElementById('drawerTitle'),s=document.getElementById('drawerSubtitle'),b2=document.getElementById('drawerBody');if(t)t.textContent=title;if(s)s.textContent=sub;if(b2)b2.innerHTML='<div class="empty">Loading\u2026</div>';}
+
+/* ---------- Mobile drawer navigation ---------- */
+document.addEventListener('DOMContentLoaded',function(){
+  var btn=document.getElementById('drawerMobileNavBtn');
+  if(btn)btn.addEventListener('click',function(){document.querySelector('.drawer-side')?.classList.toggle('mobile-open');});
+});
+
+/* ---------- UUID fallback for non-HTTPS contexts ---------- */
+try{if(typeof crypto!=='undefined'&&!crypto.randomUUID){crypto.randomUUID=function(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});};}}catch(e){}
+
+/* ---------- Forgot password ---------- */
+window.domaForgotPassword=async function(){
+  var email=(document.getElementById('loginEmail')?.value||'').trim();
+  if(!email)return showStatus('authStatus','Enter your email first, then press Forgot password.','error');
+  showStatus('authStatus','Sending reset link\u2026');
+  try{
+    var r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+    if(r.error)return showStatus('authStatus',r.error.message,'error');
+    showStatus('authStatus','Password reset link sent. Check your email inbox.','success');
+  }catch(e){showStatus('authStatus',e?.message||String(e),'error');}
+};
+
+/* ---------- Quiz countdown timer (Exam Pro) ---------- */
+function domaStartQuizTimer(){
+  if(!window.currentQuiz||!currentQuiz.endsAt)return;
+  var el=document.getElementById('quizTimer'),lb=document.getElementById('quizTimerLabel');
+  if(lb)lb.textContent='Time limit applies \u2014 the quiz submits automatically.';
+  clearInterval(window.__domaQuizTimer);
+  var tick=function(){
+    var left=currentQuiz.endsAt-Date.now();
+    if(left<=0){clearInterval(window.__domaQuizTimer);showToast('Time is up \u2014 submitting your quiz\u2026');try{submitQuiz();}catch(e){}return;}
+    var m=Math.floor(left/60000),s=Math.floor(left%60000/1000);
+    if(el)el.textContent='\u23f1 '+m+':'+String(s).padStart(2,'0');
+  };
+  window.__domaQuizTimer=setInterval(tick,1000);tick();
+}
+var __origRQP=window.renderQuizPage;
+if(typeof __origRQP==='function'){window.renderQuizPage=function(){__origRQP();setTimeout(domaStartQuizTimer,60);};}
+var __origSQ=window.submitQuiz;
+if(typeof __origSQ==='function'){window.submitQuiz=async function(){clearInterval(window.__domaQuizTimer);return __origSQ.apply(this,arguments);};}
+
+/* ---------- Student: Live Classes view ---------- */
+window.renderStudentLive=async function(){
+  var body=document.getElementById('drawerBody');
+  var access=await ensureActiveGrade();
+  if(!access){body.innerHTML='<div class="empty">Activate your grade subscription to see live classes.</div>';return;}
+  var r;
+  try{r=await sb.from('live_classes').select('id,title,description,teacher_name,starts_at,ends_at,meeting_url,recording_url').eq('grade_id',access.grade.id).eq('is_published',true).order('starts_at',{ascending:false}).limit(100);}catch(e){r={error:e};}
+  if(r.error){body.innerHTML='<div class="empty">Live classes are not available yet. Ask the admin to run the PRO7 SQL patch for live_classes.</div>';return;}
+  var rows=r.data||[],now=Date.now();
+  body.innerHTML='<div class="hw-page-head"><div><div class="eyebrow">Live Classes</div><h3>'+esc(access.grade.name)+' \u2014 Live & Recordings</h3><p>Join scheduled live lessons and watch recordings after they end.</p></div></div>'+
+  (rows.length?'<div class="table-list">'+rows.map(function(x){
+    var start=new Date(x.starts_at).getTime(),end=x.ends_at?new Date(x.ends_at).getTime():null;
+    var live=now>=start&&(!end||now<=end);
+    return '<div class="listrow"><div class="listrow-main"><strong>'+esc(x.title)+'</strong><span>'+esc(x.teacher_name||'DOMA Team')+' \u2022 '+fmtDateTime(x.starts_at)+(x.ends_at?' \u2192 '+fmtDateTime(x.ends_at):'')+'</span>'+(x.description?'<span style="margin-top:4px">'+esc(x.description)+'</span>':'')+'</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+(live?'<span class="pill live-pill">\u25cf LIVE NOW</span>':'')+(x.meeting_url?'<a class="btn '+(live?'primary':'secondary')+'" style="padding:8px 12px;font-size:11px" href="'+esc(x.meeting_url)+'" target="_blank" rel="noopener noreferrer">'+(live?'Join Now \u2192':'Meeting Link')+'</a>':'')+(x.recording_url?'<a class="btn secondary" style="padding:8px 12px;font-size:11px" href="'+esc(x.recording_url)+'" target="_blank" rel="noopener noreferrer">Recording \u2197</a>':'')+'</div></div>';
+  }).join('')+'</div>':'<div class="empty">No live classes scheduled yet.</div>');
+};
+
+/* ---------- Student: Support Center view ---------- */
+window.renderStudentSupport=async function(){
+  var body=document.getElementById('drawerBody');
+  if(!sessionUser){body.innerHTML='<div class="empty">Please log in.</div>';return;}
+  var r;
+  try{r=await sb.from('support_tickets').select('id,subject,category,priority,status,created_at,updated_at').eq('student_id',sessionUser.id).order('updated_at',{ascending:false}).limit(100);}catch(e){r={error:e};}
+  if(r.error){body.innerHTML='<div class="empty">Support center is not available yet. Ask the admin to run the PRO7 SQL patch for support tables.</div>';return;}
+  var rows=r.data||[];
+  body.innerHTML='<div class="hw-page-head"><div><div class="eyebrow">Support Center</div><h3>My Tickets</h3><p>Ask the DOMA team a question and follow the reply here.</p></div><button class="btn primary" id="newTicketBtn" type="button">+ New Ticket</button></div>'+
+  (rows.length?'<div class="table-list">'+rows.map(function(t){
+    return '<div class="listrow"><div class="listrow-main"><strong>'+esc(t.subject)+'</strong><span>'+esc(t.category||'General')+' \u2022 '+fmtDateTime(t.updated_at||t.created_at)+'</span></div><div style="display:flex;gap:8px;align-items:center"><span class="pill '+(t.status==='closed'?'':'ok')+'">'+esc(t.status||'open')+'</span><button class="btn secondary" data-support-open="'+esc(t.id)+'">Open</button></div></div>';
+  }).join('')+'</div>':'<div class="empty">No tickets yet \u2014 press "+ New Ticket" if you need help.</div>');
+  document.getElementById('newTicketBtn').onclick=openNewTicketModal;
+  body.querySelectorAll('[data-support-open]').forEach(function(b){b.onclick=function(){openSupportTicket(b.getAttribute('data-support-open'));};});
+};
+function openNewTicketModal(){
+  document.getElementById('modalTitle').textContent='New Support Ticket';
+  document.getElementById('modalText').textContent='Describe your issue and the DOMA team will reply here.';
+  document.getElementById('modalBody').innerHTML='<div class="formgrid"><select id="tkCategory" class="field"><option>General</option><option>Payment</option><option>Lessons</option><option>Quiz</option><option>Homework</option><option>Technical</option></select><select id="tkPriority" class="field"><option value="normal">Normal priority</option><option value="high">High priority</option></select><input id="tkSubject" class="field full" placeholder="Subject"><textarea id="tkMessage" class="field full" rows="6" placeholder="Write your message\u2026"></textarea><div id="tkStatus" class="status full"></div><button class="btn primary full" id="tkSend" type="button">Send Ticket</button></div>';
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('tkSend').onclick=async function(){
+    var subject=(document.getElementById('tkSubject').value||'').trim(),msg=(document.getElementById('tkMessage').value||'').trim();
+    if(!subject||!msg)return showStatus('tkStatus','Write a subject and a message.','error');
+    var t=await sb.from('support_tickets').insert({student_id:sessionUser.id,subject:subject,category:document.getElementById('tkCategory').value,priority:document.getElementById('tkPriority').value,status:'open',last_message_at:new Date().toISOString()}).select('id');
+    if(t.error)return showStatus('tkStatus',t.error.message,'error');
+    var m=await sb.from('support_messages').insert({ticket_id:t.data[0].id,sender_id:sessionUser.id,sender_role:'student',message:msg});
+    if(m.error)return showStatus('tkStatus',m.error.message,'error');
+    closeModal();showToast('Ticket sent.');window.renderStudentSupport();
+  };
+}
+async function openSupportTicket(id){
+  var t=await sb.from('support_tickets').select('id,subject,status').eq('id',id).single();if(t.error)return toast(t.error.message);
+  var m=await sb.from('support_messages').select('sender_role,message,created_at').eq('ticket_id',id).order('created_at',{ascending:true});
+  if(m.error)return toast(m.error.message);
+  document.getElementById('modalTitle').textContent='Ticket \u2014 '+t.data.subject;
+  document.getElementById('modalText').textContent='Status: '+t.data.status;
+  document.getElementById('modalBody').innerHTML='<div class="table-list" style="max-height:50vh;overflow:auto;margin-bottom:10px">'+((m.data||[]).map(function(x){
+    return '<div class="notification" style="margin-bottom:8px;'+(x.sender_role==='staff'?'border-color:#6a2a3d':'')+'"><strong style="font-size:10px;color:#d98ea0">'+(x.sender_role==='staff'?'DOMA Team':'You')+'</strong><p>'+esc(x.message)+'</p><span class="pill" style="margin-top:5px">'+fmtDateTime(x.created_at)+'</span></div>';
+  }).join('')||'<div class="empty">No messages.</div>')+'</div>'+(t.data.status!=='closed'?'<textarea id="tkReply" class="field" rows="4" placeholder="Write a reply\u2026"></textarea><div class="account-actions" style="margin-top:10px"><button class="btn primary" id="tkReplySend" type="button">Send Reply</button></div>':'<div class="notice">This ticket is closed.</div>');
+  document.getElementById('modal').classList.add('show');
+  var send=document.getElementById('tkReplySend');
+  if(send)send.onclick=async function(){
+    var msg=(document.getElementById('tkReply').value||'').trim();if(!msg)return;
+    var r=await sb.from('support_messages').insert({ticket_id:id,sender_id:sessionUser.id,sender_role:'student',message:msg});
+    if(r.error)return toast(r.error.message);
+    await sb.from('support_tickets').update({status:'open',last_message_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq('id',id);
+    openSupportTicket(id);
+  };
+}
+
+/* ---------- studentView wrapper: live/support + timer cleanup ---------- */
+var __origSV=window.studentView;
+window.studentView=async function(view){
+  clearInterval(window.__domaQuizTimer);
+  document.querySelector('.drawer-side')?.classList.remove('mobile-open');
+  if(view==='live'){currentStudentView='live';__setChrome('live','Live Classes','Join live lessons and watch recordings for your grade.');return window.renderStudentLive();}
+  if(view==='support'){currentStudentView='support';__setChrome('support','Support Center','Ask the DOMA team and follow replies.');return window.renderStudentSupport();}
+  return __origSV(view);
+};
+
+/* ---------- openStudentTool guard ---------- */
+var __origOST=window.openStudentTool;
+var __VALID=['overview','lessons','daily100','quizzes','homework','certificates','notifications','profile','assistant','questionbank','analytics','timer','challenge','planner','library','rewards','aiassistant','live','support'];
+window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview';return __origOST(view);};
 })();
 </script>
 </body>
