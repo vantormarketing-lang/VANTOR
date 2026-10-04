@@ -2072,62 +2072,88 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script id="doma-grade-aware-home-curriculum-fix">
 (function(){
   'use strict';
-  const originalFeaturedHTML=document.getElementById('first-prep')?.innerHTML||'';
+  const section=document.getElementById('first-prep');
+  if(!section)return;
   let rendering=false;
-
   function escHome(v){
     return typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]||m));
   }
-
-  async function renderGradeAwareCurriculum(){
-    const section=document.getElementById('first-prep');
-    if(!section||rendering)return;
-    if(!window.sessionUser||!window.sb||!window.currentGrade){
-      if(section.dataset.gradeAware==='1'){section.innerHTML=originalFeaturedHTML;section.dataset.gradeAware='0';}
-      return;
+  function gradeCards(){
+    const gs=Array.isArray(window.grades)?window.grades:[];
+    if(!gs.length)return '<div class="empty">Loading grades…</div>';
+    return gs.map(g=>'<button type="button" class="btn secondary" style="margin:4px" onclick="domaHomeChooseGrade('+JSON.stringify(String(g.name||''))+')">'+escHome(g.name)+'</button>').join('');
+  }
+  async function resolvePreviewGrade(){
+    const gs=Array.isArray(window.grades)?window.grades:[];
+    if(window.currentGrade) return window.currentGrade;
+    if(window.domaPreviewGradeId){const g=gs.find(x=>x.id===window.domaPreviewGradeId);if(g)return g;}
+    if(window.domaPreviewGradeName){const g=gs.find(x=>x.name===window.domaPreviewGradeName);if(g)return g;}
+    if(window.sessionUser&&window.sb){
+      try{
+        const p=window.domaStudentProfile||await getProfile();
+        if(p?.grade_id){const g=gs.find(x=>x.id===p.grade_id);if(g)return g;}
+      }catch(e){}
     }
-    const grade=window.currentGrade;
+    return null;
+  }
+  async function loadGradeData(grade){
+    const [u,l]=await Promise.all([
+      sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true}),
+      sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true}).order('created_at',{ascending:true}).limit(2000)
+    ]);
+    if(u.error)throw u.error;if(l.error)throw l.error;
+    const units=u.data||[], lessons=l.data||[], byUnit=new Map(units.map(x=>[x.id,x]));
+    lessons.sort((a,b)=>{
+      const ua=Number(byUnit.get(a.unit_id)?.unit_number??999),ub=Number(byUnit.get(b.unit_id)?.unit_number??999);
+      if(ua!==ub)return ua-ub;
+      const sa=Number(a.sort_order??999),sb=Number(b.sort_order??999);
+      return sa-sb||String(a.title||'').localeCompare(String(b.title||''));
+    });
+    const byUnitHtml=units.map((unit,i)=>{
+      const rows=lessons.filter(x=>x.unit_id===unit.id);
+      const cards=rows.length?rows.map(x=>{
+        const video=String(x.video_url||'').trim();
+        return '<div class="prep-lesson"><div class="lesson-top"><strong>'+escHome(x.title)+'</strong><span class="lesson-type">'+escHome(x.lesson_type||'lesson')+'</span></div><p>'+escHome(x.description||'Lesson content is available inside the lesson area.')+'</p><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="mini-open" type="button" onclick="openPublicLesson('+JSON.stringify(String(x.title||''))+')">Open Lesson →</button>'+(video?'<span class="pill">Video</span>':'<span class="pill">No video yet</span>')+'</div></div>';
+      }).join(''):'<div class="empty">No published lessons in this unit yet.</div>';
+      return '<details class="prep-unit" '+(i===0?'open':'')+'><summary><div class="unit-title-wrap"><div class="unit-index">'+(i+1)+'</div><div class="unit-summary"><strong>'+escHome(unit.title)+'</strong><span>'+escHome(unit.description||'')+'</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons">'+cards+'</div></details>';
+    }).join('');
+    return {units,lessons,html:byUnitHtml};
+  }
+  async function renderGradeAwareCurriculum(forceGrade=null){
+    if(rendering)return;
     rendering=true;
-    section.innerHTML='<div class="container"><div class="curriculum-spotlight"><div class="curriculum-top"><div><div class="eyebrow">Your Active Grade</div><h2>'+escHome(grade.name)+' — Curriculum</h2><p>المناهج والدروس والفيديوهات هنا خاصة بالصف الحالي ومربوطة مباشرة بـ grade_id.</p><div class="curriculum-badges"><span class="pill" id="gradeAwareUnits">Loading units…</span><span class="pill" id="gradeAwareLessons">Loading lessons…</span><span class="pill" id="gradeAwareVideos">Loading videos…</span></div></div><button class="btn primary" type="button" onclick="openStudentTool(\'lessons\')">Open My Lessons →</button></div><div class="curriculum-detail"><div class="curriculum-detail-head"><div><div class="eyebrow" style="margin-bottom:4px">Curriculum Explorer</div><h3>'+escHome(grade.name)+' Units & Lessons</h3><p>يتم عرض المحتوى الفعلي لهذا الصف من Supabase، بدون إعادة استخدام محتوى الصف الأول.</p></div></div><div id="gradeAwareCurriculumBody"><div class="empty">Loading your curriculum…</div></div></div></div></div>';
     try{
-      const [u,l]=await Promise.all([
-        sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true}),
-        sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true}).limit(2000)
-      ]);
-      if(u.error)throw u.error;
-      if(l.error)throw l.error;
-      const units=u.data||[],lessons=l.data||[],byUnit=new Map(units.map(x=>[x.id,x]));
-      lessons.sort((a,b)=>{const ua=Number(byUnit.get(a.unit_id)?.unit_number??999),ub=Number(byUnit.get(b.unit_id)?.unit_number??999);if(ua!==ub)return ua-ub;const sa=Number(a.sort_order??999),sb=Number(b.sort_order??999);return sa-sb||String(a.title||'').localeCompare(String(b.title||''));});
-      const videoCount=lessons.filter(x=>String(x.video_url||'').trim()).length;
-      const unitHtml=units.length?units.map((unit,idx)=>{
-        const rows=lessons.filter(x=>x.unit_id===unit.id);
-        const cards=rows.length?rows.map(x=>{
-          const video=String(x.video_url||'').trim();
-          return '<div class="prep-lesson"><div class="lesson-top"><strong>'+escHome(x.title)+'</strong><span class="lesson-type">'+escHome(x.lesson_type||'lesson')+'</span></div><p>'+escHome(x.description||'Lesson content is available inside the lesson area.')+'</p><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="mini-open" type="button" onclick="openPublicLesson('+JSON.stringify(String(x.title||''))+')">Open Lesson →</button>'+(video?'<span class="pill">Video</span>':'')+'</div></div>';
-        }).join(''):'<div class="empty">No published lessons in this unit yet.</div>';
-        return '<details class="prep-unit" '+(idx===0?'open':'')+'><summary><div class="unit-title-wrap"><div class="unit-index">'+(idx+1)+'</div><div class="unit-summary"><strong>'+escHome(unit.title)+'</strong><span>'+escHome(unit.description||'')+'</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons">'+cards+'</div></details>';
-      }).join(''):'<div class="empty">No units are published for '+escHome(grade.name)+' yet.</div>';
-      const body=document.getElementById('gradeAwareCurriculumBody');
-      if(body)body.innerHTML='<div class="prep-accordion">'+unitHtml+'</div>';
-      const a=document.getElementById('gradeAwareUnits'),b=document.getElementById('gradeAwareLessons'),c=document.getElementById('gradeAwareVideos');
-      if(a)a.textContent=units.length+' units';if(b)b.textContent=lessons.length+' lessons';if(c)c.textContent=videoCount+' videos';
-      section.dataset.gradeAware='1';
+      const grade=forceGrade||await resolvePreviewGrade();
+      if(!grade){
+        section.innerHTML='<div class="container"><div class="curriculum-spotlight"><div class="curriculum-top"><div><div class="eyebrow">Choose Your Grade</div><h2>English Curriculum</h2><p>اختار الصف عشان نعرض لك الدروس والوحدات والفيديوهات الخاصة بالصف ده فقط.</p><div class="curriculum-badges"><span class="pill">Grade-specific lessons</span><span class="pill">Grade-specific videos</span></div></div></div><div class="curriculum-detail"><div class="curriculum-detail-head"><div><div class="eyebrow" style="margin-bottom:4px">Curriculum Explorer</div><h3>Select your grade</h3></div></div><div class="grade-home-chooser" style="padding:12px 0">'+gradeCards()+'</div></div></div></div>';
+        return;
+      }
+      window.currentGrade=grade;
+      const data=await loadGradeData(grade);
+      const videoCount=data.lessons.filter(x=>String(x.video_url||'').trim()).length;
+      section.innerHTML='<div class="container"><div class="curriculum-spotlight"><div class="curriculum-top"><div><div class="eyebrow">Current Grade</div><h2>'+escHome(grade.name)+' — English Curriculum</h2><p>المحتوى هنا مربوط مباشرة بالصف المحدد، وكل درس وفيديو مأخوذ من سجلات هذا الصف فقط.</p><div class="curriculum-badges"><span class="pill">'+data.units.length+' Units</span><span class="pill">'+data.lessons.length+' Lessons</span><span class="pill">'+videoCount+' Videos</span></div></div><div style="min-width:230px"><div class="eyebrow">Switch Grade</div><div style="margin-top:7px">'+gradeCards()+'</div></div></div><div class="curriculum-detail"><div class="curriculum-detail-head"><div><div class="eyebrow" style="margin-bottom:4px">Curriculum Explorer</div><h3>'+escHome(grade.name)+' Units & Lessons</h3><p>لا يوجد محتوى ثابت للصف الأول هنا؛ الصفحة تعرض فقط بيانات الصف الحالي من Supabase.</p></div></div><div class="prep-accordion">'+(data.html||'<div class="empty">No published lessons are available for '+escHome(grade.name)+' yet.</div>')+'</div></div></div></div>';
     }catch(err){
-      const body=document.getElementById('gradeAwareCurriculumBody');
-      if(body)body.innerHTML='<div class="empty"><b>تعذر تحميل منهج '+escHome(grade.name)+'</b><br><small>'+escHome(err?.message||'Supabase read error')+'</small></div>';
-      section.dataset.gradeAware='1';
+      section.innerHTML='<div class="container"><div class="curriculum-detail"><div class="empty"><b>تعذر تحميل منهج الصف الحالي</b><br><small>'+escHome(err?.message||'Supabase read error')+'</small><br><button type="button" class="btn secondary" style="margin-top:9px" onclick="domaRenderHomeCurriculum()">Retry</button></div></div></div>';
     }finally{rendering=false;}
   }
-
+  window.domaRenderHomeCurriculum=()=>renderGradeAwareCurriculum();
+  window.domaHomeChooseGrade=async function(name){
+    const gs=Array.isArray(window.grades)?window.grades:[];const g=gs.find(x=>x.name===name);if(!g)return;
+    window.domaPreviewGradeId=g.id;window.domaPreviewGradeName=g.name;
+    if(window.sessionUser){
+      const subs=await getActiveSubscriptions().catch(()=>[]);const active=subs.find(s=>s.grade_id===g.id)||null;
+      if(active){currentGrade=g;currentSubscription=active;window.currentGrade=g;window.currentSubscription=active;}
+    }
+    await renderGradeAwareCurriculum(g);
+  };
   const oldRefresh=window.refreshStudentState;
-  if(typeof oldRefresh==='function'&&!oldRefresh.__gradeAwareWrapped){
-    const wrapped=async function(){const r=await oldRefresh.apply(this,arguments);setTimeout(renderGradeAwareCurriculum,0);return r;};
-    wrapped.__gradeAwareWrapped=true;
-    window.refreshStudentState=wrapped;
+  if(typeof oldRefresh==='function'&&!oldRefresh.__gradeAwareHomeV2){
+    const wrapped=async function(){const r=await oldRefresh.apply(this,arguments);setTimeout(()=>renderGradeAwareCurriculum(),0);return r;};
+    wrapped.__gradeAwareHomeV2=true;window.refreshStudentState=wrapped;
   }
-  const run=()=>setTimeout(renderGradeAwareCurriculum,250);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
-  window.addEventListener('load',run);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>renderGradeAwareCurriculum(),250));
+  else setTimeout(()=>renderGradeAwareCurriculum(),250);
+  window.addEventListener('load',()=>setTimeout(()=>renderGradeAwareCurriculum(),400));
 })();
 </script>
 </body>
