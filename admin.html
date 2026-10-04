@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DOMA ACADEMY — Admin • PRO7 Full Fixed</title>
+<title>DOMA ACADEMY — Admin • One-Step Final</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -294,13 +294,24 @@ async function loadGrades(){
 async function loadUnitsCache(){const r=await db.from('units').select('id,grade_id,title,unit_number,description,created_at').order('unit_number',{ascending:true});if(!r.error)units=r.data||[]}
 
 async function loadDashboard(){
+  const host=document.querySelector('#section-dashboard');
   const [students,lessons,pending,active]=await Promise.all([
     db.from('profiles').select('id',{count:'exact',head:true}).eq('role','student'),
     db.from('lessons').select('id',{count:'exact',head:true}).eq('is_published',true),
     db.from('subscription_requests').select('id',{count:'exact',head:true}).eq('status','pending'),
     db.from('subscriptions').select('id',{count:'exact',head:true}).eq('status','active').gt('expires_at',new Date().toISOString())
   ]);
-  $('stStudents').textContent=students.count??0;$('stLessons').textContent=lessons.count??0;$('stPending').textContent=pending.count??0;$('stActive').textContent=active.count??0;
+  const failed=[['Students',students],['Lessons',lessons],['Pending',pending],['Subscriptions',active]].filter(x=>x[1]?.error);
+  $('stStudents').textContent=students.error?'RLS':String(students.count??0);
+  $('stLessons').textContent=lessons.error?'RLS':String(lessons.count??0);
+  $('stPending').textContent=pending.error?'RLS':String(pending.count??0);
+  $('stActive').textContent=active.error?'RLS':String(active.count??0);
+  let note=document.getElementById('adminDataAccessWarning');
+  if(!note){note=document.createElement('div');note.id='adminDataAccessWarning';note.className='info-box';note.style.marginTop='14px';host?.appendChild(note)}
+  if(failed.length){
+    note.style.display='block';
+    note.innerHTML='<b>Admin data access needs attention.</b><br>'+failed.map(x=>x[0]+': '+esc(x[1].error.message||'RLS error')).join('<br>')+'<br><span class="muted">Run DOMA_ACADEMY_ADMIN_DATA_RLS_FIX_V2.sql in Supabase, then refresh the Admin.</span>';
+  }else{note.style.display='none';}
 }
 
 async function loadGradesTable(){
@@ -434,6 +445,20 @@ $('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGrade
 
 async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Supabase connected':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
 
+async function checkAdminDataAccess(){
+  try{
+    const [g,l,q,h]=await Promise.all([
+      db.from('grades').select('id',{count:'exact',head:true}),
+      db.from('lessons').select('id',{count:'exact',head:true}),
+      db.from('quizzes').select('id',{count:'exact',head:true}),
+      db.from('homework').select('id',{count:'exact',head:true})
+    ]);
+    const errors=[g,l,q,h].filter(x=>x?.error);
+    if(errors.length) console.warn('DOMA Admin data access check:',errors.map(x=>x.error?.message));
+    return {ok:errors.length===0,errors};
+  }catch(e){return {ok:false,errors:[e]}}
+}
+
 async function start(){
   if(state.started)return true;if(state.startPromise)return state.startPromise;
   state.startPromise=(async()=>{
@@ -450,16 +475,8 @@ async function start(){
         return false;
       }
       window.__domaStaffProfile=staff.profile;
-      // Render the Admin shell immediately after staff authorization.
-      // A cache/query failure must never leave the whole Admin UI hidden.
-      $('login').style.display='none';
-      $('app').style.display='block';
-      state.started=true;
-      show('dashboard');
-      const bootResults=await Promise.allSettled([loadGrades(),loadUnitsCache(),checkConnection()]);
-      bootResults.forEach((x,i)=>{if(x.status==='rejected')console.error('Admin boot task failed',i,x.reason)});
-      setTimeout(()=>{try{checkLessonVideoIntegrity()}catch(e){console.warn(e)}},500);
-      return true;
+      $('login').style.display='none';$('app').style.display='block';
+      await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();await checkAdminDataAccess();setTimeout(checkLessonVideoIntegrity,500);return true;
     }catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}
     finally{state.startPromise=null}
   })();return state.startPromise
@@ -981,28 +998,33 @@ window.pro7LoadLive=loadLive7;window.pro7LoadSupport=loadSupport7;window.pro7Loa
   window.addEventListener('load',()=>setTimeout(installHealth,300));
 })();
 </script>
-<script id="doma-admin-visible-diagnostics">
+
+<script id="doma-admin-data-visibility-guard">
 (function(){
   'use strict';
-  function q(id){return document.getElementById(id)}
-  function safe(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-  async function run(){
-    const checks=[['Grades','grades'],['Units','units'],['Lessons','lessons'],['Quizzes','quizzes'],['Homework','homework'],['Students','profiles'],['Sales','subscription_requests']];
-    const out=[];
-    for(const [label,table] of checks){
-      try{const r=await db.from(table).select('id',{count:'exact',head:true});out.push('<span class="pill '+(r.error?'bad':'ok')+'">'+safe(label)+': '+(r.error?'ERROR':'OK')+(r.error?' — '+safe(r.error.message):'')+'</span>')}catch(e){out.push('<span class="pill bad">'+safe(label)+': ERROR — '+safe(e.message||e)+'</span>')}
-    }
-    const host=q('domaAdminDbDiagnostics');
-    if(host)host.innerHTML=out.join(' ');
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  async function diagnose(){
+    try{
+      const checks=[
+        ['Lessons','lessons'],['Quizzes','quizzes'],['Homework','homework'],['Students','profiles']
+      ];
+      const failed=[];
+      for(const [label,table] of checks){
+        const r=await db.from(table).select('id',{count:'exact',head:true});
+        if(r.error)failed.push(label+': '+r.error.message);
+      }
+      const host=document.getElementById('section-dashboard');
+      if(!host)return;
+      let box=document.getElementById('domaAdminVisibilityGuard');
+      if(!box){box=document.createElement('div');box.id='domaAdminVisibilityGuard';box.className='info-box';box.style.marginTop='10px';host.appendChild(box)}
+      if(failed.length){box.style.display='block';box.innerHTML='<b>Data access issue detected</b><br>'+failed.map(esc).join('<br>')+'<br><small>Run the Admin Data/RLS Fix SQL once in Supabase, then Ctrl+F5.</small>';}
+      else box.style.display='none';
+    }catch(e){}
   }
-  function install(){
-    const sec=q('section-dashboard'); if(!sec || q('domaAdminDbDiagnosticsCard'))return;
-    const card=document.createElement('div'); card.id='domaAdminDbDiagnosticsCard'; card.className='card'; card.style.marginTop='14px';
-    card.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><b>Database Health</b><div class="muted" style="margin-top:4px">Live checks for the records used by the Admin. Errors indicate Supabase/RLS configuration rather than missing Admin sections.</div></div><button class="btn secondary small" type="button" id="domaAdminDbDiagnosticsRefresh">Check Now</button></div><div id="domaAdminDbDiagnostics" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:11px"><span class="pill">Checking…</span></div>';
-    sec.appendChild(card); const b=q('domaAdminDbDiagnosticsRefresh'); if(b)b.onclick=run; run();
-  }
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(install,450));
-  window.addEventListener('load',()=>setTimeout(install,450));
-})();</script>
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(diagnose,900));
+  window.addEventListener('load',()=>setTimeout(diagnose,600));
+  window.domaDiagnoseAdminData=diagnose;
+})();
+</script>
 </body>
 </html>
