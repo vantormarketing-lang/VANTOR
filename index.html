@@ -162,9 +162,6 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 @media(max-width:900px){.student-home-grid{grid-template-columns:repeat(2,1fr)}.student-home-two{grid-template-columns:1fr}}
 @media(max-width:560px){.student-home-grid{grid-template-columns:1fr 1fr}.student-home-achievements{grid-template-columns:repeat(2,1fr)}}
 </style>
-<style id="doma-pro7-css">
-.pro7-panel{background:linear-gradient(145deg,#120b0e,#0b090a);border:1px solid #38212a;border-radius:16px;padding:18px;margin-top:14px}.pro7-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.pro7-grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.pro7-card{padding:14px;border:1px solid #2f1b23;border-radius:13px;background:#100b0d}.pro7-card h3{font-size:15px;margin-bottom:6px}.pro7-card p{font-size:10px;color:#81777b;line-height:1.7}.pro7-kpi{padding:12px;background:#0d090b;border:1px solid #29171e;border-radius:10px}.pro7-kpi b{display:block;font-size:21px}.pro7-kpi span{display:block;color:#756c70;font-size:8px;margin-top:3px}.pro7-list{display:grid;gap:8px;margin-top:11px}.pro7-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:11px;border:1px solid #2a181f;border-radius:11px;background:#0e0a0c}.pro7-row strong{font-size:11px}.pro7-row small,.pro7-row span{display:block;color:#776d72;font-size:9px;margin-top:3px}.pro7-badge{display:inline-flex;padding:5px 8px;border-radius:999px;border:1px solid #472431;background:#1b0e13;color:#dca3af;font-size:8px;white-space:nowrap}.pro7-badge.ok{border-color:#31583e;background:#102118;color:#a6d8b5}.pro7-badge.warn{border-color:#59452b;background:#241b10;color:#dfc08b}.pro7-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.pro7-empty{padding:22px;text-align:center;color:#786e72;border:1px dashed #352028;border-radius:11px}.pro7-input{width:100%;padding:10px 11px;border-radius:10px;border:1px solid #2e1b22;background:#0c090a;color:#fff;outline:none}.pro7-input:focus{border-color:#7f3047}.pro7-message{padding:10px 11px;border-radius:11px;line-height:1.6;font-size:10px}.pro7-message.user{background:#201017;border:1px solid #4b2632}.pro7-message.staff{background:#111a15;border:1px solid #2d4e3a}.pro7-message-meta{display:flex;justify-content:space-between;gap:8px;color:#70676b;font-size:8px;margin-bottom:4px}.pro7-chat{display:grid;gap:8px;max-height:420px;overflow:auto;padding-right:3px}.pro7-roadmap{display:grid;gap:10px}.pro7-road-unit{border:1px solid #2d1921;border-radius:13px;overflow:hidden;background:#0d090b}.pro7-road-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px}.pro7-road-bar{height:7px;background:#24151b;border-radius:9px;overflow:hidden;margin:0 13px 12px}.pro7-road-bar i{display:block;height:100%;background:#b44361;border-radius:9px}.pro7-road-lessons{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 13px 13px}.pro7-road-lesson{padding:9px 10px;border-radius:9px;border:1px solid #28171e;background:#100a0c;font-size:9px}.pro7-road-lesson.done{border-color:#33583f;background:#0f1c14}.pro7-revision-item{padding:12px;border:1px solid #31202a;border-radius:11px;background:#100b0d}.pro7-revision-item+.pro7-revision-item{margin-top:8px}.pro7-score{font-size:18px;font-weight:900}.pro7-live-count{font-size:9px;color:#8a7d82}.pro7-countdown{font:900 18px/1 monospace;letter-spacing:.05em}.pro7-alert{padding:11px 12px;border-radius:10px;background:#241510;border:1px solid #5b382e;color:#e0c0b3;font-size:10px;margin-top:10px}.pro7-statusline{font-size:9px;color:#82767b;margin-top:5px}@media(max-width:850px){.pro7-grid,.pro7-grid-3{grid-template-columns:1fr}.pro7-road-lessons{grid-template-columns:1fr}} 
-</style>
 </head>
 <body>
 <nav class="nav">
@@ -454,17 +451,7 @@ async function domaSubmitSubscription(){
   const ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg';
   const path=sessionUser.id+'/'+crypto.randomUUID()+'.'+ext;
   const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});
-  if(up.error){
-    console.error('DOMA payment receipt upload failed:',up.error);
-    const raw=String(up.error.message||up.error.error_description||up.error.name||'Unknown upload error');
-    const isSchemaMismatch=/database schema is invalid or incompatible|DatabaseInvalidObjectDefinition|schema mismatch|42P17/i.test(raw);
-    const hint=isSchemaMismatch
-      ? ' Supabase Storage is rejecting the upload at the database/RLS layer. Run DOMA_ACADEMY_PAYMENT_RECEIPT_STORAGE_REPAIR.sql once in Supabase SQL Editor, then retry.'
-      : (/rls|row.?level|forbidden|permission|policy|403/i.test(raw)
-        ? ' Check the payment-proofs Storage policies in Supabase.'
-        : '');
-    return showStatus('subStatus','Receipt upload failed: '+raw+hint,'error');
-  }
+  if(up.error)return showStatus('subStatus','Receipt upload failed: '+up.error.message,'error');
   const r=await sb.rpc('doma_create_subscription_request',{p_grade_id:grade.id,p_plan:selectedPlan,p_student_phone:phone,p_proof_path:path});
   if(r.error){await sb.storage.from('payment-proofs').remove([path]);return showStatus('subStatus','Request failed: '+r.error.message,'error')}
   showStatus('subStatus','Request submitted successfully. Your request is now Pending. Access will activate after admin approval.','success');$('domaReceipt').value='';$('domaSenderPhone').value='';await refreshStudentState();showToast('Payment request submitted.')
@@ -621,87 +608,38 @@ function renderVideoEmbed(url){const raw=String(url||'').trim();if(!raw)return '
 
 let currentLessonProgress = new Map();
 let currentLessonUnits = new Map();
-let currentLessonAccess = false;
 let lessonsLoadToken = 0;
 
 async function renderStudentLessons(){
   if(!sessionUser){$('drawerBody').innerHTML='<div class="empty">Log in to open your lessons.</div>';return}
   const token=++lessonsLoadToken;
-  currentLessonAccess=false;
-
-  let profile=null,active=null;
-  try{profile=window.domaStudentProfile||await getProfile()}catch(e){console.warn('Profile lookup failed:',e)}
-  try{active=await ensureActiveGrade()}catch(e){console.warn('Active-grade lookup failed:',e)}
+  const profile=window.domaStudentProfile||await getProfile();
+  const active=await ensureActiveGrade();
   if(token!==lessonsLoadToken)return;
-
-  const profileGrade=profile?.grade_id?(grades||[]).find(g=>g.id===profile.grade_id)||null:null;
-  const grade=active?.grade||profileGrade||currentGrade||null;
-  if(!grade){
-    currentLessons=[];currentLessonProgress=new Map();currentLessonUnits=new Map();
-    $('drawerBody').innerHTML='<div class="empty"><b>Choose your school grade first.</b><br><small>Open Account → Profile and select your grade. Your existing lessons in Supabase will load after that.</small></div>';
-    return;
-  }
-
+  const grade=active?.grade||(profile?.grade_id?grades.find(g=>g.id===profile.grade_id)||null:null);
+  if(!grade){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">Choose a grade first. Free lesson previews will be available after you set your grade.</div>';return}
   currentGrade=grade;
   if(active?.sub)currentSubscription=active.sub;
-  const subscriptionLooksActive=!!currentSubscription&&new Date(currentSubscription.expires_at)>new Date()&&currentSubscription.grade_id===grade.id;
-
-  let loadedLessons=[];
-  let usedRpc=false;
-
-  // Preferred path: secure server-side access check. This avoids a fragile
-  // dependency on the client's direct SELECT policy for paid lessons.
-  try{
-    const rpc=await sb.rpc('doma_get_student_lessons',{p_grade_id:grade.id});
-    if(!rpc.error){
-      loadedLessons=Array.isArray(rpc.data)?rpc.data:[];
-      usedRpc=true;
-      currentLessonAccess=subscriptionLooksActive||loadedLessons.some(x=>x?.is_free===false);
-    }else if(!/function .*doma_get_student_lessons.*does not exist|could not find the function|PGRST202/i.test(rpc.error.message||'')){
-      console.warn('Student lesson RPC failed:',rpc.error);
-    }
-  }catch(e){console.warn('Student lesson RPC unavailable; using direct lessons SELECT:',e)}
-
-  // Backward-compatible fallback when the one-time RPC patch has not been run.
-  if(!usedRpc){
-    const r=await sb.from('lessons')
-      .select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published')
-      .eq('grade_id',grade.id)
-      .eq('is_published',true)
-      .order('sort_order',{ascending:true})
-      .range(0,1999);
-    if(token!==lessonsLoadToken)return;
-    if(r.error){
-      currentLessons=[];currentLessonProgress=new Map();currentLessonUnits=new Map();
-      $('drawerBody').innerHTML='<div class="empty"><b>Lessons could not be loaded.</b><br><small>'+esc(r.error.message||'Supabase read error')+'</small><br><small>Run the provided DOMA_ACADEMY_STUDENT_LESSONS_ACCESS_RPC.sql once in Supabase SQL Editor.</small></div>';
-      return;
-    }
-    loadedLessons=r.data||[];
-    currentLessonAccess=subscriptionLooksActive;
-  }
-
+  const r=await sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true});
   if(token!==lessonsLoadToken)return;
-  if(!loadedLessons.length){
-    currentLessons=[];currentLessonProgress=new Map();currentLessonUnits=new Map();
-    const reason=subscriptionLooksActive?'An active subscription was detected, but Supabase returned no published lessons for this grade.':'No active subscription was detected, so only lessons permitted for preview/free access can be shown.';
-    $('drawerBody').innerHTML='<div class="empty"><b>No lessons are readable for '+esc(grade.name)+'.</b><br><small>'+esc(reason)+'</small><br><small>Your existing lesson data is not being changed.</small></div>';
-    return;
-  }
-
+  if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load lessons: '+esc(r.error.message)+'</div>';return}
+  const loadedLessons=r.data||[];
+  if(!loadedLessons.length){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">No published lessons are available for '+esc(grade.name)+' yet.</div>';return}
   const p=await sb.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',sessionUser.id);
   const u=await sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true});
   if(token!==lessonsLoadToken)return;
-  if(p.error)console.warn('Lesson progress read failed:',p.error);
-  if(u.error)console.warn('Unit read failed:',u.error);
   currentLessonProgress=new Map((p.data||[]).map(x=>[x.lesson_id,x]));
   currentLessonUnits=new Map((u.data||[]).map(x=>[x.id,x]));
 
+  // IMPORTANT: the database stores lesson order inside each Unit.
+  // Sorting only by sort_order would produce Lesson 1 from every Unit first.
   loadedLessons.sort((a,b)=>{
     const ua=Number(currentLessonUnits.get(a.unit_id)?.unit_number ?? 999);
     const ub=Number(currentLessonUnits.get(b.unit_id)?.unit_number ?? 999);
-    if(ua!==ub)return ua-ub;
-    const sa=Number(a.sort_order ?? 999),sb=Number(b.sort_order ?? 999);
-    if(sa!==sb)return sa-sb;
+    if(ua!==ub) return ua-ub;
+    const sa=Number(a.sort_order ?? 999);
+    const sb=Number(b.sort_order ?? 999);
+    if(sa!==sb) return sa-sb;
     return String(a.title||'').localeCompare(String(b.title||''));
   });
 
@@ -715,7 +653,7 @@ async function renderStudentLessons(){
 function renderLessonWorkspace(prog){
   const l=currentLessons[currentLessonIndex];
   const done=currentLessons.filter(x=>prog.get(x.id)?.completed).length,pct=currentLessons.length?Math.round(done/currentLessons.length*100):0;
-  const hasSub=!!currentLessonAccess || (!!currentSubscription&&new Date(currentSubscription.expires_at)>new Date()&&currentSubscription.grade_id===currentGrade?.id);
+  const hasSub=!!currentSubscription;
   const grouped=[],groups=new Map();
   currentLessons.forEach((x,i)=>{const key=x.unit_id||'__no_unit__';if(!groups.has(key)){const head=x._unit||{title:'General Lessons',unit_number:'',description:''};const g={unit:head,items:[]};groups.set(key,g);grouped.push(g)}groups.get(key).items.push({...x,_realIndex:i})});
   const listHtml=grouped.map(g=>'<div class="lesson-group"><div class="lesson-group-head"><strong>'+esc((g.unit.unit_number?'Unit '+g.unit.unit_number+': ':'')+(g.unit.title||'Lessons'))+'</strong><span>'+g.items.length+' lessons</span></div><div class="lesson-group-body">'+g.items.map((x,j)=>'<button type="button" class="lesson-btn '+(x._realIndex===currentLessonIndex?'active':'')+'" data-action="select-lesson" data-lesson-index="'+x._realIndex+'"><span class="lesson-num">'+(prog.get(x.id)?.completed?'✓':(j+1))+'</span><span style="min-width:0;flex:1"><strong style="display:block">'+esc(x._displayTitle||x.title)+'</strong><small style="display:block;color:#777;font-size:9px;margin-top:2px">'+esc(x.lesson_type||'lesson')+' • '+(x.duration_minutes||0)+' min</small></span>'+(x.video_url?'<span class="pill" style="margin-left:auto">Video</span>':'')+'</button>').join('')+'</div></div>').join('');
@@ -833,10 +771,14 @@ async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';i
 
 async function renderStudentCertificates(){const r=await sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',sessionUser.id).order('issued_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load certificates: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];$('drawerBody').innerHTML=rows.length?'<div class="cert-grid">'+rows.map(c=>'<div class="cert"><span class="pill">Certificate</span><h3 style="font-size:17px;margin-top:9px">'+esc(c.title)+'</h3><p style="font-size:10px;color:#888;margin-top:5px">Issued '+fmtDate(c.issued_at)+'</p><div class="cert-code">'+esc(c.certificate_code)+'</div><button type="button" class="btn secondary" style="margin-top:12px" data-action="print-certificate" data-title="'+esc(c.title)+'" data-code="'+esc(c.certificate_code)+'" data-issued="'+esc(c.issued_at)+'">Print / Save PDF</button></div>').join('')+'</div>':'<div class="empty">No certificates have been issued yet.</div>'}
 function printCertificate(title,code,issued){
-  const w=window.open('','_blank','width=900,height=650');if(!w)return;
+  const w=window.open('','_blank','width=900,height=650');
+  if(!w)return;
   const safeTitle=esc(title),safeCode=esc(code),safeIssued=esc(fmtDate(issued));
+  w.document.open();
   const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Certificate</title><style>body{font-family:Arial,sans-serif;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f;border-radius:18px}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+safeTitle+'</h1><p>Certificate of Completion</p><p class="small">Issued '+safeIssued+'</p><div class="code">'+safeCode+'</div><p class="small">BY ADHAM</p></div></body></html>';
-  w.document.open();w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),150);
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>w.print(),150);
 }
 </script>
 <script id="doma-index-phase-hooks">
@@ -936,6 +878,8 @@ document.addEventListener('DOMContentLoaded',boot);</script>
 
 <button class="back-top" id="domaBackTop" type="button" aria-label="Back to top">↑</button>
 
+
+</script>
 
 <script id="doma-master-upgrade-script">
 (function(){
@@ -1406,7 +1350,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   window.addEventListener('load',()=>setTimeout(()=>{try{if(typeof patchNavNotificationBadge==='function')patchNavNotificationBadge()}catch(e){}},700));
 })();
 </script>
-<script id="doma-student-home-upgrades-v2-script">
+<script id="doma-student-home-upgrades-v2">
 (function(){
   'use strict';
   function safeNum(v){const n=Number(v);return Number.isFinite(n)?n:0}
@@ -1527,7 +1471,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <style id="doma-student-plus5-v1">
 .student-plus5-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.student-plus5-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.student-plus5-card h3,.student-plus5-card h4{margin:0 0 7px}.student-plus5-muted{opacity:.72;font-size:.9rem;line-height:1.7}.plus5-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.plus5-toolbar .field{min-width:160px}.plus5-list{display:grid;gap:9px}.plus5-item{padding:12px;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06)}.plus5-item strong{display:block}.plus5-answer{display:block;margin-top:8px;padding:8px 10px;border-radius:10px;background:rgba(98,212,255,.07);font-size:.88rem}.plus5-statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.plus5-stat{padding:12px;border-radius:13px;background:rgba(255,255,255,.05);text-align:center}.plus5-stat b{display:block;font-size:1.25rem}.plus5-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.plus5-bar i{display:block;height:100%;background:linear-gradient(90deg,#62d4ff,#8d7cff);border-radius:99px}.plus5-chat{min-height:220px;max-height:430px;overflow:auto;display:grid;gap:9px;padding:4px}.plus5-msg{padding:11px 13px;border-radius:14px;line-height:1.65;white-space:pre-wrap}.plus5-msg.user{background:rgba(98,212,255,.10);margin-left:15%}.plus5-msg.bot{background:rgba(255,255,255,.05);margin-right:10%}.plus5-timer{font-size:clamp(44px,8vw,76px);font-weight:900;letter-spacing:2px;text-align:center;margin:15px 0}.plus5-challenge{font-size:1.05rem;line-height:1.8}.plus5-q{padding:14px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)}.plus5-q label{display:block;margin-top:7px;padding:8px;border-radius:10px;background:rgba(255,255,255,.035);cursor:pointer}.plus5-q label:hover{background:rgba(98,212,255,.08)}.plus5-progress{margin-top:8px}.plus5-small{font-size:.78rem;opacity:.72}@media(max-width:850px){.student-plus5-grid{grid-template-columns:1fr}.plus5-statgrid{grid-template-columns:repeat(2,1fr)}.plus5-msg.user,.plus5-msg.bot{margin-left:0;margin-right:0}}
 </style>
-<script id="doma-student-plus5-v1-script">
+<script id="doma-student-plus5-v1">
 (function(){'use strict';
  const e5=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
  const n5=v=>Number(v||0); const p5=v=>Math.max(0,Math.min(100,Math.round(n5(v))));
@@ -1629,7 +1573,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 .student-gami{margin-top:16px}.student-gami-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.student-gami-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.student-gami-card h4{margin:0 0 8px}.student-gami-muted{opacity:.72;font-size:.9rem}.student-gami-progress{height:10px;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden;margin:10px 0}.student-gami-progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#62d4ff,#8d7cff);border-radius:999px}.student-gami-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.student-gami-stat{padding:11px;border-radius:13px;background:rgba(255,255,255,.055);text-align:center}.student-gami-stat b{display:block;font-size:1.15rem}.student-gami-list{display:grid;gap:8px;margin-top:10px}.student-gami-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.045)}.student-gami-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.student-gami-badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.student-gami-badge{padding:12px 8px;text-align:center;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}.student-gami-badge.locked{opacity:.35}.student-gami-badge .ico{font-size:1.55rem;display:block;margin-bottom:5px}.student-gami-table{width:100%;border-collapse:collapse;margin-top:8px}.student-gami-table td,.student-gami-table th{padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left}.student-gami-rank{width:34px;font-weight:800}.student-gami-me{background:rgba(98,212,255,.08)}.student-gami-skill{display:grid;grid-template-columns:95px 1fr 45px;align-items:center;gap:8px;margin:9px 0}.student-gami-skill .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.student-gami-skill .bar i{display:block;height:100%;border-radius:99px;background:#62d4ff}.student-gami-center{margin-top:14px}.student-gami-center .student-gami-card{height:100%}@media(max-width:850px){.student-gami-grid{grid-template-columns:1fr}.student-gami-stats{grid-template-columns:repeat(2,1fr)}.student-gami-badges{grid-template-columns:repeat(2,1fr)}}
 </style>
 
-<script id="doma-student-gamification-v1-script">
+<script id="doma-student-gamification-v1">
 (function(){
   'use strict';
   const escG=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -1897,99 +1841,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   document.addEventListener('DOMContentLoaded',()=>{installCloudNav();setTimeout(()=>{if(window.sessionUser)fullSync().catch(()=>{})},1200)});
   window.addEventListener('load',()=>{installCloudNav();setTimeout(()=>{if(window.sessionUser)fullSync().catch(()=>{})},1500)});
   if(window.sb?.auth?.onAuthStateChange){window.sb.auth.onAuthStateChange((event,session)=>{if(session?.user)setTimeout(()=>fullSync().catch(()=>{}),700);});}
-})();
-</script>
-
-<script id="doma-pro7-index">
-(function(){
-  'use strict';
-  const e7=v=>typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const uid=()=>window.sessionUser?.id||null;
-  const role=async()=>{try{const p=await getProfile();return p?.role||'student'}catch(e){return 'student'}};
-  function setHeader(t,s){if($('drawerTitle'))$('drawerTitle').textContent=t;if($('drawerSubtitle'))$('drawerSubtitle').textContent=s}
-  function openViewButton(view,label,icon){const side=document.querySelector('.drawer-side');if(!side||side.querySelector('[data-pro7-view="'+view+'"]'))return;const b=document.createElement('button');b.type='button';b.className='side-link';b.dataset.pro7View=view;b.textContent=icon+' '+label;b.onclick=()=>window.studentView(view);const logout=Array.from(side.querySelectorAll('.side-link')).find(x=>(x.textContent||'').includes('Log Out'));side.insertBefore(b,logout||null)}
-  function installNav(){openViewButton('liveclasses','Live Classes','📺');openViewButton('roadmap','Course Roadmap','🗺️');openViewButton('revision','Smart Revision','🧠');openViewButton('support','Support Center','🎧');openViewButton('parent','Parent Dashboard','👨‍👩‍👧‍👦')}
-  function countdownText(iso){const ms=new Date(iso).getTime()-Date.now();if(!Number.isFinite(ms))return '';if(ms<=0)return 'Live / Started';const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);return (d?d+'d ':'')+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')}
-
-  async function renderLiveClasses(){
-    const host=$('drawerBody');setHeader('Live Classes','Upcoming lessons and live sessions for your grade.');
-    if(!uid()){host.innerHTML='<div class="pro7-empty">Please log in first.</div>';return}
-    const access=await ensureActiveGrade();
-    const gid=access?.grade?.id||null;
-    let query=sb.from('live_classes').select('id,grade_id,title,description,teacher_name,starts_at,ends_at,meeting_url,recording_url,is_published').eq('is_published',true).order('starts_at',{ascending:true}).limit(50);
-    if(gid)query=query.or('grade_id.eq.'+gid+',grade_id.is.null');
-    const r=await query;
-    if(r.error){host.innerHTML='<div class="pro7-panel"><h3>Live Classes</h3><p>'+e7(r.error.message)+'</p><div class="pro7-statusline">Create the live_classes table with the PRO7 SQL patch to enable this feature.</div></div>';return}
-    const rows=r.data||[];const now=Date.now();host.innerHTML='<div class="pro7-panel"><div class="pro7-grid-3"><div class="pro7-kpi"><b>'+rows.filter(x=>new Date(x.starts_at).getTime()>now).length+'</b><span>Upcoming</span></div><div class="pro7-kpi"><b>'+rows.filter(x=>new Date(x.starts_at).getTime()<=now&&new Date(x.ends_at||x.starts_at).getTime()>=now).length+'</b><span>Live now</span></div><div class="pro7-kpi"><b>'+(access?.grade?.name?e7(access.grade.name):'—')+'</b><span>Current grade</span></div></div><div class="pro7-list">'+(rows.length?rows.map(x=>'<article class="pro7-card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><span class="pro7-badge">'+e7(x.teacher_name||'DOMA Teacher')+'</span><h3 style="margin-top:8px">'+e7(x.title)+'</h3><p>'+e7(x.description||'Live English session for your course.')+'</p></div><span class="pro7-badge '+(new Date(x.starts_at).getTime()<=now?'ok':'warn')+'">'+(new Date(x.starts_at).getTime()<=now?'LIVE/PAST':'UPCOMING')+'</span></div><div class="pro7-actions"><span class="pill">'+fmtDateTime(x.starts_at)+'</span><span class="pill">'+e7(countdownText(x.starts_at))+'</span>'+(x.meeting_url?'<a class="btn primary" href="'+e7(x.meeting_url)+'" target="_blank" rel="noopener noreferrer">Join Class ↗</a>':'')+(x.recording_url?'<a class="btn secondary" href="'+e7(x.recording_url)+'" target="_blank" rel="noopener noreferrer">Recording ↗</a>':'')+'</div></article>').join(''):'<div class="pro7-empty">No live classes are scheduled yet.</div>')+'</div></div>';
-  }
-
-  async function renderRoadmap(){
-    const host=$('drawerBody');setHeader('Course Roadmap','Follow your grade from Unit 1 to the final assessment.');
-    if(!uid()){host.innerHTML='<div class="pro7-empty">Please log in first.</div>';return}
-    const access=await ensureActiveGrade();if(!access){host.innerHTML='<div class="pro7-panel"><h3>Course Roadmap</h3><p>Activate a grade to build your roadmap.</p></div>';return}
-    const gid=access.grade.id;
-    const [u,p,l]=await Promise.all([sb.from('units').select('id,title,unit_number,description').eq('grade_id',gid).order('unit_number',{ascending:true}),sb.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',uid()),sb.from('lessons').select('id,title,unit_id,lesson_type,duration_minutes,is_published').eq('grade_id',gid).eq('is_published',true).order('sort_order',{ascending:true})]);
-    if(u.error||p.error||l.error){host.innerHTML='<div class="pro7-empty">Roadmap data is temporarily unavailable.</div>';return}
-    const progress=new Map((p.data||[]).map(x=>[x.lesson_id,x])),lessons=l.data||[],units=u.data||[];
-    const done=lessons.filter(x=>progress.get(x.id)?.completed).length,pct=lessons.length?Math.round(done/lessons.length*100):0;
-    host.innerHTML='<div class="pro7-panel"><div class="pro7-grid-3"><div class="pro7-kpi"><b>'+e7(access.grade.name)+'</b><span>Current grade</span></div><div class="pro7-kpi"><b>'+done+'/'+lessons.length+'</b><span>Lessons completed</span></div><div class="pro7-kpi"><b>'+pct+'%</b><span>Overall progress</span></div></div><div class="pro7-roadmap" style="margin-top:14px">'+(units.length?units.map(unit=>{const ls=lessons.filter(x=>x.unit_id===unit.id),d=ls.filter(x=>progress.get(x.id)?.completed).length,pp=ls.length?Math.round(d/ls.length*100):0;return '<div class="pro7-road-unit"><div class="pro7-road-head"><div><strong>Unit '+e7(unit.unit_number)+' — '+e7(unit.title)+'</strong><div class="pro7-statusline">'+e7(unit.description||'')+'</div></div><span class="pro7-badge '+(pp===100?'ok':'')+'">'+pp+'%</span></div><div class="pro7-road-bar"><i style="width:'+pp+'%"></i></div><div class="pro7-road-lessons">'+(ls.length?ls.map(x=>'<button type="button" class="pro7-road-lesson '+(progress.get(x.id)?.completed?'done':'')+'" data-pro7-open-lesson="'+e7(x.id)+'"><strong>'+(progress.get(x.id)?.completed?'✓ ':'')+e7(x.title)+'</strong><div class="pro7-statusline">'+e7(x.lesson_type||'lesson')+' • '+(x.duration_minutes||0)+' min</div></button>').join(''):'<div class="pro7-empty">No published lessons in this unit.</div>')+'</div></div>'}).join(''):'<div class="pro7-empty">No units published yet.</div>')+'</div></div>';
-    host.querySelectorAll('[data-pro7-open-lesson]').forEach(b=>b.onclick=async()=>{const id=b.dataset.pro7OpenLesson;const idx=currentLessons.findIndex(x=>x.id===id);if(idx>=0){currentLessonIndex=idx;await window.studentView('lessons')}else{await window.studentView('lessons');const retry=currentLessons.findIndex(x=>x.id===id);if(retry>=0){currentLessonIndex=retry;if(typeof renderLessonWorkspace==='function')renderLessonWorkspace(currentLessonProgress)}}});
-  }
-
-  async function renderRevision(){
-    const host=$('drawerBody');setHeader('Smart Revision','A focused revision plan built from your real course activity.');
-    if(!uid()){host.innerHTML='<div class="pro7-empty">Please log in first.</div>';return}
-    const access=await ensureActiveGrade();if(!access){host.innerHTML='<div class="pro7-panel"><h3>Smart Revision</h3><p>Activate a grade first.</p></div>';return}
-    const gid=access.grade.id;
-    const [less,prog,att]=await Promise.all([sb.from('lessons').select('id,title,lesson_type,unit_id').eq('grade_id',gid).eq('is_published',true).order('sort_order',{ascending:true}),sb.from('lesson_progress').select('lesson_id,completed,progress_percent,lessons(title,lesson_type,grade_id,unit_id)').eq('student_id',uid()),sb.from('quiz_attempts').select('id,score,total_points,submitted_at,quiz_id,quizzes(title,grade_id)').eq('student_id',uid()).order('submitted_at',{ascending:false}).limit(200)]);
-    if(less.error||prog.error||att.error){host.innerHTML='<div class="pro7-empty">Revision signals are temporarily unavailable.</div>';return}
-    const lessons=less.data||[],lp=prog.data||[],attempts=(att.data||[]).filter(x=>x.quizzes?.grade_id===gid),done=new Map(lp.map(x=>[x.lesson_id,x]));
-    const typeMap={};lessons.forEach(l=>{const k=l.lesson_type||'lesson';typeMap[k]??={total:0,done:0};typeMap[k].total++;if(done.get(l.id)?.completed)typeMap[k].done++});
-    const weakTypes=Object.entries(typeMap).map(([k,v])=>({k,p:v.total?Math.round(v.done/v.total*100):0})).sort((a,b)=>a.p-b.p).slice(0,2);
-    const quizMap={};attempts.forEach(a=>{const key=a.quiz_id;const score=Number(a.total_points)?Number(a.score)/Number(a.total_points)*100:0;if(!quizMap[key])quizMap[key]={title:a.quizzes?.title||'Quiz',scores:[]};quizMap[key].scores.push(score)});
-    const weakQuizzes=Object.values(quizMap).map(x=>({title:x.title,p:Math.round(x.scores.reduce((a,b)=>a+b,0)/x.scores.length)})).sort((a,b)=>a.p-b.p).slice(0,3);
-    const firstWeak=weakTypes[0]?.k||'lesson';const recommended=lessons.filter(l=>!done.get(l.id)?.completed&&(l.lesson_type||'lesson')===firstWeak).slice(0,5);
-    host.innerHTML='<div class="pro7-grid"><div class="pro7-panel"><span class="eyebrow">SMART REVISION</span><h3 style="margin-top:6px">Your highest-priority revision areas</h3><p style="font-size:10px;color:#81777b;margin-top:5px">The plan prioritizes unfinished lessons and lower-performing quiz areas.</p><div class="pro7-list">'+(weakTypes.length?weakTypes.map(x=>'<div class="pro7-revision-item"><div style="display:flex;justify-content:space-between;gap:10px"><div><strong>'+e7(x.k)+'</strong><div class="pro7-statusline">Completion in this skill</div></div><span class="pro7-score">'+x.p+'%</span></div></div>').join(''):'<div class="pro7-empty">Complete more lessons to unlock stronger recommendations.</div>')+'</div></div><div class="pro7-panel"><h3>Suggested next steps</h3><div class="pro7-list">'+(recommended.length?recommended.map((x,i)=>'<button type="button" class="pro7-revision-item" data-pro7-revision-lesson="'+e7(x.id)+'" style="text-align:left;color:#fff;cursor:pointer"><div><span class="pro7-badge">Priority '+(i+1)+'</span></div><strong style="display:block;margin-top:7px">'+e7(x.title)+'</strong><div class="pro7-statusline">'+e7(x.lesson_type||'lesson')+'</div></button>').join(''):'<div class="pro7-empty">Great job — no obvious unfinished lesson in your weakest skill.</div>')+'</div></div></div>'+(weakQuizzes.length?'<div class="pro7-panel"><h3>Quiz revision targets</h3><div class="pro7-list">'+weakQuizzes.map(x=>'<div class="pro7-row"><div><strong>'+e7(x.title)+'</strong><span>Average attempt score</span></div><span class="pro7-badge '+(x.p>=80?'ok':'warn')+'">'+x.p+'%</span></div>').join('')+'</div>':'');
-    host.querySelectorAll('[data-pro7-revision-lesson]').forEach(b=>b.onclick=async()=>{const id=b.dataset.pro7RevisionLesson;const idx=currentLessons.findIndex(x=>x.id===id);if(idx>=0){currentLessonIndex=idx;await window.studentView('lessons')}else{await window.studentView('lessons');const retry=currentLessons.findIndex(x=>x.id===id);if(retry>=0){currentLessonIndex=retry;if(typeof renderLessonWorkspace==='function')renderLessonWorkspace(currentLessonProgress)}}});
-  }
-
-  async function supportListFor(userId){const r=await sb.from('support_tickets').select('id,subject,category,priority,status,created_at,updated_at,last_message_at').eq('student_id',userId).order('updated_at',{ascending:false}).limit(50);return r}
-  async function renderSupport(){
-    const host=$('drawerBody');setHeader('Support Center','Open a support ticket and keep the full conversation in one place.');
-    if(!uid()){host.innerHTML='<div class="pro7-empty">Please log in first.</div>';return}
-    const r=await supportListFor(uid());
-    if(r.error){host.innerHTML='<div class="pro7-panel"><h3>Support Center</h3><p>'+e7(r.error.message)+'</p><div class="pro7-statusline">Run the PRO7 SQL patch to enable support tickets.</div></div>';return}
-    const rows=r.data||[];host.innerHTML='<div class="pro7-grid"><div class="pro7-panel"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><h3>My tickets</h3><p>Track questions, payment issues and technical problems.</p></div><button class="btn primary" id="pro7NewTicket">+ New Ticket</button></div><div class="pro7-list">'+(rows.length?rows.map(x=>'<button type="button" class="pro7-row" data-pro7-ticket="'+e7(x.id)+'" style="text-align:left;color:#fff;cursor:pointer"><div><strong>'+e7(x.subject)+'</strong><span>'+e7(x.category||'General')+' • '+e7(x.priority||'normal')+'</span></div><span class="pro7-badge '+(x.status==='closed'?'':'ok')+'">'+e7(x.status||'open')+'</span></button>').join(''):'<div class="pro7-empty">No tickets yet.</div>')+'</div></div><div class="pro7-panel" id="pro7TicketPanel"><h3>Support is here</h3><p>Open a ticket and explain what you need. Admin or teacher staff can reply from the control panel.</p></div></div>';
-    $('pro7NewTicket').onclick=()=>openTicketEditor();host.querySelectorAll('[data-pro7-ticket]').forEach(b=>b.onclick=()=>openSupportTicket(b.dataset.pro7Ticket));
-  }
-  function openPro7Modal(title,text,body){const t=$('modalTitle'),d=$('modalText'),b=$('modalBody'),m=$('modal');if(t)t.textContent=title;if(d)d.textContent=text||'';if(b)b.innerHTML=body||'';if(m)m.classList.add('show')}
-  function openTicketEditor(){
-    openPro7Modal('New Support Ticket','Send a message to DOMA ACADEMY support.','<form id="pro7TicketForm"><div class="form-row"><label>Subject</label><input id="pro7Subject" class="field" required placeholder="Payment issue / homework / technical problem"></div><div class="form-grid"><div class="form-row"><label>Category</label><select id="pro7Category" class="field"><option>General</option><option>Technical</option><option>Payment</option><option>Homework</option><option>Lessons</option><option>Account</option></select></div><div class="form-row"><label>Priority</label><select id="pro7Priority" class="field"><option>normal</option><option>high</option><option>urgent</option></select></div></div><div class="form-row"><label>Message</label><textarea id="pro7Message" class="field" required placeholder="Describe the problem clearly…"></textarea></div><button class="btn primary">Create Ticket</button></form>');
-    $('pro7TicketForm').onsubmit=async ev=>{ev.preventDefault();const ticket=await sb.from('support_tickets').insert({student_id:uid(),subject:$('pro7Subject').value.trim(),category:$('pro7Category').value,priority:$('pro7Priority').value,status:'open',last_message_at:new Date().toISOString()}).select('id').single();if(ticket.error)return showToast(ticket.error.message);const msg=await sb.from('support_messages').insert({ticket_id:ticket.data.id,sender_id:uid(),sender_role:'student',message:$('pro7Message').value.trim()});if(msg.error)return showToast(msg.error.message);closeModal();showToast('Support ticket created.');renderSupport()}
-  }
-  async function openSupportTicket(id){
-    const r=await sb.from('support_tickets').select('id,subject,category,priority,status,created_at,student_id').eq('id',id).eq('student_id',uid()).single();if(r.error)return showToast(r.error.message);
-    const m=await sb.from('support_messages').select('id,sender_id,sender_role,message,created_at').eq('ticket_id',id).order('created_at',{ascending:true});if(m.error)return showToast(m.error.message);
-    openPro7Modal('Support — '+r.data.subject,'Continue the conversation with DOMA ACADEMY support.','<div class="pro7-chat">'+(m.data||[]).map(x=>'<div class="pro7-message '+(x.sender_id===uid()?'user':'staff')+'"><div class="pro7-message-meta"><span>'+e7(x.sender_role||'staff')+'</span><span>'+e7(fmtDateTime(x.created_at))+'</span></div>'+e7(x.message)+'</div>').join('')+'</div><form id="pro7ReplyForm" style="margin-top:12px"><textarea id="pro7Reply" class="field" required placeholder="Write a reply…"></textarea><div class="pro7-actions"><button class="btn primary">Send Reply</button>'+ (r.data.status!=='closed'?'<button class="btn secondary" type="button" id="pro7CloseTicket">Close Ticket</button>':'')+'</div></form>');$('pro7ReplyForm').onsubmit=async ev=>{ev.preventDefault();const x=await sb.from('support_messages').insert({ticket_id:id,sender_id:uid(),sender_role:'student',message:$('pro7Reply').value.trim()});if(x.error)return showToast(x.error.message);await sb.from('support_tickets').update({updated_at:new Date().toISOString(),last_message_at:new Date().toISOString()}).eq('id',id).eq('student_id',uid());openSupportTicket(id)};$('pro7CloseTicket')?.addEventListener('click',async()=>{await sb.from('support_tickets').update({status:'closed',updated_at:new Date().toISOString()}).eq('id',id).eq('student_id',uid());openSupportTicket(id)});
-  }
-
-  async function renderParent(){
-    const host=$('drawerBody');setHeader('Parent Dashboard','A clear view of linked students, progress and account activity.');
-    const p=await getProfile();if(!uid()||!p){host.innerHTML='<div class="pro7-empty">Please log in first.</div>';return}
-    if(p.role!=='parent'){host.innerHTML='<div class="pro7-panel"><h3>Parent Dashboard</h3><p>This account is currently a <b>'+e7(p.role||'student')+'</b> account. The parent portal is available for profiles with the parent role and an active parent link.</p></div>';return}
-    const links=await sb.from('parent_links').select('id,student_id,relationship,is_active,profiles!parent_links_student_id_fkey(id,full_name,email,grade_id,created_at)').eq('parent_id',uid()).eq('is_active',true);
-    if(links.error){host.innerHTML='<div class="pro7-panel"><h3>Parent Dashboard</h3><p>'+e7(links.error.message)+'</p><div class="pro7-statusline">Run the PRO7 SQL patch to enable parent links.</div></div>';return}
-    const students=(links.data||[]).map(x=>x.profiles).filter(Boolean);if(!students.length){host.innerHTML='<div class="pro7-panel"><h3>No linked students</h3><p>Ask Admin to link this parent account to a student.</p></div>';return}
-    let cards='';for(const st of students){const [sub,prog,quiz,hw]=await Promise.all([sb.from('subscriptions').select('status,expires_at,grade_id,plan').eq('student_id',st.id).eq('status','active').order('expires_at',{ascending:false}).limit(1),sb.from('lesson_progress').select('lesson_id,completed,lessons!inner(id,grade_id)').eq('student_id',st.id).eq('lessons.grade_id',st.grade_id),sb.from('quiz_attempts').select('score,total_points,quizzes!inner(grade_id)').eq('student_id',st.id).eq('quizzes.grade_id',st.grade_id).limit(100),sb.from('homework_submissions').select('status,grade,submitted_at,homework!inner(grade_id)').eq('student_id',st.id).eq('homework.grade_id',st.grade_id).limit(100)]);const lessons=await sb.from('lessons').select('id').eq('grade_id',st.grade_id).eq('is_published',true);const done=(prog.data||[]).filter(x=>x.completed).length,total=(lessons.data||[]).length,lp=total?Math.round(done/total*100):0;const qs=(quiz.data||[]).map(x=>Number(x.total_points)?Number(x.score)/Number(x.total_points)*100:0);const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;const active=(sub.data||[])[0];cards+='<article class="pro7-card"><div style="display:flex;justify-content:space-between;gap:10px"><div><span class="pro7-badge">'+e7(links.data.find(x=>x.student_id===st.id)?.relationship||'Student')+'</span><h3 style="margin-top:7px">'+e7(st.full_name||'Student')+'</h3><p>'+e7(st.email||'')+' • '+e7(grades.find(g=>g.id===st.grade_id)?.name||'Grade')+'</p></div><span class="pro7-badge '+(active?'ok':'warn')+'">'+(active?'Active':'No active subscription')+'</span></div><div class="pro7-grid-3" style="margin-top:10px"><div class="pro7-kpi"><b>'+lp+'%</b><span>Lesson progress</span></div><div class="pro7-kpi"><b>'+qa+'%</b><span>Quiz average</span></div><div class="pro7-kpi"><b>'+((hw.data||[]).length)+'</b><span>Homework records</span></div></div>'+(active?'<div class="pro7-statusline">Access until '+e7(fmtDate(active.expires_at))+'</div>':'')+'</article>'}
-    host.innerHTML='<div class="pro7-panel"><div class="pro7-grid-3"><div class="pro7-kpi"><b>'+students.length+'</b><span>Linked students</span></div><div class="pro7-kpi"><b>'+students.filter(s=>s.grade_id).length+'</b><span>Assigned grades</span></div><div class="pro7-kpi"><b>'+new Date().toLocaleDateString('en-US',{weekday:'long'})+'</b><span>Today</span></div></div><div class="pro7-list">'+cards+'</div></div>';
-  }
-
-  const originalSV=window.studentView;
-  window.studentView=async function(view){installNav();if(view==='liveclasses'){currentStudentView=view;return renderLiveClasses()}if(view==='roadmap'){currentStudentView=view;return renderRoadmap()}if(view==='revision'){currentStudentView=view;return renderRevision()}if(view==='support'){currentStudentView=view;return renderSupport()}if(view==='parent'){currentStudentView=view;return renderParent()}return originalSV.apply(this,arguments)};
-  const oldLogin=window.domaLogin; if(typeof oldLogin==='function'){window.domaLogin=async function(){await oldLogin.apply(this,arguments);try{const p=await getProfile();if(p?.role==='parent')window.studentView('parent')}catch(e){}}}
-  document.addEventListener('click',async e=>{const b=e.target.closest?.('[data-pro7-open-lesson]');if(b){/* handled by view renderer */}});
-  document.addEventListener('DOMContentLoaded',installNav);window.addEventListener('load',()=>setTimeout(installNav,700));
-  window.domaPro7={renderLiveClasses,renderRoadmap,renderRevision,renderSupport,renderParent};
 })();
 </script>
 </body>
