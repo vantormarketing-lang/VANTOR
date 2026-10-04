@@ -546,7 +546,7 @@ async function studentView(view){
   if(view==='homework')await renderStudentHomework();
   if(view==='certificates')await renderStudentCertificates();
   if(view==='notifications')await renderStudentNotifications();
-  try{if(view==='profile')await renderStudentProfile();if(view==='assistant')await renderStudyAssistant();if(view==='questionbank')await renderStudentQuestionBank();if(view==='analytics')await renderStudentAnalytics();if(view==='timer')await renderStudentTimer();if(view==='challenge')await renderDailyChallenge()}catch(err){console.error('DOMA student tool error:',err);$('drawerBody').innerHTML='<div class="empty">This learning tool could not be loaded right now. Please refresh and try again.</div>'}
+  if(view==='profile')await renderStudentProfile();if(view==='assistant')await renderStudyAssistant();if(view==='questionbank')await renderStudentQuestionBank();if(view==='analytics')await renderStudentAnalytics();if(view==='timer')await renderStudentTimer();if(view==='challenge')await renderDailyChallenge()
 }
 async function renderStudentOverview(){
   await refreshStudentState();
@@ -618,87 +618,38 @@ function renderVideoEmbed(url){const raw=String(url||'').trim();if(!raw)return '
 
 let currentLessonProgress = new Map();
 let currentLessonUnits = new Map();
-let currentLessonAccess = false;
 let lessonsLoadToken = 0;
 
 async function renderStudentLessons(){
   if(!sessionUser){$('drawerBody').innerHTML='<div class="empty">Log in to open your lessons.</div>';return}
   const token=++lessonsLoadToken;
-  currentLessonAccess=false;
-
-  let profile=null,active=null;
-  try{profile=window.domaStudentProfile||await getProfile()}catch(e){console.warn('Profile lookup failed:',e)}
-  try{active=await ensureActiveGrade()}catch(e){console.warn('Active-grade lookup failed:',e)}
+  const profile=window.domaStudentProfile||await getProfile();
+  const active=await ensureActiveGrade();
   if(token!==lessonsLoadToken)return;
-
-  const profileGrade=profile?.grade_id?(grades||[]).find(g=>g.id===profile.grade_id)||null:null;
-  const grade=active?.grade||profileGrade||currentGrade||null;
-  if(!grade){
-    currentLessons=[];currentLessonProgress=new Map();currentLessonUnits=new Map();
-    $('drawerBody').innerHTML='<div class="empty"><b>Choose your school grade first.</b><br><small>Open Account → Profile and select your grade. Your existing lessons in Supabase will load after that.</small></div>';
-    return;
-  }
-
+  const grade=active?.grade||(profile?.grade_id?grades.find(g=>g.id===profile.grade_id)||null:null);
+  if(!grade){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">Choose a grade first. Free lesson previews will be available after you set your grade.</div>';return}
   currentGrade=grade;
   if(active?.sub)currentSubscription=active.sub;
-  const subscriptionLooksActive=!!currentSubscription&&new Date(currentSubscription.expires_at)>new Date()&&currentSubscription.grade_id===grade.id;
-
-  let loadedLessons=[];
-  let usedRpc=false;
-
-  // Preferred path: secure server-side access check. This avoids a fragile
-  // dependency on the client's direct SELECT policy for paid lessons.
-  try{
-    const rpc=await sb.rpc('doma_get_student_lessons',{p_grade_id:grade.id});
-    if(!rpc.error){
-      loadedLessons=Array.isArray(rpc.data)?rpc.data:[];
-      usedRpc=true;
-      currentLessonAccess=subscriptionLooksActive||loadedLessons.some(x=>x?.is_free===false);
-    }else if(!/function .*doma_get_student_lessons.*does not exist|could not find the function|PGRST202/i.test(rpc.error.message||'')){
-      console.warn('Student lesson RPC failed:',rpc.error);
-    }
-  }catch(e){console.warn('Student lesson RPC unavailable; using direct lessons SELECT:',e)}
-
-  // Backward-compatible fallback when the one-time RPC patch has not been run.
-  if(!usedRpc){
-    const r=await sb.from('lessons')
-      .select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published')
-      .eq('grade_id',grade.id)
-      .eq('is_published',true)
-      .order('sort_order',{ascending:true})
-      .range(0,1999);
-    if(token!==lessonsLoadToken)return;
-    if(r.error){
-      currentLessons=[];currentLessonProgress=new Map();currentLessonUnits=new Map();
-      $('drawerBody').innerHTML='<div class="empty"><b>Lessons could not be loaded.</b><br><small>'+esc(r.error.message||'Supabase read error')+'</small><br><small>Run the provided DOMA_ACADEMY_STUDENT_LESSONS_ACCESS_RPC.sql once in Supabase SQL Editor.</small></div>';
-      return;
-    }
-    loadedLessons=r.data||[];
-    currentLessonAccess=subscriptionLooksActive;
-  }
-
+  const r=await sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true});
   if(token!==lessonsLoadToken)return;
-  if(!loadedLessons.length){
-    currentLessons=[];currentLessonProgress=new Map();currentLessonUnits=new Map();
-    const reason=subscriptionLooksActive?'An active subscription was detected, but Supabase returned no published lessons for this grade.':'No active subscription was detected, so only lessons permitted for preview/free access can be shown.';
-    $('drawerBody').innerHTML='<div class="empty"><b>No lessons are readable for '+esc(grade.name)+'.</b><br><small>'+esc(reason)+'</small><br><small>Your existing lesson data is not being changed.</small></div>';
-    return;
-  }
-
+  if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load lessons: '+esc(r.error.message)+'</div>';return}
+  const loadedLessons=r.data||[];
+  if(!loadedLessons.length){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">No published lessons are available for '+esc(grade.name)+' yet.</div>';return}
   const p=await sb.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',sessionUser.id);
   const u=await sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true});
   if(token!==lessonsLoadToken)return;
-  if(p.error)console.warn('Lesson progress read failed:',p.error);
-  if(u.error)console.warn('Unit read failed:',u.error);
   currentLessonProgress=new Map((p.data||[]).map(x=>[x.lesson_id,x]));
   currentLessonUnits=new Map((u.data||[]).map(x=>[x.id,x]));
 
+  // IMPORTANT: the database stores lesson order inside each Unit.
+  // Sorting only by sort_order would produce Lesson 1 from every Unit first.
   loadedLessons.sort((a,b)=>{
     const ua=Number(currentLessonUnits.get(a.unit_id)?.unit_number ?? 999);
     const ub=Number(currentLessonUnits.get(b.unit_id)?.unit_number ?? 999);
-    if(ua!==ub)return ua-ub;
-    const sa=Number(a.sort_order ?? 999),sb=Number(b.sort_order ?? 999);
-    if(sa!==sb)return sa-sb;
+    if(ua!==ub) return ua-ub;
+    const sa=Number(a.sort_order ?? 999);
+    const sb=Number(b.sort_order ?? 999);
+    if(sa!==sb) return sa-sb;
     return String(a.title||'').localeCompare(String(b.title||''));
   });
 
@@ -712,7 +663,7 @@ async function renderStudentLessons(){
 function renderLessonWorkspace(prog){
   const l=currentLessons[currentLessonIndex];
   const done=currentLessons.filter(x=>prog.get(x.id)?.completed).length,pct=currentLessons.length?Math.round(done/currentLessons.length*100):0;
-  const hasSub=!!currentLessonAccess || (!!currentSubscription&&new Date(currentSubscription.expires_at)>new Date()&&currentSubscription.grade_id===currentGrade?.id);
+  const hasSub=!!currentSubscription;
   const grouped=[],groups=new Map();
   currentLessons.forEach((x,i)=>{const key=x.unit_id||'__no_unit__';if(!groups.has(key)){const head=x._unit||{title:'General Lessons',unit_number:'',description:''};const g={unit:head,items:[]};groups.set(key,g);grouped.push(g)}groups.get(key).items.push({...x,_realIndex:i})});
   const listHtml=grouped.map(g=>'<div class="lesson-group"><div class="lesson-group-head"><strong>'+esc((g.unit.unit_number?'Unit '+g.unit.unit_number+': ':'')+(g.unit.title||'Lessons'))+'</strong><span>'+g.items.length+' lessons</span></div><div class="lesson-group-body">'+g.items.map((x,j)=>'<button type="button" class="lesson-btn '+(x._realIndex===currentLessonIndex?'active':'')+'" data-action="select-lesson" data-lesson-index="'+x._realIndex+'"><span class="lesson-num">'+(prog.get(x.id)?.completed?'✓':(j+1))+'</span><span style="min-width:0;flex:1"><strong style="display:block">'+esc(x._displayTitle||x.title)+'</strong><small style="display:block;color:#777;font-size:9px;margin-top:2px">'+esc(x.lesson_type||'lesson')+' • '+(x.duration_minutes||0)+' min</small></span>'+(x.video_url?'<span class="pill" style="margin-left:auto">Video</span>':'')+'</button>').join('')+'</div></div>').join('');
@@ -1987,6 +1938,131 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   document.addEventListener('click',async e=>{const b=e.target.closest?.('[data-pro7-open-lesson]');if(b){/* handled by view renderer */}});
   document.addEventListener('DOMContentLoaded',installNav);window.addEventListener('load',()=>setTimeout(installNav,700));
   window.domaPro7={renderLiveClasses,renderRoadmap,renderRevision,renderSupport,renderParent};
+})();
+</script>
+
+<script id="doma-lessons-videos-reliable-loader">
+(function(){
+  'use strict';
+
+  async function domaResolveStudentGrade(){
+    if(!sessionUser || !sb) return {grade:null, sub:null, profile:null, error:null};
+    let profile=null, subs=[];
+    try{
+      profile = window.domaStudentProfile || await getProfile();
+    }catch(e){
+      return {grade:null, sub:null, profile:null, error:e};
+    }
+    try{
+      subs = await getActiveSubscriptions();
+    }catch(e){
+      console.warn('DOMA subscription lookup failed:', e);
+      subs=[];
+    }
+    const preferredGrade = profile?.grade_id ? (grades||[]).find(g=>g.id===profile.grade_id) || null : null;
+    const preferredSub = preferredGrade ? subs.find(s=>s.grade_id===preferredGrade.id) || null : null;
+    const sub = preferredSub || subs[0] || null;
+    const grade = sub ? ((grades||[]).find(g=>g.id===sub.grade_id)||null) : preferredGrade;
+    return {grade,sub,profile,error:null};
+  }
+
+  window.ensureActiveGrade = async function(){
+    if(!sessionUser) return null;
+    const state = await domaResolveStudentGrade();
+    if(!state.grade) return null;
+    currentGrade=state.grade;
+    currentSubscription=state.sub||null;
+    window.currentGrade=currentGrade;
+    window.currentSubscription=currentSubscription;
+    return {grade:state.grade,sub:state.sub||null,profile:state.profile||null};
+  };
+
+  window.renderStudentLessons = async function(){
+    if(!sessionUser){
+      $('drawerBody').innerHTML='<div class="empty">Log in to open your lessons.</div>';
+      return;
+    }
+    const token=++lessonsLoadToken;
+    const state=await domaResolveStudentGrade();
+    if(token!==lessonsLoadToken)return;
+    if(!state.grade){
+      currentLessons=[];currentLessonProgress=new Map();
+      $('drawerBody').innerHTML='<div class="empty">Choose a school grade in your profile first. Your existing Supabase lessons will then load from that grade.</div>';
+      return;
+    }
+    const grade=state.grade, sub=state.sub;
+    currentGrade=grade;
+    currentSubscription=sub||null;
+    window.currentGrade=currentGrade;
+    window.currentSubscription=currentSubscription;
+
+    // Read the real lesson rows exactly as stored in Supabase.
+    // RLS still decides whether a student may see free or paid rows.
+    const r=await sb.from('lessons')
+      .select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published',{count:'exact'})
+      .eq('grade_id',grade.id)
+      .eq('is_published',true)
+      .order('sort_order',{ascending:true})
+      .order('created_at',{ascending:true})
+      .range(0,1999);
+    if(token!==lessonsLoadToken)return;
+    if(r.error){
+      currentLessons=[];currentLessonProgress=new Map();
+      $('drawerBody').innerHTML='<div class="empty"><b>Lessons could not be loaded.</b><br><small>'+esc(r.error.message||'Supabase read error')+'</small><br><small>Database content is present, so this points to the current student access/RLS session rather than missing lessons.</small></div>';
+      return;
+    }
+
+    const loadedLessons=r.data||[];
+    if(!loadedLessons.length){
+      currentLessons=[];currentLessonProgress=new Map();
+      const accessText=sub
+        ? 'Your grade subscription is detected, but Supabase returned 0 readable published lessons for this grade.'
+        : 'Your grade is detected, but this account has no active subscription. Supabase will only return lessons allowed by the published/free-content policy.';
+      $('drawerBody').innerHTML='<div class="empty"><b>No lessons are currently readable for '+esc(grade.name)+'.</b><br><small>'+esc(accessText)+'</small><br><small>Check the account grade and lesson RLS; do not reseed the 622 existing lessons.</small></div>';
+      return;
+    }
+
+    const p=await sb.from('lesson_progress').select('lesson_id,completed,progress_percent').eq('student_id',sessionUser.id);
+    const u=await sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true});
+    if(token!==lessonsLoadToken)return;
+    if(p.error)console.warn('Lesson progress read failed:',p.error);
+    if(u.error)console.warn('Unit read failed:',u.error);
+    currentLessonProgress=new Map((p.data||[]).map(x=>[x.lesson_id,x]));
+    currentLessonUnits=new Map((u.data||[]).map(x=>[x.id,x]));
+
+    loadedLessons.sort((a,b)=>{
+      const ua=Number(currentLessonUnits.get(a.unit_id)?.unit_number ?? 999);
+      const ub=Number(currentLessonUnits.get(b.unit_id)?.unit_number ?? 999);
+      if(ua!==ub)return ua-ub;
+      const sa=Number(a.sort_order ?? 999), sb=Number(b.sort_order ?? 999);
+      if(sa!==sb)return sa-sb;
+      return String(a.title||'').localeCompare(String(b.title||''));
+    });
+
+    currentLessons=loadedLessons.map((x,i)=>{
+      const unit=currentLessonUnits.get(x.unit_id)||null;
+      return {...x,_index:i,_unit:unit,_displayTitle:domaLessonDisplayTitle(x,currentLessonUnits)};
+    });
+    currentLessonIndex=Math.max(0,Math.min(Number(currentLessonIndex)||0,currentLessons.length-1));
+    renderLessonWorkspace(currentLessonProgress);
+  };
+
+  // Make the existing video renderer a little more tolerant without exposing new data.
+  const originalVideoRenderer=window.renderVideoEmbed;
+  if(typeof originalVideoRenderer==='function'){
+    window.renderVideoEmbed=function(url){
+      const raw=String(url||'').trim();
+      if(!raw) return originalVideoRenderer(url);
+      try{
+        const u=new URL(raw);
+        const host=u.hostname.replace(/^www\./,'').toLowerCase();
+        if(host==='youtube.com'||host==='m.youtube.com'||host==='youtu.be') return originalVideoRenderer(raw);
+        if(host==='drive.google.com') return originalVideoRenderer(raw);
+        if(/^https?:$/i.test(u.protocol)) return originalVideoRenderer(raw);
+      }catch(e){ return '<div class="video-placeholder"><b>▶</b><div>Invalid video URL.</div></div>'; }
+      return originalVideoRenderer(raw);
+    };
+  }
 })();
 </script>
 </body>
