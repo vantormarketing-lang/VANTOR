@@ -457,9 +457,12 @@ async function domaSubmitSubscription(){
   if(up.error){
     console.error('DOMA payment receipt upload failed:',up.error);
     const raw=String(up.error.message||up.error.error_description||up.error.name||'Unknown upload error');
-    const hint=/schema|rls|row.?level|forbidden|permission|policy|403|500/i.test(raw)
-      ? ' Run DOMA_ACADEMY_PAYMENT_RECEIPT_RLS_FIX.sql in Supabase SQL Editor, then try again.'
-      : '';
+    const isSchemaMismatch=/database schema is invalid or incompatible|DatabaseInvalidObjectDefinition|schema mismatch|42P17/i.test(raw);
+    const hint=isSchemaMismatch
+      ? ' Supabase Storage is rejecting the upload at the database/RLS layer. Run DOMA_ACADEMY_PAYMENT_RECEIPT_STORAGE_REPAIR.sql once in Supabase SQL Editor, then retry.'
+      : (/rls|row.?level|forbidden|permission|policy|403/i.test(raw)
+        ? ' Check the payment-proofs Storage policies in Supabase.'
+        : '');
     return showStatus('subStatus','Receipt upload failed: '+raw+hint,'error');
   }
   const r=await sb.rpc('doma_create_subscription_request',{p_grade_id:grade.id,p_plan:selectedPlan,p_student_phone:phone,p_proof_path:path});
