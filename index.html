@@ -378,7 +378,7 @@ async function domaLogin(){
   showStatus('authStatus','Signing in…');
   const r=await sb.auth.signInWithPassword({email,password:pass});
   if(r.error)return showStatus('authStatus',r.error.message,'error');
-  sessionUser=r.data.user;await ensureProfile(sessionUser);await refreshStudentState();closeModal();showToast(currentGrade?'Welcome back — your grade access is active.':'Welcome back to DOMA ACADEMY.');openDrawer('overview')
+  sessionUser=r.data.user;await ensureProfile(sessionUser);closeModal();await refreshStudentState();showToast('Welcome back to DOMA ACADEMY.');openDrawer('overview')
 }
 
 async function domaSignup(){
@@ -403,15 +403,9 @@ function updateNav(){
 async function getProfile(){if(!sessionUser)return null;const r=await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id',sessionUser.id).maybeSingle();if(r.error){console.warn(r.error);return await ensureProfile(sessionUser)}return r.data||await ensureProfile(sessionUser)}
 async function getActiveSubscriptions(){
   if(!sessionUser)return [];
-  try{
-    const rpc=await sb.rpc('doma_get_my_active_subscriptions');
-    if(!rpc.error && Array.isArray(rpc.data)){
-      return rpc.data.filter(x=>x?.grade_id&&x?.expires_at&&new Date(x.expires_at)>new Date()).map(x=>({...x,grades:{name:x.grade_name||grades.find(g=>g.id===x.grade_id)?.name||''}}));
-    }
-  }catch(e){console.warn('Active subscription RPC unavailable:',e)}
   const r=await sb.from('subscriptions').select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at').eq('student_id',sessionUser.id).eq('status','active').order('expires_at',{ascending:false});
-  if(r.error){console.warn('subscriptions select failed:',r.error);return []}
-  return (r.data||[]).filter(x=>x?.expires_at&&new Date(x.expires_at)>new Date()).map(x=>({...x,grades:{name:grades.find(g=>g.id===x.grade_id)?.name||''}}));
+  if(r.error){console.warn(r.error);return []}
+  return (r.data||[]).filter(x=>new Date(x.expires_at)>new Date()).map(x=>({...x,grades:{name:grades.find(g=>g.id===x.grade_id)?.name||''}}));
 }
 async function getRequests(){
   if(!sessionUser)return [];
@@ -436,7 +430,7 @@ function renderGrades(list=grades){
 function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim(),stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const text=(card.dataset.gradeSearch||''),okQ=!q||text.includes(q),okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'block':'none'})}
 function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>150 EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${JSON.stringify(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${JSON.stringify(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
 
-async function domaOpenGrade(name){pendingGradeName=name;if(!sessionUser){openAuth('login');return}const g=grades.find(x=>x.name===name);if(!g)return showToast('Grade is not available right now.');await refreshStudentState();const active=(window.domaStudentSubscriptions||[]).find(s=>s.grade_id===g.id&&s.status==='active'&&new Date(s.expires_at)>new Date());if(active){currentGrade=g;currentSubscription=active;window.currentGrade=g;window.currentSubscription=active;await openDrawer('overview');return}showGradeInfo(name)}
+async function domaOpenGrade(name){pendingGradeName=name;if(!sessionUser){openAuth('signup');return}const g=grades.find(x=>x.name===name);if(!g)return showToast('Grade is not available right now.');const subs=await getActiveSubscriptions();const active=subs.find(s=>s.grade_id===g.id);if(active){currentGrade=g;currentSubscription=active;await openDrawer('overview');return}showGradeInfo(name)}
 async function domaStartSubscription(name,plan){
   pendingGradeName=name;selectedPlan='monthly';plan='monthly';closeGradeModal();
   if(!sessionUser){openAuth('login');return}
@@ -474,7 +468,7 @@ async function domaSubmitSubscription(){
 }
 
 async function refreshStudentState(){
-  if(sb){try{const s=await sb.auth.getSession();sessionUser=s.data?.session?.user||sessionUser||null}catch(e){}}
+  if(!sessionUser&&sb){const s=await sb.auth.getSession();sessionUser=s.data?.session?.user||null}
   updateNav();
   if(!sessionUser){currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaStudentProfile=null;window.domaStudentSubscriptions=[];window.domaStudentRequests=[];renderDashboardLoggedOut();return}
   const profile=await getProfile(),subs=await getActiveSubscriptions(),reqs=await getRequests();
@@ -482,7 +476,9 @@ async function refreshStudentState(){
   const preferredSub=preferredGrade?subs.find(s=>s.grade_id===preferredGrade.id):null;
   currentSubscription=preferredSub||subs[0]||null;
   currentGrade=currentSubscription?grades.find(g=>g.id===currentSubscription.grade_id)||null:null;
-  window.currentSubscription=currentSubscription;window.currentGrade=currentGrade;
+  // Expose the active state for the expiry reminder and UI enhancement scripts.
+  window.currentSubscription=currentSubscription;
+  window.currentGrade=currentGrade;
   window.domaStudentProfile=profile;window.domaStudentSubscriptions=subs;window.domaStudentRequests=reqs;
   await renderDashboardData(profile,subs,reqs);updateStudentShell();
   if(typeof window.domaRefreshExpiry==='function')window.domaRefreshExpiry();
@@ -582,6 +578,9 @@ const DOMA_1ST_PREP_LESSON_TITLES = {
   6:['Being a Global Citizen','Global Citizen Talk','Ocean Circle','Story Time','Let’s Make a Difference','Team-Project Roundtable']
 };
 function domaLessonDisplayTitle(lesson,unitMap){
+  // The normalized title map is for 1st Preparatory only.
+  // All other grades must display their exact Supabase lesson titles.
+  if(String(window.currentGrade?.name || currentGrade?.name || '') !== '1st Preparatory') return lesson?.title || 'Lesson';
   const unitNumber=Number(unitMap?.get(lesson?.unit_id)?.unit_number ?? unitMap?.get(lesson?.unit_id) ?? 0);
   const no=Number(lesson?.sort_order ?? 0);
   return DOMA_1ST_PREP_LESSON_TITLES[unitNumber]?.[no-1] || lesson?.title || 'Lesson';
@@ -787,7 +786,7 @@ async function renderStudentCertificates(){const r=await sb.from('certificates')
 function printCertificate(title,code,issued){
   const w=window.open('','_blank','width=900,height=650');if(!w)return;
   const safeTitle=esc(title),safeCode=esc(code),safeIssued=esc(fmtDate(issued));
-  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Certificate</title><style>body{font-family:Arial,sans-serif;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f;border-radius:18px}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+safeTitle+'</h1><p>Certificate of Completion</p><p class="small">Issued '+safeIssued+'</p><div class="code">'+safeCode+'</div><p class="small">BY ADHAM</p></div><\/body><\/html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Certificate</title><style>body{font-family:Arial,sans-serif;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f;border-radius:18px}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+safeTitle+'</h1><p>Certificate of Completion</p><p class="small">Issued '+safeIssued+'</p><div class="code">'+safeCode+'</div><p class="small">BY ADHAM</p></div></body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),150);
 }
 </script>
@@ -878,9 +877,9 @@ async function boot(){
     sb=window.supabase.createClient(DOMA_URL,DOMA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   }catch(e){console.error(e);$('gradeLoadStatus').textContent='Connection error';$('gradeGrid').innerHTML='<div class="empty">'+esc(e.message)+'</div>';return}
   const s=await sb.auth.getSession();sessionUser=s.data?.session?.user||null;updateNav();
-  sb.auth.onAuthStateChange((_event,session)=>{sessionUser=session?.user||null;updateNav();if(sessionUser)setTimeout(()=>refreshStudentState().catch(e=>console.warn('Student state refresh failed:',e)),50);else{closeDrawer();renderDashboardLoggedOut()}});
+  sb.auth.onAuthStateChange((_event,session)=>{sessionUser=session?.user||null;updateNav();if(sessionUser)setTimeout(()=>refreshStudentState(),0);else{closeDrawer();renderDashboardLoggedOut()}});
   await loadGrades();
-  if(sessionUser){await refreshStudentState();sb.rpc('doma_log_activity',{p_activity_type:'login',p_entity_id:null,p_metadata:{source:'student_web'}}).catch(()=>{});}
+  if(sessionUser){sb.rpc('doma_log_activity',{p_activity_type:'login',p_entity_id:null,p_metadata:{source:'student_web'}}).catch(()=>{});}
 }
 window.domaOpenGrade=domaOpenGrade;window.openDomaV2Reports=openDomaV2Reports;window.openAttemptReview=openAttemptReview;window.openDomaV2Notifications=openDomaV2Notifications;window.domaStartSubscription=domaStartSubscription;window.domaSubmitSubscription=domaSubmitSubscription;window.openAuth=openAuth;window.openModal=openModal;window.closeModal=closeModal;window.closeGradeModal=closeGradeModal;window.filterGrades=filterGrades;window.showGradeInfo=showGradeInfo;window.studentView=studentView;window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.domaLogout=domaLogout;window.toggleMobileMenu=toggleMobileMenu;window.closeMobileMenu=closeMobileMenu;window.openSearch=openSearch;window.applyModalSearch=applyModalSearch;window.selectLesson=selectLesson;window.changeLesson=changeLesson;window.completeCurrentLesson=completeCurrentLesson;window.startQuiz=startQuiz;window.submitQuiz=submitQuiz;window.openHomework=openHomework;window.submitHomework=submitHomework;window.markNotificationRead=markNotificationRead;window.saveProfile=saveProfile;window.openReviewForm=openReviewForm;window.submitReview=submitReview;window.printCertificate=printCertificate;
 document.addEventListener('DOMContentLoaded',boot);</script>
@@ -2070,12 +2069,65 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
-<script id="doma-subscription-access-watchdog">
+<script id="doma-grade-aware-home-curriculum-fix">
 (function(){
   'use strict';
-  const sync=()=>{if(typeof sessionUser!=='undefined'&&sessionUser&&typeof refreshStudentState==='function')setTimeout(()=>refreshStudentState().catch(()=>{}),120)};
-  window.addEventListener('focus',sync);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')sync()});
+  const originalFeaturedHTML=document.getElementById('first-prep')?.innerHTML||'';
+  let rendering=false;
+
+  function escHome(v){
+    return typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]||m));
+  }
+
+  async function renderGradeAwareCurriculum(){
+    const section=document.getElementById('first-prep');
+    if(!section||rendering)return;
+    if(!window.sessionUser||!window.sb||!window.currentGrade){
+      if(section.dataset.gradeAware==='1'){section.innerHTML=originalFeaturedHTML;section.dataset.gradeAware='0';}
+      return;
+    }
+    const grade=window.currentGrade;
+    rendering=true;
+    section.innerHTML='<div class="container"><div class="curriculum-spotlight"><div class="curriculum-top"><div><div class="eyebrow">Your Active Grade</div><h2>'+escHome(grade.name)+' — Curriculum</h2><p>المناهج والدروس والفيديوهات هنا خاصة بالصف الحالي ومربوطة مباشرة بـ grade_id.</p><div class="curriculum-badges"><span class="pill" id="gradeAwareUnits">Loading units…</span><span class="pill" id="gradeAwareLessons">Loading lessons…</span><span class="pill" id="gradeAwareVideos">Loading videos…</span></div></div><button class="btn primary" type="button" onclick="openStudentTool(\'lessons\')">Open My Lessons →</button></div><div class="curriculum-detail"><div class="curriculum-detail-head"><div><div class="eyebrow" style="margin-bottom:4px">Curriculum Explorer</div><h3>'+escHome(grade.name)+' Units & Lessons</h3><p>يتم عرض المحتوى الفعلي لهذا الصف من Supabase، بدون إعادة استخدام محتوى الصف الأول.</p></div></div><div id="gradeAwareCurriculumBody"><div class="empty">Loading your curriculum…</div></div></div></div></div>';
+    try{
+      const [u,l]=await Promise.all([
+        sb.from('units').select('id,title,unit_number,description').eq('grade_id',grade.id).order('unit_number',{ascending:true}),
+        sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true}).limit(2000)
+      ]);
+      if(u.error)throw u.error;
+      if(l.error)throw l.error;
+      const units=u.data||[],lessons=l.data||[],byUnit=new Map(units.map(x=>[x.id,x]));
+      lessons.sort((a,b)=>{const ua=Number(byUnit.get(a.unit_id)?.unit_number??999),ub=Number(byUnit.get(b.unit_id)?.unit_number??999);if(ua!==ub)return ua-ub;const sa=Number(a.sort_order??999),sb=Number(b.sort_order??999);return sa-sb||String(a.title||'').localeCompare(String(b.title||''));});
+      const videoCount=lessons.filter(x=>String(x.video_url||'').trim()).length;
+      const unitHtml=units.length?units.map((unit,idx)=>{
+        const rows=lessons.filter(x=>x.unit_id===unit.id);
+        const cards=rows.length?rows.map(x=>{
+          const video=String(x.video_url||'').trim();
+          return '<div class="prep-lesson"><div class="lesson-top"><strong>'+escHome(x.title)+'</strong><span class="lesson-type">'+escHome(x.lesson_type||'lesson')+'</span></div><p>'+escHome(x.description||'Lesson content is available inside the lesson area.')+'</p><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="mini-open" type="button" onclick="openPublicLesson('+JSON.stringify(String(x.title||''))+')">Open Lesson →</button>'+(video?'<span class="pill">Video</span>':'')+'</div></div>';
+        }).join(''):'<div class="empty">No published lessons in this unit yet.</div>';
+        return '<details class="prep-unit" '+(idx===0?'open':'')+'><summary><div class="unit-title-wrap"><div class="unit-index">'+(idx+1)+'</div><div class="unit-summary"><strong>'+escHome(unit.title)+'</strong><span>'+escHome(unit.description||'')+'</span></div></div><span class="chev">⌄</span></summary><div class="prep-lessons">'+cards+'</div></details>';
+      }).join(''):'<div class="empty">No units are published for '+escHome(grade.name)+' yet.</div>';
+      const body=document.getElementById('gradeAwareCurriculumBody');
+      if(body)body.innerHTML='<div class="prep-accordion">'+unitHtml+'</div>';
+      const a=document.getElementById('gradeAwareUnits'),b=document.getElementById('gradeAwareLessons'),c=document.getElementById('gradeAwareVideos');
+      if(a)a.textContent=units.length+' units';if(b)b.textContent=lessons.length+' lessons';if(c)c.textContent=videoCount+' videos';
+      section.dataset.gradeAware='1';
+    }catch(err){
+      const body=document.getElementById('gradeAwareCurriculumBody');
+      if(body)body.innerHTML='<div class="empty"><b>تعذر تحميل منهج '+escHome(grade.name)+'</b><br><small>'+escHome(err?.message||'Supabase read error')+'</small></div>';
+      section.dataset.gradeAware='1';
+    }finally{rendering=false;}
+  }
+
+  const oldRefresh=window.refreshStudentState;
+  if(typeof oldRefresh==='function'&&!oldRefresh.__gradeAwareWrapped){
+    const wrapped=async function(){const r=await oldRefresh.apply(this,arguments);setTimeout(renderGradeAwareCurriculum,0);return r;};
+    wrapped.__gradeAwareWrapped=true;
+    window.refreshStudentState=wrapped;
+  }
+  const run=()=>setTimeout(renderGradeAwareCurriculum,250);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+  window.addEventListener('load',run);
 })();
 </script>
 </body>
