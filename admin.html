@@ -438,44 +438,9 @@ async function loadThirdSecondarySummary(){
 }
 
 
-async function loadThirdSecondarySummary(){
-  if(typeof db==='undefined')return;
-  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
-  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
-  const id=g.data.id;
-  const [u,l,q]=await Promise.all([
-    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
-    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
-    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
-  ]);
-  const ls=l.data||[];
-  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
-  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
-  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
-  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
-  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
-  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
-}
 
 
-async function loadThirdSecondarySummary(){
-  if(typeof db==='undefined')return;
-  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
-  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
-  const id=g.data.id;
-  const [u,l,q]=await Promise.all([
-    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
-    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
-    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
-  ]);
-  const ls=l.data||[];
-  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
-  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
-  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
-  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
-  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
-  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
-}
+
 
 loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
 $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
