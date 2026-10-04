@@ -454,7 +454,14 @@ async function domaSubmitSubscription(){
   const ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg';
   const path=sessionUser.id+'/'+crypto.randomUUID()+'.'+ext;
   const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});
-  if(up.error)return showStatus('subStatus','Receipt upload failed: '+up.error.message,'error');
+  if(up.error){
+    console.error('DOMA payment receipt upload failed:',up.error);
+    const raw=String(up.error.message||up.error.error_description||up.error.name||'Unknown upload error');
+    const hint=/schema|rls|row.?level|forbidden|permission|policy|403|500/i.test(raw)
+      ? ' Run DOMA_ACADEMY_PAYMENT_RECEIPT_RLS_FIX.sql in Supabase SQL Editor, then try again.'
+      : '';
+    return showStatus('subStatus','Receipt upload failed: '+raw+hint,'error');
+  }
   const r=await sb.rpc('doma_create_subscription_request',{p_grade_id:grade.id,p_plan:selectedPlan,p_student_phone:phone,p_proof_path:path});
   if(r.error){await sb.storage.from('payment-proofs').remove([path]);return showStatus('subStatus','Request failed: '+r.error.message,'error')}
   showStatus('subStatus','Request submitted successfully. Your request is now Pending. Access will activate after admin approval.','success');$('domaReceipt').value='';$('domaSenderPhone').value='';await refreshStudentState();showToast('Payment request submitted.')
@@ -877,8 +884,6 @@ document.addEventListener('DOMContentLoaded',boot);</script>
 
 <button class="back-top" id="domaBackTop" type="button" aria-label="Back to top">↑</button>
 
-
-</script>
 
 <script id="doma-master-upgrade-script">
 (function(){
