@@ -133,7 +133,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <style id="doma-index-phase-upgrades">
 .phase-spotlight{margin:30px 0 0;padding:24px;border:1px solid #45232e;border-radius:18px;background:linear-gradient(135deg,#1a0d12,#0d090a);position:relative;overflow:hidden}.phase-spotlight:after{content:'03';position:absolute;right:18px;top:-10px;font-size:120px;font-weight:900;color:rgba(255,255,255,.025)}.phase-spotlight h2{font-size:28px;margin:5px 0 8px}.phase-spotlight p{max-width:760px;color:#8d8286;font-size:11px;line-height:1.75}.phase-badges{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.phase-actions{display:flex;gap:8px;flex-wrap:wrap}.expiry-banner{display:none;margin:0 0 14px;padding:13px 15px;border:1px solid #6b3b2f;background:#21130f;border-radius:13px;color:#e5c4b8;font-size:10px}.expiry-banner.show{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.practice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.practice-card{padding:15px;border:1px solid #2f1b22;background:#110b0d;border-radius:13px}.practice-card b{display:block;font-size:13px}.practice-card span{display:block;color:#7f767a;font-size:10px;line-height:1.6;margin-top:5px}@media(max-width:900px){.practice-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.practice-grid{grid-template-columns:1fr}.phase-spotlight{padding:18px}}
 </style>
-<style id="doma-student-home-upgrades-v2-css">
+<style id="doma-student-home-upgrades-v2">
 .student-home-insights{margin-top:16px}
 .student-home-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .student-home-card{padding:15px;background:linear-gradient(145deg,#130c0f,#0c090a);border:1px solid #30202a;border-radius:13px}
@@ -525,17 +525,7 @@ function openDrawer(view='overview'){if(!sessionUser){openAuth('login');return}$
 function closeDrawer(){$('drawer').classList.remove('show');document.body.style.overflow=''}
 function updateStudentShell(){const p=window.domaStudentProfile||{};$('userCard').innerHTML='<strong>'+esc(p.full_name||sessionUser?.email||'Student')+'</strong><span>'+esc(p.email||sessionUser?.email||'')+'</span><span style="display:block;margin-top:6px;color:#d18498">'+esc(currentGrade?.name||'No active grade')+'</span>'}
 
-async function ensureActiveGrade(){
-  if(!sessionUser)return null;
-  const cacheValid=currentGrade&&currentSubscription&&currentSubscription.status==='active'&&currentSubscription.expires_at&&new Date(currentSubscription.expires_at)>new Date()&&grades.some(g=>g.id===currentGrade.id);
-  if(cacheValid)return {grade:currentGrade,sub:currentSubscription};
-  const subs=await getActiveSubscriptions();
-  if(!subs.length){currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;return null}
-  const s=subs[0],g=grades.find(x=>x.id===s.grade_id);
-  if(!g){currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;return null}
-  currentGrade=g;currentSubscription=s;window.currentGrade=g;window.currentSubscription=s;
-  return {grade:g,sub:s}
-}
+async function ensureActiveGrade(){if(!sessionUser)return null;if(currentGrade&&currentSubscription)return {grade:currentGrade,sub:currentSubscription};const subs=await getActiveSubscriptions();if(!subs.length)return null;const s=subs[0],g=grades.find(x=>x.id===s.grade_id);if(!g)return null;currentGrade=g;currentSubscription=s;return {grade:g,sub:s}}
 async function studentView(view){
   currentStudentView=view;document.querySelectorAll('.side-link[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   const meta={overview:['Overview','Your English learning command center.'],lessons:['Lessons','Published lessons for your active grade.'],quizzes:['Quizzes','Practice and check your understanding.'],homework:['Homework','Assignments and submissions.'],certificates:['Certificates','Your issued completion certificates.'],notifications:['Notifications','Important updates from DOMA ACADEMY.'],profile:['Profile','Manage your student account.'],assistant:['Study Assistant','Get practical study guidance from your course data.'],questionbank:['Question Bank','Search and practice questions from your published quizzes.'],analytics:['My Analytics','Detailed progress and learning performance.'],timer:['Study Timer','Focus on one study session at a time.'],challenge:['Daily Challenge','A small goal to keep your English streak moving.']};
@@ -630,7 +620,7 @@ async function renderStudentLessons(){
   if(!grade){currentLessons=[];currentLessonProgress=new Map();$('drawerBody').innerHTML='<div class="empty">Choose a grade first. Free lesson previews will be available after you set your grade.</div>';return}
   currentGrade=grade;
   if(active?.sub)currentSubscription=active.sub;
-  let lessonQuery=sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true);if(!active?.sub)lessonQuery=lessonQuery.eq('is_free',true);const r=await lessonQuery.order('sort_order',{ascending:true});
+  const r=await sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',grade.id).eq('is_published',true).order('sort_order',{ascending:true});
   if(token!==lessonsLoadToken)return;
   if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load lessons: '+esc(r.error.message)+'</div>';return}
   const loadedLessons=r.data||[];
@@ -674,14 +664,8 @@ function renderLessonWorkspace(prog){
 }
 
 async function selectLesson(i){
-  const raw=String(i??'').trim();
-  let index=-1;
-  if(/^\d+$/.test(raw)){
-    const n=Number(raw);
-    if(Number.isInteger(n)&&n>=0&&n<currentLessons.length)index=n;
-  }
-  if(index<0)index=currentLessons.findIndex(x=>String(x.id)===raw);
-  if(index<0||index>=currentLessons.length)return;
+  const index=Number(i);
+  if(!Number.isInteger(index)||index<0||index>=currentLessons.length)return;
   const lesson=currentLessons[index];
   currentLessonIndex=index;
   renderLessonWorkspace(currentLessonProgress);
@@ -786,67 +770,16 @@ async function openHomework(id){
 async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';if(!answer)return showStatus('hwStatus','Write an answer before submitting.','error');const r=await sb.rpc('doma_submit_homework',{p_homework_id:id,p_answer_text:answer});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showStatus('hwStatus',r.error.message+hint,'error')}closeModal();showToast('Homework submitted successfully.');await renderStudentHomework();await refreshStudentState()}
 
 async function renderStudentCertificates(){const r=await sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',sessionUser.id).order('issued_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load certificates: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];$('drawerBody').innerHTML=rows.length?'<div class="cert-grid">'+rows.map(c=>'<div class="cert"><span class="pill">Certificate</span><h3 style="font-size:17px;margin-top:9px">'+esc(c.title)+'</h3><p style="font-size:10px;color:#888;margin-top:5px">Issued '+fmtDate(c.issued_at)+'</p><div class="cert-code">'+esc(c.certificate_code)+'</div><button type="button" class="btn secondary" style="margin-top:12px" data-action="print-certificate" data-title="'+esc(c.title)+'" data-code="'+esc(c.certificate_code)+'" data-issued="'+esc(c.issued_at)+'">Print / Save PDF</button></div>').join('')+'</div>':'<div class="empty">No certificates have been issued yet.</div>'}
-function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">BY ADHAM</p></div></body></html>');w.document.close();w.print()}
-</script>
-<style id="doma-student-pro5plus-style">
-.pro5-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.pro5-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.pro5-card h3{margin:0 0 8px}.pro5-muted{opacity:.72;font-size:.9rem;line-height:1.6}.pro5-list{display:grid;gap:9px;margin-top:12px}.pro5-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-row small,.pro5-row span{display:block;opacity:.68}.pro5-input{width:100%;box-sizing:border-box;padding:11px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:inherit;outline:none}.pro5-textarea{min-height:130px;resize:vertical}.pro5-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.pro5-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.07);font-size:.78rem}.pro5-progress{height:9px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:8px}.pro5-progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#62d4ff,#8d7cff)}.pro5-reward{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:13px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06)}.pro5-reward .ico{font-size:1.6rem}.pro5-day{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:12px}.pro5-day div{padding:9px 4px;text-align:center;border-radius:11px;background:rgba(255,255,255,.045);font-size:.72rem}.pro5-day .on{background:rgba(98,212,255,.15);border:1px solid rgba(98,212,255,.25)}.pro5-note{padding:12px;border-radius:13px;background:rgba(255,255,255,.045);white-space:pre-wrap;line-height:1.6}.pro5-unread{box-shadow:inset 3px 0 0 #62d4ff}.pro5-assistant{min-height:180px;max-height:390px;overflow:auto;display:grid;gap:8px;padding:10px;background:rgba(0,0,0,.12);border-radius:14px}.pro5-msg{padding:10px 12px;border-radius:13px;line-height:1.55;max-width:90%}.pro5-msg.bot{background:rgba(98,212,255,.09);justify-self:start}.pro5-msg.user{background:rgba(255,255,255,.08);justify-self:end}.pro5-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.pro5-kpi div{padding:11px;text-align:center;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-kpi b{display:block;font-size:1.2rem}.pro5-empty{padding:20px;border-radius:14px;background:rgba(255,255,255,.04);text-align:center;opacity:.75}@media(max-width:850px){.pro5-grid{grid-template-columns:1fr}.pro5-kpi{grid-template-columns:repeat(2,1fr)}}
-</style>
-<script id="doma-student-pro5plus-v1">
-(function(){
- 'use strict';
- const E=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
- const K=k=>'doma_pro5_'+k+'_'+(window.sessionUser?.id||'guest');
- const read=(k,d)=>{try{const v=localStorage.getItem(K(k));return v===null?d:JSON.parse(v)}catch(e){return d}};
- const write=(k,v)=>{try{localStorage.setItem(K(k),JSON.stringify(v))}catch(e){}};
- const escId=v=>E(v);
- function nav(view,label,icon){const side=document.querySelector('.drawer-side');if(!side||side.querySelector('[data-pro5-view="'+view+'"]'))return;const b=document.createElement('button');b.type='button';b.className='side-link';b.dataset.pro5View=view;b.textContent=icon+' '+label;b.onclick=()=>window.studentView(view);const logout=Array.from(side.querySelectorAll('.side-link')).find(x=>(x.textContent||'').includes('Log Out'));side.insertBefore(b,logout||null)}
- function installNav(){nav('planner','Study Planner','📅');nav('library','Bookmarks & Notes','🔖');nav('rewards','Rewards','🎁');}
- function markActive(view){document.querySelectorAll('.side-link').forEach(b=>b.classList.toggle('active',b.dataset.pro5View===view || b.dataset.view===view))}
- function setHeader(title,sub){const t=document.getElementById('drawerTitle'),s=document.getElementById('drawerSubtitle');if(t)t.textContent=title;if(s)s.textContent=sub}
- function getDays(){const x=read('planner',{days:[]});return Array.isArray(x.days)?x.days:[]}
- function plannerRender(){
-   const host=$('drawerBody');const p=read('planner',{goal:5,minutes:25,days:[]});const days=Array.isArray(p.days)?p.days:[];const labels=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-   host.innerHTML='<div class="pro5-grid"><div class="pro5-card"><h3>📅 Study Planner</h3><p class="pro5-muted">Set a simple weekly target and track your study days on this device.</p><div class="pro5-kpi"><div><b>'+E(days.length)+'</b><span>Days logged</span></div><div><b>'+E(p.goal||5)+'</b><span>Weekly goal</span></div><div><b>'+E(p.minutes||25)+'</b><span>Focus min</span></div><div><b>'+Math.min(100,Math.round(days.length/Math.max(1,Number(p.goal)||5)*100))+'%</b><span>Goal progress</span></div></div><div class="pro5-day">'+labels.map((l,i)=>{const d=new Date();d.setDate(d.getDate()-(d.getDay()-i+7)%7);const key=d.toISOString().slice(0,10);return '<div class="'+(days.includes(key)?'on':'')+'"><b>'+l+'</b><br>'+(days.includes(key)?'✓':'—')+'</div>'}).join('')+'</div></div><div class="pro5-card"><h3>Planner Settings</h3><label class="pro5-muted">Weekly study days</label><input id="pro5Goal" class="pro5-input" type="number" min="1" max="7" value="'+E(p.goal||5)+'"><label class="pro5-muted" style="display:block;margin-top:10px">Focus minutes</label><select id="pro5Minutes" class="pro5-input"><option value="15" '+(Number(p.minutes)===15?'selected':'')+'>15 minutes</option><option value="25" '+(Number(p.minutes)===25?'selected':'')+'>25 minutes</option><option value="45" '+(Number(p.minutes)===45?'selected':'')+'>45 minutes</option><option value="60" '+(Number(p.minutes)===60?'selected':'')+'>60 minutes</option></select><div class="pro5-toolbar"><button class="btn primary" id="pro5SavePlanner">Save Plan</button><button class="btn secondary" id="pro5LogToday">Log Study Today</button><button class="btn secondary" id="pro5OpenTimer">Open Timer</button></div></div></div><div class="pro5-card" style="margin-top:14px"><h3>Today’s Plan</h3><p class="pro5-muted">'+(days.includes(new Date().toISOString().slice(0,10))?'You already logged a study session today. Keep the momentum going.':'Study for '+E(p.minutes||25)+' minutes, then complete one small course task such as a lesson, quiz review, or vocabulary practice.')+'</p></div>';
-   $('pro5SavePlanner').onclick=()=>{const goal=Math.max(1,Math.min(7,Number($('pro5Goal').value)||5));const minutes=Number($('pro5Minutes').value)||25;write('planner',{goal,minutes,days});showToast('Study plan saved.')};
-   $('pro5LogToday').onclick=()=>{const key=new Date().toISOString().slice(0,10);if(!days.includes(key))days.push(key);write('planner',{goal:Number($('pro5Goal').value)||5,minutes:Number($('pro5Minutes').value)||25,days:days.slice(-60)});try{const s=JSON.parse(localStorage.getItem('doma_master_local_v1')||'{}');s.studyDays=Array.isArray(s.studyDays)?s.studyDays:[];if(!s.studyDays.includes(key))s.studyDays.push(key);localStorage.setItem('doma_master_local_v1',JSON.stringify(s))}catch(e){}plannerRender();showToast('Today logged. Keep going!')};
-   $('pro5OpenTimer').onclick=()=>window.studentView('timer');
- }
- async function libraryRender(){
-   const host=$('drawerBody');const access=await ensureActiveGrade();const saved=(()=>{try{return JSON.parse(localStorage.getItem('doma_master_local_v1')||'{}').savedLessons||[]}catch(e){return []}})();
-   let lessons=[];if(access){const r=await sb.from('lessons').select('id,title,description,lesson_type,unit_id,sort_order').eq('grade_id',access.grade.id).eq('is_published',true).order('sort_order',{ascending:true});lessons=r.data||[]}
-   const notes=read('notes',{});const savedRows=lessons.filter(l=>saved.includes(l.id));
-   host.innerHTML='<div class="pro5-grid"><div class="pro5-card"><h3>🔖 Saved Lessons</h3><p class="pro5-muted">Your saved lessons stay on this device and can be opened again quickly.</p><div class="pro5-list">'+(savedRows.length?savedRows.map(l=>'<div class="pro5-row"><div><strong>'+E(l.title)+'</strong><small>'+E(l.lesson_type||'Lesson')+'</small></div><button class="btn secondary" data-open-lib="'+escId(l.id)+'">Open</button></div>').join(''):'<div class="pro5-empty">No saved lessons yet. Open Lessons and tap Save Lesson.</div>')+'</div></div><div class="pro5-card"><h3>📝 Personal Notes</h3><p class="pro5-muted">Write notes linked to lessons. Notes are private to this browser.</p><div class="pro5-list">'+(Object.keys(notes).length?Object.entries(notes).slice(0,20).map(([id,n])=>{const l=lessons.find(x=>x.id===id);return '<div class="pro5-note"><strong>'+E(l?.title||'Saved lesson')+'</strong><br><span>'+E(n.text||'')+'</span><div class="pro5-toolbar"><button class="btn secondary" data-edit-note="'+escId(id)+'">Edit</button><button class="btn secondary" data-del-note="'+escId(id)+'">Delete</button></div></div>'}).join(''):'<div class="pro5-empty">No personal notes yet.</div>')+'</div></div></div><div class="pro5-card" style="margin-top:14px"><h3>Add / Edit Note</h3><select id="pro5NoteLesson" class="pro5-input"><option value="">Select a lesson</option>'+lessons.map(l=>'<option value="'+escId(l.id)+'">'+E(l.title)+'</option>').join('')+'</select><textarea id="pro5NoteText" class="pro5-input pro5-textarea" style="margin-top:10px" placeholder="Write your note…"></textarea><div class="pro5-toolbar"><button class="btn primary" id="pro5SaveNote">Save Note</button><button class="btn secondary" id="pro5ClearNote">Clear</button></div></div>';
-   host.querySelectorAll('[data-open-lib]').forEach(b=>b.onclick=()=>{const l=lessons.find(x=>x.id===b.dataset.openLib);if(l&&typeof selectLesson==='function'){window.studentView('lessons').then?.(()=>{});setTimeout(()=>{try{const idx=currentLessons.findIndex(x=>String(x.id)===String(l.id));selectLesson(idx>=0?idx:l.id)}catch(e){}},500)}});
-   host.querySelectorAll('[data-edit-note]').forEach(b=>b.onclick=()=>{const id=b.dataset.editNote;$('pro5NoteLesson').value=id;$('pro5NoteText').value=notes[id]?.text||'';$('pro5NoteText').focus()});
-   host.querySelectorAll('[data-del-note]').forEach(b=>b.onclick=()=>{delete notes[b.dataset.delNote];write('notes',notes);libraryRender();showToast('Note deleted.')});
-   $('pro5SaveNote').onclick=()=>{const id=$('pro5NoteLesson').value,text=($('pro5NoteText').value||'').trim();if(!id||!text)return showToast('Select a lesson and write a note first.');notes[id]={text,updated_at:new Date().toISOString()};write('notes',notes);$('pro5NoteText').value='';libraryRender();showToast('Note saved.')};
-   $('pro5ClearNote').onclick=()=>{$('pro5NoteLesson').value='';$('pro5NoteText').value=''};
- }
- async function notificationsRender(){
-   if(!sessionUser?.id){$('drawerBody').innerHTML='<div class="pro5-empty">Please log in to view notifications.</div>';return}
-   const r=await sb.from('notifications').select('id,title,message,is_read,created_at').eq('student_id',sessionUser.id).order('created_at',{ascending:false}).limit(100);if(r.error){$('drawerBody').innerHTML='<div class="pro5-empty">Could not load notifications: '+E(r.error.message)+'</div>';return}
-   const rows=r.data||[];const prefs=read('notificationPrefs',{enabled:true,reminders:true});
-   $('drawerBody').innerHTML='<div class="pro5-card"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap"><div><h3>🔔 Smart Notifications</h3><p class="pro5-muted">Your real account notifications plus local study reminders.</p></div><span class="pro5-chip">'+rows.filter(x=>!x.is_read).length+' unread</span></div><div class="pro5-toolbar"><label class="pro5-chip"><input id="pro5NotifEnabled" type="checkbox" '+(prefs.enabled?'checked':'')+'> Notifications</label><label class="pro5-chip"><input id="pro5NotifReminders" type="checkbox" '+(prefs.reminders?'checked':'')+'> Study reminders</label><button class="btn secondary" id="pro5MarkAll">Mark all read</button></div><div class="pro5-list">'+(rows.length?rows.map(n=>'<div class="pro5-row '+(!n.is_read?'pro5-unread':'')+'"><div><strong>'+E(n.title)+'</strong><small>'+E(n.message)+'</small></div><div><span>'+E(typeof fmtDateTime==='function'?fmtDateTime(n.created_at):n.created_at)+'</span>'+(!n.is_read?'<button class="btn secondary" style="margin-top:6px" data-pro5-read="'+escId(n.id)+'">Read</button>':'')+'</div></div>').join(''):'<div class="pro5-empty">No account notifications yet.</div>')+'</div></div>';
-   $('pro5NotifEnabled').onchange=e=>{prefs.enabled=e.target.checked;write('notificationPrefs',prefs);showToast('Notification preference saved.')};$('pro5NotifReminders').onchange=e=>{prefs.reminders=e.target.checked;write('notificationPrefs',prefs);showToast('Reminder preference saved.')};
-   $('pro5MarkAll').onclick=async()=>{const rr=await sb.from('notifications').update({is_read:true}).eq('student_id',sessionUser.id).eq('is_read',false);if(rr.error)return showToast(rr.error.message);notificationsRender()};
-   host.querySelectorAll('[data-pro5-read]').forEach(b=>b.onclick=async()=>{const rr=await sb.from('notifications').update({is_read:true}).eq('id',b.dataset.pro5Read).eq('student_id',sessionUser.id);if(rr.error)return showToast(rr.error.message);notificationsRender()});
- }
- async function rewardsRender(){
-   const access=await ensureActiveGrade();if(!access){$('drawerBody').innerHTML='<div class="pro5-empty">Choose an active grade first.</div>';return}
-   const uid=sessionUser.id,gid=access.grade.id;const [lp,att,hw,cert,sub]=await Promise.all([sb.from('lesson_progress').select('lesson_id,completed').eq('student_id',uid),sb.from('quiz_attempts').select('quiz_id,score,total_points').eq('student_id',uid),sb.from('homework_submissions').select('id').eq('student_id',uid),sb.from('certificates').select('id').eq('student_id',uid),sb.from('subscriptions').select('status,expires_at,grade_id').eq('student_id',uid).eq('grade_id',gid)]);
-   const lessons=(lp.data||[]).filter(x=>x.completed).length,best={};(att.data||[]).forEach(a=>{const p=Number(a.total_points)?Number(a.score)/Number(a.total_points)*100:0;if(!best[a.quiz_id]||p>best[a.quiz_id])best[a.quiz_id]=p});const quizXP=Object.values(best).reduce((s,p)=>s+Math.min(100,Math.max(0,Math.round(p))),0);const xp=lessons*20+quizXP+(hw.data||[]).length*20+(cert.data||[]).length*100+((sub.data||[]).some(x=>x.status==='active'&&new Date(x.expires_at)>new Date())?50:0);const levels=[[0,'Starter'],[200,'Learner'],[500,'Achiever'],[900,'Expert'],[1400,'Master'],[2200,'Legend']];let level=levels[0],next=null;for(const l of levels){if(xp>=l[0])level=l;else{next=l;break}}const rewards=[['🎯','First Lesson',lessons>=1,'Complete your first lesson'],['⚡','200 XP',xp>=200,'Reach 200 XP'],['🔥','7 Day Streak',(window.getDomaStudyStreak?window.getDomaStudyStreak():0)>=7,'Study 7 days in a row'],['📚','10 Lessons',lessons>=10,'Complete 10 lessons'],['💯','90% Quiz',Math.max(0,...Object.values(best))>=90,'Score 90%+ on a quiz'],['🏆','Certificate',(cert.data||[]).length>=1,'Earn a certificate']];
-   $('drawerBody').innerHTML='<div class="pro5-grid"><div class="pro5-card"><h3>🎁 Rewards & Levels</h3><p class="pro5-muted">Earn XP from real learning activity and unlock badges as you progress.</p><div class="pro5-kpi"><div><b>'+xp+'</b><span>XP</span></div><div><b>'+E(level[1])+'</b><span>Level</span></div><div><b>'+lessons+'</b><span>Lessons</span></div><div><b>'+Object.keys(best).length+'</b><span>Quizzes</span></div></div>'+(next?'<div style="margin-top:14px"><div style="display:flex;justify-content:space-between"><span>'+E(level[1])+'</span><b>'+Math.round((xp-level[0])/(next[0]-level[0]*1)*100)+'%</b></div><div class="pro5-progress"><i style="width:'+Math.min(100,Math.max(0,Math.round((xp-level[0])/(next[0]-level[0])*100)))+'%"></i></div><p class="pro5-muted" style="margin-top:6px">'+(next[0]-xp)+' XP to '+E(next[1])+'</p></div>':'<div class="pro5-chip" style="margin-top:12px">Maximum level reached 🎉</div>')+'</div><div class="pro5-card"><h3>🏅 Your Rewards</h3><div class="pro5-list">'+rewards.map(r=>'<div class="pro5-reward" style="opacity:'+(r[2]?'1':'.45')+'"><span class="ico">'+r[0]+'</span><div><strong>'+E(r[1])+'</strong><span>'+E(r[3])+'</span></div><b>'+(r[2]?'Unlocked':'Locked')+'</b></div>').join('')+'</div></div></div>';
- }
- async function aiRender(){
-   const host=$('drawerBody');host.innerHTML='<div class="pro5-card"><h3>🤖 AI Study Assistant</h3><p class="pro5-muted">Loading your learning context…</p></div>';const access=await ensureActiveGrade();if(!access){host.innerHTML='<div class="pro5-empty">Choose an active grade first.</div>';return}const uid=sessionUser.id,gid=access.grade.id;const [less,lp,att,hw]=await Promise.all([sb.from('lessons').select('id,title,lesson_type').eq('grade_id',gid).eq('is_published',true).order('sort_order',{ascending:true}),sb.from('lesson_progress').select('lesson_id,completed').eq('student_id',uid),sb.from('quiz_attempts').select('quiz_id,score,total_points,submitted_at').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(200),sb.from('homework_submissions').select('id,status,submitted_at').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(100)]);const lessons=less.data||[],done=new Set((lp.data||[]).filter(x=>x.completed).map(x=>x.lesson_id));const scores=(att.data||[]).map(a=>Number(a.total_points)?Number(a.score)/Number(a.total_points)*100:0);const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;const next=lessons.find(l=>!done.has(l.id));const answer=q=>{const low=q.toLowerCase();if(/today|النهارده|اليوم/.test(low))return 'Today I recommend: '+(next?'complete “'+next.title+'”, then spend '+(read('planner',{minutes:25}).minutes||25)+' minutes reviewing it.':'review a previous lesson and take a short quiz.');if(/quiz|كويز|اختبار|درجة|score/.test(low))return 'Your current quiz average is '+avg+'%. '+(avg<80?'Review your latest mistakes before taking another quiz.':'You are doing well—try a new quiz and aim for consistency.');if(/homework|واجب/.test(low))return 'You have '+(hw.data||[]).length+' homework record(s). Open Homework to check anything still awaiting review.';if(/next|التالي|بعد/.test(low))return next?'Your next unfinished lesson is “'+next.title+'”.':'You have completed all currently published lessons. Great job!';if(/weak|ضعف|تحسين/.test(low)){const map={};lessons.forEach(l=>{const k=(l.lesson_type||'lesson').toLowerCase();map[k]??={t:0,d:0};map[k].t++;if(done.has(l.id))map[k].d++});const w=Object.entries(map).map(([k,v])=>[k,Math.round(v.d/v.t*100)]).sort((a,b)=>a[1]-b[1])[0];return w?'Your lowest completion area is '+w[0]+' at '+w[1]+'%. Start with an unfinished lesson of that type.':'Complete more lessons and I can identify a clearer weak area.'}return 'I can help you decide what to study next, review your quiz performance, plan today’s session, or identify weaker learning areas. Try asking “What should I study today?”'};
-   host.innerHTML='<div class="pro5-grid"><div class="pro5-card"><h3>🤖 AI Study Assistant</h3><p class="pro5-muted">Course-aware guidance based on your actual lessons, progress, quizzes and homework. This version runs safely in the browser; it does not expose an external AI API key.</p><div id="pro5AIChat" class="pro5-assistant"><div class="pro5-msg bot">Hi! Tell me what you want to study or improve today.</div><div class="pro5-msg bot">You completed '+done.size+' of '+lessons.length+' published lessons and your quiz average is '+avg+'%.</div></div><div class="pro5-toolbar"><input id="pro5AIInput" class="pro5-input" style="flex:1" placeholder="What should I study today?"><button class="btn primary" id="pro5AISend">Ask</button></div><div class="pro5-toolbar"><button class="btn secondary" data-ai-q="What should I study today?">Today</button><button class="btn secondary" data-ai-q="What are my weak areas?">Weak Areas</button><button class="btn secondary" data-ai-q="How can I improve my quiz score?">Quiz Help</button><button class="btn secondary" data-ai-q="What should I do next?">Next Step</button></div></div><div class="pro5-card"><h3>Quick Study Context</h3><div class="pro5-list"><div class="pro5-row"><span>Grade</span><b>'+E(access.grade.name)+'</b></div><div class="pro5-row"><span>Completed lessons</span><b>'+done.size+'/'+lessons.length+'</b></div><div class="pro5-row"><span>Quiz average</span><b>'+avg+'%</b></div><div class="pro5-row"><span>Next lesson</span><b>'+E(next?.title||'All published lessons completed')+'</b></div></div></div></div>';
-   const send=()=>{const input=$('pro5AIInput');const q=(input?.value||'').trim();if(!q)return;const chat=$('pro5AIChat');const add=(c,t)=>{const d=document.createElement('div');d.className='pro5-msg '+c;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight};add('user',q);add('bot',answer(q));input.value=''};$('pro5AISend').onclick=send;$('pro5AIInput').onkeydown=e=>{if(e.key==='Enter')send()};host.querySelectorAll('[data-ai-q]').forEach(b=>b.onclick=()=>{$('pro5AIInput').value=b.dataset.aiQ;send()});
- }
- const originalSV=window.studentView;
- window.studentView=async function(view){installNav();markActive(view);if(view==='planner'){currentStudentView=view;setHeader('Study Planner','Build a simple weekly study routine.');return plannerRender()}if(view==='library'){currentStudentView=view;setHeader('Bookmarks & Notes','Keep lessons and personal notes easy to find.');return libraryRender()}if(view==='rewards'){currentStudentView=view;setHeader('Rewards','Turn real learning activity into XP and achievements.');return rewardsRender()}if(view==='aiassistant'){currentStudentView=view;setHeader('AI Study Assistant','Course-aware study guidance.');return aiRender()}if(view==='notifications')return notificationsRender();if(view==='assistant')return aiRender();return originalSV.apply(this,arguments)};
- window.renderStudyAssistant=aiRender;window.renderSmartNotifications=notificationsRender;window.renderStudyPlanner=plannerRender;window.renderBookmarksNotes=libraryRender;window.renderRewards=rewardsRender;
- document.addEventListener('DOMContentLoaded',installNav);window.addEventListener('load',()=>setTimeout(installNav,500));
-})();
+function printCertificate(title,code,issued){
+  const w=window.open('','_blank','width=900,height=650');
+  if(!w)return;
+  const safeTitle=esc(title),safeCode=esc(code),safeIssued=esc(fmtDate(issued));
+  w.document.open();
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Certificate</title><style>body{font-family:Arial,sans-serif;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f;border-radius:18px}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+safeTitle+'</h1><p>Certificate of Completion</p><p class="small">Issued '+safeIssued+'</p><div class="code">'+safeCode+'</div><p class="small">BY ADHAM</p></div></body></html>';
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>w.print(),150);
+}
 </script>
 <script id="doma-index-phase-hooks">
 (function(){
@@ -946,6 +879,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
 <button class="back-top" id="domaBackTop" type="button" aria-label="Back to top">↑</button>
 
 
+</script>
 
 <script id="doma-master-upgrade-script">
 (function(){
@@ -1498,7 +1432,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
-<style id="doma-student-plus5-v1-css">
+<style id="doma-student-plus5-v1">
 .student-plus5-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.student-plus5-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.student-plus5-card h3,.student-plus5-card h4{margin:0 0 7px}.student-plus5-muted{opacity:.72;font-size:.9rem;line-height:1.7}.plus5-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.plus5-toolbar .field{min-width:160px}.plus5-list{display:grid;gap:9px}.plus5-item{padding:12px;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06)}.plus5-item strong{display:block}.plus5-answer{display:block;margin-top:8px;padding:8px 10px;border-radius:10px;background:rgba(98,212,255,.07);font-size:.88rem}.plus5-statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.plus5-stat{padding:12px;border-radius:13px;background:rgba(255,255,255,.05);text-align:center}.plus5-stat b{display:block;font-size:1.25rem}.plus5-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.plus5-bar i{display:block;height:100%;background:linear-gradient(90deg,#62d4ff,#8d7cff);border-radius:99px}.plus5-chat{min-height:220px;max-height:430px;overflow:auto;display:grid;gap:9px;padding:4px}.plus5-msg{padding:11px 13px;border-radius:14px;line-height:1.65;white-space:pre-wrap}.plus5-msg.user{background:rgba(98,212,255,.10);margin-left:15%}.plus5-msg.bot{background:rgba(255,255,255,.05);margin-right:10%}.plus5-timer{font-size:clamp(44px,8vw,76px);font-weight:900;letter-spacing:2px;text-align:center;margin:15px 0}.plus5-challenge{font-size:1.05rem;line-height:1.8}.plus5-q{padding:14px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)}.plus5-q label{display:block;margin-top:7px;padding:8px;border-radius:10px;background:rgba(255,255,255,.035);cursor:pointer}.plus5-q label:hover{background:rgba(98,212,255,.08)}.plus5-progress{margin-top:8px}.plus5-small{font-size:.78rem;opacity:.72}@media(max-width:850px){.student-plus5-grid{grid-template-columns:1fr}.plus5-statgrid{grid-template-columns:repeat(2,1fr)}.plus5-msg.user,.plus5-msg.bot{margin-left:0;margin-right:0}}
 </style>
 <script id="doma-student-plus5-v1">
@@ -1599,7 +1533,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  window.renderStudyAssistant=renderStudyAssistant;window.renderStudentQuestionBank=renderStudentQuestionBank;window.renderStudentAnalytics=renderStudentAnalytics;window.renderStudentTimer=renderStudentTimer;window.renderDailyChallenge=renderDailyChallenge;
 })();
 </script>
-<style id="doma-student-gamification-v1-css">
+<style id="doma-student-gamification-v1">
 .student-gami{margin-top:16px}.student-gami-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.student-gami-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.student-gami-card h4{margin:0 0 8px}.student-gami-muted{opacity:.72;font-size:.9rem}.student-gami-progress{height:10px;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden;margin:10px 0}.student-gami-progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#62d4ff,#8d7cff);border-radius:999px}.student-gami-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.student-gami-stat{padding:11px;border-radius:13px;background:rgba(255,255,255,.055);text-align:center}.student-gami-stat b{display:block;font-size:1.15rem}.student-gami-list{display:grid;gap:8px;margin-top:10px}.student-gami-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.045)}.student-gami-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.student-gami-badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.student-gami-badge{padding:12px 8px;text-align:center;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}.student-gami-badge.locked{opacity:.35}.student-gami-badge .ico{font-size:1.55rem;display:block;margin-bottom:5px}.student-gami-table{width:100%;border-collapse:collapse;margin-top:8px}.student-gami-table td,.student-gami-table th{padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left}.student-gami-rank{width:34px;font-weight:800}.student-gami-me{background:rgba(98,212,255,.08)}.student-gami-skill{display:grid;grid-template-columns:95px 1fr 45px;align-items:center;gap:8px;margin:9px 0}.student-gami-skill .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.student-gami-skill .bar i{display:block;height:100%;border-radius:99px;background:#62d4ff}.student-gami-center{margin-top:14px}.student-gami-center .student-gami-card{height:100%}@media(max-width:850px){.student-gami-grid{grid-template-columns:1fr}.student-gami-stats{grid-template-columns:repeat(2,1fr)}.student-gami-badges{grid-template-columns:repeat(2,1fr)}}
 </style>
 
@@ -1659,7 +1593,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const progressToNext=lv.next?Math.round((x.xp-lv.min)/(lv.next[0]-lv.min)*100):100;
     const s=stateG(), studyDays=Array.isArray(s.studyDays)?s.studyDays:[];
     const activeSub=data.subs.find(z=>z.grade_id===gid&&z.status==='active'&&new Date(z.expires_at)>new Date());
-     const streak=window.getDomaStudyStreak?window.getDomaStudyStreak():0;
     const bestByQuiz={};
     data.attempts.forEach(a=>{const p=Number(a.total_points)?Number(a.score)/Number(a.total_points)*100:0;if(!bestByQuiz[a.quiz_id]||p>bestByQuiz[a.quiz_id])bestByQuiz[a.quiz_id]=p});
     const quizScores=Object.values(bestByQuiz), quizAvg=quizScores.length?Math.round(quizScores.reduce((a,b)=>a+b,0)/quizScores.length):0;
@@ -1671,12 +1604,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const unlocked=[
       ['🎯','First Lesson',x.lessons>=1],
       ['⚡','200 XP',x.xp>=200],
-      ['🔥','7 Day Streak',streak>=7],
+      ['🔥','7 Day Streak',studyDays.length>=7],
       ['📚','10 Lessons',x.lessons>=10],
       ['💯','90% Quiz',quizAvg>=90],
       ['🏆','Certificate',x.cert>=1]
     ];
     const unread=data.notifs.filter(n=>!n.is_read).length;
+    const streak=window.getDomaStudyStreak?window.getDomaStudyStreak():0;
 
     let leaderboard=[];
     try{
@@ -1749,6 +1683,128 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   document.addEventListener('DOMContentLoaded',()=>setTimeout(buildG,1100));
   window.addEventListener('load',()=>setTimeout(buildG,1400));
   window.domaRefreshGamification=buildG;
+})();
+</script>
+<style id="doma-index-pro6-css">
+.pro6-sync-card{margin-top:14px;padding:18px;border:1px solid #3b2230;border-radius:16px;background:linear-gradient(145deg,#150c10,#0c090a)}
+.pro6-sync-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.pro6-sync-stat{padding:12px;border:1px solid #2c1921;border-radius:11px;background:#100b0d}.pro6-sync-stat b{display:block;font-size:18px}.pro6-sync-stat span{display:block;font-size:9px;color:#7d7478;margin-top:3px}
+.pro6-sync-status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#171015;border:1px solid #3e222c;color:#baaab0;font-size:9px}.pro6-sync-status.ok{color:#9fe0bb;border-color:#2c5940;background:#102017}.pro6-sync-status.warn{color:#e1c18b;border-color:#59452b;background:#21190f}
+.pro6-analytics-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.pro6-panel{padding:17px;background:linear-gradient(145deg,#120b0e,#0c090a);border:1px solid #2e1a22;border-radius:14px}.pro6-panel h3{font-size:15px;margin-bottom:7px}.pro6-panel p{font-size:10px;color:#80767a;line-height:1.7}.pro6-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.pro6-kpi{padding:11px;text-align:center;background:#100b0d;border:1px solid #29171e;border-radius:10px}.pro6-kpi b{display:block;font-size:20px}.pro6-kpi span{display:block;color:#777;font-size:8px;margin-top:3px}.pro6-bars{display:grid;gap:9px;margin-top:12px}.pro6-bar-row{display:grid;grid-template-columns:100px 1fr 40px;gap:8px;align-items:center}.pro6-bar-row label{font-size:9px;color:#8c8287}.pro6-bar{height:8px;border-radius:8px;background:#24151b;overflow:hidden}.pro6-bar i{display:block;height:100%;border-radius:8px;background:var(--burg3)}.pro6-bar-row b{font-size:9px;text-align:right;color:#d2a4af}.pro6-weak-list{display:grid;gap:8px;margin-top:10px}.pro6-weak{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 10px;border:1px solid #29171e;border-radius:9px;background:#0f0a0c}.pro6-weak strong{font-size:10px}.pro6-weak span{font-size:9px;color:#a99199}.pro6-cloud-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}.pro6-exam-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding:10px;border:1px solid #2c1921;border-radius:11px;background:#0f0a0c}.pro6-timer{font-weight:900;font-size:17px;color:#e4a9b6}.pro6-timer.warning{color:#efbd78}.pro6-exam-meta{font-size:9px;color:#7f7579}.pro6-result-pass{color:#9ed9b8}.pro6-result-fail{color:#e59ba9}.pro6-notif-pref{padding:13px;margin-bottom:12px;border:1px solid #2d1a21;border-radius:12px;background:#110b0d}.pro6-notif-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}.pro6-notif-box{padding:10px;border:1px solid #28171e;border-radius:9px;background:#0d090b}.pro6-notif-box label{font-size:9px;color:#aaa;display:flex;gap:7px;align-items:center}.pro6-check{accent-color:#b44361}
+@media(max-width:900px){.pro6-sync-grid,.pro6-kpis,.pro6-notif-grid{grid-template-columns:repeat(2,1fr)}.pro6-analytics-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.pro6-sync-grid,.pro6-kpis,.pro6-notif-grid{grid-template-columns:1fr}.pro6-bar-row{grid-template-columns:80px 1fr 35px}}
+</style>
+<script id="doma-index-pro6-script">
+(function(){
+  'use strict';
+  const localKey='doma_master_local_v1';
+  function safeParse(v,fallback={}){try{return JSON.parse(v)}catch(e){return fallback}}
+  function masterState(){return safeParse(localStorage.getItem(localKey)||'{}',{})}
+  function writeMaster(s){try{localStorage.setItem(localKey,JSON.stringify(s))}catch(e){}}
+  function cloudKey(){return 'doma_pro6_cloud_'+(window.sessionUser?.id||'guest')}
+  function localCloud(){return safeParse(localStorage.getItem(cloudKey())||'{}',{})}
+  function writeLocalCloud(v){try{localStorage.setItem(cloudKey(),JSON.stringify(v))}catch(e){}}
+  function mergedState(){const m=masterState(),c=localCloud();return {planner:m.planner||c.planner||{},notes:m.notes||c.notes||{},savedLessons:m.savedLessons||c.savedLessons||[],studyDays:m.studyDays||c.studyDays||[],prefs:c.prefs||{},timer:m.timer||c.timer||{}}}
+  async function pullCloud(){
+    if(!window.sessionUser||!window.sb)return {ok:false,reason:'No student session'};
+    try{const r=await sb.from('student_cloud_state').select('state,updated_at').eq('student_id',sessionUser.id).maybeSingle();
+      if(r.error) return {ok:false,reason:r.error.message};
+      if(r.data?.state){const c=r.data.state||{};const m=masterState();if(c.planner)m.planner=c.planner;if(c.notes)m.notes=c.notes;if(Array.isArray(c.savedLessons))m.savedLessons=c.savedLessons;if(Array.isArray(c.studyDays))m.studyDays=c.studyDays;if(c.timer)m.timer=c.timer;writeMaster(m);writeLocalCloud({...c,last_cloud_update:r.data.updated_at||new Date().toISOString()});}
+      return {ok:true,updated_at:r.data?.updated_at||null};
+    }catch(e){return {ok:false,reason:e?.message||String(e)}}
+  }
+  async function pushCloud(){
+    if(!window.sessionUser||!window.sb)return {ok:false,reason:'No student session'};
+    const state=mergedState();state.last_cloud_update=new Date().toISOString();
+    try{const r=await sb.from('student_cloud_state').upsert({student_id:sessionUser.id,state,updated_at:new Date().toISOString()},{onConflict:'student_id'});if(r.error)return {ok:false,reason:r.error.message};writeLocalCloud(state);return {ok:true}}
+    catch(e){return {ok:false,reason:e?.message||String(e)}}
+  }
+  async function fullSync(){const p=await pullCloud();if(p.ok){const q=await pushCloud();return q.ok?{ok:true}:q}const q=await pushCloud();return q.ok?{ok:true,localOnly:false}:{ok:false,reason:p.reason||q.reason}}
+
+  function installCloudNav(){
+    const side=document.querySelector('.drawer-side');if(!side)return;
+    if(!side.querySelector('[data-pro6-view="cloudsync"]')){
+      const b=document.createElement('button');b.type='button';b.className='side-link';b.dataset.pro6View='cloudsync';b.textContent='☁ Cloud Sync';b.onclick=()=>window.studentView('cloudsync');
+      const logout=Array.from(side.querySelectorAll('.side-link')).find(x=>(x.textContent||'').includes('Log Out'));side.insertBefore(b,logout||null);
+    }
+  }
+  function syncCounts(){const s=mergedState();return {notes:Object.keys(s.notes||{}).length,saved:Array.isArray(s.savedLessons)?s.savedLessons.length:0,days:Array.isArray(s.studyDays)?s.studyDays.length:0}}
+  async function renderCloudSync(){
+    const host=$('drawerBody');const counts=syncCounts();host.innerHTML='<div class="pro6-sync-card"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap"><div><span class="eyebrow">PRO6 • Cloud</span><h3 style="margin-top:5px">Your learning data, synced to your account.</h3><p class="pro5-muted" style="margin-top:5px">Planner, notes, saved lessons, study days and timer preferences can follow you across devices when the Supabase cloud table is installed.</p></div><span id="pro6CloudStatus" class="pro6-sync-status">Checking…</span></div><div class="pro6-sync-grid"><div class="pro6-sync-stat"><b>'+counts.notes+'</b><span>Notes</span></div><div class="pro6-sync-stat"><b>'+counts.saved+'</b><span>Saved lessons</span></div><div class="pro6-sync-stat"><b>'+counts.days+'</b><span>Study days</span></div></div><div class="pro6-cloud-row"><span class="muted" style="font-size:9px">Last local/cloud state: '+esc(localCloud().last_cloud_update||'Not synced yet')+'</span><div class="account-actions"><button class="btn primary" id="pro6SyncNow">Sync Now</button><button class="btn secondary" id="pro6CloudPull">Refresh from Cloud</button></div></div></div><div class="pro6-sync-card"><h3>Cross-device backup</h3><p>Your local browser data is kept as a fallback. When cloud sync is available, the account copy is updated without exposing private notes to other students.</p></div>';
+    const status=$('pro6CloudStatus');const r=await pullCloud();if(r.ok){status.textContent='Cloud connected';status.classList.add('ok')}else{status.textContent='Local fallback';status.classList.add('warn');status.title=r.reason||'Cloud setup is not available yet'}
+    $('pro6SyncNow').onclick=async()=>{const x=await fullSync();status.textContent=x.ok?'Synced successfully':'Local fallback';status.className='pro6-sync-status '+(x.ok?'ok':'warn');showToast(x.ok?'Learning data synced.':('Cloud sync unavailable: '+(x.reason||'using local backup.')));if(x.ok)renderCloudSync()};
+    $('pro6CloudPull').onclick=async()=>{const x=await pullCloud();showToast(x.ok?'Cloud data loaded.':'Could not read cloud data: '+(x.reason||'unknown error'));await renderCloudSync()};
+  }
+
+  function shuffle(arr){const a=Array.isArray(arr)?arr.slice():[];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  let examTimer=null,examDeadline=0,examConfig={attempts_limit:0,time_limit_minutes:20,pass_percent:50,show_review:true,shuffle_questions:false,shuffle_options:false,attempts_used:0};
+  async function getExamConfig(quizId){
+    try{const gate=await sb.rpc('doma_quiz_start_gate',{p_quiz_id:quizId});if(!gate.error&&gate.data&&typeof gate.data==='object')return gate.data;
+    }catch(e){}
+    try{const cfg=await sb.from('quiz_pro_settings').select('shuffle_questions,shuffle_options,attempts_limit,time_limit_minutes,pass_percent,show_review').eq('quiz_id',quizId).maybeSingle();if(!cfg.error&&cfg.data)return {...cfg.data,allowed:true,attempts_used:0}}
+    catch(e){}
+    const q=currentQuizzes.find(x=>x.id===quizId);return {allowed:true,attempts_used:0,attempts_limit:0,shuffle_questions:false,shuffle_options:false,time_limit_minutes:Number(q?.duration_minutes||20),pass_percent:50,show_review:true}
+  }
+  async function pro6StartQuiz(id){
+    const q=currentQuizzes.find(x=>x.id===id);if(!q)return;
+    const gate=await getExamConfig(id);if(gate.allowed===false)return showToast(gate.reason||'This quiz cannot be started.');
+    const r=await sb.rpc('doma_get_quiz_questions',{p_quiz_id:id});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run the PRODUCTION SETUP SQL first.':'';return showToast('Could not load quiz: '+r.error.message+hint)}
+    let qs=Array.isArray(r.data)?r.data:[];if(!qs.length)return showToast('This quiz has no questions yet.');
+    qs=gate.shuffle_questions?shuffle(qs):qs.slice();qs=qs.map(x=>({...x,options:gate.shuffle_options?shuffle(Array.isArray(x.options)?x.options:[]):(Array.isArray(x.options)?x.options.slice():[])}));
+    currentQuiz={quiz:q,questions:qs,config:gate};examConfig=gate;renderQuizPage();
+  }
+  const originalStartQuiz=window.startQuiz;
+  window.startQuiz=pro6StartQuiz;
+  function stopExamTimer(){if(examTimer){clearInterval(examTimer);examTimer=null}}
+  function formatLeft(ms){const t=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(t/60),s=t%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+  const originalRenderQuizPage=window.renderQuizPage;
+  window.renderQuizPage=function(){
+    stopExamTimer();originalRenderQuizPage();
+    const q=currentQuiz?.quiz;if(!q)return;const root=$('drawerBody');if(!root)return;
+    const box=root.querySelector('.quiz-box');if(!box)return;
+    const tools=document.createElement('div');tools.className='pro6-exam-tools';tools.innerHTML='<div><b>Exam Pro</b><div class="pro6-exam-meta">'+(examConfig.shuffle_questions?'Questions shuffled • ':'')+(examConfig.shuffle_options?'Options shuffled • ':'')+'Pass mark: '+Number(examConfig.pass_percent||50)+'%'+(Number(examConfig.attempts_limit)>0?' • Attempt '+(Number(examConfig.attempts_used||0)+1)+' / '+examConfig.attempts_limit:'')+'</div></div><div id="pro6Timer" class="pro6-timer">'+formatLeft(Number(examConfig.time_limit_minutes||q.duration_minutes||20)*60000)+'</div>';
+    const notice=box.querySelector('.notice');if(notice)notice.insertAdjacentElement('afterend',tools);else box.prepend(tools);
+    const start=Date.now(),limit=Math.max(1,Number(examConfig.time_limit_minutes||q.duration_minutes||20))*60000;examDeadline=start+limit;const tick=()=>{const el=$('pro6Timer');if(!el)return;const left=examDeadline-Date.now();el.textContent=formatLeft(left);el.classList.toggle('warning',left<=60000);if(left<=0){stopExamTimer();showToast('Time is up. Submitting your quiz…');window.submitQuiz()}};tick();examTimer=setInterval(tick,500);
+    root.querySelectorAll('#quizForm input').forEach(i=>i.addEventListener('change',()=>{const total=currentQuiz.questions.length,answered=root.querySelectorAll('#quizForm input[type=radio]:checked').length;const c=tools.querySelector('.pro6-exam-meta');if(c)c.textContent=(examConfig.shuffle_questions?'Questions shuffled • ':'')+(examConfig.shuffle_options?'Options shuffled • ':'')+'Answered: '+answered+'/'+total+' • Pass mark: '+Number(examConfig.pass_percent||50)+'%'}));
+  };
+  const originalSubmitQuiz=window.submitQuiz;
+  window.submitQuiz=async function(){stopExamTimer();await originalSubmitQuiz();try{if(!currentQuiz?.quiz?.id||!sessionUser)return;const r=await sb.from('quiz_attempts').select('score,total_points,submitted_at').eq('student_id',sessionUser.id).eq('quiz_id',currentQuiz.quiz.id).order('submitted_at',{ascending:false}).limit(1);const a=r.data?.[0];if(!a||!$('quizResult'))return;const pct=a.total_points?Math.round(Number(a.score)/Number(a.total_points)*100):0;const pass=pct>=Number(examConfig.pass_percent||50);$('quizResult').insertAdjacentHTML('beforeend','<div style="margin-top:7px" class="'+(pass?'pro6-result-pass':'pro6-result-fail')+'">'+(pass?'✓ Passed':'✕ Below pass mark')+' • Required '+Number(examConfig.pass_percent||50)+'%</div>');}catch(e){console.warn(e)}};
+
+  async function renderPro6Analytics(){
+    const host=$('drawerBody');if(!sessionUser){host.innerHTML='<div class="pro6-panel"><h3>Analytics</h3><p>Please log in first.</p></div>';return}
+    const access=await ensureActiveGrade();if(!access){host.innerHTML='<div class="pro6-panel"><h3>My Analytics</h3><p>Activate a grade to unlock detailed performance analytics.</p></div>';return}
+    host.innerHTML='<div class="pro6-panel"><span class="eyebrow">PRO6 • Analytics</span><h3 style="margin-top:5px">Detailed learning performance</h3><p>Signals calculated from your current grade lessons, quiz attempts, homework and certificates.</p><div id="pro6AnalyticsInner" style="margin-top:12px"><div class="empty">Loading analytics…</div></div></div>';
+    const gid=access.grade.id,uid=sessionUser.id;
+    const [less,prog,att,hw,cert]=await Promise.all([sb.from('lessons').select('id,title,lesson_type,unit_id').eq('grade_id',gid).eq('is_published',true).order('sort_order',{ascending:true}),sb.from('lesson_progress').select('lesson_id,completed,progress_percent,lessons(title,lesson_type,grade_id)').eq('student_id',uid),sb.from('quiz_attempts').select('score,total_points,submitted_at,quizzes(title,grade_id)').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(200),sb.from('homework_submissions').select('status,grade,submitted_at,homework(title,grade_id)').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(200),sb.from('certificates').select('id').eq('student_id',uid)]);
+    const lessons=less.data||[],lp=(prog.data||[]).filter(x=>x.lessons?.grade_id===gid),done=lp.filter(x=>x.completed).length,lessonPct=lessons.length?Math.round(done/lessons.length*100):0;
+    const attempts=(att.data||[]).filter(x=>x.quizzes?.grade_id===gid),scores=attempts.map(x=>x.total_points?Number(x.score)/Number(x.total_points)*100:0),quizAvg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;
+    const hwRows=(hw.data||[]).filter(x=>x.homework?.grade_id===gid),reviewed=hwRows.filter(x=>x.status==='reviewed'),hwPct=hwRows.length?Math.round(reviewed.length/hwRows.length*100):0;
+    const overall=Math.round((lessonPct+quizAvg+(hwRows.length?hwPct:lessonPct))/3);
+    const byType={};lessons.forEach(l=>{const k=l.lesson_type||'lesson';byType[k]??={t:0,d:0};byType[k].t++;if(lp.find(p=>p.lesson_id===l.id)?.completed)byType[k].d++});const weak=Object.entries(byType).map(([k,v])=>[k,Math.round(v.d/v.t*100)]).sort((a,b)=>a[1]-b[1]);
+    const inner=$('pro6AnalyticsInner');inner.innerHTML='<div class="pro6-kpis"><div class="pro6-kpi"><b>'+lessonPct+'%</b><span>Lesson completion</span></div><div class="pro6-kpi"><b>'+quizAvg+'%</b><span>Quiz average</span></div><div class="pro6-kpi"><b>'+hwPct+'%</b><span>Homework reviewed</span></div><div class="pro6-kpi"><b>'+overall+'%</b><span>Overall signal</span></div></div><div class="pro6-analytics-grid" style="margin-top:14px"><div class="pro6-panel"><h3>Performance map</h3><div class="pro6-bars"><div class="pro6-bar-row"><label>Lessons</label><div class="pro6-bar"><i style="width:'+lessonPct+'%"></i></div><b>'+lessonPct+'%</b></div><div class="pro6-bar-row"><label>Quizzes</label><div class="pro6-bar"><i style="width:'+quizAvg+'%"></i></div><b>'+quizAvg+'%</b></div><div class="pro6-bar-row"><label>Homework</label><div class="pro6-bar"><i style="width:'+hwPct+'%"></i></div><b>'+hwPct+'%</b></div></div><div class="account-actions" style="margin-top:12px"><button class="btn secondary" onclick="studentView(\'lessons\')">Open Lessons</button><button class="btn secondary" onclick="studentView(\'quizzes\')">Open Quizzes</button></div></div><div class="pro6-panel"><h3>Weakest learning areas</h3><p>Start with the lowest completion skill before moving forward.</p><div class="pro6-weak-list">'+(weak.length?weak.slice(0,5).map(x=>'<div class="pro6-weak"><strong>'+esc(x[0])+'</strong><span>'+x[1]+'%</span></div>').join(''):'<div class="empty">Complete more lessons for stronger skill analysis.</div>')+'</div></div></div><div class="pro6-panel" style="margin-top:14px"><h3>Activity totals</h3><div class="pro6-kpis"><div class="pro6-kpi"><b>'+attempts.length+'</b><span>Quiz attempts</span></div><div class="pro6-kpi"><b>'+hwRows.length+'</b><span>Homework records</span></div><div class="pro6-kpi"><b>'+((cert.data||[]).length)+'</b><span>Certificates</span></div><div class="pro6-kpi"><b>'+((window.getDomaStudyStreak?window.getDomaStudyStreak():0))+'</b><span>Day streak</span></div></div></div>';
+  }
+
+  const originalNotif=window.renderStudentNotifications;
+  if(typeof originalNotif==='function'){
+    window.renderStudentNotifications=async function(){
+      await originalNotif();
+      try{const body=$('drawerBody');if(!body||!sessionUser)return;const prefs=localCloud().prefs||{};const box=document.createElement('div');box.className='pro6-notif-pref';box.innerHTML='<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><b>Notification Preferences</b><div class="muted" style="font-size:9px;margin-top:3px">Choose which reminders should be enabled on this device.</div></div><span class="pill">Pro6</span></div><div class="pro6-notif-grid"><div class="pro6-notif-box"><label><input class="pro6-check" type="checkbox" id="pro6PrefHomework" '+(prefs.homework!==false?'checked':'')+'> Homework reminders</label></div><div class="pro6-notif-box"><label><input class="pro6-check" type="checkbox" id="pro6PrefQuiz" '+(prefs.quiz!==false?'checked':'')+'> Quiz result reminders</label></div><div class="pro6-notif-box"><label><input class="pro6-check" type="checkbox" id="pro6PrefExpiry" '+(prefs.expiry!==false?'checked':'')+'> Subscription expiry alerts</label></div></div>';
+        body.insertBefore(box,body.firstElementChild);['Homework','Quiz','Expiry'].forEach(k=>{const el=$('pro6Pref'+k);if(el)el.onchange=async()=>{const c=localCloud();c.prefs=c.prefs||{};c.prefs[k.toLowerCase()]=el.checked;writeLocalCloud(c);await pushCloud();showToast('Notification preference saved.')}});
+      }catch(e){console.warn(e)}
+    }
+  }
+
+  const originalStudentView=window.studentView;
+  window.studentView=async function(view){
+    installCloudNav();
+    if(view==='cloudsync'){currentStudentView=view;$('drawerTitle').textContent='Cloud Sync';$('drawerSubtitle').textContent='Keep your learning data connected to your account.';$('drawerBody').innerHTML='<div class="empty">Loading cloud sync…</div>';return renderCloudSync()}
+    if(view==='analytics'){currentStudentView=view;$('drawerTitle').textContent='My Analytics';$('drawerSubtitle').textContent='Detailed progress and learning performance.';$('drawerBody').innerHTML='<div class="empty">Loading analytics…</div>';return renderPro6Analytics()}
+    return originalStudentView.apply(this,arguments)
+  };
+  window.pro6SyncNow=fullSync;
+  document.addEventListener('DOMContentLoaded',()=>{installCloudNav();setTimeout(()=>{if(window.sessionUser)fullSync().catch(()=>{})},1200)});
+  window.addEventListener('load',()=>{installCloudNav();setTimeout(()=>{if(window.sessionUser)fullSync().catch(()=>{})},1500)});
+  if(window.sb?.auth?.onAuthStateChange){window.sb.auth.onAuthStateChange((event,session)=>{if(session?.user)setTimeout(()=>fullSync().catch(()=>{}),700);});}
 })();
 </script>
 </body>
