@@ -147,6 +147,11 @@
       </section>
 
       <section id="section-lessons" class="section">
+  <div id="lessonVideoIntegrity" class="info-box" style="margin:0 0 14px">
+  <b>Lessons & Videos</b> — This section reads your existing Supabase lesson records. Nothing in this file deletes lessons or video URLs. <button type="button" class="btn secondary small" id="checkLessonVideoIntegrity" style="margin-left:8px">Check data</button>
+  <span id="lessonVideoIntegrityText" class="muted" style="margin-left:8px"></span>
+</div>
+
         <div class="head"><div><h2>Lessons</h2><p>Manage English lessons, media, publishing and free/paid access.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
         <div class="toolbar"><select id="lessonGrade"><option value="">All Grades</option></select><select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select><input id="lessonSearch" placeholder="Search lessons…"><button class="btn secondary" id="lessonRefresh">Refresh</button></div>
         <div id="lessonsTable" class="table-wrap"></div>
@@ -323,10 +328,27 @@ async function uploadLessonVideo(file,gradeId,lessonId){
   if(!url)throw new Error('Video uploaded but public URL could not be created.');
   return url;
 }
+async function checkLessonVideoIntegrity(){
+  const out=document.getElementById('lessonVideoIntegrityText');
+  if(out)out.textContent='Checking…';
+  try{
+    const [all,withVideo]=await Promise.all([
+      db.from('lessons').select('id',{count:'exact',head:true}),
+      db.from('lessons').select('id',{count:'exact',head:true}).not('video_url','is',null)
+    ]);
+    if(all.error||withVideo.error){
+      if(out)out.textContent='Supabase read failed. Check the staff Lessons RLS policy.';
+      return;
+    }
+    if(out)out.textContent=(all.count??0)+' lessons • '+(withVideo.count??0)+' with video URLs';
+  }catch(e){ if(out)out.textContent='Could not check lesson/video data.'; }
+}
+
 async function loadLessons(){
   let q=db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published,created_at').order('sort_order',{ascending:true}).order('created_at',{ascending:false});const g=$('lessonGrade').value,t=$('lessonType').value;if(g)q=q.eq('grade_id',g);if(t)q=q.eq('lesson_type',t);const r=await q;if(r.error)return $('lessonsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('lessonSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.lesson_type||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('lessonsTable').innerHTML=rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Video</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${esc(units.find(u=>u.id===x.unit_id)?.title||'—')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.lesson_type)}</td><td><span class="pill ${x.video_url?'ok':'warn'}">${x.video_url?'Video ready':'No video'}</span></td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit / Video</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons found.</div>';
 }
 function lessonForm(title,x=null){const selectedGrade=x?.grade_id||'';openModal(title,`<form id="lessonForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="lGrade" required>${gradeOptions(selectedGrade)}</select></div><div class="form-row"><label>Unit</label><select id="lUnit">${unitOptions(selectedGrade,x?.unit_id||'')}</select></div><div class="form-row"><label>Title</label><input id="lTitle" value="${esc(x?.title||'')}" required></div><div class="form-row"><label>Type</label><select id="lType">${['lesson','grammar','vocabulary','reading','writing','listening'].map(v=>`<option ${v===(x?.lesson_type||'lesson')?'selected':''}>${v}</option>`).join('')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="lDuration" type="number" min="0" value="${Number(x?.duration_minutes||0)}"></div><div class="form-row"><label>Sort order</label><input id="lSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div><div class="form-row"><label>Access</label><select id="lFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free lesson</option></select></div><div class="form-row"><label>Publishing</label><select id="lPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div><div class="form-row full"><label>Description</label><textarea id="lDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Lesson content</label><textarea id="lContent" style="min-height:170px">${esc(x?.content||'')}</textarea></div><div class="form-row full"><label>Real lesson video file</label><input id="lVideoFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime"><small class="muted">Upload the actual video file. MP4 is recommended. Maximum 500 MB.</small>${x?.video_url?'<div class="pill ok" style="margin-top:7px">A video is already attached to this lesson.</div>':''}</div><div class="form-row full"><label>Existing video URL (optional fallback)</label><input id="lVideo" value="${esc(x?.video_url||'')}" placeholder="Leave as-is when using the uploaded video"></div></div><button class="btn" id="lessonSaveBtn">Save Lesson</button></form>`);$('lGrade').onchange=()=>{$('lUnit').innerHTML=unitOptions($('lGrade').value,'')};$('lessonForm').onsubmit=async e=>{e.preventDefault();const btn=$('lessonSaveBtn');if(btn)btn.disabled=true;try{const p={grade_id:$('lGrade').value,unit_id:$('lUnit').value||null,title:$('lTitle').value.trim(),lesson_type:$('lType').value,duration_minutes:Number($('lDuration').value||0),sort_order:Number($('lSort').value||0),is_free:$('lFree').value==='true',is_published:$('lPub').value==='true',description:$('lDesc').value.trim(),content:$('lContent').value.trim(),video_url:$('lVideo').value.trim(),updated_at:new Date().toISOString()};const r=x?await db.from('lessons').update(p).eq('id',x.id).select('id'):await db.from('lessons').insert(p).select('id');if(r.error)throw new Error('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(row=>row.id))throw new Error('Lesson save was not confirmed. Check INSERT/UPDATE RLS/permissions.');const lessonId=x?.id||r.data[0].id;const file=$('lVideoFile')?.files?.[0];if(file){toast('Lesson saved. Uploading video…');const videoUrl=await uploadLessonVideo(file,$('lGrade').value,lessonId);const vr=await db.from('lessons').update({video_url:videoUrl,updated_at:new Date().toISOString()}).eq('id',lessonId).select('id,video_url');if(vr.error)throw new Error('Video uploaded but lesson update failed: '+vr.error.message);if(!Array.isArray(vr.data)||!vr.data.some(row=>row.id===lessonId&&row.video_url===videoUrl))throw new Error('Video URL was not saved to the lesson.');}closeModal();toast(file?'Lesson and real video saved successfully.':'Lesson saved.');await loadLessons();await loadDashboard()}catch(err){toast(err?.message||String(err))}finally{if(btn)btn.disabled=false}}}
+$('checkLessonVideoIntegrity')?.addEventListener('click',checkLessonVideoIntegrity);
 $('newLesson').onclick=()=>lessonForm('New Lesson');
 async function editLesson(id){const r=await db.from('lessons').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);lessonForm('Edit Lesson',r.data)}
 async function toggleLessonPublish(id,v){const r=await db.from('lessons').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id,is_published');if(r.error)return toast('Lesson update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===v))return toast('Lesson update was not confirmed. Check UPDATE RLS/permissions.');await loadLessons();await loadDashboard()}
@@ -429,7 +451,7 @@ async function start(){
       }
       window.__domaStaffProfile=staff.profile;
       $('login').style.display='none';$('app').style.display='block';
-      await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();return true;
+      await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();setTimeout(checkLessonVideoIntegrity,500);return true;
     }catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}
     finally{state.startPromise=null}
   })();return state.startPromise
