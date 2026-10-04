@@ -256,7 +256,29 @@ $('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').on
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
 
 async function authUser(){return (await db.auth.getUser()).data.user}
-async function getStaffProfile(){const u=await authUser();if(!u)return null;const r=await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle();if(r.error||!r.data)return null;return ['admin','teacher'].includes(r.data.role)?r.data:null}
+async function getStaffProfile(){
+  const u=await authUser();
+  if(!u)return {ok:false,reason:'no_session',message:'No authenticated Supabase user.'};
+  // Prefer the SECURITY DEFINER staff helper so profile RLS cannot hide a valid staff account.
+  try{
+    const rpc=await db.rpc('doma_get_my_staff_profile');
+    if(!rpc.error && rpc.data){
+      const row=Array.isArray(rpc.data)?rpc.data[0]:rpc.data;
+      if(row && ['admin','teacher'].includes(String(row.role||'').toLowerCase())){
+        return {ok:true,profile:{id:row.id||u.id,full_name:row.full_name||'',email:row.email||u.email||'',role:String(row.role).toLowerCase()}};
+      }
+      if(row && row.role)return {ok:false,reason:'wrong_role',message:'Profile role is '+String(row.role),profile:row,user:u};
+      return {ok:false,reason:'missing_profile',message:'Authenticated user has no staff profile row.',user:u,profile:null};
+    }
+  }catch(e){console.warn('Staff RPC unavailable; falling back to direct profile read.',e)}
+
+  const r=await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle();
+  if(r.error)return {ok:false,reason:'profile_query',message:r.error.message,user:u,profile:null};
+  if(!r.data)return {ok:false,reason:'missing_profile',message:'No profile row was returned for this Auth user.',user:u,profile:null};
+  const role=String(r.data.role||'').toLowerCase();
+  if(!['admin','teacher'].includes(role))return {ok:false,reason:'wrong_role',message:'Profile role is '+(r.data.role||'unknown')+', not admin/teacher.',user:u,profile:r.data};
+  return {ok:true,profile:{...r.data,role}};
+}
 
 async function loadGrades(){
   const r=await db.from('grades').select('id,name,stage,sort_order,is_active').order('sort_order',{ascending:true});
@@ -392,7 +414,26 @@ async function checkConnection(){try{const s=await db.auth.getSession();$('conne
 
 async function start(){
   if(state.started)return true;if(state.startPromise)return state.startPromise;
-  state.startPromise=(async()=>{try{const s=await db.auth.getSession();if(!s.data.session)return false;const staff=await getStaffProfile();if(!staff){await db.auth.signOut();$('loginError').textContent='This account is not an academy admin/teacher, or the profiles row cannot be read.';return false}$('login').style.display='none';$('app').style.display='block';await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();return true}catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}finally{state.startPromise=null}})();return state.startPromise}
+  state.startPromise=(async()=>{
+    try{
+      const s=await db.auth.getSession();
+      if(!s.data.session)return false;
+      const staff=await getStaffProfile();
+      if(!staff.ok){
+        await db.auth.signOut();
+        if(staff.reason==='profile_query')$('loginError').textContent='Login succeeded, but Supabase blocked the staff profile read: '+staff.message;
+        else if(staff.reason==='missing_profile')$('loginError').textContent='Login succeeded, but this Auth account has no matching staff profile in public.profiles.';
+        else if(staff.reason==='wrong_role')$('loginError').textContent='Login succeeded, but this account has role “'+(staff.profile?.role||'unknown')+'”. Set the profile role to admin or teacher.';
+        else $('loginError').textContent=staff.message||'Staff verification failed.';
+        return false;
+      }
+      window.__domaStaffProfile=staff.profile;
+      $('login').style.display='none';$('app').style.display='block';
+      await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();return true;
+    }catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}
+    finally{state.startPromise=null}
+  })();return state.startPromise
+}
 
 $('loginForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter;const email=$('email').value.trim(),password=$('password').value;if(btn){btn.disabled=true;btn.textContent='Signing in…'}$('loginError').textContent='';try{const r=await db.auth.signInWithPassword({email,password});if(r.error){$('loginError').textContent='Login error: '+r.error.message;return}if(!(await start()))$('loginError').textContent=$('loginError').textContent||'Login succeeded, but staff verification failed.'}catch(ex){$('loginError').textContent='Unexpected error: '+(ex?.message||String(ex))}finally{if(btn){btn.disabled=false;btn.textContent='Login'}}};
 $('logout').onclick=async()=>{await db.auth.signOut();location.reload()};db.auth.onAuthStateChange(()=>setTimeout(checkConnection,0));
