@@ -22,11 +22,6 @@
 <style id="doma-daily-words-admin-css">
 .daily-word-preview{font-size:11px;line-height:1.55;max-width:330px}.daily-word-preview b{font-size:13px}.daily-word-preview .ar{color:#d7a9b5}.daily-word-preview .sentence{margin-top:4px;color:#c7b8bd}.audio-link{display:inline-flex;margin-top:5px;color:#e2a7b7;font-size:10px}.daily-actions{display:flex;gap:6px;flex-wrap:wrap}.daily-position{font-size:18px;font-weight:900}.daily-form-note{padding:10px;border:1px solid #432530;background:#160d11;border-radius:10px;color:#b9aab0;font-size:10px;line-height:1.5}
 </style>
-
-<style id="doma-pro6-admin-css">
-.doma-pro6-admin-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.doma-pro6-admin-card{padding:13px;background:linear-gradient(145deg,#130c0f,#0b090a);border:1px solid #30202a;border-radius:12px}.doma-pro6-admin-card small{display:block;font-size:8px;color:#786f73;text-transform:uppercase;letter-spacing:.08em}.doma-pro6-admin-card b{display:block;font-size:21px;margin-top:4px}.doma-pro6-admin-card span{display:block;font-size:8px;color:#81777b;margin-top:2px}.doma-pro6-admin-row{padding:9px 10px;border:1px solid #2b181f;border-radius:9px;background:#0f0a0c;margin-top:7px}.doma-pro6-admin-row-top{display:flex;justify-content:space-between;gap:10px}.doma-pro6-admin-bar{height:7px;background:#25171c;border-radius:99px;overflow:hidden;margin-top:5px}.doma-pro6-admin-bar i{display:block;height:100%;background:#b44361;border-radius:99px}.doma-pro6-checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.doma-pro6-check{padding:9px;border:1px solid #2b181f;background:#0e0a0c;border-radius:9px;font-size:9px}.doma-pro6-check input{width:auto}.doma-pro6-note{font-size:9px;color:#81777b;line-height:1.6;margin:10px 0}.doma-pro6-template{padding:11px;border:1px solid #2b181f;background:#0e0a0c;border-radius:10px;margin-top:8px}.doma-pro6-template strong{font-size:10px}.doma-pro6-template p{font-size:9px;color:#81777b;margin:4px 0 8px;white-space:pre-wrap}.doma-pro6-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:1100px){.doma-pro6-admin-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.doma-pro6-admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.doma-pro6-form-grid,.doma-pro6-checks{grid-template-columns:1fr}}
-</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -68,10 +63,6 @@
       <button class="nav-btn" data-section="reviews">★ Reviews</button>
       <div class="nav-title">Learning Tools</div>
       <button class="nav-btn" data-section="daily-words">🔊 Daily Words</button>
-      <div class="nav-title">Pro Control</div>
-      <button class="nav-btn" data-section="analytics">📊 Analytics</button>
-      <button class="nav-btn" data-section="teachers">👨‍🏫 Teachers</button>
-      <button class="nav-btn" data-section="exam-pro">⏱ Exam Pro</button>
       <div class="nav-title">System</div>
       <button class="nav-btn" data-section="settings">⚙ Settings</button>
       <button class="nav-btn" id="logout">↪ Logout</button>
@@ -184,22 +175,6 @@
   <div id="dailyWordsTable" class="table-wrap"></div>
 </section>
 
-<section id="section-analytics" class="section">
-  <div class="head"><div><h2>Academy Analytics</h2><p>Live learning, engagement and performance indicators from Supabase.</p></div><button class="btn secondary" id="domaAnalyticsRefresh">Refresh</button></div>
-  <div id="domaAnalyticsHost"></div>
-  <div class="grid-2" style="margin-top:14px"><div class="card"><h3>Performance by Grade</h3><div id="domaAnalyticsGrades"></div></div><div class="card"><h3>Activity — Last 7 Days</h3><div id="domaAnalyticsActivity"></div></div></div>
-</section>
-<section id="section-teachers" class="section">
-  <div class="head"><div><h2>Teacher Management</h2><p>Manage existing teacher accounts and assign them to academy grades.</p></div><button class="btn" id="domaNewTeacher">+ Promote Existing Account</button></div>
-  <div class="info-box" style="margin-bottom:14px">Teacher management promotes an existing profile to the <b>teacher</b> role. It does not create Supabase Auth accounts from the browser. Grade assignments use <b>teacher_grade_assignments</b>.</div>
-  <div id="domaTeachersTable" class="table-wrap"></div>
-</section>
-<section id="section-exam-pro" class="section">
-  <div class="head"><div><h2>Exam Pro</h2><p>Configure timing, randomization, attempt limits and pass targets.</p></div><button class="btn secondary" id="domaExamRefresh">Refresh</button></div>
-  <div class="info-box" style="margin-bottom:14px">Rules are stored in <b>quiz_pro_settings</b>. The student page continues to use the existing secure quiz RPC.</div>
-  <div id="domaExamProTable" class="table-wrap"></div>
-</section>
-
 <section id="section-settings" class="section"><div class="head"><div><h2>Settings</h2><p>Production connection and academy payment settings.</p></div></div><div class="grid-2"><div class="card"><h3>Academy</h3><p><b>Brand:</b> DOMA ACADEMY</p><p><b>Footer:</b> BY ADHAM</p><p><b>Audience:</b> Egyptian preparatory and secondary students</p></div><div class="card"><h3>Mobile Cash</h3><p><b>Payment number:</b> 01006525147</p><p><b>Proof bucket:</b> payment-proofs (private)</p><p class="muted">Monthly: 150 EGP for every grade. Annual subscriptions are disabled in the current production setup.</p></div></div><div class="info-box" style="margin-top:14px">After running the Production Setup SQL, all staff CRUD is protected by RLS. Student quiz scoring is handled server-side through an RPC so correct_answer is not exposed to the browser.</div></section>
     </div>
   </main>
@@ -233,6 +208,7 @@ function show(name){current=name;document.querySelectorAll('.section').forEach(s
 $('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
 
+aSync=async()=>{};
 async function authUser(){return (await db.auth.getUser()).data.user}
 async function getStaffProfile(){const u=await authUser();if(!u)return null;const r=await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle();if(r.error||!r.data)return null;return ['admin','teacher'].includes(r.data.role)?r.data:null}
 
@@ -462,7 +438,46 @@ async function loadThirdSecondarySummary(){
 }
 
 
-window.loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
+async function loadThirdSecondarySummary(){
+  if(typeof db==='undefined')return;
+  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
+  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
+  const id=g.data.id;
+  const [u,l,q]=await Promise.all([
+    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
+    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
+    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
+  ]);
+  const ls=l.data||[];
+  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
+  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
+  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
+  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
+  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
+  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
+}
+
+
+async function loadThirdSecondarySummary(){
+  if(typeof db==='undefined')return;
+  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
+  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
+  const id=g.data.id;
+  const [u,l,q]=await Promise.all([
+    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
+    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
+    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
+  ]);
+  const ls=l.data||[];
+  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
+  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
+  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
+  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
+  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
+  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
+}
+
+loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
 $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
 </script>
 
@@ -509,7 +524,7 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
 })();
 </script>
 
-<script id="doma-daily-words-admin-script">
+\n<script id="doma-daily-words-admin-script">
 (function(){
   'use strict';
   const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Cairo'}).format(new Date());
@@ -561,8 +576,17 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
   }
   window.editDailyWord=async function(id){const r=await db.from('daily_words').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);dailyWordForm('Edit Daily Word',r.data)};
   window.deleteDailyWord=async function(id){
-     await window.deletePersisted('daily_words',id,'Daily Word',loadDailyWords);
-   };
+    if(!confirm('Delete this Daily Word permanently?'))return;
+    const r=await db.from('daily_words').delete().eq('id',id).select('id');
+    if(r.error)return toast('Delete failed: '+r.error.message);
+    const returned=Array.isArray(r.data)&&r.data.some(row=>row.id===id);
+    if(!returned)return toast('Nothing was deleted. Check DELETE RLS/permissions.');
+    const verify=await db.from('daily_words').select('id').eq('id',id).maybeSingle();
+    if(verify.error)return toast('Delete verification failed: '+verify.error.message);
+    if(verify.data)return toast('Delete did not persist. The Daily Word still exists.');
+    toast('Daily Word deleted permanently.');
+    await loadDailyWords();
+  };
   window.toggleDailyWord=async function(id,value){const r=await db.from('daily_words').update({is_published:value}).eq('id',id).select('id,is_published');if(r.error)return toast('Update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===value))return toast('Daily Word update was not confirmed. Check UPDATE RLS/permissions.');await loadDailyWords()};
   $('newDailyWord')?.addEventListener('click',()=>dailyWordForm('New Daily Word'));
   $('dailyWordsRefresh')?.addEventListener('click',loadDailyWords);
@@ -572,8 +596,7 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
   $('dailyWordsPublished')?.addEventListener('change',loadDailyWords);
   window.loadDailyWords=loadDailyWords;
 })();
-</script>
-
+</script>\n
 <style id="doma-pro-admin-v3-css">
 .student-pro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.student-pro-stat{background:#100a0c;border:1px solid #33202a;border-radius:11px;padding:12px}.student-pro-stat small{display:block;color:#82767b;font-size:9px;text-transform:uppercase}.student-pro-stat b{display:block;font-size:18px;margin-top:5px}.history-row{padding:10px;border:1px solid #30202a;border-radius:10px;background:#0d090a;margin-bottom:7px}.history-row strong{font-size:12px}.history-row span{font-size:10px;color:#8d8186}.expiry-badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;background:#422d12;color:#f0cf79}.expiry-badge.ok{background:#173b2b;color:#a7e5c3}.wa-btn{background:#1d6d48!important}.admin-logo-mark{width:34px;height:34px;border-radius:10px;border:1px solid #432530;display:inline-grid;place-items:center;background:#180d12;margin-right:8px;vertical-align:middle}
 @media(max-width:900px){.student-pro-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.student-pro-grid{grid-template-columns:1fr}}
@@ -753,32 +776,8 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
     const host=$('certTable');if(!host)return;const r=await db.from('certificates').select('id,title,issued_at,certificate_code,student_id,profiles(full_name,email)').order('issued_at',{ascending:false});if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
     const rows=r.data||[];host.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Certificate</th><th>Code</th><th>Issued</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.profiles?.full_name||'Student')+'</b><div class="muted">'+esc(x.profiles?.email||'')+'</div></td><td>'+esc(x.title)+'</td><td>'+esc(x.certificate_code)+'</td><td>'+fmtDate(x.issued_at)+'</td><td><button class="btn secondary small" onclick="printAdminCertificate(\''+esc(x.title)+'\',\''+esc(x.certificate_code)+'\',\''+esc(x.issued_at)+'\')">Print</button><button class="btn danger small" onclick="deleteCertificate(\''+x.id+'\')">Delete</button></td></tr>').join('')+'</tbody></table>':'<div class="empty">No certificates yet.</div>';
   };
-  window.printAdminCertificate=function(title,code,issued){
-    const w=window.open('','_blank','width=1000,height=700');if(!w)return;
-    const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    const html='<!doctype html><html><head><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee}.cert{width:850px;padding:65px;text-align:center;background:#fff;border:12px double #762337}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>';
-    w.document.write(html);w.document.close();w.focus();w.print()};
+  window.printAdminCertificate=function(title,code,issued){const w=window.open('','_blank','width=1000,height=700');if(!w)return;const safe=t=>String(t??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));w.document.write('<!doctype html><html><head><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee}.cert{width:850px;padding:65px;text-align:center;background:#fff;border:12px double #762337}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>');w.document.close();w.focus();w.print()};
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
-})();
-</script>
-
-<script id="doma-pro6-admin-upgrades">
-(function(){
- 'use strict';
- const E6=v=>typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
- const A6=v=>Math.max(0,Math.round(Number(v)||0)); const P6=(n,d)=>d?Math.round((Number(n)||0)/d*100):0;
- async function role6(){try{const u=(await db.auth.getUser()).data.user;if(!u)return null;return (await db.from('profiles').select('id,full_name,email,role').eq('id',u.id).maybeSingle()).data||null}catch(e){return null}}
- async function loadAnalytics6(){const host=$('domaAnalyticsHost');if(!host)return;host.innerHTML='<div class="empty">Loading analytics…</div>';try{const seven=new Date(Date.now()-7*86400000).toISOString();const [students,lessons,progress,attempts,hw,certs,subs,activity]=await Promise.all([db.from('profiles').select('id',{count:'exact',head:true}).eq('role','student'),db.from('lessons').select('id',{count:'exact',head:true}).eq('is_published',true),db.from('lesson_progress').select('student_id,completed,progress_percent,lessons(title,grade_id)').limit(3000),db.from('quiz_attempts').select('student_id,quiz_id,score,total_points,submitted_at,quizzes(title,grade_id)').limit(3000),db.from('homework_submissions').select('student_id,status,grade,submitted_at,homework(title,grade_id)').limit(3000),db.from('certificates').select('id',{count:'exact',head:true}),db.from('subscriptions').select('id,expires_at,status').eq('status','active').gt('expires_at',new Date().toISOString()).limit(3000),db.from('student_activity').select('student_id,activity_type,created_at').gte('created_at',seven).order('created_at',{ascending:false}).limit(5000)]);const pr=progress.data||[],at=attempts.data||[],hwRows=hw.data||[],subRows=subs.data||[],act=activity.data||[];const active7=new Set(act.map(x=>x.student_id).filter(Boolean)).size;const qPct=at.map(x=>Number(x.total_points)?Number(x.score)/Number(x.total_points)*100:0);const qAvg=qPct.length?Math.round(qPct.reduce((a,b)=>a+b,0)/qPct.length):0;const avgProg=pr.length?Math.round(pr.reduce((a,b)=>a+Number(b.progress_percent||0),0)/pr.length):0;const completed=pr.filter(x=>x.completed).length;const exp=subRows.filter(x=>new Date(x.expires_at).getTime()-Date.now()<=7*86400000).length;const cards=[['Students',students.count??0,'registered'],['Active 7d',active7,'students with activity'],['Published Lessons',lessons.count??0,'visible lessons'],['Avg Progress',avgProg+'%','tracked progress'],['Quiz Average',qAvg+'%','all attempts'],['Active Subs',subRows.length,'not expired'],['Homework',hwRows.length,'submissions'],['Certificates',certs.count??0,'issued'],['Expiring ≤ 7d',exp,'renewal attention'],['Activity Events',act.length,'last 7 days'],['Completed',completed,'lesson completions'],['Quiz Attempts',at.length,'recorded attempts']];host.innerHTML='<div class="doma-pro6-admin-grid">'+cards.map(c=>'<div class="doma-pro6-admin-card"><small>'+E6(c[0])+'</small><b>'+E6(c[1])+'</b><span>'+E6(c[2])+'</span></div>').join('')+'</div>';const map={};pr.forEach(x=>{const id=x.lessons?.grade_id||'unknown';map[id]??={done:0,total:0,prog:0};map[id].total++;if(x.completed)map[id].done++;map[id].prog+=Number(x.progress_percent||0)});const gn={};(grades||[]).forEach(g=>gn[g.id]=g.name);const gb=$('domaAnalyticsGrades');if(gb){const es=Object.entries(map);gb.innerHTML=es.length?es.map(([id,v])=>{const p=P6(v.prog,v.total);return '<div class="doma-pro6-admin-row"><div class="doma-pro6-admin-row-top"><span><b>'+E6(gn[id]||'Grade')+'</b><small style="display:block;color:#777;font-size:8px">'+v.done+' completed records</small></span><b>'+p+'%</b></div><div class="doma-pro6-admin-bar"><i style="width:'+p+'%"></i></div></div>'}).join(''):'<div class="empty">No progress data yet.</div>'}const ab=$('domaAnalyticsActivity');if(ab){const m={};act.forEach(x=>m[x.activity_type]=(m[x.activity_type]||0)+1);const es=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,10);ab.innerHTML=es.length?es.map(x=>'<div class="doma-pro6-admin-row doma-pro6-admin-row-top"><span>'+E6(String(x[0]).replace(/_/g,' '))+'</span><b>'+x[1]+'</b></div>').join(''):'<div class="empty">No recent activity.</div>'}}catch(e){host.innerHTML='<div class="empty">Analytics failed: '+E6(e?.message||String(e))+'</div>'}}
- async function loadTeachers6(){const host=$('domaTeachersTable');if(!host)return;const rr=await role6(),isAdmin=rr?.role==='admin';const r=await db.from('profiles').select('id,full_name,email,role,created_at').eq('role','teacher').order('full_name');if(r.error){host.innerHTML='<div class="empty">'+E6(r.error.message)+'</div>';return}let map={};try{const a=await db.from('teacher_grade_assignments').select('id,teacher_id,grade_id');if(!a.error)(a.data||[]).forEach(x=>(map[x.teacher_id]??=[]).push(x.grade_id))}catch(e){}host.innerHTML=(r.data||[]).length?'<table><thead><tr><th>Teacher</th><th>Assigned Grades</th><th>Account</th><th>Action</th></tr></thead><tbody>'+(r.data||[]).map(t=>'<tr><td><b>'+E6(t.full_name||'Teacher')+'</b><div class="muted">'+E6(t.email||'')+'</div></td><td>'+E6((map[t.id]||[]).map(id=>(grades.find(g=>g.id===id)||{}).name).filter(Boolean).join(' • ')||'No grades assigned')+'</td><td>'+fmtDate(t.created_at)+'</td><td>'+(isAdmin?'<div class="actions"><button class="btn secondary small" data-tedit="'+E6(t.id)+'">Assign</button><button class="btn danger small" data-tdemote="'+E6(t.id)+'">Remove Role</button></div>':'<span class="muted">Admin only</span>')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No teacher accounts yet.</div>';host.querySelectorAll('[data-tedit]').forEach(b=>b.onclick=()=>assignTeacher6(b.dataset.tedit,map[b.dataset.tedit]||[]));host.querySelectorAll('[data-tdemote]').forEach(b=>b.onclick=()=>demote6(b.dataset.tdemote))}
- async function assignTeacher6(id,selected){const r=await db.from('profiles').select('full_name,email').eq('id',id).single();if(r.error)return toast(r.error.message);openModal('Assign Grades — '+E6(r.data.full_name||r.data.email),'<form id="domaTeacherAssignForm"><div class="form-row"><label>Grades</label><div class="doma-pro6-checks">'+(grades||[]).map(g=>'<label class="doma-pro6-check"><input type="checkbox" value="'+E6(g.id)+'" '+(selected.includes(g.id)?'checked':'')+'> '+E6(g.name)+'</label>').join('')+'</div></div><div class="doma-pro6-note">Assignments are stored separately from the student grade field.</div><button class="btn">Save Assignments</button></form>');$('domaTeacherAssignForm').onsubmit=async e=>{e.preventDefault();const picked=[...$('domaTeacherAssignForm').querySelectorAll('input:checked')].map(x=>x.value);const d=await db.from('teacher_grade_assignments').delete().eq('teacher_id',id);if(d.error)return toast('Reset failed: '+d.error.message);if(picked.length){const ins=await db.from('teacher_grade_assignments').insert(picked.map(g=>({teacher_id:id,grade_id:g})));if(ins.error)return toast('Save failed: '+ins.error.message)}closeModal();toast('Teacher assignments saved.');await loadTeachers6()}}
- async function demote6(id){const me=(await db.auth.getUser()).data.user?.id;if(me===id)return toast('You cannot remove your own teacher role here.');if(!confirm('Remove the teacher role from this account?'))return;const r=await db.from('profiles').update({role:'student'}).eq('id',id).select('id,role');if(r.error)return toast('Role update failed: '+r.error.message);toast('Teacher role removed.');await loadTeachers6()}
- $('domaNewTeacher').onclick=async()=>{const r=await role6();if(r?.role!=='admin')return toast('Only an admin can promote accounts.');const s=await db.from('profiles').select('id,full_name,email').eq('role','student').order('full_name').limit(500);if(s.error)return toast(s.error.message);openModal('Promote Existing Account','<form id="domaPromoteTeacherForm"><div class="form-row"><label>Existing student account</label><select id="domaTeacherStudent" required><option value="">Select account</option>'+(s.data||[]).map(x=>'<option value="'+E6(x.id)+'">'+E6(x.full_name||x.email)+' — '+E6(x.email||'')+'</option>').join('')+'</select></div><div class="doma-pro6-note">This changes only profiles.role. The existing Supabase Auth password remains unchanged.</div><button class="btn">Promote to Teacher</button></form>');$('domaPromoteTeacherForm').onsubmit=async e=>{e.preventDefault();const u=await db.from('profiles').update({role:'teacher'}).eq('id',$('domaTeacherStudent').value).select('id,role');if(u.error)return toast('Promotion failed: '+u.error.message);closeModal();toast('Teacher role added.');await loadTeachers6()}}
- async function loadExamPro6(){const host=$('domaExamProTable');if(!host)return;const q=await db.from('quizzes').select('id,grade_id,title,duration_minutes,is_published').order('created_at',{ascending:false});if(q.error){host.innerHTML='<div class="empty">'+E6(q.error.message)+'</div>';return}let settings=[];try{const s=await db.from('quiz_pro_settings').select('quiz_id,shuffle_questions,shuffle_options,attempts_limit,time_limit_minutes,pass_percent,show_review');if(!s.error)settings=s.data||[]}catch(e){}const sm=new Map(settings.map(x=>[x.quiz_id,x]));host.innerHTML='<table><thead><tr><th>Quiz</th><th>Grade</th><th>Status</th><th>Rules</th><th>Action</th></tr></thead><tbody>'+(q.data||[]).map(x=>{const s=sm.get(x.id)||{};return '<tr><td><b>'+E6(x.title)+'</b><div class="muted">Base: '+A6(x.duration_minutes||20)+' min</div></td><td>'+E6(gradeName(x.grade_id))+'</td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Draft')+'</span></td><td><span class="doma-pro6-pill">'+(s.shuffle_questions?'Shuffle Q':'Fixed Q')+'</span> <span class="doma-pro6-pill">'+(s.shuffle_options?'Shuffle options':'Fixed options')+'</span> <span class="doma-pro6-pill">'+A6(s.attempts_limit||0)+' attempts</span> <span class="doma-pro6-pill">'+A6(s.time_limit_minutes||x.duration_minutes||20)+' min</span> <span class="doma-pro6-pill">Pass '+A6(s.pass_percent||50)+'%</span></td><td><button class="btn secondary small" data-epedit="'+E6(x.id)+'">Configure</button></td></tr>'}).join('')+'</tbody></table>';host.querySelectorAll('[data-epedit]').forEach(b=>b.onclick=()=>examForm6(b.dataset.epedit,sm.get(b.dataset.epedit)||{}))}
- async function examForm6(id,s){const q=await db.from('quizzes').select('id,title,duration_minutes').eq('id',id).single();if(q.error)return toast(q.error.message);const v={shuffle_questions:!!s.shuffle_questions,shuffle_options:!!s.shuffle_options,attempts_limit:Number(s.attempts_limit||0),time_limit_minutes:Number(s.time_limit_minutes||q.data.duration_minutes||20),pass_percent:Number(s.pass_percent||50),show_review:s.show_review!==false};openModal('Exam Pro — '+E6(q.data.title),'<form id="domaExamProForm"><div class="doma-pro6-form-grid"><div class="form-row"><label>Time limit</label><input id="epTime" type="number" min="1" max="300" value="'+v.time_limit_minutes+'"></div><div class="form-row"><label>Attempts limit (0 = unlimited)</label><input id="epAttempts" type="number" min="0" max="50" value="'+v.attempts_limit+'"></div><div class="form-row"><label>Pass percentage</label><input id="epPass" type="number" min="0" max="100" value="'+v.pass_percent+'"></div></div><div class="doma-pro6-checks"><label class="doma-pro6-check"><input id="epShuffleQ" type="checkbox" '+(v.shuffle_questions?'checked':'')+'> Shuffle questions</label><label class="doma-pro6-check"><input id="epShuffleO" type="checkbox" '+(v.shuffle_options?'checked':'')+'> Shuffle answer options</label><label class="doma-pro6-check"><input id="epReview" type="checkbox" '+(v.show_review?'checked':'')+'> Allow attempt review</label></div><div class="doma-pro6-note">The student timer auto-submits. Attempt limits can also be checked server-side by <b>doma_quiz_start_gate</b> after the SQL patch is installed.</div><button class="btn">Save Exam Rules</button></form>');$('domaExamProForm').onsubmit=async e=>{e.preventDefault();const p={quiz_id:id,time_limit_minutes:Math.max(1,Math.min(300,Number($('epTime').value)||20)),attempts_limit:Math.max(0,Math.min(50,Number($('epAttempts').value)||0)),pass_percent:Math.max(0,Math.min(100,Number($('epPass').value)||50)),shuffle_questions:$('epShuffleQ').checked,shuffle_options:$('epShuffleO').checked,show_review:$('epReview').checked,updated_at:new Date().toISOString()};const r=await db.from('quiz_pro_settings').upsert(p,{onConflict:'quiz_id'}).select('quiz_id');if(r.error){const hint=/relation .*quiz_pro_settings.*does not exist|PGRST205/i.test(r.error.message||'')?' Run the DOMA PRO6 SQL patch first.':'';return toast('Exam rules could not be saved: '+r.error.message+hint)}closeModal();toast('Exam Pro settings saved.');await loadExamPro6()}}
- async function openNotifPro6(){const s=await db.from('profiles').select('id,full_name,email,grade_id').eq('role','student').order('full_name').limit(1000);if(s.error)return toast(s.error.message);let templates=[];try{templates=JSON.parse(localStorage.getItem('doma_admin_notification_templates')||'[]')}catch(e){}openModal('Notification Pro','<form id="domaNotifProForm"><div class="doma-pro6-form-grid"><div class="form-row"><label>Target</label><select id="npTarget"><option value="all">All students</option><option value="grade">Students in a grade</option><option value="student">One student</option></select></div><div class="form-row" id="npTargetValueWrap"><label>Target value</label><select id="npTargetValue"></select></div></div><div class="form-row"><label>Title</label><input id="npTitle" required></div><div class="form-row"><label>Message</label><textarea id="npMessage" required></textarea></div><div class="form-row"><label>Saved template</label><div class="doma-pro6-template"><div class="actions"><select id="npTemplateSelect"><option value="">Select template</option>'+templates.map((t,i)=>'<option value="'+i+'">'+E6(t.name)+'</option>').join('')+'</select><button class="btn secondary small" type="button" id="npSaveTemplate">Save current</button></div></div></div><div class="doma-pro6-note">Bulk sending creates normal rows in the existing notifications table for every selected student.</div><button class="btn">Send Notification</button></form>');const tv=$('npTarget'),wrap=$('npTargetValueWrap'),val=$('npTargetValue');const sync=()=>{wrap.style.display=tv.value==='all'?'none':'block';val.innerHTML=tv.value==='grade'?(grades||[]).map(g=>'<option value="'+E6(g.id)+'">'+E6(g.name)+'</option>').join(''):(s.data||[]).map(x=>'<option value="'+E6(x.id)+'">'+E6(x.full_name||x.email)+' — '+E6(x.email||'')+'</option>').join('')};sync();tv.onchange=sync;$('npTemplateSelect').onchange=()=>{const t=templates[Number($('npTemplateSelect').value)];if(t){$('npTitle').value=t.title||'';$('npMessage').value=t.message||''}};$('npSaveTemplate').onclick=()=>{const name=prompt('Template name');if(!name)return;templates.push({name,title:$('npTitle').value.trim(),message:$('npMessage').value.trim()});try{localStorage.setItem('doma_admin_notification_templates',JSON.stringify(templates))}catch(e){}toast('Template saved on this admin browser.')};$('domaNotifProForm').onsubmit=async e=>{e.preventDefault();const target=tv.value,id=val.value;let ids=(s.data||[]).map(x=>x.id);if(target==='grade')ids=(s.data||[]).filter(x=>x.grade_id===id).map(x=>x.id);if(target==='student')ids=ids.filter(x=>x===id);if(!ids.length)return toast('No students match this target.');const rows=ids.map(id=>({student_id:id,title:$('npTitle').value.trim(),message:$('npMessage').value.trim()}));const r=await db.from('notifications').insert(rows).select('id');if(r.error)return toast('Bulk notification failed: '+r.error.message);closeModal();toast('Notification sent to '+rows.length+' student(s).');await loadNotifications()}}
- const nb=$('newNotification');if(nb){nb.textContent='+ Notification Pro';nb.onclick=openNotifPro6}
- const oldLS=window.loadSection;window.loadSection=function(n){if(n==='analytics')return loadAnalytics6();if(n==='teachers')return loadTeachers6();if(n==='exam-pro')return loadExamPro6();return oldLS.apply(this,arguments)};
- $('domaAnalyticsRefresh')?.addEventListener('click',loadAnalytics6);$('domaExamRefresh')?.addEventListener('click',loadExamPro6);window.domaRefreshAnalytics=loadAnalytics6;window.domaRefreshTeachers=loadTeachers6;window.domaRefreshExamPro=loadExamPro6;
 })();
 </script>
 </body>
