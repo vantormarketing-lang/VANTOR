@@ -175,12 +175,62 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 </style>
 <base target="_blank">
 
-<style id="doma-student-single-scroll-clean">
-/* Student Area: the drawer is the only vertical scroll container. */
-#drawer.show{overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:auto!important}
-#drawer.show .drawer-body,#drawer.show .drawer-side,#drawer.show .lesson-list,#drawer.show .quiz-scroll,#drawer.show .daily100-student-list,#drawer.show .global-search-results{overflow:visible!important;max-height:none!important;height:auto!important;overscroll-behavior:auto!important}
-#drawer.show .drawer-main{overflow:visible!important;height:auto!important;min-height:0!important}
-@media(min-width:701px){#drawer.show .drawer-side{position:sticky!important;top:12px!important;align-self:start!important}}
+<style id="doma-student-scroll-corrected">
+/* DOMA ACADEMY — Student Area: one stable viewport + one main scroll */
+#drawer.show{
+  display:block!important;
+  overflow:hidden!important;
+  padding:12px!important;
+}
+#drawer.show .drawer-shell{
+  width:100%!important;
+  height:calc(100vh - 24px)!important;
+  min-height:0!important;
+  max-height:calc(100vh - 24px)!important;
+  overflow:hidden!important;
+  display:grid!important;
+}
+#drawer.show .drawer-main{
+  min-width:0!important;
+  min-height:0!important;
+  height:100%!important;
+  overflow:hidden!important;
+}
+#drawer.show .drawer-body{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#drawer.show .drawer-side{
+  min-height:0!important;
+  max-height:none!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#drawer.show .lesson-list,
+#drawer.show .quiz-scroll,
+#drawer.show .daily100-student-list,
+#drawer.show .global-search-results{
+  max-height:none!important;
+  height:auto!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+}
+@media(max-width:700px){
+  #drawer.show .drawer-shell{
+    grid-template-columns:1fr!important;
+  }
+  #drawer.show .drawer-side{
+    max-height:none!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -558,8 +608,8 @@ async function renderDashboardData(profile,subs,reqs){
   $('dashNotice').textContent='Active access until '+fmtDate(currentSubscription?.expires_at)+' • '+'Monthly'+' • '+esc(currentGrade.name);
 }
 
-function openDrawer(view='overview'){if(!sessionUser){openAuth('login');return}$('drawer').classList.add('show');document.body.style.overflow='';document.documentElement.style.overflow='';$('drawer').scrollTop=0;studentView(view)}
-function closeDrawer(){$('drawer').classList.remove('show');document.body.style.overflow='';document.documentElement.style.overflow=''}
+function openDrawer(view='overview'){if(!sessionUser){openAuth('login');return}$('drawer').classList.add('show');document.body.style.overflow='hidden';$('drawerBody').scrollTop=0;studentView(view)}
+function closeDrawer(){$('drawer').classList.remove('show');document.body.style.overflow=''}
 function updateStudentShell(){const p=window.domaStudentProfile||{};$('userCard').innerHTML='<strong>'+esc(p.full_name||sessionUser?.email||'Student')+'</strong><span>'+esc(p.email||sessionUser?.email||'')+'</span><span style="display:block;margin-top:6px;color:#d18498">'+esc(currentGrade?.name||'No active grade')+'</span>'}
 
 async function ensureActiveGrade(){if(!sessionUser)return null;if(currentGrade&&currentSubscription)return {grade:currentGrade,sub:currentSubscription};const subs=await getActiveSubscriptions();if(!subs.length)return null;const s=subs[0],g=grades.find(x=>x.id===s.grade_id);if(!g)return null;currentGrade=g;currentSubscription=s;return {grade:g,sub:s}}
@@ -617,7 +667,7 @@ function domaLessonDisplayTitle(lesson,unitMap){
 async function openPublicLesson(title){
   if(!sessionUser){openAuth('login');showToast('Log in to open the lesson and watch its video.');return}
   $('drawer').classList.add('show');
-  document.body.style.overflow='';document.documentElement.style.overflow='';
+  document.body.style.overflow='hidden';
   try{
     await studentView('lessons');
     const wanted=String(title||'').trim().toLowerCase();
@@ -817,7 +867,47 @@ async function openHomework(id){
 async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';const file=$('hwFile')?.files?.[0]||null;if(!answer&&!file)return showStatus('hwStatus','Write an answer or attach a file before submitting.','error');if(file&&file.size>10*1024*1024)return showStatus('hwStatus','File must be 10 MB or less.','error');showStatus('hwStatus','Submitting…');let finalAnswer=answer;if(file){try{const ext=(file.name.split('.').pop()||'pdf').replace(/[^a-z0-9]/gi,'').toLowerCase()||'pdf';const path=sessionUser.id+'/'+id+'-'+Date.now()+'.'+ext;const up=await sb.storage.from('homework-submissions').upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});if(up.error)throw new Error(up.error.message);const pub=sb.storage.from('homework-submissions').getPublicUrl(path);const url=pub?.data?.publicUrl||'';if(url)finalAnswer=(answer?answer+'\n\n':'')+'Attached file: '+url;}catch(e){const msg=(e?.message||String(e));return showStatus('hwStatus','File upload failed: '+msg+(/bucket/i.test(msg)?' — create the "homework-submissions" bucket in Supabase Storage.':''),'error')}}const r=await sb.rpc('doma_submit_homework',{p_homework_id:id,p_answer_text:finalAnswer});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showStatus('hwStatus',r.error.message+hint,'error')}closeModal();showToast('Homework submitted successfully.');await renderStudentHomework();await refreshStudentState()}
 
 async function renderStudentCertificates(){const r=await sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',sessionUser.id).order('issued_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load certificates: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];$('drawerBody').innerHTML=rows.length?'<div class="cert-grid">'+rows.map(c=>'<div class="cert"><span class="pill">Certificate</span><h3 style="font-size:17px;margin-top:9px">'+esc(c.title)+'</h3><p style="font-size:10px;color:#888;margin-top:5px">Issued '+fmtDate(c.issued_at)+'</p><div class="cert-code">'+esc(c.certificate_code)+'</div><button type="button" class="btn secondary" style="margin-top:12px" data-action="print-certificate" data-title="'+esc(c.title)+'" data-code="'+esc(c.certificate_code)+'" data-issued="'+esc(c.issued_at)+'">Print / Save PDF</button></div>').join('')+'</div>':'<div class="empty">No certificates have been issued yet.</div>'}
-function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">BY ADHAM</p></div></body></html>');w.document.close();w.print()}
+function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">BY ADHAM</p></div>
+<script id="doma-student-wheel-routing">
+(function(){
+  'use strict';
+  function studentWheelRouter(e){
+    var drawer=document.getElementById('drawer');
+    if(!drawer || !drawer.classList.contains('show')) return;
+    var body=document.getElementById('drawerBody');
+    if(!body) return;
+
+    /* The content area keeps its normal native scrolling. */
+    if(body.contains(e.target)) return;
+
+    /* When the pointer is over the sidebar/header/empty drawer area,
+       route the wheel to the Student content area so the user never
+       has to hunt for a particular scrollbar. */
+    if(drawer.contains(e.target)){
+      var before=body.scrollTop;
+      body.scrollTop += e.deltaY;
+      if(body.scrollTop !== before || e.deltaY !== 0){
+        e.preventDefault();
+      }
+    }
+  }
+  document.addEventListener('wheel',studentWheelRouter,{passive:false});
+
+  /* Always open the Student Area at the top of its own content. */
+  var oldOpenDrawer=window.openDrawer;
+  if(typeof oldOpenDrawer==='function'){
+    window.openDrawer=function(view){
+      var result=oldOpenDrawer.apply(this,arguments);
+      var body=document.getElementById('drawerBody');
+      var drawer=document.getElementById('drawer');
+      if(body) body.scrollTop=0;
+      if(drawer) drawer.scrollTop=0;
+      return result;
+    };
+  }
+})();
+</script>
+</body></html>');w.document.close();w.print()}
 </script>
 <style id="doma-student-pro5plus-style">
 .pro5-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.pro5-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.pro5-card h3{margin:0 0 8px}.pro5-muted{opacity:.72;font-size:.9rem;line-height:1.6}.pro5-list{display:grid;gap:9px;margin-top:12px}.pro5-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-row small,.pro5-row span{display:block;opacity:.68}.pro5-input{width:100%;box-sizing:border-box;padding:11px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:inherit;outline:none}.pro5-textarea{min-height:130px;resize:vertical}.pro5-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.pro5-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.07);font-size:.78rem}.pro5-progress{height:9px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:8px}.pro5-progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#62d4ff,#8d7cff)}.pro5-reward{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:13px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06)}.pro5-reward .ico{font-size:1.6rem}.pro5-day{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:12px}.pro5-day div{padding:9px 4px;text-align:center;border-radius:11px;background:rgba(255,255,255,.045);font-size:.72rem}.pro5-day .on{background:rgba(98,212,255,.15);border:1px solid rgba(98,212,255,.25)}.pro5-note{padding:12px;border-radius:13px;background:rgba(255,255,255,.045);white-space:pre-wrap;line-height:1.6}.pro5-unread{box-shadow:inset 3px 0 0 #62d4ff}.pro5-assistant{min-height:180px;max-height:390px;overflow:auto;display:grid;gap:8px;padding:10px;background:rgba(0,0,0,.12);border-radius:14px}.pro5-msg{padding:10px 12px;border-radius:13px;line-height:1.55;max-width:90%}.pro5-msg.bot{background:rgba(98,212,255,.09);justify-self:start}.pro5-msg.user{background:rgba(255,255,255,.08);justify-self:end}.pro5-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.pro5-kpi div{padding:11px;text-align:center;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-kpi b{display:block;font-size:1.2rem}.pro5-empty{padding:20px;border-radius:14px;background:rgba(255,255,255,.04);text-align:center;opacity:.75}@media(max-width:850px){.pro5-grid{grid-template-columns:1fr}.pro5-kpi{grid-template-columns:repeat(2,1fr)}}
@@ -923,7 +1013,7 @@ async function submitReview(){const text=$('reviewText')?.value.trim()||'',ratin
 async function openDomaV2Reports(){
   if(!sessionUser)return openAuth('login');
   $('drawerTitle').textContent='Detailed Reports';$('drawerSubtitle').textContent='Your performance, progress and recent activity.';
-  $('drawerBody').innerHTML='<div class="empty">Loading your reports…</div>';$('drawer').classList.add('show');document.body.style.overflow='';document.documentElement.style.overflow='';
+  $('drawerBody').innerHTML='<div class="empty">Loading your reports…</div>';$('drawer').classList.add('show');document.body.style.overflow='hidden';
   const uid=sessionUser.id;
   const [p,subs,progress,attempts,homework,certs,activity]=await Promise.all([
     sb.from('profiles').select('full_name,email,phone,grade_id').eq('id',uid).maybeSingle(),
