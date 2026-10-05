@@ -174,6 +174,62 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .live-pill{border-color:#2f7f59!important;color:#a7e5c3!important;background:#10231a!important}
 </style>
 <base target="_blank">
+
+<style id="doma-student-single-scroll-final">
+/* Student Area: allow the mouse wheel to scroll the whole student page.
+   The drawer is the only scroll container; inner panels never trap the wheel. */
+#drawer.show{
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:auto!important;
+}
+#drawer.show .drawer-shell{
+  height:auto!important;
+  min-height:calc(100vh - 24px)!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#drawer.show .drawer-main{
+  min-height:0!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+#drawer.show .drawer-body{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+}
+#drawer.show .drawer-side{
+  overflow:visible!important;
+  max-height:none!important;
+  height:auto!important;
+}
+#drawer.show .lesson-list,
+#drawer.show .quiz-scroll,
+#drawer.show .daily100-student-list,
+#drawer.show .global-search-results{
+  max-height:none!important;
+  height:auto!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+}
+@media(min-width:701px){
+  #drawer.show .drawer-side{
+    position:sticky!important;
+    top:12px!important;
+    align-self:start!important;
+  }
+}
+@media(max-width:700px){
+  #drawer.show .drawer-side{
+    max-height:none!important;
+    overflow:visible!important;
+  }
+}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -550,8 +606,8 @@ async function renderDashboardData(profile,subs,reqs){
   $('dashNotice').textContent='Active access until '+fmtDate(currentSubscription?.expires_at)+' • '+'Monthly'+' • '+esc(currentGrade.name);
 }
 
-function openDrawer(view='overview'){if(!sessionUser){openAuth('login');return}$('drawer').classList.add('show');document.body.style.overflow='hidden';$('drawerBody').scrollTop=0;studentView(view)}
-function closeDrawer(){$('drawer').classList.remove('show');document.body.style.overflow=''}
+function openDrawer(view='overview'){if(!sessionUser){openAuth('login');return}$('drawer').classList.add('show');document.body.style.overflow='';document.documentElement.style.overflow='';$('drawer').scrollTop=0;studentView(view)}
+function closeDrawer(){$('drawer').classList.remove('show');document.body.style.overflow='';document.documentElement.style.overflow=''}
 function updateStudentShell(){const p=window.domaStudentProfile||{};$('userCard').innerHTML='<strong>'+esc(p.full_name||sessionUser?.email||'Student')+'</strong><span>'+esc(p.email||sessionUser?.email||'')+'</span><span style="display:block;margin-top:6px;color:#d18498">'+esc(currentGrade?.name||'No active grade')+'</span>'}
 
 async function ensureActiveGrade(){if(!sessionUser)return null;if(currentGrade&&currentSubscription)return {grade:currentGrade,sub:currentSubscription};const subs=await getActiveSubscriptions();if(!subs.length)return null;const s=subs[0],g=grades.find(x=>x.id===s.grade_id);if(!g)return null;currentGrade=g;currentSubscription=s;return {grade:g,sub:s}}
@@ -915,7 +971,7 @@ async function submitReview(){const text=$('reviewText')?.value.trim()||'',ratin
 async function openDomaV2Reports(){
   if(!sessionUser)return openAuth('login');
   $('drawerTitle').textContent='Detailed Reports';$('drawerSubtitle').textContent='Your performance, progress and recent activity.';
-  $('drawerBody').innerHTML='<div class="empty">Loading your reports…</div>';$('drawer').classList.add('show');document.body.style.overflow='hidden';
+  $('drawerBody').innerHTML='<div class="empty">Loading your reports…</div>';$('drawer').classList.add('show');document.body.style.overflow='';document.documentElement.style.overflow='';
   const uid=sessionUser.id;
   const [p,subs,progress,attempts,homework,certs,activity]=await Promise.all([
     sb.from('profiles').select('full_name,email,phone,grade_id').eq('id',uid).maybeSingle(),
