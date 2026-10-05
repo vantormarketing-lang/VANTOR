@@ -175,17 +175,59 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 </style>
 <base target="_blank">
 
-<style id="doma-student-scroll-fix-final">
-/* DOMA ACADEMY — Student navigation fix: one main scroll area */
-#drawer.show{overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:auto!important;}
-#drawer.show .drawer-shell{height:auto!important;min-height:calc(100vh - 24px)!important;max-height:none!important;overflow:visible!important;}
-#drawer.show .drawer-main{min-height:0!important;overflow:visible!important;}
-#drawer.show .drawer-body{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;overscroll-behavior:auto!important;}
+<style id="doma-student-single-scroll-final">
+/* Student Area: allow the mouse wheel to scroll the whole student page.
+   The drawer is the only scroll container; inner panels never trap the wheel. */
+#drawer.show{
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:auto!important;
+}
+#drawer.show .drawer-shell{
+  height:auto!important;
+  min-height:calc(100vh - 24px)!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#drawer.show .drawer-main{
+  min-height:0!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+#drawer.show .drawer-body{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+}
+#drawer.show .drawer-side{
+  overflow:visible!important;
+  max-height:none!important;
+  height:auto!important;
+}
+#drawer.show .lesson-list,
+#drawer.show .quiz-scroll,
+#drawer.show .daily100-student-list,
+#drawer.show .global-search-results{
+  max-height:none!important;
+  height:auto!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+}
 @media(min-width:701px){
-  #drawer.show .drawer-side{position:sticky!important;top:12px!important;align-self:start!important;height:calc(100vh - 24px)!important;max-height:calc(100vh - 24px)!important;overflow-y:auto!important;overflow-x:hidden!important;}
+  #drawer.show .drawer-side{
+    position:sticky!important;
+    top:12px!important;
+    align-self:start!important;
+  }
 }
 @media(max-width:700px){
-  #drawer.show .drawer-side{max-height:none!important;overflow:visible!important;}
+  #drawer.show .drawer-side{
+    max-height:none!important;
+    overflow:visible!important;
+  }
 }
 </style>
 </head>
