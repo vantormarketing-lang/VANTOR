@@ -194,6 +194,9 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 @media(max-width:760px){#domaBattleModal{padding:8px}.doma-battle-shell{min-height:calc(100vh - 16px)}.doma-battle-body{padding:14px}.doma-battle-grid{grid-template-columns:1fr}.doma-battle-live{grid-template-columns:1fr auto 1fr}.doma-battle-question h3{font-size:16px}.doma-battle-code{font-size:24px;letter-spacing:2px}.doma-battle-players{grid-template-columns:1fr 1fr}}
 </style>
 
+<style id="doma-battle-history-css">
+.doma-battle-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.doma-battle-section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.doma-battle-section-head h3{margin:0}.doma-battle-history{display:grid;gap:8px}.doma-battle-history-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid #2c191f;border-radius:11px;background:#0b090a}.doma-battle-history-row b{font-size:11px}.doma-battle-history-score{display:flex;align-items:flex-end;flex-direction:column;gap:3px}.doma-battle-history-score span{font-weight:900}.doma-battle-history-score small{font-size:9px;color:#8e8387}.doma-battle-table-wrap{overflow:auto}.doma-battle-table{width:100%;border-collapse:collapse;font-size:10px}.doma-battle-table th,.doma-battle-table td{padding:10px 8px;border-bottom:1px solid #24151a;text-align:left;white-space:nowrap}.doma-battle-table th{color:#8e8387;font-size:9px;text-transform:uppercase}.doma-battle-table tr.me{background:#170d11}.doma-battle-muted{color:#8e8387;font-size:10px}@media(max-width:760px){.doma-battle-tools{flex-direction:column}.doma-battle-tools .btn{width:100%}.doma-battle-history-row{align-items:flex-start;flex-direction:column}.doma-battle-history-score{align-items:flex-start}}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -2055,12 +2058,12 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 <script id="doma-battle-isolated-js">
 (function(){
   'use strict';
-  const X=window.DomaBattle={channel:null,room:'',role:'',player:null,host:null,guest:null,quiz:null,questions:[],index:0,deadline:0,answered:false,finished:false,timer:null,oldOverflow:''};
+  const X=window.DomaBattle={channel:null,room:'',role:'',player:null,host:null,guest:null,quiz:null,gradeId:null,questions:[],index:0,deadline:0,answered:false,finished:false,resultSaved:false,timer:null,oldOverflow:''};
   const escB=v=>typeof esc==='function'?esc(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const body=()=>document.getElementById('domaBattleBody');
   const modal=()=>document.getElementById('domaBattleModal');
   function closeChannel(){try{if(X.channel)X.channel.unsubscribe();}catch(e){}X.channel=null;clearInterval(X.timer);X.timer=null}
-  function reset(){closeChannel();X.room='';X.role='';X.player=null;X.host=null;X.guest=null;X.quiz=null;X.questions=[];X.index=0;X.deadline=0;X.answered=false;X.finished=false}
+  function reset(){closeChannel();X.room='';X.role='';X.player=null;X.host=null;X.guest=null;X.quiz=null;X.gradeId=null;X.questions=[];X.index=0;X.deadline=0;X.answered=false;X.finished=false;X.resultSaved=false}
   function showStatus(msg){const el=document.getElementById('domaBattleStatus');if(el)el.textContent=msg}
   async function playerName(){
     if(!sessionUser)return 'Student';
@@ -2099,7 +2102,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     document.getElementById('domaBattleTitle').textContent='Battle Mode ⚔';
     document.getElementById('domaBattleSubtitle').textContent='Live 1v1 challenge — same questions, direct result.';
     body().innerHTML='<div class="doma-battle-grid"><div class="doma-battle-card"><h3>Create a Battle</h3><div class="doma-battle-form"><select id="domaBattleQuiz" class="field"><option value="">Loading quizzes…</option></select><select id="domaBattleCount" class="field"><option value="5">5 questions</option><option value="10" selected>10 questions</option><option value="15">15 questions</option><option value="20">20 questions</option></select><button class="btn primary" type="button" id="domaBattleCreate">Create Battle Room →</button><div class="doma-battle-note">Both players receive the same questions. Each question lasts 15 seconds.</div></div></div><div class="doma-battle-card"><h3>Join a Battle</h3><div class="doma-battle-form"><input id="domaBattleCodeInput" class="field" placeholder="DOMA-AB12-CD" maxlength="11" autocomplete="off"><button class="btn secondary" type="button" id="domaBattleJoin">Join Battle →</button><div class="doma-battle-note">Enter the code from the student who created the room.</div></div></div></div>'+(message?'<div class="doma-battle-status" style="margin-top:14px">'+escB(message)+'</div>':'');
-    document.getElementById('domaBattleCreate').onclick=createBattle;document.getElementById('domaBattleJoin').onclick=joinBattle;loadQuizzes();
+    body().insertAdjacentHTML('beforeend','<div class="doma-battle-tools"><button class="btn secondary" type="button" id="domaBattleHistoryBtn">📜 Battle History</button><button class="btn secondary" type="button" id="domaBattleLeaderboardBtn">🏆 Leaderboard</button></div><div id="domaBattleExtra"></div>');document.getElementById('domaBattleCreate').onclick=createBattle;document.getElementById('domaBattleJoin').onclick=joinBattle;document.getElementById('domaBattleHistoryBtn').onclick=showHistory;document.getElementById('domaBattleLeaderboardBtn').onclick=showLeaderboard;loadQuizzes();
   }
   window.openDomaBattle=async function(){
     if(!sessionUser)return openAuth('login');
@@ -2113,20 +2116,20 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     if(!sessionUser)return openAuth('login');const sel=document.getElementById('domaBattleQuiz');const count=Math.max(2,Math.min(20,Number(document.getElementById('domaBattleCount')?.value||10)));const quizId=sel?.value;if(!quizId)return showToast('Choose a published quiz first.');
     const q=await sb.from('quiz_questions').select('id,quiz_id,question,options,correct_answer,answer,points,sort_order').eq('quiz_id',quizId).order('sort_order',{ascending:true});
     if(q.error)return showToast('Could not load Battle questions: '+q.error.message);let rows=q.data||[];if(rows.length<2)return showToast('This quiz needs at least 2 questions for Battle Mode.');rows=rows.sort(()=>Math.random()-.5).slice(0,count);
-    X.role='host';X.room=makeCode();X.player={id:sessionUser.id,name:await playerName()};X.host={id:X.player.id,name:X.player.name,score:0,answered:false};X.guest=null;X.quiz={id:quizId,title:sel.selectedOptions[0]?.textContent||'Quiz'};X.questions=rows;X.index=0;
+    X.role='host';X.room=makeCode();X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};X.host={id:X.player.id,name:X.player.name,score:0,answered:false};X.guest=null;X.quiz={id:quizId,title:sel.selectedOptions[0]?.textContent||'Quiz'};X.questions=rows;X.index=0;
     try{await subscribeRoom(X.room)}catch(e){reset();return showToast('Battle connection failed. Please try again.')}
     renderLobby();send('join',{id:X.player.id,name:X.player.name});
   }
   async function joinBattle(){
     if(!sessionUser)return openAuth('login');const input=String(document.getElementById('domaBattleCodeInput')?.value||'').trim().toUpperCase();if(!/^DOMA-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(input))return showToast('Enter a valid Battle Code.');
-    X.role='guest';X.room=input;X.player={id:sessionUser.id,name:await playerName()};
+    X.role='guest';X.room=input;X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};
     try{await subscribeRoom(X.room)}catch(e){return showToast('Could not connect to that Battle room.')}
     renderWaitingGuest('Connected. Waiting for Player 1…');send('join',{id:X.player.id,name:X.player.name});
   }
   function renderLobby(){body().innerHTML='<div class="doma-battle-card"><div class="eyebrow">BATTLE ROOM</div><div class="doma-battle-code">'+escB(X.room)+'</div><div class="doma-battle-status" id="domaBattleStatus">Waiting for Player 2…</div><div class="doma-battle-actions"><button class="btn secondary" type="button" onclick="domaBattleCopyCode()">Copy Code</button><button class="btn secondary" type="button" onclick="domaBattleLeave()">Leave</button><button class="btn primary" type="button" id="domaBattleStart" disabled>Start Battle</button></div></div><div class="doma-battle-card" style="margin-top:14px"><h3>'+escB(X.quiz?.title||'Quiz')+'</h3><p class="doma-battle-note">'+X.questions.length+' questions • 15 seconds per question • faster correct answers score more.</p><div class="doma-battle-players"><div class="doma-battle-player active"><div class="name">'+escB(X.host?.name||'You')+'</div><div class="score">0</div><span class="pill">Player 1</span></div><div class="doma-battle-player" id="domaBattleGuest"><div class="name">Waiting…</div><div class="score">—</div><span class="pill">Player 2</span></div></div></div>';document.getElementById('domaBattleStart').onclick=startBattle}
   function renderWaitingGuest(text){body().innerHTML='<div class="doma-battle-card"><div class="eyebrow">BATTLE ROOM</div><div class="doma-battle-code">'+escB(X.room)+'</div><div class="doma-battle-status" id="domaBattleStatus">'+escB(text)+'</div><div class="doma-battle-actions"><button class="btn secondary" type="button" onclick="domaBattleLeave()">Leave Battle</button></div></div>'}
-  function onJoin(p){if(X.role!=='host'||!p.id||p.id===X.host?.id)return;if(X.guest)return;X.guest={id:p.id,name:p.name||'Player 2',score:0,answered:false};const slot=document.getElementById('domaBattleGuest');if(slot)slot.innerHTML='<div class="name">'+escB(X.guest.name)+'</div><div class="score">0</div><span class="pill">Player 2 • Ready</span>';const btn=document.getElementById('domaBattleStart');if(btn)btn.disabled=false;showStatus('Player 2 joined. You can start the Battle now.');send('lobby',{host:X.host,guest:X.guest,quiz:X.quiz,count:X.questions.length})}
-  function onLobby(p){if(X.role!=='guest')return;X.host=p.host||null;X.guest=p.guest||null;X.quiz=p.quiz||null;renderWaitingGuest('Player 1 is ready. Waiting for Start…')}
+  function onJoin(p){if(X.role!=='host'||!p.id||p.id===X.host?.id)return;if(X.guest)return;X.guest={id:p.id,name:p.name||'Player 2',score:0,answered:false};const slot=document.getElementById('domaBattleGuest');if(slot)slot.innerHTML='<div class="name">'+escB(X.guest.name)+'</div><div class="score">0</div><span class="pill">Player 2 • Ready</span>';const btn=document.getElementById('domaBattleStart');if(btn)btn.disabled=false;showStatus('Player 2 joined. You can start the Battle now.');send('lobby',{host:X.host,guest:X.guest,quiz:X.quiz,count:X.questions.length,gradeId:X.gradeId})}
+  function onLobby(p){if(X.role!=='guest')return;X.host=p.host||null;X.guest=p.guest||null;X.quiz=p.quiz||null;X.gradeId=p.gradeId||X.gradeId;renderWaitingGuest('Player 1 is ready. Waiting for Start…')}
   function publicQ(q){let opts=q?.options;try{if(typeof opts==='string')opts=JSON.parse(opts)}catch(e){}if(!Array.isArray(opts))opts=[];return {id:q.id,question:q.question||'',options:opts.map(String),points:Number(q.points||1),sort_order:q.sort_order||0}}
   function startBattle(){if(X.role!=='host'||!X.guest)return;X.index=0;X.host.answered=false;X.guest.answered=false;sendQuestion()}
   function sendQuestion(){if(X.index>=X.questions.length)return finishBattle();X.answered=false;X.host.answered=false;if(X.guest)X.guest.answered=false;X.deadline=Date.now()+15000;const packet={index:X.index,total:X.questions.length,deadline:X.deadline,question:publicQ(X.questions[X.index]),questions:X.questions.map(publicQ),quiz:X.quiz};renderQuestion(publicQ(X.questions[X.index]));send('start',packet);startTimer()}
@@ -2141,7 +2144,57 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   function advanceQuestion(){if(X.role!=='host')return;if(X.finished)return;if(X.host&&!X.host.answered)X.host.answered=true;if(X.guest&&!X.guest.answered)X.guest.answered=true;X.index++;if(X.index>=X.questions.length){finishBattle();return}X.deadline=Date.now()+15000;send('next',{index:X.index,deadline:X.deadline});setTimeout(()=>sendQuestion(),30)}
   function finishBattle(){if(X.finished)return;X.finished=true;clearInterval(X.timer);X.timer=null;const h=Number(X.host?.score||0),g=Number(X.guest?.score||0),winner=h===g?'draw':(h>g?'host':'guest');send('finish',{hostScore:h,guestScore:g,winner});renderResult(h,g,winner)}
   function onFinish(p){if(X.finished)return;X.finished=true;clearInterval(X.timer);X.timer=null;renderResult(Number(p.hostScore||0),Number(p.guestScore||0),p.winner)}
-  function renderResult(h,g,w){const me=X.role==='host'?'host':'guest';const win=w==='draw'?'DRAW':(w===me?'YOU WIN!':'YOU LOSE');const icon=w==='draw'?'🤝':(w===me?'🏆':'⚔️');document.getElementById('domaBattleTitle').textContent='Battle Result';document.getElementById('domaBattleSubtitle').textContent='The match is complete.';body().innerHTML='<div class="doma-battle-result"><div class="icon">'+icon+'</div><h2>'+win+'</h2><div class="doma-battle-muted">'+escB(X.host?.name||'Player 1')+' '+h+' — '+g+' '+escB(X.guest?.name||'Player 2')+'</div></div><div class="doma-battle-card" style="margin-top:14px"><div class="doma-battle-players"><div class="doma-battle-player '+(h>g?'active':'')+'"><div class="name">'+escB(X.host?.name||'Player 1')+'</div><div class="score">'+h+'</div></div><div class="doma-battle-player '+(g>h?'active':'')+'"><div class="name">'+escB(X.guest?.name||'Player 2')+'</div><div class="score">'+g+'</div></div></div><div class="doma-battle-actions"><button class="btn primary" type="button" onclick="openDomaBattle()">New Battle</button><button class="btn secondary" type="button" onclick="closeDomaBattle()">Close</button></div></div>'}
+  async function recordBattleResult(h,g){
+    if(X.resultSaved||!sessionUser||!X.room||!X.host?.id||!X.guest?.id)return;
+    X.resultSaved=true;
+    try{
+      const winnerId=h===g?null:(h>g?X.host.id:X.guest.id);
+      const r=await sb.rpc('doma_record_battle',{
+        p_room_code:X.room,
+        p_quiz_id:X.quiz?.id||null,
+        p_quiz_title:X.quiz?.title||'Quiz',
+        p_grade_id:X.gradeId||activeGradeId()||null,
+        p_player1_id:X.host.id,
+        p_player1_name:X.host.name||'Player 1',
+        p_player1_score:Number(h||0),
+        p_player2_id:X.guest.id,
+        p_player2_name:X.guest.name||'Player 2',
+        p_player2_score:Number(g||0),
+        p_winner_id:winnerId
+      });
+      if(r?.error){X.resultSaved=false;console.warn('Battle result save:',r.error.message)}
+    }catch(e){X.resultSaved=false;console.warn('Battle result save failed:',e)}
+  }
+  function battleResultLabel(r){return r==='win'?'🏆 Win':r==='loss'?'⚔ Loss':'🤝 Draw'}
+  async function showHistory(){
+    const host=document.getElementById('domaBattleExtra');if(!host||!sessionUser)return;
+    host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-muted">Loading your Battle History…</div></div>';
+    try{
+      const r=await sb.rpc('doma_battle_history',{p_student_id:sessionUser.id,p_limit:20});
+      if(r.error)throw r.error;
+      const rows=r.data||[];
+      host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-section-head"><h3>📜 Battle History</h3><button class="btn secondary" type="button" id="domaBattleHistoryClose">Close</button></div>'+
+        (rows.length?'<div class="doma-battle-history">'+rows.map(x=>'<div class="doma-battle-history-row"><div><b>'+escB(x.quiz_title||'Quiz')+'</b><div class="doma-battle-muted">vs '+escB(x.opponent_name||'Opponent')+' • '+new Date(x.played_at).toLocaleString()+'</div></div><div class="doma-battle-history-score"><span>'+Number(x.my_score||0)+' — '+Number(x.opponent_score||0)+'</span><small>'+battleResultLabel(x.result)+'</small></div></div>').join('')+'</div>':'<div class="doma-battle-muted">No completed battles yet.</div>')+'</div>';
+      document.getElementById('domaBattleHistoryClose').onclick=()=>{host.innerHTML=''};
+    }catch(e){host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-section-head"><h3>📜 Battle History</h3><button class="btn secondary" type="button" id="domaBattleHistoryClose">Close</button></div><div class="doma-battle-muted">Battle History needs the Battle SQL patch to be installed in Supabase.</div></div>';document.getElementById('domaBattleHistoryClose').onclick=()=>{host.innerHTML=''};}
+  }
+  async function showLeaderboard(){
+    const host=document.getElementById('domaBattleExtra');if(!host||!sessionUser)return;
+    host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-muted">Loading Leaderboard…</div></div>';
+    try{
+      const r=await sb.rpc('doma_battle_leaderboard',{p_grade_id:activeGradeId()||X.gradeId||null,p_limit:20});
+      if(r.error)throw r.error;
+      const rows=r.data||[];
+      host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-section-head"><h3>🏆 Battle Leaderboard</h3><button class="btn secondary" type="button" id="domaBattleLeaderboardClose">Close</button></div>'+
+        (rows.length?'<div class="doma-battle-table-wrap"><table class="doma-battle-table"><thead><tr><th>#</th><th>Student</th><th>Matches</th><th>Wins</th><th>Draws</th><th>Losses</th><th>Points</th></tr></thead><tbody>'+rows.map((x,i)=>'<tr class="'+(x.student_id===sessionUser.id?'me':'')+'"><td>'+(i+1)+'</td><td>'+escB(x.full_name||'Student')+(x.student_id===sessionUser.id?' <span class="pill">You</span>':'')+'</td><td>'+Number(x.matches||0)+'</td><td>'+Number(x.wins||0)+'</td><td>'+Number(x.draws||0)+'</td><td>'+Number(x.losses||0)+'</td><td><b>'+Number(x.points||0)+'</b></td></tr>').join('')+'</tbody></table></div>':'<div class="doma-battle-muted">No completed battles for this grade yet.</div>')+'</div>';
+      document.getElementById('domaBattleLeaderboardClose').onclick=()=>{host.innerHTML=''};
+    }catch(e){host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-section-head"><h3>🏆 Battle Leaderboard</h3><button class="btn secondary" type="button" id="domaBattleLeaderboardClose">Close</button></div><div class="doma-battle-muted">Leaderboard needs the Battle SQL patch to be installed in Supabase.</div></div>';document.getElementById('domaBattleLeaderboardClose').onclick=()=>{host.innerHTML=''};}
+  }
+  function renderResult(h,g,w){
+    recordBattleResult(h,g);
+    const me=X.role==='host'?'host':'guest';const win=w==='draw'?'DRAW':(w===me?'YOU WIN!':'YOU LOSE');const icon=w==='draw'?'🤝':(w===me?'🏆':'⚔️');document.getElementById('domaBattleTitle').textContent='Battle Result';document.getElementById('domaBattleSubtitle').textContent='The match is complete.';body().innerHTML='<div class="doma-battle-result"><div class="icon">'+icon+'</div><h2>'+win+'</h2><div class="doma-battle-muted">'+escB(X.host?.name||'Player 1')+' '+h+' — '+g+' '+escB(X.guest?.name||'Player 2')+'</div><div class="doma-battle-muted" style="margin-top:8px">Result is saved automatically when the Battle SQL patch is installed.</div></div><div class="doma-battle-card" style="margin-top:14px"><div class="doma-battle-players"><div class="doma-battle-player '+(h>g?'active':'')+'"><div class="name">'+escB(X.host?.name||'Player 1')+'</div><div class="score">'+h+'</div></div><div class="doma-battle-player '+(g>h?'active':'')+'"><div class="name">'+escB(X.guest?.name||'Player 2')+'</div><div class="score">'+g+'</div></div></div><div class="doma-battle-actions"><button class="btn primary" type="button" onclick="openDomaBattle()">New Battle</button><button class="btn secondary" type="button" onclick="domaBattleShowLeaderboard()">🏆 Leaderboard</button><button class="btn secondary" type="button" onclick="domaBattleShowHistory()">📜 History</button><button class="btn secondary" type="button" onclick="closeDomaBattle()">Close</button></div></div>'
+  }
+  window.domaBattleShowHistory=showHistory;window.domaBattleShowLeaderboard=showLeaderboard;
   function onLeave(p){if(X.finished)return;clearInterval(X.timer);if(X.role==='host'){X.guest=null;renderLobby();showStatus('Player 2 left the room. Waiting for another student…')}else renderWaitingGuest('Your opponent left the Battle.')}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal().classList.contains('show'))closeDomaBattle()});
   window.addEventListener('beforeunload',()=>{try{send('leave',{id:sessionUser?.id})}catch(e){}closeChannel()});
