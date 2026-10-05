@@ -2062,11 +2062,11 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 <script id="doma-battle-isolated-js">
 (function(){
   'use strict';
-  const X=window.DomaBattle={channel:null,room:'',role:'',player:null,host:null,guest:null,quiz:null,gradeId:null,questions:[],index:0,deadline:0,answered:false,finished:false,resultSaved:false,timer:null,oldOverflow:''};
+  const X=window.DomaBattle={channel:null,room:'',role:'',player:null,host:null,guest:null,quiz:null,gradeId:null,questions:[],index:0,deadline:0,answered:false,finished:false,resultSaved:false,timer:null,joinTimer:null,presenceTimer:null,oldOverflow:''};
   const escB=v=>typeof esc==='function'?esc(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const body=()=>document.getElementById('domaBattleBody');
   const modal=()=>document.getElementById('domaBattleModal');
-  function closeChannel(){try{if(X.channel)X.channel.unsubscribe();}catch(e){}X.channel=null;clearInterval(X.timer);X.timer=null}
+  function closeChannel(){try{if(X.channel)X.channel.unsubscribe();}catch(e){}X.channel=null;clearInterval(X.timer);X.timer=null;clearInterval(X.joinTimer);X.joinTimer=null;clearInterval(X.presenceTimer);X.presenceTimer=null}
   function reset(){closeChannel();X.room='';X.role='';X.player=null;X.host=null;X.guest=null;X.quiz=null;X.gradeId=null;X.questions=[];X.index=0;X.deadline=0;X.answered=false;X.finished=false;X.resultSaved=false}
   function showStatus(msg){const el=document.getElementById('domaBattleStatus');if(el)el.textContent=msg}
   async function playerName(){
@@ -2077,7 +2077,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   function send(event,payload){try{return X.channel?X.channel.send({type:'broadcast',event,payload:payload||{}}):null}catch(e){return null}}
   async function subscribeRoom(room){
     closeChannel();
-    X.channel=sb.channel('doma-academy-battle-'+room,{config:{broadcast:{self:false}}});
+    X.channel=sb.channel('doma-academy-battle-'+room,{config:{broadcast:{self:false},presence:{key:sessionUser.id}}});
     X.channel.on('broadcast',{event:'join'},x=>onJoin(x.payload||{}));
     X.channel.on('broadcast',{event:'lobby'},x=>onLobby(x.payload||{}));
     X.channel.on('broadcast',{event:'start'},x=>onStart(x.payload||{}));
@@ -2086,11 +2086,39 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     X.channel.on('broadcast',{event:'next'},x=>onNext(x.payload||{}));
     X.channel.on('broadcast',{event:'finish'},x=>onFinish(x.payload||{}));
     X.channel.on('broadcast',{event:'leave'},x=>onLeave(x.payload||{}));
+    X.channel.on('presence',{event:'sync'},()=>handlePresence());
+    X.channel.on('presence',{event:'join'},()=>handlePresence());
+    X.channel.on('presence',{event:'leave'},()=>handlePresence());
     return await new Promise((resolve,reject)=>{
-      let done=false;const finish=(ok,val)=>{if(done)return;done=true;ok?resolve(val):reject(val)};
+      let done=false;const finish=async(ok,val)=>{if(done)return;done=true;if(ok){try{await X.channel.track({id:sessionUser.id,name:X.player?.name||'Student',role:X.role})}catch(e){} handlePresence();resolve(val)}else reject(val)};
       X.channel.subscribe(status=>{if(status==='SUBSCRIBED')finish(true,true);else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')finish(false,new Error(status))});
       setTimeout(()=>finish(false,new Error('Battle connection timed out')),12000);
     });
+  }
+  function presenceUsers(){
+    try{
+      const state=X.channel?.presenceState?.()||{};const out=[];
+      Object.keys(state).forEach(key=>(state[key]||[]).forEach(item=>{if(item?.id&&item.id!==sessionUser?.id)out.push(item)}));
+      return out;
+    }catch(e){return []}
+  }
+  function handlePresence(){
+    if(!X.channel||!sessionUser)return;
+    const others=presenceUsers();
+    if(X.role==='host'&&!X.guest){
+      const p=others.find(x=>x.role==='guest'||x.role!=='host');
+      if(p){onJoin({id:p.id,name:p.name||'Player 2'});return;}
+    }
+    if(X.role==='guest'&&!X.host){
+      const p=others.find(x=>x.role==='host');
+      if(p){send('join',{id:X.player.id,name:X.player.name});}
+    }
+  }
+  function startJoinHeartbeat(){
+    clearInterval(X.joinTimer);
+    if(X.role!=='guest')return;
+    const ping=()=>{if(X.role==='guest'&&!X.host&&!X.finished)send('join',{id:X.player.id,name:X.player.name});};
+    ping();X.joinTimer=setInterval(ping,1200);
   }
   function activeGradeId(){return window.currentGrade?.id||currentGrade?.id||null}
   async function loadQuizzes(){
@@ -2122,18 +2150,18 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     if(q.error)return showToast('Could not load Battle questions: '+q.error.message);let rows=q.data||[];if(rows.length<2)return showToast('This quiz needs at least 2 questions for Battle Mode.');rows=rows.sort(()=>Math.random()-.5).slice(0,count);
     X.role='host';X.room=makeCode();X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};X.host={id:X.player.id,name:X.player.name,score:0,answered:false};X.guest=null;X.quiz={id:quizId,title:sel.selectedOptions[0]?.textContent||'Quiz'};X.questions=rows;X.index=0;
     try{await subscribeRoom(X.room)}catch(e){reset();return showToast('Battle connection failed. Please try again.')}
-    renderLobby();send('join',{id:X.player.id,name:X.player.name});
+    renderLobby();handlePresence();
   }
   async function joinBattle(){
     if(!sessionUser)return openAuth('login');const input=String(document.getElementById('domaBattleCodeInput')?.value||'').trim().toUpperCase();if(input==='DOMA-AB12-CD'||input==='DOMA-K7P2-XQ')return showToast('ده مثال فقط. استخدم الكود الحقيقي الظاهر عند Player 1 بعد Create Battle Room.');if(!/^DOMA-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(input))return showToast('Enter the REAL Battle Code from Player 1.');
     X.role='guest';X.room=input;X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};
     try{await subscribeRoom(X.room)}catch(e){return showToast('Could not connect to that Battle room.')}
-    renderWaitingGuest('Connected. Waiting for Player 1…');send('join',{id:X.player.id,name:X.player.name});
+    renderWaitingGuest('Connected. Waiting for Player 1…');startJoinHeartbeat();handlePresence();
   }
   function renderLobby(){body().innerHTML='<div class="doma-battle-card"><div class="eyebrow">BATTLE ROOM</div><div class="doma-battle-code">'+escB(X.room)+'</div><div class="doma-battle-status" id="domaBattleStatus">Waiting for Player 2…</div><div class="doma-battle-actions"><button class="btn secondary" type="button" onclick="domaBattleCopyCode()">Copy Code</button><button class="btn secondary" type="button" onclick="domaBattleLeave()">Leave</button><button class="btn primary" type="button" id="domaBattleStart" disabled>Start Battle</button></div></div><div class="doma-battle-card" style="margin-top:14px"><h3>'+escB(X.quiz?.title||'Quiz')+'</h3><p class="doma-battle-note">'+X.questions.length+' questions • 15 seconds per question • faster correct answers score more.</p><div class="doma-battle-players"><div class="doma-battle-player active"><div class="name">'+escB(X.host?.name||'You')+'</div><div class="score">0</div><span class="pill">Player 1</span></div><div class="doma-battle-player" id="domaBattleGuest"><div class="name">Waiting…</div><div class="score">—</div><span class="pill">Player 2</span></div></div></div>';document.getElementById('domaBattleStart').onclick=startBattle}
   function renderWaitingGuest(text){body().innerHTML='<div class="doma-battle-card"><div class="eyebrow">BATTLE ROOM</div><div class="doma-battle-code">'+escB(X.room)+'</div><div class="doma-battle-status" id="domaBattleStatus">'+escB(text)+'</div><div class="doma-battle-actions"><button class="btn secondary" type="button" onclick="domaBattleLeave()">Leave Battle</button></div></div>'}
-  function onJoin(p){if(X.role!=='host'||!p.id||p.id===X.host?.id)return;if(X.guest)return;X.guest={id:p.id,name:p.name||'Player 2',score:0,answered:false};const slot=document.getElementById('domaBattleGuest');if(slot)slot.innerHTML='<div class="name">'+escB(X.guest.name)+'</div><div class="score">0</div><span class="pill">Player 2 • Ready</span>';const btn=document.getElementById('domaBattleStart');if(btn)btn.disabled=false;showStatus('Player 2 joined. You can start the Battle now.');send('lobby',{host:X.host,guest:X.guest,quiz:X.quiz,count:X.questions.length,gradeId:X.gradeId})}
-  function onLobby(p){if(X.role!=='guest')return;X.host=p.host||null;X.guest=p.guest||null;X.quiz=p.quiz||null;X.gradeId=p.gradeId||X.gradeId;renderWaitingGuest('Player 1 is ready. Waiting for Start…')}
+  function onJoin(p){if(X.role!=='host'||!p.id||p.id===X.host?.id)return;if(X.guest&&X.guest.id===p.id)return;if(X.guest)return;X.guest={id:p.id,name:p.name||'Player 2',score:0,answered:false};const slot=document.getElementById('domaBattleGuest');if(slot)slot.innerHTML='<div class="name">'+escB(X.guest.name)+'</div><div class="score">0</div><span class="pill">Player 2 • Ready</span>';const btn=document.getElementById('domaBattleStart');if(btn)btn.disabled=false;showStatus('Player 2 joined. You can start the Battle now.');send('lobby',{host:X.host,guest:X.guest,quiz:X.quiz,count:X.questions.length,gradeId:X.gradeId});clearInterval(X.presenceTimer);X.presenceTimer=setInterval(()=>{if(X.role==='host'&&X.guest&&!X.finished)send('lobby',{host:X.host,guest:X.guest,quiz:X.quiz,count:X.questions.length,gradeId:X.gradeId});},1200)}
+  function onLobby(p){if(X.role!=='guest')return;X.host=p.host||null;X.guest=p.guest||null;X.quiz=p.quiz||null;X.gradeId=p.gradeId||X.gradeId;clearInterval(X.joinTimer);X.joinTimer=null;renderWaitingGuest('Player 1 is ready. Waiting for Start…')}
   function publicQ(q){let opts=q?.options;try{if(typeof opts==='string')opts=JSON.parse(opts)}catch(e){}if(!Array.isArray(opts))opts=[];return {id:q.id,question:q.question||'',options:opts.map(String),points:Number(q.points||1),sort_order:q.sort_order||0}}
   function startBattle(){if(X.role!=='host'||!X.guest)return;X.index=0;X.host.answered=false;X.guest.answered=false;sendQuestion()}
   function sendQuestion(){if(X.index>=X.questions.length)return finishBattle();X.answered=false;X.host.answered=false;if(X.guest)X.guest.answered=false;X.deadline=Date.now()+15000;const packet={index:X.index,total:X.questions.length,deadline:X.deadline,question:publicQ(X.questions[X.index]),questions:X.questions.map(publicQ),quiz:X.quiz};renderQuestion(publicQ(X.questions[X.index]));send('start',packet);startTimer()}
@@ -2230,9 +2258,8 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     const me=X.role==='host'?'host':'guest';const win=w==='draw'?'DRAW':(w===me?'YOU WIN!':'YOU LOSE');const icon=w==='draw'?'🤝':(w===me?'🏆':'⚔️');document.getElementById('domaBattleTitle').textContent='Battle Result';document.getElementById('domaBattleSubtitle').textContent='The match is complete.';body().innerHTML='<div class="doma-battle-result"><div class="icon">'+icon+'</div><h2>'+win+'</h2><div class="doma-battle-muted">'+escB(X.host?.name||'Player 1')+' '+h+' — '+g+' '+escB(X.guest?.name||'Player 2')+'</div><div class="doma-battle-muted" style="margin-top:8px">Result is saved automatically when the Battle SQL patch is installed.</div></div><div class="doma-battle-card" style="margin-top:14px"><div class="doma-battle-players"><div class="doma-battle-player '+(h>g?'active':'')+'"><div class="name">'+escB(X.host?.name||'Player 1')+'</div><div class="score">'+h+'</div></div><div class="doma-battle-player '+(g>h?'active':'')+'"><div class="name">'+escB(X.guest?.name||'Player 2')+'</div><div class="score">'+g+'</div></div></div><div class="doma-battle-actions"><button class="btn primary" type="button" onclick="openDomaBattle()">New Battle</button><button class="btn secondary" type="button" onclick="domaBattleShowLeaderboard()">🏆 Leaderboard</button><button class="btn secondary" type="button" onclick="domaBattleShowHistory()">📜 History</button><button class="btn secondary" type="button" onclick="closeDomaBattle()">Close</button></div></div>'
   }
   window.domaBattleShowHistory=showHistory;window.domaBattleShowLeaderboard=showLeaderboard;window.domaBattleShowAchievements=showAchievements;
-  function onLeave(p){if(X.finished)return;clearInterval(X.timer);if(X.role==='host'){X.guest=null;renderLobby();showStatus('Player 2 left the room. Waiting for another student…')}else renderWaitingGuest('Your opponent left the Battle.')}
+  function onLeave(p){if(X.finished)return;clearInterval(X.timer);clearInterval(X.joinTimer);X.joinTimer=null;clearInterval(X.presenceTimer);X.presenceTimer=null;if(X.role==='host'){X.guest=null;renderLobby();showStatus('Player 2 left the room. Waiting for another student…');handlePresence()}else renderWaitingGuest('Your opponent left the Battle.')}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal().classList.contains('show'))closeDomaBattle()});
   window.addEventListener('beforeunload',()=>{try{send('leave',{id:sessionUser?.id})}catch(e){}closeChannel()});
 })();
 </script>
-
