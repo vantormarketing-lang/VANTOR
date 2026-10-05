@@ -2001,14 +2001,20 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 
 <script id="doma-student-wheel-only-fix">
 (function(){
-  'use strict';
-  document.addEventListener('wheel', function(e){
+  function bindStudentWheel(){
     var drawer=document.getElementById('drawer');
-    var body=document.getElementById('drawerBody');
-    if(!drawer || !body || !drawer.classList.contains('show') || !e.deltaY) return;
-    e.preventDefault();
-    body.scrollTop += e.deltaY;
-  }, {passive:false});
+    if(!drawer || drawer.__studentWheelFixBound) return;
+    drawer.__studentWheelFixBound=true;
+    drawer.addEventListener('wheel',function(e){
+      if(!drawer.classList.contains('show') || !e.deltaY) return;
+      var body=document.getElementById('drawerBody');
+      if(!body) return;
+      e.preventDefault();
+      body.scrollTop += e.deltaY;
+    },{passive:false,capture:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindStudentWheel);
+  else bindStudentWheel();
 })();
 </script>
 </body>
