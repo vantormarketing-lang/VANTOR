@@ -2146,14 +2146,29 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   window.domaBattleLeave=function(){try{send('leave',{id:sessionUser?.id})}catch(e){}closeDomaBattle();openDomaBattle()}
   async function createBattle(){
     if(!sessionUser)return openAuth('login');const sel=document.getElementById('domaBattleQuiz');const count=Math.max(2,Math.min(20,Number(document.getElementById('domaBattleCount')?.value||10)));const quizId=sel?.value;if(!quizId)return showToast('Choose a published quiz first.');
-    const q=await sb.from('quiz_questions').select('id,quiz_id,question,options,correct_answer,answer,points,sort_order').eq('quiz_id',quizId).order('sort_order',{ascending:true});
-    if(q.error)return showToast('Could not load Battle questions: '+q.error.message);let rows=q.data||[];if(rows.length<2)return showToast('This quiz needs at least 2 questions for Battle Mode.');rows=rows.sort(()=>Math.random()-.5).slice(0,count);
+    /* Use select('*') here because the existing DOMA schema may not contain every optional answer column.
+       The previous explicit select could fail before the room code was generated. */
+    const q=await sb.from('quiz_questions').select('*').eq('quiz_id',quizId).order('sort_order',{ascending:true});
+    if(q.error)return showToast('Could not load Battle questions: '+q.error.message);
+    let rows=q.data||[];
+    if(rows.length<2)return showToast('This quiz needs at least 2 questions for Battle Mode.');
+    rows=rows.sort(()=>Math.random()-.5).slice(0,count);
     X.role='host';X.room=makeCode();X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};X.host={id:X.player.id,name:X.player.name,score:0,answered:false};X.guest=null;X.quiz={id:quizId,title:sel.selectedOptions[0]?.textContent||'Quiz'};X.questions=rows;X.index=0;
-    try{await subscribeRoom(X.room)}catch(e){reset();return showToast('Battle connection failed. Please try again.')}
+    try{
+      await subscribeRoom(X.room);
+    }catch(e){
+      const code=X.room;
+      renderLobby();
+      showStatus('Battle room created as '+code+'. Realtime connection failed — keep this page open and try Join from the other device.');
+      return;
+    }
     renderLobby();handlePresence();
   }
   async function joinBattle(){
-    if(!sessionUser)return openAuth('login');const input=String(document.getElementById('domaBattleCodeInput')?.value||'').trim().toUpperCase();if(input==='DOMA-AB12-CD'||input==='DOMA-K7P2-XQ')return showToast('ده مثال فقط. استخدم الكود الحقيقي الظاهر عند Player 1 بعد Create Battle Room.');if(!/^DOMA-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(input))return showToast('Enter the REAL Battle Code from Player 1.');
+    if(!sessionUser)return openAuth('login');
+    const input=String(document.getElementById('domaBattleCodeInput')?.value||'').replace(/\s+/g,'').trim().toUpperCase();
+    if(input==='DOMA-AB12-CD'||input==='DOMA-K7P2-XQ')return showToast('ده مثال فقط. استخدم الكود الحقيقي الظاهر عند Player 1 بعد Create Battle Room.');
+    if(!/^DOMA-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(input))return showToast('Enter the REAL Battle Code from Player 1.');
     X.role='guest';X.room=input;X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};
     try{await subscribeRoom(X.room)}catch(e){return showToast('Could not connect to that Battle room.')}
     renderWaitingGuest('Connected. Waiting for Player 1…');startJoinHeartbeat();handlePresence();
