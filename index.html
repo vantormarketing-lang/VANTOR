@@ -175,12 +175,12 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 </style>
 <base target="_blank">
 
-<style id="doma-student-single-scroll-final">
-/* Student Area: allow the mouse wheel to scroll the whole student page.
-   The drawer is the only scroll container; inner panels never trap the wheel. */
+<style id="doma-student-single-scroll-final-v3">
+/* DOMA ACADEMY — Student Area: one main scroll container.
+   The fixed drawer owns vertical scrolling; inner panels do not trap the mouse wheel. */
 #drawer.show{
-  overflow-y:auto!important;
   overflow-x:hidden!important;
+  overflow-y:auto!important;
   -webkit-overflow-scrolling:touch!important;
   overscroll-behavior:auto!important;
 }
@@ -190,11 +190,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
   max-height:none!important;
   overflow:visible!important;
 }
-#drawer.show .drawer-main{
-  min-height:0!important;
-  height:auto!important;
-  overflow:visible!important;
-}
+#drawer.show .drawer-main,
 #drawer.show .drawer-body{
   height:auto!important;
   min-height:0!important;
@@ -202,32 +198,21 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
   overflow:visible!important;
   overscroll-behavior:auto!important;
 }
-#drawer.show .drawer-side{
-  overflow:visible!important;
-  max-height:none!important;
-  height:auto!important;
-}
+#drawer.show .drawer-side,
 #drawer.show .lesson-list,
 #drawer.show .quiz-scroll,
 #drawer.show .daily100-student-list,
 #drawer.show .global-search-results{
-  max-height:none!important;
   height:auto!important;
+  max-height:none!important;
   overflow:visible!important;
   overscroll-behavior:auto!important;
 }
 @media(min-width:701px){
-  #drawer.show .drawer-side{
-    position:sticky!important;
-    top:12px!important;
-    align-self:start!important;
-  }
+  #drawer.show .drawer-side{position:sticky!important;top:12px!important;align-self:start!important;}
 }
 @media(max-width:700px){
-  #drawer.show .drawer-side{
-    max-height:none!important;
-    overflow:visible!important;
-  }
+  #drawer.show .drawer-side{max-height:none!important;overflow:visible!important;}
 }
 </style>
 </head>
@@ -485,10 +470,10 @@ async function getRequests(){
 }
 
 async function loadGrades(){
-  const g=await sb.from('grades').select('id,name,stage,sort_order,is_active').order('sort_order',{ascending:true});
+  const g=await domaWithTimeout(sb.from('grades').select('id,name,stage,sort_order,is_active').order('sort_order',{ascending:true}),12000,'Could not reach Supabase while loading grades.');
   if(g.error){$('gradeLoadStatus').textContent='Supabase error';$('gradeGrid').innerHTML='<div class="empty">Could not load grades: '+esc(g.error.message)+'</div>';return}
   grades=(g.data||[]).filter(x=>x.is_active!==false);gradePrices={};
-  const p=await sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount');
+  const p=await domaWithTimeout(sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount'),12000,'Could not load grade pricing from Supabase.');
   if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:Number(x.monthly_amount)||150,annual:Number(x.annual_amount)||150})}
   for(const g of grades){if(!gradePrices[g.id]&&DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]}}
   $('gradeLoadStatus').textContent=grades.length+' grades';renderGrades();updatePricingRange();await refreshStudentState()
@@ -665,7 +650,7 @@ function domaLessonDisplayTitle(lesson,unitMap){
 async function openPublicLesson(title){
   if(!sessionUser){openAuth('login');showToast('Log in to open the lesson and watch its video.');return}
   $('drawer').classList.add('show');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow='';document.documentElement.style.overflow='';
   try{
     await studentView('lessons');
     const wanted=String(title||'').trim().toLowerCase();
@@ -973,7 +958,7 @@ async function openDomaV2Reports(){
   $('drawerTitle').textContent='Detailed Reports';$('drawerSubtitle').textContent='Your performance, progress and recent activity.';
   $('drawerBody').innerHTML='<div class="empty">Loading your reports…</div>';$('drawer').classList.add('show');document.body.style.overflow='';document.documentElement.style.overflow='';
   const uid=sessionUser.id;
-  const [p,subs,progress,attempts,homework,certs,activity]=await Promise.all([
+  const [p,subs,progress,attempts,homework,certs,activity]=await domaWithTimeout(Promise.all([
     sb.from('profiles').select('full_name,email,phone,grade_id').eq('id',uid).maybeSingle(),
     sb.from('subscriptions').select('grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',uid).order('expires_at',{ascending:false}),
     sb.from('lesson_progress').select('completed,progress_percent,last_opened_at,lessons(title,grade_id)').eq('student_id',uid).order('last_opened_at',{ascending:false}).limit(500),
@@ -981,7 +966,7 @@ async function openDomaV2Reports(){
     sb.from('homework_submissions').select('status,grade,submitted_at,homework(title,grade_id)').eq('student_id',uid).order('submitted_at',{ascending:false}).limit(200),
     sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',uid).order('issued_at',{ascending:false}),
     sb.from('student_activity').select('activity_type,metadata,created_at').eq('student_id',uid).order('created_at',{ascending:false}).limit(100)
-  ]);
+  ]),12000,'Detailed reports timed out. Please try again.');
   const firstError=[p,subs,progress,attempts,homework,certs,activity].find(x=>x.error);if(firstError){$('drawerBody').innerHTML='<div class="empty">Could not load reports: '+esc(firstError.error.message)+'</div>';return}
   const completed=(progress.data||[]).filter(x=>x.completed).length,total=progress.data?.length||0;
   const avg=attempts.data?.length?Math.round(attempts.data.reduce((sum,x)=>sum+(x.total_points?Number(x.score)/Number(x.total_points)*100:0),0)/attempts.data.length):0;
@@ -1010,14 +995,19 @@ document.addEventListener('click',async e=>{
   }catch(err){console.error(err);showToast(err?.message||'Action failed.')}
 });
 
+function domaWithTimeout(promise,ms,label){
+  return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label||'Request timed out. Please check your connection and try again.')),ms))]);
+}
+
 async function boot(){
   try{
     if(typeof window.supabase==='undefined')throw new Error('Supabase library did not load. Check your internet connection or CDN access.');
     sb=window.supabase.createClient(DOMA_URL,DOMA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   }catch(e){console.error(e);$('gradeLoadStatus').textContent='Connection error';$('gradeGrid').innerHTML='<div class="empty">'+esc(e.message)+'</div>';return}
-  const s=await sb.auth.getSession();sessionUser=s.data?.session?.user||null;updateNav();
+  try{const s=await domaWithTimeout(sb.auth.getSession(),12000,'Supabase session request timed out.');sessionUser=s.data?.session?.user||null}catch(e){console.warn('Supabase session check failed:',e);sessionUser=null}
+  updateNav();
   sb.auth.onAuthStateChange((_event,session)=>{sessionUser=session?.user||null;updateNav();if(sessionUser)setTimeout(()=>refreshStudentState(),0);else{closeDrawer();renderDashboardLoggedOut()}});
-  await loadGrades();
+  try{await domaWithTimeout(loadGrades(),15000,'Loading grades timed out. Please refresh the page.')}catch(e){console.error('DOMA startup grade load failed:',e);$('gradeLoadStatus').textContent='Connection error';$('gradeGrid').innerHTML='<div class="empty">'+esc(e?.message||'Could not load grades. Please refresh the page.')+'</div>'}
   if(sessionUser){sb.rpc('doma_log_activity',{p_activity_type:'login',p_entity_id:null,p_metadata:{source:'student_web'}}).catch(()=>{});}
 }
 window.domaOpenGrade=domaOpenGrade;window.openDomaV2Reports=openDomaV2Reports;window.openAttemptReview=openAttemptReview;window.openDomaV2Notifications=openDomaV2Notifications;window.domaStartSubscription=domaStartSubscription;window.domaSubmitSubscription=domaSubmitSubscription;window.openAuth=openAuth;window.openModal=openModal;window.closeModal=closeModal;window.closeGradeModal=closeGradeModal;window.filterGrades=filterGrades;window.showGradeInfo=showGradeInfo;window.studentView=studentView;window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.domaLogout=domaLogout;window.toggleMobileMenu=toggleMobileMenu;window.closeMobileMenu=closeMobileMenu;window.openSearch=openSearch;window.applyModalSearch=applyModalSearch;window.selectLesson=selectLesson;window.changeLesson=changeLesson;window.completeCurrentLesson=completeCurrentLesson;window.startQuiz=startQuiz;window.submitQuiz=submitQuiz;window.openHomework=openHomework;window.submitHomework=submitHomework;window.markNotificationRead=markNotificationRead;window.saveProfile=saveProfile;window.openReviewForm=openReviewForm;window.submitReview=submitReview;window.printCertificate=printCertificate;
