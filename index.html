@@ -197,6 +197,10 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <style id="doma-battle-history-css">
 .doma-battle-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.doma-battle-section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.doma-battle-section-head h3{margin:0}.doma-battle-history{display:grid;gap:8px}.doma-battle-history-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid #2c191f;border-radius:11px;background:#0b090a}.doma-battle-history-row b{font-size:11px}.doma-battle-history-score{display:flex;align-items:flex-end;flex-direction:column;gap:3px}.doma-battle-history-score span{font-weight:900}.doma-battle-history-score small{font-size:9px;color:#8e8387}.doma-battle-table-wrap{overflow:auto}.doma-battle-table{width:100%;border-collapse:collapse;font-size:10px}.doma-battle-table th,.doma-battle-table td{padding:10px 8px;border-bottom:1px solid #24151a;text-align:left;white-space:nowrap}.doma-battle-table th{color:#8e8387;font-size:9px;text-transform:uppercase}.doma-battle-table tr.me{background:#170d11}.doma-battle-muted{color:#8e8387;font-size:10px}@media(max-width:760px){.doma-battle-tools{flex-direction:column}.doma-battle-tools .btn{width:100%}.doma-battle-history-row{align-items:flex-start;flex-direction:column}.doma-battle-history-score{align-items:flex-start}}
 </style>
+
+<style id="doma-battle-achievements-css">
+.doma-battle-achievements{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.doma-battle-achievement{padding:14px;border:1px solid #2d181f;border-radius:12px;background:#0b090a;display:flex;gap:11px;align-items:center}.doma-battle-achievement.locked{opacity:.4}.doma-battle-achievement .ico{font-size:25px}.doma-battle-achievement b{display:block;font-size:11px}.doma-battle-achievement span{display:block;font-size:9px;color:#8e8387;margin-top:3px;line-height:1.45}.doma-battle-achievement.done{border-color:#6f3145;background:#150d11}@media(max-width:760px){.doma-battle-achievements{grid-template-columns:1fr 1fr}}@media(max-width:520px){.doma-battle-achievements{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -2102,7 +2106,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     document.getElementById('domaBattleTitle').textContent='Battle Mode ⚔';
     document.getElementById('domaBattleSubtitle').textContent='Live 1v1 challenge — same questions, direct result.';
     body().innerHTML='<div class="doma-battle-grid"><div class="doma-battle-card"><h3>Create a Battle</h3><div class="doma-battle-form"><select id="domaBattleQuiz" class="field"><option value="">Loading quizzes…</option></select><select id="domaBattleCount" class="field"><option value="5">5 questions</option><option value="10" selected>10 questions</option><option value="15">15 questions</option><option value="20">20 questions</option></select><button class="btn primary" type="button" id="domaBattleCreate">Create Battle Room →</button><div class="doma-battle-note">Both players receive the same questions. Each question lasts 15 seconds.</div></div></div><div class="doma-battle-card"><h3>Join a Battle</h3><div class="doma-battle-form"><input id="domaBattleCodeInput" class="field" placeholder="DOMA-AB12-CD" maxlength="11" autocomplete="off"><button class="btn secondary" type="button" id="domaBattleJoin">Join Battle →</button><div class="doma-battle-note">Enter the code from the student who created the room.</div></div></div></div>'+(message?'<div class="doma-battle-status" style="margin-top:14px">'+escB(message)+'</div>':'');
-    body().insertAdjacentHTML('beforeend','<div class="doma-battle-tools"><button class="btn secondary" type="button" id="domaBattleHistoryBtn">📜 Battle History</button><button class="btn secondary" type="button" id="domaBattleLeaderboardBtn">🏆 Leaderboard</button></div><div id="domaBattleExtra"></div>');document.getElementById('domaBattleCreate').onclick=createBattle;document.getElementById('domaBattleJoin').onclick=joinBattle;document.getElementById('domaBattleHistoryBtn').onclick=showHistory;document.getElementById('domaBattleLeaderboardBtn').onclick=showLeaderboard;loadQuizzes();
+    body().insertAdjacentHTML('beforeend','<div class="doma-battle-tools"><button class="btn secondary" type="button" id="domaBattleHistoryBtn">📜 Battle History</button><button class="btn secondary" type="button" id="domaBattleLeaderboardBtn">🏆 Leaderboard</button><button class="btn secondary" type="button" id="domaBattleAchievementsBtn">🎖 Achievements</button></div><div id="domaBattleExtra"></div>');document.getElementById('domaBattleCreate').onclick=createBattle;document.getElementById('domaBattleJoin').onclick=joinBattle;document.getElementById('domaBattleHistoryBtn').onclick=showHistory;document.getElementById('domaBattleLeaderboardBtn').onclick=showLeaderboard;document.getElementById('domaBattleAchievementsBtn').onclick=showAchievements;loadQuizzes();
   }
   window.openDomaBattle=async function(){
     if(!sessionUser)return openAuth('login');
@@ -2178,6 +2182,37 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
       document.getElementById('domaBattleHistoryClose').onclick=()=>{host.innerHTML=''};
     }catch(e){host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-section-head"><h3>📜 Battle History</h3><button class="btn secondary" type="button" id="domaBattleHistoryClose">Close</button></div><div class="doma-battle-muted">Battle History needs the Battle SQL patch to be installed in Supabase.</div></div>';document.getElementById('domaBattleHistoryClose').onclick=()=>{host.innerHTML=''};}
   }
+  async function showAchievements(){
+    const host=document.getElementById('domaBattleExtra');if(!host||!sessionUser)return;
+    host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-muted">Loading your Battle Achievements…</div></div>';
+    try{
+      const r=await sb.rpc('doma_battle_history',{p_student_id:sessionUser.id,p_limit:100});
+      if(r.error)throw r.error;
+      const rows=(r.data||[]).slice().sort((a,b)=>new Date(a.played_at||0)-new Date(b.played_at||0));
+      let matches=rows.length,wins=0,draws=0,losses=0,totalPoints=0,currentStreak=0,bestStreak=0;
+      rows.forEach(x=>{
+        const result=x.result||'';
+        if(result==='win'){wins++;currentStreak++;bestStreak=Math.max(bestStreak,currentStreak)}
+        else {if(result==='draw')draws++;else if(result==='loss')losses++;currentStreak=0}
+        totalPoints+=Number(x.my_score||0);
+      });
+      const ach=[
+        ['⚔️','First Duel','Complete 1 Battle',matches>=1],
+        ['🏆','First Victory','Win your first Battle',wins>=1],
+        ['🔥','Win Streak','Win 3 Battles in a row',bestStreak>=3],
+        ['🥇','Five-Time Victor','Reach 5 Battle wins',wins>=5],
+        ['🎯','Duelist','Play 10 Battles',matches>=10],
+        ['💎','Battle Veteran','Play 25 Battles',matches>=25],
+        ['⭐','Point Hunter','Score 500 points across Battles',totalPoints>=500],
+        ['👑','Battle Master','Reach 10 Battle wins',wins>=10],
+        ['🤝','Fair Fighter','Complete 5 draws',draws>=5]
+      ];
+      const unlocked=ach.filter(x=>x[3]).length;
+      host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-section-head"><div><h3>🎖 Battle Achievements</h3><div class="doma-battle-muted">'+unlocked+'/'+ach.length+' unlocked • '+wins+' wins • '+losses+' losses • '+draws+' draws</div></div><button class="btn secondary" type="button" id="domaBattleAchievementsClose">Close</button></div><div class="doma-battle-achievements">'+ach.map(a=>'<div class="doma-battle-achievement '+(a[3]?'done':'locked')+'"><div class="ico">'+a[0]+'</div><div><b>'+escB(a[1])+'</b><span>'+escB(a[2])+'</span></div></div>').join('')+'</div></div>';
+      document.getElementById('domaBattleAchievementsClose').onclick=()=>{host.innerHTML=''};
+    }catch(e){host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-section-head"><h3>🎖 Battle Achievements</h3><button class="btn secondary" type="button" id="domaBattleAchievementsClose">Close</button></div><div class="doma-battle-muted">Battle Achievements need the Battle SQL patch to be installed in Supabase.</div></div>';document.getElementById('domaBattleAchievementsClose').onclick=()=>{host.innerHTML=''};}
+  }
+
   async function showLeaderboard(){
     const host=document.getElementById('domaBattleExtra');if(!host||!sessionUser)return;
     host.innerHTML='<div class="doma-battle-card"><div class="doma-battle-muted">Loading Leaderboard…</div></div>';
@@ -2194,7 +2229,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     recordBattleResult(h,g);
     const me=X.role==='host'?'host':'guest';const win=w==='draw'?'DRAW':(w===me?'YOU WIN!':'YOU LOSE');const icon=w==='draw'?'🤝':(w===me?'🏆':'⚔️');document.getElementById('domaBattleTitle').textContent='Battle Result';document.getElementById('domaBattleSubtitle').textContent='The match is complete.';body().innerHTML='<div class="doma-battle-result"><div class="icon">'+icon+'</div><h2>'+win+'</h2><div class="doma-battle-muted">'+escB(X.host?.name||'Player 1')+' '+h+' — '+g+' '+escB(X.guest?.name||'Player 2')+'</div><div class="doma-battle-muted" style="margin-top:8px">Result is saved automatically when the Battle SQL patch is installed.</div></div><div class="doma-battle-card" style="margin-top:14px"><div class="doma-battle-players"><div class="doma-battle-player '+(h>g?'active':'')+'"><div class="name">'+escB(X.host?.name||'Player 1')+'</div><div class="score">'+h+'</div></div><div class="doma-battle-player '+(g>h?'active':'')+'"><div class="name">'+escB(X.guest?.name||'Player 2')+'</div><div class="score">'+g+'</div></div></div><div class="doma-battle-actions"><button class="btn primary" type="button" onclick="openDomaBattle()">New Battle</button><button class="btn secondary" type="button" onclick="domaBattleShowLeaderboard()">🏆 Leaderboard</button><button class="btn secondary" type="button" onclick="domaBattleShowHistory()">📜 History</button><button class="btn secondary" type="button" onclick="closeDomaBattle()">Close</button></div></div>'
   }
-  window.domaBattleShowHistory=showHistory;window.domaBattleShowLeaderboard=showLeaderboard;
+  window.domaBattleShowHistory=showHistory;window.domaBattleShowLeaderboard=showLeaderboard;window.domaBattleShowAchievements=showAchievements;
   function onLeave(p){if(X.finished)return;clearInterval(X.timer);if(X.role==='host'){X.guest=null;renderLobby();showStatus('Player 2 left the room. Waiting for another student…')}else renderWaitingGuest('Your opponent left the Battle.')}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal().classList.contains('show'))closeDomaBattle()});
   window.addEventListener('beforeunload',()=>{try{send('leave',{id:sessionUser?.id})}catch(e){}closeChannel()});
