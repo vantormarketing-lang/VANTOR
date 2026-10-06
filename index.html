@@ -1356,9 +1356,706 @@ document.addEventListener('DOMContentLoaded',boot);</script>
 const DAILY_WORDS_BUCKET_BASE='https://dtptxhkcogpoleftguas.supabase.co/storage/v1/object/public/daily-words-audio/';
 
 const daily100Fallback=[
- {position:1,word:'achieve',translation:'يحقق',sentence:'She worked hard to achieve her goal.',sentence_translation:'لقد عملت بجد لتحقيق هدفها.'},
- {position:2,word:'improve',translation:'يحسن / يطوّر',sentence:'I want to improve my English.',sentence_translation:'أريد أن أحسن لغتي الإنجليزية.'},
- {position:3,word:'prepare',translation:'يستعد / يجهز',sentence:'We need to prepare for the exam.',sentence_translation:'نحتاج أن نستعد للامتحان.'}
+ {
+  "position": 1,
+  "word": "achieve",
+  "translation": "يحقق",
+  "sentence": "She worked consistently to achieve her professional goals.",
+  "sentence_translation": "لقد عملت باستمرار لتحقيق أهدافها المهنية."
+ },
+ {
+  "position": 2,
+  "word": "adapt",
+  "translation": "يتكيف / يكيف",
+  "sentence": "Successful people adapt quickly to changing circumstances.",
+  "sentence_translation": "الأشخاص الناجحون يتكيفون بسرعة مع الظروف المتغيرة."
+ },
+ {
+  "position": 3,
+  "word": "advocate",
+  "translation": "يدافع عن / يؤيد",
+  "sentence": "Many experts advocate practical experience alongside formal education.",
+  "sentence_translation": "يدافع كثير من الخبراء عن الخبرة العملية إلى جانب التعليم الرسمي."
+ },
+ {
+  "position": 4,
+  "word": "allocate",
+  "translation": "يخصص",
+  "sentence": "The manager decided to allocate more resources to training.",
+  "sentence_translation": "قرر المدير تخصيص مزيد من الموارد للتدريب."
+ },
+ {
+  "position": 5,
+  "word": "anticipate",
+  "translation": "يتوقع / يستبق",
+  "sentence": "We should anticipate potential challenges before launching the project.",
+  "sentence_translation": "يجب أن نتوقع التحديات المحتملة قبل إطلاق المشروع."
+ },
+ {
+  "position": 6,
+  "word": "articulate",
+  "translation": "يعبر بوضوح",
+  "sentence": "She can articulate complex ideas in a simple way.",
+  "sentence_translation": "تستطيع التعبير عن الأفكار المعقدة بطريقة بسيطة."
+ },
+ {
+  "position": 7,
+  "word": "assess",
+  "translation": "يقيّم",
+  "sentence": "Teachers assess students through projects and regular tests.",
+  "sentence_translation": "يقيّم المعلمون الطلاب من خلال المشروعات والاختبارات المنتظمة."
+ },
+ {
+  "position": 8,
+  "word": "attain",
+  "translation": "يحقق / ينال",
+  "sentence": "He worked for years to attain a high level of expertise.",
+  "sentence_translation": "عمل لسنوات ليحقق مستوى عالياً من الخبرة."
+ },
+ {
+  "position": 9,
+  "word": "authentic",
+  "translation": "أصيل / حقيقي",
+  "sentence": "The course provides authentic examples of professional communication.",
+  "sentence_translation": "يوفر الكورس أمثلة حقيقية على التواصل المهني."
+ },
+ {
+  "position": 10,
+  "word": "benchmark",
+  "translation": "معيار مرجعي",
+  "sentence": "The company uses customer satisfaction as a key benchmark.",
+  "sentence_translation": "تستخدم الشركة رضا العملاء كمعيار رئيسي."
+ },
+ {
+  "position": 11,
+  "word": "collaborate",
+  "translation": "يتعاون",
+  "sentence": "Students collaborate on presentations to improve their teamwork skills.",
+  "sentence_translation": "يتعاون الطلاب في العروض التقديمية لتحسين مهارات العمل الجماعي."
+ },
+ {
+  "position": 12,
+  "word": "compelling",
+  "translation": "مقنع / جذاب بشدة",
+  "sentence": "She gave a compelling argument during the meeting.",
+  "sentence_translation": "قدمت حجة مقنعة خلال الاجتماع."
+ },
+ {
+  "position": 13,
+  "word": "competent",
+  "translation": "كفء",
+  "sentence": "A competent professional knows how to solve problems calmly.",
+  "sentence_translation": "المحترف الكفء يعرف كيف يحل المشكلات بهدوء."
+ },
+ {
+  "position": 14,
+  "word": "comprehensive",
+  "translation": "شامل",
+  "sentence": "The report offers a comprehensive analysis of the market.",
+  "sentence_translation": "يقدم التقرير تحليلاً شاملاً للسوق."
+ },
+ {
+  "position": 15,
+  "word": "concede",
+  "translation": "يقر / يعترف",
+  "sentence": "He had to concede that the second proposal was stronger.",
+  "sentence_translation": "اضطر إلى الإقرار بأن الاقتراح الثاني كان أقوى."
+ },
+ {
+  "position": 16,
+  "word": "consecutive",
+  "translation": "متتالٍ",
+  "sentence": "She completed three consecutive training sessions.",
+  "sentence_translation": "أكملت ثلاث جلسات تدريبية متتالية."
+ },
+ {
+  "position": 17,
+  "word": "considerable",
+  "translation": "كبير / ملحوظ",
+  "sentence": "The project required a considerable amount of preparation.",
+  "sentence_translation": "تطلب المشروع قدراً كبيراً من الاستعداد."
+ },
+ {
+  "position": 18,
+  "word": "constructive",
+  "translation": "بنّاء",
+  "sentence": "The teacher gave constructive feedback on my presentation.",
+  "sentence_translation": "قدم المعلم ملاحظات بناءة على عرضي التقديمي."
+ },
+ {
+  "position": 19,
+  "word": "contemporary",
+  "translation": "معاصر",
+  "sentence": "The course focuses on contemporary business English.",
+  "sentence_translation": "يركز الكورس على الإنجليزية المعاصرة المستخدمة في الأعمال."
+ },
+ {
+  "position": 20,
+  "word": "crucial",
+  "translation": "حاسم / بالغ الأهمية",
+  "sentence": "Clear communication is crucial in every professional environment.",
+  "sentence_translation": "التواصل الواضح أمر بالغ الأهمية في كل بيئة مهنية."
+ },
+ {
+  "position": 21,
+  "word": "cultivate",
+  "translation": "يطور / ينمي",
+  "sentence": "Reading helps students cultivate a strong academic vocabulary.",
+  "sentence_translation": "تساعد القراءة الطلاب على تنمية حصيلة لغوية أكاديمية قوية."
+ },
+ {
+  "position": 22,
+  "word": "demonstrate",
+  "translation": "يبرهن / يظهر",
+  "sentence": "You should demonstrate your ideas with clear examples.",
+  "sentence_translation": "يجب أن توضح أفكارك بأمثلة واضحة."
+ },
+ {
+  "position": 23,
+  "word": "derive",
+  "translation": "يستمد / يستخلص",
+  "sentence": "We can derive useful insights from the survey results.",
+  "sentence_translation": "يمكننا استخلاص رؤى مفيدة من نتائج الاستبيان."
+ },
+ {
+  "position": 24,
+  "word": "diligent",
+  "translation": "مجتهد",
+  "sentence": "A diligent student reviews new vocabulary every day.",
+  "sentence_translation": "الطالب المجتهد يراجع المفردات الجديدة كل يوم."
+ },
+ {
+  "position": 25,
+  "word": "diplomatic",
+  "translation": "دبلوماسي / لبق",
+  "sentence": "She gave a diplomatic response to a difficult question.",
+  "sentence_translation": "قدمت رداً دبلوماسياً على سؤال صعب."
+ },
+ {
+  "position": 26,
+  "word": "discrete",
+  "translation": "منفصل / مستقل",
+  "sentence": "The teacher divided the project into discrete stages.",
+  "sentence_translation": "قسّم المعلم المشروع إلى مراحل منفصلة."
+ },
+ {
+  "position": 27,
+  "word": "distinguish",
+  "translation": "يميز",
+  "sentence": "Good readers distinguish facts from opinions.",
+  "sentence_translation": "يميز القراء الجيدون بين الحقائق والآراء."
+ },
+ {
+  "position": 28,
+  "word": "diverse",
+  "translation": "متنوع",
+  "sentence": "The program attracts students from diverse backgrounds.",
+  "sentence_translation": "يجذب البرنامج طلاباً من خلفيات متنوعة."
+ },
+ {
+  "position": 29,
+  "word": "elaborate",
+  "translation": "يفصل / يوضح بتفصيل",
+  "sentence": "Could you elaborate on the main point of your argument?",
+  "sentence_translation": "هل يمكنك توضيح النقطة الأساسية في حجتك بمزيد من التفصيل؟"
+ },
+ {
+  "position": 30,
+  "word": "enhance",
+  "translation": "يعزز / يحسن",
+  "sentence": "Regular practice can enhance your speaking confidence.",
+  "sentence_translation": "يمكن للممارسة المنتظمة أن تعزز ثقتك في التحدث."
+ },
+ {
+  "position": 31,
+  "word": "evaluate",
+  "translation": "يقيّم",
+  "sentence": "We need to evaluate the results before making a decision.",
+  "sentence_translation": "نحتاج إلى تقييم النتائج قبل اتخاذ قرار."
+ },
+ {
+  "position": 32,
+  "word": "explicit",
+  "translation": "صريح / واضح",
+  "sentence": "The instructions provide explicit guidance for each task.",
+  "sentence_translation": "تقدم التعليمات إرشادات واضحة لكل مهمة."
+ },
+ {
+  "position": 33,
+  "word": "facilitate",
+  "translation": "يسهّل",
+  "sentence": "Visual examples facilitate understanding of difficult concepts.",
+  "sentence_translation": "تسهل الأمثلة المرئية فهم المفاهيم الصعبة."
+ },
+ {
+  "position": 34,
+  "word": "feasible",
+  "translation": "قابل للتنفيذ",
+  "sentence": "The team proposed a feasible plan within the available budget.",
+  "sentence_translation": "اقترح الفريق خطة قابلة للتنفيذ ضمن الميزانية المتاحة."
+ },
+ {
+  "position": 35,
+  "word": "formulate",
+  "translation": "يصوغ / يضع",
+  "sentence": "Students learn to formulate strong arguments in English.",
+  "sentence_translation": "يتعلم الطلاب صياغة حجج قوية باللغة الإنجليزية."
+ },
+ {
+  "position": 36,
+  "word": "foster",
+  "translation": "يعزز / ينمي",
+  "sentence": "Group discussions foster critical thinking and confidence.",
+  "sentence_translation": "تنمي المناقشات الجماعية التفكير النقدي والثقة."
+ },
+ {
+  "position": 37,
+  "word": "fundamental",
+  "translation": "أساسي",
+  "sentence": "Grammar is fundamental to accurate academic writing.",
+  "sentence_translation": "القواعد أساسية للكتابة الأكاديمية الدقيقة."
+ },
+ {
+  "position": 38,
+  "word": "hierarchy",
+  "translation": "تسلسل هرمي",
+  "sentence": "The report explains the hierarchy of responsibilities within the team.",
+  "sentence_translation": "يشرح التقرير التسلسل الهرمي للمسؤوليات داخل الفريق."
+ },
+ {
+  "position": 39,
+  "word": "implement",
+  "translation": "ينفذ",
+  "sentence": "The school plans to implement a new assessment system.",
+  "sentence_translation": "تخطط المدرسة لتنفيذ نظام تقييم جديد."
+ },
+ {
+  "position": 40,
+  "word": "inevitable",
+  "translation": "حتمي",
+  "sentence": "Some mistakes are inevitable when you learn a new language.",
+  "sentence_translation": "بعض الأخطاء حتمية عند تعلم لغة جديدة."
+ },
+ {
+  "position": 41,
+  "word": "innovative",
+  "translation": "مبتكر",
+  "sentence": "The teacher introduced an innovative way to practice vocabulary.",
+  "sentence_translation": "قدم المعلم طريقة مبتكرة لممارسة المفردات."
+ },
+ {
+  "position": 42,
+  "word": "integrate",
+  "translation": "يدمج",
+  "sentence": "Students should integrate new vocabulary into everyday conversations.",
+  "sentence_translation": "ينبغي للطلاب دمج المفردات الجديدة في المحادثات اليومية."
+ },
+ {
+  "position": 43,
+  "word": "interpret",
+  "translation": "يفسر",
+  "sentence": "We must interpret the data carefully before drawing conclusions.",
+  "sentence_translation": "يجب أن نفسر البيانات بعناية قبل استخلاص النتائج."
+ },
+ {
+  "position": 44,
+  "word": "justify",
+  "translation": "يبرر",
+  "sentence": "Can you justify your answer with evidence from the text?",
+  "sentence_translation": "هل يمكنك تبرير إجابتك بدليل من النص؟"
+ },
+ {
+  "position": 45,
+  "word": "leverage",
+  "translation": "يستفيد من / يوظف",
+  "sentence": "The company leverages technology to improve customer service.",
+  "sentence_translation": "تستفيد الشركة من التكنولوجيا لتحسين خدمة العملاء."
+ },
+ {
+  "position": 46,
+  "word": "maintain",
+  "translation": "يحافظ على",
+  "sentence": "It is important to maintain a professional tone in emails.",
+  "sentence_translation": "من المهم الحفاظ على أسلوب مهني في رسائل البريد الإلكتروني."
+ },
+ {
+  "position": 47,
+  "word": "meticulous",
+  "translation": "دقيق للغاية",
+  "sentence": "Her meticulous preparation helped the presentation succeed.",
+  "sentence_translation": "ساعدها إعدادها الدقيق للغاية على نجاح العرض."
+ },
+ {
+  "position": 48,
+  "word": "mitigate",
+  "translation": "يخفف / يقلل",
+  "sentence": "Early planning can mitigate the risks of the project.",
+  "sentence_translation": "يمكن للتخطيط المبكر أن يقلل من مخاطر المشروع."
+ },
+ {
+  "position": 49,
+  "word": "notable",
+  "translation": "ملحوظ",
+  "sentence": "There was a notable improvement in his writing skills.",
+  "sentence_translation": "كان هناك تحسن ملحوظ في مهاراته في الكتابة."
+ },
+ {
+  "position": 50,
+  "word": "objective",
+  "translation": "موضوعي / هدف",
+  "sentence": "Try to remain objective when evaluating different opinions.",
+  "sentence_translation": "حاول أن تظل موضوعياً عند تقييم الآراء المختلفة."
+ },
+ {
+  "position": 51,
+  "word": "optimize",
+  "translation": "يحسن إلى أفضل مستوى",
+  "sentence": "We optimized the study schedule to save more time.",
+  "sentence_translation": "حسّنا جدول المذاكرة للوصول إلى أفضل استخدام للوقت."
+ },
+ {
+  "position": 52,
+  "word": "persuasive",
+  "translation": "مقنع",
+  "sentence": "She wrote a persuasive essay supported by strong evidence.",
+  "sentence_translation": "كتبت مقالاً مقنعاً مدعوماً بأدلة قوية."
+ },
+ {
+  "position": 53,
+  "word": "proactive",
+  "translation": "استباقي / مبادر",
+  "sentence": "A proactive student asks questions before problems become serious.",
+  "sentence_translation": "الطالب المبادر يطرح الأسئلة قبل أن تصبح المشكلات خطيرة."
+ },
+ {
+  "position": 54,
+  "word": "prioritize",
+  "translation": "يحدد الأولويات",
+  "sentence": "You should prioritize the most important tasks first.",
+  "sentence_translation": "يجب أن تحدد أولوياتك وتبدأ بالمهام الأكثر أهمية."
+ },
+ {
+  "position": 55,
+  "word": "proficient",
+  "translation": "متقن / متمكن",
+  "sentence": "He is proficient in written and spoken English.",
+  "sentence_translation": "هو متمكن من اللغة الإنجليزية كتابةً وتحدثاً."
+ },
+ {
+  "position": 56,
+  "word": "prominent",
+  "translation": "بارز",
+  "sentence": "She became a prominent speaker at educational events.",
+  "sentence_translation": "أصبحت متحدثة بارزة في الفعاليات التعليمية."
+ },
+ {
+  "position": 57,
+  "word": "refine",
+  "translation": "يصقل / يحسن",
+  "sentence": "Practice will help you refine your pronunciation.",
+  "sentence_translation": "ستساعدك الممارسة على صقل نطقك."
+ },
+ {
+  "position": 58,
+  "word": "reinforce",
+  "translation": "يعزز / يرسخ",
+  "sentence": "Short quizzes reinforce what students learn in class.",
+  "sentence_translation": "تساعد الاختبارات القصيرة على ترسيخ ما يتعلمه الطلاب في الفصل."
+ },
+ {
+  "position": 59,
+  "word": "relevant",
+  "translation": "ذو صلة",
+  "sentence": "Use examples that are relevant to the topic.",
+  "sentence_translation": "استخدم أمثلة ذات صلة بالموضوع."
+ },
+ {
+  "position": 60,
+  "word": "resilient",
+  "translation": "مرن / قادر على التعافي",
+  "sentence": "A resilient learner keeps going after a difficult mistake.",
+  "sentence_translation": "المتعلم القادر على التعافي يواصل التقدم بعد الخطأ الصعب."
+ },
+ {
+  "position": 61,
+  "word": "rigorous",
+  "translation": "صارم / دقيق",
+  "sentence": "The program follows a rigorous academic standard.",
+  "sentence_translation": "يتبع البرنامج معياراً أكاديمياً صارماً."
+ },
+ {
+  "position": 62,
+  "word": "strategic",
+  "translation": "استراتيجي",
+  "sentence": "We need a strategic approach to improve the team’s performance.",
+  "sentence_translation": "نحتاج إلى أسلوب استراتيجي لتحسين أداء الفريق."
+ },
+ {
+  "position": 63,
+  "word": "substantial",
+  "translation": "كبير / جوهري",
+  "sentence": "She made substantial progress after a month of practice.",
+  "sentence_translation": "حققت تقدماً جوهرياً بعد شهر من الممارسة."
+ },
+ {
+  "position": 64,
+  "word": "sustainable",
+  "translation": "مستدام",
+  "sentence": "The academy is looking for sustainable ways to improve learning.",
+  "sentence_translation": "تبحث الأكاديمية عن طرق مستدامة لتحسين التعلم."
+ },
+ {
+  "position": 65,
+  "word": "coherent",
+  "translation": "مترابط / متماسك",
+  "sentence": "Your paragraph should present a coherent line of reasoning.",
+  "sentence_translation": "يجب أن يقدم مقالك تسلسلاً مترابطاً في التفكير."
+ },
+ {
+  "position": 66,
+  "word": "concise",
+  "translation": "موجز",
+  "sentence": "Keep your professional emails concise and clear.",
+  "sentence_translation": "اجعل رسائل بريدك المهنية موجزة وواضحة."
+ },
+ {
+  "position": 67,
+  "word": "credible",
+  "translation": "موثوق / جدير بالثقة",
+  "sentence": "Use credible sources when preparing a research project.",
+  "sentence_translation": "استخدم مصادر موثوقة عند إعداد مشروع بحثي."
+ },
+ {
+  "position": 68,
+  "word": "profound",
+  "translation": "عميق",
+  "sentence": "Reading widely can have a profound effect on your vocabulary.",
+  "sentence_translation": "يمكن للقراءة الواسعة أن يكون لها تأثير عميق في حصيلتك اللغوية."
+ },
+ {
+  "position": 69,
+  "word": "versatile",
+  "translation": "متعدد الاستخدامات / مرن",
+  "sentence": "English is a versatile tool for study and work.",
+  "sentence_translation": "اللغة الإنجليزية أداة متعددة الاستخدامات للدراسة والعمل."
+ },
+ {
+  "position": 70,
+  "word": "precise",
+  "translation": "دقيق",
+  "sentence": "Choose precise words when you explain a technical idea.",
+  "sentence_translation": "اختر كلمات دقيقة عندما تشرح فكرة تقنية."
+ },
+ {
+  "position": 71,
+  "word": "efficient",
+  "translation": "فعّال",
+  "sentence": "A focused study plan is more efficient than random practice.",
+  "sentence_translation": "خطة المذاكرة المركزة أكثر فاعلية من الممارسة العشوائية."
+ },
+ {
+  "position": 72,
+  "word": "subtle",
+  "translation": "دقيق / خفي",
+  "sentence": "The speaker used a subtle change in tone to show disagreement.",
+  "sentence_translation": "استخدم المتحدث تغييراً دقيقاً في نبرة صوته ليظهر عدم الاتفاق."
+ },
+ {
+  "position": 73,
+  "word": "transparent",
+  "translation": "شفاف / واضح",
+  "sentence": "The school follows a transparent process for evaluating results.",
+  "sentence_translation": "تتبع المدرسة عملية واضحة وشفافة لتقييم النتائج."
+ },
+ {
+  "position": 74,
+  "word": "consistent",
+  "translation": "متسق / منتظم",
+  "sentence": "Consistent effort is more valuable than occasional intense study.",
+  "sentence_translation": "الجهد المنتظم أكثر قيمة من المذاكرة المكثفة بشكل متقطع."
+ },
+ {
+  "position": 75,
+  "word": "adaptable",
+  "translation": "قابل للتكيف",
+  "sentence": "Employers value adaptable students who can learn new skills.",
+  "sentence_translation": "يقدّر أصحاب العمل الطلاب القادرين على التكيف وتعلم مهارات جديدة."
+ },
+ {
+  "position": 76,
+  "word": "analytical",
+  "translation": "تحليلي",
+  "sentence": "An analytical approach helps you identify the cause of a problem.",
+  "sentence_translation": "يساعد الأسلوب التحليلي على تحديد سبب المشكلة."
+ },
+ {
+  "position": 77,
+  "word": "assertive",
+  "translation": "حازم وواثق",
+  "sentence": "You can be assertive without being rude in a professional discussion.",
+  "sentence_translation": "يمكنك أن تكون حازماً وواثقاً دون أن تكون وقحاً في نقاش مهني."
+ },
+ {
+  "position": 78,
+  "word": "collaborative",
+  "translation": "تعاوني",
+  "sentence": "The project requires a collaborative learning environment.",
+  "sentence_translation": "يتطلب المشروع بيئة تعلم تعاونية."
+ },
+ {
+  "position": 79,
+  "word": "deliberate",
+  "translation": "متعمد / مدروس",
+  "sentence": "Every deliberate choice in the presentation has a clear purpose.",
+  "sentence_translation": "كل اختيار مدروس في العرض له هدف واضح."
+ },
+ {
+  "position": 80,
+  "word": "dynamic",
+  "translation": "ديناميكي / متغير",
+  "sentence": "The modern workplace is a dynamic environment.",
+  "sentence_translation": "بيئة العمل الحديثة بيئة ديناميكية ومتغيرة."
+ },
+ {
+  "position": 81,
+  "word": "ethical",
+  "translation": "أخلاقي",
+  "sentence": "Professionals must make ethical decisions even under pressure.",
+  "sentence_translation": "يجب على المحترفين اتخاذ قرارات أخلاقية حتى تحت الضغط."
+ },
+ {
+  "position": 82,
+  "word": "insightful",
+  "translation": "ثاقب / عميق الفهم",
+  "sentence": "Her insightful comments helped the team understand the issue.",
+  "sentence_translation": "ساعدت ملاحظاتها الثاقبة الفريق على فهم المشكلة."
+ },
+ {
+  "position": 83,
+  "word": "provisional",
+  "translation": "مؤقت / مبدئي",
+  "sentence": "The teacher gave a provisional schedule for the next month.",
+  "sentence_translation": "قدم المعلم جدولاً مبدئياً للشهر القادم."
+ },
+ {
+  "position": 84,
+  "word": "robust",
+  "translation": "قوي / متين",
+  "sentence": "The platform needs a robust system for tracking student progress.",
+  "sentence_translation": "تحتاج المنصة إلى نظام قوي لتتبع تقدم الطلاب."
+ },
+ {
+  "position": 85,
+  "word": "scalable",
+  "translation": "قابل للتوسع",
+  "sentence": "The school wants a scalable solution for future growth.",
+  "sentence_translation": "تريد المدرسة حلاً قابلاً للتوسع للنمو في المستقبل."
+ },
+ {
+  "position": 86,
+  "word": "streamline",
+  "translation": "يبسط / يجعل أكثر كفاءة",
+  "sentence": "The new system will streamline the registration process.",
+  "sentence_translation": "سيعمل النظام الجديد على تبسيط عملية التسجيل."
+ },
+ {
+  "position": 87,
+  "word": "supplement",
+  "translation": "يكمل / يدعم",
+  "sentence": "Use practice tests to supplement your regular lessons.",
+  "sentence_translation": "استخدم الاختبارات التدريبية لدعم دروسك المنتظمة."
+ },
+ {
+  "position": 88,
+  "word": "validate",
+  "translation": "يتحقق من / يثبت صحة",
+  "sentence": "The experiment helped validate the original hypothesis.",
+  "sentence_translation": "ساعدت التجربة على التحقق من صحة الفرضية الأصلية."
+ },
+ {
+  "position": 89,
+  "word": "viable",
+  "translation": "قابل للحياة / عملي",
+  "sentence": "The team found a viable solution to the problem.",
+  "sentence_translation": "وجد الفريق حلاً عملياً قابلاً للتنفيذ للمشكلة."
+ },
+ {
+  "position": 90,
+  "word": "vigilant",
+  "translation": "يقظ / متنبّه",
+  "sentence": "Students should remain vigilant about online security.",
+  "sentence_translation": "ينبغي للطلاب أن يظلوا يقظين تجاه الأمان على الإنترنت."
+ },
+ {
+  "position": 91,
+  "word": "nuanced",
+  "translation": "دقيق متعدد الجوانب",
+  "sentence": "The article presents a nuanced view of social media.",
+  "sentence_translation": "يقدم المقال رؤية دقيقة ومتعددة الجوانب لوسائل التواصل الاجتماعي."
+ },
+ {
+  "position": 92,
+  "word": "synthesize",
+  "translation": "يُركّب / يجمع الأفكار",
+  "sentence": "Students learn to synthesize information from several sources.",
+  "sentence_translation": "يتعلم الطلاب جمع المعلومات وتركيبها من عدة مصادر."
+ },
+ {
+  "position": 93,
+  "word": "differentiate",
+  "translation": "يميز / يفرق",
+  "sentence": "The teacher helps students differentiate formal English from casual speech.",
+  "sentence_translation": "يساعد المعلم الطلاب على التمييز بين الإنجليزية الرسمية والكلام العادي."
+ },
+ {
+  "position": 94,
+  "word": "anticipatory",
+  "translation": "استباقي / تمهيدي",
+  "sentence": "The teacher used anticipatory questions to prepare students for the lesson.",
+  "sentence_translation": "استخدم المعلم أسئلة تمهيدية لتهيئة الطلاب للدرس."
+ },
+ {
+  "position": 95,
+  "word": "contemplate",
+  "translation": "يتأمل / يفكر ملياً",
+  "sentence": "Take time to contemplate the feedback before responding.",
+  "sentence_translation": "خذ وقتاً للتفكير ملياً في الملاحظات قبل الرد."
+ },
+ {
+  "position": 96,
+  "word": "profoundly",
+  "translation": "بعمق",
+  "sentence": "The experience profoundly changed her approach to learning.",
+  "sentence_translation": "غيّرت التجربة أسلوبها في التعلم بشكل عميق."
+ },
+ {
+  "position": 97,
+  "word": "quantify",
+  "translation": "يُقدّر كمياً",
+  "sentence": "Researchers use data to quantify the impact of the program.",
+  "sentence_translation": "يستخدم الباحثون البيانات لتقدير تأثير البرنامج كمياً."
+ },
+ {
+  "position": 98,
+  "word": "reconcile",
+  "translation": "يوفق بين",
+  "sentence": "The manager tried to reconcile two different opinions.",
+  "sentence_translation": "حاول المدير التوفيق بين رأيين مختلفين."
+ },
+ {
+  "position": 99,
+  "word": "benchmarking",
+  "translation": "المقارنة بالمعايير",
+  "sentence": "Benchmarking can reveal where a team performs better than expected.",
+  "sentence_translation": "يمكن للمقارنة بالمعايير أن تكشف أين يتفوق الفريق على المتوقع."
+ },
+ {
+  "position": 100,
+  "word": "facilitation",
+  "translation": "تيسير / تسهيل",
+  "sentence": "Effective facilitation keeps group discussions focused and productive.",
+  "sentence_translation": "يساعد التيسير الفعال على إبقاء المناقشات الجماعية مركزة ومنتجة."
+ }
 ];
 
 function daily100Esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -1436,15 +2133,12 @@ async function loadDailyWordsStudent(){
    const today=daily100LocalDate();
    let r=await sb.from('daily_words').select('day_date,position,word,translation,sentence,sentence_translation,word_audio_url,sentence_audio_url').eq('day_date',today).eq('is_published',true).order('position',{ascending:true});
    if(!r.error&&r.data?.length){rows=r.data;label=today}
-   else{
-    r=await sb.from('daily_words').select('day_date,position,word,translation,sentence,sentence_translation,word_audio_url,sentence_audio_url').eq('is_published',true).order('day_date',{ascending:false}).order('position',{ascending:true}).limit(100);
-    if(!r.error&&r.data?.length){rows=r.data;label=String(r.data[0].day_date||label)}
-   }
   }
  }catch(e){console.error('Daily Words load error:',e)}
  const list=document.getElementById('daily100StudentList');if(!list)return;
  const date=document.getElementById('daily100StudentDate');if(date)date.textContent=label;
- const data=(rows&&rows.length?rows:daily100Fallback).slice(0,100);
+ const daily100ByPosition=new Map((rows||[]).map(x=>[Number(x.position),x]));
+ const data=daily100Fallback.map((fallback)=>daily100ByPosition.get(fallback.position)||fallback);
  list.innerHTML=data.map((x,i)=>{
   const day=String(x.day_date||label),pos=Number(x.position)||i+1;
   const wordText=String(x.word||'').trim(),sentenceText=String(x.sentence||'').trim();
