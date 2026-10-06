@@ -2940,14 +2940,14 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     $('domaBsAgain').onclick=start;
   }
   async function start(){
-    if(!window.sessionUser){if(typeof openAuth==='function')return openAuth('login');return;}
+    if(typeof sessionUser==='undefined' || !sessionUser){if(typeof openAuth==='function')return openAuth('login');return;}
     const source=await getSourceItems();
     if(!source.length)return renderHome('مفيش جمل متاحة حاليًا.');
     BS.queue=shuffle(source).slice(0,BS.sessionSize);BS.index=0;BS.score=0;BS.correct=0;BS.answered=false;
     renderQuestion();
   }
   window.openDomaBuildSentence=function(){
-    if(!window.sessionUser){if(typeof openAuth==='function')return openAuth('login');return;}
+    if(typeof sessionUser==='undefined' || !sessionUser){if(typeof openAuth==='function')return openAuth('login');return;}
     const drawer=$('drawer');if(!drawer)return;
     try{if(window.speechSynthesis)window.speechSynthesis.cancel()}catch(e){}
     drawer.classList.add('show');
