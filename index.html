@@ -855,154 +855,7 @@ async function openHomework(id){
 async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';const file=$('hwFile')?.files?.[0]||null;if(!answer&&!file)return showStatus('hwStatus','Write an answer or attach a file before submitting.','error');if(file&&file.size>10*1024*1024)return showStatus('hwStatus','File must be 10 MB or less.','error');showStatus('hwStatus','Submitting…');let finalAnswer=answer;if(file){try{const ext=(file.name.split('.').pop()||'pdf').replace(/[^a-z0-9]/gi,'').toLowerCase()||'pdf';const path=sessionUser.id+'/'+id+'-'+Date.now()+'.'+ext;const up=await sb.storage.from('homework-submissions').upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});if(up.error)throw new Error(up.error.message);const pub=sb.storage.from('homework-submissions').getPublicUrl(path);const url=pub?.data?.publicUrl||'';if(url)finalAnswer=(answer?answer+'\n\n':'')+'Attached file: '+url;}catch(e){const msg=(e?.message||String(e));return showStatus('hwStatus','File upload failed: '+msg+(/bucket/i.test(msg)?' — create the "homework-submissions" bucket in Supabase Storage.':''),'error')}}const r=await sb.rpc('doma_submit_homework',{p_homework_id:id,p_answer_text:finalAnswer});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showStatus('hwStatus',r.error.message+hint,'error')}closeModal();showToast('Homework submitted successfully.');await renderStudentHomework();await refreshStudentState()}
 
 async function renderStudentCertificates(){const r=await sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',sessionUser.id).order('issued_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load certificates: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];$('drawerBody').innerHTML=rows.length?'<div class="cert-grid">'+rows.map(c=>'<div class="cert"><span class="pill">Certificate</span><h3 style="font-size:17px;margin-top:9px">'+esc(c.title)+'</h3><p style="font-size:10px;color:#888;margin-top:5px">Issued '+fmtDate(c.issued_at)+'</p><div class="cert-code">'+esc(c.certificate_code)+'</div><button type="button" class="btn secondary" style="margin-top:12px" data-action="print-certificate" data-title="'+esc(c.title)+'" data-code="'+esc(c.certificate_code)+'" data-issued="'+esc(c.issued_at)+'">Print / Save PDF</button></div>').join('')+'</div>':'<div class="empty">No certificates have been issued yet.</div>'}
-function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">BY ADHAM</p></div>
-<style id="doma-movie-roulette-css">
-.doma-mr-page{display:grid;gap:14px}
-.doma-mr-hero{padding:21px;background:linear-gradient(135deg,#261018,#0c090b);border:1px solid #4d2633;border-radius:16px;position:relative;overflow:hidden}
-.doma-mr-hero:after{content:'◆  ◆  ◆';position:absolute;right:16px;top:14px;letter-spacing:6px;color:#5c2737;font-size:12px;opacity:.7}
-.doma-mr-kicker{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c05269;font-weight:900;margin-bottom:6px}
-.doma-mr-hero h3{font-size:24px;margin:0 0 6px}.doma-mr-hero p{font-size:11px;color:#8e8387;line-height:1.7;max-width:780px;margin:0}
-.doma-mr-card{padding:17px;background:#100b0d;border:1px solid #2d181f;border-radius:15px}
-.doma-mr-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.doma-mr-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:99px;background:#1c1014;color:#d29aaa;border:1px solid #40222c;font-size:9px}
-.doma-movie-stage{min-height:260px;padding:18px;border:1px solid #4a2531;border-radius:15px;background:radial-gradient(circle at 50% 20%,#32141f 0,#160c10 45%,#090708 100%);display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}
-.doma-movie-stage:before{content:'';position:absolute;inset:14px;border:1px solid rgba(255,255,255,.05);border-radius:11px;pointer-events:none}
-.doma-movie-scene-tag{position:absolute;left:18px;top:17px;font-size:8px;letter-spacing:1.5px;color:#8d737a;text-transform:uppercase}
-.doma-movie-dialogue{position:relative;z-index:1;max-width:880px;margin:auto;width:100%;text-align:center;padding:12px}
-.doma-movie-speaker{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#d98ea0;font-weight:900;margin-bottom:6px}
-.doma-movie-line{font-size:22px;line-height:1.6;font-weight:850;color:#fff}.doma-movie-ar{font-size:11px;line-height:1.8;color:#b6a9ae;margin-top:8px}
-.doma-movie-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;position:relative;z-index:2}
-.doma-movie-subtitle{margin-top:12px;padding:11px 12px;border-radius:10px;background:#0a0809;border:1px dashed #41232c;color:#9b8e93;font-size:10px;text-align:center}
-.doma-movie-list{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.doma-movie-choice{padding:12px;border-radius:12px;background:#120c0f;border:1px solid #2c1a21;color:#ddd;text-align:left;cursor:pointer}.doma-movie-choice:hover,.doma-movie-choice.active{border-color:#7f3149;background:#211016}
-.doma-movie-choice b{display:block;font-size:11px;margin-bottom:4px}.doma-movie-choice span{display:block;color:#7f7478;font-size:9px;line-height:1.5}
-.doma-movie-q{margin-top:12px;padding:14px;background:#0c090a;border:1px solid #302028;border-radius:12px}.doma-movie-q h4{font-size:14px;line-height:1.5;margin:0 0 10px}
-.doma-movie-options{display:grid;gap:8px}.doma-movie-option{width:100%;padding:10px 11px;border-radius:10px;background:#130d10;border:1px solid #2d1b22;color:#ddd;text-align:left;font-size:10px;cursor:pointer}.doma-movie-option:hover{border-color:#783048}.doma-movie-option.sel{border-color:#b44361;background:#251018}
-.doma-roulette-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);gap:14px}.doma-roulette-card{padding:18px;background:#100b0d;border:1px solid #2d181f;border-radius:15px}.doma-roulette-wheel-shell{display:grid;place-items:center;padding:16px}
-.doma-roulette-wheel{width:min(290px,72vw);aspect-ratio:1;border-radius:50%;position:relative;border:7px solid #2e1820;box-shadow:0 18px 50px rgba(0,0,0,.35);display:grid;place-items:center;transition:transform 2.6s cubic-bezier(.15,.85,.2,1);background:conic-gradient(#6f2940 0deg 60deg,#24131a 60deg 120deg,#8a3851 120deg 180deg,#24131a 180deg 240deg,#6f2940 240deg 300deg,#24131a 300deg 360deg)}
-.doma-roulette-wheel:before{content:'';width:86px;height:86px;border-radius:50%;background:#0b090a;border:1px solid #6c3042;box-shadow:inset 0 0 0 8px #160d11}
-.doma-roulette-wheel:after{content:'⚡';position:absolute;font-size:32px;color:#f0c6cf}
-.doma-roulette-pointer{width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-top:24px solid #e3b0bb;filter:drop-shadow(0 4px 7px rgba(0,0,0,.5));margin-bottom:-9px;z-index:2}
-.doma-roulette-items{display:grid;gap:8px;margin-top:12px}.doma-roulette-item{padding:10px 11px;background:#0c090a;border:1px solid #28171e;border-radius:10px;display:flex;justify-content:space-between;gap:10px;font-size:10px}.doma-roulette-item span{color:#7d7176}.doma-roulette-result{margin-top:13px;padding:15px;border-radius:12px;border:1px solid #4a2731;background:linear-gradient(135deg,#211016,#120b0d);text-align:center}.doma-roulette-result .emoji{font-size:34px}.doma-roulette-result h3{margin:4px 0 5px;font-size:20px}.doma-roulette-result p{font-size:10px;color:#8e8387;line-height:1.6}
-.doma-mr-side-nav{margin-top:6px}
-@media(max-width:780px){.doma-roulette-wrap{grid-template-columns:1fr}.doma-movie-list{grid-template-columns:1fr}.doma-mr-hero h3{font-size:21px}.doma-movie-line{font-size:18px}}
-</style>
-
-<script id="doma-movie-roulette-js">
-(function(){
-  'use strict';
-  const MR=window.__domaMovieRoulette={scene:0,line:0,finished:false,answers:{},spin:0,spinning:false};
-  const esc=v=>typeof window.esc==='function'?window.esc(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const $=id=>document.getElementById(id);
-  function loggedIn(){return typeof sessionUser!=='undefined'&&!!sessionUser}
-  function openShell(title,sub){
-    if(!loggedIn())return typeof openAuth==='function'&&openAuth('login');
-    const d=$('drawer');if(!d)return;
-    d.classList.add('show');document.body.style.overflow='hidden';if($('drawerBody'))$('drawerBody').scrollTop=0;
-    if($('drawerTitle'))$('drawerTitle').textContent=title;if($('drawerSubtitle'))$('drawerSubtitle').textContent=sub||'';
-    document.querySelectorAll('.doma-custom-student-nav').forEach(b=>b.classList.remove('active'));
-  }
-  function speak(text,lang){
-    if(!('speechSynthesis' in window)||!text)return;
-    try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang||'en-US';u.rate=.9;u.pitch=1;u.volume=1;speechSynthesis.speak(u)}catch(e){}
-  }
-  const scenes=[
-    {title:'The Unexpected Interview',meta:'Career • Confidence • Professional English',lines:[
-      ['Interviewer','I reviewed your application. What makes you a strong candidate?','راجعت طلب التقديم الخاص بك. ما الذي يجعلك مرشحًا قويًا؟'],
-      ['You','I learn quickly, communicate clearly, and take responsibility for my work.','أتعلم بسرعة، وأتواصل بوضوح، وأتحمل مسؤولية عملي.'],
-      ['Interviewer','Can you describe a challenge you handled successfully?','هل يمكنك وصف تحدٍ تعاملت معه بنجاح؟'],
-      ['You','Certainly. I stayed calm, identified the main issue, and proposed a practical solution.','بالتأكيد. حافظت على هدوئي، وحددت المشكلة الأساسية، واقترحت حلًا عمليًا.'],
-      ['Interviewer','That sounds promising. Do you have any questions for us?','هذا يبدو واعدًا. هل لديك أي أسئلة لنا؟'],
-      ['You','Yes. What would success in this role look like after the first three months?','نعم. كيف سيبدو النجاح في هذا الدور بعد الأشهر الثلاثة الأولى؟']
-    ],quiz:[
-      ['What quality does the candidate mention first?',['Quick learning','Technical expertise','Leadership experience'],0],
-      ['What did the candidate do with the challenge?',['Ignored it','Identified the issue and proposed a solution','Asked someone else to solve it'],1]
-    ]},
-    {title:'The Late Delivery',meta:'Workplace • Apology • Problem Solving',lines:[
-      ['Manager','The client expected the report this morning. What happened?','كان العميل يتوقع التقرير هذا الصباح. ماذا حدث؟'],
-      ['You','The final data arrived late, so I had to verify it before sending the report.','وصلت البيانات النهائية متأخرة، لذلك كان عليّ التحقق منها قبل إرسال التقرير.'],
-      ['Manager','I understand the reason, but we still need a solution.','أتفهم السبب، لكننا ما زلنا بحاجة إلى حل.'],
-      ['You','I can send a verified summary within an hour and deliver the full report by this afternoon.','يمكنني إرسال ملخص موثّق خلال ساعة وتسليم التقرير الكامل بعد ظهر اليوم.'],
-      ['Manager','That works. Keep me updated if anything changes.','هذا مناسب. أبلغني إذا تغير أي شيء.'],
-      ['You','Absolutely. I will keep you informed.','بالتأكيد. سأبقيك على اطلاع.']
-    ],quiz:[
-      ['Why was the report delayed?',['The client cancelled it','The data arrived late and needed verification','The manager changed the deadline'],1],
-      ['What solution did the student offer?',['A verified summary first, then the full report','Nothing','A new meeting next week'],0]
-    ]},
-    {title:'The Presentation',meta:'Academic • Speaking • Handling Questions',lines:[
-      ['Teacher','Your presentation was clear. How did you choose the main points?','كان عرضك واضحًا. كيف اخترت النقاط الرئيسية؟'],
-      ['Student','I focused on the strongest evidence and removed details that were not essential.','ركزت على أقوى الأدلة وحذفت التفاصيل غير الضرورية.'],
-      ['Teacher','A classmate challenged one of your conclusions. How would you respond?','اعترض أحد زملائك على إحدى استنتاجاتك. كيف سترد؟'],
-      ['Student','I would listen carefully, clarify the concern, and explain which evidence supports my conclusion.','سأستمع بعناية، وأوضح نقطة القلق، وأشرح أي دليل يدعم استنتاجي.'],
-      ['Teacher','That is a professional way to handle disagreement.','هذه طريقة احترافية للتعامل مع الاختلاف.'],
-      ['Student','Thank you. I think constructive questions make the presentation stronger.','شكرًا. أعتقد أن الأسئلة البنّاءة تجعل العرض أقوى.']
-    ],quiz:[
-      ['What did the student prioritize?',['Strong evidence and essential details','Long stories','Decorative slides'],0],
-      ['How would the student handle disagreement?',['Ignore it','Listen, clarify, and explain the evidence','End the presentation'],1]
-    ]}
-  ];
-  function navMark(which){document.querySelectorAll('.doma-custom-student-nav').forEach(b=>b.classList.toggle('active',b.dataset.domaCustom===which));}
-  function renderMovie(){
-    openShell('English Movie Scene 🎬', 'Original mini-scenes for real-world English practice.'); navMark('movie');
-    const sc=scenes[MR.scene], l=sc.lines[MR.line]||sc.lines[0];
-    $('drawerBody').innerHTML='<div class="doma-mr-page"><div class="doma-mr-hero"><div class="doma-mr-kicker">DOMA ORIGINAL • SCENE PRACTICE</div><h3>'+esc(sc.title)+'</h3><p>مشهد أصلي قصير بأسلوب سينمائي. اقرأ، اسمع الحوار، ثم اختبر فهمك للمعنى والاستخدام الطبيعي.</p></div><div class="doma-mr-toolbar"><div><span class="doma-mr-pill">SCENE '+(MR.scene+1)+' / '+scenes.length+'</span> <span class="doma-mr-pill">LINE '+(MR.line+1)+' / '+sc.lines.length+'</span></div><div class="doma-mr-actions"><button class="btn secondary" type="button" onclick="domaMoviePlayLine()">🔊 Play Line</button><button class="btn primary" type="button" onclick="domaMoviePlayScene()">▶ Play Scene</button></div></div><div class="doma-movie-stage"><div class="doma-movie-scene-tag">'+esc(sc.meta)+'</div><div class="doma-movie-dialogue"><div class="doma-movie-speaker">'+esc(l[0])+'</div><div class="doma-movie-line">'+esc(l[1])+'</div><div class="doma-movie-ar">'+esc(l[2])+'</div><div class="doma-movie-controls"><button class="btn secondary" type="button" onclick="domaMoviePrev()">← Previous</button><button class="btn primary" type="button" onclick="domaMovieNext()">Next →</button></div></div></div><div class="doma-movie-subtitle">Tip: اسمع الجملة ثم حاول ترديدها بنفس السرعة والنبرة.</div><div class="doma-mr-card"><div class="doma-mr-kicker">Choose a scene</div><div class="doma-movie-list">'+scenes.map((x,i)=>'<button type="button" class="doma-movie-choice '+(i===MR.scene?'active':'')+'" onclick="domaMovieScene('+i+')"><b>'+esc(x.title)+'</b><span>'+esc(x.meta)+'</span></button>').join('')+'</div></div><div class="doma-mr-card"><div class="doma-mr-kicker">Comprehension Check</div><div id="domaMovieQuizHost">'+renderMovieQuiz(sc)+'</div></div></div>';
-  }
-  function renderMovieQuiz(sc){
-    const total=sc.quiz.length;let h='';
-    sc.quiz.forEach((q,i)=>{const chosen=MR.answers[MR.scene+'_'+i];h+='<div class="doma-movie-q"><h4>'+(i+1)+'. '+esc(q[0])+'</h4><div class="doma-movie-options">'+q[1].map((opt,j)=>'<button type="button" class="doma-movie-option '+(chosen===j?'sel':'')+'" onclick="domaMovieAnswer('+i+','+j+')">'+esc(opt)+'</button>').join('')+'</div>'+(chosen!==undefined?'<div class="status show '+(chosen===q[2]?'success':'error')+'" style="margin-top:9px">'+(chosen===q[2]?'Correct ✅':'Not quite — try the other option.')+'</div>':'')+'</div>'});
-    const got=sc.quiz.reduce((n,q,i)=>n+(MR.answers[MR.scene+'_'+i]===q[2]?1:0),0);
-    return h+'<div class="doma-mr-pill" style="margin-top:10px">Score: '+got+'/'+total+'</div>';
-  }
-  function movieAnswer(qi,oi){MR.answers[MR.scene+'_'+qi]=oi;renderMovie()}
-  function movieNext(){const sc=scenes[MR.scene];if(MR.line<sc.lines.length-1){MR.line++;renderMovie()}else{MR.line=0;renderMovie()}}
-  function moviePrev(){if(MR.line>0){MR.line--;renderMovie()}else{const sc=scenes[MR.scene];MR.line=sc.lines.length-1;renderMovie()}}
-  function playLine(){const sc=scenes[MR.scene],l=sc.lines[MR.line];speak(l[1],'en-US')}
-  function playScene(){const sc=scenes[MR.scene];try{speechSynthesis.cancel()}catch(e){}let i=0;const run=()=>{if(i>=sc.lines.length)return;MR.line=i;renderMovie();const l=sc.lines[i];if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(l[1]);u.lang='en-US';u.rate=.9;u.onend=()=>{i++;run()};speechSynthesis.speak(u)}else{i++;setTimeout(run,1800)}};run()}
-  window.domaMovieScene=function(i){MR.scene=Math.max(0,Math.min(scenes.length-1,Number(i)||0));MR.line=0;MR.answers={};renderMovie()};
-  window.domaMovieNext=movieNext;window.domaMoviePrev=moviePrev;window.domaMoviePlayLine=playLine;window.domaMoviePlayScene=playScene;window.domaMovieAnswer=movieAnswer;
-
-  const roulette=[
-    {title:'Build Your Sentence',icon:'🧩',desc:'رتّب كلمات جملة احترافية.',action:()=>typeof openDomaBuildSentence==='function'&&openDomaBuildSentence()},
-    {title:'Daily Words',icon:'🔤',desc:'راجع كلمة اليوم مع صوتها.',action:()=>typeof studentView==='function'&&studentView('daily100')},
-    {title:'Quiz Sprint',icon:'⚡',desc:'افتح اختبارًا سريعًا من كويزاتك.',action:()=>typeof studentView==='function'&&studentView('quizzes')},
-    {title:'Lesson Hunt',icon:'📚',desc:'افتح درسًا جديدًا وتعلّم فكرة واحدة.',action:()=>typeof studentView==='function'&&studentView('lessons')},
-    {title:'Movie Scene',icon:'🎬',desc:'شاهد مشهدًا أصليًا واسمع الحوار.',action:()=>openDomaMovieScene()},
-    {title:'Grammar Fix',icon:'🛠️',desc:'صحّح جملة مكسورة في 20 ثانية.',action:()=>renderRouletteChallenge()},
-    {title:'Vocabulary Duel',icon:'🎯',desc:'اختر الكلمة الأنسب للمعنى.',action:()=>renderRouletteChallenge()},
-    {title:'Listening Flash',icon:'🎧',desc:'اسمع جملة ثم اختر معناها.',action:()=>renderRouletteChallenge()}
-  ];
-  let challengeType=null;
-  function renderRoulette(){
-    openShell('Skill Roulette 🎲','Spin once and let DOMA choose your next English challenge.');navMark('roulette');
-    $('drawerBody').innerHTML='<div class="doma-mr-page"><div class="doma-mr-hero"><div class="doma-mr-kicker">DOMA ACADEMY • RANDOM SKILL ENGINE</div><h3>Skill Roulette 🎲</h3><p>مش عارف تذاكر إيه؟ سيب الاختيار للمنصة. كل لفة تختار لك مهارة أو تحديًا مختلفًا.</p></div><div class="doma-roulette-wrap"><div class="doma-roulette-card"><div class="doma-roulette-wheel-shell"><div class="doma-roulette-pointer"></div><div id="domaRouletteWheel" class="doma-roulette-wheel"></div><button id="domaRouletteSpin" class="btn primary" type="button" style="margin-top:15px;min-width:190px" onclick="domaSpinRoulette()">🎲 SPIN</button></div><div id="domaRouletteResult"></div></div><div class="doma-roulette-card"><div class="doma-mr-kicker">Possible Skills</div><div class="doma-roulette-items">'+roulette.map((x,i)=>'<div class="doma-roulette-item"><b>'+x.icon+' '+esc(x.title)+'</b><span>#'+(i+1)+'</span></div>').join('')+'</div><div class="notice" style="margin-top:12px">كل مرة تعمل Spin هتطلع لك مهمة مختلفة. مفيش ترتيب ثابت.</div></div></div></div>';
-  }
-  function renderRouletteChallenge(){
-    openShell('Skill Roulette 🎲','Your random challenge is ready.');navMark('roulette');
-    const ch=challengeType||6, def=roulette[ch%roulette.length];
-    let content='';
-    if(def.title==='Grammar Fix')content='<div class="doma-random-mini"><div class="doma-movie-q"><h4>Fix this sentence:</h4><div style="font-size:17px;font-weight:850;margin:8px 0">She don’t usually arrive late.</div><p class="doma-movie-ar">هي لا تصل متأخرة عادةً.</p><button class="btn primary" onclick="domaRandomAnswer(0)">She doesn’t usually arrive late.</button><button class="btn secondary" onclick="domaRandomAnswer(1)" style="margin-left:7px">She don’t usually arrives late.</button><div id="domaRandomFeedback"></div></div></div>';
-    else if(def.title==='Vocabulary Duel')content='<div class="doma-movie-q"><h4>Choose the strongest match for <b>“reliable”</b>:</h4><div class="doma-movie-options"><button class="doma-movie-option" onclick="domaRandomAnswer(1)">Trustworthy and dependable</button><button class="doma-movie-option" onclick="domaRandomAnswer(0)">Expensive and modern</button><button class="doma-movie-option" onclick="domaRandomAnswer(0)">Fast and dramatic</button></div><div id="domaRandomFeedback"></div></div>';
-    else content='<div class="doma-movie-q"><h4>Listening Flash 🎧</h4><p style="font-size:11px;color:#8e8387">اضغط تشغيل، اسمع الجملة، ثم اختر معناها.</p><button class="btn secondary" onclick="speak(\'We need to reach a practical agreement before the meeting ends.\',\'en-US\')">🔊 Play</button><div class="doma-movie-options" style="margin-top:10px"><button class="doma-movie-option" onclick="domaRandomAnswer(0)">نحتاج إلى التوصل لاتفاق عملي قبل انتهاء الاجتماع.</button><button class="doma-movie-option" onclick="domaRandomAnswer(1)">نحتاج إلى إلغاء الاجتماع فورًا.</button></div><div id="domaRandomFeedback"></div></div>';
-    $('drawerBody').innerHTML='<div class="doma-mr-page"><div class="doma-mr-hero"><div class="doma-mr-kicker">LUCKY SKILL</div><h3>'+def.icon+' '+esc(def.title)+'</h3><p>'+esc(def.desc)+' خلّص التحدي وخد نقطة إضافية معنوية داخل الجلسة.</p></div><div class="doma-mr-card">'+content+'<div class="doma-mr-toolbar" style="margin-top:13px"><button class="btn secondary" onclick="renderDomaSkillRoulette()">↻ Spin Again</button><button class="btn primary" onclick="'+(def.action?'domaRouletteOpenPicked()':'renderDomaSkillRoulette()')+'">Open Skill</button></div></div></div>';
-    window.domaRouletteOpenPicked=function(){def.action&&def.action()};
-  }
-  window.speak=speak;
-  window.domaRandomAnswer=function(n){const fb=$('domaRandomFeedback');if(!fb)return;const good=(roulette[(challengeType||0)%roulette.length].title==='Grammar Fix'?n===0:roulette[(challengeType||0)%roulette.length].title==='Vocabulary Duel'?n===1:n===0);fb.innerHTML='<div class="status show '+(good?'success':'error')+'" style="margin-top:10px">'+(good?'Correct ✅ +10 XP':'Not quite. Try again and listen for the key word.')+'</div>'};
-  window.domaSpinRoulette=function(){if(MR.spinning)return;MR.spinning=true;const btn=$('domaRouletteSpin'),wheel=$('domaRouletteWheel');if(btn)btn.disabled=true;const pick=Math.floor(Math.random()*roulette.length);const rotations=5+Math.floor(Math.random()*3);const angle=rotations*360+pick*45+22.5;MR.spin+=angle;if(wheel)wheel.style.transform='rotate('+MR.spin+'deg)';setTimeout(()=>{MR.spinning=false;if(btn)btn.disabled=false;challengeType=pick;const r=roulette[pick];const result=$('domaRouletteResult');if(result)result.innerHTML='<div class="doma-roulette-result"><div class="emoji">'+r.icon+'</div><h3>'+esc(r.title)+'</h3><p>'+esc(r.desc)+'</p><button class="btn primary" onclick="domaRouletteOpenPicked()">Start This Challenge →</button></div>';if(r.title==='Grammar Fix'||r.title==='Vocabulary Duel'||r.title==='Listening Flash')setTimeout(renderRouletteChallenge,400)},2750)};
-  window.renderDomaSkillRoulette=renderRoulette;
-  window.openDomaMovieScene=function(){MR.line=0;renderMovie()};
-
-  function installNav(){
-    const side=document.querySelector('.drawer-side');if(!side||side.querySelector('#domaMovieNav'))return;
-    const logout=Array.from(side.querySelectorAll('.side-link')).find(x=>(x.textContent||'').includes('Log Out'));
-    const make=(id,label,fn)=>{const b=document.createElement('button');b.type='button';b.id=id;b.className='side-link doma-custom-student-nav';b.dataset.domaCustom=label==='English Movie Scene'?'movie':'roulette';b.textContent=(label==='English Movie Scene'?'🎬 ':'🎲 ')+label;b.onclick=fn;side.insertBefore(b,logout||null)};
-    make('domaMovieNav','English Movie Scene',openDomaMovieScene);make('domaRouletteNav','Skill Roulette',renderRoulette);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installNav,{once:true});else installNav();
-  window.addEventListener('beforeunload',()=>{try{speechSynthesis.cancel()}catch(e){}});
-})();
-</script>
-</body></html>');w.document.close();w.print()}
+function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">DOMA ACADEMY</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">BY ADHAM</p></div></body></html>');w.document.close();w.print()}
 </script>
 <style id="doma-student-pro5plus-style">
 .pro5-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.pro5-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.pro5-card h3{margin:0 0 8px}.pro5-muted{opacity:.72;font-size:.9rem;line-height:1.6}.pro5-list{display:grid;gap:9px;margin-top:12px}.pro5-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-row small,.pro5-row span{display:block;opacity:.68}.pro5-input{width:100%;box-sizing:border-box;padding:11px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:inherit;outline:none}.pro5-textarea{min-height:130px;resize:vertical}.pro5-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.pro5-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.07);font-size:.78rem}.pro5-progress{height:9px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:8px}.pro5-progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#62d4ff,#8d7cff)}.pro5-reward{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:13px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06)}.pro5-reward .ico{font-size:1.6rem}.pro5-day{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:12px}.pro5-day div{padding:9px 4px;text-align:center;border-radius:11px;background:rgba(255,255,255,.045);font-size:.72rem}.pro5-day .on{background:rgba(98,212,255,.15);border:1px solid rgba(98,212,255,.25)}.pro5-note{padding:12px;border-radius:13px;background:rgba(255,255,255,.045);white-space:pre-wrap;line-height:1.6}.pro5-unread{box-shadow:inset 3px 0 0 #62d4ff}.pro5-assistant{min-height:180px;max-height:390px;overflow:auto;display:grid;gap:8px;padding:10px;background:rgba(0,0,0,.12);border-radius:14px}.pro5-msg{padding:10px 12px;border-radius:13px;line-height:1.55;max-width:90%}.pro5-msg.bot{background:rgba(98,212,255,.09);justify-self:start}.pro5-msg.user{background:rgba(255,255,255,.08);justify-self:end}.pro5-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.pro5-kpi div{padding:11px;text-align:center;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-kpi b{display:block;font-size:1.2rem}.pro5-empty{padding:20px;border-radius:14px;background:rgba(255,255,255,.04);text-align:center;opacity:.75}@media(max-width:850px){.pro5-grid{grid-template-columns:1fr}.pro5-kpi{grid-template-columns:repeat(2,1fr)}}
@@ -3106,6 +2959,152 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 })();
 </script>
 
+
+<style id="doma-movie-roulette-css">
+.doma-mr-page{display:grid;gap:14px}
+.doma-mr-hero{padding:21px;background:linear-gradient(135deg,#261018,#0c090b);border:1px solid #4d2633;border-radius:16px;position:relative;overflow:hidden}
+.doma-mr-hero:after{content:'◆  ◆  ◆';position:absolute;right:16px;top:14px;letter-spacing:6px;color:#5c2737;font-size:12px;opacity:.7}
+.doma-mr-kicker{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c05269;font-weight:900;margin-bottom:6px}
+.doma-mr-hero h3{font-size:24px;margin:0 0 6px}.doma-mr-hero p{font-size:11px;color:#8e8387;line-height:1.7;max-width:780px;margin:0}
+.doma-mr-card{padding:17px;background:#100b0d;border:1px solid #2d181f;border-radius:15px}
+.doma-mr-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.doma-mr-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:99px;background:#1c1014;color:#d29aaa;border:1px solid #40222c;font-size:9px}
+.doma-movie-stage{min-height:260px;padding:18px;border:1px solid #4a2531;border-radius:15px;background:radial-gradient(circle at 50% 20%,#32141f 0,#160c10 45%,#090708 100%);display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}
+.doma-movie-stage:before{content:'';position:absolute;inset:14px;border:1px solid rgba(255,255,255,.05);border-radius:11px;pointer-events:none}
+.doma-movie-scene-tag{position:absolute;left:18px;top:17px;font-size:8px;letter-spacing:1.5px;color:#8d737a;text-transform:uppercase}
+.doma-movie-dialogue{position:relative;z-index:1;max-width:880px;margin:auto;width:100%;text-align:center;padding:12px}
+.doma-movie-speaker{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#d98ea0;font-weight:900;margin-bottom:6px}
+.doma-movie-line{font-size:22px;line-height:1.6;font-weight:850;color:#fff}.doma-movie-ar{font-size:11px;line-height:1.8;color:#b6a9ae;margin-top:8px}
+.doma-movie-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;position:relative;z-index:2}
+.doma-movie-subtitle{margin-top:12px;padding:11px 12px;border-radius:10px;background:#0a0809;border:1px dashed #41232c;color:#9b8e93;font-size:10px;text-align:center}
+.doma-movie-list{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.doma-movie-choice{padding:12px;border-radius:12px;background:#120c0f;border:1px solid #2c1a21;color:#ddd;text-align:left;cursor:pointer}.doma-movie-choice:hover,.doma-movie-choice.active{border-color:#7f3149;background:#211016}
+.doma-movie-choice b{display:block;font-size:11px;margin-bottom:4px}.doma-movie-choice span{display:block;color:#7f7478;font-size:9px;line-height:1.5}
+.doma-movie-q{margin-top:12px;padding:14px;background:#0c090a;border:1px solid #302028;border-radius:12px}.doma-movie-q h4{font-size:14px;line-height:1.5;margin:0 0 10px}
+.doma-movie-options{display:grid;gap:8px}.doma-movie-option{width:100%;padding:10px 11px;border-radius:10px;background:#130d10;border:1px solid #2d1b22;color:#ddd;text-align:left;font-size:10px;cursor:pointer}.doma-movie-option:hover{border-color:#783048}.doma-movie-option.sel{border-color:#b44361;background:#251018}
+.doma-roulette-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);gap:14px}.doma-roulette-card{padding:18px;background:#100b0d;border:1px solid #2d181f;border-radius:15px}.doma-roulette-wheel-shell{display:grid;place-items:center;padding:16px}
+.doma-roulette-wheel{width:min(290px,72vw);aspect-ratio:1;border-radius:50%;position:relative;border:7px solid #2e1820;box-shadow:0 18px 50px rgba(0,0,0,.35);display:grid;place-items:center;transition:transform 2.6s cubic-bezier(.15,.85,.2,1);background:conic-gradient(#6f2940 0deg 60deg,#24131a 60deg 120deg,#8a3851 120deg 180deg,#24131a 180deg 240deg,#6f2940 240deg 300deg,#24131a 300deg 360deg)}
+.doma-roulette-wheel:before{content:'';width:86px;height:86px;border-radius:50%;background:#0b090a;border:1px solid #6c3042;box-shadow:inset 0 0 0 8px #160d11}
+.doma-roulette-wheel:after{content:'⚡';position:absolute;font-size:32px;color:#f0c6cf}
+.doma-roulette-pointer{width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-top:24px solid #e3b0bb;filter:drop-shadow(0 4px 7px rgba(0,0,0,.5));margin-bottom:-9px;z-index:2}
+.doma-roulette-items{display:grid;gap:8px;margin-top:12px}.doma-roulette-item{padding:10px 11px;background:#0c090a;border:1px solid #28171e;border-radius:10px;display:flex;justify-content:space-between;gap:10px;font-size:10px}.doma-roulette-item span{color:#7d7176}.doma-roulette-result{margin-top:13px;padding:15px;border-radius:12px;border:1px solid #4a2731;background:linear-gradient(135deg,#211016,#120b0d);text-align:center}.doma-roulette-result .emoji{font-size:34px}.doma-roulette-result h3{margin:4px 0 5px;font-size:20px}.doma-roulette-result p{font-size:10px;color:#8e8387;line-height:1.6}
+.doma-mr-side-nav{margin-top:6px}
+@media(max-width:780px){.doma-roulette-wrap{grid-template-columns:1fr}.doma-movie-list{grid-template-columns:1fr}.doma-mr-hero h3{font-size:21px}.doma-movie-line{font-size:18px}}
+</style>
+<script id="doma-movie-roulette-js">
+(function(){
+  'use strict';
+  const MR=window.__domaMovieRoulette={scene:0,line:0,finished:false,answers:{},spin:0,spinning:false};
+  const esc=v=>typeof window.esc==='function'?window.esc(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const $=id=>document.getElementById(id);
+  function loggedIn(){return typeof sessionUser!=='undefined'&&!!sessionUser}
+  function openShell(title,sub){
+    if(!loggedIn())return typeof openAuth==='function'&&openAuth('login');
+    const d=$('drawer');if(!d)return;
+    d.classList.add('show');document.body.style.overflow='hidden';if($('drawerBody'))$('drawerBody').scrollTop=0;
+    if($('drawerTitle'))$('drawerTitle').textContent=title;if($('drawerSubtitle'))$('drawerSubtitle').textContent=sub||'';
+    document.querySelectorAll('.doma-custom-student-nav').forEach(b=>b.classList.remove('active'));
+  }
+  function speak(text,lang){
+    if(!('speechSynthesis' in window)||!text)return;
+    try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang||'en-US';u.rate=.9;u.pitch=1;u.volume=1;speechSynthesis.speak(u)}catch(e){}
+  }
+  const scenes=[
+    {title:'The Unexpected Interview',meta:'Career • Confidence • Professional English',lines:[
+      ['Interviewer','I reviewed your application. What makes you a strong candidate?','راجعت طلب التقديم الخاص بك. ما الذي يجعلك مرشحًا قويًا؟'],
+      ['You','I learn quickly, communicate clearly, and take responsibility for my work.','أتعلم بسرعة، وأتواصل بوضوح، وأتحمل مسؤولية عملي.'],
+      ['Interviewer','Can you describe a challenge you handled successfully?','هل يمكنك وصف تحدٍ تعاملت معه بنجاح؟'],
+      ['You','Certainly. I stayed calm, identified the main issue, and proposed a practical solution.','بالتأكيد. حافظت على هدوئي، وحددت المشكلة الأساسية، واقترحت حلًا عمليًا.'],
+      ['Interviewer','That sounds promising. Do you have any questions for us?','هذا يبدو واعدًا. هل لديك أي أسئلة لنا؟'],
+      ['You','Yes. What would success in this role look like after the first three months?','نعم. كيف سيبدو النجاح في هذا الدور بعد الأشهر الثلاثة الأولى؟']
+    ],quiz:[
+      ['What quality does the candidate mention first?',['Quick learning','Technical expertise','Leadership experience'],0],
+      ['What did the candidate do with the challenge?',['Ignored it','Identified the issue and proposed a solution','Asked someone else to solve it'],1]
+    ]},
+    {title:'The Late Delivery',meta:'Workplace • Apology • Problem Solving',lines:[
+      ['Manager','The client expected the report this morning. What happened?','كان العميل يتوقع التقرير هذا الصباح. ماذا حدث؟'],
+      ['You','The final data arrived late, so I had to verify it before sending the report.','وصلت البيانات النهائية متأخرة، لذلك كان عليّ التحقق منها قبل إرسال التقرير.'],
+      ['Manager','I understand the reason, but we still need a solution.','أتفهم السبب، لكننا ما زلنا بحاجة إلى حل.'],
+      ['You','I can send a verified summary within an hour and deliver the full report by this afternoon.','يمكنني إرسال ملخص موثّق خلال ساعة وتسليم التقرير الكامل بعد ظهر اليوم.'],
+      ['Manager','That works. Keep me updated if anything changes.','هذا مناسب. أبلغني إذا تغير أي شيء.'],
+      ['You','Absolutely. I will keep you informed.','بالتأكيد. سأبقيك على اطلاع.']
+    ],quiz:[
+      ['Why was the report delayed?',['The client cancelled it','The data arrived late and needed verification','The manager changed the deadline'],1],
+      ['What solution did the student offer?',['A verified summary first, then the full report','Nothing','A new meeting next week'],0]
+    ]},
+    {title:'The Presentation',meta:'Academic • Speaking • Handling Questions',lines:[
+      ['Teacher','Your presentation was clear. How did you choose the main points?','كان عرضك واضحًا. كيف اخترت النقاط الرئيسية؟'],
+      ['Student','I focused on the strongest evidence and removed details that were not essential.','ركزت على أقوى الأدلة وحذفت التفاصيل غير الضرورية.'],
+      ['Teacher','A classmate challenged one of your conclusions. How would you respond?','اعترض أحد زملائك على إحدى استنتاجاتك. كيف سترد؟'],
+      ['Student','I would listen carefully, clarify the concern, and explain which evidence supports my conclusion.','سأستمع بعناية، وأوضح نقطة القلق، وأشرح أي دليل يدعم استنتاجي.'],
+      ['Teacher','That is a professional way to handle disagreement.','هذه طريقة احترافية للتعامل مع الاختلاف.'],
+      ['Student','Thank you. I think constructive questions make the presentation stronger.','شكرًا. أعتقد أن الأسئلة البنّاءة تجعل العرض أقوى.']
+    ],quiz:[
+      ['What did the student prioritize?',['Strong evidence and essential details','Long stories','Decorative slides'],0],
+      ['How would the student handle disagreement?',['Ignore it','Listen, clarify, and explain the evidence','End the presentation'],1]
+    ]}
+  ];
+  function navMark(which){document.querySelectorAll('.doma-custom-student-nav').forEach(b=>b.classList.toggle('active',b.dataset.domaCustom===which));}
+  function renderMovie(){
+    openShell('English Movie Scene 🎬', 'Original mini-scenes for real-world English practice.'); navMark('movie');
+    const sc=scenes[MR.scene], l=sc.lines[MR.line]||sc.lines[0];
+    $('drawerBody').innerHTML='<div class="doma-mr-page"><div class="doma-mr-hero"><div class="doma-mr-kicker">DOMA ORIGINAL • SCENE PRACTICE</div><h3>'+esc(sc.title)+'</h3><p>مشهد أصلي قصير بأسلوب سينمائي. اقرأ، اسمع الحوار، ثم اختبر فهمك للمعنى والاستخدام الطبيعي.</p></div><div class="doma-mr-toolbar"><div><span class="doma-mr-pill">SCENE '+(MR.scene+1)+' / '+scenes.length+'</span> <span class="doma-mr-pill">LINE '+(MR.line+1)+' / '+sc.lines.length+'</span></div><div class="doma-mr-actions"><button class="btn secondary" type="button" onclick="domaMoviePlayLine()">🔊 Play Line</button><button class="btn primary" type="button" onclick="domaMoviePlayScene()">▶ Play Scene</button></div></div><div class="doma-movie-stage"><div class="doma-movie-scene-tag">'+esc(sc.meta)+'</div><div class="doma-movie-dialogue"><div class="doma-movie-speaker">'+esc(l[0])+'</div><div class="doma-movie-line">'+esc(l[1])+'</div><div class="doma-movie-ar">'+esc(l[2])+'</div><div class="doma-movie-controls"><button class="btn secondary" type="button" onclick="domaMoviePrev()">← Previous</button><button class="btn primary" type="button" onclick="domaMovieNext()">Next →</button></div></div></div><div class="doma-movie-subtitle">Tip: اسمع الجملة ثم حاول ترديدها بنفس السرعة والنبرة.</div><div class="doma-mr-card"><div class="doma-mr-kicker">Choose a scene</div><div class="doma-movie-list">'+scenes.map((x,i)=>'<button type="button" class="doma-movie-choice '+(i===MR.scene?'active':'')+'" onclick="domaMovieScene('+i+')"><b>'+esc(x.title)+'</b><span>'+esc(x.meta)+'</span></button>').join('')+'</div></div><div class="doma-mr-card"><div class="doma-mr-kicker">Comprehension Check</div><div id="domaMovieQuizHost">'+renderMovieQuiz(sc)+'</div></div></div>';
+  }
+  function renderMovieQuiz(sc){
+    const total=sc.quiz.length;let h='';
+    sc.quiz.forEach((q,i)=>{const chosen=MR.answers[MR.scene+'_'+i];h+='<div class="doma-movie-q"><h4>'+(i+1)+'. '+esc(q[0])+'</h4><div class="doma-movie-options">'+q[1].map((opt,j)=>'<button type="button" class="doma-movie-option '+(chosen===j?'sel':'')+'" onclick="domaMovieAnswer('+i+','+j+')">'+esc(opt)+'</button>').join('')+'</div>'+(chosen!==undefined?'<div class="status show '+(chosen===q[2]?'success':'error')+'" style="margin-top:9px">'+(chosen===q[2]?'Correct ✅':'Not quite — try the other option.')+'</div>':'')+'</div>'});
+    const got=sc.quiz.reduce((n,q,i)=>n+(MR.answers[MR.scene+'_'+i]===q[2]?1:0),0);
+    return h+'<div class="doma-mr-pill" style="margin-top:10px">Score: '+got+'/'+total+'</div>';
+  }
+  function movieAnswer(qi,oi){MR.answers[MR.scene+'_'+qi]=oi;renderMovie()}
+  function movieNext(){const sc=scenes[MR.scene];if(MR.line<sc.lines.length-1){MR.line++;renderMovie()}else{MR.line=0;renderMovie()}}
+  function moviePrev(){if(MR.line>0){MR.line--;renderMovie()}else{const sc=scenes[MR.scene];MR.line=sc.lines.length-1;renderMovie()}}
+  function playLine(){const sc=scenes[MR.scene],l=sc.lines[MR.line];speak(l[1],'en-US')}
+  function playScene(){const sc=scenes[MR.scene];try{speechSynthesis.cancel()}catch(e){}let i=0;const run=()=>{if(i>=sc.lines.length)return;MR.line=i;renderMovie();const l=sc.lines[i];if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(l[1]);u.lang='en-US';u.rate=.9;u.onend=()=>{i++;run()};speechSynthesis.speak(u)}else{i++;setTimeout(run,1800)}};run()}
+  window.domaMovieScene=function(i){MR.scene=Math.max(0,Math.min(scenes.length-1,Number(i)||0));MR.line=0;MR.answers={};renderMovie()};
+  window.domaMovieNext=movieNext;window.domaMoviePrev=moviePrev;window.domaMoviePlayLine=playLine;window.domaMoviePlayScene=playScene;window.domaMovieAnswer=movieAnswer;
+
+  const roulette=[
+    {title:'Build Your Sentence',icon:'🧩',desc:'رتّب كلمات جملة احترافية.',action:()=>typeof openDomaBuildSentence==='function'&&openDomaBuildSentence()},
+    {title:'Daily Words',icon:'🔤',desc:'راجع كلمة اليوم مع صوتها.',action:()=>typeof studentView==='function'&&studentView('daily100')},
+    {title:'Quiz Sprint',icon:'⚡',desc:'افتح اختبارًا سريعًا من كويزاتك.',action:()=>typeof studentView==='function'&&studentView('quizzes')},
+    {title:'Lesson Hunt',icon:'📚',desc:'افتح درسًا جديدًا وتعلّم فكرة واحدة.',action:()=>typeof studentView==='function'&&studentView('lessons')},
+    {title:'Movie Scene',icon:'🎬',desc:'شاهد مشهدًا أصليًا واسمع الحوار.',action:()=>openDomaMovieScene()},
+    {title:'Grammar Fix',icon:'🛠️',desc:'صحّح جملة مكسورة في 20 ثانية.',action:()=>renderRouletteChallenge()},
+    {title:'Vocabulary Duel',icon:'🎯',desc:'اختر الكلمة الأنسب للمعنى.',action:()=>renderRouletteChallenge()},
+    {title:'Listening Flash',icon:'🎧',desc:'اسمع جملة ثم اختر معناها.',action:()=>renderRouletteChallenge()}
+  ];
+  let challengeType=null;
+  function renderRoulette(){
+    openShell('Skill Roulette 🎲','Spin once and let DOMA choose your next English challenge.');navMark('roulette');
+    $('drawerBody').innerHTML='<div class="doma-mr-page"><div class="doma-mr-hero"><div class="doma-mr-kicker">DOMA ACADEMY • RANDOM SKILL ENGINE</div><h3>Skill Roulette 🎲</h3><p>مش عارف تذاكر إيه؟ سيب الاختيار للمنصة. كل لفة تختار لك مهارة أو تحديًا مختلفًا.</p></div><div class="doma-roulette-wrap"><div class="doma-roulette-card"><div class="doma-roulette-wheel-shell"><div class="doma-roulette-pointer"></div><div id="domaRouletteWheel" class="doma-roulette-wheel"></div><button id="domaRouletteSpin" class="btn primary" type="button" style="margin-top:15px;min-width:190px" onclick="domaSpinRoulette()">🎲 SPIN</button></div><div id="domaRouletteResult"></div></div><div class="doma-roulette-card"><div class="doma-mr-kicker">Possible Skills</div><div class="doma-roulette-items">'+roulette.map((x,i)=>'<div class="doma-roulette-item"><b>'+x.icon+' '+esc(x.title)+'</b><span>#'+(i+1)+'</span></div>').join('')+'</div><div class="notice" style="margin-top:12px">كل مرة تعمل Spin هتطلع لك مهمة مختلفة. مفيش ترتيب ثابت.</div></div></div></div>';
+  }
+  function renderRouletteChallenge(){
+    openShell('Skill Roulette 🎲','Your random challenge is ready.');navMark('roulette');
+    const ch=challengeType||6, def=roulette[ch%roulette.length];
+    let content='';
+    if(def.title==='Grammar Fix')content='<div class="doma-random-mini"><div class="doma-movie-q"><h4>Fix this sentence:</h4><div style="font-size:17px;font-weight:850;margin:8px 0">She don’t usually arrive late.</div><p class="doma-movie-ar">هي لا تصل متأخرة عادةً.</p><button class="btn primary" onclick="domaRandomAnswer(0)">She doesn’t usually arrive late.</button><button class="btn secondary" onclick="domaRandomAnswer(1)" style="margin-left:7px">She don’t usually arrives late.</button><div id="domaRandomFeedback"></div></div></div>';
+    else if(def.title==='Vocabulary Duel')content='<div class="doma-movie-q"><h4>Choose the strongest match for <b>“reliable”</b>:</h4><div class="doma-movie-options"><button class="doma-movie-option" onclick="domaRandomAnswer(1)">Trustworthy and dependable</button><button class="doma-movie-option" onclick="domaRandomAnswer(0)">Expensive and modern</button><button class="doma-movie-option" onclick="domaRandomAnswer(0)">Fast and dramatic</button></div><div id="domaRandomFeedback"></div></div>';
+    else content='<div class="doma-movie-q"><h4>Listening Flash 🎧</h4><p style="font-size:11px;color:#8e8387">اضغط تشغيل، اسمع الجملة، ثم اختر معناها.</p><button class="btn secondary" onclick="speak(\'We need to reach a practical agreement before the meeting ends.\',\'en-US\')">🔊 Play</button><div class="doma-movie-options" style="margin-top:10px"><button class="doma-movie-option" onclick="domaRandomAnswer(0)">نحتاج إلى التوصل لاتفاق عملي قبل انتهاء الاجتماع.</button><button class="doma-movie-option" onclick="domaRandomAnswer(1)">نحتاج إلى إلغاء الاجتماع فورًا.</button></div><div id="domaRandomFeedback"></div></div>';
+    $('drawerBody').innerHTML='<div class="doma-mr-page"><div class="doma-mr-hero"><div class="doma-mr-kicker">LUCKY SKILL</div><h3>'+def.icon+' '+esc(def.title)+'</h3><p>'+esc(def.desc)+' خلّص التحدي وخد نقطة إضافية معنوية داخل الجلسة.</p></div><div class="doma-mr-card">'+content+'<div class="doma-mr-toolbar" style="margin-top:13px"><button class="btn secondary" onclick="renderDomaSkillRoulette()">↻ Spin Again</button><button class="btn primary" onclick="'+(def.action?'domaRouletteOpenPicked()':'renderDomaSkillRoulette()')+'">Open Skill</button></div></div></div>';
+    window.domaRouletteOpenPicked=function(){def.action&&def.action()};
+  }
+  window.speak=speak;
+  window.domaRandomAnswer=function(n){const fb=$('domaRandomFeedback');if(!fb)return;const good=(roulette[(challengeType||0)%roulette.length].title==='Grammar Fix'?n===0:roulette[(challengeType||0)%roulette.length].title==='Vocabulary Duel'?n===1:n===0);fb.innerHTML='<div class="status show '+(good?'success':'error')+'" style="margin-top:10px">'+(good?'Correct ✅ +10 XP':'Not quite. Try again and listen for the key word.')+'</div>'};
+  window.domaSpinRoulette=function(){if(MR.spinning)return;MR.spinning=true;const btn=$('domaRouletteSpin'),wheel=$('domaRouletteWheel');if(btn)btn.disabled=true;const pick=Math.floor(Math.random()*roulette.length);const rotations=5+Math.floor(Math.random()*3);const angle=rotations*360+pick*45+22.5;MR.spin+=angle;if(wheel)wheel.style.transform='rotate('+MR.spin+'deg)';setTimeout(()=>{MR.spinning=false;if(btn)btn.disabled=false;challengeType=pick;const r=roulette[pick];const result=$('domaRouletteResult');if(result)result.innerHTML='<div class="doma-roulette-result"><div class="emoji">'+r.icon+'</div><h3>'+esc(r.title)+'</h3><p>'+esc(r.desc)+'</p><button class="btn primary" onclick="domaRouletteOpenPicked()">Start This Challenge →</button></div>';if(r.title==='Grammar Fix'||r.title==='Vocabulary Duel'||r.title==='Listening Flash')setTimeout(renderRouletteChallenge,400)},2750)};
+  window.renderDomaSkillRoulette=renderRoulette;
+  window.openDomaMovieScene=function(){MR.line=0;renderMovie()};
+
+  function installNav(){
+    const side=document.querySelector('.drawer-side');if(!side||side.querySelector('#domaMovieNav'))return;
+    const logout=Array.from(side.querySelectorAll('.side-link')).find(x=>(x.textContent||'').includes('Log Out'));
+    const make=(id,label,fn)=>{const b=document.createElement('button');b.type='button';b.id=id;b.className='side-link doma-custom-student-nav';b.dataset.domaCustom=label==='English Movie Scene'?'movie':'roulette';b.textContent=(label==='English Movie Scene'?'🎬 ':'🎲 ')+label;b.onclick=fn;side.insertBefore(b,logout||null)};
+    make('domaMovieNav','English Movie Scene',openDomaMovieScene);make('domaRouletteNav','Skill Roulette',renderRoulette);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installNav,{once:true});else installNav();
+  window.addEventListener('beforeunload',()=>{try{speechSynthesis.cancel()}catch(e){}});
+})();
+</script>
 </body>
 
 
