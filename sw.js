@@ -1,38 +1,48 @@
-const CACHE_NAME = 'mr-fluent-offline-v2';
+const CACHE_NAME = 'mr-fluent-offline-v3';
 
-const scopeUrl = new URL('./', self.registration.scope);
-
-const SHELL = [
-  scopeUrl.href,
-  new URL('./index.html', self.registration.scope).href,
-  new URL('./manifest.webmanifest', self.registration.scope).href,
-  new URL('./mr-fluent-icon-192(1).png', self.registration.scope).href,
-  new URL('./mr-fluent-icon-512(1).png', self.registration.scope).href
+const SHELL_FILES = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './mr-fluent-icon-192.png',
+  './mr-fluent-icon-512.png'
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(SHELL))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+
+    await Promise.allSettled(
+      SHELL_FILES.map(async url => {
+        try {
+          const response = await fetch(url, { cache: 'no-cache' });
+          if (response.ok) {
+            await cache.put(url, response);
+          }
+        } catch (_) {}
+      })
+    );
+
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys =>
-        Promise.all(
-          keys
-            .filter(key =>
-              key.startsWith('mr-fluent-offline-') &&
-              key !== CACHE_NAME
-            )
-            .map(key => caches.delete(key))
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+
+    await Promise.all(
+      keys
+        .filter(
+          key =>
+            key.startsWith('mr-fluent-offline-') &&
+            key !== CACHE_NAME
         )
-      )
-      .then(() => self.clients.claim())
-  );
+        .map(key => caches.delete(key))
+    );
+
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener('fetch', event => {
@@ -40,43 +50,44 @@ self.addEventListener('fetch', event => {
 
   if (req.method !== 'GET') return;
 
-  event.respondWith(
-    (async () => {
-      const cached = await caches.match(req);
+  event.respondWith((async () => {
+    const cached = await caches.match(req);
 
-      if (req.mode === 'navigate') {
-        try {
-          const fresh = await fetch(req);
+    if (req.mode === 'navigate') {
+      try {
+        const fresh = await fetch(req);
 
+        if (fresh && fresh.ok) {
           const cache = await caches.open(CACHE_NAME);
           cache.put(req, fresh.clone()).catch(() => {});
-
-          return fresh;
-        } catch (_) {
-          return (
-            cached ||
-            caches.match(scopeUrl.href) ||
-            caches.match(
-              new URL('./index.html', self.registration.scope).href
-            )
-          );
-        }
-      }
-
-      if (cached) return cached;
-
-      try {
-        const response = await fetch(req);
-
-        if (response.ok || response.type === 'opaque') {
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(req, response.clone()).catch(() => {});
         }
 
-        return response;
+        return fresh;
       } catch (_) {
-        return cached || Response.error();
+        return (
+          cached ||
+          caches.match('./index.html') ||
+          Response.error()
+        );
       }
-    })()
-  );
+    }
+
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(req);
+
+      if (
+        response &&
+        (response.ok || response.type === 'opaque')
+      ) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(req, response.clone()).catch(() => {});
+      }
+
+      return response;
+    } catch (_) {
+      return cached || Response.error();
+    }
+  })());
 });
