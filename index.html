@@ -3992,3 +3992,361 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   window.addEventListener('beforeunload',()=>{try{send('leave',{id:sessionUser?.id})}catch(e){}closeChannel()});
 })();
 </script>
+
+
+
+<script id="doma-offline-content-v2-fix">
+(function(){
+  'use strict';
+
+  const DB_NAME='doma-offline-content-v2';
+  const DB_VERSION=1;
+  const PACKS='packs';
+  const META='meta';
+  const KEY_PREFIX='grade:';
+
+  function dbOpen(){
+    return new Promise((resolve,reject)=>{
+      try{
+        const req=indexedDB.open(DB_NAME,DB_VERSION);
+        req.onupgradeneeded=()=>{
+          const db=req.result;
+          if(!db.objectStoreNames.contains(PACKS))db.createObjectStore(PACKS);
+          if(!db.objectStoreNames.contains(META))db.createObjectStore(META);
+        };
+        req.onsuccess=()=>resolve(req.result);
+        req.onerror=()=>reject(req.error||new Error('Offline database unavailable'));
+      }catch(e){reject(e)}
+    });
+  }
+
+  async function dbPut(store,key,value){
+    const db=await dbOpen();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(store,'readwrite');
+      tx.objectStore(store).put(value,key);
+      tx.oncomplete=()=>{db.close();resolve(true)};
+      tx.onerror=()=>{db.close();reject(tx.error||new Error('Offline save failed'))};
+    });
+  }
+
+  async function dbGet(store,key){
+    const db=await dbOpen();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(store,'readonly');
+      const req=tx.objectStore(store).get(key);
+      req.onsuccess=()=>{db.close();resolve(req.result)};
+      req.onerror=()=>{db.close();reject(req.error||new Error('Offline read failed'))};
+    });
+  }
+
+  async function dbClear(){
+    const db=await dbOpen();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction([PACKS,META],'readwrite');
+      tx.objectStore(PACKS).clear();
+      tx.objectStore(META).clear();
+      tx.oncomplete=()=>{db.close();resolve(true)};
+      tx.onerror=()=>{db.close();reject(tx.error||new Error('Offline clear failed'))};
+    });
+  }
+
+  function packKey(gradeId){return KEY_PREFIX+String(gradeId||'')}
+
+  async function readPack(gradeId){
+    try{
+      if(gradeId)return await dbGet(PACKS,packKey(gradeId));
+      const meta=await dbGet(META,'last');
+      return meta?.gradeId?await dbGet(PACKS,packKey(meta.gradeId)):null;
+    }catch(_){return null}
+  }
+
+  function setStatusText(msg,kind){
+    const el=document.getElementById('domaOfflinePackStatus');
+    if(!el)return;
+    el.textContent=msg||'';
+    el.className='doma-offline-pack-status'+(kind?' '+kind:'');
+  }
+
+  function currentDate(){
+    try{return typeof daily100LocalDate==='function'?daily100LocalDate():new Date().toISOString().slice(0,10)}catch(_){return new Date().toISOString().slice(0,10)}
+  }
+
+  async function downloadPackV2(){
+    if(!navigator.onLine){
+      setStatusText('أنت غير متصل بالإنترنت. اتصل بالإنترنت أولًا لتنزيل أو تحديث الحزمة.','warn');
+      return false;
+    }
+    if(typeof sb==='undefined'||!sb){
+      setStatusText('Supabase غير متاح حاليًا. أعد تحميل الصفحة وحاول مرة أخرى.','error');
+      return false;
+    }
+
+    let access=null;
+    try{access=typeof ensureActiveGrade==='function'?await ensureActiveGrade():null}catch(_){access=null}
+    if(!access?.grade){
+      setStatusText('لا يوجد صف مشترك نشط لهذا الحساب. فعّل الاشتراك أولًا.','warn');
+      return false;
+    }
+
+    const gradeId=access.grade.id;
+    setStatusText('جاري تنزيل الدروس والوحدات والكويزات والأسئلة والواجبات…');
+
+    try{
+      let lessonQuery=sb.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published').eq('grade_id',gradeId).eq('is_published',true).order('sort_order',{ascending:true});
+      if(!access.sub)lessonQuery=lessonQuery.eq('is_free',true);
+
+      const [lessonsR,unitsR,quizzesR,homeworkR,dailyR]=await Promise.all([
+        lessonQuery,
+        sb.from('units').select('id,title,unit_number,description').eq('grade_id',gradeId).order('unit_number',{ascending:true}),
+        sb.from('quizzes').select('id,grade_id,title,description,duration_minutes,is_published,created_at').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false}),
+        sb.from('homework').select('id,grade_id,title,description,due_at,is_free,is_published,created_at').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false}),
+        sb.from('daily_words').select('day_date,position,word,translation,sentence,sentence_translation,word_audio_url,sentence_audio_url').eq('day_date',currentDate()).eq('is_published',true).order('position',{ascending:true})
+      ]);
+
+      const base=[['Lessons',lessonsR],['Units',unitsR],['Quizzes',quizzesR],['Homework',homeworkR],['Daily Words',dailyR]];
+      const failed=base.filter(x=>x[1]?.error).map(x=>x[0]);
+      if(failed.length)throw new Error('تعذر تنزيل: '+failed.join('، '));
+
+      const quizzes=quizzesR.data||[];
+      const quizQuestions={};
+      const quizPro={};
+      let questionErrors=[];
+
+      await Promise.all(quizzes.map(async q=>{
+        let qr=null;
+        try{
+          const rr=await sb.rpc('doma_get_quiz_questions',{p_quiz_id:q.id});
+          if(!rr.error)qr=rr.data||[];
+          else questionErrors.push(q.title||q.id);
+        }catch(_){questionErrors.push(q.title||q.id)}
+
+        if(!qr){
+          try{
+            const rr=await sb.from('quiz_questions').select('id,quiz_id,question,options,points,sort_order').eq('quiz_id',q.id).order('sort_order',{ascending:true});
+            if(!rr.error)qr=rr.data||[];
+          }catch(_){ }
+        }
+        quizQuestions[q.id]=Array.isArray(qr)?qr:[];
+
+        try{
+          const ps=await sb.from('quiz_pro_settings').select('*').eq('quiz_id',q.id).maybeSingle();
+          quizPro[q.id]=(!ps.error&&ps.data)?ps.data:{};
+        }catch(_){quizPro[q.id]={}}
+      }));
+
+      const pack={
+        version:2,
+        grade:{id:gradeId,name:access.grade.name},
+        hasSubscription:!!access.sub,
+        savedAt:Date.now(),
+        lessons:lessonsR.data||[],
+        units:unitsR.data||[],
+        quizzes,
+        quizQuestions,
+        quizPro,
+        homework:homeworkR.data||[],
+        dailyWords:dailyR.data||[],
+        counts:{
+          lessons:(lessonsR.data||[]).length,
+          units:(unitsR.data||[]).length,
+          quizzes:quizzes.length,
+          quizQuestions:Object.values(quizQuestions).reduce((n,a)=>n+(Array.isArray(a)?a.length:0),0),
+          homework:(homeworkR.data||[]).length,
+          dailyWords:(dailyR.data||[]).length
+        }
+      };
+
+      await dbPut(PACKS,packKey(gradeId),pack);
+      await dbPut(META,'last',{gradeId,savedAt:pack.savedAt,gradeName:access.grade.name,counts:pack.counts});
+
+      const qText=pack.counts.quizQuestions+' سؤال';
+      setStatusText('✓ تم حفظ الحزمة على الجهاز: '+pack.counts.lessons+' درس • '+pack.counts.units+' وحدة • '+pack.counts.quizzes+' Quiz • '+qText+' • '+pack.counts.homework+' Homework • '+pack.counts.dailyWords+' Daily Words.','ok');
+      if(questionErrors.length){
+        setStatusText('✓ تم حفظ المحتوى، لكن تعذر تنزيل أسئلة بعض الاختبارات: '+questionErrors.slice(0,3).join('، ')+(questionErrors.length>3?' …':''),'warn');
+      }
+      return true;
+    }catch(err){
+      setStatusText('فشل تنزيل حزمة Offline: '+(err?.message||String(err)),'error');
+      return false;
+    }
+  }
+
+  function offlineAvailable(){return !navigator.onLine}
+
+  async function renderOfflineLessons(){
+    const pack=await readPack(currentGrade?.id);
+    if(!pack?.lessons?.length)return false;
+    currentGrade=pack.grade||currentGrade;
+    currentSubscription=pack.hasSubscription?{id:'offline-cache',status:'active',grade_id:pack.grade.id,expires_at:null}:null;
+    currentLessonUnits=new Map((pack.units||[]).map(x=>[x.id,x]));
+    currentLessonProgress=new Map();
+    currentLessons=(pack.lessons||[]).filter(x=>String(x.grade_id)===String(pack.grade.id)).map((x,i)=>({...x,_index:i,_unit:currentLessonUnits.get(x.unit_id)||null,_displayTitle:typeof domaLessonDisplayTitle==='function'?domaLessonDisplayTitle(x,currentLessonUnits):(x.title||'Lesson')}));
+    currentLessonIndex=Math.max(0,Math.min(Number(currentLessonIndex)||0,currentLessons.length-1));
+    if(typeof renderLessonWorkspace==='function')renderLessonWorkspace(currentLessonProgress);
+    const note=document.createElement('div');
+    note.className='doma-offline-content-card';
+    note.innerHTML='<span class="pill">OFFLINE MODE</span><h4>📴 Cached Lessons</h4><p>المحتوى محفوظ على الجهاز. الفيديوهات الخارجية مثل YouTube وGoogle Drive تحتاج اتصالًا بالإنترنت.</p>';
+    document.getElementById('drawerBody')?.prepend(note);
+    return true;
+  }
+
+  async function renderOfflineQuizzes(){
+    const pack=await readPack(currentGrade?.id);
+    if(!pack?.quizzes?.length)return false;
+    currentGrade=pack.grade||currentGrade;
+    currentSubscription=pack.hasSubscription?{id:'offline-cache',status:'active',grade_id:pack.grade.id}:null;
+    currentQuizzes=pack.quizzes||[];
+    $('drawerBody').innerHTML='<div class="notice">📴 Offline: الكويزات المحفوظة متاحة. إرسال النتيجة يحتاج اتصالًا بالإنترنت.</div><div class="table-list" style="margin-top:12px">'+currentQuizzes.map(q=>'<div class="listrow"><div class="listrow-main"><strong>'+esc(q.title)+'</strong><span>'+esc(q.description||'Test your understanding.')+' • '+(q.duration_minutes||20)+' min</span></div><button type="button" class="btn primary" data-action="start-quiz" data-quiz-id="'+esc(q.id)+'">Start Quiz →</button></div>').join('')+'</div>';
+    return true;
+  }
+
+  async function startQuizOffline(id){
+    const pack=await readPack(currentGrade?.id);
+    const q=(pack?.quizzes||[]).find(x=>String(x.id)===String(id));
+    const qs=pack?.quizQuestions?.[id]||[];
+    if(!q)return false;
+    if(!qs.length){showToast('This quiz was saved, but its questions were not available for offline use. Sync again while online.');return true}
+    const pro=pack?.quizPro?.[id]||{};
+    currentQuiz={quiz:q,questions:qs,pro:pro,endsAt:pro.time_limit_minutes?Date.now()+Number(pro.time_limit_minutes)*60000:null};
+    renderQuizPage();
+    setTimeout(()=>{
+      const box=document.createElement('div');
+      box.className='notice';
+      box.textContent='📴 Offline mode: You can practice this quiz, but Submit Quiz requires internet to save the score securely.';
+      const target=document.querySelector('#drawerBody .quiz-box');
+      target?.prepend(box);
+    },0);
+    return true;
+  }
+
+  async function renderOfflineHomework(){
+    const pack=await readPack(currentGrade?.id);
+    if(!pack?.homework?.length)return false;
+    currentGrade=pack.grade||currentGrade;
+    currentSubscription=pack.hasSubscription?{id:'offline-cache',status:'active',grade_id:pack.grade.id}:null;
+    currentHomework=pack.homework||[];
+    const stats={all:currentHomework.length,not:currentHomework.length,submitted:0,reviewed:0};
+    $('drawerBody').innerHTML='<div class="notice">📴 Offline: الواجبات المحفوظة متاحة للقراءة. إرسال أو تحديث الإجابات يحتاج اتصالًا بالإنترنت.</div><div class="hw-page-head" style="margin-top:12px"><div><div class="eyebrow">Homework Center</div><h3>'+esc(pack.grade?.name||'')+' — Saved Assignments</h3><p>Assignments cached on this device.</p></div><div class="pill">'+stats.all+' saved</div></div><div class="hw-stats"><div class="hw-stat"><b>'+stats.all+'</b><span>Saved tasks</span></div><div class="hw-stat"><b>'+stats.not+'</b><span>Status unavailable offline</span></div><div class="hw-stat"><b>—</b><span>Submitted</span></div><div class="hw-stat"><b>—</b><span>Reviewed</span></div></div><div class="hw-grid">'+currentHomework.map(h=>'<article class="hw-card-pro"><div class="hw-topline"><span class="pill">English Homework</span><span class="hw-status">Saved Offline</span></div><h3>'+esc(h.title)+'</h3><div class="desc">'+esc(h.description||'Complete the assignment and submit your answer.')+'</div><div class="hw-due"><span class="pill">'+esc(h.due_at?fmtDate(h.due_at):'No due date')+'</span></div><div class="hw-instructions">Open the assignment to read it offline. Submission is available again when internet returns.</div><div class="account-actions"><button type="button" class="btn primary" data-action="open-homework" data-homework-id="'+esc(h.id)+'">Open Assignment →</button></div></article>').join('')+'</div>';
+    return true;
+  }
+
+  async function openHomeworkOffline(id){
+    const pack=await readPack(currentGrade?.id);
+    const h=(pack?.homework||[]).find(x=>String(x.id)===String(id));
+    if(!h)return false;
+    $('modalTitle').textContent=h.title||'Homework Assignment';
+    $('modalText').textContent='Offline copy — reading is available without internet.';
+    $('modalBody').innerHTML='<div class="doma-hw-modal-task" style="padding:12px;border:1px solid #2d181f;border-radius:10px;background:#0c090a;color:#b7adb1;font-size:11px;line-height:1.7"><strong style="display:block;color:#fff;margin-bottom:5px">Assignment</strong>'+esc(h.description||'Complete this assignment and submit your answer.')+'</div><div class="notice" style="margin-top:12px">📴 أنت في وضع Offline. يمكنك قراءة الواجب الآن، لكن حفظ/إرسال الإجابة يحتاج اتصالًا بالإنترنت.</div><div class="account-actions"><button type="button" class="btn secondary" onclick="closeModal()">Close</button></div>';
+    $('modal').classList.add('show');
+    return true;
+  }
+
+  async function showOfflineCard(){
+    const card=document.getElementById('domaOfflineContentCard');
+    if(!card)return;
+    const pack=await readPack(currentGrade?.id);
+    const stats=pack?.counts||{};
+    const label=pack?('✓ '+(pack.grade?.name||'Saved Grade')+' • '+new Date(pack.savedAt).toLocaleString()+' • '+(stats.lessons||0)+' lessons • '+(stats.quizzes||0)+' quizzes • '+(stats.homework||0)+' homework'): 'لم يتم تنزيل حزمة Offline بعد.';
+    const el=document.getElementById('domaOfflinePackStatus');if(el){el.textContent=label;el.className='doma-offline-pack-status'+(pack?' ok':'')}
+  }
+
+  function bindCard(){
+    const card=document.getElementById('domaOfflineContentCard');
+    if(!card)return false;
+    const d=document.getElementById('domaOfflineDownloadBtn');
+    const s=document.getElementById('domaOfflineSyncBtn');
+    if(d){d.onclick=async function(){this.disabled=true;try{await downloadPackV2()}finally{this.disabled=false;await showOfflineCard()}}}
+    if(s){s.onclick=async function(){this.disabled=true;try{await downloadPackV2()}finally{this.disabled=false;await showOfflineCard()}}}
+    showOfflineCard();
+    return true;
+  }
+
+  function patchOfflinePage(){
+    const original=window.openMrFluentOffline;
+    if(typeof original!=='function'||original.__offlineV2Wrapper)return;
+    const wrapped=async function(){
+      const r=await original.apply(this,arguments);
+      setTimeout(bindCard,20);setTimeout(bindCard,250);setTimeout(bindCard,800);
+      return r;
+    };
+    wrapped.__offlineV2Wrapper=true;
+    window.openMrFluentOffline=wrapped;
+  }
+
+  function patchContentViews(){
+    if(typeof window.renderStudentLessons==='function'&&!window.renderStudentLessons.__offlineV2Wrapper){
+      const original=window.renderStudentLessons;
+      const wrapped=async function(){
+        if(offlineAvailable() && await renderOfflineLessons())return;
+        return original.apply(this,arguments);
+      };
+      wrapped.__offlineV2Wrapper=true;window.renderStudentLessons=wrapped;
+    }
+    if(typeof window.renderStudentQuizzes==='function'&&!window.renderStudentQuizzes.__offlineV2Wrapper){
+      const original=window.renderStudentQuizzes;
+      const wrapped=async function(){
+        if(offlineAvailable() && await renderOfflineQuizzes())return;
+        return original.apply(this,arguments);
+      };
+      wrapped.__offlineV2Wrapper=true;window.renderStudentQuizzes=wrapped;
+    }
+    if(typeof window.startQuiz==='function'&&!window.startQuiz.__offlineV2Wrapper){
+      const original=window.startQuiz;
+      const wrapped=async function(id){
+        if(offlineAvailable() && await startQuizOffline(id))return;
+        return original.apply(this,arguments);
+      };
+      wrapped.__offlineV2Wrapper=true;window.startQuiz=wrapped;
+    }
+    if(typeof window.renderStudentHomework==='function'&&!window.renderStudentHomework.__offlineV2Wrapper){
+      const original=window.renderStudentHomework;
+      const wrapped=async function(){
+        if(offlineAvailable() && await renderOfflineHomework())return;
+        return original.apply(this,arguments);
+      };
+      wrapped.__offlineV2Wrapper=true;window.renderStudentHomework=wrapped;
+    }
+    if(typeof window.openHomework==='function'&&!window.openHomework.__offlineV2Wrapper){
+      const original=window.openHomework;
+      const wrapped=async function(id){
+        if(offlineAvailable() && await openHomeworkOffline(id))return;
+        return original.apply(this,arguments);
+      };
+      wrapped.__offlineV2Wrapper=true;window.openHomework=wrapped;
+    }
+  }
+
+  async function clearAll(){try{await dbClear()}catch(_){} }
+
+  // Keep the original shell installer, but make the content database authoritative.
+  window.DomaOfflineContent={download:downloadPackV2,readPack,clear:clearAll};
+
+  function boot(){
+    patchContentViews();
+    if(typeof window.openMrFluentOffline==='function'&&!window.openMrFluentOffline.__offlineV2Wrapper){
+      const original=window.openMrFluentOffline;
+      const wrapped=async function(){
+        const r=await original.apply(this,arguments);
+        setTimeout(bindCard,20);setTimeout(bindCard,250);setTimeout(bindCard,800);
+        return r;
+      };
+      wrapped.__offlineV2Wrapper=true;
+      window.openMrFluentOffline=wrapped;
+    }
+    setTimeout(patchContentViews,300);
+    setTimeout(patchContentViews,1000);
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  window.addEventListener('load',boot,{once:true});
+
+  // When the old Remove Offline button is used, clear the v2 content database too.
+  const oldRemove=window.mrFluentRemoveOffline;
+  if(typeof oldRemove==='function'&&!oldRemove.__offlineV2Wrapper){
+    const wrappedRemove=async function(){await clearAll();return oldRemove.apply(this,arguments)};
+    wrappedRemove.__offlineV2Wrapper=true;window.mrFluentRemoveOffline=wrappedRemove;
+  }
+})();
+</script>
+
