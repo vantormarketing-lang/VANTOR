@@ -3254,7 +3254,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   function openShell(title,sub){
     if(!loggedIn())return typeof openAuth==='function'&&openAuth('login');
     const d=$('drawer');if(!d)return;
-    d.classList.add('show');document.body.style.overflow='hidden';if($('drawerBody'))$('drawerBody').scrollTop=0;
+    d.classList.add('show');document.body.style.overflow='hidden';document.querySelector('.drawer-side')?.classList.remove('mobile-open');if($('drawerBody'))$('drawerBody').scrollTop=0;
     if($('drawerTitle'))$('drawerTitle').textContent=title;if($('drawerSubtitle'))$('drawerSubtitle').textContent=sub||'';
     document.querySelectorAll('.doma-custom-student-nav').forEach(b=>b.classList.remove('active'));
   }
@@ -4349,4 +4349,3 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   }
 })();
 </script>
-
