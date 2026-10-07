@@ -31,13 +31,13 @@
 .pro7-admin-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}.pro7-admin-kpi{padding:13px;border:1px solid #2f1b23;border-radius:12px;background:linear-gradient(145deg,#140c10,#0c090a)}.pro7-admin-kpi b{display:block;font-size:22px}.pro7-admin-kpi span{display:block;color:#81777b;font-size:9px;margin-top:3px}.pro7-admin-list{display:grid;gap:9px}.pro7-admin-ticket{padding:13px;border:1px solid #2e1a22;border-radius:12px;background:#100b0d}.pro7-admin-ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.pro7-admin-meta{font-size:9px;color:#786e72;margin-top:4px}.pro7-admin-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.pro7-admin-chat{display:grid;gap:8px;max-height:420px;overflow:auto}.pro7-admin-msg{padding:10px;border-radius:10px;background:#121012;border:1px solid #2f2027;font-size:10px;line-height:1.6}.pro7-admin-msg.staff{background:#121a16;border-color:#2c4b38}.pro7-admin-msg small{display:block;color:#746a6f;font-size:8px;margin-bottom:4px}.pro7-parent-link{padding:10px;border:1px solid #2d1a21;border-radius:10px;background:#0f0a0c;display:flex;justify-content:space-between;gap:10px;align-items:center}.pro7-parent-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pro7-live-preview{padding:11px;border:1px dashed #3b232c;border-radius:10px;background:#100a0c;font-size:9px;color:#81777b}@media(max-width:900px){.pro7-admin-grid{grid-template-columns:1fr 1fr}.pro7-parent-grid{grid-template-columns:1fr}}@media(max-width:600px){.pro7-admin-grid{grid-template-columns:1fr}}
 </style>
 
-<link rel="manifest" href="./admin-manifest.webmanifest?v=7">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=8">
 <meta name="theme-color" content="#0d090b">
 <meta name="application-name" content="DOMA Admin">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=7">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=8">
 <style id="doma-admin-pwa-final-css">
 .admin-install-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .admin-install-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px}
@@ -49,21 +49,85 @@
 (function(){
   'use strict';
   let deferredPrompt=null;
-  const isStandalone=()=>{try{return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true}catch(_){return false}};
-  const setNote=(msg,ok)=>{const n=document.getElementById('adminInstallNote');if(!n)return;n.textContent=msg||'';n.classList.toggle('show',!!msg);if(ok)n.style.borderColor='#2e5f47'};
-  const refresh=()=>{const b=document.getElementById('adminInstallBtn');if(!b)return;if(isStandalone()){b.textContent='✓ DOMA Admin Installed';b.disabled=true;setNote('DOMA Admin is installed on this device.',true);return}b.disabled=false;b.textContent='Install DOMA Admin';};
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;refresh()});
-  window.addEventListener('appinstalled',()=>{deferredPrompt=null;refresh();setNote('DOMA Admin was installed successfully.',true)});
+  let installAttempted=false;
+  const isStandalone=()=>{
+    try{
+      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+    }catch(_){return false}
+  };
+  const setNote=(msg,ok)=>{
+    const n=document.getElementById('adminInstallNote');
+    if(!n)return;
+    n.textContent=msg||'';
+    n.classList.toggle('show',!!msg);
+    n.style.borderColor=ok?'#2e5f47':'#4a2732';
+  };
+  const refresh=()=>{
+    const b=document.getElementById('adminInstallBtn');
+    if(!b)return;
+    if(isStandalone()){
+      b.textContent='✓ DOMA Admin Installed';
+      b.disabled=true;
+      setNote('DOMA Admin is installed on this device.',true);
+      return;
+    }
+    b.disabled=false;
+    b.textContent=deferredPrompt?'Install DOMA Admin':'Install DOMA Admin';
+  };
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    refresh();
+  });
+  window.addEventListener('appinstalled',()=>{
+    deferredPrompt=null;
+    installAttempted=false;
+    refresh();
+    setNote('DOMA Admin was installed successfully.',true);
+  });
   async function install(){
-    if(isStandalone())return setNote('DOMA Admin is already installed.',true);
-    if(deferredPrompt){try{await deferredPrompt.prompt();await deferredPrompt.userChoice}catch(e){}deferredPrompt=null;refresh();return}
-    setNote('Open the browser menu and choose “Install DOMA Admin” or “Add to Home screen”.',false);
+    if(isStandalone()){
+      setNote('DOMA Admin is already installed.',true);
+      return;
+    }
+    if(deferredPrompt){
+      try{
+        installAttempted=true;
+        await deferredPrompt.prompt();
+        const choice=await deferredPrompt.userChoice;
+        if(choice?.outcome==='accepted'){
+          setNote('Installing DOMA Admin…',true);
+        }else{
+          setNote('Installation was cancelled. You can try again from the button.',false);
+        }
+      }catch(e){
+        setNote('The browser could not open the install prompt. Use Edge menu → Apps → Install DOMA Admin.',false);
+      }finally{
+        deferredPrompt=null;
+        refresh();
+      }
+      return;
+    }
+    setNote('For desktop Edge: open the browser menu (…) → Apps → Install DOMA Admin. If “Install” is missing, refresh this page once after the latest files load.',false);
   }
   window.domaInstallAdmin=install;
+  async function registerAdminSW(){
+    if(!('serviceWorker' in navigator))return;
+    try{
+      const swUrl=new URL('./admin-sw.js?v=8',window.location.href);
+      const scopeUrl=new URL('./admin.html',window.location.href);
+      const reg=await navigator.serviceWorker.register(swUrl,{scope:scopeUrl.pathname});
+      await reg.update().catch(()=>{});
+      await navigator.serviceWorker.ready;
+    }catch(e){
+      console.warn('DOMA Admin service worker registration failed:',e);
+    }
+  }
   document.addEventListener('DOMContentLoaded',()=>{
     refresh();
-    const b=document.getElementById('adminInstallBtn');if(b)b.addEventListener('click',install);
-    if('serviceWorker' in navigator)navigator.serviceWorker.register('./admin-sw.js?v=7',{scope:'./admin.html'}).catch(()=>{});
+    const b=document.getElementById('adminInstallBtn');
+    if(b)b.addEventListener('click',install);
+    registerAdminSW();
   });
 })();
 </script>
