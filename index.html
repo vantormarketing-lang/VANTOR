@@ -3485,6 +3485,290 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 </script>
 
 <style id="doma-mobile-drawer-scroll-final-fix">@media (max-width:700px){.drawer.show .drawer-shell{height:100dvh;max-height:100dvh;min-height:100dvh;overflow:hidden}.drawer.show .drawer-main{height:100%;min-height:0;overflow:hidden}.drawer.show .drawer-side{height:100%;max-height:100%;overflow-y:scroll!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;overscroll-behavior-x:none;touch-action:pan-y;pointer-events:auto;scrollbar-width:thin}.drawer.show .drawer-side .side-link{touch-action:pan-y;-webkit-tap-highlight-color:transparent}}</style><script id="doma-mobile-drawer-scroll-final-js">(function(){'use strict';function install(){var side=document.querySelector('.drawer-side');if(!side||side.__domaScrollFinalFixInstalled)return;side.__domaScrollFinalFixInstalled=true;var sy=0,sx=0,moved=false,tracking=false;side.addEventListener('pointerdown',function(e){if(window.matchMedia&&!window.matchMedia('(max-width:700px)').matches)return;tracking=true;moved=false;sy=e.clientY;sx=e.clientX;e.stopImmediatePropagation();},{capture:true,passive:true});side.addEventListener('pointermove',function(e){if(!tracking)return;if(Math.abs(e.clientY-sy)>8||Math.abs(e.clientX-sx)>8)moved=true;},{capture:true,passive:true});side.addEventListener('pointerup',function(){tracking=false;},{capture:true,passive:true});side.addEventListener('pointercancel',function(){tracking=false;moved=false;},{capture:true,passive:true});side.addEventListener('click',function(e){if(!moved)return;e.preventDefault();e.stopImmediatePropagation();moved=false;tracking=false;},{capture:true});}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(install,0);});else setTimeout(install,0);setTimeout(install,150);setTimeout(install,500);})();</script>
+
+<style id="doma-offline-content-pro-css">
+.doma-offline-content-card{margin-top:14px;padding:18px;border:1px solid #4a2732;border-radius:15px;background:linear-gradient(145deg,#160c10,#0d090b)}
+.doma-offline-content-card h4{font-size:15px;margin:8px 0 6px}
+.doma-offline-content-card p{font-size:10px;color:#8e8387;line-height:1.7}
+.doma-offline-content-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.doma-offline-pack-status{margin-top:10px;padding:10px 11px;border-radius:10px;background:#100a0c;border:1px solid #2e1b22;color:#aaa;font-size:10px;line-height:1.6}
+.doma-offline-pack-status.ok{border-color:#2e5f47;color:#a9e4c8;background:#102016}
+.doma-offline-pack-status.warn{border-color:#59452b;color:#e5ce9a;background:#20190f}
+.doma-offline-pack-status.error{border-color:#6b2c3a;color:#ffb0bf;background:#211016}
+</style>
+
+
+<script id="doma-offline-content-pro-js">
+(function(){
+  'use strict';
+
+  const DB_NAME='doma-offline-content-v1';
+  const DB_VERSION=1;
+  const STORE='supabase_get_cache';
+  const META='meta';
+  const ALLOWED_TABLES=new Set(['lessons','units','daily_words','quizzes','homework']);
+  let installed=false;
+  let originalFetch=window.fetch;
+
+  function openDb(){
+    return new Promise((resolve,reject)=>{
+      try{
+        const req=indexedDB.open(DB_NAME,DB_VERSION);
+        req.onupgradeneeded=()=>{
+          const db=req.result;
+          if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE);
+          if(!db.objectStoreNames.contains(META))db.createObjectStore(META);
+        };
+        req.onsuccess=()=>resolve(req.result);
+        req.onerror=()=>reject(req.error||new Error('IndexedDB unavailable'));
+      }catch(e){reject(e)}
+    });
+  }
+
+  async function put(store,key,value){
+    const db=await openDb();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(store,'readwrite');
+      tx.objectStore(store).put(value,key);
+      tx.oncomplete=()=>{db.close();resolve(true)};
+      tx.onerror=()=>{db.close();reject(tx.error||new Error('Cache write failed'))};
+    });
+  }
+
+  async function get(store,key){
+    const db=await openDb();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(store,'readonly');
+      const req=tx.objectStore(store).get(key);
+      req.onsuccess=()=>{db.close();resolve(req.result)};
+      req.onerror=()=>{db.close();reject(req.error||new Error('Cache read failed'))};
+    });
+  }
+
+  async function clearStore(store){
+    try{
+      const db=await openDb();
+      return new Promise((resolve,reject)=>{
+        const tx=db.transaction(store,'readwrite');
+        tx.objectStore(store).clear();
+        tx.oncomplete=()=>{db.close();resolve(true)};
+        tx.onerror=()=>{db.close();reject(tx.error||new Error('Cache clear failed'))};
+      });
+    }catch(_){return false}
+  }
+
+  function tableFromUrl(url){
+    try{
+      const u=new URL(url);
+      if(u.hostname!=='dtptxhkcogpoleftguas.supabase.co')return null;
+      const m=u.pathname.match(/^\/rest\/v1\/([^/]+)$/);
+      return m?decodeURIComponent(m[1]):null;
+    }catch(_){return null}
+  }
+
+  async function cacheResponse(req,res){
+    const table=tableFromUrl(req.url);
+    if(req.method!=='GET'||!table||!ALLOWED_TABLES.has(table)||!res?.ok)return;
+    try{
+      const body=await res.clone().text();
+      await put(STORE,req.method+':'+req.url,{
+        body,status:res.status,statusText:res.statusText,
+        headers:Array.from(res.headers.entries()),savedAt:Date.now()
+      });
+    }catch(_){}
+  }
+
+  async function cachedResponse(req){
+    try{
+      const rec=await get(STORE,req.method+':'+req.url);
+      if(!rec)return null;
+      return new Response(rec.body,{
+        status:rec.status||200,
+        statusText:rec.statusText||'OK',
+        headers:rec.headers||[['content-type','application/json']]
+      });
+    }catch(_){return null}
+  }
+
+  function installFetchCache(){
+    if(installed||typeof window.fetch!=='function')return;
+    installed=true;
+    originalFetch=window.fetch.bind(window);
+    window.fetch=async function(input,init){
+      const req=input instanceof Request?input:new Request(input,init);
+      const table=tableFromUrl(req.url);
+      if(req.method==='GET'&&table&&ALLOWED_TABLES.has(table)){
+        try{
+          const live=await originalFetch(req);
+          cacheResponse(req,live).catch(()=>{});
+          return live;
+        }catch(err){
+          const cached=await cachedResponse(req);
+          if(cached)return cached;
+          throw err;
+        }
+      }
+      return originalFetch(req);
+    };
+  }
+
+  async function getAccess(){
+    if(typeof sessionUser==='undefined'||!sessionUser||typeof ensureActiveGrade!=='function')return null;
+    try{return await ensureActiveGrade()}catch(_){return null}
+  }
+
+  async function downloadPack(setStatus){
+    if(!navigator.onLine){
+      setStatus('أنت غير متصل بالإنترنت. اتصل بالإنترنت أولًا لتنزيل الحزمة.','warn');
+      return;
+    }
+    if(typeof sb==='undefined'||!sb){
+      setStatus('Supabase غير متاح حاليًا. أعد تحميل الصفحة وحاول مرة أخرى.','error');
+      return;
+    }
+
+    const access=await getAccess();
+    if(!access?.grade){
+      setStatus('لا يوجد صف مشترك نشط لهذا الحساب. فعّل الاشتراك أولًا.','warn');
+      return;
+    }
+
+    const gradeId=access.grade.id;
+    setStatus('جاري تنزيل محتوى صفك للاستخدام بدون إنترنت…');
+
+    try{
+      let lessonQuery=sb.from('lessons').select(
+        'id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published'
+      ).eq('grade_id',gradeId).eq('is_published',true);
+      if(!access.sub)lessonQuery=lessonQuery.eq('is_free',true);
+      lessonQuery=lessonQuery.order('sort_order',{ascending:true});
+
+      const promises=[
+        lessonQuery,
+        sb.from('units').select('id,title,unit_number,description').eq('grade_id',gradeId).order('unit_number',{ascending:true}),
+        sb.from('quizzes').select('id,grade_id,title,description,duration_minutes,is_published,created_at').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false}),
+        sb.from('homework').select('id,grade_id,title,description,due_at,is_free,is_published').eq('grade_id',gradeId).eq('is_published',true).order('created_at',{ascending:false}),
+        sb.from('daily_words').select('day_date,position,word,translation,sentence,sentence_translation,word_audio_url,sentence_audio_url').eq('day_date',typeof daily100LocalDate==='function'?daily100LocalDate():new Date().toISOString().slice(0,10)).eq('is_published',true).order('position',{ascending:true})
+      ];
+
+      const results=await Promise.all(promises);
+      const names=['Lessons','Units','Quizzes','Homework','Daily Words'];
+      const failed=results.map((r,i)=>r?.error?names[i]:null).filter(Boolean);
+
+      if(failed.length){
+        setStatus('تعذر تنزيل: '+failed.join('، ')+'. جرّب مرة أخرى بعد التأكد من الاتصال.','error');
+        return;
+      }
+
+      const counts=results.map(r=>r.data?.length||0);
+      await put(META,'pack',{
+        gradeId,
+        gradeName:access.grade.name,
+        savedAt:Date.now(),
+        counts:{lessons:counts[0],units:counts[1],quizzes:counts[2],homework:counts[3],dailyWords:counts[4]}
+      });
+
+      setStatus(
+        '✓ تم تنزيل حزمة Offline بنجاح: '+
+        counts[0]+' درس • '+counts[1]+' وحدة • '+counts[2]+' Quiz • '+
+        counts[3]+' Homework • '+counts[4]+' Daily Words.',
+        'ok'
+      );
+    }catch(err){
+      setStatus('فشل تنزيل حزمة Offline: '+(err?.message||String(err)),'error');
+    }
+  }
+
+  async function readMeta(){
+    try{return await get(META,'pack')}catch(_){return null}
+  }
+
+  function injectCard(){
+    const body=document.getElementById('drawerBody');
+    if(!body||body.querySelector('#domaOfflineContentCard'))return;
+
+    const card=document.createElement('div');
+    card.className='doma-offline-content-card';
+    card.id='domaOfflineContentCard';
+    card.innerHTML=
+      '<span class="pill">OFFLINE CONTENT</span>'+
+      '<h4>📚 Download Learning Pack</h4>'+
+      '<p>نزّل محتوى صفك الحالي على الجهاز لاستخدام الدروس والوحدات والـQuiz والـHomework وDaily Words عند انقطاع الإنترنت.</p>'+
+      '<div class="doma-offline-content-actions">'+
+        '<button type="button" class="btn primary" id="domaOfflineDownloadBtn">⬇ Download Offline Pack</button>'+
+        '<button type="button" class="btn secondary" id="domaOfflineSyncBtn">↻ Sync Again</button>'+
+      '</div>'+
+      '<div id="domaOfflinePackStatus" class="doma-offline-pack-status">Checking offline pack…</div>'+
+      '<p style="margin-top:8px;font-size:9px">ملاحظة: فيديوهات YouTube/Google Drive لا تُحفظ كملفات فيديو Offline تلقائيًا؛ المحتوى والبيانات الأساسية هي التي تُحفظ.</p>';
+
+    body.insertBefore(card,body.firstChild);
+
+    const statusEl=document.getElementById('domaOfflinePackStatus');
+    const setStatus=(msg,kind)=>{
+      if(!statusEl)return;
+      statusEl.textContent=msg||'';
+      statusEl.className='doma-offline-pack-status'+(kind?' '+kind:'');
+    };
+
+    document.getElementById('domaOfflineDownloadBtn').onclick=()=>downloadPack(setStatus);
+    document.getElementById('domaOfflineSyncBtn').onclick=()=>downloadPack(setStatus);
+
+    readMeta().then(meta=>{
+      setStatus(meta
+        ?('✓ '+(meta.gradeName||'Active Grade')+' • آخر مزامنة: '+new Date(meta.savedAt).toLocaleString()+' • '+(meta.counts?.lessons||0)+' lessons محفوظة.')
+        :'لم يتم تنزيل حزمة Offline بعد.',
+        meta?'ok':''
+      );
+    });
+  }
+
+  function wrapOfflinePage(){
+    if(typeof window.openMrFluentOffline!=='function')return;
+    if(window.openMrFluentOffline.__offlineContentWrapped)return;
+    const original=window.openMrFluentOffline;
+    const wrapped=async function(){
+      const result=await original.apply(this,arguments);
+      setTimeout(injectCard,0);
+      setTimeout(injectCard,250);
+      setTimeout(injectCard,700);
+      return result;
+    };
+    wrapped.__offlineContentWrapped=true;
+    window.openMrFluentOffline=wrapped;
+  }
+
+  function wrapRemoveOffline(){
+    if(typeof window.mrFluentRemoveOffline!=='function')return;
+    if(window.mrFluentRemoveOffline.__offlineContentWrapped)return;
+    const original=window.mrFluentRemoveOffline;
+    const wrapped=async function(){
+      try{
+        await clearStore(STORE);
+        await clearStore(META);
+      }catch(_){}
+      return original.apply(this,arguments);
+    };
+    wrapped.__offlineContentWrapped=true;
+    window.mrFluentRemoveOffline=wrapped;
+  }
+
+  installFetchCache();
+
+  function boot(){
+    wrapOfflinePage();
+    wrapRemoveOffline();
+    setTimeout(wrapOfflinePage,400);
+    setTimeout(wrapRemoveOffline,400);
+    setTimeout(wrapOfflinePage,1200);
+    setTimeout(wrapRemoveOffline,1200);
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
+  else boot();
+  window.addEventListener('load',boot,{once:true});
+})();
+</script>
+
 </body>
 
 
