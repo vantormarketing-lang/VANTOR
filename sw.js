@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mr-fluent-offline-v1';
+const CACHE_NAME = 'mr-fluent-offline-v2';
 
 const scopeUrl = new URL('./', self.registration.scope);
 
@@ -6,14 +6,13 @@ const SHELL = [
   scopeUrl.href,
   new URL('./index.html', self.registration.scope).href,
   new URL('./manifest.webmanifest', self.registration.scope).href,
-  new URL('./mr-fluent-icon-192.png', self.registration.scope).href,
-  new URL('./mr-fluent-icon-512.png', self.registration.scope).href
+  new URL('./mr-fluent-icon-192(1).png', self.registration.scope).href,
+  new URL('./mr-fluent-icon-512(1).png', self.registration.scope).href
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
+    caches.open(CACHE_NAME)
       .then(cache => cache.addAll(SHELL))
       .then(() => self.skipWaiting())
   );
@@ -21,15 +20,13 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches
-      .keys()
+    caches.keys()
       .then(keys =>
         Promise.all(
           keys
-            .filter(
-              key =>
-                key !== CACHE_NAME &&
-                key.startsWith('mr-fluent-offline-')
+            .filter(key =>
+              key.startsWith('mr-fluent-offline-') &&
+              key !== CACHE_NAME
             )
             .map(key => caches.delete(key))
         )
@@ -69,17 +66,14 @@ self.addEventListener('fetch', event => {
       if (cached) return cached;
 
       try {
-        const res = await fetch(req);
+        const response = await fetch(req);
 
-        const copyable =
-          res && (res.ok || res.type === 'opaque');
-
-        if (copyable) {
+        if (response.ok || response.type === 'opaque') {
           const cache = await caches.open(CACHE_NAME);
-          cache.put(req, res.clone()).catch(() => {});
+          cache.put(req, response.clone()).catch(() => {});
         }
 
-        return res;
+        return response;
       } catch (_) {
         return cached || Response.error();
       }
