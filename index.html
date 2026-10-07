@@ -216,104 +216,261 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
+
   window.__mrFluentInstallPrompt = null;
+
+  function isStandalone(){
+    try{
+      return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches ||
+             window.navigator.standalone === true;
+    }catch(_){ return false; }
+  }
+
+  function notify(msg){
+    try{ if(typeof showToast === 'function') showToast(msg); }catch(_){}
+  }
+
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     window.__mrFluentInstallPrompt = e;
-    try{ window.dispatchEvent(new CustomEvent('mrfluent:install-available')); }catch(_){ }
+    try{ window.dispatchEvent(new CustomEvent('mrfluent:install-available')); }catch(_){}
   });
+
   window.addEventListener('appinstalled', function(){
     window.__mrFluentInstallPrompt = null;
-    try{ if(typeof showToast==='function') showToast('Mr. Fluent is installed.'); }catch(_){ }
+    notify('Mr. Fluent was installed successfully.');
+    try{ window.dispatchEvent(new CustomEvent('mrfluent:installed')); }catch(_){}
   });
+
   async function registerOfflineService(){
-    if(!('serviceWorker' in navigator)) throw new Error('Offline App is not supported by this browser.');
-    const reg = await navigator.serviceWorker.register('./sw.js', {scope:'./'});
-    try{ await navigator.serviceWorker.ready; }catch(_){ }
+    if(!window.isSecureContext) throw new Error('Mr. Fluent installation requires the HTTPS GitHub Pages site.');
+    if(!('serviceWorker' in navigator)) throw new Error('This browser does not support the Mr. Fluent app installer.');
+
+    // The query string helps the browser notice a new installer/service-worker build
+    // without changing the public sw.js filename required by the existing deployment.
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v4', {scope:'./'});
+    const ready = navigator.serviceWorker.ready;
+    const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
+    await Promise.race([ready, timeout]);
     return reg;
   }
+
+  window.mrFluentIsInstalled = isStandalone;
   window.mrFluentRegisterOffline = registerOfflineService;
+
   window.mrFluentInstallOffline = async function(){
     try{
+      if(isStandalone()){
+        notify('Mr. Fluent is already installed on this device.');
+        try{ window.dispatchEvent(new CustomEvent('mrfluent:installed')); }catch(_){}
+        return true;
+      }
+
       await registerOfflineService();
-      const prompt = window.__mrFluentInstallPrompt;
+
+      // Give the browser a moment to expose the install prompt after the
+      // service worker becomes ready.
+      let prompt = window.__mrFluentInstallPrompt;
+      if(!prompt){
+        await new Promise(resolve=>setTimeout(resolve, 250));
+        prompt = window.__mrFluentInstallPrompt;
+      }
+
       if(prompt){
         await prompt.prompt();
         const choice = await prompt.userChoice;
         window.__mrFluentInstallPrompt = null;
-        if(choice && choice.outcome==='accepted'){
-          if(typeof showToast==='function') showToast('Mr. Fluent installation started.');
+        if(choice && choice.outcome === 'accepted'){
+          notify('Mr. Fluent installation started.');
           return true;
         }
-        if(typeof showToast==='function') showToast('Installation cancelled. Offline mode remains enabled.');
+        notify('Installation cancelled. Offline mode is still enabled.');
         return false;
       }
-      if(typeof showToast==='function') showToast('Offline mode enabled. Use the browser menu to install Mr. Fluent when available.');
+
+      // Not every browser exposes beforeinstallprompt. We cannot force the
+      // browser's install UI, so provide the correct manual route instead.
+      notify('Use your browser menu and choose “Install Mr. Fluent” or “Install this site as an app”.');
+      try{ window.dispatchEvent(new CustomEvent('mrfluent:manual-install-needed')); }catch(_){}
       return true;
     }catch(err){
-      if(typeof showToast==='function') showToast(err.message||'Could not enable Offline App.');
+      notify((err && err.message) || 'Mr. Fluent installation could not be started.');
       return false;
     }
   };
+
   window.mrFluentRemoveOffline = async function(){
     try{
       if('serviceWorker' in navigator){
         const regs = await navigator.serviceWorker.getRegistrations();
-        for(const reg of regs){ try{ await reg.unregister(); }catch(_){ } }
+        for(const reg of regs){
+          try{ await reg.unregister(); }catch(_){}
+        }
       }
       if(window.caches){
         const keys = await caches.keys();
-        await Promise.all(keys.filter(k=>String(k).startsWith('mr-fluent-offline-')).map(k=>caches.delete(k)));
+        await Promise.all(
+          keys
+            .filter(k=>String(k).startsWith('mr-fluent-offline-'))
+            .map(k=>caches.delete(k))
+        );
       }
-      if(typeof showToast==='function') showToast('Offline data removed. Reloading…');
+      notify('Offline data removed. Reloading…');
       setTimeout(function(){ location.reload(); }, 500);
     }catch(err){
-      if(typeof showToast==='function') showToast(err.message||'Could not remove Offline App data.');
+      notify((err && err.message) || 'Could not remove Mr. Fluent offline data.');
     }
   };
+
   window.openMrFluentOffline = async function(){
-    const body=document.getElementById('drawerBody');
-    const title=document.getElementById('drawerTitle');
-    const sub=document.getElementById('drawerSubtitle');
-    if(!body)return;
-    if(title)title.textContent='Offline App';
-    if(sub)sub.textContent='Install Mr. Fluent and keep the app shell ready without internet.';
-    document.querySelectorAll('.side-link[data-view]').forEach(function(x){x.classList.remove('active')});
-    body.innerHTML='<div class="mr-offline-page">'+
-      '<div class="mr-offline-hero"><div class="mr-offline-icon">↯</div><div><div class="eyebrow">MR. FLUENT • OFFLINE</div><h3>Take your English learning offline.</h3><p>Prepare the Mr. Fluent app for offline use, then install it on your device when your browser supports app installation.</p></div></div>'+
-      '<div class="mr-offline-grid">'+
-        '<div class="mr-offline-card"><span class="pill">STEP 1</span><h4>Enable Offline Mode</h4><p>Prepare the Mr. Fluent app shell and cache the pages/resources your browser has already loaded.</p><button type="button" class="btn primary" id="mrOfflineEnable">Enable Offline →</button></div>'+
-        '<div class="mr-offline-card"><span class="pill">STEP 2</span><h4>Install the App</h4><p>Install Mr. Fluent as an app when your browser exposes the installation option.</p><button type="button" class="btn secondary" id="mrOfflineInstall">Install Mr. Fluent ↗</button></div>'+
-        '<div class="mr-offline-card danger-card"><span class="pill">REMOVE</span><h4>Remove Offline App</h4><p>Turn off the service worker and clear the Mr. Fluent offline cache from this browser.</p><button type="button" class="btn secondary" id="mrOfflineRemove">Remove Offline App</button></div>'+
+    const body = document.getElementById('drawerBody');
+    const title = document.getElementById('drawerTitle');
+    const sub = document.getElementById('drawerSubtitle');
+    if(!body) return;
+
+    if(title) title.textContent = 'Offline App';
+    if(sub) sub.textContent = 'Install Mr. Fluent as a desktop app and keep the app shell available offline.';
+    document.querySelectorAll('.side-link[data-view]').forEach(function(x){ x.classList.remove('active'); });
+
+    body.innerHTML = '<div class="mr-offline-page">'+
+      '<div class="mr-offline-hero">'+
+        '<div class="mr-offline-icon">📥</div>'+
+        '<div>'+
+          '<div class="eyebrow">MR. FLUENT • DESKTOP APP</div>'+
+          '<h3>Install Mr. Fluent on your computer.</h3>'+
+          '<p>One click can install the website as an app on Windows when your browser supports PWA installation. No separate EXE is required for the browser-based installer.</p>'+
+        '</div>'+
       '</div>'+
-      '<div class="mr-offline-status" id="mrOfflineStatus">Offline mode is ready to be enabled.</div>'+
-      '<div class="mr-offline-note"><b>Note:</b> The Remove button clears offline data and unregisters the offline service. A home-screen/desktop icon installed by the browser may still need to be removed manually.</div>'+
+
+      '<div class="mr-offline-grid">'+
+        '<div class="mr-offline-card">'+
+          '<span class="pill">STEP 1</span>'+
+          '<h4>Prepare Offline Mode</h4>'+
+          '<p>Register the Mr. Fluent service worker and prepare the site shell for offline use on this browser.</p>'+
+          '<button type="button" class="btn primary" id="mrOfflineEnable">Enable Offline →</button>'+
+        '</div>'+
+
+        '<div class="mr-offline-card install-card">'+
+          '<span class="pill">STEP 2</span>'+
+          '<h4>Install Mr. Fluent</h4>'+
+          '<p>Install Mr. Fluent as a Windows desktop app. The browser creates the app shortcut and opens it separately.</p>'+
+          '<button type="button" class="btn primary" id="mrOfflineInstall">Install Mr. Fluent ↗</button>'+
+          '<div class="mr-install-state" id="mrInstallState">Checking install availability…</div>'+
+        '</div>'+
+
+        '<div class="mr-offline-card">'+
+          '<span class="pill">STEP 3</span>'+
+          '<h4>Use the Installed App</h4>'+
+          '<p>After installation, launch Mr. Fluent from the Windows Start menu or desktop shortcut like a normal app.</p>'+
+          '<button type="button" class="btn secondary" id="mrOfflineCheck">Check Installation</button>'+
+        '</div>'+
+
+        '<div class="mr-offline-card danger-card">'+
+          '<span class="pill">REMOVE</span>'+
+          '<h4>Remove Offline Data</h4>'+
+          '<p>Unregister the service worker and clear Mr. Fluent offline cache from this browser.</p>'+
+          '<button type="button" class="btn secondary" id="mrOfflineRemove">Remove Offline App</button>'+
+        '</div>'+
+      '</div>'+
+
+      '<div class="mr-offline-status" id="mrOfflineStatus">Checking Mr. Fluent app status…</div>'+
+
+      '<div class="mr-offline-install-help" id="mrInstallHelp">'+
+        '<div><b>Windows install not appearing?</b><span>Enable Offline first, then use the browser menu / install icon in the address bar and choose <b>Install Mr. Fluent</b> or <b>Install this site as an app</b>.</span></div>'+
+      '</div>'+
+
+      '<div class="mr-offline-note"><b>Important:</b> Installing the app and caching the website shell does not automatically download every Supabase lesson, video, quiz, or student record for full offline use. Those still need an internet connection unless we build a separate content-sync/offline database.</div>'+
     '</div>';
-    const status=document.getElementById('mrOfflineStatus');
-    const setStatus=(msg,ok)=>{if(status){status.textContent=msg;status.dataset.ok=ok?'1':'0'}};
-    document.getElementById('mrOfflineEnable').onclick=async function(){
-      this.disabled=true;setStatus('Preparing Offline Mode…',false);
-      try{await window.mrFluentRegisterOffline();setStatus('Offline Mode is enabled on this browser.',true);if(typeof showToast==='function')showToast('Offline mode enabled.')}catch(e){setStatus(e.message||'Could not enable Offline Mode.',false)}
-      this.disabled=false;
+
+    const status = document.getElementById('mrOfflineStatus');
+    const installState = document.getElementById('mrInstallState');
+    const help = document.getElementById('mrInstallHelp');
+    const setStatus = (msg, ok)=>{
+      if(status){ status.textContent = msg; status.dataset.ok = ok ? '1' : '0'; }
     };
-    document.getElementById('mrOfflineInstall').onclick=async function(){await window.mrFluentInstallOffline();};
-    document.getElementById('mrOfflineRemove').onclick=async function(){
-      if(confirm('Remove Mr. Fluent Offline App data from this browser?')) await window.mrFluentRemoveOffline();
-    };
-    try{
-      if('serviceWorker' in navigator){
-        const regs=await navigator.serviceWorker.getRegistrations();
-        if(regs.length) setStatus('Offline Mode is currently enabled on this browser.',true);
+
+    const updateInstallState = ()=>{
+      const installed = isStandalone();
+      if(installed){
+        if(installState) installState.textContent = '✓ Installed — Mr. Fluent is running as an app.';
+        setStatus('Mr. Fluent is installed and running as an app on this device.', true);
+        if(help) help.hidden = true;
+        return;
       }
-    }catch(_){ }
+      if(window.__mrFluentInstallPrompt){
+        if(installState) installState.textContent = '✓ Ready — click Install Mr. Fluent.';
+        setStatus('Mr. Fluent is ready to be installed on this device.', true);
+        if(help) help.hidden = true;
+      }else{
+        if(installState) installState.textContent = 'Use the browser install option when no one-click prompt is available.';
+        setStatus('Offline mode can be enabled. Installation will be available when the browser exposes the app install option.', false);
+        if(help) help.hidden = false;
+      }
+    };
+
+    document.getElementById('mrOfflineEnable').onclick = async function(){
+      this.disabled = true;
+      setStatus('Preparing Offline Mode…', false);
+      try{
+        await window.mrFluentRegisterOffline();
+        setStatus('Offline Mode is enabled on this browser.', true);
+        notify('Offline mode enabled.');
+        updateInstallState();
+      }catch(e){
+        setStatus((e && e.message) || 'Could not enable Offline Mode.', false);
+      }
+      this.disabled = false;
+    };
+
+    document.getElementById('mrOfflineInstall').onclick = async function(){
+      this.disabled = true;
+      setStatus('Starting Mr. Fluent installation…', false);
+      const result = await window.mrFluentInstallOffline();
+      updateInstallState();
+      if(result && !isStandalone() && !window.__mrFluentInstallPrompt){
+        // Keep the manual-install guide visible when the browser did not
+        // provide the programmatic install prompt.
+        if(help) help.hidden = false;
+      }
+      this.disabled = false;
+    };
+
+    document.getElementById('mrOfflineCheck').onclick = function(){
+      if(isStandalone()){
+        setStatus('✓ Mr. Fluent is installed. You can launch it from the Windows Start menu or desktop shortcut.', true);
+        if(installState) installState.textContent = '✓ Installed — app mode is active.';
+      }else if(window.__mrFluentInstallPrompt){
+        setStatus('Mr. Fluent is ready to install. Press “Install Mr. Fluent”.', true);
+      }else{
+        setStatus('This page is not running as an installed app yet. Use the browser menu / install icon to install Mr. Fluent.', false);
+        if(help) help.hidden = false;
+      }
+    };
+
+    document.getElementById('mrOfflineRemove').onclick = async function(){
+      if(confirm('Remove Mr. Fluent offline data and service worker from this browser?')){
+        await window.mrFluentRemoveOffline();
+      }
+    };
+
+    updateInstallState();
+
+    window.addEventListener('mrfluent:install-available', updateInstallState, {once:true});
+    window.addEventListener('mrfluent:installed', updateInstallState, {once:true});
+    window.addEventListener('mrfluent:manual-install-needed', updateInstallState, {once:true});
   };
+
   if('serviceWorker' in navigator){
-    window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){ }); });
+    window.addEventListener('load', function(){
+      // Background registration keeps the normal site fast; the Install button
+      // performs the explicit readiness check.
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v4', {scope:'./'}).catch(function(){});
+    });
   }
 })();
 </script>
 <style id="mr-fluent-offline-css">
-.mr-offline-page{display:grid;gap:14px}.mr-offline-hero{display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:center;padding:20px;background:linear-gradient(135deg,#211016,#0e090b);border:1px solid #4a222f;border-radius:16px}.mr-offline-icon{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;background:#1a0d12;border:1px solid #6b3043;font-size:30px;color:#e2a0b0}.mr-offline-hero h3{font-size:23px}.mr-offline-hero p{color:#8e8387;font-size:10px;line-height:1.7;margin-top:5px}.mr-offline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mr-offline-card{padding:18px;background:#100b0d;border:1px solid #2d181f;border-radius:14px}.mr-offline-card h4{font-size:14px;margin:10px 0 7px}.mr-offline-card p{color:#8e8387;font-size:10px;line-height:1.7;min-height:52px;margin-bottom:13px}.mr-offline-card.danger-card{border-color:#4b242e}.mr-offline-status{padding:12px 14px;border-radius:11px;background:#171014;border:1px solid #35202a;color:#d7c4c9;font-size:10px}.mr-offline-status[data-ok="1"]{border-color:#245b43;background:#102019;color:#a9e4c8}.mr-offline-note{padding:11px 13px;border:1px dashed #43232e;border-radius:10px;color:#8e8387;font-size:9px;line-height:1.7}@media(max-width:760px){.mr-offline-grid{grid-template-columns:1fr}.mr-offline-hero{grid-template-columns:56px 1fr}.mr-offline-icon{width:52px;height:52px;font-size:24px}.mr-offline-hero h3{font-size:19px}}
+.mr-offline-page{display:grid;gap:14px}.mr-offline-hero{display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:center;padding:20px;background:linear-gradient(135deg,#211016,#0e090b);border:1px solid #4a222f;border-radius:16px}.mr-offline-icon{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;background:#1a0d12;border:1px solid #6b3043;font-size:30px;color:#e2a0b0}.mr-offline-hero h3{font-size:23px}.mr-offline-hero p{color:#8e8387;font-size:10px;line-height:1.7;margin-top:5px}.mr-offline-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.mr-offline-card{padding:18px;background:#100b0d;border:1px solid #2d181f;border-radius:14px}.mr-offline-card h4{font-size:14px;margin:10px 0 7px}.mr-offline-card p{color:#8e8387;font-size:10px;line-height:1.7;min-height:52px;margin-bottom:13px}.mr-offline-card.danger-card{border-color:#4b242e}.mr-offline-card.install-card{border-color:#633044;background:linear-gradient(135deg,#160b10,#100b0d)}.mr-install-state{margin-top:10px;padding:9px 10px;border-radius:9px;background:#0b090a;border:1px solid #2b181f;color:#a99ca0;font-size:9px;line-height:1.55}.mr-offline-status{padding:12px 14px;border-radius:11px;background:#171014;border:1px solid #35202a;color:#d7c4c9;font-size:10px}.mr-offline-status[data-ok="1"]{border-color:#245b43;background:#102019;color:#a9e4c8}.mr-offline-install-help{padding:13px 14px;border:1px solid #533040;background:#140c10;border-radius:11px;color:#cdbcc1;font-size:10px;line-height:1.65}.mr-offline-install-help div{display:grid;gap:3px}.mr-offline-install-help span{color:#93868b}.mr-offline-install-help[hidden]{display:none}.mr-offline-note{padding:11px 13px;border:1px dashed #43232e;border-radius:10px;color:#8e8387;font-size:9px;line-height:1.7}@media(max-width:760px){.mr-offline-grid{grid-template-columns:1fr}.mr-offline-hero{grid-template-columns:56px 1fr}.mr-offline-icon{width:52px;height:52px;font-size:24px}.mr-offline-hero h3{font-size:19px}}
 </style>
 </head>
 <body>
