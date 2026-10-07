@@ -1,71 +1,108 @@
-const CACHE_NAME = 'doma-offline-v4';
+const CACHE_NAME = 'mr-fluent-offline-v2';
 
 const scopeUrl = new URL('./', self.registration.scope);
+const indexUrl = new URL('./index.html', self.registration.scope);
+
 const SHELL = [
   scopeUrl.href,
-  new URL('./index.html', self.registration.scope).href,
+  indexUrl.href,
   new URL('./manifest.webmanifest', self.registration.scope).href,
   new URL('./mr-fluent-icon-192.png', self.registration.scope).href,
   new URL('./mr-fluent-icon-512.png', self.registration.scope).href
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    await Promise.all(SHELL.map(async url => {
-      try {
-        const response = await fetch(url, { cache: 'no-cache' });
-        if (response.ok) await cache.put(url, response);
-      } catch (_) {}
-    }));
-    await self.skipWaiting();
-  })());
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache =>
+        Promise.all(
+          SHELL.map(async url => {
+            try {
+              const res = await fetch(url, { cache: 'no-store' });
+
+              if (res && res.ok) {
+                await cache.put(url, res);
+              }
+            } catch (_) {}
+          })
+        )
+      )
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(
-      keys
-        .filter(key => key.startsWith('mr-fluent-offline-') || key.startsWith('doma-offline-'))
-        .filter(key => key !== CACHE_NAME)
-        .map(key => caches.delete(key))
-    );
-    await self.clients.claim();
-  })());
+  event.waitUntil(
+    caches.keys()
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(
+              key =>
+                key.startsWith('mr-fluent-offline-') &&
+                key !== CACHE_NAME
+            )
+            .map(key => caches.delete(key))
+        )
+      )
+      .then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener('fetch', event => {
   const req = event.request;
+
   if (req.method !== 'GET') return;
 
-  event.respondWith((async () => {
-    const cached = await caches.match(req);
+  event.respondWith(
+    (async () => {
+      const cached = await caches.match(req);
 
-    if (req.mode === 'navigate') {
-      try {
-        const fresh = await fetch(req, { cache: 'no-store' });
-        if (fresh && fresh.ok) {
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(req, fresh.clone()).catch(() => {});
+      // Navigation requests:
+      // Try the live page first, then fall back to cached app shell.
+      if (req.mode === 'navigate') {
+        try {
+          const fresh = await fetch(req, {
+            cache: 'no-store'
+          });
+
+          if (fresh && fresh.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(req, fresh.clone()).catch(() => {});
+          }
+
+          return fresh;
+        } catch (_) {
+          return (
+            cached ||
+            caches.match(scopeUrl.href) ||
+            caches.match(indexUrl.href) ||
+            Response.error()
+          );
         }
-        return fresh;
+      }
+
+      // Return cached resource immediately when available.
+      if (cached) {
+        return cached;
+      }
+
+      // Otherwise try the network and cache the successful response.
+      try {
+        const res = await fetch(req);
+
+        if (
+          res &&
+          (res.ok || res.type === 'opaque')
+        ) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(req, res.clone()).catch(() => {});
+        }
+
+        return res;
       } catch (_) {
-        return cached || caches.match('./index.html') || Response.error();
+        return cached || Response.error();
       }
-    }
-
-    if (cached) return cached;
-
-    try {
-      const response = await fetch(req);
-      if (response && (response.ok || response.type === 'opaque')) {
-        const cache = await caches.open(CACHE_NAME);
-        cache.put(req, response.clone()).catch(() => {});
-      }
-      return response;
-    } catch (_) {
-      return cached || Response.error();
-    }
-  })());
+    })()
+  );
 });
