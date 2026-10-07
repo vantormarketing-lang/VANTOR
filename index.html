@@ -168,8 +168,12 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .mobile-nav-toggle{display:none!important}
 @media(max-width:700px){
   .mobile-nav-toggle{display:inline-flex!important}
-  .drawer-side{display:block!important;position:absolute;top:0;left:0;bottom:0;width:266px;z-index:90;background:rgba(10,8,9,.99);border-right:1px solid #27151b;box-shadow:0 24px 70px rgba(0,0,0,.55);transform:translateX(-106%);transition:transform .2s ease}
+  .drawer-side{display:block!important;position:absolute;top:0;left:0;bottom:0;width:266px;height:100%;max-height:100%;z-index:90;background:rgba(10,8,9,.99);border-right:1px solid #27151b;box-shadow:0 24px 70px rgba(0,0,0,.55);transform:translateX(-106%);transition:transform .2s ease;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;scroll-behavior:smooth;padding-bottom:28px;scrollbar-width:thin}
   .drawer-side.mobile-open{transform:none}
+  .drawer-side::-webkit-scrollbar{width:7px}
+  .drawer-side::-webkit-scrollbar-track{background:#0d090b}
+  .drawer-side::-webkit-scrollbar-thumb{background:#3f2029;border-radius:999px}
+  .drawer-side .side-link{min-height:42px}
 }
 .live-pill{border-color:#2f7f59!important;color:#a7e5c3!important;background:#10231a!important}
 </style>
@@ -3703,4 +3707,3 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   window.addEventListener('beforeunload',()=>{try{send('leave',{id:sessionUser?.id})}catch(e){}closeChannel()});
 })();
 </script>
-
