@@ -30,6 +30,44 @@
 <style id="doma-pro7-admin-css">
 .pro7-admin-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}.pro7-admin-kpi{padding:13px;border:1px solid #2f1b23;border-radius:12px;background:linear-gradient(145deg,#140c10,#0c090a)}.pro7-admin-kpi b{display:block;font-size:22px}.pro7-admin-kpi span{display:block;color:#81777b;font-size:9px;margin-top:3px}.pro7-admin-list{display:grid;gap:9px}.pro7-admin-ticket{padding:13px;border:1px solid #2e1a22;border-radius:12px;background:#100b0d}.pro7-admin-ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.pro7-admin-meta{font-size:9px;color:#786e72;margin-top:4px}.pro7-admin-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.pro7-admin-chat{display:grid;gap:8px;max-height:420px;overflow:auto}.pro7-admin-msg{padding:10px;border-radius:10px;background:#121012;border:1px solid #2f2027;font-size:10px;line-height:1.6}.pro7-admin-msg.staff{background:#121a16;border-color:#2c4b38}.pro7-admin-msg small{display:block;color:#746a6f;font-size:8px;margin-bottom:4px}.pro7-parent-link{padding:10px;border:1px solid #2d1a21;border-radius:10px;background:#0f0a0c;display:flex;justify-content:space-between;gap:10px;align-items:center}.pro7-parent-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pro7-live-preview{padding:11px;border:1px dashed #3b232c;border-radius:10px;background:#100a0c;font-size:9px;color:#81777b}@media(max-width:900px){.pro7-admin-grid{grid-template-columns:1fr 1fr}.pro7-parent-grid{grid-template-columns:1fr}}@media(max-width:600px){.pro7-admin-grid{grid-template-columns:1fr}}
 </style>
+
+<link rel="manifest" href="./admin-manifest.webmanifest?v=4">
+<meta name="theme-color" content="#0d090b">
+<meta name="application-name" content="DOMA Admin">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=4">
+<style id="doma-admin-pwa-final-css">
+.admin-install-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.admin-install-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.admin-install-note{display:none;padding:8px 10px;border-radius:9px;background:#1b1115;border:1px solid #4a2732;color:#cdbcc1;font-size:10px;line-height:1.45}
+.admin-install-note.show{display:block}
+@media(max-width:700px){.admin-install-wrap{width:100%}.admin-install-btn{width:100%;margin-top:6px}}
+</style>
+<script id="doma-admin-pwa-final-bootstrap">
+(function(){
+  'use strict';
+  let deferredPrompt=null;
+  const isStandalone=()=>{try{return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true}catch(_){return false}};
+  const setNote=(msg,ok)=>{const n=document.getElementById('adminInstallNote');if(!n)return;n.textContent=msg||'';n.classList.toggle('show',!!msg);if(ok)n.style.borderColor='#2e5f47'};
+  const refresh=()=>{const b=document.getElementById('adminInstallBtn');if(!b)return;if(isStandalone()){b.textContent='✓ DOMA Admin Installed';b.disabled=true;setNote('DOMA Admin is installed on this device.',true);return}b.disabled=false;b.textContent='Install DOMA Admin';};
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;refresh()});
+  window.addEventListener('appinstalled',()=>{deferredPrompt=null;refresh();setNote('DOMA Admin was installed successfully.',true)});
+  async function install(){
+    if(isStandalone())return setNote('DOMA Admin is already installed.',true);
+    if(deferredPrompt){try{await deferredPrompt.prompt();await deferredPrompt.userChoice}catch(e){}deferredPrompt=null;refresh();return}
+    setNote('Use the browser menu and choose “Install DOMA Admin” or “Add to Home screen”.',false);
+  }
+  window.domaInstallAdmin=install;
+  document.addEventListener('DOMContentLoaded',()=>{
+    refresh();
+    const b=document.getElementById('adminInstallBtn');if(b)b.addEventListener('click',install);
+    if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+})();
+</script>
+
 <base target="_blank">
 </head>
 <body>
@@ -95,7 +133,11 @@
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="connection"><i id="connectionDot" class="dot"></i><span id="connectionText">Checking…</span></span>
-        <button class="btn secondary" id="openSite">Open Website ↗</button>
+        <div class="admin-install-wrap">
+          <button class="btn secondary admin-install-btn" id="adminInstallBtn" type="button">Install DOMA Admin</button>
+          <span id="adminInstallNote" class="admin-install-note"></span>
+          <button class="btn secondary" id="openSite">Open Website ↗</button>
+        </div>
       </div>
     </header>
 
