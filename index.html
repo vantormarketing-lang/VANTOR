@@ -3196,6 +3196,62 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   window.addEventListener('beforeunload',()=>{try{speechSynthesis.cancel()}catch(e){}});
 })();
 </script>
+
+<style id="mr-fluent-offline-overview-card-css">
+.mr-offline-overview-card{margin-top:15px;padding:18px;background:linear-gradient(135deg,#171014,#0f0a0c);border:1px solid #4a222f;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.2)}
+.mr-offline-overview-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.mr-offline-overview-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#1d0e14;border:1px solid #6a3041;font-size:23px;flex:0 0 auto}
+.mr-offline-overview-copy{display:flex;align-items:center;gap:11px;min-width:0}
+.mr-offline-overview-copy h3{font-size:15px;margin:0}
+.mr-offline-overview-copy p{font-size:10px;color:#8e8387;margin-top:4px;line-height:1.6}
+.mr-offline-overview-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.mr-offline-overview-status{font-size:9px;color:#777;margin-top:9px;line-height:1.5}
+@media(max-width:700px){.mr-offline-overview-head{align-items:flex-start}.mr-offline-overview-actions .btn{flex:1 1 140px}.mr-offline-overview-copy h3{font-size:14px}}
+</style>
+
+<script id="mr-fluent-offline-overview-card-script">
+(function(){
+  'use strict';
+  function install(){
+    const fn=window.renderStudentOverview;
+    if(typeof fn!=='function'){setTimeout(install,100);return}
+    if(fn.__mrFluentOfflineOverviewCard)return;
+    const wrapped=async function(){
+      const result=await fn.apply(this,arguments);
+      try{
+        if(typeof currentStudentView!=='undefined'&&currentStudentView==='overview'){
+          const body=document.getElementById('drawerBody');
+          if(body&&!document.getElementById('mrOfflineOverviewCard')){
+            const html='<div class="mr-offline-overview-card" id="mrOfflineOverviewCard">'+
+              '<div class="mr-offline-overview-head"><div class="mr-offline-overview-copy"><div class="mr-offline-overview-icon">📥</div><div><h3>Offline App</h3><p>Install Mr. Fluent or prepare offline access directly from your Student Overview.</p></div></div><span class="pill">OFFLINE</span></div>'+
+              '<div class="mr-offline-overview-actions"><button type="button" class="btn primary" id="mrOfflineOverviewOpen">Open Offline App →</button><button type="button" class="btn secondary" id="mrOfflineOverviewEnable">Enable Offline</button></div>'+
+              '<div class="mr-offline-overview-status">You can return here anytime to manage offline mode or remove offline data.</div></div>';
+            body.insertAdjacentHTML('beforeend',html);
+            document.getElementById('mrOfflineOverviewOpen')?.addEventListener('click',function(){window.openMrFluentOffline();});
+            document.getElementById('mrOfflineOverviewEnable')?.addEventListener('click',async function(){
+              this.disabled=true;
+              this.textContent='Preparing…';
+              try{
+                await window.mrFluentRegisterOffline();
+                if(typeof showToast==='function')showToast('Offline Mode enabled.');
+                this.textContent='Offline Enabled ✓';
+              }catch(e){
+                if(typeof showToast==='function')showToast(e?.message||'Could not enable Offline Mode.');
+                this.disabled=false;
+                this.textContent='Enable Offline';
+              }
+            });
+          }
+        }
+      }catch(e){console.warn('Offline overview card:',e)}
+      return result;
+    };
+    wrapped.__mrFluentOfflineOverviewCard=true;
+    window.renderStudentOverview=wrapped;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script>
 </body>
 
 
