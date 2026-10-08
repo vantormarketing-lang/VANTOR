@@ -601,14 +601,25 @@ async function loadStudents(){const r=await db.from('profiles').select('id,full_
 async function studentDetails(id){const [p,s,pr]=await Promise.all([db.from('profiles').select('id,full_name,email,grade_id,created_at').eq('id',id).single(),db.from('subscriptions').select('id,grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',id).order('expires_at',{ascending:false}),db.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at,lessons(title)').eq('student_id',id).order('last_opened_at',{ascending:false}).limit(100)]);if(p.error)return toast(p.error.message);openModal('Student Details',`<div class="grid-2"><div class="card"><b>${esc(p.data.full_name||'Student')}</b><p class="muted">${esc(p.data.email||'')}</p><p>Grade: ${esc(gradeName(p.data.grade_id))}</p></div><div class="card"><b>Subscriptions</b><p class="muted">${(s.data||[]).map(x=>esc(gradeName(x.grade_id)+' · '+x.plan+' · '+x.status+' · '+fmtDate(x.expires_at))).join('<br>')||'None'}</p></div></div><div class="card" style="margin-top:12px"><b>Recent Progress</b><p class="muted">${(pr.data||[]).slice(0,15).map(x=>esc((x.lessons?.title||'Lesson')+' · '+x.progress_percent+'% · '+(x.completed?'Completed':'In progress'))).join('<br>')||'No progress yet.'}</p></div>`)}
 
 async function loadSales(){
-  const [rq,sub]=await Promise.all([
-    db.from('subscription_requests').select('id,student_id,grade_id,plan,amount,student_name,student_phone,student_email,proof_path,status,admin_note,created_at').order('created_at',{ascending:false}),
-    db.from('subscriptions').select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at').order('created_at',{ascending:false})
-  ]);
-  if(rq.error)return $('salesTable').innerHTML='<div class="empty">'+esc(rq.error.message)+'</div>';
-  const all=rq.data||[], subs=sub.data||[];
+  const box=$('salesTable');
+  if(box)box.innerHTML='<div class="empty">Loading subscription requests…</div>';
+  const rq=await db.from('subscription_requests')
+    .select('id,student_id,grade_id,plan,amount,student_name,student_phone,student_email,proof_path,status,admin_note,created_at')
+    .order('created_at',{ascending:false})
+    .range(0,1999);
+  if(rq.error){
+    if(box)box.innerHTML='<div class="empty"><b>Could not load subscription requests.</b><br>'+esc(rq.error.message)+'</div>';
+    $('salesPending').textContent='—';$('salesApproved').textContent='—';$('salesRejected').textContent='—';
+    return;
+  }
+  const all=rq.data||[];
+  const sub=await db.from('subscriptions')
+    .select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at')
+    .order('created_at',{ascending:false})
+    .range(0,1999);
+  const subs=sub.error?[]:(sub.data||[]);
   let rows=all.slice();
-  const term=$('salesSearch').value.trim().toLowerCase();
+  const term=($('salesSearch')?.value||'').trim().toLowerCase();
   if(term)rows=rows.filter(x=>(x.student_name||'').toLowerCase().includes(term)||(x.student_email||'').toLowerCase().includes(term)||(x.student_phone||'').toLowerCase().includes(term)||(x.status||'').toLowerCase().includes(term));
   const now=Date.now(), seven=now+7*86400000;
   $('salesPending').textContent=all.filter(x=>x.status==='pending').length;
@@ -616,14 +627,45 @@ async function loadSales(){
   $('salesRejected').textContent=all.filter(x=>x.status==='rejected').length;
   $('salesActive').textContent=subs.filter(x=>x.status==='active'&&new Date(x.expires_at)>new Date()).length;
   if($('salesExpiring'))$('salesExpiring').textContent=subs.filter(x=>x.status==='active'&&new Date(x.expires_at)>new Date()&&new Date(x.expires_at).getTime()<=seven).length;
+
   const subByStudent={};subs.forEach(x=>{subByStudent[x.student_id]=x});
-  $('salesTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Plan</th><th>Amount</th><th>Phone</th><th>Subscription</th><th>Receipt</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
+  const pending=rows.filter(x=>x.status==='pending');
+  const pendingBanner=pending.length
+    ? '<div class="info-box" style="margin-bottom:14px;border-color:#6b3150;background:linear-gradient(135deg,#1b1018,#25101b)"><b style="color:#fff">Pending payment requests: '+pending.length+'</b><span class="muted" style="display:block;margin-top:4px">The newest requests appear first below. Review the receipt, then Accept or Reject.</span></div>'
+    : '';
+
+  const table=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Plan</th><th>Amount</th><th>Phone</th><th>Subscription</th><th>Receipt</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
     const sx=subByStudent[x.student_id];
     let expiry='—', badge='';
     if(sx){const d=Math.ceil((new Date(sx.expires_at)-Date.now())/86400000);expiry=fmtDate(sx.expires_at);if(sx.status==='active'&&d>=0&&d<=7)badge='<span class="expiry-badge">'+(d<=1?'Expires tomorrow':d+' days left')+'</span>';else if(sx.status==='active'&&d<0)badge='<span class="expiry-badge">Expired</span>'}
-    return `<tr><td><b>${esc(x.student_name)}</b><div class="muted">${esc(x.student_email)}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.plan||'Monthly')}</td><td>${x.amount} EGP</td><td><a style="color:#8fd4a9" target="_blank" rel="noopener" href="https://wa.me/20${esc(x.student_phone).replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')}">${esc(x.student_phone)}</a></td><td>${sx?`<div>${esc(sx.status||'')} · ${expiry}</div>${badge}`:'—'}</td><td>${x.proof_path?`<button class="btn secondary small" onclick="viewReceipt('${x.id}')">View</button>`:'—'}</td><td><span class="pill ${x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn'}">${esc(x.status)}</span></td><td>${x.status==='pending'?`<div class="actions"><button class="btn ok small" onclick="approveSub('${x.id}')">Accept</button><button class="btn danger small" onclick="rejectSub('${x.id}')">Reject</button></div>`:x.status==='approved'?`<div class="actions"><button type="button" class="btn danger small js-delete-student" data-student-id="${esc(x.student_id)}" data-student-label="${esc(x.student_email||x.student_name||'Student')}">Delete student</button></div>`:'—'}</td></tr>`;
-  }).join('')+'</tbody></table>':'<div class="empty">No subscription requests yet.</div>'
+    return '<tr>'+
+      '<td><b>'+esc(x.student_name||'Student')+'</b><div class="muted">'+esc(x.student_email||'')+'</div><div class="muted" style="font-size:9px">'+esc(fmt(x.created_at))+'</div></td>'+
+      '<td>'+esc(gradeName(x.grade_id))+'</td>'+
+      '<td>'+esc(x.plan||'Monthly')+'</td>'+
+      '<td>'+esc(x.amount)+' EGP</td>'+
+      '<td><a style="color:#8fd4a9" target="_blank" rel="noopener" href="https://wa.me/20'+esc(x.student_phone||'').replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')+'">'+esc(x.student_phone||'—')+'</a></td>'+
+      '<td>'+(sx?'<div>'+esc(sx.status||'')+' · '+expiry+'</div>'+badge:'—')+'</td>'+
+      '<td>'+(x.proof_path?'<button class="btn secondary small" onclick="viewReceipt(\''+x.id+'\')">View</button>':'—')+'</td>'+
+      '<td><span class="pill '+(x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn')+'">'+esc(x.status||'pending')+'</span></td>'+
+      '<td>'+(x.status==='pending'?'<div class="actions"><button class="btn ok small" onclick="approveSub(\''+x.id+'\')">Accept</button><button class="btn danger small" onclick="rejectSub(\''+x.id+'\')">Reject</button></div>':x.status==='approved'?'<div class="actions"><button type="button" class="btn danger small js-delete-student" data-student-id="'+esc(x.student_id||'')+'" data-student-label="'+esc(x.student_email||x.student_name||'Student')+'">Delete student</button></div>':'—')+'</td>'+
+      '</tr>';
+  }).join('')+'</tbody></table>':'<div class="empty">No subscription requests found for the current account.</div>';
+  if(box)box.innerHTML=pendingBanner+table+(sub.error?'<div class="muted" style="padding:10px 0;font-size:10px">Subscription details are temporarily unavailable: '+esc(sub.error.message)+'</div>':'');
 }
+
+function startSalesRealtime(){
+  if(window.__domaSalesRealtimeStarted)return;
+  window.__domaSalesRealtimeStarted=true;
+  try{
+    window.__domaSalesRealtime=db.channel('doma-admin-sales-live')
+      .on('postgres_changes',{event:'*',schema:'public',table:'subscription_requests'},()=>{
+        loadDashboard();
+        if(current==='sales')loadSales();
+      })
+      .subscribe();
+  }catch(e){console.warn('Sales realtime unavailable',e)}
+}
+startSalesRealtime();
 async function viewReceipt(id){const r=await db.from('subscription_requests').select('proof_path').eq('id',id).single();if(r.error||!r.data?.proof_path)return toast('Receipt not found.');const s=await db.storage.from('payment-proofs').createSignedUrl(r.data.proof_path,300);if(s.error)return toast('Receipt error: '+s.error.message);window.open(s.data.signedUrl,'_blank')}
 async function approveSub(id){if(!confirm('Approve this request and activate the student subscription?'))return;const note=prompt('Admin note (optional):','Payment verified.');if(note===null)return;const r=await db.rpc('doma_approve_subscription_request',{p_request_id:id,p_note:note});if(r.error)return toast('Approval failed: '+r.error.message);toast('Subscription approved and activated.');await loadSales();await loadDashboard()}
 async function rejectSub(id){const note=prompt('Rejection reason:','Payment receipt could not be verified.');if(note===null)return;const r=await db.rpc('doma_reject_subscription_request',{p_request_id:id,p_note:note});if(r.error)return toast('Rejection failed: '+r.error.message);toast('Request rejected.');await loadSales();await loadDashboard()}
