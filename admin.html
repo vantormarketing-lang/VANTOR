@@ -667,8 +667,33 @@ function startSalesRealtime(){
 }
 startSalesRealtime();
 async function viewReceipt(id){const r=await db.from('subscription_requests').select('proof_path').eq('id',id).single();if(r.error||!r.data?.proof_path)return toast('Receipt not found.');const s=await db.storage.from('payment-proofs').createSignedUrl(r.data.proof_path,300);if(s.error)return toast('Receipt error: '+s.error.message);window.open(s.data.signedUrl,'_blank')}
-async function approveSub(id){if(!confirm('Approve this request and activate the student subscription?'))return;const note=prompt('Admin note (optional):','Payment verified.');if(note===null)return;const r=await db.rpc('doma_approve_subscription_request',{p_request_id:id,p_note:note});if(r.error)return toast('Approval failed: '+r.error.message);toast('Subscription approved and activated.');await loadSales();await loadDashboard()}
-async function rejectSub(id){const note=prompt('Rejection reason:','Payment receipt could not be verified.');if(note===null)return;const r=await db.rpc('doma_reject_subscription_request',{p_request_id:id,p_note:note});if(r.error)return toast('Rejection failed: '+r.error.message);toast('Request rejected.');await loadSales();await loadDashboard()}
+async function approveSub(id){
+  if(!confirm('Approve this request and activate the student subscription?'))return;
+  const latest=await db.from('subscription_requests').select('id,status').eq('id',id).maybeSingle();
+  if(latest.error)return toast('Could not verify the current request status: '+latest.error.message);
+  if(!latest.data)return toast('This subscription request could not be found.');
+  if(latest.data.status!=='pending'){
+    await loadSales();await loadDashboard();
+    return toast(latest.data.status==='approved'?'This request was already approved. The list has been refreshed.':latest.data.status==='rejected'?'This request was already rejected. The list has been refreshed.':'The request status has changed. The list has been refreshed.');
+  }
+  const note=prompt('Admin note (optional):','Payment verified.');if(note===null)return;
+  const r=await db.rpc('doma_approve_subscription_request',{p_request_id:id,p_note:note});
+  if(r.error){await loadSales();await loadDashboard();return toast(/not pending/i.test(r.error.message||'')?'The request status changed before approval. The list has been refreshed.':'Approval failed: '+r.error.message)}
+  toast('Subscription approved and activated.');await loadSales();await loadDashboard()
+}
+async function rejectSub(id){
+  const latest=await db.from('subscription_requests').select('id,status').eq('id',id).maybeSingle();
+  if(latest.error)return toast('Could not verify the current request status: '+latest.error.message);
+  if(!latest.data)return toast('This subscription request could not be found.');
+  if(latest.data.status!=='pending'){
+    await loadSales();await loadDashboard();
+    return toast(latest.data.status==='approved'?'This request was already approved. The list has been refreshed.':latest.data.status==='rejected'?'This request was already rejected. The list has been refreshed.':'The request status has changed. The list has been refreshed.');
+  }
+  const note=prompt('Rejection reason:','Payment receipt could not be verified.');if(note===null)return;
+  const r=await db.rpc('doma_reject_subscription_request',{p_request_id:id,p_note:note});
+  if(r.error){await loadSales();await loadDashboard();return toast(/not pending/i.test(r.error.message||'')?'The request status changed before rejection. The list has been refreshed.':'Rejection failed: '+r.error.message)}
+  toast('Request rejected.');await loadSales();await loadDashboard()
+}
 
 async function loadProgress(){const r=await db.from('lesson_progress').select('student_id,lesson_id,completed,progress_percent,last_opened_at,profiles(full_name,email),lessons(title,grade_id)').order('last_opened_at',{ascending:false}).limit(500);if(r.error)return $('progressTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('progressTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Lesson</th><th>Grade</th><th>Progress</th><th>Status</th><th>Last opened</th></tr></thead><tbody>'+r.data.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}<div class="muted">${esc(x.profiles?.email||'')}</div></td><td>${esc(x.lessons?.title||'')}</td><td>${esc(gradeName(x.lessons?.grade_id))}</td><td>${x.progress_percent}%</td><td><span class="pill ${x.completed?'ok':'warn'}">${x.completed?'Completed':'In progress'}</span></td><td>${fmt(x.last_opened_at)}</td></tr>`).join('')+'</tbody></table>':'<div class="empty">No progress records yet.</div>'}
 async function loadResults(){const r=await db.from('quiz_attempts').select('id,score,total_points,submitted_at,student_id,quiz_id,profiles(full_name,email),quizzes(title,grade_id)').order('submitted_at',{ascending:false}).limit(500);if(r.error)return $('resultsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('resultsTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Quiz</th><th>Grade</th><th>Score</th><th>Percent</th><th>Submitted</th></tr></thead><tbody>'+r.data.map(x=>{const total=Number(x.total_points||0),score=Number(x.score||0),pct=total?Math.round(score/total*100):0;return `<tr><td>${esc(x.profiles?.full_name||'Student')}</td><td>${esc(x.quizzes?.title||'')}</td><td>${esc(gradeName(x.quizzes?.grade_id))}</td><td>${score}/${total}</td><td>${pct}%</td><td>${fmt(x.submitted_at)}</td></tr>`}).join('')+'</tbody></table>':'<div class="empty">No quiz results yet.</div>'}
