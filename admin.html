@@ -181,6 +181,46 @@ th{color:#b08bbf}
 }
 </style>
 
+
+<style id="doma-admin-selection-colors">
+/* Keep native form controls readable in the DOMA dark theme. */
+html{color-scheme:dark}
+select,.field, input, textarea{
+  color:#f5f2f3 !important;
+  background:#100b0d !important;
+  border-color:#3a2029 !important;
+}
+select:focus,.field:focus,input:focus,textarea:focus{
+  border-color:#762337 !important;
+  box-shadow:0 0 0 2px rgba(118,35,55,.16);
+}
+select option,
+select optgroup{
+  background:#120b0f !important;
+  color:#f5f2f3 !important;
+}
+select option:checked,
+select option:hover{
+  background:#762337 !important;
+  color:#ffffff !important;
+}
+/* Cleaner modal / popup surfaces that use the same palette. */
+.modal-card,
+.table-wrap,
+.card,
+.info-box{
+  color:#f5f2f3;
+}
+.modal-card .form-row label,
+.modal-card small.muted,
+.toolbar label{
+  color:#a6969d !important;
+}
+input::placeholder,
+textarea::placeholder{
+  color:#7f7379 !important;
+}
+</style>
 </head>
 <body>
 <div id="login" class="login">
