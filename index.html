@@ -774,9 +774,28 @@ function updateNav(){
 async function getProfile(){if(!sessionUser)return null;const r=await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id',sessionUser.id).maybeSingle();if(r.error){console.warn(r.error);return await ensureProfile(sessionUser)}return r.data||await ensureProfile(sessionUser)}
 async function getActiveSubscriptions(){
   if(!sessionUser)return [];
-  const r=await sb.from('subscriptions').select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at').eq('student_id',sessionUser.id).eq('status','active').order('expires_at',{ascending:false});
+  // Read paid access through the secure Supabase RPC first. This avoids
+  // student-side RLS/cache mismatches after an Admin approves a request.
+  try{
+    const rpc=await sb.rpc('doma_get_my_active_subscriptions');
+    if(!rpc.error){
+      return (rpc.data||[])
+        .filter(x=>String(x.status||'').trim().toLowerCase()==='active' && (!x.expires_at || new Date(x.expires_at)>new Date()))
+        .map(x=>({...x,grades:{name:x.grade_name||grades.find(g=>String(g.id)===String(x.grade_id))?.name||''}}));
+    }
+    console.warn('Active subscription RPC failed; using direct fallback.',rpc.error);
+  }catch(e){console.warn('Active subscription RPC unavailable; using direct fallback.',e)}
+
+  // Backward-compatible fallback for deployments where the RPC has not been
+  // installed yet. Keep the same normalized status/date checks.
+  const r=await sb.from('subscriptions')
+    .select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at')
+    .eq('student_id',sessionUser.id)
+    .order('expires_at',{ascending:false});
   if(r.error){console.warn(r.error);return []}
-  return (r.data||[]).filter(x=>new Date(x.expires_at)>new Date()).map(x=>({...x,grades:{name:grades.find(g=>g.id===x.grade_id)?.name||''}}));
+  return (r.data||[])
+    .filter(x=>String(x.status||'').trim().toLowerCase()==='active' && (!x.expires_at || new Date(x.expires_at)>new Date()))
+    .map(x=>({...x,grades:{name:grades.find(g=>String(g.id)===String(x.grade_id))?.name||''}}));
 }
 async function getRequests(){
   if(!sessionUser)return [];
@@ -811,7 +830,27 @@ function renderGrades(list=grades){
 function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim(),stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const text=(card.dataset.gradeSearch||''),okQ=!q||text.includes(q),okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'block':'none'})}
 function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>150 EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${JSON.stringify(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${JSON.stringify(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
 
-async function domaOpenGrade(name){pendingGradeName=name;if(!sessionUser){openAuth('signup');return}const g=grades.find(x=>x.name===name);if(!g)return showToast('Grade is not available right now.');const subs=await getActiveSubscriptions();const active=subs.find(s=>s.grade_id===g.id);if(active){currentGrade=g;currentSubscription=active;await openDrawer('overview');return}showGradeInfo(name)}
+async function domaOpenGrade(name){
+  pendingGradeName=name;
+  if(!sessionUser){openAuth('signup');return}
+  const g=grades.find(x=>x.name===name);
+  if(!g)return showToast('Grade is not available right now.');
+  // Refresh the server-side access state at the moment the student opens a
+  // grade. This is important after the Admin approves a payment in another tab/device.
+  try{await refreshStudentState()}catch(e){console.warn('Grade access refresh failed.',e)}
+  const subs=await getActiveSubscriptions();
+  const active=subs.find(s=>String(s.grade_id)===String(g.id));
+  if(active){
+    currentGrade=g;
+    currentSubscription=active;
+    window.currentGrade=currentGrade;
+    window.currentSubscription=currentSubscription;
+    closeGradeModal();
+    await openDrawer('overview');
+    return;
+  }
+  showGradeInfo(name);
+}
 async function domaStartSubscription(name,plan){
   pendingGradeName=name;selectedPlan='monthly';plan='monthly';closeGradeModal();
   if(!sessionUser){openAuth('login');return}
@@ -911,7 +950,26 @@ function openDrawer(view='overview'){if(!sessionUser){openAuth('login');return}$
 function closeDrawer(){$('drawer').classList.remove('show');document.body.style.overflow=''}
 function updateStudentShell(){const p=window.domaStudentProfile||{};$('userCard').innerHTML='<strong>'+esc(p.full_name||sessionUser?.email||'Student')+'</strong><span>'+esc(p.email||sessionUser?.email||'')+'</span><span style="display:block;margin-top:6px;color:#d18498">'+esc(currentGrade?.name||'No active grade')+'</span>'}
 
-async function ensureActiveGrade(){if(!sessionUser)return null;if(currentGrade&&currentSubscription)return {grade:currentGrade,sub:currentSubscription};const subs=await getActiveSubscriptions();if(!subs.length)return null;const s=subs[0],g=grades.find(x=>x.id===s.grade_id);if(!g)return null;currentGrade=g;currentSubscription=s;return {grade:g,sub:s}}
+async function ensureActiveGrade(){
+  if(!sessionUser)return null;
+  if(currentGrade&&currentSubscription && currentSubscription.expires_at && new Date(currentSubscription.expires_at)>new Date())return {grade:currentGrade,sub:currentSubscription};
+  const subs=await getActiveSubscriptions();
+  if(!subs.length){
+    try{
+      await refreshStudentState();
+      const retry=await getActiveSubscriptions();
+      if(retry.length){
+        const rs=retry[0],rg=grades.find(x=>String(x.id)===String(rs.grade_id));
+        if(rg){currentGrade=rg;currentSubscription=rs;window.currentGrade=currentGrade;window.currentSubscription=currentSubscription;return {grade:rg,sub:rs};}
+      }
+    }catch(e){console.warn('Active grade retry failed.',e)}
+    return null;
+  }
+  const s=subs[0],g=grades.find(x=>String(x.id)===String(s.grade_id));
+  if(!g)return null;
+  currentGrade=g;currentSubscription=s;window.currentGrade=currentGrade;window.currentSubscription=currentSubscription;
+  return {grade:g,sub:s};
+}
 async function studentView(view){
   currentStudentView=view;document.querySelectorAll('.side-link[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   const meta={overview:['Overview','Your English learning command center.'],lessons:['Lessons','Published lessons for your active grade.'],quizzes:['Quizzes','Practice and check your understanding.'],homework:['Homework','Assignments and submissions.'],certificates:['Certificates','Your issued completion certificates.'],notifications:['Notifications','Important updates from Mr. Fluent.'],assistant:['Study Assistant','Get practical study guidance from your course data.'],questionbank:['Question Bank','Search and practice questions from your published quizzes.'],analytics:['My Analytics','Detailed progress and learning performance.'],challenge:['Daily Challenge','A small goal to keep your English streak moving.']};
