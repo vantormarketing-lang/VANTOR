@@ -30,160 +30,157 @@
 <style id="doma-pro7-admin-css">
 .pro7-admin-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}.pro7-admin-kpi{padding:13px;border:1px solid #2f1b23;border-radius:12px;background:linear-gradient(145deg,#140c10,#0c090a)}.pro7-admin-kpi b{display:block;font-size:22px}.pro7-admin-kpi span{display:block;color:#81777b;font-size:9px;margin-top:3px}.pro7-admin-list{display:grid;gap:9px}.pro7-admin-ticket{padding:13px;border:1px solid #2e1a22;border-radius:12px;background:#100b0d}.pro7-admin-ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.pro7-admin-meta{font-size:9px;color:#786e72;margin-top:4px}.pro7-admin-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.pro7-admin-chat{display:grid;gap:8px;max-height:420px;overflow:auto}.pro7-admin-msg{padding:10px;border-radius:10px;background:#121012;border:1px solid #2f2027;font-size:10px;line-height:1.6}.pro7-admin-msg.staff{background:#121a16;border-color:#2c4b38}.pro7-admin-msg small{display:block;color:#746a6f;font-size:8px;margin-bottom:4px}.pro7-parent-link{padding:10px;border:1px solid #2d1a21;border-radius:10px;background:#0f0a0c;display:flex;justify-content:space-between;gap:10px;align-items:center}.pro7-parent-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pro7-live-preview{padding:11px;border:1px dashed #3b232c;border-radius:10px;background:#100a0c;font-size:9px;color:#81777b}@media(max-width:900px){.pro7-admin-grid{grid-template-columns:1fr 1fr}.pro7-parent-grid{grid-template-columns:1fr}}@media(max-width:600px){.pro7-admin-grid{grid-template-columns:1fr}}
 </style>
-
-<link rel="manifest" href="./admin-manifest.webmanifest?v=8">
-<meta name="theme-color" content="#0d090b">
-<meta name="application-name" content="DOMA Admin">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=8">
-<style id="doma-admin-pwa-final-css">
-.admin-install-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.admin-install-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px}
-.admin-install-note{display:none;padding:8px 10px;border-radius:9px;background:#1b1115;border:1px solid #4a2732;color:#cdbcc1;font-size:10px;line-height:1.45}
-.admin-install-note.show{display:block}
-@media(max-width:700px){.admin-install-wrap{width:100%}.admin-install-btn{width:100%;margin-top:6px}}
-</style>
-<script id="doma-admin-pwa-final-bootstrap">
-(function(){
-  'use strict';
-  let deferredPrompt=null;
-  let installAttempted=false;
-  const isStandalone=()=>{
-    try{
-      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-    }catch(_){return false}
-  };
-  const setNote=(msg,ok)=>{
-    const n=document.getElementById('adminInstallNote');
-    if(!n)return;
-    n.textContent=msg||'';
-    n.classList.toggle('show',!!msg);
-    n.style.borderColor=ok?'#2e5f47':'#4a2732';
-  };
-  const refresh=()=>{
-    const b=document.getElementById('adminInstallBtn');
-    if(!b)return;
-    if(isStandalone()){
-      b.textContent='✓ DOMA Admin Installed';
-      b.disabled=true;
-      setNote('DOMA Admin is installed on this device.',true);
-      return;
-    }
-    b.disabled=false;
-    b.textContent=deferredPrompt?'Install DOMA Admin':'Install DOMA Admin';
-  };
-  window.addEventListener('beforeinstallprompt',e=>{
-    e.preventDefault();
-    deferredPrompt=e;
-    refresh();
-  });
-  window.addEventListener('appinstalled',()=>{
-    deferredPrompt=null;
-    installAttempted=false;
-    refresh();
-    setNote('DOMA Admin was installed successfully.',true);
-  });
-  async function install(){
-    if(isStandalone()){
-      setNote('DOMA Admin is already installed.',true);
-      return;
-    }
-    if(deferredPrompt){
-      try{
-        installAttempted=true;
-        await deferredPrompt.prompt();
-        const choice=await deferredPrompt.userChoice;
-        if(choice?.outcome==='accepted'){
-          setNote('Installing DOMA Admin…',true);
-        }else{
-          setNote('Installation was cancelled. You can try again from the button.',false);
-        }
-      }catch(e){
-        setNote('The browser could not open the install prompt. Use Edge menu → Apps → Install DOMA Admin.',false);
-      }finally{
-        deferredPrompt=null;
-        refresh();
-      }
-      return;
-    }
-    setNote('For desktop Edge: open the browser menu (…) → Apps → Install DOMA Admin. If “Install” is missing, refresh this page once after the latest files load.',false);
-  }
-  window.domaInstallAdmin=install;
-  async function registerAdminSW(){
-    if(!('serviceWorker' in navigator))return;
-    try{
-      const swUrl=new URL('./admin-sw.js?v=8',window.location.href);
-      const scopeUrl=new URL('./admin.html',window.location.href);
-      const reg=await navigator.serviceWorker.register(swUrl,{scope:scopeUrl.pathname});
-      await reg.update().catch(()=>{});
-      await navigator.serviceWorker.ready;
-    }catch(e){
-      console.warn('DOMA Admin service worker registration failed:',e);
-    }
-  }
-  document.addEventListener('DOMContentLoaded',()=>{
-    refresh();
-    const b=document.getElementById('adminInstallBtn');
-    if(b)b.addEventListener('click',install);
-    registerAdminSW();
-  });
-})();
-</script>
-
 <base target="_blank">
-<style id="doma-admin-mobile-polish-v1">
-/* Mobile-only presentation polish. Desktop layout and behavior remain unchanged. */
-@media (max-width: 700px){
-  body{overflow-x:hidden}
-  .sidebar{width:min(320px,88vw);padding:14px 12px;box-shadow:18px 0 50px rgba(0,0,0,.45)}
-  .side-logo{padding:4px 10px 16px}
-  .nav-title{padding:12px 10px 6px;font-size:9px}
-  .nav-btn{padding:11px 12px;font-size:12px}
-  .top{min-height:68px;height:auto;padding:10px 12px;gap:10px;align-items:center}
-  .top>div:first-child{min-width:0;flex:1}
-  .top>div:first-child>div{min-width:0}
-  .top h1{font-size:17px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .top small{font-size:9px}
-  .top>div:last-child{display:flex!important;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;max-width:58%}
-  .connection{font-size:9px;white-space:nowrap}
-  .top .btn{padding:8px 10px;font-size:10px}
-  .admin-install-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-  .admin-install-btn{margin-top:0!important;width:auto!important}
-  .admin-install-note{width:100%;font-size:9px}
-  .content{padding:12px}
-  .head{gap:10px;margin-bottom:13px}
-  .head h2{font-size:21px}
-  .head p{font-size:10px;line-height:1.55}
-  .toolbar{gap:7px;margin-bottom:10px}
-  .toolbar input,.toolbar select{width:100%;max-width:none!important}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-  .grid-2{grid-template-columns:1fr}
-  .card{padding:13px;border-radius:13px}
-  .stat .num{font-size:25px}
-  .table-wrap,.qbank-scroll{border-radius:12px}
-  table{min-width:720px}
-  th,td{padding:10px 9px;font-size:11px}
-  .modal{padding:7px}
-  .modal-card{width:100%;max-height:94vh;border-radius:14px;padding:15px}
-  .modal-head h3{font-size:16px}
-  .form-grid{gap:8px}
-  .form-row{margin-bottom:8px}
-  .login{padding:14px}
-  .login-card{padding:22px;border-radius:17px}
+
+<style id="doma-admin-index-palette">
+/* DOMA ACADEMY — admin palette match (visual-only override) */
+:root{
+  --bg:#060608;
+  --panel:#120c12;
+  --panel2:#18101a;
+  --line:#33203d;
+  --text:#f5f2f3;
+  --muted:#9b9396;
+  --accent:#75223f;
+  --accent2:#a33255;
+  --purple:#6f42a6;
+  --purple2:#8d5bd1;
+  --purpleSoft:#b28ae8;
+  --purpleBg:#1a1026;
+  --ok:#2f7f59;
+  --warn:#8c6a23;
+  --danger:#9d304a;
+  --shadow:0 24px 70px rgba(0,0,0,.42)
 }
-@media (max-width: 430px){
-  .top>div:last-child{max-width:50%}
-  .connection{display:none}
-  .admin-install-btn{font-size:9px!important;padding:7px 8px!important}
-  .top .btn#openSite{font-size:9px!important;padding:7px 8px!important}
-  .grid{grid-template-columns:1fr 1fr}
-  .head h2{font-size:19px}
-  .content{padding:10px}
-  .nav-btn{padding:10px 11px}
+
+body{
+  background:
+    radial-gradient(circle at 10% 10%,rgba(111,66,166,.16),transparent 28%),
+    radial-gradient(circle at 88% 16%,rgba(117,34,63,.18),transparent 30%),
+    radial-gradient(circle at 52% 100%,rgba(141,91,209,.07),transparent 32%),
+    linear-gradient(180deg,#060608 0%,#09070b 52%,#060608 100%);
+  color:var(--text)
+}
+
+.login{
+  background:
+    radial-gradient(circle at 18% 10%,rgba(111,66,166,.17),transparent 30%),
+    radial-gradient(circle at 84% 84%,rgba(117,34,63,.19),transparent 33%),
+    linear-gradient(180deg,#060608,#0d090f 62%,#060608)
+}
+.login-card{
+  background:linear-gradient(145deg,rgba(24,16,26,.96),rgba(13,9,15,.97));
+  border-color:#3b2849
+}
+.logo span{color:var(--burg3,#c96786)}
+
+.sidebar{
+  background:
+    radial-gradient(circle at 88% 10%,rgba(111,66,166,.12),transparent 28%),
+    linear-gradient(180deg,#060608 0%,#0c080d 55%,#120a10 100%);
+  border-right-color:#33203d;
+}
+.nav-title{color:#8f7aa1}
+.nav-btn{color:#c5b8c9}
+.nav-btn:hover,.nav-btn.active{
+  background:linear-gradient(135deg,#201027,#24101c);
+  color:#fff;
+  box-shadow:inset 3px 0 0 var(--purple2)
+}
+
+.top{
+  background:linear-gradient(90deg,rgba(7,7,10,.96),rgba(14,8,15,.93),rgba(12,7,11,.96));
+  border-bottom-color:#33203d;
+}
+.mobile-menu{color:#fff}
+
+.card,
+.table-wrap,
+.modal-card,
+.admin-health,
+.student-pro-stat,
+.history-row,
+.doma-final-review-row{
+  background:linear-gradient(145deg,rgba(24,16,26,.96),rgba(13,9,15,.98));
+  border-color:#33203d;
+}
+
+.field,input,select,textarea{
+  background:linear-gradient(145deg,#0f0b12,#0a090c);
+  border-color:#33203d;
+  color:var(--text)
+}
+.field:focus,input:focus,select:focus,textarea:focus{border-color:#73498f;box-shadow:0 0 0 3px rgba(111,66,166,.09)}
+
+.btn{
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  border:1px solid #87436d;
+  box-shadow:0 10px 24px rgba(111,66,166,.10)
+}
+.btn:hover{background:linear-gradient(135deg,#8a294a,var(--purple2))}
+.btn.secondary{background:#120d15;border-color:#3b2849}
+.btn.secondary:hover{border-color:#6a3e89;background:#17101d}
+.btn.ok{background:linear-gradient(135deg,#285f49,#2f7f59)}
+.btn.warn{background:linear-gradient(135deg,#7b5b1e,#8c6a23)}
+.btn.danger{background:linear-gradient(135deg,#75223f,#9d304a)}
+
+th{color:#b08bbf}
+.pill{background:#21152a;border-color:#4a2c5d;color:#d9b9ee}
+.pill.ok,.pill.free{background:#173b2b;border-color:#285a44;color:#a7e5c3}
+.pill.warn{background:#493915;border-color:#6f5722;color:#f1d681}
+.pill.bad{background:#481b27;border-color:#6b3044;color:#ff9caf}
+
+.modal{background:rgba(0,0,0,.82)}
+.toast{background:linear-gradient(145deg,#211126,#170d12);border-color:#4a2c5d}
+.info-box{background:linear-gradient(135deg,#1a1018,#1a1026);border-color:#4a293e;color:#d0c4d3}
+
+.qbank-card,
+.doma-pro6-admin-row,
+.doma-pro6-check,
+.doma-pro6-template,
+.pro7-admin-ticket,
+.history-row{
+  background:linear-gradient(145deg,#120c12,#0d090f);
+  border-color:#33203d
+}
+.activity-chip{background:#24142f}
+.doma-pro6-admin-bar{background:#24172d}
+.doma-pro6-admin-bar i{background:linear-gradient(90deg,var(--purple2),var(--burg2))}
+
+.admin-upgrade-card,
+.doma-pro6-admin-card,
+.doma-final-admin-card,
+.pro7-admin-kpi{
+  background:linear-gradient(145deg,#18101a,#0d090f);
+  border-color:#33203d
+}
+.admin-upgrade-card small,.doma-pro6-admin-card small,.doma-final-admin-card small{color:#937f9b}
+.admin-video-link,.audio-link,.hw-attachment-admin,.hw-attachment-admin a{color:#d09be9}
+.daily-word-preview .ar{color:#c996ea}
+.daily-word-preview .sentence{color:#c7b9cb}
+.daily-form-note{border-color:#432a4e;background:#17101d;color:#b9aabf}
+
+.pro7-admin-msg{background:#121012;border-color:#33203d}
+.pro7-admin-msg.staff{background:#121a16;border-color:#2c4b38}
+.pro7-admin-parent-link,.pro7-parent-link{background:#100b12;border-color:#33203d}
+.pro7-live-preview{background:#100a11;border-color:#49304f;color:#9a8aa1}
+
+.doma-pro6-check input{accent-color:var(--purple2)}
+.wa{color:#8ed7ad}
+.wa-btn{background:#1d6d48!important}
+
+.admin-logo-mark{
+  background:linear-gradient(145deg,#241333,#100b14);
+  border-color:#60377f;
+  box-shadow:0 8px 25px rgba(0,0,0,.45),0 0 22px rgba(111,66,166,.10)
+}
+
+@media (prefers-reduced-motion:no-preference){
+  .card,.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi{transition:border-color .2s,box-shadow .2s}
+  .card:hover,.admin-upgrade-card:hover,.doma-pro6-admin-card:hover,.doma-final-admin-card:hover,.pro7-admin-kpi:hover{border-color:#4b315c;box-shadow:0 12px 34px rgba(0,0,0,.18)}
 }
 </style>
+
 </head>
 <body>
 <div id="login" class="login">
@@ -201,7 +198,7 @@
 
 <div id="app" class="app">
   <aside id="sidebar" class="sidebar">
-    <div class="side-logo"><div class="logo">DOMA <span>ACADEMY</span></div><small class="muted">Admin</small></div>
+    <div class="side-logo"><div class="logo">DOMA <span>ACADEMY</span></div><small class="muted">Production Admin</small></div>
     <nav>
       <div class="nav-title">Main</div>
       <button class="nav-btn" data-section="dashboard">▦ Dashboard</button>
@@ -248,11 +245,7 @@
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="connection"><i id="connectionDot" class="dot"></i><span id="connectionText">Checking…</span></span>
-        <div class="admin-install-wrap">
-          <button class="btn secondary admin-install-btn" id="adminInstallBtn" type="button">Install DOMA Admin</button>
-          <span id="adminInstallNote" class="admin-install-note"></span>
-          <button class="btn secondary" id="openSite">Open Website ↗</button>
-        </div>
+        <button class="btn secondary" id="openSite">Open Website ↗</button>
       </div>
     </header>
 
