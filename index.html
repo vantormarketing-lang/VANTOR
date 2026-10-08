@@ -3828,6 +3828,40 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 })();
 </script>
 
+
+<style id="doma-mobile-sidebar-item-close-final">
+@media(max-width:700px){
+  .drawer-side.mobile-open .side-link{touch-action:manipulation}
+}
+</style>
+<script id="doma-mobile-sidebar-item-close-final-js">
+(function(){
+  'use strict';
+  function closeMobileStudentNav(){
+    try{
+      var side=document.querySelector('.drawer-side');
+      if(side) side.classList.remove('mobile-open');
+    }catch(e){}
+  }
+  function install(){
+    var side=document.querySelector('.drawer-side');
+    if(!side || side.__domaMobileItemCloseFinalInstalled) return;
+    side.__domaMobileItemCloseFinalInstalled=true;
+    side.addEventListener('click',function(e){
+      if(window.matchMedia && !window.matchMedia('(max-width:700px)').matches) return;
+      var item=e.target && e.target.closest ? e.target.closest('.side-link') : null;
+      if(!item) return;
+      closeMobileStudentNav();
+    },{capture:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install);
+  else install();
+  setTimeout(install,120);
+  setTimeout(install,500);
+  setTimeout(install,1200);
+})();
+</script>
+
 </body>
 
 
@@ -4408,4 +4442,3 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   }
 })();
 </script>
-
