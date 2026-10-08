@@ -181,45 +181,55 @@ th{color:#b08bbf}
 }
 </style>
 
-
-<style id="doma-admin-selection-colors">
-/* Keep native form controls readable in the DOMA dark theme. */
-html{color-scheme:dark}
-select,.field, input, textarea{
-  color:#f5f2f3 !important;
-  background:#100b0d !important;
-  border-color:#3a2029 !important;
+<style id="doma-grade-select-visual-fix">
+/* Fix the Lessons grade selector and every native select popup: never use white-on-white. */
+select,
+select.field,
+#lessonGrade,
+#lessonType,
+#unitGrade,
+#quizGrade,
+#hwGrade,
+#lGrade,
+#lUnit,
+#lType,
+#lFree,
+#lPub {
+  color-scheme: dark;
+  background:#120d18 !important;
+  color:#f7f2f8 !important;
+  border:1px solid #4d2a59 !important;
 }
-select:focus,.field:focus,input:focus,textarea:focus{
-  border-color:#762337 !important;
-  box-shadow:0 0 0 2px rgba(118,35,55,.16);
+select:focus,
+select.field:focus {
+  background:#160f1d !important;
+  color:#ffffff !important;
+  border-color:#7d3f91 !important;
+  box-shadow:0 0 0 2px rgba(125,63,145,.16);
 }
 select option,
-select optgroup{
-  background:#120b0f !important;
-  color:#f5f2f3 !important;
+select optgroup {
+  background:#100b12 !important;
+  color:#f7f2f8 !important;
 }
 select option:checked,
-select option:hover{
-  background:#762337 !important;
+select option:hover {
+  background:#4a244f !important;
   color:#ffffff !important;
 }
-/* Cleaner modal / popup surfaces that use the same palette. */
-.modal-card,
-.table-wrap,
-.card,
-.info-box{
-  color:#f5f2f3;
+/* Keep the Lessons toolbar itself in the same dark palette when a grade is selected. */
+#section-lessons .toolbar {
+  background:linear-gradient(135deg,rgba(18,13,24,.92),rgba(38,13,25,.92));
+  border:1px solid #38233f;
+  border-radius:14px;
+  padding:10px;
 }
-.modal-card .form-row label,
-.modal-card small.muted,
-.toolbar label{
-  color:#a6969d !important;
+#section-lessons .toolbar select,
+#section-lessons .toolbar input {
+  background:#120d18 !important;
+  color:#f7f2f8 !important;
 }
-input::placeholder,
-textarea::placeholder{
-  color:#7f7379 !important;
-}
+#section-lessons .toolbar select option { background:#100b12 !important; color:#f7f2f8 !important; }
 </style>
 </head>
 <body>
