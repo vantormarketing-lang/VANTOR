@@ -476,6 +476,65 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 <style id="mr-fluent-offline-css">
 .mr-offline-page{display:grid;gap:14px}.mr-offline-hero{display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:center;padding:20px;background:linear-gradient(135deg,#211016,#0e090b);border:1px solid #4a222f;border-radius:16px}.mr-offline-icon{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;background:#1a0d12;border:1px solid #6b3043;font-size:30px;color:#e2a0b0}.mr-offline-hero h3{font-size:23px}.mr-offline-hero p{color:#8e8387;font-size:10px;line-height:1.7;margin-top:5px}.mr-offline-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.mr-offline-card{padding:18px;background:#100b0d;border:1px solid #2d181f;border-radius:14px}.mr-offline-card h4{font-size:14px;margin:10px 0 7px}.mr-offline-card p{color:#8e8387;font-size:10px;line-height:1.7;min-height:52px;margin-bottom:13px}.mr-offline-card.danger-card{border-color:#4b242e}.mr-offline-card.install-card{border-color:#633044;background:linear-gradient(135deg,#160b10,#100b0d)}.mr-install-state{margin-top:10px;padding:9px 10px;border-radius:9px;background:#0b090a;border:1px solid #2b181f;color:#a99ca0;font-size:9px;line-height:1.55}.mr-offline-status{padding:12px 14px;border-radius:11px;background:#171014;border:1px solid #35202a;color:#d7c4c9;font-size:10px}.mr-offline-status[data-ok="1"]{border-color:#245b43;background:#102019;color:#a9e4c8}.mr-offline-install-help{padding:13px 14px;border:1px solid #533040;background:#140c10;border-radius:11px;color:#cdbcc1;font-size:10px;line-height:1.65}.mr-offline-install-help div{display:grid;gap:3px}.mr-offline-install-help span{color:#93868b}.mr-offline-install-help[hidden]{display:none}.mr-offline-note{padding:11px 13px;border:1px dashed #43232e;border-radius:10px;color:#8e8387;font-size:9px;line-height:1.7}@media(max-width:760px){.mr-offline-grid{grid-template-columns:1fr}.mr-offline-hero{grid-template-columns:56px 1fr}.mr-offline-icon{width:52px;height:52px;font-size:24px}.mr-offline-hero h3{font-size:19px}}
 </style>
+
+<style id="doma-purple-burgundy-theme">
+:root{
+  --bg:#060608;
+  --bg2:#0b080d;
+  --card:#120c12;
+  --card2:#18101a;
+  --line:#33203d;
+  --burg:#75223f;
+  --burg2:#a33255;
+  --burg3:#c96786;
+  --purple:#6f42a6;
+  --purple2:#8d5bd1;
+  --purpleSoft:#b28ae8;
+  --purpleBg:#1a1026;
+}
+body{
+  background:
+    radial-gradient(circle at 12% 8%,rgba(111,66,166,.12),transparent 28%),
+    radial-gradient(circle at 88% 18%,rgba(117,34,63,.13),transparent 30%),
+    linear-gradient(180deg,#060608 0%,#09070b 52%,#060608 100%);
+}
+.nav{background:linear-gradient(180deg,rgba(7,7,10,.96),rgba(10,7,12,.90));border-bottom-color:#211629}
+.brand .mark{background:linear-gradient(145deg,#241333,#100b14);border-color:#60377f;box-shadow:0 8px 25px rgba(0,0,0,.55),0 0 28px rgba(111,66,166,.12)}
+.hero{background:radial-gradient(circle at 78% 34%,rgba(111,66,166,.25),transparent 30%),radial-gradient(circle at 22% 70%,rgba(117,34,63,.16),transparent 28%),linear-gradient(180deg,#07070a 0%,#0d090f 100%)}
+.hero h1 span,.eyebrow{color:var(--purpleSoft)}
+.primary{background:linear-gradient(135deg,var(--burg),var(--purple));border-color:#87436d;box-shadow:0 10px 24px rgba(111,66,166,.12)}
+.primary:hover{background:linear-gradient(135deg,#8a294a,var(--purple2))}
+.secondary,.ghost{background:#120d15;border-color:#3b2849}
+.secondary:hover,.ghost:hover{border-color:#6a3e89}
+.tag{color:#e6c8f6;background:linear-gradient(135deg,#2b1320,#241436);border:1px solid #4c2b58}
+.grade-cover{background:radial-gradient(circle at 88% 18%,rgba(141,91,209,.22),transparent 28%),linear-gradient(135deg,#2a1020,#171022 70%,#0d0b10)}
+.grade:hover{border-color:#73498f}
+.tool-icon{background:linear-gradient(145deg,#291532,#1a1024);border-color:#5c3680;color:var(--purpleSoft)}
+.card,.feature,.tool,.plan,.hero-card,.dash,.stat,.notification,.workspace-card{border-color:#2f2038}
+.bar i,.rbar i{background:var(--burg2)}
+.progress-ring{background:conic-gradient(var(--purple2) calc(var(--p,0)*1%),#27192f 0)}
+.stage,.pill{background:#21152a;border-color:#4a2c5d;color:#d9b9ee}
+.notice{background:linear-gradient(135deg,#1a1018,#1b1224);border-color:#4a293e}
+.video-wrap{background:linear-gradient(145deg,#180e18,#110b12);border-color:#46284f}
+.side-link:hover,.side-link.active{background:linear-gradient(135deg,#211126,#24101c);color:#fff;box-shadow:inset 3px 0 0 var(--purple2)}
+.lesson-btn.active{border-color:#8b3f68;background:linear-gradient(135deg,#21101b,#24142f)}
+.lesson-num{background:#1e1428;color:#c996ea}
+.hw-card-pro{background:linear-gradient(145deg,#150d14,#0c090d);border-color:#31213a}
+.hw-card-pro::after{background:linear-gradient(90deg,var(--purple2),var(--burg2),transparent)}
+.cert{background:linear-gradient(145deg,#171018,#0c090d);border-color:#4a2b55}
+.cert-code,.video-open-link{color:#d09be9}
+.searchbox{background:linear-gradient(145deg,#120c12,#0d090f);border-color:#3b2545}
+.section-head .pill{color:#e0c4ef}
+.cta{background:linear-gradient(135deg,#311325,#17102b);border-color:#64365f}
+.footer{background:#050507;border-top-color:#211629}
+.drawer{background:rgba(0,0,0,.82)}
+.drawer-side{background:linear-gradient(180deg,#09070b,#0d080f);border-right-color:#2e1e39}
+.drawer-top{background:linear-gradient(90deg,#0e090f,#110a10);border-bottom-color:#2c1c36}
+.user-card{background:linear-gradient(145deg,#17101b,#100a10);border-color:#3a2747}
+.pill.ok,.pill.free{background:#173b2b;border-color:#285a44;color:#a7e5c3}
+.pill.warn{background:#493915;border-color:#6f5722;color:#f1d681}
+</style>
+
 </head>
 <body>
 <nav class="nav">
@@ -1107,209 +1166,7 @@ async function openHomework(id){
 async function submitHomework(id){const answer=$('hwAnswer')?.value.trim()||'';const file=$('hwFile')?.files?.[0]||null;if(!answer&&!file)return showStatus('hwStatus','Write an answer or attach a file before submitting.','error');if(file&&file.size>10*1024*1024)return showStatus('hwStatus','File must be 10 MB or less.','error');showStatus('hwStatus','Submitting…');let finalAnswer=answer;if(file){try{const ext=(file.name.split('.').pop()||'pdf').replace(/[^a-z0-9]/gi,'').toLowerCase()||'pdf';const path=sessionUser.id+'/'+id+'-'+Date.now()+'.'+ext;const up=await sb.storage.from('homework-submissions').upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});if(up.error)throw new Error(up.error.message);const pub=sb.storage.from('homework-submissions').getPublicUrl(path);const url=pub?.data?.publicUrl||'';if(url)finalAnswer=(answer?answer+'\n\n':'')+'Attached file: '+url;}catch(e){const msg=(e?.message||String(e));return showStatus('hwStatus','File upload failed: '+msg+(/bucket/i.test(msg)?' — create the "homework-submissions" bucket in Supabase Storage.':''),'error')}}const r=await sb.rpc('doma_submit_homework',{p_homework_id:id,p_answer_text:finalAnswer});if(r.error){const hint=/function .* does not exist|could not find the function|PGRST202/i.test(r.error.message||'')?' Run DOMA_ACADEMY_PRODUCTION_SETUP_FINAL.sql in Supabase SQL Editor first.':'';return showStatus('hwStatus',r.error.message+hint,'error')}closeModal();showToast('Homework submitted successfully.');await renderStudentHomework();await refreshStudentState()}
 
 async function renderStudentCertificates(){const r=await sb.from('certificates').select('id,title,issued_at,certificate_code').eq('student_id',sessionUser.id).order('issued_at',{ascending:false});if(r.error){$('drawerBody').innerHTML='<div class="empty">Could not load certificates: '+esc(r.error.message)+'</div>';return}const rows=r.data||[];$('drawerBody').innerHTML=rows.length?'<div class="cert-grid">'+rows.map(c=>'<div class="cert"><span class="pill">Certificate</span><h3 style="font-size:17px;margin-top:9px">'+esc(c.title)+'</h3><p style="font-size:10px;color:#888;margin-top:5px">Issued '+fmtDate(c.issued_at)+'</p><div class="cert-code">'+esc(c.certificate_code)+'</div><button type="button" class="btn secondary" style="margin-top:12px" data-action="print-certificate" data-title="'+esc(c.title)+'" data-code="'+esc(c.certificate_code)+'" data-issued="'+esc(c.issued_at)+'">Print / Save PDF</button></div>').join('')+'</div>':'<div class="empty">No certificates have been issued yet.</div>'}
-function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style>
-<style id="doma-purple-burgundy-theme">
-:root{
-  --bg:#060608;
-  --bg2:#0b080d;
-  --card:#120c12;
-  --card2:#18101a;
-  --line:#33203d;
-  --burg:#75223f;
-  --burg2:#a33255;
-  --burg3:#c96786;
-  --purple:#6f42a6;
-  --purple2:#8d5bd1;
-  --purpleSoft:#b28ae8;
-  --purpleBg:#1a1026;
-}
-
-body{
-  background:
-    radial-gradient(circle at 12% 8%,rgba(111,66,166,.12),transparent 28%),
-    radial-gradient(circle at 88% 18%,rgba(117,34,63,.13),transparent 30%),
-    linear-gradient(180deg,#060608 0%,#09070b 52%,#060608 100%);
-}
-
-.nav{
-  background:linear-gradient(180deg,rgba(7,7,10,.96),rgba(10,7,12,.90));
-  border-bottom-color:#211629;
-}
-
-.brand{color:#fff}
-.brand .mark{
-  background:linear-gradient(145deg,#241333,#100b14);
-  border-color:#60377f;
-  box-shadow:0 8px 25px rgba(0,0,0,.55),0 0 28px rgba(111,66,166,.12);
-}
-
-.hero{
-  background:
-    radial-gradient(circle at 78% 34%,rgba(111,66,166,.25),transparent 30%),
-    radial-gradient(circle at 22% 70%,rgba(117,34,63,.16),transparent 28%),
-    linear-gradient(180deg,#07070a 0%,#0d090f 100%);
-}
-
-.hero h1 span,.eyebrow{
-  color:var(--purpleSoft);
-}
-
-.primary{
-  background:linear-gradient(135deg,var(--burg),var(--purple));
-  border-color:#87436d;
-  box-shadow:0 10px 24px rgba(111,66,166,.12);
-}
-.primary:hover{
-  background:linear-gradient(135deg,#8a294a,var(--purple2));
-}
-
-.secondary,.ghost{
-  background:#120d15;
-  border-color:#3b2849;
-}
-.secondary:hover,.ghost:hover{
-  border-color:#6a3e89;
-}
-
-.tag{
-  color:#e6c8f6;
-  background:linear-gradient(135deg,#2b1320,#241436);
-  border:1px solid #4c2b58;
-}
-
-.grade-cover{
-  background:
-    radial-gradient(circle at 88% 18%,rgba(141,91,209,.22),transparent 28%),
-    linear-gradient(135deg,#2a1020,#171022 70%,#0d0b10);
-}
-
-.grade:hover{border-color:#73498f}
-
-.tool-icon{
-  background:linear-gradient(145deg,#291532,#1a1024);
-  border-color:#5c3680;
-  color:var(--purpleSoft);
-}
-
-.card,.feature,.tool,.plan,.hero-card,.dash,.stat,.notification,.workspace-card{
-  border-color:#2f2038;
-}
-
-.bar i,.rbar i,.progress-ring{
-  background-color:var(--burg2);
-}
-
-.progress-ring{
-  background:conic-gradient(var(--purple2) calc(var(--p,0)*1%),#27192f 0);
-}
-
-.stage,.pill{
-  background:#21152a;
-  border-color:#4a2c5d;
-  color:#d9b9ee;
-}
-
-.notice{
-  background:linear-gradient(135deg,#1a1018,#1b1224);
-  border-color:#4a293e;
-}
-
-.video-wrap{
-  background:linear-gradient(145deg,#180e18,#110b12);
-  border-color:#46284f;
-}
-
-.side-link:hover,.side-link.active{
-  background:linear-gradient(135deg,#211126,#24101c);
-  color:#fff;
-  box-shadow:inset 3px 0 0 var(--purple2);
-}
-
-.lesson-btn.active{
-  border-color:#8b3f68;
-  background:linear-gradient(135deg,#21101b,#24142f);
-}
-
-.lesson-num{
-  background:#1e1428;
-  color:#c996ea;
-}
-
-.hw-card-pro{
-  background:linear-gradient(145deg,#150d14,#0c090d);
-  border-color:#31213a;
-}
-
-.hw-card-pro::after{
-  background:linear-gradient(90deg,var(--purple2),var(--burg2),transparent);
-}
-
-.cert{
-  background:linear-gradient(145deg,#171018,#0c090d);
-  border-color:#4a2b55;
-}
-
-.cert-code,.video-open-link,a:hover{
-  color:#d09be9;
-}
-
-.searchbox{
-  background:linear-gradient(145deg,#120c12,#0d090f);
-  border-color:#3b2545;
-}
-
-.section-head .pill{
-  color:#e0c4ef;
-}
-
-.cta{
-  background:linear-gradient(135deg,#311325,#17102b);
-  border-color:#64365f;
-}
-
-.footer{
-  background:#050507;
-  border-top-color:#211629;
-}
-
-.drawer{
-  background:rgba(0,0,0,.82);
-}
-
-.drawer-side{
-  background:linear-gradient(180deg,#09070b,#0d080f);
-  border-right-color:#2e1e39;
-}
-
-.drawer-top{
-  background:linear-gradient(90deg,#0e090f,#110a10);
-  border-bottom-color:#2c1c36;
-}
-
-.user-card{
-  background:linear-gradient(145deg,#17101b,#100a10);
-  border-color:#3a2747;
-}
-
-
-/* Keep status colors readable and separate from the theme. */
-.pill.ok,.pill.free{
-  background:#173b2b;
-  border-color:#285a44;
-  color:#a7e5c3;
-}
-
-.pill.warn{
-  background:#493915;
-  border-color:#6f5722;
-  color:#f1d681;
-}
-
-@media(max-width:700px){
-  .hero h1 span{color:var(--purpleSoft)}
-}
-</style>
-</head><body><div class="c"><div class="small">Mr. Fluent</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">LEARN • SPEAK • MASTER</p></div></body></html>');w.document.close();w.print()}
+function printCertificate(title,code,issued){const w=window.open('','_blank','width=900,height=650');if(!w)return;w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;height:100vh}.c{width:760px;padding:60px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">Mr. Fluent</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">LEARN • SPEAK • MASTER</p></div></body></html>');w.document.close();w.print()}
 </script>
 <style id="doma-student-pro5plus-style">
 .pro5-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.pro5-card{background:linear-gradient(145deg,#101827,#172338);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.pro5-card h3{margin:0 0 8px}.pro5-muted{opacity:.72;font-size:.9rem;line-height:1.6}.pro5-list{display:grid;gap:9px;margin-top:12px}.pro5-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-row small,.pro5-row span{display:block;opacity:.68}.pro5-input{width:100%;box-sizing:border-box;padding:11px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:inherit;outline:none}.pro5-textarea{min-height:130px;resize:vertical}.pro5-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.pro5-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.07);font-size:.78rem}.pro5-progress{height:9px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:8px}.pro5-progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#62d4ff,#8d7cff)}.pro5-reward{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:13px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06)}.pro5-reward .ico{font-size:1.6rem}.pro5-day{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:12px}.pro5-day div{padding:9px 4px;text-align:center;border-radius:11px;background:rgba(255,255,255,.045);font-size:.72rem}.pro5-day .on{background:rgba(98,212,255,.15);border:1px solid rgba(98,212,255,.25)}.pro5-note{padding:12px;border-radius:13px;background:rgba(255,255,255,.045);white-space:pre-wrap;line-height:1.6}.pro5-unread{box-shadow:inset 3px 0 0 #62d4ff}.pro5-assistant{min-height:180px;max-height:390px;overflow:auto;display:grid;gap:8px;padding:10px;background:rgba(0,0,0,.12);border-radius:14px}.pro5-msg{padding:10px 12px;border-radius:13px;line-height:1.55;max-width:90%}.pro5-msg.bot{background:rgba(98,212,255,.09);justify-self:start}.pro5-msg.user{background:rgba(255,255,255,.08);justify-self:end}.pro5-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.pro5-kpi div{padding:11px;text-align:center;border-radius:13px;background:rgba(255,255,255,.045)}.pro5-kpi b{display:block;font-size:1.2rem}.pro5-empty{padding:20px;border-radius:14px;background:rgba(255,255,255,.04);text-align:center;opacity:.75}@media(max-width:850px){.pro5-grid{grid-template-columns:1fr}.pro5-kpi{grid-template-columns:repeat(2,1fr)}}
@@ -4551,3 +4408,4 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   }
 })();
 </script>
+
