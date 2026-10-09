@@ -231,6 +231,286 @@ select option:hover {
 }
 #section-lessons .toolbar select option { background:#100b12 !important; color:#f7f2f8 !important; }
 </style>
+
+
+<!-- DOMA ACADEMY Glass Coffee visual design layers. Original application logic retained. -->
+<style id="doma-glass-coffee-design-v1">
+/* DOMA ACADEMY — premium espresso glassmorphism. Visual-only layer; app logic untouched. */
+:root{
+  --bg:#0b0807;
+  --panel:rgba(27,19,17,.78);
+  --panel2:rgba(39,27,24,.78);
+  --line:rgba(197,151,122,.22);
+  --text:#f8f1ec;
+  --muted:#b6a39b;
+  --accent:#704638;
+  --accent2:#a66e50;
+  --purple:#72556f;
+  --purple2:#a27e9a;
+  --purpleSoft:#c8a4b8;
+  --purpleBg:#251a25;
+  --ok:#34745a;
+  --warn:#946b3d;
+  --danger:#984d4a;
+  --shadow:0 22px 65px rgba(0,0,0,.42);
+  --coffee-950:#100b09;
+  --coffee-900:#17100e;
+  --coffee-800:#211714;
+  --coffee-700:#30211c;
+  --glass-edge:rgba(238,207,184,.16);
+  --glass-hi:rgba(255,239,225,.07);
+}
+html{background:var(--coffee-950)}
+body{
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(145,91,64,.19),transparent 34%),
+    radial-gradient(ellipse at 88% 14%,rgba(105,76,108,.13),transparent 32%),
+    radial-gradient(ellipse at 54% 100%,rgba(88,54,42,.20),transparent 36%),
+    linear-gradient(145deg,#0b0807 0%,#100b0a 45%,#090707 100%);
+  color:var(--text);
+}
+/* Login and shell */
+.login{
+  background:
+    radial-gradient(circle at 18% 8%,rgba(151,101,73,.22),transparent 31%),
+    radial-gradient(circle at 84% 86%,rgba(108,78,111,.17),transparent 34%),
+    linear-gradient(145deg,#0b0807,#17100e 58%,#0a0707);
+}
+.login-card{
+  background:linear-gradient(145deg,rgba(48,32,28,.78),rgba(22,15,14,.84));
+  border:1px solid rgba(214,169,139,.25);
+  box-shadow:0 28px 85px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,239,225,.07);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+}
+.logo span{color:#d6a27f}
+.sidebar{
+  background:linear-gradient(180deg,rgba(19,13,12,.96),rgba(14,10,9,.93) 58%,rgba(25,15,14,.96));
+  border-right:1px solid rgba(197,151,122,.17);
+  box-shadow:12px 0 42px rgba(0,0,0,.12);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.nav-title{color:#a48678}
+.nav-btn{color:#d0c0b8;transition:background .2s ease,color .2s ease,box-shadow .2s ease}
+.nav-btn:hover,.nav-btn.active{
+  background:linear-gradient(115deg,rgba(135,83,60,.32),rgba(87,61,84,.20));
+  color:#fff8f3;box-shadow:inset 3px 0 0 #c69572,inset 0 0 0 1px rgba(229,191,164,.08);
+}
+.top{
+  background:linear-gradient(100deg,rgba(16,11,10,.88),rgba(29,20,19,.76),rgba(15,11,10,.88));
+  border-bottom:1px solid rgba(197,151,122,.18);
+  box-shadow:0 8px 30px rgba(0,0,0,.12);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+}
+.top h1{letter-spacing:-.025em}
+.mobile-menu{color:#f6e9df}
+/* Glass tiles and all dynamic content cards */
+.card,.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi,
+.admin-health,.qbank-card,.doma-pro6-admin-row,.doma-pro6-check,.doma-pro6-template,
+.pro7-admin-ticket,.pro7-admin-msg,.pro7-parent-link,.pro7-admin-parent-link,
+.history-row,.student-pro-stat,.doma-final-review-row,.pro7-live-preview,.daily-form-note{
+  background:linear-gradient(145deg,rgba(55,37,32,.67),rgba(23,16,15,.76));
+  border:1px solid var(--glass-edge);
+  box-shadow:inset 0 1px 0 rgba(255,239,225,.055),0 12px 30px rgba(0,0,0,.14);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.card{
+  border-radius:17px;
+  position:relative;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+}
+.card:hover,.admin-upgrade-card:hover,.doma-pro6-admin-card:hover,.doma-final-admin-card:hover,.pro7-admin-kpi:hover{
+  border-color:rgba(220,174,143,.34);
+  box-shadow:inset 0 1px 0 rgba(255,239,225,.09),0 18px 38px rgba(0,0,0,.22),0 0 24px rgba(141,94,70,.06);
+}
+.stat{
+  min-height:114px;overflow:hidden;
+  background:linear-gradient(145deg,rgba(67,43,36,.76),rgba(25,17,16,.84));
+}
+.stat:after{
+  content:"";position:absolute;right:-36px;top:-48px;width:128px;height:128px;border-radius:50%;
+  background:radial-gradient(circle,rgba(209,157,122,.16),rgba(164,110,80,.045) 48%,transparent 72%);
+  pointer-events:none;
+}
+.stat>*{position:relative;z-index:1}
+.stat .num{font-size:32px;letter-spacing:-.04em;color:#fff6ef}
+.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi{border-radius:15px}
+.admin-upgrade-card small,.doma-pro6-admin-card small,.doma-final-admin-card small,.pro7-admin-kpi span{color:#c0a397}
+.admin-upgrade-card b,.doma-pro6-admin-card b,.doma-final-admin-card b,.pro7-admin-kpi b{color:#fbf0e8}
+.admin-health{border-radius:15px}
+/* Tables: quiet glass surface, clear readable rows */
+.table-wrap,.qbank-scroll{
+  background:linear-gradient(145deg,rgba(36,25,22,.80),rgba(18,13,12,.86));
+  border:1px solid rgba(197,151,122,.19);border-radius:16px;
+  box-shadow:inset 0 1px 0 rgba(255,239,225,.04),0 14px 34px rgba(0,0,0,.13);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+table{background:transparent}
+th{background:rgba(63,43,37,.48);color:#d0ad98}
+td{border-bottom-color:rgba(197,151,122,.12)}
+tbody tr{transition:background .16s ease}
+tbody tr:hover{background:rgba(165,111,81,.085)}
+/* Fields stay dark and high-contrast */
+.field,input,select,textarea{
+  background:linear-gradient(145deg,rgba(22,15,14,.96),rgba(14,10,9,.96));
+  border-color:rgba(197,151,122,.23);color:#f8f1ec;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.16);
+}
+.field:focus,input:focus,select:focus,textarea:focus{
+  border-color:#b17d5e;box-shadow:0 0 0 3px rgba(177,125,94,.14);
+}
+select,select.field,#lessonGrade,#lessonType,#unitGrade,#quizGrade,#hwGrade,#lGrade,#lUnit,#lType,#lFree,#lPub{
+  background-color:#1d1411!important;border-color:rgba(197,151,122,.28)!important;color:#fbf2eb!important;
+}
+select option,select optgroup{background:#1b1210!important;color:#fbf2eb!important}
+select option:checked,select option:hover{background:#55382e!important;color:#fff!important}
+#section-lessons .toolbar{background:linear-gradient(115deg,rgba(45,29,25,.60),rgba(31,22,31,.48));border-color:rgba(197,151,122,.20);backdrop-filter:blur(12px)}
+/* Buttons: brushed bronze / espresso, with existing semantic success/warning/error colors retained */
+.btn{
+  background:linear-gradient(135deg,#76503e,#9a674b);
+  border:1px solid rgba(229,184,151,.25);
+  color:#fff8f3;box-shadow:0 8px 22px rgba(73,43,31,.22),inset 0 1px 0 rgba(255,237,221,.10);
+  transition:filter .18s ease,transform .18s ease,border-color .18s ease;
+}
+.btn:hover{background:linear-gradient(135deg,#865b45,#b17a59);filter:brightness(1.04);transform:translateY(-1px)}
+.btn.secondary{background:linear-gradient(135deg,rgba(53,37,33,.90),rgba(31,23,24,.92));border-color:rgba(197,151,122,.22);box-shadow:inset 0 1px 0 rgba(255,239,225,.045)}
+.btn.secondary:hover{background:linear-gradient(135deg,rgba(77,51,42,.94),rgba(43,30,34,.94));border-color:rgba(220,174,143,.38)}
+.btn.ok{background:linear-gradient(135deg,#285f49,#3d8061);border-color:rgba(143,214,177,.22)}
+.btn.warn{background:linear-gradient(135deg,#76562e,#9b743e);border-color:rgba(230,194,126,.24)}
+.btn.danger{background:linear-gradient(135deg,#733d3b,#9c514c);border-color:rgba(231,153,147,.22)}
+.pill{background:rgba(113,79,68,.30);border:1px solid rgba(197,151,122,.16);color:#f0ddd1}
+.pill.ok,.pill.free{background:rgba(34,91,62,.38);border-color:rgba(90,168,125,.26);color:#b6ebcb}
+.pill.warn{background:rgba(119,83,34,.36);border-color:rgba(197,151,82,.25);color:#f1d69c}
+.pill.bad{background:rgba(116,42,46,.38);border-color:rgba(190,89,95,.26);color:#ffb7b8}
+.activity-chip{background:rgba(109,73,64,.42);border:1px solid rgba(197,151,122,.13)}
+/* Inner widgets */
+.qbank-card,.doma-pro6-admin-row,.doma-pro6-check,.doma-pro6-template,.pro7-admin-ticket,.pro7-admin-msg,.pro7-parent-link,.history-row{
+  border-radius:12px;
+}
+.pro7-admin-msg.staff{background:rgba(28,65,47,.43);border-color:rgba(95,164,123,.22)}
+.pro7-live-preview{border-color:rgba(197,151,122,.29);color:#c3aea3}
+.doma-pro6-admin-bar{background:rgba(91,62,53,.34)}
+.doma-pro6-admin-bar i{background:linear-gradient(90deg,#b78565,#d0a17e)}
+.daily-word-preview .ar{color:#dfb49a}
+.daily-word-preview .sentence{color:#d0bdb4}
+.admin-video-link,.audio-link,.hw-attachment-admin,.hw-attachment-admin a{color:#e2b493}
+.toast{background:linear-gradient(145deg,rgba(52,35,31,.97),rgba(25,17,17,.98));border-color:rgba(197,151,122,.30);box-shadow:var(--shadow);backdrop-filter:blur(18px)}
+.info-box{background:linear-gradient(135deg,rgba(54,36,31,.66),rgba(35,25,35,.64));border-color:rgba(197,151,122,.25);color:#dfd0c7;backdrop-filter:blur(12px)}
+.modal{background:rgba(5,4,4,.76);backdrop-filter:blur(7px)}
+.modal-card{background:linear-gradient(145deg,rgba(45,31,28,.97),rgba(20,14,14,.985));border-color:rgba(197,151,122,.26);box-shadow:0 28px 90px rgba(0,0,0,.62);backdrop-filter:blur(24px)}
+.error{color:#ffaaa9}
+.connection{color:#c0aca3}
+.dot.ok{background:#66d7a0;box-shadow:0 0 9px rgba(102,215,160,.24)}
+.dot.bad{background:#f07f7d;box-shadow:0 0 9px rgba(240,127,125,.2)}
+.admin-logo-mark{background:linear-gradient(145deg,#593b32,#201513);border-color:#8e6651;box-shadow:0 8px 25px rgba(0,0,0,.42),0 0 22px rgba(174,119,87,.10)}
+::selection{background:rgba(178,127,96,.36);color:#fff}
+@media(prefers-reduced-motion:reduce){.card,.btn,.nav-btn,tbody tr{transition:none!important}.btn:hover{transform:none}}
+@media(max-width:960px){.sidebar{box-shadow:18px 0 50px rgba(0,0,0,.45)}}
+@media(max-width:560px){.card{border-radius:15px}.stat .num{font-size:29px}.content{padding:14px}}
+</style>
+
+<style id="doma-glass-coffee-polish-v2">
+/* Final visual polish for the existing DOMA ACADEMY admin. No application logic changed. */
+:root{color-scheme:dark;--glass-focus:rgba(205,157,124,.26)}
+html{scroll-behavior:smooth;scrollbar-color:#5d4135 #120d0b;scrollbar-width:thin}
+body{min-height:100vh;background-attachment:fixed}
+::selection{background:rgba(204,151,113,.34);color:#fffaf6}
+/* Desktop dashboard proportions and stronger hierarchy */
+.content{width:100%;padding:28px clamp(18px,2.1vw,34px) 30px}
+.head{align-items:center;margin-bottom:22px}
+.head h2{font-size:clamp(22px,2vw,27px);letter-spacing:-.035em;color:#fff7f0}
+.head p{line-height:1.65;color:#bba89e}
+.grid,.grid-2{align-items:stretch}
+.card{overflow:hidden}
+.card h3{margin-top:0;color:#fff2e8;letter-spacing:-.015em}
+/* Each KPI tile gets its own quiet glass tint, while staying within the espresso palette. */
+#section-dashboard .head + .grid .stat{--stat-rgb:196,133,99;border-color:rgba(var(--stat-rgb),.34);background:linear-gradient(145deg,rgba(var(--stat-rgb),.18),rgba(39,26,23,.79) 48%,rgba(19,14,13,.88))}
+#section-dashboard .head + .grid .stat:nth-child(2){--stat-rgb:99,157,200}
+#section-dashboard .head + .grid .stat:nth-child(3){--stat-rgb:221,157,79}
+#section-dashboard .head + .grid .stat:nth-child(4){--stat-rgb:181,122,174}
+#section-dashboard .head + .grid .stat:before{content:"";position:absolute;left:0;top:15px;bottom:15px;width:3px;border-radius:0 5px 5px 0;background:linear-gradient(180deg,rgba(var(--stat-rgb),.98),rgba(var(--stat-rgb),.16));box-shadow:0 0 17px rgba(var(--stat-rgb),.22);pointer-events:none}
+#section-dashboard .head + .grid .stat:after{background:radial-gradient(circle,rgba(var(--stat-rgb),.22),rgba(var(--stat-rgb),.055) 47%,transparent 73%)}
+#section-dashboard .head + .grid .stat .muted{font-size:12px;letter-spacing:.01em;color:#dfcec3}
+#section-dashboard .head + .grid .stat .num{font-variant-numeric:tabular-nums;text-shadow:0 2px 20px rgba(var(--stat-rgb),.09)}
+#section-dashboard .head + .grid + .grid .card{min-height:132px;border-color:rgba(206,164,139,.18);background:linear-gradient(145deg,rgba(57,39,33,.58),rgba(22,16,15,.78));}
+#section-dashboard .head + .grid + .grid .card:before{content:"";position:absolute;left:18px;right:18px;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(233,190,159,.42),transparent);pointer-events:none}
+#section-dashboard .head + .grid + .grid .card b{display:block;font-size:14px;color:#f5dfd0;margin-bottom:8px}
+#section-dashboard .head + .grid + .grid .card p{font-size:12px;line-height:1.75;margin:0;color:#bba99f}
+/* Sidebar and top bar details */
+.side-logo{padding-bottom:21px;border-bottom:1px solid rgba(197,151,122,.11);margin-bottom:4px}
+.logo{letter-spacing:.055em;text-shadow:0 2px 24px rgba(210,155,119,.09)}
+.nav-title{padding-top:17px;color:#b18e7b;font-weight:700}
+.nav-btn{min-height:39px;border:1px solid transparent;letter-spacing:.005em}
+.nav-btn:hover{border-color:rgba(206,164,139,.12)}
+.nav-btn.active{border-color:rgba(210,164,132,.17)}
+.top{min-height:72px}
+.top h1{font-size:clamp(17px,1.8vw,21px)}
+#openSite{white-space:nowrap}
+/* Consistent layered glass across dynamically rendered cards, modals and panels. */
+.admin-upgrade-summary,.doma-pro6-admin-grid,.pro7-admin-grid{align-items:stretch}
+.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi{position:relative;overflow:hidden}
+.admin-upgrade-card:after,.doma-pro6-admin-card:after,.doma-final-admin-card:after,.pro7-admin-kpi:after{content:"";position:absolute;inset:0 18% auto;height:1px;background:linear-gradient(90deg,transparent,rgba(236,198,173,.22),transparent);pointer-events:none}
+.admin-upgrade-card small,.doma-pro6-admin-card small,.doma-final-admin-card small,.pro7-admin-kpi span{letter-spacing:.075em}
+.info-box{line-height:1.75;border-radius:13px}
+.qbank-card,.doma-pro6-admin-row,.doma-pro6-check,.doma-pro6-template,.pro7-admin-ticket,.pro7-admin-msg,.pro7-parent-link,.history-row{box-shadow:inset 0 1px 0 rgba(255,239,225,.035),0 8px 22px rgba(0,0,0,.11)}
+/* Tables remain scrollable on small screens; row contrast and headings are improved. */
+.table-wrap{max-width:100%;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+table{font-variant-numeric:tabular-nums}
+th{padding-top:14px;padding-bottom:14px;white-space:nowrap}
+td{line-height:1.6}
+.table-wrap tbody tr:nth-child(even){background:rgba(255,235,220,.012)}
+.table-wrap tbody tr:hover{background:rgba(191,135,99,.09)}
+/* Controls: visible focus ring, larger click targets and deliberate states. */
+button,.btn{touch-action:manipulation}
+.btn{min-height:37px}
+.btn.small{min-height:30px}
+.btn:focus-visible,.nav-btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #d6a17d;outline-offset:2px}
+input::placeholder,textarea::placeholder{color:#8d7a70;opacity:1}
+input:disabled,select:disabled,textarea:disabled,button:disabled{opacity:.58;cursor:not-allowed}
+.field:focus,input:focus,select:focus,textarea:focus{outline:none;box-shadow:0 0 0 3px var(--glass-focus),inset 0 1px 2px rgba(0,0,0,.16)}
+.modal-card{overscroll-behavior:contain}
+.toast{max-width:min(440px,calc(100vw - 32px));line-height:1.55}
+/* Better touch layout and header wrapping at tablet / mobile widths. */
+@media(max-width:960px){
+  .content{padding:20px 17px 24px}
+  .head{align-items:flex-start}
+  .top{gap:10px}
+  .sidebar{border-right-color:rgba(220,174,143,.22)}
+}
+@media(max-width:560px){
+  .content{padding:15px 12px 22px}
+  .top{height:auto;min-height:68px;padding:10px 12px;align-items:center;flex-wrap:wrap}
+  .top>div:first-child{min-width:0;flex:1 1 180px}
+  .top>div:last-child{margin-left:auto;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+  .top h1{font-size:16px}
+  #openSite{font-size:10px;padding:8px 9px}
+  .connection{font-size:9px}
+  .head{gap:11px;margin-bottom:17px}
+  .head h2{font-size:22px}
+  #section-dashboard .head + .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  #section-dashboard .head + .grid .stat{min-height:105px;padding:14px 12px}
+  #section-dashboard .head + .grid .stat .num{font-size:27px}
+  #section-dashboard .head + .grid .stat .muted{font-size:11px}
+  #section-dashboard .head + .grid + .grid{gap:10px}
+  .toolbar{gap:8px}
+  .toolbar .btn{flex:0 0 auto}
+  .form-grid,.doma-pro6-form-grid,.pro7-parent-grid{gap:9px}
+  .modal{padding:10px}
+  .modal-card{padding:17px;border-radius:16px;max-height:94vh}
+}
+@media(max-width:380px){
+  #section-dashboard .head + .grid{grid-template-columns:1fr}
+  .top>div:last-child{width:100%;justify-content:flex-start;padding-left:34px}
+  #openSite{margin-left:auto}
+}
+@media(hover:hover) and (pointer:fine){
+  .card:hover{transform:translateY(-2px)}
+  .admin-upgrade-card:hover,.doma-pro6-admin-card:hover,.doma-final-admin-card:hover,.pro7-admin-kpi:hover{transform:translateY(-2px)}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+</style>
 </head>
 <body>
 <div id="login" class="login">
