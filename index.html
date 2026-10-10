@@ -776,23 +776,25 @@ function isPhoneAliasEmail(email){
 async function ensureProfile(user,name='',phone=''){
   if(!user||!sb)return null;
   const phoneValue=String(phone||user.user_metadata?.phone||'').trim();
-  const r=await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id',user.id).maybeSingle();
+  const favoriteTeamValue=String(user.user_metadata?.favorite_team||'').trim();
+  const r=await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at,favorite_team').eq('id',user.id).maybeSingle();
   if(!r.error&&r.data){
     const updates={};
     if(name&&r.data.full_name!==name)updates.full_name=name;
     if(phoneValue&&r.data.phone!==phoneValue)updates.phone=phoneValue;
     if(user.email&&r.data.email!==user.email)updates.email=user.email;
+    if(favoriteTeamValue&&r.data.favorite_team!==favoriteTeamValue)updates.favorite_team=favoriteTeamValue;
     if(Object.keys(updates).length){
       updates.updated_at=new Date().toISOString();
-      const up=await sb.from('profiles').update(updates).eq('id',user.id).select('id,full_name,email,phone,role,grade_id,created_at').maybeSingle();
+      const up=await sb.from('profiles').update(updates).eq('id',user.id).select('id,full_name,email,phone,role,grade_id,created_at,favorite_team').maybeSingle();
       if(!up.error&&up.data)return up.data;
       console.warn('Profile details could not be synchronized:',up.error);
       return {...r.data,...updates};
     }
     return r.data;
   }
-  const payload={id:user.id,full_name:name||user.user_metadata?.full_name||'',email:user.email||null,phone:phoneValue||null,role:'student'};
-  const ins=await sb.from('profiles').insert(payload).select('id,full_name,email,phone,role,grade_id,created_at').maybeSingle();
+  const payload={id:user.id,full_name:name||user.user_metadata?.full_name||'',email:user.email||null,phone:phoneValue||null,role:'student',favorite_team:favoriteTeamValue||null};
+  const ins=await sb.from('profiles').insert(payload).select('id,full_name,email,phone,role,grade_id,created_at,favorite_team').maybeSingle();
   if(!ins.error)return ins.data||payload;
   console.warn('Profile creation could not be confirmed:',ins.error);
   return payload;
