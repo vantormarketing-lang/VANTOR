@@ -5159,5 +5159,300 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 })();
 </script>
 
+
+<style id="mr-student-midnight-blue-glass-balanced-css">
+/* MIDNIGHT BLUE GLASS — student area only. Visual overrides; no layout or application logic changes. */
+#drawer {
+  background:rgba(1,7,14,.82)!important;
+  -webkit-backdrop-filter:blur(9px) saturate(125%)!important;
+  backdrop-filter:blur(9px) saturate(125%)!important;
+}
+#drawer .drawer-shell {
+  color:#eaf6ff!important;
+  background:linear-gradient(145deg,rgba(7,24,40,.96),rgba(4,15,27,.97) 56%,rgba(5,23,39,.96))!important;
+  border-color:rgba(80,185,245,.28)!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.50),0 0 50px rgba(0,145,220,.065)!important;
+}
+#drawer .drawer-side {
+  color:#dceefa!important;
+  background:linear-gradient(165deg,rgba(7,27,45,.94),rgba(5,18,33,.96) 58%,rgba(7,24,40,.96))!important;
+  border-right-color:rgba(73,174,232,.23)!important;
+  scrollbar-color:rgba(70,163,215,.42) transparent!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%);
+  backdrop-filter:blur(18px) saturate(135%);
+}
+#drawer .drawer-brand .mark {
+  background:linear-gradient(145deg,rgba(18,81,119,.50),rgba(7,28,46,.60))!important;
+  border-color:rgba(61,187,244,.34)!important;
+  box-shadow:0 0 22px rgba(0,166,231,.10)!important;
+}
+#drawer .drawer-brand .mark svg path:first-child {stroke:#51d1ff!important}
+#drawer .drawer-brand .mark svg path:nth-child(2) {stroke:#e5f7ff!important}
+#drawer .user-card {
+  color:#eaf6ff!important;
+  background:linear-gradient(145deg,rgba(20,56,82,.72),rgba(8,29,48,.72))!important;
+  border-color:rgba(74,177,229,.25)!important;
+  box-shadow:inset 0 1px 0 rgba(235,249,255,.06)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(130%);backdrop-filter:blur(16px) saturate(130%);
+}
+#drawer .user-card strong {color:#f0f9ff!important}
+#drawer .user-card span {color:#a9c5d8!important}
+#drawer .student-nav-heading {
+  color:#65cfff!important;
+  letter-spacing:.12em!important;
+}
+#drawer .side-link {
+  color:#b9d1e2!important;
+  border:1px solid transparent!important;
+  background:rgba(255,255,255,.018)!important;
+  transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease!important;
+}
+#drawer .side-link:hover,
+#drawer .side-link.active {
+  color:#f1fbff!important;
+  border-color:rgba(65,188,247,.25)!important;
+  background:linear-gradient(100deg,rgba(18,117,174,.32),rgba(18,55,83,.32))!important;
+  box-shadow:inset 3px 0 0 #38c3fa,0 5px 20px rgba(0,132,196,.07)!important;
+}
+#drawer .drawer-top {
+  background:linear-gradient(100deg,rgba(6,23,39,.82),rgba(10,33,52,.74))!important;
+  border-bottom-color:rgba(77,170,219,.20)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(135%)!important;
+  backdrop-filter:blur(20px) saturate(135%)!important;
+}
+#drawer .drawer-top h2 {color:#eff9ff!important}
+#drawer .drawer-top p {color:#a5c0d2!important}
+#drawer .drawer-body {
+  color:#e7f4fc!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(0,155,221,.095),transparent 35%),
+    radial-gradient(ellipse at 96% 20%,rgba(65,92,235,.075),transparent 33%),
+    linear-gradient(180deg,#081827 0%,#061321 56%,#071725 100%)!important;
+  scrollbar-color:rgba(70,163,215,.42) rgba(6,20,33,.45)!important;
+}
+#drawer .drawer-body::-webkit-scrollbar-track {background:rgba(6,20,33,.45)!important}
+#drawer .drawer-body::-webkit-scrollbar-thumb {background:rgba(70,163,215,.42)!important;border-radius:99px!important}
+
+/* Balanced translucency for student cards, panels, tiles and activity rows. */
+#drawer .drawer-body .card,
+#drawer .drawer-body [class*="-card"],
+#drawer .drawer-body [class*="-panel"],
+#drawer .drawer-body .notice,
+#drawer .drawer-body .listrow,
+#drawer .drawer-body .notification,
+#drawer .drawer-body .question,
+#drawer .drawer-body .lesson-content,
+#drawer .drawer-body .lesson-list,
+#drawer .drawer-body .resource,
+#drawer .drawer-body .empty,
+#drawer .drawer-body .assessment-box,
+#drawer .drawer-body .prep-unit,
+#drawer .drawer-body .prep-lesson,
+#drawer .drawer-body .mini-card,
+#drawer .drawer-body .scorebox,
+#drawer .drawer-body .progress-mini,
+#drawer .drawer-body .local-insight,
+#drawer .drawer-body .student-gami-row,
+#drawer .drawer-body .daily100-student-item,
+#drawer .drawer-body .hw-stat,
+#drawer .drawer-body .doma-movie-q,
+#drawer .drawer-body .doma-movie-choice,
+#drawer .drawer-body .doma-roulette-card,
+#drawer .drawer-body .doma-roulette-result,
+#drawer .drawer-body .doma-mr-hero,
+#drawer .drawer-body .doma-mr-card,
+#drawer .drawer-body .mr-offline-hero,
+#drawer .drawer-body .mr-offline-card {
+  color:#eaf6ff!important;
+  background:linear-gradient(145deg,rgba(17,52,78,.68),rgba(7,28,46,.64))!important;
+  border-color:rgba(80,177,229,.25)!important;
+  box-shadow:inset 0 1px 0 rgba(230,247,255,.055),0 12px 32px rgba(0,0,0,.14)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(135%)!important;
+  backdrop-filter:blur(16px) saturate(135%)!important;
+}
+#drawer .drawer-body .card:hover,
+#drawer .drawer-body [class*="-card"]:hover,
+#drawer .drawer-body .listrow:hover {
+  border-color:rgba(74,195,249,.38)!important;
+}
+#drawer .drawer-body h1,
+#drawer .drawer-body h2,
+#drawer .drawer-body h3,
+#drawer .drawer-body h4,
+#drawer .drawer-body h5,
+#drawer .drawer-body strong,
+#drawer .drawer-body b {color:#f0f9ff}
+#drawer .drawer-body p,
+#drawer .drawer-body .muted,
+#drawer .drawer-body .student-plus5-muted,
+#drawer .drawer-body .student-gami-muted,
+#drawer .drawer-body .student-home-card p,
+#drawer .drawer-body .mr-offline-hero p,
+#drawer .drawer-body .mr-offline-card p,
+#drawer .drawer-body .doma-mr-hero p,
+#drawer .drawer-body .doma-roulette-result p {color:#acc4d5}
+#drawer .drawer-body a {color:#71d7ff}
+#drawer .drawer-body .eyebrow,
+#drawer .drawer-body .doma-mr-kicker {color:#69d3ff!important}
+#drawer .drawer-body .pill {
+  color:#b8eaff!important;background:rgba(17,105,151,.20)!important;
+  border-color:rgba(72,182,235,.28)!important;
+}
+#drawer .drawer-body .pill.ok,
+#drawer .drawer-body .pill.free,
+#drawer .drawer-body .hw-status.reviewed {color:#9ef0cb!important;background:rgba(30,131,94,.16)!important;border-color:rgba(73,203,157,.30)!important}
+#drawer .drawer-body .pill.warn,
+#drawer .drawer-body .hw-status.pending {color:#ffdb9b!important;background:rgba(168,111,32,.16)!important;border-color:rgba(241,186,94,.30)!important}
+#drawer .drawer-body .pill.bad,
+#drawer .drawer-body .hw-status.urgent {color:#ffb3bd!important;background:rgba(162,53,75,.17)!important;border-color:rgba(241,111,133,.29)!important}
+
+/* Inputs, lesson rows and interactive controls. */
+#drawer .drawer-body input:not([type="checkbox"]):not([type="radio"]),
+#drawer .drawer-body select,
+#drawer .drawer-body textarea,
+#drawer .drawer-body .field {
+  color:#eaf7ff!important;background:rgba(5,25,42,.72)!important;
+  border-color:rgba(77,177,229,.26)!important;
+}
+#drawer .drawer-body input::placeholder,
+#drawer .drawer-body textarea::placeholder {color:#86a9c0!important;opacity:1}
+#drawer .drawer-body select option,
+#drawer .drawer-body select optgroup {background:#0a2135!important;color:#eaf6ff!important}
+#drawer .drawer-body input:focus,
+#drawer .drawer-body select:focus,
+#drawer .drawer-body textarea:focus,
+#drawer .drawer-body .field:focus {border-color:#37bff6!important;box-shadow:0 0 0 3px rgba(55,191,246,.10)!important}
+#drawer .drawer-body .lesson-btn {
+  color:#cde5f4!important;background:rgba(9,34,54,.66)!important;
+  border-color:rgba(75,160,208,.22)!important;
+}
+#drawer .drawer-body .lesson-btn:hover,
+#drawer .drawer-body .lesson-btn.active {
+  color:#f2fbff!important;background:linear-gradient(100deg,rgba(13,124,186,.32),rgba(16,59,91,.58))!important;
+  border-color:rgba(69,196,249,.55)!important;box-shadow:inset 3px 0 #45c9ff!important;
+}
+#drawer .drawer-body .lesson-num,
+#drawer .drawer-body .tool-icon,
+#drawer .drawer-body .icon-box,
+#drawer .drawer-body .student-gami-badge .ico {
+  color:#7bdcff!important;background:rgba(16,107,156,.20)!important;border-color:rgba(74,183,236,.28)!important;
+}
+#drawer .drawer-body .btn.primary,
+#drawer .drawer-body button.btn:not(.secondary):not(.danger):not(.ok):not(.warn) {
+  color:#f4fcff!important;background:linear-gradient(135deg,rgba(0,137,205,.92),rgba(30,185,235,.88))!important;
+  border-color:rgba(94,211,255,.44)!important;box-shadow:0 8px 22px rgba(0,136,204,.16)!important;
+}
+#drawer .drawer-body .btn.primary:hover,
+#drawer .drawer-body button.btn:not(.secondary):not(.danger):not(.ok):not(.warn):hover {
+  background:linear-gradient(135deg,#087fbd,#24c2ee)!important;
+}
+#drawer .drawer-body .btn.secondary,
+#drawer .drawer-top .btn.secondary,
+#drawer #mrStudentMenuClose {
+  color:#cdeaff!important;background:rgba(13,49,74,.54)!important;
+  border-color:rgba(78,176,227,.28)!important;
+}
+#drawer .drawer-body .btn.danger {background:linear-gradient(135deg,#8f344a,#b64b60)!important;border-color:rgba(241,132,150,.36)!important;color:#fff!important}
+#drawer .drawer-body input[type="checkbox"],
+#drawer .drawer-body input[type="radio"] {accent-color:#31bdf4!important}
+#drawer .drawer-body .video-wrap {background:rgba(2,12,22,.85)!important;border-color:rgba(73,172,225,.26)!important}
+#drawer .drawer-body .progress-ring {background:conic-gradient(#2dc5fb calc(var(--p,0)*1%),rgba(68,114,144,.25) 0)!important}
+#drawer .drawer-body .progress-ring::after {background:#0a2033!important}
+#drawer .drawer-body .student-gami-progress,
+#drawer .drawer-body .student-gami-skill .bar,
+#drawer .drawer-body .plus5-bar,
+#drawer .drawer-body .hw-progress-bar {background:rgba(95,153,183,.18)!important}
+#drawer .drawer-body .student-gami-progress>i,
+#drawer .drawer-body .student-gami-skill .bar i,
+#drawer .drawer-body .plus5-bar i,
+#drawer .drawer-body .hw-progress-bar i {background:linear-gradient(90deg,#21baf1,#66e0ff)!important}
+#drawer .drawer-body .doma-roulette-wheel {
+  border-color:rgba(63,181,236,.42)!important;
+  background:conic-gradient(#0876ad 0deg 45deg,#0b2941 45deg 90deg,#168fc3 90deg 135deg,#0b2941 135deg 180deg,#0876ad 180deg 225deg,#0b2941 225deg 270deg,#168fc3 270deg 315deg,#0b2941 315deg 360deg)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.35),0 0 32px rgba(0,164,229,.10)!important;
+}
+#drawer .drawer-body .doma-roulette-wheel:before {background:#071a2a!important;border-color:rgba(73,190,240,.45)!important}
+#drawer .drawer-body .doma-roulette-wheel:after {color:#a8eeff!important}
+#drawer .drawer-body .doma-roulette-pointer {border-top-color:#53d1ff!important}
+#drawer .drawer-body .doma-movie-option:hover,
+#drawer .drawer-body .doma-movie-option.sel {color:#ecfaff!important;background:rgba(16,113,163,.28)!important;border-color:rgba(68,195,248,.44)!important}
+#drawer .drawer-body .student-home-alert {background:rgba(143,103,27,.16)!important;border-color:rgba(229,185,91,.26)!important;color:#ffdfa4!important}
+
+/* Mobile bottom navigation keeps its exact position, order and behavior; only the skin changes. */
+#mrStudentBottomNav {
+  background:linear-gradient(180deg,rgba(9,34,54,.78),rgba(4,17,30,.94))!important;
+  border-top-color:rgba(73,179,231,.27)!important;
+  box-shadow:0 -10px 32px rgba(0,0,0,.22)!important;
+}
+#mrStudentBottomNav .mr-student-tab {
+  color:#b9d6e8!important;background:rgba(255,255,255,.022)!important;
+  border-color:transparent!important;
+}
+#mrStudentBottomNav .mr-student-tab.active {
+  color:#f1fbff!important;border-color:rgba(68,192,243,.35)!important;
+  background:linear-gradient(145deg,rgba(11,127,184,.31),rgba(255,255,255,.045))!important;
+  box-shadow:inset 0 1px 0 rgba(225,248,255,.08),0 4px 18px rgba(0,143,210,.10)!important;
+}
+#mrStudentBottomNav .mr-student-tab.active svg {color:#59d5ff!important;filter:drop-shadow(0 0 7px rgba(57,193,245,.22))!important}
+#mrStudentBottomNav .mr-student-tab:focus-visible {outline-color:rgba(93,208,255,.78)!important}
+#mrStudentSidebarBackdrop {background:rgba(1,8,15,.60)!important}
+#drawer #mrStudentMenuClose {
+  color:#e7f7ff!important;background:rgba(12,53,79,.52)!important;
+  border-color:rgba(72,177,229,.30)!important;
+}
+#drawer #mrStudentPracticeHub .mr-practice-intro {
+  background:linear-gradient(135deg,rgba(12,113,163,.22),rgba(255,255,255,.035) 55%,rgba(19,69,109,.20))!important;
+  border-color:rgba(76,187,235,.29)!important;
+}
+#drawer #mrStudentPracticeHub .mr-practice-intro h3 {color:#effaff!important}
+#drawer #mrStudentPracticeHub .mr-practice-intro p,
+#drawer #mrStudentPracticeHub .mr-practice-footer {color:#b2d0e2!important}
+#drawer #mrStudentPracticeHub .mr-practice-card {
+  color:#eaf8ff!important;
+  border-color:rgba(78,178,226,.26)!important;
+  background:linear-gradient(145deg,rgba(20,72,104,.50),rgba(7,30,49,.46))!important;
+  box-shadow:inset 0 1px 0 rgba(232,249,255,.065),0 12px 30px rgba(0,0,0,.12)!important;
+}
+#drawer #mrStudentPracticeHub .mr-practice-card:hover {
+  border-color:rgba(77,205,255,.46)!important;
+  background:linear-gradient(145deg,rgba(12,128,184,.30),rgba(255,255,255,.045))!important;
+}
+#drawer #mrStudentPracticeHub .mr-practice-icon {
+  color:#79dcff!important;border-color:rgba(77,192,241,.32)!important;
+  background:linear-gradient(145deg,rgba(14,133,189,.29),rgba(255,255,255,.035))!important;
+}
+#drawer #mrStudentPracticeHub .mr-practice-card span:last-child {color:#b4cedf!important}
+
+/* Battle Mode uses its own overlay but is still part of the student area. */
+#domaBattleModal {
+  background:rgba(1,7,14,.84)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(130%)!important;
+  backdrop-filter:blur(10px) saturate(130%)!important;
+}
+#domaBattleModal .doma-battle-shell {
+  background:linear-gradient(145deg,rgba(8,27,44,.96),rgba(4,16,28,.97))!important;
+  border-color:rgba(76,178,230,.28)!important;
+  box-shadow:0 25px 80px rgba(0,0,0,.52),0 0 40px rgba(0,150,220,.07)!important;
+}
+#domaBattleModal .doma-battle-head {background:rgba(8,25,41,.82)!important;border-bottom-color:rgba(76,178,230,.22)!important}
+#domaBattleModal .doma-battle-head h2,
+#domaBattleModal .doma-battle-card h3 {color:#eff9ff!important}
+#domaBattleModal .doma-battle-head p,
+#domaBattleModal .doma-battle-note {color:#a9c4d7!important}
+#domaBattleModal .doma-battle-card,
+#domaBattleModal .doma-battle-status,
+#domaBattleModal .doma-battle-code {
+  background:linear-gradient(145deg,rgba(16,53,79,.70),rgba(7,27,44,.68))!important;
+  border-color:rgba(76,178,230,.27)!important;color:#eaf7ff!important;
+  -webkit-backdrop-filter:blur(15px) saturate(135%)!important;backdrop-filter:blur(15px) saturate(135%)!important;
+}
+#domaBattleModal input,#domaBattleModal select,#domaBattleModal textarea {
+  background:rgba(5,25,42,.75)!important;color:#eaf7ff!important;border-color:rgba(76,178,230,.28)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  #drawer .side-link,#drawer .drawer-body .card,#drawer .drawer-body [class*="-card"],#mrStudentBottomNav .mr-student-tab {transition:none!important}
+}
+</style>
+
 </body>
 </html>
