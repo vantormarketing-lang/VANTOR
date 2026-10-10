@@ -4963,5 +4963,201 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 @media(prefers-reduced-motion:reduce){#drawer .drawer-side > .side-link{transition:none}#drawer .drawer-side > .side-link:hover{transform:none}}
 </style>
 
+
+
+<style id="mr-student-bottom-nav-fix-css">
+/* Mobile-only navigation correction: move Menu from the top into a fixed glass bottom bar. */
+#mrStudentBottomNav{display:none}
+#mrStudentSidebarBackdrop{display:none}
+#drawer #drawerMobileNavBtn{display:none!important;visibility:hidden!important;pointer-events:none!important}
+@media(max-width:700px){
+  #drawer{padding:0!important;overflow:hidden!important}
+  #drawer.show .drawer-shell{width:100%;height:100vh!important;height:100dvh!important;min-height:100vh!important;min-height:100dvh!important;max-height:100vh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;grid-template-columns:1fr!important;overflow:hidden!important}
+  #drawer.show .drawer-main{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;position:relative;z-index:1}
+  #drawer .drawer-top{flex:0 0 auto;padding:12px 13px!important;gap:9px!important;min-height:67px}
+  #drawer .drawer-top h2{font-size:20px!important}
+  #drawer .drawer-top p{font-size:10px!important}
+  #drawer.show .drawer-body{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding:14px 12px calc(18px + env(safe-area-inset-bottom))!important;-webkit-overflow-scrolling:touch}
+  #mrStudentBottomNav{
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+    flex:0 0 auto;position:relative;z-index:60;
+    padding:8px 9px calc(8px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(35,25,30,.76),rgba(16,13,20,.94));
+    border-top:1px solid rgba(255,177,111,.28);
+    box-shadow:0 -10px 32px rgba(0,0,0,.18);
+    backdrop-filter:blur(26px) saturate(155%);-webkit-backdrop-filter:blur(26px) saturate(155%);
+  }
+  #mrStudentBottomNav .mr-student-tab{
+    min-width:0;min-height:53px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    border:1px solid transparent;border-radius:13px;padding:6px 3px;
+    background:rgba(255,255,255,.018);color:#c7b8ba;font:600 10px/1.1 Inter,Segoe UI,Arial,sans-serif;
+    cursor:pointer;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  #mrStudentBottomNav .mr-student-tab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+  #mrStudentBottomNav .mr-student-tab.active{
+    color:#fff2e7;border-color:rgba(255,177,111,.32);
+    background:linear-gradient(145deg,rgba(255,145,77,.20),rgba(255,255,255,.045));
+    box-shadow:inset 0 1px 0 rgba(255,235,214,.08),0 4px 18px rgba(255,120,60,.075);
+  }
+  #mrStudentBottomNav .mr-student-tab.active svg{color:#ffb36e;filter:drop-shadow(0 0 7px rgba(255,145,77,.2))}
+  #mrStudentBottomNav .mr-student-tab:focus-visible{outline:2px solid rgba(255,190,133,.78);outline-offset:2px}
+  #drawer .drawer-side{
+    position:absolute!important;top:0!important;left:0!important;bottom:0!important;width:min(286px,84vw)!important;height:100%!important;max-height:100%!important;
+    z-index:91!important;overflow-y:auto!important;padding:16px 13px calc(22px + env(safe-area-inset-bottom))!important;
+    background:linear-gradient(165deg,rgba(30,22,29,.985),rgba(15,14,22,.99) 58%,rgba(35,20,23,.99))!important;
+    border-right:1px solid rgba(255,177,111,.3)!important;
+    box-shadow:0 25px 70px rgba(0,0,0,.62),12px 0 40px rgba(255,130,68,.055)!important;
+    transform:translateX(-106%);transition:transform .22s cubic-bezier(.2,.8,.2,1)!important;
+  }
+  #drawer .drawer-side.mobile-open{transform:translateX(0)!important}
+  #mrStudentSidebarBackdrop{
+    display:block;position:absolute;inset:0;z-index:80;border:0;margin:0;padding:0;
+    background:rgba(1,5,10,.55);opacity:0;visibility:hidden;pointer-events:none;
+    backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);transition:opacity .2s ease,visibility .2s ease;
+  }
+  #drawer.mr-sidebar-open #mrStudentSidebarBackdrop{opacity:1;visibility:visible;pointer-events:auto}
+  #mrStudentSidebarBackdrop:focus-visible{outline:2px solid #ffb36e;outline-offset:-4px}
+  #mrStudentMenuClose{display:flex!important;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:10px 11px;margin:0 0 10px;border:1px solid rgba(255,177,111,.24);border-radius:12px;background:rgba(255,255,255,.04);color:#fff0e5;font:600 11px Inter,Segoe UI,Arial,sans-serif}
+  #mrStudentPracticeHub .mr-practice-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:360px){
+  #mrStudentBottomNav{gap:4px;padding-left:6px;padding-right:6px}
+  #mrStudentBottomNav .mr-student-tab{font-size:9px;min-height:49px}
+  #mrStudentBottomNav .mr-student-tab svg{width:18px;height:18px}
+  #mrStudentPracticeHub .mr-practice-grid{grid-template-columns:1fr!important}
+}
+#drawer #mrStudentPracticeHub .mr-practice-intro{
+  padding:19px;border:1px solid rgba(255,177,111,.25);border-radius:19px;
+  background:linear-gradient(135deg,rgba(255,145,77,.15),rgba(255,255,255,.035) 55%,rgba(105,57,75,.14));
+  backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%);
+  box-shadow:inset 0 1px 0 rgba(255,235,214,.08),0 15px 35px rgba(0,0,0,.12);margin-bottom:14px
+}
+#drawer #mrStudentPracticeHub .mr-practice-intro h3{font-size:22px;margin:5px 0 6px;color:#fff3e8}
+#drawer #mrStudentPracticeHub .mr-practice-intro p{font-size:11px;line-height:1.7;color:#c7b1a8;margin:0}
+#drawer #mrStudentPracticeHub .mr-practice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+#drawer #mrStudentPracticeHub .mr-practice-card{
+  min-width:0;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:15px;
+  min-height:128px;border:1px solid rgba(255,177,111,.21);border-radius:16px;
+  background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018));
+  color:#fff1e5;cursor:pointer;backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);transition:transform .18s ease,border-color .18s ease,background .18s ease
+}
+#drawer #mrStudentPracticeHub .mr-practice-card:hover{transform:translateY(-2px);border-color:rgba(255,177,111,.43);background:linear-gradient(145deg,rgba(255,145,77,.13),rgba(255,255,255,.035))}
+#drawer #mrStudentPracticeHub .mr-practice-icon{width:38px;height:38px;border:1px solid rgba(255,177,111,.26);border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,145,77,.22),rgba(255,255,255,.035));font-size:19px}
+#drawer #mrStudentPracticeHub .mr-practice-card strong{font-size:12px;line-height:1.35}
+#drawer #mrStudentPracticeHub .mr-practice-card span:last-child{color:#c3ada2;font-size:10px;line-height:1.55}
+#drawer #mrStudentPracticeHub .mr-practice-footer{margin-top:13px;color:#c3ada2;font-size:10px;line-height:1.6}
+@media(prefers-reduced-motion:reduce){#mrStudentBottomNav .mr-student-tab,#drawer .drawer-side,#drawer #mrStudentPracticeHub .mr-practice-card,#mrStudentSidebarBackdrop{transition:none!important}}
+</style>
+<script id="mr-student-bottom-nav-fix-js">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const drawer=$('drawer');
+  if(!drawer || $('mrStudentBottomNav')) return;
+
+  function svg(name){
+    const paths={
+      home:'<path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9"></path><path d="M9 20v-6h6v6"></path>',
+      lessons:'<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22z"></path><path d="M4 4.5v17.5"></path><path d="M8 6h8M8 10h7"></path>',
+      practice:'<circle cx="12" cy="12" r="9"></circle><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8z"></path>',
+      more:'<circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle>'
+    };
+    return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(paths[name]||paths.more)+'</svg>';
+  }
+  const nav=document.createElement('nav');
+  nav.id='mrStudentBottomNav';nav.setAttribute('aria-label','Student navigation');
+  nav.innerHTML=[
+    ['home','Home','home'],['lessons','Lessons','lessons'],['practice','Practice','practice'],['more','More','more']
+  ].map(([id,label,icon])=>'<button type="button" class="mr-student-tab" data-mr-tab="'+id+'" aria-label="'+label+'">'+svg(icon)+'<span>'+label+'</span></button>').join('');
+  const main=drawer.querySelector('.drawer-main');
+  const body=$('drawerBody');
+  if(!main||!body)return;
+  main.appendChild(nav);
+
+  const side=drawer.querySelector('.drawer-side');
+  if(side){
+    const backdrop=document.createElement('button');backdrop.type='button';backdrop.id='mrStudentSidebarBackdrop';backdrop.setAttribute('aria-label','Close more menu');
+    const shell=drawer.querySelector('.drawer-shell');
+    if(shell)shell.appendChild(backdrop);
+    const close=document.createElement('button');close.type='button';close.id='mrStudentMenuClose';close.innerHTML='<span>✦ More student tools</span><span aria-hidden="true">Close ×</span>';
+    const brand=side.querySelector('.drawer-brand');
+    if(brand)brand.insertAdjacentElement('afterend',close);else side.prepend(close);
+    close.addEventListener('click',closeMoreMenu);
+    backdrop.addEventListener('click',closeMoreMenu);
+    side.addEventListener('click',function(ev){
+      const link=ev.target.closest('.side-link');
+      if(!link || link.id==='mrStudentMenuClose')return;
+      window.setTimeout(function(){closeMoreMenu();syncActiveTab();},80);
+    });
+  }
+
+  function setActive(id){nav.querySelectorAll('[data-mr-tab]').forEach(b=>{const on=b.dataset.mrTab===id;b.classList.toggle('active',on);b.setAttribute('aria-current',on?'page':'false')});}
+  function closeMoreMenu(){side?.classList.remove('mobile-open');drawer.classList.remove('mr-sidebar-open');syncActiveTab();}
+  function openMoreMenu(){side?.classList.add('mobile-open');drawer.classList.add('mr-sidebar-open');setActive('more');}
+  function syncActiveTab(){
+    const view=(typeof currentStudentView!=='undefined'?currentStudentView:(window.currentStudentView||''));
+    if(view==='overview')setActive('home');
+    else if(view==='lessons')setActive('lessons');
+    else if(['practice-hub','daily100','quizzes','questionbank','challenge','assistant','timer','planner','library','rewards','roulette','movie'].includes(view))setActive('practice');
+    else if(side?.classList.contains('mobile-open'))setActive('more');
+    else setActive('');
+  }
+  function practiceItems(){return [
+    {title:'Skill Roulette',icon:'🎲',desc:'خلّي المنصة تختار لك تحديًا.',run:()=>window.renderDomaSkillRoulette?.()},
+    {title:'Battle Mode',icon:'⚔️',desc:'نافس طالبًا آخر في تحدّي مباشر.',run:()=>window.openDomaBattle?.()},
+    {title:'Daily Words',icon:'🔤',desc:'كلمات وجمل وترجمة وصوت.',run:()=>window.studentView?.('daily100')},
+    {title:'Build Your Sentence',icon:'🧩',desc:'رتّب الكلمات وابنِ جملة صحيحة.',run:()=>window.openDomaBuildSentence?.()},
+    {title:'English Movie Scene',icon:'🎬',desc:'تدرّب على الاستماع والمحادثة.',run:()=>window.openDomaMovieScene?.()},
+    {title:'Quick Quizzes',icon:'⚡',desc:'ادخل الاختبارات المنشورة.',run:()=>window.studentView?.('quizzes')},
+    {title:'Question Bank',icon:'🧠',desc:'تدرّب على أسئلة المنهج.',run:()=>window.studentView?.('questionbank')},
+    {title:'Daily Challenge',icon:'🎯',desc:'أنجز هدفًا صغيرًا اليوم.',run:()=>window.studentView?.('challenge')},
+    {title:'Study Assistant',icon:'🤖',desc:'إرشادات مبنية على تقدمك.',run:()=>window.studentView?.('assistant')},
+    {title:'Focus Timer',icon:'⏱️',desc:'نظّم جلسة المذاكرة.',run:()=>{if(typeof currentStudentView!=='undefined')currentStudentView='timer';else window.currentStudentView='timer';$('drawerTitle').textContent='Focus Timer';$('drawerSubtitle').textContent='A focused study session.';if(typeof window.renderStudentTimer==='function')window.renderStudentTimer();}},
+    {title:'Study Planner',icon:'🗓️',desc:'رتّب خطة مذاكرتك الأسبوعية.',run:()=>window.studentView?.('planner')},
+    {title:'Bookmarks & Notes',icon:'🔖',desc:'ارجع للدروس والملاحظات المحفوظة.',run:()=>window.studentView?.('library')},
+    {title:'Rewards',icon:'🏆',desc:'تابع مكافآت وإنجازات التعلم.',run:()=>window.studentView?.('rewards')},
+    {title:'My Analytics',icon:'📈',desc:'راجع تقدمك ونتائجك.',run:()=>window.studentView?.('analytics')}
+  ];}
+  function openPracticeHub(){
+    closeMoreMenu();
+    if(!(typeof sessionUser!=='undefined'&&sessionUser)){if(typeof window.openAuth==='function')window.openAuth('login');return;}
+    if(typeof currentStudentView!=='undefined')currentStudentView='practice-hub';else window.currentStudentView='practice-hub';
+    document.querySelectorAll('.side-link[data-view]').forEach(b=>b.classList.remove('active'));
+    $('drawerTitle').textContent='Practice Hub';
+    $('drawerSubtitle').textContent='All your challenges and learning tools in one place.';
+    body.scrollTop=0;
+    body.innerHTML='<section id="mrStudentPracticeHub"><div class="mr-practice-intro"><div class="eyebrow">MR. FLUENT • PRACTICE HUB</div><h3>Choose your next challenge ✨</h3><p>اختار أي أداة من أدواتك. كل المميزات الأصلية موجودة، والتنقل هنا مجرد طريقة أسرع للوصول إليها.</p></div><div class="mr-practice-grid">'+practiceItems().map((x,i)=>'<button type="button" class="mr-practice-card" data-mr-practice="'+i+'"><span class="mr-practice-icon">'+x.icon+'</span><strong>'+x.title+'</strong><span>'+x.desc+'</span></button>').join('')+'</div><div class="mr-practice-footer">لو بتدور على إعدادات الحساب أو الشهادات أو الإشعارات أو الدعم، افتح <b>More</b> من الشريط السفلي.</div></section>';
+    body.querySelectorAll('[data-mr-practice]').forEach(btn=>btn.addEventListener('click',function(){const item=practiceItems()[Number(this.dataset.mrPractice)];if(!item)return;try{item.run()}finally{window.setTimeout(syncActiveTab,80)}}));
+    setActive('practice');
+  }
+  nav.addEventListener('click',function(ev){
+    const btn=ev.target.closest('[data-mr-tab]');if(!btn)return;
+    const tab=btn.dataset.mrTab;
+    if(tab==='home'){closeMoreMenu();setActive('home');window.studentView?.('overview');}
+    else if(tab==='lessons'){closeMoreMenu();setActive('lessons');window.studentView?.('lessons');}
+    else if(tab==='practice'){openPracticeHub();}
+    else if(tab==='more'){
+      if(side?.classList.contains('mobile-open'))closeMoreMenu();else openMoreMenu();
+    }
+  });
+  const oldTopMenu=$('drawerMobileNavBtn');
+  if(oldTopMenu){oldTopMenu.setAttribute('aria-hidden','true');oldTopMenu.tabIndex=-1;}
+  document.addEventListener('click',function(ev){
+    if(!drawer.classList.contains('show'))return;
+    const target=ev.target;
+    if(target.closest('#drawer [data-view],#drawer [data-pro5-view],#drawer .doma-custom-student-nav'))window.setTimeout(syncActiveTab,100);
+  },true);
+  const observer=new MutationObserver(()=>{if(drawer.classList.contains('show'))syncActiveTab()});
+  observer.observe(body,{childList:true,subtree:false});
+  drawer.addEventListener('transitionend',syncActiveTab);
+  document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&drawer.classList.contains('mr-sidebar-open'))closeMoreMenu()});
+  window.mrFluentOpenPracticeHub=openPracticeHub;
+  window.mrFluentSyncStudentBottomNav=syncActiveTab;
+  setActive('home');
+})();
+</script>
+
 </body>
 </html>
