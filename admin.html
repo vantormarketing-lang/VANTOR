@@ -2065,10 +2065,10 @@ async function mfLoadEnglishCourseSales(){
     const action=allowReview
       ?'<div class="actions"><button class="btn secondary small" onclick="mfViewEnglishCourseReceipt(\''+x.id+'\')">View receipt</button><button class="btn ok small" onclick="mfApproveEnglishCourseRequest(\''+x.id+'\')">Approve</button><button class="btn danger small" onclick="mfRejectEnglishCourseRequest(\''+x.id+'\')">Reject</button></div>'
       :(x.proof_path?'<button class="btn secondary small" onclick="mfViewEnglishCourseReceipt(\''+x.id+'\')">View receipt</button>':'—');
-    return '<tr><td><b>'+mfEsc(p.full_name||'Student')+'</b><div class="muted">'+mfEsc(p.phone||p.email||x.student_id)+'</div></td><td>'+mfEsc(x.amount)+' EGP</td><td>'+mfEsc(x.sender_phone||'—')+'</td><td>'+date+'</td><td><span class="pill '+(x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn')+'">'+mfEsc(x.status)+'</span>'+(x.admin_note?'<div class="muted">'+mfEsc(x.admin_note)+'</div>':'')+'</td><td>'+action+'</td></tr>';
+    return '<tr><td><code style="font-size:11px;word-break:break-all">'+mfEsc(x.id)+'</code></td><td><b>'+mfEsc(p.full_name||'Student')+'</b><div class="muted">'+mfEsc(p.phone||p.email||x.student_id)+'</div></td><td>'+mfEsc(x.amount)+' EGP</td><td>'+mfEsc(x.sender_phone||'—')+'</td><td>'+date+'</td><td><span class="pill '+(x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn')+'">'+mfEsc(x.status)+'</span>'+(x.admin_note?'<div class="muted">'+mfEsc(x.admin_note)+'</div>':'')+'</td><td>'+action+'</td></tr>';
   }).join('');
   const reqTable=(items,allowReview,emptyText)=>items.length
-    ?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Sender phone</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+makeReqRows(items,allowReview)+'</tbody></table></div>'
+    ?'<div class="table-wrap"><table><thead><tr><th>Request ID</th><th>Student</th><th>Amount</th><th>Sender phone</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+makeReqRows(items,allowReview)+'</tbody></table></div>'
     :'<div class="empty">'+emptyText+'</div>';
   const subRows=subs.map(x=>{
     const p=profileById[x.student_id]||{};
@@ -2094,12 +2094,12 @@ async function mfApproveEnglishCourseRequest(id){
     if(verify.error)throw new Error('Approval RPC responded, but status could not be verified: '+verify.error.message);
     if(!verify.data||String(verify.data.status||'').toLowerCase()!=='approved')throw new Error('The request is still not marked approved in Supabase. Run MR_FLUENT_ENGLISH_COURSE_APPROVE_STATUS_FIX.sql, then retry this request.');
     const expiry=result.expires_at?fmtDate(result.expires_at):'';
-    toast('Payment approved and saved.'+(expiry?' Access until '+expiry+'.':''));
+    toast('Payment approved and saved. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
     await mfLoadEnglishCourseSales();
     try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}
   }catch(e){
     console.error('English Course approval failed:',e);
-    toast('Approval not confirmed: '+(e?.message||String(e)));
+    toast('Approval not confirmed for request '+id+': '+(e?.message||String(e)));
     await mfLoadEnglishCourseSales();
   }
 }
