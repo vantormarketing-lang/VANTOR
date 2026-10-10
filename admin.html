@@ -922,7 +922,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
       </section>
       <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-STATUS-RACEFIX-20261011-E</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · no-cache reads + latest-load-wins protection</div></div>
+        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-STATUS-RECONCILE-20261011-F</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · reconciled status reads + no-cache + latest-load-wins protection</div></div>
         <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
         <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
         <div id="mfCourseSalesTable" class="table-wrap"></div>
@@ -2054,7 +2054,25 @@ async function mfLoadEnglishCourseSales(){
     host.innerHTML='<div class="empty">Could not load English Course payments.<br><b>Database error:</b> '+mfEsc(err.message)+'</div>';
     return;
   }
-  const reqs=(r.data||[]).map(x=>{
+  // Reconcile request statuses through a second, narrower PostgREST query.
+  // The full list query may be served with an older representation by an intermediary cache;
+  // a status-only query has a different cache key and is used to decide Pending vs Reviewed.
+  let requestRows=(r.data||[]);
+  const idsToReconcile=[...new Set(requestRows.map(x=>x.id).filter(Boolean))];
+  if(idsToReconcile.length){
+    const freshStatus=await db.from('mrfluent_english_course_requests')
+      .select('id,status,reviewed_at,admin_note')
+      .in('id',idsToReconcile);
+    if(loadSequence!==mfCourseSalesLoadSequence)return;
+    if(freshStatus.error){
+      host.innerHTML='<div class="empty">Could not verify current payment statuses.<br><b>Database error:</b> '+mfEsc(freshStatus.error.message)+'<br>Please press Refresh again; requests have not been changed.</div>';
+      return;
+    }
+    const currentById=Object.create(null);
+    (freshStatus.data||[]).forEach(x=>{currentById[x.id]=x;});
+    requestRows=requestRows.map(x=>currentById[x.id]?{...x,status:currentById[x.id].status,reviewed_at:currentById[x.id].reviewed_at,admin_note:currentById[x.id].admin_note}:x);
+  }
+  const reqs=requestRows.map(x=>{
     const verified=window.__mfVerifiedEnglishCourseStatuses[x.id];
     return verified ? {...x,status:verified.status,reviewed_at:x.reviewed_at||verified.reviewed_at,admin_note:x.admin_note||verified.admin_note} : x;
   }),subs=s.data||[],now=Date.now();
@@ -2113,11 +2131,11 @@ async function mfApproveEnglishCourseRequest(id){
     window.__mfVerifiedEnglishCourseStatuses[id]={status:'approved',reviewed_at:verify.data.reviewed_at||new Date().toISOString(),admin_note:'Payment verified by admin.'};
     const expiry=result.expires_at?fmtDate(result.expires_at):'';
     await mfLoadEnglishCourseSales();
-    toast('MF-COURSE-STATUS-RACEFIX-20261011-E: APPROVED confirmed in Supabase. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
+    toast('MF-COURSE-STATUS-RECONCILE-20261011-F: APPROVED confirmed in Supabase. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
     try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}
   }catch(e){
     console.error('English Course approval failed:',e);
-    toast('MF-COURSE-STATUS-RACEFIX-20261011-E: NOT CONFIRMED for request '+id+': '+(e?.message||String(e))); 
+    toast('MF-COURSE-STATUS-RECONCILE-20261011-F: NOT CONFIRMED for request '+id+': '+(e?.message||String(e))); 
     await mfLoadEnglishCourseSales();
   }
 }
