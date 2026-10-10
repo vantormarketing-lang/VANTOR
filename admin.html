@@ -799,7 +799,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <button class="nav-btn" data-section="quizzes">✓ Exams & Quizzes</button>
       <button class="nav-btn" data-section="question-bank">▥ Question Bank</button>
       <button class="nav-btn" data-section="homework">✎ Homework</button>
-      <button class="nav-btn" data-section="english-course">🌐 English Course</button>
       <div class="nav-title">Students</div>
       <button class="nav-btn" data-section="students">◎ Students</button>
       <button class="nav-btn" data-section="activity">◉ Activity & Attendance</button>
@@ -807,8 +806,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <button class="nav-btn" data-section="results">▤ Results</button>
       <button class="nav-btn" data-section="certificates">🏆 Certificates</button>
       <div class="nav-title">Sales</div>
-      <button class="nav-btn" data-section="sales">₿ Grade Sales & Subscriptions</button>
-      <button class="nav-btn" data-section="course-sales">🌐 English Course Payments</button>
+      <button class="nav-btn" data-section="sales">₿ Sales & Subscriptions</button>
       <div class="nav-title">Communication</div>
       <button class="nav-btn" data-section="notifications">✉ Notifications</button>
       <button class="nav-btn" data-section="reviews">★ Reviews</button>
@@ -912,31 +910,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div id="homeworkTable" class="table-wrap"></div>
       </section>
 
-      
-      <section id="section-english-course" class="section">
-        <div class="head"><div><h2>English Course — Curriculum</h2><p>Manage the separate A1–C2 course. Publish only lesson content that is ready for students; this does not change school-grade subscriptions.</p></div><button class="btn secondary" id="mfCourseRefresh">Refresh</button></div>
-        <div class="info-box" style="margin-bottom:12px"><b>Separate plan:</b> 150 EGP / 30 days for all published English Course levels. The SQL setup creates six level records plus editable draft unit/lesson templates. Add the real lesson content and video links here, then publish each lesson.</div>
-        <div class="toolbar"><input id="mfCourseSearch" placeholder="Search levels, units and lessons…"><button class="btn" id="mfNewLevel">+ New Level</button><button class="btn" id="mfNewUnit">+ New Unit</button><button class="btn" id="mfNewLesson">+ New Lesson</button></div>
-        <div class="head" style="margin-top:18px"><div><h3>Levels</h3><p>Published levels appear in the student page.</p></div></div><div id="mfCourseLevelsTable" class="table-wrap"></div>
-        <div class="head" style="margin-top:22px"><div><h3>Units</h3><p>Units are grouped inside each level.</p></div></div><div id="mfCourseUnitsTable" class="table-wrap"></div>
-        <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
-      </section>
-      <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-SESSION-DIAG-20261011-G</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · reconciled status reads + no-cache + latest-load-wins protection</div></div>
-        <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
-        <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
-        <div class="card" style="margin-bottom:14px;border:1px solid rgba(70,160,255,.35)">
-          <h3 style="margin:0 0 8px">Connection diagnostic</h3>
-          <p class="muted" style="margin:0 0 10px">Use this only if a payment request exists in Supabase but is missing here. It reads data only and does not approve, reject, or modify anything.</p>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-            <input id="mfCourseDiagnosticRequestId" placeholder="Paste full Request ID from Supabase (optional)" style="min-width:260px;flex:1;max-width:620px">
-            <button class="btn secondary" id="mfCourseDiagnosticRun">Check current connection</button>
-          </div>
-          <div id="mfCourseDiagnosticResult" class="empty" style="margin-top:10px">Diagnostic has not been run.</div>
-        </div>
-        <div id="mfCourseSalesTable" class="table-wrap"></div>
-      </section>
-
       <section id="section-students" class="section">
         <div class="head"><div><h2>Students</h2><p>Student accounts and grade information.</p></div><div class="toolbar"><input id="studentSearch" placeholder="Search students…"><button class="btn secondary" id="studentsRefresh">Refresh</button> <button class="btn secondary" id="studentsExport">Export CSV</button></div></div>
         <div id="studentsTable" class="table-wrap"></div>
@@ -1006,9 +979,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <script>
 const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';
 const SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-// Force fresh HTTP reads for Supabase so browser/proxy caches cannot leave request statuses stale.
-const mfNoCacheFetch=(input,init={})=>fetch(input,{...init,cache:'no-store'});
-const db=supabase.createClient(SB_URL,SB_KEY,{global:{fetch:mfNoCacheFetch},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const db=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const fmt=v=>v?new Date(v).toLocaleString(): '—';
@@ -1203,7 +1174,7 @@ async function loadStudents(){
   }).join('');
   host.innerHTML=rows.length?'<table><thead><tr><th>Student name</th><th>Phone / WhatsApp</th><th>Favorite team</th><th>Grade</th><th>Joined</th><th>Actions</th></tr></thead><tbody>'+rowHtml+'</tbody></table>':'<div class="empty">No students found.</div>';
 }
-async function studentDetails(id){const [p,s,pr,cs,cr]=await Promise.all([db.from('profiles').select('id,full_name,email,grade_id,created_at,favorite_team,phone').eq('id',id).single(),db.from('subscriptions').select('id,grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',id).order('expires_at',{ascending:false}),db.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at,lessons(title)').eq('student_id',id).order('last_opened_at',{ascending:false}).limit(100),db.from('mrfluent_english_course_subscriptions').select('amount,starts_at,expires_at,status,created_at').eq('student_id',id).order('expires_at',{ascending:false}).limit(10),db.from('mrfluent_english_course_requests').select('amount,status,created_at,admin_note').eq('student_id',id).order('created_at',{ascending:false}).limit(10)]);if(p.error)return toast(p.error.message);const team=p.data.favorite_team||'Not selected';const courseSubs=cs.error?[]:(cs.data||[]);const courseReqs=cr.error?[]:(cr.data||[]);openModal('Student Details',`<div class="grid-2"><div class="card"><b>${esc(p.data.full_name||'Student')}</b><p class="muted">${esc(p.data.email||'')}</p><p>Phone: <b>${esc(p.data.phone||'Not saved')}</b></p><p>Grade: ${esc(gradeName(p.data.grade_id))}</p><p>Favorite team: <b>${esc(team)}</b></p></div><div class="card"><b>Grade subscriptions</b><p class="muted">${(s.data||[]).map(x=>esc(gradeName(x.grade_id)+' · '+x.plan+' · '+x.status+' · '+fmtDate(x.expires_at))).join('<br>')||'None'}</p></div></div><div class="card" style="margin-top:12px"><b>Independent English Course Membership</b><p class="muted">${courseSubs.map(x=>esc(x.amount+' EGP · '+x.status+' · '+fmtDate(x.starts_at)+' – '+fmtDate(x.expires_at))).join('<br>')||'No course subscription'}${courseReqs.length?'<br><br><b>Course payment requests</b><br>'+courseReqs.map(x=>esc(x.amount+' EGP · '+x.status+' · '+fmtDate(x.created_at)+(x.admin_note?' · '+x.admin_note:''))).join('<br>'):''}</p></div><div class="card" style="margin-top:12px"><b>Recent Progress</b><p class="muted">${(pr.data||[]).slice(0,15).map(x=>esc((x.lessons?.title||'Lesson')+' · '+x.progress_percent+'% · '+(x.completed?'Completed':'In progress'))).join('<br>')||'No progress yet.'}</p></div>`)}
+async function studentDetails(id){const [p,s,pr]=await Promise.all([db.from('profiles').select('id,full_name,email,grade_id,created_at,favorite_team').eq('id',id).single(),db.from('subscriptions').select('id,grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',id).order('expires_at',{ascending:false}),db.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at,lessons(title)').eq('student_id',id).order('last_opened_at',{ascending:false}).limit(100)]);if(p.error)return toast(p.error.message);openModal('Student Details',`<div class="grid-2"><div class="card"><b>${esc(p.data.full_name||'Student')}</b><p class="muted">${esc(p.data.email||'')}</p><p>Grade: ${esc(gradeName(p.data.grade_id))}</p><p>Favorite team: <b>${esc(p.data.favorite_team||'Not selected')}</b></p></div><div class="card"><b>Subscriptions</b><p class="muted">${(s.data||[]).map(x=>esc(gradeName(x.grade_id)+' · '+x.plan+' · '+x.status+' · '+fmtDate(x.expires_at))).join('<br>')||'None'}</p></div></div><div class="card" style="margin-top:12px"><b>Recent Progress</b><p class="muted">${(pr.data||[]).slice(0,15).map(x=>esc((x.lessons?.title||'Lesson')+' · '+x.progress_percent+'% · '+(x.completed?'Completed':'In progress'))).join('<br>')||'No progress yet.'}</p></div>`)}
 
 async function loadSales(){
   const box=$('salesTable');
@@ -1704,48 +1675,7 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   window.printAdminCertificate=function(title,code,issued){
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div>
-<script id="mf-course-session-diagnostic-20261011-g">
-(function(){
-  const btn=document.getElementById('mfCourseDiagnosticRun');
-  const out=document.getElementById('mfCourseDiagnosticResult');
-  const idInput=document.getElementById('mfCourseDiagnosticRequestId');
-  if(!btn||!out||!idInput)return;
-  const safe=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  btn.addEventListener('click',async function(){
-    btn.disabled=true;out.innerHTML='Checking current session and visible requests…';
-    try{
-      const ur=await db.auth.getUser();
-      const user=ur&&ur.data?ur.data.user:null;
-      const staff=await db.rpc('mrfluent_english_is_staff');
-      const currentProfile=user?await db.from('profiles').select('id,full_name,role').eq('id',user.id).maybeSingle():null;
-      const recent=await db.from('mrfluent_english_course_requests').select('id,student_id,status,created_at').order('created_at',{ascending:false}).limit(10);
-      const requestedId=idInput.value.trim();
-      let oneHtml='<p><b>Request ID check:</b> not requested.</p>';
-      if(requestedId){
-        const one=await db.from('mrfluent_english_course_requests').select('id,student_id,status,created_at').eq('id',requestedId).maybeSingle();
-        if(one.error) oneHtml='<p><b>Exact request lookup error:</b> '+safe(one.error.message)+'</p>';
-        else if(!one.data) oneHtml='<p><b>Exact request lookup:</b> no row visible to this app session for that ID.</p>';
-        else oneHtml='<p><b>Exact request lookup:</b> FOUND — <code>'+safe(one.data.id)+'</code> · status <b>'+safe(one.data.status)+'</b> · student <code>'+safe(one.data.student_id)+'</code></p>';
-      }
-      let recentHtml='';
-      if(recent.error) recentHtml='<p><b>Recent request query error:</b> '+safe(recent.error.message)+'</p>';
-      else recentHtml='<p><b>Recent requests visible to this app session:</b> '+(recent.data||[]).length+'</p><div style="overflow:auto"><table><thead><tr><th>Request ID</th><th>Student ID</th><th>Status</th><th>Created</th></tr></thead><tbody>'+((recent.data||[]).map(x=>'<tr><td><code>'+safe(x.id)+'</code></td><td><code>'+safe(x.student_id)+'</code></td><td>'+safe(x.status)+'</td><td>'+safe(x.created_at)+'</td></tr>').join('')||'<tr><td colspan="4">No requests visible.</td></tr>')+'</tbody></table></div>';
-      const profile=currentProfile&&currentProfile.data?currentProfile.data:null;
-      out.innerHTML='<div style="text-align:left;overflow-wrap:anywhere">'+
-        '<p><b>Build:</b> MF-COURSE-SESSION-DIAG-20261011-G</p>'+
-        '<p><b>Authenticated user:</b> '+(user?safe(user.email||'(email not provided)'):'NO AUTH USER')+'</p>'+
-        '<p><b>Auth UID:</b> <code>'+(user?safe(user.id):'none')+'</code></p>'+
-        '<p><b>Staff helper:</b> '+(staff.error?'ERROR — '+safe(staff.error.message):safe(JSON.stringify(staff.data)))+'</p>'+
-        '<p><b>Current profile:</b> '+(currentProfile&&currentProfile.error?'ERROR — '+safe(currentProfile.error.message):profile?safe(profile.full_name||'')+' · role <b>'+safe(profile.role)+'</b> · id <code>'+safe(profile.id)+'</code>':'NO PROFILE ROW VISIBLE')+'</p>'+
-        oneHtml+recentHtml+'</div>';
-    }catch(e){out.innerHTML='<b>Diagnostic failed:</b> '+safe(e&&e.message?e.message:String(e));}
-    finally{btn.disabled=false;}
-  });
-})();
-</script>
-
-</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
 };
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
@@ -2048,176 +1978,6 @@ function domaConfirm(message, options = {}) {
     cancel.focus();
   });
 }
-</script>
-<script>
-/* Independent English Course administration: curriculum and course payments. */
-let mfEnglishLevelsAdmin=[],mfEnglishUnitsAdmin=[],mfEnglishLessonsAdmin=[];
-const MF_ENGLISH_COURSE_PRICE=150;
-const mfEsc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-function mfCourseLevelLabel(id){const x=mfEnglishLevelsAdmin.find(a=>String(a.id)===String(id));return x?(x.code+' — '+x.title):'—'}
-function mfCourseUnitLabel(id){const u=mfEnglishUnitsAdmin.find(a=>String(a.id)===String(id));return u?(mfCourseLevelLabel(u.level_id)+' / Unit '+u.unit_number+' — '+u.title):'—'}
-async function mfLoadEnglishCourseAdmin(){
- const hosts=['mfCourseLevelsTable','mfCourseUnitsTable','mfCourseLessonsTable'];hosts.forEach(id=>{if($(id))$(id).innerHTML='<div class="empty">Loading English Course curriculum…</div>'});
- const [lr,ur,lessonr]=await Promise.all([db.from('mrfluent_english_levels').select('*').order('sort_order',{ascending:true}),db.from('mrfluent_english_units').select('*').order('sort_order',{ascending:true}),db.from('mrfluent_english_lessons').select('*').order('sort_order',{ascending:true})]);
- const err=[lr,ur,lessonr].find(r=>r.error);if(err){hosts.forEach(id=>{if($(id))$(id).innerHTML='<div class="empty">Could not load the course setup. Run <b>MR_FLUENT_ENGLISH_COURSE_SETUP.sql</b> in Supabase first.<br>'+mfEsc(err.error.message)+'</div>'});return}
- mfEnglishLevelsAdmin=lr.data||[];mfEnglishUnitsAdmin=ur.data||[];mfEnglishLessonsAdmin=lessonr.data||[];
- const term=($('mfCourseSearch')?.value||'').trim().toLowerCase();
- const levelRows=mfEnglishLevelsAdmin.filter(x=>!term||(x.code+' '+x.title+' '+x.description).toLowerCase().includes(term));
- $('mfCourseLevelsTable').innerHTML=levelRows.length?'<table><thead><tr><th>Code</th><th>Level</th><th>Description</th><th>Status</th><th>Units / Lessons</th><th>Actions</th></tr></thead><tbody>'+levelRows.map(x=>{const uc=mfEnglishUnitsAdmin.filter(u=>u.level_id===x.id).length,lc=mfEnglishLessonsAdmin.filter(l=>mfEnglishUnitsAdmin.some(u=>u.id===l.unit_id&&u.level_id===x.id)).length;return '<tr><td><b>'+mfEsc(x.code)+'</b></td><td>'+mfEsc(x.title)+'</td><td>'+mfEsc(x.description||'')+'</td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Hidden')+'</span></td><td>'+uc+' / '+lc+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfEditEnglishLevel(\''+x.id+'\')">Edit</button><button class="btn secondary small" onclick="mfToggleEnglishLevel(\''+x.id+'\', '+(!x.is_published)+')">'+(x.is_published?'Hide':'Publish')+'</button><button class="btn danger small" onclick="mfDeleteEnglishLevel(\''+x.id+'\')">Delete</button></div></td></tr>'}).join('')+'</tbody></table>':'<div class="empty">No matching levels.</div>';
- const unitRows=mfEnglishUnitsAdmin.filter(x=>!term||(x.title+' '+x.description+' '+mfCourseLevelLabel(x.level_id)).toLowerCase().includes(term));
- $('mfCourseUnitsTable').innerHTML=unitRows.length?'<table><thead><tr><th>Level</th><th>Unit</th><th>Title</th><th>Status</th><th>Lessons</th><th>Actions</th></tr></thead><tbody>'+unitRows.map(x=>'<tr><td>'+mfEsc(mfCourseLevelLabel(x.level_id))+'</td><td>'+mfEsc(x.unit_number)+'</td><td><b>'+mfEsc(x.title)+'</b><div class="muted">'+mfEsc(x.description||'')+'</div></td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Hidden')+'</span></td><td>'+mfEnglishLessonsAdmin.filter(l=>l.unit_id===x.id).length+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfEditEnglishUnit(\''+x.id+'\')">Edit</button><button class="btn secondary small" onclick="mfToggleEnglishUnit(\''+x.id+'\', '+(!x.is_published)+')">'+(x.is_published?'Hide':'Publish')+'</button><button class="btn danger small" onclick="mfDeleteEnglishUnit(\''+x.id+'\')">Delete</button></div></td></tr>').join('')+'</tbody></table>':'<div class="empty">No matching units.</div>';
- const lessonRows=mfEnglishLessonsAdmin.filter(x=>!term||(x.title+' '+x.lesson_type+' '+x.description+' '+mfCourseUnitLabel(x.unit_id)).toLowerCase().includes(term));
- $('mfCourseLessonsTable').innerHTML=lessonRows.length?'<table><thead><tr><th>Level / Unit</th><th>Lesson</th><th>Media</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+lessonRows.map(x=>'<tr><td>'+mfEsc(mfCourseUnitLabel(x.unit_id))+'</td><td><b>'+mfEsc(x.title)+'</b><div class="muted">'+mfEsc(x.lesson_type||'lesson')+' · '+mfEsc(x.description||'')+'</div></td><td>'+(x.video_url?'<a href="'+mfEsc(x.video_url)+'" target="_blank" rel="noopener noreferrer">Open video</a>':'—')+'<div class="muted">'+(String(x.content_text||'').trim()?'Text added':'No text yet')+'</div></td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Draft / Hidden')+'</span></td><td><div class="actions"><button class="btn secondary small" onclick="mfEditEnglishLesson(\''+x.id+'\')">Edit</button><button class="btn secondary small" onclick="mfToggleEnglishLesson(\''+x.id+'\', '+(!x.is_published)+')">'+(x.is_published?'Unpublish':'Publish')+'</button><button class="btn danger small" onclick="mfDeleteEnglishLesson(\''+x.id+'\')">Delete</button></div></td></tr>').join('')+'</tbody></table>':'<div class="empty">No matching lessons.</div>';
-}
-function mfEnglishStatusCheck(){return '<label style="display:flex;gap:8px;align-items:center;margin:12px 0"><input id="mfPublished" type="checkbox"> Publish / visible to subscribed students</label>'}
-function mfEditEnglishLevel(id=''){const x=mfEnglishLevelsAdmin.find(z=>z.id===id)||{code:'',title:'',description:'',sort_order:mfEnglishLevelsAdmin.length+1,is_published:false};openModal(id?'Edit English Level':'New English Level','<form id="mfEnglishLevelForm"><div class="form-row"><label>Level code (A1, A2, B1, B2, C1, C2)</label><input id="mfLvlCode" maxlength="8" required value="'+mfEsc(x.code)+'"></div><div class="form-row"><label>Level title</label><input id="mfLvlTitle" required value="'+mfEsc(x.title)+'"></div><div class="form-row"><label>Description</label><textarea id="mfLvlDesc">'+mfEsc(x.description||'')+'</textarea></div><div class="form-row"><label>Sort order</label><input id="mfLvlSort" type="number" value="'+Number(x.sort_order||0)+'"></div>'+mfEnglishStatusCheck().replace('id="mfPublished"','id="mfLvlPublished"').replace('type="checkbox"','type="checkbox" '+(x.is_published?'checked':''))+'<button class="btn">Save Level</button></form>');$('mfEnglishLevelForm').onsubmit=async e=>{e.preventDefault();const p={code:$('mfLvlCode').value.trim().toUpperCase(),title:$('mfLvlTitle').value.trim(),description:$('mfLvlDesc').value.trim(),sort_order:Number($('mfLvlSort').value||0),is_published:$('mfLvlPublished').checked,updated_at:new Date().toISOString()};const r=id?await db.from('mrfluent_english_levels').update(p).eq('id',id).select('id'):await db.from('mrfluent_english_levels').insert(p).select('id');if(r.error)return toast('Level could not be saved: '+r.error.message);closeModal();toast('English Course level saved.');await mfLoadEnglishCourseAdmin()}}
-function mfEditEnglishUnit(id=''){const x=mfEnglishUnitsAdmin.find(z=>z.id===id)||{level_id:mfEnglishLevelsAdmin[0]?.id||'',unit_number:mfEnglishUnitsAdmin.length+1,title:'',description:'',sort_order:mfEnglishUnitsAdmin.length+1,is_published:false};const options=mfEnglishLevelsAdmin.map(l=>'<option value="'+mfEsc(l.id)+'" '+(l.id===x.level_id?'selected':'')+'>'+mfEsc(l.code+' — '+l.title)+'</option>').join('');openModal(id?'Edit English Unit':'New English Unit','<form id="mfEnglishUnitForm"><div class="form-row"><label>Level</label><select id="mfUnitLevel" required>'+options+'</select></div><div class="form-row"><label>Unit number</label><input id="mfUnitNumber" type="number" min="1" required value="'+Number(x.unit_number||1)+'"></div><div class="form-row"><label>Unit title</label><input id="mfUnitTitle" required value="'+mfEsc(x.title)+'"></div><div class="form-row"><label>Description</label><textarea id="mfUnitDesc">'+mfEsc(x.description||'')+'</textarea></div><div class="form-row"><label>Sort order</label><input id="mfUnitSort" type="number" value="'+Number(x.sort_order||0)+'"></div>'+mfEnglishStatusCheck().replace('id="mfPublished"','id="mfUnitPublished"').replace('type="checkbox"','type="checkbox" '+(x.is_published?'checked':''))+'<button class="btn">Save Unit</button></form>');$('mfEnglishUnitForm').onsubmit=async e=>{e.preventDefault();const p={level_id:$('mfUnitLevel').value,unit_number:Number($('mfUnitNumber').value),title:$('mfUnitTitle').value.trim(),description:$('mfUnitDesc').value.trim(),sort_order:Number($('mfUnitSort').value||0),is_published:$('mfUnitPublished').checked,updated_at:new Date().toISOString()};const r=id?await db.from('mrfluent_english_units').update(p).eq('id',id).select('id'):await db.from('mrfluent_english_units').insert(p).select('id');if(r.error)return toast('Unit could not be saved: '+r.error.message);closeModal();toast('English Course unit saved.');await mfLoadEnglishCourseAdmin()}}
-function mfEditEnglishLesson(id=''){const x=mfEnglishLessonsAdmin.find(z=>z.id===id)||{unit_id:mfEnglishUnitsAdmin[0]?.id||'',title:'',lesson_type:'lesson',description:'',content_text:'',video_url:'',sort_order:mfEnglishLessonsAdmin.length+1,is_published:false};const options=mfEnglishUnitsAdmin.map(u=>'<option value="'+mfEsc(u.id)+'" '+(u.id===x.unit_id?'selected':'')+'>'+mfEsc(mfCourseLevelLabel(u.level_id)+' / '+u.unit_number+' — '+u.title)+'</option>').join('');openModal(id?'Edit English Lesson':'New English Lesson','<form id="mfEnglishLessonForm"><div class="form-row"><label>Level / Unit</label><select id="mfLessonUnit" required>'+options+'</select></div><div class="form-row"><label>Lesson title</label><input id="mfLessonTitle" required value="'+mfEsc(x.title)+'"></div><div class="form-row"><label>Type</label><select id="mfLessonType"><option value="lesson" '+(x.lesson_type==='lesson'?'selected':'')+'>Lesson</option><option value="grammar" '+(x.lesson_type==='grammar'?'selected':'')+'>Grammar</option><option value="vocabulary" '+(x.lesson_type==='vocabulary'?'selected':'')+'>Vocabulary</option><option value="reading" '+(x.lesson_type==='reading'?'selected':'')+'>Reading</option><option value="writing" '+(x.lesson_type==='writing'?'selected':'')+'>Writing</option><option value="listening" '+(x.lesson_type==='listening'?'selected':'')+'>Listening</option><option value="speaking" '+(x.lesson_type==='speaking'?'selected':'')+'>Speaking</option><option value="review" '+(x.lesson_type==='review'?'selected':'')+'>Review</option></select></div><div class="form-row"><label>Short description</label><textarea id="mfLessonDesc">'+mfEsc(x.description||'')+'</textarea></div><div class="form-row"><label>Lesson content / explanation</label><textarea id="mfLessonContent" rows="9" placeholder="Write the lesson explanation, examples and exercises here…">'+mfEsc(x.content_text||'')+'</textarea></div><div class="form-row"><label>Video URL (optional)</label><input id="mfLessonVideo" type="url" placeholder="https://…" value="'+mfEsc(x.video_url||'')+'"></div><div class="form-row"><label>Sort order</label><input id="mfLessonSort" type="number" value="'+Number(x.sort_order||0)+'"></div>'+mfEnglishStatusCheck().replace('id="mfPublished"','id="mfLessonPublished"').replace('type="checkbox"','type="checkbox" '+(x.is_published?'checked':''))+'<button class="btn">Save Lesson</button></form>');$('mfEnglishLessonForm').onsubmit=async e=>{e.preventDefault();const p={unit_id:$('mfLessonUnit').value,title:$('mfLessonTitle').value.trim(),lesson_type:$('mfLessonType').value,description:$('mfLessonDesc').value.trim(),content_text:$('mfLessonContent').value.trim(),video_url:$('mfLessonVideo').value.trim()||null,sort_order:Number($('mfLessonSort').value||0),is_published:$('mfLessonPublished').checked,updated_at:new Date().toISOString()};if(p.is_published&&!p.content_text&&!p.video_url){if(!confirm('This lesson has no explanation text or video URL. Publish it anyway?'))return}const r=id?await db.from('mrfluent_english_lessons').update(p).eq('id',id).select('id'):await db.from('mrfluent_english_lessons').insert(p).select('id');if(r.error)return toast('Lesson could not be saved: '+r.error.message);closeModal();toast('English Course lesson saved.');await mfLoadEnglishCourseAdmin()}}
-async function mfToggleEnglishLevel(id,v){const r=await db.from('mrfluent_english_levels').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id');if(r.error)return toast(r.error.message);await mfLoadEnglishCourseAdmin()}
-async function mfToggleEnglishUnit(id,v){const r=await db.from('mrfluent_english_units').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id');if(r.error)return toast(r.error.message);await mfLoadEnglishCourseAdmin()}
-async function mfToggleEnglishLesson(id,v){const r=await db.from('mrfluent_english_lessons').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id');if(r.error)return toast(r.error.message);await mfLoadEnglishCourseAdmin()}
-async function mfDeleteEnglishLevel(id){if(!confirm('Delete this level and its units and lessons? This cannot be undone.'))return;const r=await db.from('mrfluent_english_levels').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);toast('Level deleted.');await mfLoadEnglishCourseAdmin()}
-async function mfDeleteEnglishUnit(id){if(!confirm('Delete this unit and its lessons? This cannot be undone.'))return;const r=await db.from('mrfluent_english_units').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);toast('Unit deleted.');await mfLoadEnglishCourseAdmin()}
-async function mfDeleteEnglishLesson(id){if(!confirm('Delete this lesson? This cannot be undone.'))return;const r=await db.from('mrfluent_english_lessons').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);toast('Lesson deleted.');await mfLoadEnglishCourseAdmin()}
-async function mfViewEnglishCourseReceipt(id){const r=await db.from('mrfluent_english_course_requests').select('proof_path').eq('id',id).single();if(r.error||!r.data?.proof_path)return toast('English Course receipt not found.');const s=await db.storage.from('payment-proofs').createSignedUrl(r.data.proof_path,300);if(s.error)return toast('Receipt error: '+s.error.message);window.open(s.data.signedUrl,'_blank','noopener')}
-// Prevent overlapping list reads from rendering out of order. A response started before
-// approval must never overwrite the fresh, verified result after it completes later.
-window.__mfVerifiedEnglishCourseStatuses = window.__mfVerifiedEnglishCourseStatuses || Object.create(null);
-let mfCourseSalesLoadSequence = 0;
-async function mfLoadEnglishCourseSales(){
-  const loadSequence = ++mfCourseSalesLoadSequence;
-  const host=$('mfCourseSalesTable');
-  if(!host)return;
-  host.innerHTML='<div class="empty">Loading English Course payment requests…</div>';
-  const [r,s]=await Promise.all([
-    db.from('mrfluent_english_course_requests')
-      .select('id,student_id,amount,sender_phone,proof_path,status,admin_note,created_at,reviewed_at')
-      .order('created_at',{ascending:false}).limit(500),
-    db.from('mrfluent_english_course_subscriptions')
-      .select('id,student_id,amount,starts_at,expires_at,status,created_at')
-      .order('expires_at',{ascending:false}).limit(500)
-  ]);
-  // If a newer load began while this one was in flight, discard this response.
-  if (loadSequence !== mfCourseSalesLoadSequence) return;
-  const err=r.error||s.error;
-  if(err){
-    host.innerHTML='<div class="empty">Could not load English Course payments.<br><b>Database error:</b> '+mfEsc(err.message)+'</div>';
-    return;
-  }
-  // Reconcile request statuses through a second, narrower PostgREST query.
-  // The full list query may be served with an older representation by an intermediary cache;
-  // a status-only query has a different cache key and is used to decide Pending vs Reviewed.
-  let requestRows=(r.data||[]);
-  const idsToReconcile=[...new Set(requestRows.map(x=>x.id).filter(Boolean))];
-  if(idsToReconcile.length){
-    const freshStatus=await db.from('mrfluent_english_course_requests')
-      .select('id,status,reviewed_at,admin_note')
-      .in('id',idsToReconcile);
-    if(loadSequence!==mfCourseSalesLoadSequence)return;
-    if(freshStatus.error){
-      host.innerHTML='<div class="empty">Could not verify current payment statuses.<br><b>Database error:</b> '+mfEsc(freshStatus.error.message)+'<br>Please press Refresh again; requests have not been changed.</div>';
-      return;
-    }
-    const currentById=Object.create(null);
-    (freshStatus.data||[]).forEach(x=>{currentById[x.id]=x;});
-    requestRows=requestRows.map(x=>currentById[x.id]?{...x,status:currentById[x.id].status,reviewed_at:currentById[x.id].reviewed_at,admin_note:currentById[x.id].admin_note}:x);
-  }
-  const reqs=requestRows.map(x=>{
-    const verified=window.__mfVerifiedEnglishCourseStatuses[x.id];
-    return verified ? {...x,status:verified.status,reviewed_at:x.reviewed_at||verified.reviewed_at,admin_note:x.admin_note||verified.admin_note} : x;
-  }),subs=s.data||[],now=Date.now();
-  const pendingReqs=reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='pending');
-  const reviewedReqs=reqs.filter(x=>String(x.status||'').trim().toLowerCase()!=='pending');
-  // Fetch profiles separately because request rows contain two relationships to profiles.
-  const studentIds=[...new Set(reqs.concat(subs).map(x=>x.student_id).filter(Boolean))];
-  const profileById=Object.create(null);
-  let profileLoadError='';
-  if(studentIds.length){
-    const pr=await db.from('profiles').select('id,full_name,email,phone').in('id',studentIds);
-    // Another refresh may have started during the profile lookup too.
-    if (loadSequence !== mfCourseSalesLoadSequence) return;
-    if(pr.error)profileLoadError=pr.error.message;
-    else (pr.data||[]).forEach(p=>{profileById[p.id]=p;});
-  }
-  if (loadSequence !== mfCourseSalesLoadSequence) return;
-  const active=subs.filter(x=>String(x.status).toLowerCase()==='active'&&new Date(x.starts_at)<=new Date()&&new Date(x.expires_at)>new Date()).length;
-  $('mfCourseSalesStats').innerHTML=[['Pending requests',pendingReqs.length],['Active memberships',active],['Approved requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='approved').length],['Rejected requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='rejected').length]].map(([a,b])=>'<div class="card stat"><div class="muted">'+mfEsc(a)+'</div><div class="num">'+b+'</div></div>').join('');
-  const makeReqRows=(items,allowReview)=>items.map(x=>{
-    const p=profileById[x.student_id]||{};
-    const date=fmtDate(x.created_at);
-    const action=allowReview
-      ?'<div class="actions"><button class="btn secondary small" onclick="mfViewEnglishCourseReceipt(\''+x.id+'\')">View receipt</button><button class="btn ok small" onclick="mfApproveEnglishCourseRequest(\''+x.id+'\')">Approve</button><button class="btn danger small" onclick="mfRejectEnglishCourseRequest(\''+x.id+'\')">Reject</button></div>'
-      :(x.proof_path?'<button class="btn secondary small" onclick="mfViewEnglishCourseReceipt(\''+x.id+'\')">View receipt</button>':'—');
-    return '<tr><td><code style="font-size:11px;word-break:break-all">'+mfEsc(x.id)+'</code></td><td><b>'+mfEsc(p.full_name||'Student')+'</b><div class="muted">'+mfEsc(p.phone||p.email||x.student_id)+'</div></td><td>'+mfEsc(x.amount)+' EGP</td><td>'+mfEsc(x.sender_phone||'—')+'</td><td>'+date+'</td><td><span class="pill '+(x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn')+'">'+mfEsc(x.status)+'</span>'+(x.admin_note?'<div class="muted">'+mfEsc(x.admin_note)+'</div>':'')+'</td><td>'+action+'</td></tr>';
-  }).join('');
-  const reqTable=(items,allowReview,emptyText)=>items.length
-    ?'<div class="table-wrap"><table><thead><tr><th>Request ID</th><th>Student</th><th>Amount</th><th>Sender phone</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+makeReqRows(items,allowReview)+'</tbody></table></div>'
-    :'<div class="empty">'+emptyText+'</div>';
-  const subRows=subs.map(x=>{
-    const p=profileById[x.student_id]||{};
-    const future=new Date(x.starts_at).getTime()>now;
-    const st=future&&x.status==='active'?'Scheduled':(new Date(x.expires_at).getTime()<=now&&x.status==='active'?'Expired':x.status);
-    return '<tr><td><b>'+mfEsc(p.full_name||'Student')+'</b><div class="muted">'+mfEsc(p.phone||p.email||x.student_id)+'</div></td><td>'+mfEsc(x.amount)+' EGP</td><td>'+fmtDate(x.starts_at)+'</td><td>'+fmtDate(x.expires_at)+'</td><td><span class="pill '+(st==='active'?'ok':st==='Scheduled'?'warn':'')+'">'+mfEsc(st)+'</span></td></tr>';
-  }).join('');
-  host.innerHTML=(profileLoadError?'<div class="empty">Payments loaded, but student names/phones could not be loaded: '+mfEsc(profileLoadError)+'</div>':'')+
-    '<h3 style="margin:6px 0 10px">Pending payment requests</h3>'+reqTable(pendingReqs,true,'No pending English Course payments. Approved/rejected requests are kept in history below.')+
-    '<h3 style="margin:22px 0 10px">Reviewed request history</h3>'+reqTable(reviewedReqs,false,'No reviewed payment requests yet.')+
-    '<h3 style="margin:22px 0 10px">Membership history</h3>'+(subs.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Starts</th><th>Expires</th><th>Status</th></tr></thead><tbody>'+subRows+'</tbody></table></div>':'<div class="empty">No English Course memberships yet.</div>');
-}
-async function mfApproveEnglishCourseRequest(id){
-  if(!id)return;
-  if(!confirm('Approve this payment and activate 30 days of English Course access?'))return;
-  try{
-    const r=await db.rpc('mrfluent_approve_english_course_request',{p_request_id:id,p_note:'Payment verified by admin.'});
-    if(r.error)throw r.error;
-    const result=Array.isArray(r.data)?r.data[0]:r.data;
-    if(!result||result.ok===false)throw new Error(result?.message||'The database did not confirm approval.');
-    // Never show success based on the RPC response alone: verify persisted request state.
-    const verify=await db.from('mrfluent_english_course_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();
-    if(verify.error)throw new Error('Approval RPC responded, but status could not be verified: '+verify.error.message);
-    if(!verify.data||String(verify.data.status||'').trim().toLowerCase()!=='approved')throw new Error('The request is still not marked approved in Supabase. Do not retry payment; inspect this request ID: '+id);
-    // Cache the verified result in this page so a stale list response cannot leave it in Pending.
-    window.__mfVerifiedEnglishCourseStatuses = window.__mfVerifiedEnglishCourseStatuses || Object.create(null);
-    window.__mfVerifiedEnglishCourseStatuses[id]={status:'approved',reviewed_at:verify.data.reviewed_at||new Date().toISOString(),admin_note:'Payment verified by admin.'};
-    const expiry=result.expires_at?fmtDate(result.expires_at):'';
-    await mfLoadEnglishCourseSales();
-    toast('MF-COURSE-STATUS-RECONCILE-20261011-F: APPROVED confirmed in Supabase. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
-    try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}
-  }catch(e){
-    console.error('English Course approval failed:',e);
-    toast('MF-COURSE-STATUS-RECONCILE-20261011-F: NOT CONFIRMED for request '+id+': '+(e?.message||String(e))); 
-    await mfLoadEnglishCourseSales();
-  }
-}
-async function mfRejectEnglishCourseRequest(id){
-  if(!id)return;
-  const note=prompt('Reason for rejecting the English Course payment:','Payment receipt could not be verified.');
-  if(note===null)return;
-  try{
-    const r=await db.rpc('mrfluent_reject_english_course_request',{p_request_id:id,p_note:note});
-    if(r.error)throw r.error;
-    const result=Array.isArray(r.data)?r.data[0]:r.data;
-    if(!result||result.ok===false)throw new Error(result?.message||'The database did not confirm rejection.');
-    const verify=await db.from('mrfluent_english_course_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();
-    if(verify.error)throw new Error('Rejection RPC responded, but status could not be verified: '+verify.error.message);
-    if(!verify.data||String(verify.data.status||'').toLowerCase()!=='rejected')throw new Error('The request is not marked rejected in Supabase.');
-    toast('English Course request rejected and saved.');
-    await mfLoadEnglishCourseSales();
-  }catch(e){
-    console.error('English Course rejection failed:',e);
-    toast('Rejection not confirmed: '+(e?.message||String(e)));
-    await mfLoadEnglishCourseSales();
-  }
-}
-
-(function wireMrFluentEnglishCourseAdmin(){
-  const prevRoute=window.__domaRouteSection;
-  window.__domaRouteSection=function(name){if(name==='english-course')return mfLoadEnglishCourseAdmin();if(name==='course-sales')return mfLoadEnglishCourseSales();return typeof prevRoute==='function'?prevRoute(name):Promise.resolve()};
-  const oldLoad=window.loadSection;
-  window.loadSection=function(name){if(name==='english-course')return mfLoadEnglishCourseAdmin();if(name==='course-sales')return mfLoadEnglishCourseSales();return typeof oldLoad==='function'?oldLoad.apply(this,arguments):undefined};
-  $('mfCourseRefresh')?.addEventListener('click',mfLoadEnglishCourseAdmin);$('mfCourseSalesRefresh')?.addEventListener('click',mfLoadEnglishCourseSales);$('mfCourseSearch')?.addEventListener('input',mfLoadEnglishCourseAdmin);$('mfNewLevel')?.addEventListener('click',()=>mfEditEnglishLevel());$('mfNewUnit')?.addEventListener('click',()=>{if(!mfEnglishLevelsAdmin.length)return toast('Create a level first.');mfEditEnglishUnit()});$('mfNewLesson')?.addEventListener('click',()=>{if(!mfEnglishUnitsAdmin.length)return toast('Create a unit first.');mfEditEnglishLesson()});
-})();
-
 </script>
 </body>
 </html>
