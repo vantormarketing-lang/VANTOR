@@ -3920,7 +3920,6 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 })();
 </script>
 
-</body>
 
 
 <script id="doma-battle-isolated-js">
@@ -4500,3 +4499,172 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   }
 })();
 </script>
+
+<style id="mr-fluent-tech-glass-theme-v12">
+/* MR. FLUENT — Tech & Futuristic Glass Edition (visual layer only) */
+:root{
+  --bg:#050a11;
+  --bg2:#07121d;
+  --card:rgba(9,23,37,.54);
+  --card2:rgba(12,32,49,.48);
+  --line:rgba(68,207,255,.25);
+  --burg:#087ba5;
+  --burg2:#0da9d2;
+  --burg3:#50e1ff;
+  --text:#f0f9ff;
+  --muted:#9bb3c2;
+  --green:#56d9ad;
+  --gold:#ffd181;
+  --shadow:0 24px 70px rgba(0,0,0,.36),0 0 35px rgba(24,178,225,.055);
+  --tech-edge:rgba(91,218,255,.26);
+  --tech-glass:rgba(8,22,36,.46);
+  --tech-glass-hi:rgba(132,231,255,.085);
+  color-scheme:dark;
+}
+html{background:#050a11;scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(ellipse at 8% 12%,rgba(0,165,220,.13),transparent 30%),
+    radial-gradient(ellipse at 90% 18%,rgba(79,92,255,.12),transparent 28%),
+    radial-gradient(ellipse at 50% 82%,rgba(0,225,202,.055),transparent 36%),
+    linear-gradient(145deg,#050a11 0%,#07121d 46%,#050a11 100%) !important;
+  color:var(--text);
+}
+::selection{background:rgba(42,196,245,.34);color:#fff}
+/* Global glass panels: deliberately transparent so the ambient color can show through. */
+.card,.hero-card,.hero-panel,.hero-stat div,.searchbox,.feature,.grade,.dash,
+.tool,.teacher,.plan,.faq details,.cta,.upgrade-card,.upgrade-metric,
+.home-shortcut,.continue-lesson,.how-card,.why-card,.student-command-card,
+.lesson-toolbar-pro,.lesson-check,.lesson-notes,.home-continue-card,.home-feature-card,
+.home-quick,.student-home-card,.student-home-list-row,.student-achievement,
+.student-week-day,.daily100-student-wrap,.daily100-student-item,.phase-spotlight,
+.practice-card,.student-plus5-card,.student-gami-card,.student-gami-grid>*,
+.student-progress-hero>*,.doma-v2-card,.doma-v2-sub,.local-insight,.global-result,
+.curriculum-detail,.prep-unit,.prep-lesson,.grammar-map .mini-card,.assessment-box,
+.student-home-alert,.doma-battle-card,.doma-battle-player,.doma-battle-question,
+.doma-battle-result,.doma-battle-history-row,.doma-battle-side,.doma-battle-row,
+.hw-stat,.hw-card,.hw-card-pro,.cert,.notification,.profile-avatar-wrap,
+.progress-mini,.activity-row,.quick-card,.student-recommend,.student-plus5-stat,
+.student-gami-card,.student-gami-stat,.student-gami-item{
+  background:linear-gradient(135deg,rgba(49,187,237,.075),rgba(110,130,255,.025) 42%,rgba(4,15,27,.28)),rgba(8,22,36,.47) !important;
+  border-color:var(--tech-edge) !important;
+  box-shadow:inset 0 1px 0 rgba(220,249,255,.065),0 14px 38px rgba(0,0,0,.17);
+  -webkit-backdrop-filter:blur(18px) saturate(145%);
+  backdrop-filter:blur(18px) saturate(145%);
+}
+.card:hover,.grade:hover,.clickable-tool:hover,.home-shortcut:hover,.home-quick:hover,
+.quick-card:hover,.tool:hover,.workspace-card:hover,.prep-lesson:hover{
+  border-color:rgba(79,222,255,.53) !important;
+  box-shadow:0 16px 42px rgba(0,0,0,.25),0 0 22px rgba(24,189,238,.085);
+}
+.nav{background:rgba(5,10,18,.68) !important;border-bottom-color:rgba(83,207,255,.20) !important;backdrop-filter:blur(26px) saturate(155%) !important;-webkit-backdrop-filter:blur(26px) saturate(155%) !important}
+.brand .mark{background:linear-gradient(145deg,rgba(18,113,157,.42),rgba(8,20,33,.38)) !important;border-color:rgba(73,211,255,.45) !important;box-shadow:0 0 26px rgba(20,185,239,.11),inset 0 1px 0 rgba(255,255,255,.12) !important}
+.brand small{color:#8caebd !important}
+.links a{color:#a9c0cc !important}.links a:hover{color:#62e5ff !important}
+.iconbtn,.menu{background:rgba(9,27,42,.58) !important;border-color:rgba(78,207,249,.25) !important;color:#dff8ff !important;backdrop-filter:blur(12px)}
+.btn{border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.11);transition:transform .2s,border-color .2s,box-shadow .2s,background .2s}
+.btn.primary{background:linear-gradient(135deg,#0786b6,#12b9df 64%,#55dff4) !important;border-color:rgba(106,229,255,.78) !important;color:#03111a !important;box-shadow:0 8px 25px rgba(0,172,223,.18),inset 0 1px 0 rgba(255,255,255,.28) !important}
+.btn.primary:hover{background:linear-gradient(135deg,#0da8d8,#5be7ff) !important;transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,190,235,.24) !important}
+.btn.secondary,.btn.ghost{background:rgba(10,27,42,.62) !important;border-color:rgba(80,202,247,.26) !important;color:#d4eff8 !important}
+.btn.secondary:hover,.btn.ghost:hover{border-color:rgba(88,222,255,.58) !important;background:rgba(15,53,75,.65) !important}
+.btn.danger,.danger{border-color:rgba(255,112,131,.38)}
+.primary,.stage,.tag,.eyebrow,.hero h1 span,.tool-icon,.avatar,.step-no,.lesson-num{--tech-accent:var(--burg3)}
+.eyebrow{color:#55ddff !important}
+.hero{background:radial-gradient(ellipse at 78% 30%,rgba(0,183,236,.17),transparent 35%),radial-gradient(ellipse at 58% 65%,rgba(73,82,255,.08),transparent 30%),linear-gradient(180deg,rgba(4,10,18,.3),rgba(5,10,17,.15)) !important}
+.hero:after{border-color:rgba(65,202,255,.24) !important;box-shadow:0 0 0 70px rgba(0,180,235,.035),0 0 0 140px rgba(74,103,255,.025),0 0 70px rgba(0,190,230,.07) !important}
+.hero h1 span{color:#59ddff !important;text-shadow:0 0 30px rgba(44,202,255,.18)}
+.hero p,.head p,.section-head p{color:#a0b7c4 !important}
+.tag{color:#8cecff !important;background:rgba(4,68,92,.37) !important;border:1px solid rgba(60,207,250,.19)}
+.hero-card{background:linear-gradient(140deg,rgba(32,102,138,.21),rgba(8,20,32,.48)) !important;border-color:rgba(91,217,255,.34) !important;box-shadow:0 30px 85px rgba(0,0,0,.4),0 0 32px rgba(0,169,222,.08) !important}
+.hero-panel{background:linear-gradient(145deg,rgba(17,67,91,.4),rgba(5,14,24,.45)) !important;border-color:rgba(82,217,255,.26) !important}
+.hero-logo span{color:#54e2ff !important}
+.hero-stat div{border-color:rgba(77,207,247,.23) !important}
+.proof span,.feature p,.grade-body p,.grade-meta,.tool p,.teacher p,.teacher small,.plan li,.faq p,.footer a,.footer p{color:#9aafbc !important}
+.searchbox{background:rgba(7,22,35,.60) !important;border-color:rgba(64,203,249,.29) !important;box-shadow:0 20px 55px rgba(0,0,0,.32),0 0 28px rgba(0,166,221,.05) !important}
+.field,input,select,textarea{background:rgba(4,15,26,.63) !important;color:#edfbff !important;border-color:rgba(66,190,235,.23) !important;backdrop-filter:blur(12px)}
+.field:focus,input:focus,select:focus,textarea:focus{border-color:rgba(82,226,255,.8) !important;box-shadow:0 0 0 3px rgba(19,184,233,.12),0 0 20px rgba(20,181,228,.07) !important}
+.field::placeholder,input::placeholder,textarea::placeholder{color:#7393a3 !important;opacity:1}
+select{color-scheme:dark}select option,select optgroup{background:#0a1926 !important;color:#e9f8ff !important}select option:checked,select option:hover{background:#075d7e !important;color:#fff !important}
+.grade-cover{background:linear-gradient(135deg,rgba(10,83,116,.62),rgba(8,23,38,.46),rgba(18,24,55,.36)) !important;border-bottom:1px solid rgba(71,204,245,.20)}
+.stage{color:#8cecff !important;background:rgba(4,62,84,.48) !important;border:1px solid rgba(58,204,247,.22)}
+.grade-body h3,.feature h3,.tool h3,.teacher h3,.plan h3{color:#effaff}
+.grade-meta{color:#97b1be !important}
+.stat{background:rgba(8,27,41,.47) !important;border-color:rgba(75,204,247,.21) !important}
+.stat strong{color:#f4fcff}
+.notice,.status,.scorebox{background:rgba(7,64,84,.36) !important;border-color:rgba(68,211,249,.29) !important;color:#c9edf7 !important}
+.tool-icon,.avatar,.continue-icon{background:linear-gradient(145deg,rgba(10,151,199,.65),rgba(20,44,88,.62)) !important;border-color:rgba(79,221,255,.36) !important;color:#d8f9ff !important}
+.bar{background:rgba(5,23,36,.75) !important}.bar i,.student-home-bar i,.report-line .rbar i{background:linear-gradient(90deg,#078fbd,#38ddf7) !important;box-shadow:0 0 12px rgba(35,201,242,.23)}
+.progress-ring{background:conic-gradient(#30d5f7 calc(var(--p,0)*1%),rgba(49,82,110,.45) 0) !important}
+.progress-ring::after{background:rgba(6,18,30,.96) !important;border:1px solid rgba(73,203,241,.17)}
+.plan li:before{color:#4bdcff !important}
+.faq details{border-color:rgba(67,199,241,.2) !important}
+.faq summary{color:#e6f8ff}
+.cta{background:linear-gradient(135deg,rgba(8,75,103,.62),rgba(7,22,39,.66)) !important;border-color:rgba(69,206,248,.37) !important}
+.cta h2{color:#f1fbff}
+.footer{background:rgba(4,9,16,.62) !important;border-top-color:rgba(73,201,241,.2) !important;backdrop-filter:blur(18px)}
+.copy{border-top-color:rgba(78,192,230,.16) !important;color:#73909e !important}
+/* Student workspace / inside dashboard */
+.drawer{background:rgba(0,5,12,.72) !important;backdrop-filter:blur(20px) saturate(130%) !important;-webkit-backdrop-filter:blur(20px) saturate(130%) !important}
+.drawer-shell{background:rgba(5,15,25,.79) !important;border-color:rgba(68,204,246,.31) !important;box-shadow:0 32px 110px rgba(0,0,0,.62),0 0 40px rgba(0,173,225,.06) !important;backdrop-filter:blur(28px) saturate(150%) !important;-webkit-backdrop-filter:blur(28px) saturate(150%) !important}
+.drawer-side{background:rgba(3,12,21,.77) !important;border-right-color:rgba(67,193,236,.19) !important;backdrop-filter:blur(22px)}
+.drawer-top{background:rgba(7,22,36,.68) !important;border-bottom-color:rgba(67,193,236,.2) !important;backdrop-filter:blur(20px)}
+.drawer-top h2{color:#f0fbff}.drawer-top p,.user-card span{color:#98b4c1 !important}
+.user-card{background:rgba(10,31,47,.52) !important;border-color:rgba(72,196,239,.23) !important}
+.side-link{color:#aac4d0 !important}.side-link:hover,.side-link.active{background:linear-gradient(110deg,rgba(6,117,156,.4),rgba(29,59,104,.30)) !important;color:#f2fcff !important;box-shadow:inset 3px 0 0 #40d7f8;border:1px solid rgba(72,213,249,.19)}
+.workspace-card,.listrow,.lesson-player,.lesson-list,.lesson-content,.video-wrap,.quiz-box,.question,.doma-battle-code,.doma-battle-status,.doma-battle-option,.doma-battle-table-wrap,.doma-battle-question,.doma-battle-side,.doma-battle-row,.doma-battle-history-row,.doma-battle-player,.daily100-student-empty,.prep-unit summary,.prep-lesson,.grammar-map .mini-card,.assessment-list div,.hw-instructions,.hw-feedback,.hw-attachment,.lesson-notes,.lesson-check,.student-home-alert,.progress-mini,.activity-row,.quick-card,.student-week-day,.student-achievement,.daily100-student-item,.notification,.cert,.hw-card-pro,.hw-stat{
+  background:linear-gradient(135deg,rgba(37,151,194,.075),rgba(38,79,132,.045) 52%,rgba(5,18,31,.20)),rgba(7,22,35,.51) !important;
+  border-color:rgba(71,199,241,.21) !important;
+  box-shadow:inset 0 1px 0 rgba(233,250,255,.045),0 10px 28px rgba(0,0,0,.13);
+  backdrop-filter:blur(15px) saturate(138%);
+}
+.side-link,.lesson-btn,.home-quick,.quick-card,.doma-battle-option{transition:background .18s,border-color .18s,transform .18s}
+.lesson-btn{background:rgba(6,22,35,.56) !important;border-color:rgba(70,193,236,.2) !important;color:#e3f5fb !important}
+.lesson-btn.active,.doma-battle-option.selected{background:linear-gradient(135deg,rgba(4,128,166,.42),rgba(28,62,117,.40)) !important;border-color:#36cff3 !important;box-shadow:0 0 20px rgba(20,181,224,.10)}
+.lesson-num{background:rgba(7,102,137,.45) !important;color:#83eaff !important}
+.lesson-content h3,.workspace-card h3,.doma-battle-question h3,.lesson-player h3{color:#f1fbff}
+.lesson-content p,.lesson-rich-content,.lesson-content p,.doma-battle-note,.hw-page-head p{color:#9cb5c1 !important}
+.lesson-toolbar-pro,.lesson-notes,.lesson-unit-breadcrumb{border-color:rgba(69,192,234,.2) !important}
+.lesson-check.done{background:rgba(6,99,112,.28) !important;border-color:rgba(65,218,196,.35) !important;color:#b9fff0 !important}
+.lesson-check input,.doma-pro6-check input,.lesson-check input{accent-color:#29c9ef !important}
+.pill,.student-home-pill,.curriculum-count{background:rgba(7,49,68,.48) !important;border-color:rgba(74,199,239,.25) !important;color:#9beaff !important}
+.pill.ok,.pill.free,.live-pill{background:rgba(12,84,58,.45) !important;border-color:rgba(86,217,173,.4) !important;color:#a8f5d7 !important}
+.pill.warn{background:rgba(108,72,14,.37) !important;border-color:rgba(255,209,129,.35) !important;color:#ffdfa4 !important}
+.pill.bad,.pill.danger{background:rgba(117,30,46,.42) !important;border-color:rgba(255,112,132,.33) !important;color:#ffb5bf !important}
+.empty{background:rgba(7,23,36,.48) !important;border-color:rgba(68,195,237,.23) !important;color:#9bb6c4 !important}
+.modal{background:rgba(0,5,12,.73) !important;backdrop-filter:blur(18px) saturate(130%) !important}
+.modalbox{background:linear-gradient(140deg,rgba(15,48,68,.86),rgba(5,16,29,.91)) !important;border-color:rgba(75,211,253,.38) !important;box-shadow:0 30px 100px rgba(0,0,0,.64),0 0 40px rgba(0,167,220,.07) !important;backdrop-filter:blur(28px) saturate(155%) !important}
+.modalhead{border-bottom:1px solid rgba(69,193,236,.16);padding-bottom:12px}
+.modalhead h3{color:#effaff}.close{color:#8fc3d2 !important}.close:hover{color:#59e4ff !important}
+.toast{background:rgba(8,29,43,.91) !important;border-color:rgba(70,205,247,.4) !important;color:#effaff !important;backdrop-filter:blur(18px)}
+.error{color:#ff9cae !important}.success{color:#8df0c6 !important}
+#domaBattleModal{background:rgba(0,5,12,.74) !important;backdrop-filter:blur(20px) saturate(135%) !important}
+.doma-battle-shell{background:rgba(5,16,27,.86) !important;border-color:rgba(68,204,246,.30) !important;backdrop-filter:blur(26px) saturate(145%) !important}
+.doma-battle-head{background:rgba(7,23,37,.74) !important;border-bottom-color:rgba(68,194,239,.18) !important}
+.doma-battle-code{color:#9defff !important;border-color:rgba(62,213,255,.4) !important;background:rgba(4,21,33,.66) !important}
+.doma-battle-vs,.doma-battle-qnum,.doma-battle-timer{color:#5bdffb !important}
+.doma-battle-option:hover{border-color:rgba(72,220,255,.55) !important}
+.doma-battle-result{background:linear-gradient(135deg,rgba(6,92,117,.43),rgba(7,22,38,.64)) !important;border-color:rgba(69,205,248,.4) !important}
+.doma-battle-table th{color:#78d8ed !important}
+.daily100-student-word{color:#f1fbff}.daily100-student-translation{color:#9ae5f8 !important}.daily100-student-sentence{border-top-color:rgba(67,195,237,.2) !important}
+.daily100-student-audio button,.video-open-link,.resource,.mini-open{background:rgba(6,74,100,.42) !important;border-color:rgba(69,196,236,.28) !important;color:#b0effc !important}
+.phase-spotlight{background:linear-gradient(135deg,rgba(6,71,100,.45),rgba(6,18,31,.62)) !important;border-color:rgba(72,204,245,.3) !important}
+.student-home-bar{background:rgba(7,32,48,.76) !important}.student-home-pill{color:#97eaff !important}
+.student-weak-low{color:#ffb0a0 !important}.student-weak-mid{color:#ffdda2 !important}.student-weak-high{color:#8df0c6 !important}
+.back-top{background:rgba(6,35,52,.78) !important;border-color:rgba(76,209,249,.38) !important;color:#a8f0ff !important;backdrop-filter:blur(18px)}
+@media (prefers-reduced-motion:no-preference){
+  .card,.grade,.feature,.tool,.teacher,.upgrade-card,.workspace-card,.student-home-card,.home-shortcut,.lesson-btn,.quick-card,.home-quick{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease}
+  .grade:hover,.feature:hover,.tool:hover,.workspace-card:hover,.home-shortcut:hover,.home-quick:hover{transform:translateY(-3px)}
+}
+@media(max-width:1000px){.nav{backdrop-filter:blur(24px) saturate(145%) !important}.drawer-shell{backdrop-filter:blur(24px) saturate(145%) !important}}
+@media(max-width:700px){
+  .hero{background:radial-gradient(ellipse at 65% 18%,rgba(0,184,231,.13),transparent 42%),linear-gradient(180deg,rgba(4,10,18,.12),rgba(5,10,17,.2)) !important}
+  .hero-card,.hero-panel{border-radius:17px}
+  .drawer-side{background:rgba(3,12,21,.97) !important}
+  .modalbox{padding:18px;max-height:94vh}
+  .searchbox{backdrop-filter:blur(18px)}
+}
+@media(max-width:420px){.hero h1{letter-spacing:-2px}.btn{padding:10px 13px}.hero-stat div{padding:10px}}
+</style>
+
+</body>
+</html>
