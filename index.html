@@ -994,7 +994,7 @@ async function domaSubmitSubscription(){
 
 
 /* Mr. Fluent: independent English Course membership (150 EGP / 30 days). */
-let mrFluentEnglishLevels=[],mrFluentEnglishSubscription=null,mrFluentEnglishPendingRequest=null;
+let mrFluentEnglishLevels=[],mrFluentEnglishSubscription=null,mrFluentEnglishPendingRequest=null,mrFluentEnglishAccessError='';
 const MR_FLUENT_ENGLISH_PRICE=150;
 function mrfluentCourseActive(sub){const now=Date.now();return !!sub&&String(sub.status||'').toLowerCase()==='active'&&(!sub.starts_at||new Date(sub.starts_at).getTime()<=now)&&(!sub.expires_at||new Date(sub.expires_at).getTime()>now)}
 async function mrfluentRefreshEnglishCourse(){
@@ -1004,20 +1004,28 @@ async function mrfluentRefreshEnglishCourse(){
   try{levelsResult=await sb.from('mrfluent_english_levels').select('id,code,title,description,sort_order,is_published').eq('is_published',true).order('sort_order',{ascending:true})}catch(e){levelsResult={error:e}}
   if(levelsResult.error){levelsHost.innerHTML='<div class="empty">English Course setup is not installed yet. The admin must run <b>MR_FLUENT_ENGLISH_COURSE_SETUP.sql</b> in Supabase, then refresh this page.</div>';statusHost.innerHTML='<span class="pill warn">Setup needed</span> English Course is configured independently from school-grade access.';return}
   mrFluentEnglishLevels=levelsResult.data||[];
-  mrFluentEnglishSubscription=null;mrFluentEnglishPendingRequest=null;
+  mrFluentEnglishSubscription=null;mrFluentEnglishPendingRequest=null;mrFluentEnglishAccessError='';
   if(sessionUser){
     try{
-      const sr=await sb.from('mrfluent_english_course_subscriptions').select('id,student_id,amount,starts_at,expires_at,status,created_at').eq('student_id',sessionUser.id).eq('status','active').order('expires_at',{ascending:false}).limit(10);
-      if(!sr.error)mrFluentEnglishSubscription=(sr.data||[]).find(mrfluentCourseActive)||null;
+      // Read only the current user's active membership through a SECURITY DEFINER RPC.
+      // This avoids silently treating a subscriptions-table/RLS error as an unpaid account.
+      const sr=await sb.rpc('mrfluent_get_my_english_course_subscription');
+      if(sr.error){mrFluentEnglishAccessError=sr.error.message||'Could not check the English Course membership.';console.warn('English Course membership lookup failed:',sr.error)}
+      else{
+        const rows=Array.isArray(sr.data)?sr.data:(sr.data?[sr.data]:[]);
+        mrFluentEnglishSubscription=rows.find(mrfluentCourseActive)||null;
+      }
       const rr=await sb.from('mrfluent_english_course_requests').select('id,status,amount,created_at,admin_note').eq('student_id',sessionUser.id).eq('status','pending').order('created_at',{ascending:false}).limit(1);
       if(!rr.error)mrFluentEnglishPendingRequest=(rr.data||[])[0]||null;
-    }catch(e){console.warn('Could not refresh English Course access state:',e)}
+      else console.warn('Could not check pending English Course requests:',rr.error);
+    }catch(e){mrFluentEnglishAccessError=e?.message||String(e);console.warn('Could not refresh English Course access state:',e)}
   }
   if(!sessionUser){statusHost.innerHTML='<span class="pill">Guest</span> Create an account or log in to subscribe to the English Course.'}
+  else if(mrFluentEnglishAccessError){statusHost.innerHTML='<span class="pill warn">Access check failed</span> We could not verify your English Course membership. Tap Refresh Course Status; if this continues, contact the admin. <small>'+esc(mrFluentEnglishAccessError)+'</small>'}
   else if(mrFluentEnglishSubscription){statusHost.innerHTML='<span class="pill ok">English Course active</span> All published levels are unlocked until <b>'+esc(fmtDate(mrFluentEnglishSubscription.expires_at))+'</b>.'}
   else if(mrFluentEnglishPendingRequest){statusHost.innerHTML='<span class="pill warn">Payment pending</span> Your separate English Course request is waiting for admin approval.'}
   else{statusHost.innerHTML='<span class="pill">Locked</span> All levels are included in one separate monthly membership: <b>150 EGP / 30 days</b>. Your school-grade subscription is unaffected.'}
-  const subscribeBtn=$('mrfluentEnglishSubscribeBtn');if(subscribeBtn){subscribeBtn.textContent=mrFluentEnglishSubscription?'Membership active':mrFluentEnglishPendingRequest?'Payment pending':sessionUser?'Subscribe to English Course':'Log in to subscribe';}
+  const subscribeBtn=$('mrfluentEnglishSubscribeBtn');if(subscribeBtn){subscribeBtn.textContent=mrFluentEnglishAccessError?'Check membership':mrFluentEnglishSubscription?'Membership active':mrFluentEnglishPendingRequest?'Payment pending':sessionUser?'Subscribe to English Course':'Log in to subscribe';}
   const descriptors={A1:'Beginner · Essential foundations',A2:'Elementary · Everyday communication',B1:'Intermediate · Independent English',B2:'Upper-intermediate · Confident fluency',C1:'Advanced · Academic and professional',C2:'Proficiency · Precision and mastery'};
   levelsHost.innerHTML=mrFluentEnglishLevels.length?mrFluentEnglishLevels.map(l=>'<article class="mf-course-level"><span class="pill">'+esc(l.code)+'</span><h3>'+esc(l.title)+'</h3><p>'+esc(l.description||descriptors[l.code]||'English learning level')+'</p><span class="pill">'+(mrFluentEnglishSubscription?'Included in membership':'🔒 Membership required')+'</span><button class="btn '+(mrFluentEnglishSubscription?'primary':'secondary')+'" type="button" onclick="mrfluentOpenEnglishLevel(\''+esc(l.id)+'\')">'+(mrFluentEnglishSubscription?'Open level':'Explore / Unlock')+'</button></article>').join(''):'<div class="empty">No published English Course levels are available yet. Publish levels from Admin → English Course.</div>';
   if(!sessionUser||!mrFluentEnglishSubscription){$('mrfluentEnglishLevelContent').innerHTML='<div class="empty">'+(mrFluentEnglishPendingRequest?'Your course remains locked until the admin approves the receipt.':'Choose Subscribe to English Course to submit the 150 EGP monthly payment receipt. Once approved, all published levels become available.')+'</div>'}
@@ -1025,6 +1033,7 @@ async function mrfluentRefreshEnglishCourse(){
 async function mrfluentStartEnglishSubscription(){
   if(!sessionUser){openAuth('signup');return}
   await mrfluentRefreshEnglishCourse();
+  if(mrFluentEnglishAccessError){showToast('Could not verify course access. Refresh the page or contact the admin.');return}
   if(mrFluentEnglishSubscription){showToast('Your English Course membership is active until '+fmtDate(mrFluentEnglishSubscription.expires_at)+'.');$('english-course')?.scrollIntoView({behavior:'smooth'});return}
   if(mrFluentEnglishPendingRequest){showToast('Your English Course payment request is already pending admin approval.');return}
   $('gradeModalTitle').textContent='English Course — Monthly Subscription';$('gradeModalText').textContent='This is separate from Grade Access. Pay 150 EGP for 30 days, then upload the receipt for admin review.';
@@ -1050,6 +1059,7 @@ async function mrfluentSubmitEnglishCoursePayment(){
 async function mrfluentOpenEnglishLevel(levelId){
   if(!sessionUser){openAuth('login');return}
   await mrfluentRefreshEnglishCourse();
+  if(mrFluentEnglishAccessError){showToast('Could not verify your English Course membership. Refresh the page or contact the admin.');return}
   if(!mrFluentEnglishSubscription){await mrfluentStartEnglishSubscription();return}
   const level=mrFluentEnglishLevels.find(l=>String(l.id)===String(levelId));if(!level)return showToast('Course level is unavailable.');
   const host=$('mrfluentEnglishLevelContent');host.innerHTML='<div class="empty">Loading '+esc(level.code)+' lessons…</div>';
