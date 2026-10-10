@@ -923,7 +923,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
       </section>
       <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-VERIFY-20261010-B</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button></div>
+        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-VERIFY-20261010-C</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button></div>
         <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
         <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
         <div id="mfCourseSalesTable" class="table-wrap"></div>
@@ -2029,6 +2029,8 @@ async function mfDeleteEnglishLevel(id){if(!confirm('Delete this level and its u
 async function mfDeleteEnglishUnit(id){if(!confirm('Delete this unit and its lessons? This cannot be undone.'))return;const r=await db.from('mrfluent_english_units').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);toast('Unit deleted.');await mfLoadEnglishCourseAdmin()}
 async function mfDeleteEnglishLesson(id){if(!confirm('Delete this lesson? This cannot be undone.'))return;const r=await db.from('mrfluent_english_lessons').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);toast('Lesson deleted.');await mfLoadEnglishCourseAdmin()}
 async function mfViewEnglishCourseReceipt(id){const r=await db.from('mrfluent_english_course_requests').select('proof_path').eq('id',id).single();if(r.error||!r.data?.proof_path)return toast('English Course receipt not found.');const s=await db.storage.from('payment-proofs').createSignedUrl(r.data.proof_path,300);if(s.error)return toast('Receipt error: '+s.error.message);window.open(s.data.signedUrl,'_blank','noopener')}
+// Keeps the verified database result authoritative if the following list fetch returns a stale row.
+window.__mfVerifiedEnglishCourseStatuses = window.__mfVerifiedEnglishCourseStatuses || Object.create(null);
 async function mfLoadEnglishCourseSales(){
   const host=$('mfCourseSalesTable');
   if(!host)return;
@@ -2046,9 +2048,12 @@ async function mfLoadEnglishCourseSales(){
     host.innerHTML='<div class="empty">Could not load English Course payments.<br><b>Database error:</b> '+mfEsc(err.message)+'</div>';
     return;
   }
-  const reqs=r.data||[],subs=s.data||[],now=Date.now();
-  const pendingReqs=reqs.filter(x=>x.status==='pending');
-  const reviewedReqs=reqs.filter(x=>x.status!=='pending');
+  const reqs=(r.data||[]).map(x=>{
+    const verified=window.__mfVerifiedEnglishCourseStatuses[x.id];
+    return verified ? {...x,status:verified.status,reviewed_at:x.reviewed_at||verified.reviewed_at,admin_note:x.admin_note||verified.admin_note} : x;
+  }),subs=s.data||[],now=Date.now();
+  const pendingReqs=reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='pending');
+  const reviewedReqs=reqs.filter(x=>String(x.status||'').trim().toLowerCase()!=='pending');
   // Fetch profiles separately because request rows contain two relationships to profiles.
   const studentIds=[...new Set(reqs.concat(subs).map(x=>x.student_id).filter(Boolean))];
   const profileById=Object.create(null);
@@ -2059,7 +2064,7 @@ async function mfLoadEnglishCourseSales(){
     else (pr.data||[]).forEach(p=>{profileById[p.id]=p;});
   }
   const active=subs.filter(x=>String(x.status).toLowerCase()==='active'&&new Date(x.starts_at)<=new Date()&&new Date(x.expires_at)>new Date()).length;
-  $('mfCourseSalesStats').innerHTML=[['Pending requests',pendingReqs.length],['Active memberships',active],['Approved requests',reqs.filter(x=>x.status==='approved').length],['Rejected requests',reqs.filter(x=>x.status==='rejected').length]].map(([a,b])=>'<div class="card stat"><div class="muted">'+mfEsc(a)+'</div><div class="num">'+b+'</div></div>').join('');
+  $('mfCourseSalesStats').innerHTML=[['Pending requests',pendingReqs.length],['Active memberships',active],['Approved requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='approved').length],['Rejected requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='rejected').length]].map(([a,b])=>'<div class="card stat"><div class="muted">'+mfEsc(a)+'</div><div class="num">'+b+'</div></div>').join('');
   const makeReqRows=(items,allowReview)=>items.map(x=>{
     const p=profileById[x.student_id]||{};
     const date=fmtDate(x.created_at);
@@ -2093,10 +2098,13 @@ async function mfApproveEnglishCourseRequest(id){
     // Never show success based on the RPC response alone: verify persisted request state.
     const verify=await db.from('mrfluent_english_course_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();
     if(verify.error)throw new Error('Approval RPC responded, but status could not be verified: '+verify.error.message);
-    if(!verify.data||String(verify.data.status||'').toLowerCase()!=='approved')throw new Error('The request is still not marked approved in Supabase. Run MR_FLUENT_ENGLISH_COURSE_APPROVE_STATUS_FIX.sql, then retry this request.');
+    if(!verify.data||String(verify.data.status||'').trim().toLowerCase()!=='approved')throw new Error('The request is still not marked approved in Supabase. Do not retry payment; inspect this request ID: '+id);
+    // Cache the verified result in this page so a stale list response cannot leave it in Pending.
+    window.__mfVerifiedEnglishCourseStatuses = window.__mfVerifiedEnglishCourseStatuses || Object.create(null);
+    window.__mfVerifiedEnglishCourseStatuses[id]={status:'approved',reviewed_at:verify.data.reviewed_at||new Date().toISOString(),admin_note:'Payment verified by admin.'};
     const expiry=result.expires_at?fmtDate(result.expires_at):'';
-    toast('MF-COURSE-VERIFY-20261010-B: APPROVED confirmed in Supabase. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
     await mfLoadEnglishCourseSales();
+    toast('MF-COURSE-VERIFY-20261010-C: APPROVED confirmed in Supabase and removed from Pending. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
     try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}
   }catch(e){
     console.error('English Course approval failed:',e);
