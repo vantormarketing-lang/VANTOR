@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -5533,6 +5532,239 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   #drawer .side-link,#drawer .drawer-body .card,#drawer .drawer-body [class*="-card"],#mrStudentBottomNav .mr-student-tab {transition:none!important}
 }
 </style>
+
+<style id="mr-fluent-subscription-lock-css">
+/* Learning tools remain visible but locked until an approved active subscription exists. */
+#drawer .side-link.doma-access-locked{opacity:.52!important;filter:saturate(.45);cursor:not-allowed!important;border:1px solid rgba(148,163,184,.10)!important}
+#drawer .side-link.doma-access-locked:hover{background:transparent!important;color:#aab4c0!important}
+#drawer .doma-lock-indicator{margin-left:auto;flex:0 0 auto;font-size:10px;opacity:.95}
+#mrStudentBottomNav .mr-student-tab{position:relative}
+#mrStudentBottomNav .mr-student-tab.doma-access-locked{opacity:.48!important;filter:saturate(.35);cursor:not-allowed!important}
+#mrStudentBottomNav .mr-student-tab.doma-access-locked:after{content:'🔒';position:absolute;right:5px;top:2px;font-size:9px;line-height:1}
+.doma-access-lock-screen{max-width:760px;margin:0 auto;padding:clamp(18px,4vw,35px);border:1px solid rgba(89,179,223,.28);border-radius:20px;background:radial-gradient(circle at 50% 0,rgba(49,141,194,.16),transparent 52%),linear-gradient(145deg,rgba(11,34,52,.92),rgba(5,14,24,.96));color:#edf8ff;text-align:center;box-shadow:0 22px 60px rgba(0,0,0,.25)}
+.doma-access-lock-icon{width:72px;height:72px;margin:0 auto 16px;border:1px solid rgba(91,196,242,.32);border-radius:22px;display:grid;place-items:center;background:rgba(45,149,204,.12);font-size:31px}
+.doma-access-lock-screen h3{font-size:clamp(21px,3vw,29px);margin:0 0 10px;color:#f3fbff}
+.doma-access-lock-screen p{max-width:560px;margin:0 auto 16px;color:#b5ccda;font-size:12px;line-height:1.9}
+.doma-access-lock-screen .doma-access-lock-note{padding:12px 14px;margin:0 auto 17px;max-width:560px;border:1px solid rgba(91,196,242,.17);border-radius:12px;background:rgba(7,24,37,.55);font-size:11px;color:#c4dce9;line-height:1.8}
+.doma-access-lock-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.doma-access-lock-actions .btn{min-width:155px}
+@media(max-width:600px){.doma-access-lock-screen{padding:22px 16px}.doma-access-lock-actions .btn{width:100%}}
+</style>
+<script id="mr-fluent-subscription-lock-js">
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  let replayingBottomTab = false;
+  const protectedViews = new Set([
+    'lessons','quizzes','homework','analytics','certificates','notifications','assistant',
+    'questionbank','challenge','daily100','support','live','planner','library','rewards',
+    'aiassistant','practice-hub','timer','roulette','movie'
+  ]);
+
+  function hasSession(){try{return typeof sessionUser!=='undefined' && !!sessionUser;}catch(_){return false}}
+  function currentSubsFunction(){
+    if(typeof window.getActiveSubscriptions==='function') return window.getActiveSubscriptions;
+    try{if(typeof getActiveSubscriptions==='function')return getActiveSubscriptions;}catch(_){}
+    return null;
+  }
+  function decorateLinks(unlocked){
+    window.domaStudentAccessActive=!!unlocked;
+    const drawer=$('drawer');
+    if(drawer){
+      drawer.dataset.domaSubscriptionAccess=unlocked?'unlocked':'locked';
+      drawer.classList.toggle('doma-subscription-active',!!unlocked);
+      drawer.querySelectorAll('.side-link').forEach(b=>{
+        const allowed=b.id==='studentNavOverview'||b.id==='studentNavLogout'||b.id==='mrStudentMenuClose';
+        const locked=!!hasSession()&&!unlocked&&!allowed;
+        b.classList.toggle('doma-access-locked',locked);
+        if(locked){
+          b.setAttribute('aria-disabled','true');
+          if(!b.querySelector('.doma-lock-indicator')){
+            const icon=document.createElement('span');icon.className='doma-lock-indicator';icon.textContent='🔒';icon.setAttribute('aria-hidden','true');b.appendChild(icon);
+          }
+        }else{
+          b.removeAttribute('aria-disabled');
+          b.querySelectorAll('.doma-lock-indicator').forEach(el=>el.remove());
+        }
+      });
+    }
+    const nav=$('mrStudentBottomNav');
+    if(nav){
+      nav.querySelectorAll('[data-mr-tab]').forEach(b=>{
+        const locked=!!hasSession()&&!unlocked&&b.dataset.mrTab!=='home';
+        b.classList.toggle('doma-access-locked',locked);
+        b.setAttribute('aria-disabled',locked?'true':'false');
+      });
+    }
+  }
+
+  async function checkActiveSubscription(){
+    if(!hasSession()){decorateLinks(false);return false;}
+    const getSubs=currentSubsFunction();
+    if(!getSubs){decorateLinks(false);return false;}
+    let subs=[];
+    try{subs=await getSubs.call(window)||[];}catch(e){console.warn('Subscription access check failed; learning tools stay locked.',e);decorateLinks(false);return false;}
+    const now=Date.now();
+    const active=(Array.isArray(subs)?subs:[]).find(s=>{
+      const status=String(s?.status||'').trim().toLowerCase();
+      const expiry=s?.expires_at?new Date(s.expires_at).getTime():null;
+      return status==='active'&&(expiry===null||(!Number.isNaN(expiry)&&expiry>now));
+    })||null;
+    if(!active){
+      try{currentSubscription=null;currentGrade=null;window.currentSubscription=null;window.currentGrade=null;}catch(_){}
+      decorateLinks(false);
+      return false;
+    }
+    try{
+      currentSubscription=active;window.currentSubscription=active;
+      const availableGrades=(typeof grades!=='undefined'&&Array.isArray(grades))?grades:[];
+      const g=availableGrades.find(x=>String(x.id)===String(active.grade_id));
+      if(g){currentGrade=g;window.currentGrade=g;}
+      window.domaStudentAccessActive=true;
+    }catch(_){}
+    decorateLinks(true);
+    return true;
+  }
+
+  function renderLockedScreen(){
+    if(!hasSession()){
+      if(typeof window.openAuth==='function')window.openAuth('login');
+      return;
+    }
+    const drawer=$('drawer');
+    if(drawer)drawer.classList.add('show');
+    if(document.body)document.body.style.overflow='hidden';
+    const title=$('drawerTitle'),subtitle=$('drawerSubtitle'),body=$('drawerBody');
+    if(title)title.textContent='Content Locked';
+    if(subtitle)subtitle.textContent='Choose your grade and activate access first.';
+    if(body){
+      body.scrollTop=0;
+      body.innerHTML='<section class="doma-access-lock-screen" role="status" aria-live="polite">'+
+        '<div class="doma-access-lock-icon" aria-hidden="true">🔒</div>'+
+        '<h3>Learning Tools Are Locked</h3>'+
+        '<p>صفحة الطالب واختيار الصف متاحان لك، لكن الدروس والـ Practice والاختبارات وباقي الأدوات تظل مقفولة حتى يتم تفعيل اشتراكك وموافقة الإدارة على الدفع.</p>'+
+        '<div class="doma-access-lock-note">اختار الصف المناسب لك، ثم اختر الاشتراك الشهري وأرسل إيصال الدفع. كل المحتوى سيفتح بعد تفعيل الاشتراك.</div>'+
+        '<div class="doma-access-lock-actions"><button type="button" class="btn primary" onclick="domaLockedChooseGrade()">Choose Grade →</button><button type="button" class="btn secondary" onclick="studentView(\'overview\')">Student Dashboard</button><button type="button" class="btn secondary" onclick="domaLogout()">Log Out</button></div>'+
+        '</section>';
+    }
+    try{currentStudentView='overview';window.currentStudentView='overview';}catch(_){}
+    document.querySelectorAll('#mrStudentBottomNav [data-mr-tab]').forEach(b=>b.classList.toggle('active',b.dataset.mrTab==='home'));
+    decorateLinks(false);
+  }
+
+  window.domaLockedChooseGrade=function(){
+    try{if(typeof window.closeDrawer==='function')window.closeDrawer();}catch(_){}
+    const section=$('grades');
+    if(section){
+      try{window.location.hash='grades';}catch(_){}
+      try{section.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){}
+    }else if(typeof window.showToast==='function')window.showToast('Please open the Grades section to choose your grade.');
+  };
+  window.domaShowLockedContent=renderLockedScreen;
+  window.domaCheckActiveSubscription=checkActiveSubscription;
+
+  /* The student dashboard stays open; all other student views require active, approved access. */
+  const originalStudentView=window.studentView;
+  if(typeof originalStudentView==='function'&&!originalStudentView.__mrFluentSubscriptionGate){
+    const gatedStudentView=async function(view){
+      if(!hasSession())return originalStudentView.apply(this,arguments);
+      if(!view||view==='overview'){
+        let granted=false;
+        try{granted=await checkActiveSubscription();}catch(_){}
+        return originalStudentView.apply(this,arguments);
+      }
+      if(!(await checkActiveSubscription())){renderLockedScreen();return false;}
+      return originalStudentView.apply(this,arguments);
+    };
+    gatedStudentView.__mrFluentSubscriptionGate=true;
+    gatedStudentView.__original=originalStudentView;
+    window.studentView=gatedStudentView;
+  }
+
+  /* Also gate quick-action cards and direct calls that bypass the student sidebar. */
+  const originalOpenStudentTool=window.openStudentTool;
+  if(typeof originalOpenStudentTool==='function'&&!originalOpenStudentTool.__mrFluentSubscriptionGate){
+    const gatedOpenStudentTool=async function(view){
+      if(!hasSession())return originalOpenStudentTool.apply(this,arguments);
+      if(!(await checkActiveSubscription())){renderLockedScreen();return false;}
+      return originalOpenStudentTool.apply(this,arguments);
+    };
+    gatedOpenStudentTool.__mrFluentSubscriptionGate=true;
+    gatedOpenStudentTool.__original=originalOpenStudentTool;
+    window.openStudentTool=gatedOpenStudentTool;
+  }
+
+  function guardDirectTool(name){
+    const original=window[name];
+    if(typeof original!=='function'||original.__mrFluentSubscriptionGate)return;
+    const guarded=async function(){
+      if(!hasSession()){
+        if(typeof window.openAuth==='function')return window.openAuth('login');
+        return false;
+      }
+      if(!(await checkActiveSubscription())){renderLockedScreen();return false;}
+      return original.apply(this,arguments);
+    };
+    guarded.__mrFluentSubscriptionGate=true;
+    guarded.__original=original;
+    window[name]=guarded;
+  }
+  [
+    'openDomaBattle','openDomaBuildSentence','openDomaMovieScene','renderDomaSkillRoulette',
+    'openDomaV2Reports','openDomaV2Notifications','renderStudentTimer','openAttemptReview'
+  ].forEach(guardDirectTool);
+
+  /* Keep the bottom navigation from opening hidden tabs or the Practice Hub without access. */
+  function installBottomNavGuard(){
+    const nav=$('mrStudentBottomNav');
+    if(!nav||nav.__mrFluentSubscriptionGate)return;
+    nav.__mrFluentSubscriptionGate=true;
+    nav.addEventListener('click',function(ev){
+      if(replayingBottomTab)return;
+      const btn=ev.target.closest('[data-mr-tab]');
+      if(!btn||btn.dataset.mrTab==='home'||!hasSession())return;
+      ev.preventDefault();ev.stopImmediatePropagation();
+      checkActiveSubscription().then(granted=>{
+        if(!granted){renderLockedScreen();return;}
+        replayingBottomTab=true;
+        try{btn.click();}finally{replayingBottomTab=false;}
+      }).catch(()=>renderLockedScreen());
+    },true);
+  }
+
+  /* Apply the lock state after login/session restoration and grade/subscription refreshes. */
+  const originalRefresh=window.refreshStudentState;
+  if(typeof originalRefresh==='function'&&!originalRefresh.__mrFluentSubscriptionGate){
+    const gatedRefresh=async function(){
+      const result=await originalRefresh.apply(this,arguments);
+      let active=false;
+      try{
+        const sub=(typeof currentSubscription!=='undefined')?currentSubscription:null;
+        const expiry=sub?.expires_at?new Date(sub.expires_at).getTime():null;
+        active=!!sub&&String(sub.status||'').toLowerCase()==='active'&&(expiry===null||(!Number.isNaN(expiry)&&expiry>Date.now()));
+      }catch(_){}
+      decorateLinks(active);
+      return result;
+    };
+    gatedRefresh.__mrFluentSubscriptionGate=true;
+    gatedRefresh.__original=originalRefresh;
+    window.refreshStudentState=gatedRefresh;
+  }
+
+  /* Lock styling is refreshed if other existing scripts add navigation items later. */
+  function start(){
+    installBottomNavGuard();
+    if(hasSession())checkActiveSubscription().catch(()=>decorateLinks(false));
+    else decorateLinks(false);
+    const side=document.querySelector('#drawer .drawer-side');
+    if(side&&typeof MutationObserver!=='undefined'){
+      const observer=new MutationObserver(()=>decorateLinks(window.domaStudentAccessActive===true));
+      observer.observe(side,{childList:true,subtree:true});
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
 
 </body>
 </html>
