@@ -922,7 +922,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
       </section>
       <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-NOCACHE-20261010-D</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · browser cache bypass enabled</div></div>
+        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-STATUS-RACEFIX-20261011-E</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · no-cache reads + latest-load-wins protection</div></div>
         <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
         <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
         <div id="mfCourseSalesTable" class="table-wrap"></div>
@@ -2030,9 +2030,12 @@ async function mfDeleteEnglishLevel(id){if(!confirm('Delete this level and its u
 async function mfDeleteEnglishUnit(id){if(!confirm('Delete this unit and its lessons? This cannot be undone.'))return;const r=await db.from('mrfluent_english_units').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);toast('Unit deleted.');await mfLoadEnglishCourseAdmin()}
 async function mfDeleteEnglishLesson(id){if(!confirm('Delete this lesson? This cannot be undone.'))return;const r=await db.from('mrfluent_english_lessons').delete().eq('id',id).select('id');if(r.error)return toast('Delete failed: '+r.error.message);toast('Lesson deleted.');await mfLoadEnglishCourseAdmin()}
 async function mfViewEnglishCourseReceipt(id){const r=await db.from('mrfluent_english_course_requests').select('proof_path').eq('id',id).single();if(r.error||!r.data?.proof_path)return toast('English Course receipt not found.');const s=await db.storage.from('payment-proofs').createSignedUrl(r.data.proof_path,300);if(s.error)return toast('Receipt error: '+s.error.message);window.open(s.data.signedUrl,'_blank','noopener')}
-// Keeps the verified database result authoritative if the following list fetch returns a stale row.
+// Prevent overlapping list reads from rendering out of order. A response started before
+// approval must never overwrite the fresh, verified result after it completes later.
 window.__mfVerifiedEnglishCourseStatuses = window.__mfVerifiedEnglishCourseStatuses || Object.create(null);
+let mfCourseSalesLoadSequence = 0;
 async function mfLoadEnglishCourseSales(){
+  const loadSequence = ++mfCourseSalesLoadSequence;
   const host=$('mfCourseSalesTable');
   if(!host)return;
   host.innerHTML='<div class="empty">Loading English Course payment requests…</div>';
@@ -2044,6 +2047,8 @@ async function mfLoadEnglishCourseSales(){
       .select('id,student_id,amount,starts_at,expires_at,status,created_at')
       .order('expires_at',{ascending:false}).limit(500)
   ]);
+  // If a newer load began while this one was in flight, discard this response.
+  if (loadSequence !== mfCourseSalesLoadSequence) return;
   const err=r.error||s.error;
   if(err){
     host.innerHTML='<div class="empty">Could not load English Course payments.<br><b>Database error:</b> '+mfEsc(err.message)+'</div>';
@@ -2061,9 +2066,12 @@ async function mfLoadEnglishCourseSales(){
   let profileLoadError='';
   if(studentIds.length){
     const pr=await db.from('profiles').select('id,full_name,email,phone').in('id',studentIds);
+    // Another refresh may have started during the profile lookup too.
+    if (loadSequence !== mfCourseSalesLoadSequence) return;
     if(pr.error)profileLoadError=pr.error.message;
     else (pr.data||[]).forEach(p=>{profileById[p.id]=p;});
   }
+  if (loadSequence !== mfCourseSalesLoadSequence) return;
   const active=subs.filter(x=>String(x.status).toLowerCase()==='active'&&new Date(x.starts_at)<=new Date()&&new Date(x.expires_at)>new Date()).length;
   $('mfCourseSalesStats').innerHTML=[['Pending requests',pendingReqs.length],['Active memberships',active],['Approved requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='approved').length],['Rejected requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='rejected').length]].map(([a,b])=>'<div class="card stat"><div class="muted">'+mfEsc(a)+'</div><div class="num">'+b+'</div></div>').join('');
   const makeReqRows=(items,allowReview)=>items.map(x=>{
@@ -2105,11 +2113,11 @@ async function mfApproveEnglishCourseRequest(id){
     window.__mfVerifiedEnglishCourseStatuses[id]={status:'approved',reviewed_at:verify.data.reviewed_at||new Date().toISOString(),admin_note:'Payment verified by admin.'};
     const expiry=result.expires_at?fmtDate(result.expires_at):'';
     await mfLoadEnglishCourseSales();
-    toast('MF-COURSE-VERIFY-20261010-C: APPROVED confirmed in Supabase and removed from Pending. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
+    toast('MF-COURSE-STATUS-RACEFIX-20261011-E: APPROVED confirmed in Supabase. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
     try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}
   }catch(e){
     console.error('English Course approval failed:',e);
-    toast('MF-COURSE-VERIFY-20261010-B: NOT CONFIRMED for request '+id+': '+(e?.message||String(e)));
+    toast('MF-COURSE-STATUS-RACEFIX-20261011-E: NOT CONFIRMED for request '+id+': '+(e?.message||String(e))); 
     await mfLoadEnglishCourseSales();
   }
 }
