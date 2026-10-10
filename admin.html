@@ -2081,8 +2081,49 @@ async function mfLoadEnglishCourseSales(){
     '<h3 style="margin:22px 0 10px">Reviewed request history</h3>'+reqTable(reviewedReqs,false,'No reviewed payment requests yet.')+
     '<h3 style="margin:22px 0 10px">Membership history</h3>'+(subs.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Starts</th><th>Expires</th><th>Status</th></tr></thead><tbody>'+subRows+'</tbody></table></div>':'<div class="empty">No English Course memberships yet.</div>');
 }
-async function mfApproveEnglishCourseRequest(id){if(!id)return;if(!confirm('Approve this payment and activate 30 days of English Course access?'))return;try{const r=await db.rpc('mrfluent_approve_english_course_request',{p_request_id:id,p_note:'Payment verified by admin.'});if(r.error)throw r.error;if(r.data&&r.data.ok===false)throw new Error(r.data.message||'Approval did not complete.');const expiry=r.data?.expires_at?fmtDate(r.data.expires_at):'';toast('English Course membership activated.'+(expiry?' Access until '+expiry+'.':''));await mfLoadEnglishCourseSales();try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}}catch(e){toast('Course approval failed: '+(e?.message||String(e)));await mfLoadEnglishCourseSales()}}
-async function mfRejectEnglishCourseRequest(id){if(!id)return;const note=prompt('Reason for rejecting the English Course payment:','Payment receipt could not be verified.');if(note===null)return;try{const r=await db.rpc('mrfluent_reject_english_course_request',{p_request_id:id,p_note:note});if(r.error)throw r.error;toast('English Course request rejected.');await mfLoadEnglishCourseSales()}catch(e){toast('Course rejection failed: '+(e?.message||String(e)));await mfLoadEnglishCourseSales()}}
+async function mfApproveEnglishCourseRequest(id){
+  if(!id)return;
+  if(!confirm('Approve this payment and activate 30 days of English Course access?'))return;
+  try{
+    const r=await db.rpc('mrfluent_approve_english_course_request',{p_request_id:id,p_note:'Payment verified by admin.'});
+    if(r.error)throw r.error;
+    const result=Array.isArray(r.data)?r.data[0]:r.data;
+    if(!result||result.ok===false)throw new Error(result?.message||'The database did not confirm approval.');
+    // Never show success based on the RPC response alone: verify persisted request state.
+    const verify=await db.from('mrfluent_english_course_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();
+    if(verify.error)throw new Error('Approval RPC responded, but status could not be verified: '+verify.error.message);
+    if(!verify.data||String(verify.data.status||'').toLowerCase()!=='approved')throw new Error('The request is still not marked approved in Supabase. Run MR_FLUENT_ENGLISH_COURSE_APPROVE_STATUS_FIX.sql, then retry this request.');
+    const expiry=result.expires_at?fmtDate(result.expires_at):'';
+    toast('Payment approved and saved.'+(expiry?' Access until '+expiry+'.':''));
+    await mfLoadEnglishCourseSales();
+    try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}
+  }catch(e){
+    console.error('English Course approval failed:',e);
+    toast('Approval not confirmed: '+(e?.message||String(e)));
+    await mfLoadEnglishCourseSales();
+  }
+}
+async function mfRejectEnglishCourseRequest(id){
+  if(!id)return;
+  const note=prompt('Reason for rejecting the English Course payment:','Payment receipt could not be verified.');
+  if(note===null)return;
+  try{
+    const r=await db.rpc('mrfluent_reject_english_course_request',{p_request_id:id,p_note:note});
+    if(r.error)throw r.error;
+    const result=Array.isArray(r.data)?r.data[0]:r.data;
+    if(!result||result.ok===false)throw new Error(result?.message||'The database did not confirm rejection.');
+    const verify=await db.from('mrfluent_english_course_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();
+    if(verify.error)throw new Error('Rejection RPC responded, but status could not be verified: '+verify.error.message);
+    if(!verify.data||String(verify.data.status||'').toLowerCase()!=='rejected')throw new Error('The request is not marked rejected in Supabase.');
+    toast('English Course request rejected and saved.');
+    await mfLoadEnglishCourseSales();
+  }catch(e){
+    console.error('English Course rejection failed:',e);
+    toast('Rejection not confirmed: '+(e?.message||String(e)));
+    await mfLoadEnglishCourseSales();
+  }
+}
+
 (function wireMrFluentEnglishCourseAdmin(){
   const prevRoute=window.__domaRouteSection;
   window.__domaRouteSection=function(name){if(name==='english-course')return mfLoadEnglishCourseAdmin();if(name==='course-sales')return mfLoadEnglishCourseSales();return typeof prevRoute==='function'?prevRoute(name):Promise.resolve()};
