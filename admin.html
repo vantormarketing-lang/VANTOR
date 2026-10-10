@@ -922,9 +922,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
       </section>
       <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-STATUS-RECONCILE-20261011-F</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · reconciled status reads + no-cache + latest-load-wins protection</div></div>
+        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-SESSION-DIAG-20261011-G</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · reconciled status reads + no-cache + latest-load-wins protection</div></div>
         <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
         <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
+        <div class="card" style="margin-bottom:14px;border:1px solid rgba(70,160,255,.35)">
+          <h3 style="margin:0 0 8px">Connection diagnostic</h3>
+          <p class="muted" style="margin:0 0 10px">Use this only if a payment request exists in Supabase but is missing here. It reads data only and does not approve, reject, or modify anything.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <input id="mfCourseDiagnosticRequestId" placeholder="Paste full Request ID from Supabase (optional)" style="min-width:260px;flex:1;max-width:620px">
+            <button class="btn secondary" id="mfCourseDiagnosticRun">Check current connection</button>
+          </div>
+          <div id="mfCourseDiagnosticResult" class="empty" style="margin-top:10px">Diagnostic has not been run.</div>
+        </div>
         <div id="mfCourseSalesTable" class="table-wrap"></div>
       </section>
 
@@ -1695,7 +1704,48 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   window.printAdminCertificate=function(title,code,issued){
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div>
+<script id="mf-course-session-diagnostic-20261011-g">
+(function(){
+  const btn=document.getElementById('mfCourseDiagnosticRun');
+  const out=document.getElementById('mfCourseDiagnosticResult');
+  const idInput=document.getElementById('mfCourseDiagnosticRequestId');
+  if(!btn||!out||!idInput)return;
+  const safe=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  btn.addEventListener('click',async function(){
+    btn.disabled=true;out.innerHTML='Checking current session and visible requests…';
+    try{
+      const ur=await db.auth.getUser();
+      const user=ur&&ur.data?ur.data.user:null;
+      const staff=await db.rpc('mrfluent_english_is_staff');
+      const currentProfile=user?await db.from('profiles').select('id,full_name,role').eq('id',user.id).maybeSingle():null;
+      const recent=await db.from('mrfluent_english_course_requests').select('id,student_id,status,created_at').order('created_at',{ascending:false}).limit(10);
+      const requestedId=idInput.value.trim();
+      let oneHtml='<p><b>Request ID check:</b> not requested.</p>';
+      if(requestedId){
+        const one=await db.from('mrfluent_english_course_requests').select('id,student_id,status,created_at').eq('id',requestedId).maybeSingle();
+        if(one.error) oneHtml='<p><b>Exact request lookup error:</b> '+safe(one.error.message)+'</p>';
+        else if(!one.data) oneHtml='<p><b>Exact request lookup:</b> no row visible to this app session for that ID.</p>';
+        else oneHtml='<p><b>Exact request lookup:</b> FOUND — <code>'+safe(one.data.id)+'</code> · status <b>'+safe(one.data.status)+'</b> · student <code>'+safe(one.data.student_id)+'</code></p>';
+      }
+      let recentHtml='';
+      if(recent.error) recentHtml='<p><b>Recent request query error:</b> '+safe(recent.error.message)+'</p>';
+      else recentHtml='<p><b>Recent requests visible to this app session:</b> '+(recent.data||[]).length+'</p><div style="overflow:auto"><table><thead><tr><th>Request ID</th><th>Student ID</th><th>Status</th><th>Created</th></tr></thead><tbody>'+((recent.data||[]).map(x=>'<tr><td><code>'+safe(x.id)+'</code></td><td><code>'+safe(x.student_id)+'</code></td><td>'+safe(x.status)+'</td><td>'+safe(x.created_at)+'</td></tr>').join('')||'<tr><td colspan="4">No requests visible.</td></tr>')+'</tbody></table></div>';
+      const profile=currentProfile&&currentProfile.data?currentProfile.data:null;
+      out.innerHTML='<div style="text-align:left;overflow-wrap:anywhere">'+
+        '<p><b>Build:</b> MF-COURSE-SESSION-DIAG-20261011-G</p>'+
+        '<p><b>Authenticated user:</b> '+(user?safe(user.email||'(email not provided)'):'NO AUTH USER')+'</p>'+
+        '<p><b>Auth UID:</b> <code>'+(user?safe(user.id):'none')+'</code></p>'+
+        '<p><b>Staff helper:</b> '+(staff.error?'ERROR — '+safe(staff.error.message):safe(JSON.stringify(staff.data)))+'</p>'+
+        '<p><b>Current profile:</b> '+(currentProfile&&currentProfile.error?'ERROR — '+safe(currentProfile.error.message):profile?safe(profile.full_name||'')+' · role <b>'+safe(profile.role)+'</b> · id <code>'+safe(profile.id)+'</code>':'NO PROFILE ROW VISIBLE')+'</p>'+
+        oneHtml+recentHtml+'</div>';
+    }catch(e){out.innerHTML='<b>Diagnostic failed:</b> '+safe(e&&e.message?e.message:String(e));}
+    finally{btn.disabled=false;}
+  });
+})();
+</script>
+
+</body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
 };
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
