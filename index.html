@@ -750,7 +750,7 @@ function openAuth(type){
   }else{
     title.textContent='Create your student account';
     text.textContent='Create an account first, then choose your grade and access plan.';
-    body.innerHTML='<div class="formgrid"><input id="signupName" class="field full" placeholder="Full name" autocomplete="name" required><input id="signupPhone" class="field full" type="tel" inputmode="tel" placeholder="Egyptian mobile number — 01012345678" autocomplete="tel" required><input id="signupPass" class="field full" type="password" placeholder="Password — at least 6 characters" autocomplete="new-password" minlength="6" required><div class="full" style="font-size:10px;color:#8c858a;margin-top:-3px">No email or SMS needed. Keep this number safe; phone verification and SMS password reset are unavailable in this free setup.</div><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
+    body.innerHTML='<div class="formgrid"><input id="signupName" class="field full" placeholder="Full name" autocomplete="name" required><input id="signupPhone" class="field full" type="tel" inputmode="tel" placeholder="Egyptian mobile number — 01012345678" autocomplete="tel" required><input id="signupPass" class="field full" type="password" placeholder="Password — at least 6 characters" autocomplete="new-password" minlength="6" required><select id="signupTeam" class="field full" aria-label="Favorite football team (optional)"><option value="">Favorite football team (optional)</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select><div class="full" style="font-size:10px;color:#8c858a;margin-top:-3px">Choose a team if you like. This field is optional. No email or SMS needed. Keep this number safe; phone verification and SMS password reset are unavailable in this free setup.</div><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
   }
   $('modal').classList.add('show')
 }
@@ -824,7 +824,7 @@ async function domaLogin(){
 }
 
 async function domaSignup(){
-  const name=$('signupName')?.value.trim()||'',rawPhone=$('signupPhone')?.value.trim()||'',pass=$('signupPass')?.value||'';
+  const name=$('signupName')?.value.trim()||'',rawPhone=$('signupPhone')?.value.trim()||'',pass=$('signupPass')?.value||'',favoriteTeam=$('signupTeam')?.value||'';
   const normalized=normalizeEgyptianPhone(rawPhone);
   if(!name||!rawPhone||!pass)return showStatus('authStatus','Enter your full name, mobile number and password.','error');
   if(!normalized)return showStatus('authStatus','Enter a valid Egyptian mobile number, e.g. 01012345678.','error');
@@ -834,7 +834,7 @@ async function domaSignup(){
   const r=await sb.auth.signUp({
     email:aliasEmail,
     password:pass,
-    options:{data:{full_name:name,phone:normalized.local,login_method:'phone_alias'}}
+    options:{data:{full_name:name,phone:normalized.local,login_method:'phone_alias',favorite_team:favoriteTeam}}
   });
   if(r.error){
     const msg=String(r.error.message||'');
