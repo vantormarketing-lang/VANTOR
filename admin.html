@@ -2046,39 +2046,42 @@ async function mfLoadEnglishCourseSales(){
     return;
   }
   const reqs=r.data||[],subs=s.data||[],now=Date.now();
-  // Fetch profile rows separately instead of embedding profiles in both tables.
-  // Requests have both student_id and reviewed_by foreign keys to profiles, so
-  // PostgREST cannot infer which profiles relationship an implicit embed means.
+  const pendingReqs=reqs.filter(x=>x.status==='pending');
+  const reviewedReqs=reqs.filter(x=>x.status!=='pending');
+  // Fetch profiles separately because request rows contain two relationships to profiles.
   const studentIds=[...new Set(reqs.concat(subs).map(x=>x.student_id).filter(Boolean))];
   const profileById=Object.create(null);
   let profileLoadError='';
   if(studentIds.length){
     const pr=await db.from('profiles').select('id,full_name,email,phone').in('id',studentIds);
-    if(pr.error){profileLoadError=pr.error.message;}
+    if(pr.error)profileLoadError=pr.error.message;
     else (pr.data||[]).forEach(p=>{profileById[p.id]=p;});
   }
   const active=subs.filter(x=>String(x.status).toLowerCase()==='active'&&new Date(x.starts_at)<=new Date()&&new Date(x.expires_at)>new Date()).length;
-  const pending=reqs.filter(x=>x.status==='pending').length;
-  $('mfCourseSalesStats').innerHTML=[['Pending requests',pending],['Active memberships',active],['Approved requests',reqs.filter(x=>x.status==='approved').length],['Rejected requests',reqs.filter(x=>x.status==='rejected').length]].map(([a,b])=>'<div class="card stat"><div class="muted">'+mfEsc(a)+'</div><div class="num">'+b+'</div></div>').join('');
-  const reqRows=reqs.map(x=>{
+  $('mfCourseSalesStats').innerHTML=[['Pending requests',pendingReqs.length],['Active memberships',active],['Approved requests',reqs.filter(x=>x.status==='approved').length],['Rejected requests',reqs.filter(x=>x.status==='rejected').length]].map(([a,b])=>'<div class="card stat"><div class="muted">'+mfEsc(a)+'</div><div class="num">'+b+'</div></div>').join('');
+  const makeReqRows=(items,allowReview)=>items.map(x=>{
     const p=profileById[x.student_id]||{};
     const date=fmtDate(x.created_at);
-    const action=x.status==='pending'
+    const action=allowReview
       ?'<div class="actions"><button class="btn secondary small" onclick="mfViewEnglishCourseReceipt(\''+x.id+'\')">View receipt</button><button class="btn ok small" onclick="mfApproveEnglishCourseRequest(\''+x.id+'\')">Approve</button><button class="btn danger small" onclick="mfRejectEnglishCourseRequest(\''+x.id+'\')">Reject</button></div>'
       :(x.proof_path?'<button class="btn secondary small" onclick="mfViewEnglishCourseReceipt(\''+x.id+'\')">View receipt</button>':'—');
     return '<tr><td><b>'+mfEsc(p.full_name||'Student')+'</b><div class="muted">'+mfEsc(p.phone||p.email||x.student_id)+'</div></td><td>'+mfEsc(x.amount)+' EGP</td><td>'+mfEsc(x.sender_phone||'—')+'</td><td>'+date+'</td><td><span class="pill '+(x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn')+'">'+mfEsc(x.status)+'</span>'+(x.admin_note?'<div class="muted">'+mfEsc(x.admin_note)+'</div>':'')+'</td><td>'+action+'</td></tr>';
   }).join('');
+  const reqTable=(items,allowReview,emptyText)=>items.length
+    ?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Sender phone</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+makeReqRows(items,allowReview)+'</tbody></table></div>'
+    :'<div class="empty">'+emptyText+'</div>';
   const subRows=subs.map(x=>{
     const p=profileById[x.student_id]||{};
     const future=new Date(x.starts_at).getTime()>now;
-    const st=future&&x.status==='active'?'Scheduled':x.status;
+    const st=future&&x.status==='active'?'Scheduled':(new Date(x.expires_at).getTime()<=now&&x.status==='active'?'Expired':x.status);
     return '<tr><td><b>'+mfEsc(p.full_name||'Student')+'</b><div class="muted">'+mfEsc(p.phone||p.email||x.student_id)+'</div></td><td>'+mfEsc(x.amount)+' EGP</td><td>'+fmtDate(x.starts_at)+'</td><td>'+fmtDate(x.expires_at)+'</td><td><span class="pill '+(st==='active'?'ok':st==='Scheduled'?'warn':'')+'">'+mfEsc(st)+'</span></td></tr>';
   }).join('');
   host.innerHTML=(profileLoadError?'<div class="empty">Payments loaded, but student names/phones could not be loaded: '+mfEsc(profileLoadError)+'</div>':'')+
-    '<h3 style="margin:6px 0 10px">Payment requests</h3>'+(reqs.length?'<table><thead><tr><th>Student</th><th>Amount</th><th>Sender phone</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+reqRows+'</tbody></table>':'<div class="empty">No English Course payment requests yet.</div>')+
-    '<h3 style="margin:22px 0 10px">Membership history</h3>'+(subs.length?'<table><thead><tr><th>Student</th><th>Amount</th><th>Starts</th><th>Expires</th><th>Status</th></tr></thead><tbody>'+subRows+'</tbody></table>':'<div class="empty">No English Course memberships yet.</div>');
+    '<h3 style="margin:6px 0 10px">Pending payment requests</h3>'+reqTable(pendingReqs,true,'No pending English Course payments. Approved/rejected requests are kept in history below.')+
+    '<h3 style="margin:22px 0 10px">Reviewed request history</h3>'+reqTable(reviewedReqs,false,'No reviewed payment requests yet.')+
+    '<h3 style="margin:22px 0 10px">Membership history</h3>'+(subs.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Starts</th><th>Expires</th><th>Status</th></tr></thead><tbody>'+subRows+'</tbody></table></div>':'<div class="empty">No English Course memberships yet.</div>');
 }
-async function mfApproveEnglishCourseRequest(id){if(!id)return;try{const r=await db.rpc('mrfluent_approve_english_course_request',{p_request_id:id,p_note:'Payment verified by admin.'});if(r.error)throw r.error;toast('English Course membership approved.');await Promise.all([mfLoadEnglishCourseSales(),loadDashboard(),loadStudents()])}catch(e){toast('Course approval failed: '+(e?.message||String(e)));await mfLoadEnglishCourseSales()}}
+async function mfApproveEnglishCourseRequest(id){if(!id)return;if(!confirm('Approve this payment and activate 30 days of English Course access?'))return;try{const r=await db.rpc('mrfluent_approve_english_course_request',{p_request_id:id,p_note:'Payment verified by admin.'});if(r.error)throw r.error;if(r.data&&r.data.ok===false)throw new Error(r.data.message||'Approval did not complete.');const expiry=r.data?.expires_at?fmtDate(r.data.expires_at):'';toast('English Course membership activated.'+(expiry?' Access until '+expiry+'.':''));await mfLoadEnglishCourseSales();try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}}catch(e){toast('Course approval failed: '+(e?.message||String(e)));await mfLoadEnglishCourseSales()}}
 async function mfRejectEnglishCourseRequest(id){if(!id)return;const note=prompt('Reason for rejecting the English Course payment:','Payment receipt could not be verified.');if(note===null)return;try{const r=await db.rpc('mrfluent_reject_english_course_request',{p_request_id:id,p_note:note});if(r.error)throw r.error;toast('English Course request rejected.');await mfLoadEnglishCourseSales()}catch(e){toast('Course rejection failed: '+(e?.message||String(e)));await mfLoadEnglishCourseSales()}}
 (function wireMrFluentEnglishCourseAdmin(){
   const prevRoute=window.__domaRouteSection;
