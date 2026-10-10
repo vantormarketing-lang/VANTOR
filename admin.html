@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -922,7 +923,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
       </section>
       <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button></div>
+        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-VERIFY-20261010-B</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button></div>
         <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
         <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
         <div id="mfCourseSalesTable" class="table-wrap"></div>
@@ -2094,12 +2095,12 @@ async function mfApproveEnglishCourseRequest(id){
     if(verify.error)throw new Error('Approval RPC responded, but status could not be verified: '+verify.error.message);
     if(!verify.data||String(verify.data.status||'').toLowerCase()!=='approved')throw new Error('The request is still not marked approved in Supabase. Run MR_FLUENT_ENGLISH_COURSE_APPROVE_STATUS_FIX.sql, then retry this request.');
     const expiry=result.expires_at?fmtDate(result.expires_at):'';
-    toast('Payment approved and saved. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
+    toast('MF-COURSE-VERIFY-20261010-B: APPROVED confirmed in Supabase. Request ID: '+id+'.'+(expiry?' Access until '+expiry+'.':''));
     await mfLoadEnglishCourseSales();
     try{await Promise.all([loadDashboard(),loadStudents()])}catch(refreshError){console.warn('Other admin widgets refresh failed after course approval:',refreshError)}
   }catch(e){
     console.error('English Course approval failed:',e);
-    toast('Approval not confirmed for request '+id+': '+(e?.message||String(e)));
+    toast('MF-COURSE-VERIFY-20261010-B: NOT CONFIRMED for request '+id+': '+(e?.message||String(e)));
     await mfLoadEnglishCourseSales();
   }
 }
