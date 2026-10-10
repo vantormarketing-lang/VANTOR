@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -923,7 +922,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
       </section>
       <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-VERIFY-20261010-C</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button></div>
+        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-NOCACHE-20261010-D</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · browser cache bypass enabled</div></div>
         <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
         <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
         <div id="mfCourseSalesTable" class="table-wrap"></div>
@@ -998,7 +997,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <script>
 const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';
 const SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-const db=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+// Force fresh HTTP reads for Supabase so browser/proxy caches cannot leave request statuses stale.
+const mfNoCacheFetch=(input,init={})=>fetch(input,{...init,cache:'no-store'});
+const db=supabase.createClient(SB_URL,SB_KEY,{global:{fetch:mfNoCacheFetch},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const fmt=v=>v?new Date(v).toLocaleString(): '—';
