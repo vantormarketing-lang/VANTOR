@@ -1209,44 +1209,38 @@ async function mrfluentRefreshEnglishCourse(){
   if(!sessionUser||!mrFluentEnglishSubscription){$('mrfluentEnglishLevelContent').innerHTML='<div class="empty">'+(mrFluentEnglishPendingRequest?'Your course remains locked until the admin approves the receipt.':'Subscribe for 100 EGP per 30 days and wait for approval. The required placement test unlocks the assigned starting level.')+'</div>'}
 
 }
-function mrfluentCourseNavigate(query,hash=''){
-  const target=window.location.pathname+(query?'?'+query:'')+(hash||'');
-  window.location.assign(target);
-}
 function mrfluentRouteBack(){
-  const params=new URLSearchParams(window.location.search);
-  if(params.has('english-level')){mrfluentCourseNavigate('english-course=1');return}
-  mrfluentCourseNavigate('', '#english-course');
+  const body=document.body;
+  const workspace=$('mrfluentEnglishWorkspace');
+  if(body.classList.contains('mf-course-level-route')){
+    body.classList.remove('mf-course-level-route');
+    body.classList.add('mf-course-route','mf-course-list-route');
+    const host=$('mrfluentEnglishLevelContent');if(host)host.innerHTML='';
+    mrfluentRenderPlacement();
+    mrfluentRenderEnglishLevelCards();
+    const back=workspace?.querySelector('.mf-course-workspace-top .btn');
+    if(back){back.textContent='← Back to platform';back.onclick=mrfluentRouteBack}
+    return;
+  }
+  mrfluentCloseCourseWorkspace();
 }
 function mrfluentOpenCourseWorkspace(){
   if(!sessionUser){openAuth('login');return}
   if(!mrFluentEnglishSubscription){showToast('English Course is locked until your payment is approved.');return}
-  const params=new URLSearchParams(window.location.search);
-  if(params.get('english-course')!=='1'&&!params.has('english-level')){
-    mrfluentCourseNavigate('english-course=1');
-    return;
-  }
   const workspace=$('mrfluentEnglishWorkspace');if(!workspace)return;
   workspace.hidden=false;
-  document.body.classList.add('mf-course-route');
-  document.body.classList.toggle('mf-course-level-route',params.has('english-level'));
-  document.body.classList.toggle('mf-course-list-route',!params.has('english-level'));
+  document.body.classList.add('mf-course-route','mf-course-list-route');
+  document.body.classList.remove('mf-course-level-route');
   document.body.style.overflow='';
   mrfluentRenderPlacement();
   mrfluentRenderEnglishLevelCards();
+  const host=$('mrfluentEnglishLevelContent');if(host)host.innerHTML='';
   const back=workspace.querySelector('.mf-course-workspace-top .btn');
-  if(back){back.textContent=params.has('english-level')?'← Back to levels':'← Back to platform';back.onclick=mrfluentRouteBack}
-  if(params.has('english-level')){
-    const code=String(params.get('english-level')||'').toUpperCase();
-    const current=mrFluentEnglishLevels.find(l=>String(l.code||'').toUpperCase()===code);
-    if(current)mrfluentOpenEnglishLevel(current.id);
-  }else{
-    const host=$('mrfluentEnglishLevelContent');if(host)host.innerHTML='';
-  }
+  if(back){back.textContent='← Back to platform';back.onclick=mrfluentRouteBack}
 }
 function mrfluentCloseCourseWorkspace(){
-  if(document.body.classList.contains('mf-course-route')){mrfluentRouteBack();return}
   const workspace=$('mrfluentEnglishWorkspace');if(workspace)workspace.hidden=true;
+  document.body.classList.remove('mf-course-route','mf-course-list-route','mf-course-level-route');
   document.body.style.overflow='';
   $('english-course')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -1285,14 +1279,10 @@ async function mrfluentOpenEnglishLevel(levelId){
   if(!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){showToast('Complete the required placement test first.');mrfluentRenderPlacement();return}
   const assignedCode=String(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code||'').toUpperCase();
   if(String(level.code||'').toUpperCase()!==assignedCode){showToast('Start with your assigned level. Other levels are locked for now.');return}
-  const routeParams=new URLSearchParams(window.location.search);
-  if(String(routeParams.get('english-level')||'').toUpperCase()!==String(level.code||'').toUpperCase()){
-    mrfluentCourseNavigate('english-level='+encodeURIComponent(String(level.code||'').toUpperCase()));
-    return;
-  }
   document.body.classList.add('mf-course-route','mf-course-level-route');
   document.body.classList.remove('mf-course-list-route');
   const workspace=$('mrfluentEnglishWorkspace');if(workspace)workspace.hidden=false;
+  document.body.style.overflow='';
   const backButton=workspace?.querySelector('.mf-course-workspace-top .btn');
   if(backButton){backButton.textContent='← Back to levels';backButton.onclick=mrfluentRouteBack}
   const host=$('mrfluentEnglishLevelContent');host.innerHTML='<div class="empty">Loading '+esc(level.code)+' lessons…</div>';
