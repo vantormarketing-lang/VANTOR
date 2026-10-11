@@ -1,10 +1,10 @@
-const CACHE_NAME = 'doma-admin-offline-v9';
+const CACHE_NAME = 'doma-admin-offline-v10';
 const ADMIN_URL = new URL('./admin.html', self.registration.scope).href;
-const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=9', self.registration.scope).href;
-const ICON64_URL = new URL('./mr-fluent-icon-64.png?v=9', self.registration.scope).href;
-const ICON192_URL = new URL('./mr-fluent-icon-192.png?v=9', self.registration.scope).href;
-const ICON512_URL = new URL('./mr-fluent-icon-512.png?v=9', self.registration.scope).href;
-const ICON_MASKABLE_URL = new URL('./mr-fluent-icon-maskable-512.png?v=9', self.registration.scope).href;
+const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=10', self.registration.scope).href;
+const ICON64_URL = new URL('./mr-fluent-icon-64.png?v=10', self.registration.scope).href;
+const ICON192_URL = new URL('./mr-fluent-icon-192.png?v=10', self.registration.scope).href;
+const ICON512_URL = new URL('./mr-fluent-icon-512.png?v=10', self.registration.scope).href;
+const ICON_MASKABLE_URL = new URL('./mr-fluent-icon-maskable-512.png?v=10', self.registration.scope).href;
 const SHELL = [ADMIN_URL, MANIFEST_URL, ICON64_URL, ICON192_URL, ICON512_URL, ICON_MASKABLE_URL];
 
 self.addEventListener('install', event => {
