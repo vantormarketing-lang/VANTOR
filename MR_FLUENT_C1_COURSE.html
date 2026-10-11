@@ -119,15 +119,174 @@ textarea,input[type=text],input[type=email],input[type=password],input[type=numb
 @media(max-width:600px){header{padding:24px 14px}.wrap{padding:16px 12px 42px}.stat,.unit,.lesson,.tool{border-radius:16px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
 
-</style></head>
+</style><style id="doma-mobile-navigation-theme">
+
+/* DOMA MOBILE NAV + CREAM/ORANGE THEME — visual and navigation layer only */
+:root{
+  --bg:#fff8f0;--panel:#fffdf9;--panel2:#fff0e1;--ink:#34271f;--muted:#7d6a5d;
+  --line:#ecd8c5;--blue:#cf5f25;--violet:#e8752c;--green:#18794e;--orange:#d96a25;
+  --burgundy:#9c4a21;--purple:#c75e27;--purple-light:#f2a36d;--purple-deep:#8d3f18;
+}
+html{scroll-behavior:smooth;scroll-padding-top:18px}
+body{
+  color:var(--ink)!important;
+  background:radial-gradient(ellipse at 12% 0%,rgba(255,201,153,.32),transparent 38%),
+             radial-gradient(ellipse at 92% 15%,rgba(255,230,203,.6),transparent 35%),
+             linear-gradient(145deg,#fffaf4 0%,#fff5e9 55%,#fff8f0 100%)!important;
+  background-attachment:fixed;
+}
+header{
+  color:var(--ink)!important;
+  background:linear-gradient(135deg,rgba(255,237,218,.96),rgba(255,248,239,.98))!important;
+  border-bottom:1px solid var(--line)!important;
+  box-shadow:0 8px 28px rgba(125,73,34,.06);
+}
+header:before{background:rgba(247,171,108,.20)!important}
+header h1{color:#4a2d1d!important;text-shadow:none!important}
+header p{color:#7a6252!important}
+header .pill{background:#fff0e1!important;color:#a84d1b!important;border-color:#f3c8a6!important}
+header>a{background:#fffdf9!important;color:#8e431c!important;border-color:#efc7a8!important}
+.a1-hero-card{border-color:rgba(206,95,37,.22)!important;background:linear-gradient(145deg,#fffdf9,#fff0df)!important;box-shadow:0 20px 44px rgba(130,71,31,.10)!important;color:#4a2d1d!important}
+.a1-hero-card p,.a1-hero-card span{color:#806653!important}
+.a1-logo,.a1-hero-card h2{color:#63371f!important}
+.a1-level,.a1-eyebrow{color:#b55420!important}
+.wrap{color:var(--ink)!important}
+.stat,.unit,.lesson,.tool,.box,.choices label{
+  color:var(--ink)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(255,248,239,.98))!important;
+  border-color:#ecd8c5!important;
+  box-shadow:0 8px 22px rgba(110,69,34,.055),inset 0 1px 0 rgba(255,255,255,.85)!important;
+  backdrop-filter:blur(10px);
+}
+.stat strong{color:#c45a21!important}
+.unit h2,.lesson h3,.tool h3,.box h3{color:#482e20!important}
+.small,.muted{color:#806d5e!important}
+.tag{background:#fff0e2!important;color:#a54d1b!important;border-color:#f0c5a3!important}
+.example{background:#fff4e8!important;color:#433026!important;border-left-color:#d96a25!important;border-radius:0 12px 12px 0}
+.ar,.word-ar{color:#935127!important}
+button,select{
+  color:#63371f!important;background:linear-gradient(135deg,#fff0e1,#ffe2c8)!important;
+  border:1px solid #efc29f!important;border-radius:13px!important;box-shadow:0 4px 12px rgba(140,72,29,.07);
+}
+button:hover,button.active,select:focus{
+  color:#713514!important;border-color:#d96a25!important;
+  background:linear-gradient(135deg,#ffe4cc,#ffd4ae)!important;
+}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(217,106,37,.38)!important;outline-offset:2px}
+textarea,input[type=text],input[type=email],input[type=password],input[type=number],input[type=search]{
+  background:#fffdf9!important;color:#34271f!important;border:1px solid #e8cdb6!important;border-radius:12px!important;
+}
+input::placeholder,textarea::placeholder{color:#9a8574!important}
+.pill,.achievement{background:#fff0e2!important;color:#a54d1b!important;border:1px solid #f0c7a6!important}
+.progressbar{background:#f4e4d4!important;border-color:#ead4c0!important}
+.progressbar span{background:linear-gradient(90deg,#df7b35,#f2a45f,#f6c48e)!important;box-shadow:0 0 12px rgba(217,106,37,.16)}
+.feedback{color:#503224!important}.good{color:#176b46!important;background:#e9f7ee!important}.bad{color:#9b2c20!important;background:#fff0eb!important}
+.mf-video-note{background:#fff5e9!important;border-color:#eec7a6!important;color:#806755!important}
+.mf-video-note strong{color:#b75320!important}
+.video-card{background:linear-gradient(120deg,#fff3e6,#fffdf9)!important;border-color:#edc7a7!important;color:#4a3223!important}
+.video-card .video-label{color:#ad4f1d!important}
+.video-card a,.mf-play-dialogue{background:linear-gradient(135deg,#cf5f25,#e98b4e)!important;border-color:#c65b21!important;color:white!important}
+.mf-dialogue{background:#fff5eb!important;border-color:#eed0b6!important;color:#4b3021!important}
+.mf-line{background:#fffaf4!important;border-color:#efd9c4!important;color:#493327!important}
+.mf-line b{color:#b65420!important}
+.translation{background:#fff0e2!important;border-color:#f0c7a6!important;color:#7f492b!important}
+.lab-card{background:linear-gradient(145deg,#fffdf9,#fff2e5)!important;border-color:#eed3bd!important;color:#3f2c20!important}
+.sentence-bank button{background:#fff0e2!important;border-color:#edc29f!important;color:#713e20!important}
+footer{color:#806d5e!important;border-color:#ecd8c5!important}
+
+/* Desktop keeps the familiar fixed column. Small screens use a real off-canvas drawer. */
+.mobile-menu-toggle,.mobile-menu-close,.mobile-menu-backdrop{display:none}
+.student-sidebar{background:linear-gradient(180deg,#fffdf9,#fff2e5)!important;border-color:#eed4be!important;box-shadow:0 18px 42px rgba(109,65,31,.10)!important;color:#3e2b20!important}
+.sidebar-brand{border-color:#f0dcc9!important}
+.sidebar-mark{background:linear-gradient(145deg,#e87934,#b94f1c)!important;border-color:#eea36f!important;color:#fff!important;box-shadow:0 7px 20px rgba(207,95,37,.18)!important}
+.sidebar-brand strong{color:#4b2d1d!important}.sidebar-brand span{color:#9b7a62!important}
+.sidebar-caption{color:#b45b29!important}
+.student-sidebar nav button{color:#725746!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+.student-sidebar nav button:hover{color:#733c1d!important;border-color:#f0c6a4!important;background:#fff0e1!important}
+.student-sidebar nav button.active{color:#763d1e!important;border-color:#efc29f!important;background:linear-gradient(100deg,#ffe6d1,#fff4e8)!important;box-shadow:inset 3px 0 #d96a25!important}
+.student-sidebar nav button.active .menu-icon{filter:none!important}
+.menu-dot{background:#d96a25!important;box-shadow:0 0 8px rgba(217,106,37,.25)!important}
+.sidebar-foot{border-color:#eed7c2!important;color:#856d5b!important}.sidebar-status{background:#36a36a!important;box-shadow:none!important}.sidebar-version{color:#b69b86!important}
+
+@media(max-width:700px){
+  body{padding-bottom:env(safe-area-inset-bottom)}
+  .student-layout{display:block!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important;margin-top:16px!important}
+  .student-content{min-width:0!important;width:100%!important}
+  .student-sidebar{
+    position:fixed!important;left:0!important;right:auto!important;top:0!important;bottom:0!important;
+    width:min(88vw,340px)!important;max-width:calc(100vw - 42px)!important;
+    height:100vh!important;height:100dvh!important;max-height:none!important;
+    margin:0!important;padding:calc(16px + env(safe-area-inset-top)) 13px calc(18px + env(safe-area-inset-bottom))!important;
+    border-radius:0 22px 22px 0!important;border-left:0!important;
+    overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;
+    z-index:1401!important;transform:translateX(-105%)!important;visibility:hidden!important;pointer-events:none!important;
+    transition:transform .26s ease,visibility .26s ease!important;
+  }
+  body.mobile-menu-open .student-sidebar{transform:translateX(0)!important;visibility:visible!important;pointer-events:auto!important}
+  .mobile-menu-toggle{
+    display:inline-flex!important;align-items:center;justify-content:center;gap:8px;
+    position:fixed!important;left:12px!important;top:calc(10px + env(safe-area-inset-top))!important;
+    z-index:1403!important;min-height:44px!important;padding:9px 13px!important;border-radius:14px!important;
+    color:#733917!important;background:rgba(255,250,244,.96)!important;border:1px solid #efc49f!important;
+    box-shadow:0 7px 18px rgba(122,69,31,.15)!important;font-size:.92rem!important;font-weight:800!important;
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  }
+  body.mobile-menu-open .mobile-menu-toggle{opacity:0!important;pointer-events:none!important}
+  .mobile-menu-backdrop:not([hidden]){
+    display:block!important;position:fixed!important;inset:0!important;z-index:1400!important;
+    background:rgba(49,32,22,.48)!important;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  }
+  .mobile-menu-backdrop[hidden]{display:none!important}
+  .mobile-menu-close{
+    display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 auto!important;
+    margin-left:auto!important;min-width:40px!important;min-height:40px!important;padding:7px 10px!important;
+    background:#fff0e2!important;border:1px solid #efc49f!important;border-radius:12px!important;color:#a54d1b!important;
+  }
+  .sidebar-brand{position:sticky!important;top:calc(-16px - env(safe-area-inset-top))!important;z-index:2!important;
+    display:flex!important;align-items:center!important;padding:8px 3px 13px!important;margin-bottom:2px!important;
+    background:#fffdf9!important;border-bottom:1px solid #efdecc!important;
+  }
+  .sidebar-caption{padding:16px 8px 7px!important}
+  .student-sidebar nav,.student-sidebar nav#menu,.student-sidebar nav.menu-tools,.student-sidebar nav.menu-progress{
+    display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;grid-template-columns:none!important;
+    gap:4px!important;margin:0!important;padding:0!important;overflow:visible!important;
+  }
+  .student-sidebar nav button{
+    display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;
+    width:100%!important;min-width:0!important;min-height:46px!important;padding:10px 11px!important;
+    font-size:.91rem!important;line-height:1.3!important;gap:11px!important;text-align:left!important;white-space:normal!important;
+  }
+  .student-sidebar nav button .menu-icon{width:24px!important;flex:0 0 24px!important;font-size:1.08rem!important;text-align:center!important}
+  .student-sidebar nav button>span:nth-child(2){min-width:0!important;flex:1 1 auto!important}
+  .sidebar-foot{margin-top:16px!important}
+  .topgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .stat{padding:12px!important;min-width:0!important}.stat strong{font-size:1.15rem!important}
+  .wrap{width:100%!important;padding:15px 11px 40px!important}
+  .unit,.lesson,.tool{padding:14px!important;border-radius:16px!important}
+  .cols,.lab-grid{grid-template-columns:minmax(0,1fr)!important}
+  .video-card{align-items:stretch!important;flex-direction:column!important}
+  .video-card a{width:100%!important;justify-content:center!important}
+  body.mobile-menu-open{overflow:hidden!important}
+}
+@media(max-width:380px){
+  .student-sidebar{width:min(90vw,320px)!important}
+  .topgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .stat strong{font-size:1.05rem!important}
+  .mobile-menu-toggle{padding:8px 11px!important}
+}
+@media(prefers-reduced-motion:reduce){.student-sidebar,.mobile-menu-toggle{transition:none!important}}
+
+</style>
+</head>
 <body>
+<button type="button" id="mobileMenuToggle" class="mobile-menu-toggle" aria-controls="mobileCourseMenu" aria-expanded="false" aria-label="Open course navigation">☰ <span>Menu</span></button>
 <header><div class="a1-hero"><div class="a1-hero-copy"><a href="./index.html" style="display:inline-flex;margin-bottom:16px;padding:9px 13px;border:1px solid #334362;border-radius:10px;color:#dbeafe;text-decoration:none;font-weight:700">← Back to Mr. Fluent</a><div class="pill">✦ MR. FLUENT ACADEMY · CEFR C1</div><h1>Communicate with sophistication and control</h1><p>Handle abstract ideas, subtle implications, persuasive discourse, and demanding academic or professional tasks.</p><p class="ar">ابدأ رحلتك في الإنجليزية خطوة بخطوة — دروس منظمة، فيديوهات تعليمية حقيقية، تدريبات واختبارات ومتابعة للتقدم.</p></div><div class="a1-hero-card"><div class="a1-hero-card-top"><div><div class="a1-eyebrow">STUDENT LEARNING HUB</div><div class="a1-logo">Mr. Fluent<span>.</span></div></div><span class="a1-level">C1 · ADVANCED</span></div><div><h2>Study. Practice. Track. Improve.</h2><p>Your personal English study space.</p><div class="a1-hero-stats"><div><b>12</b><span>Lessons</span></div><div><b>4</b><span>Unit tests</span></div><div><b>01</b><span>Final test</span></div></div></div></div></div></header>
 <main class="wrap">
 <div class="topgrid"><div class="stat"><strong>12 lessons</strong>📚 4 units × 3 lessons</div><div class="stat"><strong>4 unit tests</strong>🧩 Check each unit</div><div class="stat"><strong>1 final test</strong>🏆 Review C1 skills</div><div class="stat"><strong id="doneCount">0 / 12</strong>✅ Lessons marked complete</div></div>
 <div class="box"><b>🎬 Real video practice</b><p>Each lesson includes a level-matched video resource from British Council LearnEnglish. Open the official resource in a new tab; video, transcript and activities depend on the provider page.</p><div class="progressbar"><span id="progressFill"></span></div><p class="small" id="progressText">Your completion progress: 0%</p></div>
 <div class="student-layout">
-<aside class="student-sidebar" aria-label="Student learning navigation">
-  <div class="sidebar-brand"><div class="sidebar-mark">MF</div><div><strong>MR. FLUENT</strong><span>STUDENT SPACE · C1</span></div></div>
+<aside id="mobileCourseMenu" class="student-sidebar" aria-label="Student learning navigation" aria-hidden="false">
+  <div class="sidebar-brand"><div class="sidebar-mark">MF</div><div><strong>MR. FLUENT</strong><span>STUDENT SPACE · C1</span></div><button type="button" id="mobileMenuClose" class="mobile-menu-close" aria-label="Close course navigation">✕</button></div>
   <div class="sidebar-caption">LEARNING</div>
   <nav id="menu">
     <button class="active" data-view="course"><span class="menu-icon">📚</span><span>Course & Lessons</span></button>
@@ -155,6 +314,7 @@ textarea,input[type=text],input[type=email],input[type=password],input[type=numb
   </nav>
   <div class="sidebar-foot"><span class="sidebar-status"></span> C1 Advanced <span class="sidebar-version">CEFR</span></div>
 </aside>
+<div id="mobileMenuBackdrop" class="mobile-menu-backdrop" hidden aria-hidden="true"></div>
 <div class="student-content">
 <section id="courseView"></section><section id="vocabView" class="hidden"></section><section id="grammarView" class="hidden"></section><section id="pronunciationView" class="hidden"></section>
 <section id="smartView" class="hidden"></section><section id="missionsView" class="hidden"></section><section id="listeningView" class="hidden"></section><section id="sentencesView" class="hidden"></section><section id="dailyView" class="hidden"></section><section id="coachView" class="hidden"></section><section id="passportView" class="hidden"></section><section id="readingView" class="hidden"></section><section id="writingView" class="hidden"></section><section id="speakingView" class="hidden"></section><section id="reviewView" class="hidden"></section><section id="progressView" class="hidden"></section>
@@ -258,4 +418,38 @@ document.querySelectorAll(".student-sidebar nav button").forEach(b=>b.onclick=()
 renderCourse();simpleViews();renderNewLabs();renderExtraTools();bindQuizzes();bindLabActions();bindExtraTools();bindCourseAudio();bindCourseView();renderCourseView();renderProgress();
 document.addEventListener("click",e=>{if(e.target.id==="saveWriting"){localStorage.setItem("mfC1writing",document.getElementById("writingDraft").value);document.getElementById("writingFeedback").classList.remove("hidden");document.getElementById("writingFeedback").textContent="Draft saved in this browser."}if(e.target.id==="showWritingTips"){let f=document.getElementById("writingFeedback");f.classList.remove("hidden");f.innerHTML="<b>Writing checklist:</b><ul><li>Start sentences with capital letters.</li><li>Check verb forms and subject–verb agreement.</li><li>Use punctuation and paragraph breaks.</li><li>Include relevant detail and level-appropriate vocabulary.</li><li>Check spelling and connectors.</li></ul>"}if(e.target.id==="reviewWritingDraft"){const area=document.getElementById("writingDraft"),f=document.getElementById("writingFeedback");if(!area||!f)return;const t=area.value.trim(),words=t?t.split(/\s+/).filter(Boolean):[],sentences=t.split(/[.!?]+/).map(x=>x.trim()).filter(Boolean),checks=[{label:"At least 50 words",ok:words.length>=50,detail:words.length+" words"},{label:"At least 4 sentences",ok:sentences.length>=4,detail:sentences.length+" sentences"},{label:"Starts with a capital letter",ok:!!t&&/^[A-Z]/.test(t),detail:"Check the first character"},{label:"Uses sentence-ending punctuation",ok:/[.!?][\"')\]]*$/.test(t),detail:"Add sentence-ending punctuation"},{label:"Uses a linking word",ok:/\b(and|but|because|although|however|therefore|also)\b/i.test(t),detail:"Try a linking word such as because or however"}];f.classList.remove("hidden");f.innerHTML="<b>Draft review (automatic checklist, not a full grammar grade)</b><p>Words: "+words.length+" · Sentences: "+sentences.length+"</p><ul>"+checks.map(c=>"<li>"+(c.ok?"✅":"🟡")+" "+c.label+" — "+(c.ok?"met":c.detail)+"</li>").join("")+"</ul><p>Next step: reread for grammar, clarity, paragraph structure and whether you answered the prompt.</p>"}})
 document.getElementById("writingDraft").value=localStorage.getItem("mfC1writing")||"";
-</script></body></html>
+</script>
+<script id="doma-mobile-drawer-controller">
+(function(){
+  'use strict';
+  const trigger=document.getElementById('mobileMenuToggle');
+  const drawer=document.getElementById('mobileCourseMenu');
+  const closer=document.getElementById('mobileMenuClose');
+  const backdrop=document.getElementById('mobileMenuBackdrop');
+  if(!trigger||!drawer||!closer||!backdrop)return;
+  const mobile=()=>window.matchMedia('(max-width: 700px)').matches;
+  function openMenu(){
+    if(!mobile())return;
+    backdrop.hidden=false;
+    document.body.classList.add('mobile-menu-open');
+    trigger.setAttribute('aria-expanded','true');
+    drawer.setAttribute('aria-hidden','false');
+    window.setTimeout(()=>closer.focus({preventScroll:true}),30);
+  }
+  function closeMenu(returnFocus){
+    document.body.classList.remove('mobile-menu-open');
+    backdrop.hidden=true;
+    trigger.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden',mobile()?'true':'false');
+    if(returnFocus&&mobile())trigger.focus({preventScroll:true});
+  }
+  trigger.addEventListener('click',openMenu);
+  closer.addEventListener('click',()=>closeMenu(true));
+  backdrop.addEventListener('click',()=>closeMenu(true));
+  drawer.querySelectorAll('nav button[data-view]').forEach(button=>button.addEventListener('click',()=>closeMenu(false)));
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&document.body.classList.contains('mobile-menu-open'))closeMenu(true)});
+  window.addEventListener('resize',()=>{if(!mobile())closeMenu(false)});
+  drawer.setAttribute('aria-hidden',mobile()?'true':'false');
+})();
+</script>
+</body></html>
