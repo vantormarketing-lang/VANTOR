@@ -1203,10 +1203,8 @@ function mrfluentOpenCourseWorkspace(){
   document.body.style.overflow='hidden';
   mrfluentRenderPlacement();
   mrfluentRenderEnglishLevelCards();
-  if(mrFluentEnglishPlacement){
-    const current=mrFluentEnglishLevels.find(l=>l.code===(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code));
-    if(current)mrfluentOpenEnglishLevel(current.id);
-  }
+  // Opening the course workspace must show the level cards first.
+  // A level (including A1) opens only after the student clicks its own card.
 }
 function mrfluentCloseCourseWorkspace(){
   const workspace=$('mrfluentEnglishWorkspace');if(workspace)workspace.hidden=true;
