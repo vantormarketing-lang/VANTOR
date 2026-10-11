@@ -734,7 +734,7 @@ body.mf-course-list-route #mrfluentEnglishLevelContent{display:none!important}
   <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Track your English progress, jump back into lessons, review quizzes and manage your student account.</p></div>
   <div class="dashboard-grid-pro">
     <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>My English Progress</h3><p id="dashGradeLabel">Log in to load your active grade.</p></div><span class="pill" id="dashAccessPill">Student</span></div><div id="dashboardGradeProgress"><div class="empty">Log in to load your English progress.</div></div></div>
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Quick Actions</h3><p>Open the part of your course you need.</p></div></div><div class="quick-grid"><button class="quick-card" onclick="openStudentTool('lessons')"><b>Lessons</b><span>Watch videos and study content</span></button><button class="quick-card" onclick="openStudentTool('quizzes')"><b>Quizzes</b><span>Practice and check your score</span></button><button class="quick-card" onclick="openStudentTool('homework')"><b>Homework</b><span>Submit assignments and view feedback</span></button><button class="quick-card" onclick="openDomaV2Reports()"><b>Reports</b><span>See your full learning history</span></button></div></div>
+    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Quick Actions</h3><p>Open the part of your course you need.</p></div></div><div class="quick-grid"><button class="quick-card" onclick="openStudentTool('lessons')"><b>Lessons</b><span>Watch videos and study content</span></button><button class="quick-card" onclick="openStudentTool('quizzes')"><b>Quizzes</b><span>Practice and check your score</span></button><button class="quick-card" onclick="openStudentTool('homework')"><b>Homework</b><span>Submit assignments and view feedback</span></button><button class="quick-card" onclick="openDomaV2Reports()"><b>Reports</b><span>See your full learning history</span></button><button class="quick-card" onclick="openDrawer('overview')"><b>Subscriptions &amp; Sync</b><span>Check plans, expiry dates and sync learning progress</span></button></div></div>
   </div>
   <div class="progress-summary" style="margin-top:15px">
     <div class="progress-mini"><b id="dashLessons">—</b><span>Lessons completed</span></div>
@@ -770,7 +770,17 @@ body.mf-course-list-route #mrfluentEnglishLevelContent{display:none!important}
   <div id="mrfluentEnglishLevels" class="mf-course-level-grid" hidden><div class="empty">Complete the placement test to see your level.</div></div>
   <div id="mrfluentEnglishLevelContent" class="mf-course-content" aria-live="polite"><div class="empty">Your lessons will appear here after access is verified.</div></div>
 </div>
-<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div><h2>Choose your learning access.</h2><p>Choose school-grade access for 150 EGP per month, or the independent Mr. Fluent English Course for 100 EGP every 30 days. Each membership is approved separately.</p></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">150 <small>EGP / month</small></div><ul><li>Access for your selected school grade</li><li>Lessons &amp; published curriculum</li><li>Quizzes &amp; assessments</li><li>Homework &amp; student results</li><li>Progress tracking &amp; certificates</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>Mr. Fluent English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Access to all six CEFR levels, from A1 to C2</li><li>Placement test to help find your level</li><li>Grammar, vocabulary &amp; pronunciation practice</li><li>Listening, speaking, reading &amp; writing</li><li>Lessons, unit practice &amp; assessments</li><li>Independent from your school-grade subscription</li><li>Access begins after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq"><details><summary>How do I start learning?</summary><p>Create a student account, choose your grade, select monthly access for 150 EGP, send the payment through Mobile Cash, and upload the receipt. Access starts after admin approval.</p></details><details><summary>Which grades are supported?</summary><p>1st, 2nd and 3rd Preparatory plus 1st, 2nd and 3rd Secondary.</p></details><details><summary>What can I study?</summary><p>Published content can include grammar, vocabulary, reading, writing, listening, quizzes and homework for your selected grade.</p></details><details><summary>Where do I see my progress?</summary><p>Use the Student Dashboard to track completed lessons, quiz attempts, certificates, homework and notifications.</p></details><details><summary>Can I study from my phone?</summary><p>Yes. The student interface is responsive and works on desktop and mobile browsers.</p></details></div></div></section>
+<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div><h2>Choose your learning access.</h2><p>Choose school-grade access for 150 EGP per month, or the independent Mr. Fluent English Course for 100 EGP every 30 days. Each membership is approved separately.</p></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">150 <small>EGP / month</small></div><ul><li>Access for your selected school grade</li><li>Lessons &amp; published curriculum</li><li>Quizzes &amp; assessments</li><li>Homework &amp; student results</li><li>Progress tracking &amp; certificates</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>Mr. Fluent English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Access to all six CEFR levels, from A1 to C2</li><li>Placement test to help find your level</li><li>Grammar, vocabulary &amp; pronunciation practice</li><li>Listening, speaking, reading &amp; writing</li><li>Lessons, unit practice &amp; assessments</li><li>Independent from your school-grade subscription</li><li>Access begins after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq">
+<details><summary>What are the two subscription options?</summary><p>Grade Access costs 150 EGP per month and unlocks the selected school grade. The separate Mr. Fluent English Course costs 100 EGP every 30 days and includes the A1–C2 English course. They are independent memberships; paying for one does not activate the other.</p></details>
+<details><summary>How do I activate Grade Access?</summary><p>Create or log in to your student account, choose one of the supported school grades, submit the payment request, send the shown Mobile Cash amount, and upload a clear receipt with the sender number. Access opens only after the admin approves the payment.</p></details>
+<details><summary>How do I activate Mr. Fluent English Course?</summary><p>Log in to your student account, choose Mr. Fluent English Course for 100 EGP per 30 days, follow the payment instructions, and upload the receipt. The placement test and course levels remain locked until the admin approves the payment.</p></details>
+<details><summary>Which school grades are supported?</summary><p>1st, 2nd and 3rd Preparatory plus 1st, 2nd and 3rd Secondary. Grade Access applies only to the grade you subscribe to.</p></details>
+<details><summary>How long does access last?</summary><p>Grade Access lasts for the period shown on its subscription, normally one month. Mr. Fluent English Course lasts 30 days. Check Account → Overview to see the current status and expiry date; renew through the site when needed.</p></details>
+<details><summary>What happens after I upload a receipt?</summary><p>Your request shows as waiting for review until the admin checks it. Uploading a receipt does not activate access automatically. If a request is rejected, check the status or admin note and follow the payment instructions before submitting again.</p></details>
+<details><summary>Where is my learning progress stored?</summary><p>Core course records such as completed lessons, quiz attempts, homework submissions and certificates are linked to your student account. Extra browser-based items such as saved lessons, lesson notes and study-plan activity can be merged between devices using the progress sync controls in Account after the progress-sync database setup is installed.</p></details>
+<details><summary>How do I sync my progress to another device?</summary><p>On the device that has your latest browser-based progress, log in and open Account → Overview, then choose Sync progress with account. On the second device, log in to the same account and choose Restore and merge. This combines data rather than deleting the other device's saved progress. The administrator must run DOMA_STUDENT_PROGRESS_SYNC.sql in the project's Supabase SQL Editor once before these controls can work.</p></details>
+<details><summary>Can I study from my phone?</summary><p>Yes. DOMA works on mobile and desktop browsers. Sign in to the same student account to access account-based learning records on another device.</p></details>
+</div></div></section>
 <section><div class="container"><div class="cta"><div class="eyebrow">Your next English lesson starts here</div><h2>Build stronger English, one lesson at a time.</h2><p>Create your student account and choose the grade that matches your school year.</p><button class="btn primary" onclick="openAuth(\'signup\')">Create Student Account →</button></div></div></section>
 <section id="study-hub" class="study-hub-section">
   <div class="container">
@@ -1421,7 +1431,8 @@ async function studentView(view){
 async function renderStudentOverview(){
   await refreshStudentState();
   if(!currentGrade){
-    $('drawerBody').innerHTML='<div class="workspace-grid"><div class="card workspace-card"><span class="pill">Account</span><h3>'+esc(window.domaStudentProfile?.full_name||'Student')+'</h3><p>'+esc(window.domaStudentProfile?.phone||sessionUser?.user_metadata?.phone||(!isPhoneAliasEmail(sessionUser?.email)?sessionUser?.email:'Phone login'))+'</p></div><div class="card workspace-card"><span class="pill">'+(window.domaStudentRequests?.some(r=>r.status==='pending')?'Pending review':'Not active')+'</span><h3>Grade access</h3><p>'+(window.domaStudentRequests?.some(r=>r.status==='pending')?'Your subscription request is waiting for approval.':'Choose a grade and activate access to start learning.')+'</p></div></div><div class="notice" style="margin-top:14px"><a href="#grades" onclick="closeDrawer()" style="color:#d98ea0">Choose a grade →</a></div>';
+    $('drawerBody').innerHTML='<div class="workspace-grid"><div class="card workspace-card"><span class="pill">Account</span><h3>'+esc(window.domaStudentProfile?.full_name||'Student')+'</h3><p>'+esc(window.domaStudentProfile?.phone||sessionUser?.user_metadata?.phone||(!isPhoneAliasEmail(sessionUser?.email)?sessionUser?.email:'Phone login'))+'</p></div><div class="card workspace-card"><span class="pill">Student account</span><h3>Your memberships</h3><p>Check Grade Access and Mr. Fluent English Course separately below. Each subscription is reviewed and activated independently.</p></div></div>';
+    await renderUnifiedSubscriptionCenter();
     return;
   }
   const [prog,attempts,hw,certs]=await Promise.all([
@@ -1435,7 +1446,8 @@ async function renderStudentOverview(){
   const hwRows=(hw.data||[]).filter(x=>x.homework?.grade_id===currentGrade.id);
   const hwPercent=hwRows.length?Math.round(hwRows.filter(x=>x.status==='reviewed').length/hwRows.length*100):0;
   const snapshot=Math.round((prog.percent+avgQuiz+(hwRows.length?hwPercent:prog.percent))/3);
-  $('drawerBody').innerHTML='<div class="dashboard-grid-pro"><div class="dash-pro-card"><div class="student-progress-hero"><div class="progress-ring" style="--p:'+prog.percent+'"><div class="ring-inner"><strong>'+prog.percent+'%</strong><span>Lessons</span></div></div><div><span class="pill">Active grade</span><h3 style="font-size:22px;margin-top:8px">'+esc(currentGrade.name)+'</h3><p style="font-size:10px;color:#7d7477;margin-top:5px">'+prog.completed+' of '+prog.total+' lessons completed.</p><div class="account-actions"><button class="btn primary" onclick="studentView(\'lessons\')">Continue Lessons →</button><button class="btn secondary" onclick="studentView(\'quizzes\')">Take Quiz</button></div></div></div></div><div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Learning Snapshot</h3><p>Your current course signals.</p></div><span class="pill">'+snapshot+'%</span></div><div class="report-bars"><div class="report-line"><label>Lessons</label><div class="rbar"><i style="width:'+prog.percent+'%"></i></div><b>'+prog.percent+'%</b></div><div class="report-line"><label>Quizzes</label><div class="rbar"><i style="width:'+avgQuiz+'%"></i></div><b>'+avgQuiz+'%</b></div><div class="report-line"><label>Homework</label><div class="rbar"><i style="width:'+hwPercent+'%"></i></div><b>'+hwPercent+'%</b></div></div></div></div><div class="progress-summary" style="margin-top:13px"><div class="progress-mini"><b>'+quizRows.length+'</b><span>Quiz attempts</span></div><div class="progress-mini"><b>'+hwRows.length+'</b><span>Homework records</span></div><div class="progress-mini"><b>'+((certs.data||[]).length)+'</b><span>Certificates</span></div></div><div class="card dash" style="margin-top:15px"><h3>Continue your English learning</h3><p style="font-size:10px;color:#777;line-height:1.7">Access your lessons, videos, quizzes and homework from one place.</p><div class="account-actions"><button class="btn primary" onclick="studentView(\'lessons\')">Open Lessons →</button><button class="btn secondary" onclick="studentView(\'quizzes\')">Open Quizzes →</button><button class="btn secondary" onclick="studentView(\'homework\')">Open Homework →</button></div><div class="notice" style="margin-top:11px">Access until '+fmtDate(currentSubscription?.expires_at)+' • '+'Monthly'+'</div></div>'
+  $('drawerBody').innerHTML='<div class="dashboard-grid-pro"><div class="dash-pro-card"><div class="student-progress-hero"><div class="progress-ring" style="--p:'+prog.percent+'"><div class="ring-inner"><strong>'+prog.percent+'%</strong><span>Lessons</span></div></div><div><span class="pill">Active grade</span><h3 style="font-size:22px;margin-top:8px">'+esc(currentGrade.name)+'</h3><p style="font-size:10px;color:#7d7477;margin-top:5px">'+prog.completed+' of '+prog.total+' lessons completed.</p><div class="account-actions"><button class="btn primary" onclick="studentView(\'lessons\')">Continue Lessons →</button><button class="btn secondary" onclick="studentView(\'quizzes\')">Take Quiz</button></div></div></div></div><div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Learning Snapshot</h3><p>Your current course signals.</p></div><span class="pill">'+snapshot+'%</span></div><div class="report-bars"><div class="report-line"><label>Lessons</label><div class="rbar"><i style="width:'+prog.percent+'%"></i></div><b>'+prog.percent+'%</b></div><div class="report-line"><label>Quizzes</label><div class="rbar"><i style="width:'+avgQuiz+'%"></i></div><b>'+avgQuiz+'%</b></div><div class="report-line"><label>Homework</label><div class="rbar"><i style="width:'+hwPercent+'%"></i></div><b>'+hwPercent+'%</b></div></div></div></div><div class="progress-summary" style="margin-top:13px"><div class="progress-mini"><b>'+quizRows.length+'</b><span>Quiz attempts</span></div><div class="progress-mini"><b>'+hwRows.length+'</b><span>Homework records</span></div><div class="progress-mini"><b>'+((certs.data||[]).length)+'</b><span>Certificates</span></div></div><div class="card dash" style="margin-top:15px"><h3>Continue your English learning</h3><p style="font-size:10px;color:#777;line-height:1.7">Access your lessons, videos, quizzes and homework from one place.</p><div class="account-actions"><button class="btn primary" onclick="studentView(\'lessons\')">Open Lessons →</button><button class="btn secondary" onclick="studentView(\'quizzes\')">Open Quizzes →</button><button class="btn secondary" onclick="studentView(\'homework\')">Open Homework →</button></div><div class="notice" style="margin-top:11px">Access until '+fmtDate(currentSubscription?.expires_at)+' • '+'Monthly'+'</div></div>';
+  await renderUnifiedSubscriptionCenter();
 }
 
 function openStudentTool(view){if(!sessionUser){openAuth('login');return}openDrawer(view)}
@@ -6146,6 +6158,146 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 </script>
 
 
+
+<style id="doma-student-improvements-css">
+.doma-subscription-center{margin:0 0 16px;padding:16px;border-radius:16px;border:1px solid #39202a;background:linear-gradient(145deg,#160d12,#0c090b);color:#f7f1f3}
+.doma-subscription-center h3{margin:0 0 7px;font-size:17px;color:#fff}.doma-subscription-center p{font-size:11px;line-height:1.7;color:#b5a8ad;margin:5px 0 10px}
+.doma-subscription-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.doma-subscription-card{padding:14px;border:1px solid #34202a;border-radius:12px;background:#100a0d;min-width:0}
+.doma-subscription-card .doma-sub-plan{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#d58a9c;font-weight:800}
+.doma-subscription-card h4{font-size:14px;margin:7px 0;color:#fff}.doma-subscription-card .doma-sub-status{font-size:10px;line-height:1.65;color:#c6b8bd}
+.doma-subscription-card .doma-sub-status b{color:#fff}.doma-subscription-card .account-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.doma-progress-sync{margin-top:12px;padding:14px;border:1px solid #30202a;border-radius:12px;background:#0b090b}.doma-progress-sync h4{margin:0 0 6px;font-size:13px;color:#fff}.doma-progress-sync p{margin:4px 0 11px}
+.doma-progress-sync-actions{display:flex;gap:8px;flex-wrap:wrap}.doma-progress-sync-status{display:block;min-height:16px;margin-top:9px;color:#c5aeb6;font-size:10px;line-height:1.6}
+.doma-status-ok{color:#78d6ac!important}.doma-status-warn{color:#f0c97c!important}.doma-status-error{color:#f2a0a9!important}
+@media(max-width:640px){.doma-subscription-grid{grid-template-columns:1fr}.doma-subscription-center{padding:12px}.doma-progress-sync-actions{flex-direction:column}.doma-progress-sync-actions .btn{width:100%}}
+</style>
+<script id="doma-student-subscription-sync-upgrade">
+/* Combined membership visibility plus account-scoped merge sync for browser-only learning data. */
+const DOMA_SYNC_TABLE = 'doma_student_progress_snapshots';
+const DOMA_SYNC_VERSION = 1;
+function domaSyncAllowedLocalKeys(){
+  if(!sessionUser?.id)return [];
+  const uid=String(sessionUser.id),out=[];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);if(!key)continue;
+      const allowed=key==='doma_master_local_v1'||key==='doma_all_upgrades_v1'||key==='doma_build_sentence_stats_v1'||
+        (key.startsWith('doma_pro5_')&&key.endsWith('_'+uid))||
+        (key.startsWith('doma_plus5_')&&key.endsWith('_'+uid));
+      if(!allowed)continue;
+      let value;
+      try{value=JSON.parse(localStorage.getItem(key)||'null')}catch(_){continue}
+      if(value===null||value===undefined)continue;
+      const encoded=JSON.stringify(value);
+      if(encoded.length>180000)continue;
+      out.push([key,value]);
+    }
+  }catch(e){console.warn('Could not enumerate local progress keys:',e)}
+  const items={};out.forEach(([k,v])=>{items[k]=v});
+  return items;
+}
+function domaSyncMergeValue(remote,local,preferLocal=true,keyName=''){
+  if(local===undefined)return remote;
+  if(remote===undefined)return local;
+  if(Array.isArray(remote)&&Array.isArray(local)){
+    const out=[],seen=new Set();
+    for(const item of [...remote,...local]){let sig;try{sig=JSON.stringify(item)}catch(_){sig=String(item)}if(!seen.has(sig)){seen.add(sig);out.push(item)}}
+    return out;
+  }
+  if(remote&&local&&typeof remote==='object'&&typeof local==='object'&&!Array.isArray(remote)&&!Array.isArray(local)){
+    const out={...remote};for(const k of Object.keys(local))out[k]=Object.prototype.hasOwnProperty.call(remote,k)?domaSyncMergeValue(remote[k],local[k],preferLocal,k):local[k];return out;
+  }
+  // Positive lesson-state flags are cumulative: a blank device must not undo a completed checklist.
+  if(typeof remote==='boolean'&&typeof local==='boolean'&&/^(watched|read|practice|completed|done|earned|unlocked|finished)$/i.test(keyName))return remote||local;
+  // A missing/empty value on one device should not erase a real note or label on the other device.
+  if(typeof remote==='string'&&typeof local==='string'){if(!local.trim())return remote;if(!remote.trim())return local}
+  // On a first-device sync, prefer its values; on restore, prefer the account snapshot for conflicting scalar fields.
+  return preferLocal?local:remote;
+}
+function domaSyncRenderStatus(message,kind=''){const el=document.getElementById('domaProgressSyncStatus');if(el){el.textContent=message;el.className='doma-progress-sync-status '+(kind?'doma-status-'+kind:'')}}
+async function domaSyncProgress(mode='sync'){
+  if(!sessionUser||!sb){showToast('Log in before syncing progress.');return}
+  const buttons=[...document.querySelectorAll('[data-doma-sync-button]')];buttons.forEach(b=>{b.disabled=true;b.dataset.oldLabel=b.textContent;b.textContent='Working…'});
+  domaSyncRenderStatus('Connecting to your DOMA account…');
+  try{
+    const fetchResult=await sb.from(DOMA_SYNC_TABLE).select('student_id,payload,updated_at').eq('student_id',sessionUser.id).maybeSingle();
+    if(fetchResult.error){
+      const msg=fetchResult.error.message||'Unknown database error';
+      if(/relation .* does not exist|could not find the table|schema cache/i.test(msg))throw new Error('Progress sync is not set up yet. Ask the administrator to run DOMA_STUDENT_PROGRESS_SYNC.sql in Supabase SQL Editor.');
+      throw new Error('Could not read your cloud progress: '+msg);
+    }
+    const cloudRow=fetchResult.data;
+    if(mode==='restore'&&!cloudRow){throw new Error('No cloud progress exists yet. On the device with your saved progress, press “Sync this device” first.')}
+    const localItems=domaSyncAllowedLocalKeys();
+    const cloudItems=(cloudRow?.payload&&cloudRow.payload.items&&typeof cloudRow.payload.items==='object')?cloudRow.payload.items:{};
+    const keys=new Set([...Object.keys(cloudItems),...Object.keys(localItems)]),mergedItems={};
+    keys.forEach(k=>{mergedItems[k]=domaSyncMergeValue(cloudItems[k],localItems[k],mode!=='restore',k)});
+    const total=JSON.stringify(mergedItems).length;
+    if(total>650000)throw new Error('Your browser-based progress snapshot is too large to sync safely. Export a local backup and contact the administrator.');
+    for(const [key,value] of Object.entries(mergedItems)){
+      const safe=key==='doma_master_local_v1'||key==='doma_all_upgrades_v1'||key==='doma_build_sentence_stats_v1'||
+        (key.startsWith('doma_pro5_')&&key.endsWith('_'+String(sessionUser.id)))||
+        (key.startsWith('doma_plus5_')&&key.endsWith('_'+String(sessionUser.id)));
+      if(safe){try{localStorage.setItem(key,JSON.stringify(value))}catch(e){console.warn('Could not restore one local key:',key,e)}}
+    }
+    const updatedAt=new Date().toISOString();
+    const saveResult=await sb.from(DOMA_SYNC_TABLE).upsert({student_id:sessionUser.id,payload:{schema_version:DOMA_SYNC_VERSION,items:mergedItems,merged_at:updatedAt},updated_at:updatedAt},{onConflict:'student_id'});
+    if(saveResult.error){
+      const msg=saveResult.error.message||'Unknown database error';
+      if(/permission denied|row-level security|violates row-level/i.test(msg))throw new Error('Supabase blocked this save. Check the table RLS policies from DOMA_STUDENT_PROGRESS_SYNC.sql.');
+      throw new Error('Could not save cloud progress: '+msg);
+    }
+    const message=mode==='restore'?'Progress restored and merged with this device; your cloud copy was updated.':'Progress from this device was merged with your account and saved to the cloud.';
+    domaSyncRenderStatus(message+' Last sync: '+new Date(updatedAt).toLocaleString(), 'ok');
+    showToast('Progress synced with your DOMA account.');
+    // Re-render the overview so counters backed by localStorage refresh immediately.
+    if(document.getElementById('drawer')?.classList.contains('show')&&currentStudentView==='overview'){
+      await renderStudentOverview();
+      showToast('Progress synced with your DOMA account.');
+    }
+  }catch(e){
+    console.error('DOMA progress sync failed:',e);
+    domaSyncRenderStatus(e?.message||'Sync failed. Please try again.','error');
+    showToast(e?.message||'Progress sync failed.');
+  }finally{buttons.forEach(b=>{b.disabled=false;if(b.dataset.oldLabel){b.textContent=b.dataset.oldLabel;delete b.dataset.oldLabel}})}
+}
+async function renderUnifiedSubscriptionCenter(){
+  const host=document.getElementById('drawerBody');if(!host||!sessionUser)return;
+  let activeGrades=[],requests=[],history=[],englishRequests=[];
+  try{activeGrades=await getActiveSubscriptions()}catch(e){console.warn(e)}
+  try{requests=await getRequests()}catch(e){console.warn(e)}
+  try{const r=await sb.from('subscriptions').select('grade_id,status,expires_at,created_at').eq('student_id',sessionUser.id).order('created_at',{ascending:false}).limit(100);if(!r.error)history=r.data||[]}catch(e){}
+  try{const r=await sb.from('mrfluent_english_course_requests').select('id,status,amount,created_at,admin_note').eq('student_id',sessionUser.id).order('created_at',{ascending:false}).limit(10);if(!r.error)englishRequests=r.data||[]}catch(e){}
+  const statusLabel=(s)=>{s=String(s||'').toLowerCase();if(s==='pending')return 'Pending admin review';if(['rejected','declined','denied'].includes(s))return 'Payment request rejected';if(['cancelled','canceled'].includes(s))return 'Cancelled';return s?s.replace(/_/g,' '):'Not active'};
+  let gradeStatusHtml='';
+  if(activeGrades.length){
+    gradeStatusHtml='<div class="doma-sub-status doma-status-ok">Active on '+activeGrades.length+' grade subscription'+(activeGrades.length===1?'':'s')+'.</div>'+activeGrades.map(s=>{const g=grades.find(x=>String(x.id)===String(s.grade_id));return '<div class="doma-sub-status" style="margin-top:6px"><b>'+esc(g?.name||s.grades?.name||'School grade')+'</b> — active until <b>'+esc(fmtDate(s.expires_at))+'</b></div>'}).join('');
+  }else{
+    const latestReq=requests[0];
+    const expired=history.find(s=>{const st=String(s.status||'').toLowerCase();return ['expired','inactive'].includes(st)||(st==='active'&&s.expires_at&&new Date(s.expires_at)<=new Date())});
+    const label=latestReq?.status==='pending'?'Payment pending review':latestReq&&['rejected','declined','denied'].includes(String(latestReq.status).toLowerCase())?'Request rejected':expired?'Membership expired':'No active Grade Access';
+    const detail=latestReq?.status==='pending'?'Your Grade Access request was received and is waiting for admin review.':latestReq&&['rejected','declined','denied'].includes(String(latestReq.status).toLowerCase())?'Admin note: '+(latestReq.admin_note||'Please check the payment information and contact support if needed.'):expired?'Your previous grade membership expired on '+fmtDate(expired.expires_at)+'.':'Choose a grade and submit payment to activate Grade Access.';
+    gradeStatusHtml='<div class="doma-sub-status '+(latestReq?.status==='pending'?'doma-status-warn':expired?'doma-status-warn':'')+'"><b>'+esc(label)+'</b><br>'+esc(detail)+'</div>';
+  }
+  let englishStatusHtml='';
+  if(mrFluentEnglishAccessError||/setup needed|could not verify/i.test(document.getElementById('mrfluentEnglishCourseStatus')?.textContent||'')){englishStatusHtml='<div class="doma-sub-status doma-status-warn"><b>Could not verify access / setup needed</b><br>Refresh the course status or contact the administrator. The site will not assume that access is active without verification.</div>'}
+  else if(mrFluentEnglishSubscription){englishStatusHtml='<div class="doma-sub-status doma-status-ok"><b>Active</b> until <b>'+esc(fmtDate(mrFluentEnglishSubscription.expires_at))+'</b>.</div>'}
+  else if(mrFluentEnglishPendingRequest||String(englishRequests[0]?.status||'').toLowerCase()==='pending'){englishStatusHtml='<div class="doma-sub-status doma-status-warn"><b>Payment pending review</b><br>Your English Course stays locked until the admin approves the receipt.</div>'}
+  else if(['rejected','declined','denied'].includes(String(englishRequests[0]?.status||'').toLowerCase())){englishStatusHtml='<div class="doma-sub-status doma-status-error"><b>Payment request rejected</b><br>'+esc(englishRequests[0]?.admin_note||'Check the payment information before trying again.')+'</div>'}
+  else{englishStatusHtml='<div class="doma-sub-status">Not active yet. Subscribe for 100 EGP per 30 days; access begins after admin approval.</div>'}
+  const node=document.createElement('section');node.className='doma-subscription-center';node.id='domaSubscriptionCenter';
+  node.innerHTML='<h3>Subscriptions &amp; Progress Sync</h3><p>Check each membership separately. Grade Access and Mr. Fluent English Course do not activate one another.</p>'+ 
+    '<div class="doma-subscription-grid">'+
+      '<article class="doma-subscription-card"><span class="doma-sub-plan">School membership</span><h4>Grade Access · 150 EGP / month</h4>'+gradeStatusHtml+'<div class="account-actions"><button class="btn secondary" type="button" onclick="closeDrawer();document.getElementById(\'grades\')?.scrollIntoView({behavior:\'smooth\',block:\'start\'})">Choose / renew grade</button></div></article>'+
+      '<article class="doma-subscription-card"><span class="doma-sub-plan">Independent course</span><h4>Mr. Fluent · 100 EGP / 30 days</h4>'+englishStatusHtml+'<div class="account-actions"><button class="btn secondary" type="button" onclick="document.getElementById(\'english-course\')?.scrollIntoView({behavior:\'smooth\',block:\'start\'});closeDrawer()">View course options</button>'+(mrFluentEnglishSubscription?'':'<button class="btn primary" type="button" '+(mrFluentEnglishPendingRequest||mrFluentEnglishAccessError?'disabled':'')+' onclick="mrfluentStartEnglishSubscription()">Subscribe</button>')+'</div></article>'+
+    '</div>'+ 
+    '<div class="doma-progress-sync"><h4>Sync browser-based learning progress</h4><p>Merge saved lessons, lesson notes/checklists, study days, study-planner settings and other supported local progress with this student account. Course records such as quiz attempts and lesson completion are already stored by the course database. Sync never deletes conflicting arrays; on field conflicts, Sync this device prefers this device’s values, while Restore & merge prefers values from the account snapshot; lists are merged.</p><div class="doma-progress-sync-actions"><button class="btn primary" type="button" data-doma-sync-button onclick="domaSyncProgress(\'sync\')">Sync this device</button><button class="btn secondary" type="button" data-doma-sync-button onclick="domaSyncProgress(\'restore\')">Restore &amp; merge from account</button></div><span id="domaProgressSyncStatus" class="doma-progress-sync-status" aria-live="polite">To enable cloud sync, the administrator must run DOMA_STUDENT_PROGRESS_SYNC.sql once in this project’s Supabase SQL Editor.</span></div>';
+  const previous=document.getElementById('domaSubscriptionCenter');if(previous)previous.remove();host.prepend(node);
+}
+window.domaSyncProgress=domaSyncProgress;
+window.renderUnifiedSubscriptionCenter=renderUnifiedSubscriptionCenter;
+</script>
 
 </body>
 </html>
