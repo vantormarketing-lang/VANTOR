@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mr. Fluent — A1 Student Hub V8</title>
+<title>Mr. Fluent — A1 Student Hub V9</title>
 <style>
 :root{--bg:#0b1020;--panel:#151d33;--panel2:#1d2944;--ink:#f3f6ff;--muted:#b8c4df;--line:#334362;--blue:#60a5fa;--violet:#a78bfa;--green:#34d399;--orange:#fbbf24}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1020,#111a32);color:var(--ink);font:16px/1.65 system-ui,Segoe UI,Arial,sans-serif}
@@ -65,6 +65,38 @@ nav#menu,nav#menu.menu-tools,nav#menu.menu-progress{position:static;display:flex
 @media(max-width:900px){.student-layout{grid-template-columns:220px minmax(0,1fr);gap:16px}.student-sidebar{padding:12px 8px}.student-sidebar nav button{font-size:.83rem;padding:9px 8px;gap:8px}}
 @media(max-width:700px){.student-layout{grid-template-columns:minmax(0,1fr);gap:15px}.student-sidebar{position:relative;top:auto;max-height:none;overflow:visible;padding:12px;border-radius:16px}.sidebar-brand{padding-bottom:12px}.sidebar-caption{padding-top:12px}.student-sidebar nav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}.student-sidebar nav button{min-width:0;min-height:42px;font-size:.78rem;padding:8px 7px;gap:6px}.student-sidebar nav button .menu-icon{width:20px;flex-basis:20px;font-size:.95rem}.sidebar-foot{margin-top:12px}.student-content #courseView>.unit:first-child{margin-top:0}}
 @media(max-width:380px){.student-sidebar nav{grid-template-columns:minmax(0,1fr)!important}.student-sidebar nav button{font-size:.88rem}}
+
+
+/* V9 PURPLE ACCENT — blends violet with the existing burgundy and gold palette */
+:root{--violet:#a78bfa;--purple:#8b5cf6;--purple-light:#c4b5fd;--purple-deep:#5b21b6;--line:rgba(167,139,250,.24)}
+.student-sidebar{border-color:rgba(167,139,250,.30);background:linear-gradient(180deg,rgba(24,15,35,.98),rgba(11,9,13,.98));box-shadow:0 20px 50px rgba(0,0,0,.32),inset 0 1px rgba(196,181,253,.06)}
+.sidebar-mark{background:linear-gradient(145deg,#8b5cf6,#762337 82%);border-color:rgba(196,181,253,.55);box-shadow:0 7px 22px rgba(139,92,246,.22)}
+.sidebar-caption{color:#b5a0e8}
+.student-sidebar nav button{border-color:transparent}
+.student-sidebar nav button:hover{border-color:rgba(167,139,250,.28);background:linear-gradient(100deg,rgba(139,92,246,.16),rgba(118,35,55,.12));color:#fff}
+.student-sidebar nav button.active{border-color:rgba(167,139,250,.38);background:linear-gradient(100deg,rgba(139,92,246,.28),rgba(118,35,55,.18));color:#f5efff;box-shadow:inset 3px 0 #a78bfa,0 5px 16px rgba(91,33,182,.08)}
+.student-sidebar nav button.active .menu-icon{filter:drop-shadow(0 0 5px rgba(196,181,253,.25))}
+.menu-dot{background:#c4b5fd;box-shadow:0 0 10px rgba(167,139,250,.55)}
+button,select{border-color:rgba(167,139,250,.25)}
+button:hover,button.active{border-color:#a78bfa;background:linear-gradient(120deg,rgba(139,92,246,.30),rgba(118,35,55,.38));}
+button:focus-visible,a:focus-visible{outline-color:#c4b5fd}
+.stat,.unit,.lesson,.tool{border-color:rgba(167,139,250,.20)}
+.stat:hover{border-color:rgba(196,181,253,.55)}
+.tag{border-color:rgba(167,139,250,.35);background:rgba(91,33,182,.18);color:#d8ccff}
+.example{border-left-color:#a78bfa}
+.progressbar span{background:linear-gradient(90deg,#762337,#8b5cf6,#c4b5fd,#d7ad61)}
+.pill,.achievement{border-color:rgba(167,139,250,.32);background:rgba(139,92,246,.13);color:#d9ceff}
+.lab-card{border-color:rgba(167,139,250,.23);background:linear-gradient(145deg,rgba(31,20,43,.94),rgba(13,10,12,.96))}
+.word-ar{color:#c4b5fd}
+.sentence-bank button{border-color:rgba(167,139,250,.4);background:rgba(91,33,182,.18)}
+.video-card{border-color:rgba(167,139,250,.26);background:linear-gradient(120deg,rgba(139,92,246,.12),rgba(118,35,55,.12))}
+.video-card .video-label{color:#c4b5fd}
+.video-card a{background:linear-gradient(135deg,#6d28d9,#762337);border-color:rgba(196,181,253,.28)}
+.mf-dialogue{border-color:rgba(167,139,250,.25);background:linear-gradient(145deg,rgba(25,15,32,.95),rgba(12,10,11,.95))}
+.mf-line{border-color:rgba(167,139,250,.2);background:rgba(139,92,246,.08)}
+.mf-line b{color:#d5c6ff}
+.translation{background:rgba(139,92,246,.12);border-color:rgba(167,139,250,.25)}
+@media(prefers-reduced-motion:no-preference){.student-sidebar nav button,.lab-card,.video-card{transition:background .2s,border-color .2s,box-shadow .2s}}
 
 </style></head>
 <body>
