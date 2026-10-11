@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mr. Fluent — A1 Beginner Course</title>
+<title>Mr. Fluent — A1 Student Hub V8</title>
 <style>
 :root{--bg:#0b1020;--panel:#151d33;--panel2:#1d2944;--ink:#f3f6ff;--muted:#b8c4df;--line:#334362;--blue:#60a5fa;--violet:#a78bfa;--green:#34d399;--orange:#fbbf24}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1020,#111a32);color:var(--ink);font:16px/1.65 system-ui,Segoe UI,Arial,sans-serif}
@@ -54,15 +54,58 @@ button,select{font:inherit;color:#eee;background:#151012;border:1px solid #3c222
 
 /* V7 learning tools */
 .lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.lab-card{border:1px solid var(--line);border-radius:16px;padding:16px;background:linear-gradient(145deg,rgba(30,18,25,.9),rgba(13,10,12,.9));margin:12px 0}.lab-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.word-en,.pron-word{font-size:1.25rem;font-weight:850;color:#e2b86e}.word-ar{color:#e8dfe2;direction:rtl}.lab-note{padding:12px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}.sentence-bank{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.sentence-bank button{background:#24141a;border-color:#704052}.sentence-result{min-height:52px;padding:12px;border:1px dashed #704052;border-radius:12px;margin:12px 0}.challenge-done{border-color:#5fc99a!important;background:rgba(95,201,154,.1)!important}
+
+/* V8 — professional student sidebar navigation */
+.student-layout{display:grid;grid-template-columns:268px minmax(0,1fr);gap:25px;align-items:start;margin-top:24px}
+.student-sidebar{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow-y:auto;padding:16px 12px 12px;border:1px solid #352029;border-radius:20px;background:linear-gradient(180deg,rgba(22,14,17,.98),rgba(11,9,10,.98));box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.sidebar-brand{display:flex;align-items:center;gap:11px;padding:7px 8px 17px;border-bottom:1px solid #2d181f}.sidebar-mark{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border-radius:13px;background:linear-gradient(145deg,#8e3049,#411622);border:1px solid #a34d63;color:#fff;font-weight:900;letter-spacing:-1px;box-shadow:0 7px 20px #0005}.sidebar-brand strong{display:block;font-size:.92rem;letter-spacing:.08em;color:#f8e9ed}.sidebar-brand span{display:block;margin-top:1px;font-size:.66rem;letter-spacing:.12em;color:#a99a9e}.sidebar-caption{padding:17px 10px 7px;color:#8f777e;font-size:.68rem;font-weight:850;letter-spacing:.13em}
+nav#menu,nav#menu.menu-tools,nav#menu.menu-progress{position:static;display:flex;flex-direction:column;flex-wrap:nowrap;gap:4px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none}
+.student-sidebar nav button{width:100%;min-height:43px;display:flex;align-items:center;gap:11px;text-align:left;padding:10px 11px;border:1px solid transparent;border-radius:11px;background:transparent;color:#bdb0b4;font-size:.9rem;font-weight:650;transform:none;box-shadow:none}
+.student-sidebar nav button .menu-icon{width:23px;flex:0 0 23px;text-align:center;font-size:1.05rem}.student-sidebar nav button>span:nth-child(2){min-width:0;flex:1}.student-sidebar nav button:hover{transform:none;border-color:#462630;background:rgba(118,35,55,.16);color:#fff}.student-sidebar nav button.active{transform:none;border-color:#633044;background:linear-gradient(100deg,rgba(118,35,55,.38),rgba(118,35,55,.12));color:#ffeef2;box-shadow:inset 3px 0 #c05269}.menu-dot{width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:#d7ad61;box-shadow:0 0 10px #d7ad6177}.sidebar-foot{display:flex;align-items:center;gap:7px;margin:17px 5px 0;padding:12px 8px 3px;border-top:1px solid #2d181f;color:#b7a5ab;font-size:.78rem}.sidebar-status{width:7px;height:7px;border-radius:50%;background:#5fc99a;box-shadow:0 0 9px #5fc99a66}.sidebar-version{margin-left:auto;color:#846f75;font-size:.67rem;letter-spacing:.1em}.student-content{min-width:0}.student-content>.unit:first-child{margin-top:0}.student-content #courseView>.unit:first-child{margin-top:0}
+@media(max-width:900px){.student-layout{grid-template-columns:220px minmax(0,1fr);gap:16px}.student-sidebar{padding:12px 8px}.student-sidebar nav button{font-size:.83rem;padding:9px 8px;gap:8px}}
+@media(max-width:700px){.student-layout{grid-template-columns:minmax(0,1fr);gap:15px}.student-sidebar{position:relative;top:auto;max-height:none;overflow:visible;padding:12px;border-radius:16px}.sidebar-brand{padding-bottom:12px}.sidebar-caption{padding-top:12px}.student-sidebar nav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}.student-sidebar nav button{min-width:0;min-height:42px;font-size:.78rem;padding:8px 7px;gap:6px}.student-sidebar nav button .menu-icon{width:20px;flex-basis:20px;font-size:.95rem}.sidebar-foot{margin-top:12px}.student-content #courseView>.unit:first-child{margin-top:0}}
+@media(max-width:380px){.student-sidebar nav{grid-template-columns:minmax(0,1fr)!important}.student-sidebar nav button{font-size:.88rem}}
+
 </style></head>
 <body>
 <header><div class="a1-hero"><div class="a1-hero-copy"><a href="./index.html" style="display:inline-flex;margin-bottom:16px;padding:9px 13px;border:1px solid #334362;border-radius:10px;color:#dbeafe;text-decoration:none;font-weight:700">← Back to Mr. Fluent</a><div class="pill">✦ MR. FLUENT ACADEMY · CEFR A1</div><h1>Your English Journey Starts Here</h1><p>A structured beginner learning space with guided lessons, real-world video practice, interactive quizzes, and progress tracking.</p><p class="ar">ابدأ رحلتك في الإنجليزية خطوة بخطوة — دروس منظمة، فيديوهات تعليمية حقيقية، تدريبات واختبارات ومتابعة للتقدم.</p></div><div class="a1-hero-card"><div class="a1-hero-card-top"><div><div class="a1-eyebrow">STUDENT LEARNING HUB</div><div class="a1-logo">Mr. Fluent<span>.</span></div></div><span class="a1-level">A1 · BEGINNER</span></div><div><h2>Study. Practice. Track. Improve.</h2><p>Your personal English study space.</p><div class="a1-hero-stats"><div><b>12</b><span>Lessons</span></div><div><b>4</b><span>Unit tests</span></div><div><b>01</b><span>Final test</span></div></div></div></div></div></header>
 <main class="wrap">
 <div class="topgrid"><div class="stat"><strong>12 lessons</strong>📚 4 units × 3 lessons</div><div class="stat"><strong>4 unit tests</strong>🧩 Check each unit</div><div class="stat"><strong>1 final test</strong>🏆 Review A1 skills</div><div class="stat"><strong id="doneCount">0 / 12</strong>✅ Lessons marked complete</div></div>
 <div class="box"><b>🎬 Real video practice</b><p>Every lesson links to the matching official British Council LearnEnglish episode, with video, transcript and practice activities where available. Links open the official learning page in a new tab.</p><div class="progressbar"><span id="progressFill"></span></div><p class="small" id="progressText">Your completion progress: 0%</p></div>
-<nav id="menu"><button class="active" data-view="course">📚 Course</button><button data-view="vocab">🧠 Vocabulary</button><button data-view="grammar">📘 Grammar</button><button data-view="speaking">🗣️ Speaking</button><button data-view="pronunciation">🎧 Pronunciation</button><button data-view="reading">📖 Reading</button><button data-view="writing">✍️ Writing</button><button data-view="review">🔁 Review</button><button data-view="progress">📈 Progress</button><button data-view="smart">🧠 Smart Revision</button><button data-view="missions">🌍 Real-Life Missions</button><button data-view="listening">🎧 Listening Lab</button><button data-view="sentences">🧩 Sentence Builder</button><button data-view="daily">⚡ Daily Challenge</button><button data-view="coach">🤖 Learning Coach</button><button data-view="passport">🏆 A1 Passport</button></nav>
+<div class="student-layout">
+<aside class="student-sidebar" aria-label="Student learning navigation">
+  <div class="sidebar-brand"><div class="sidebar-mark">MF</div><div><strong>MR. FLUENT</strong><span>STUDENT SPACE · A1</span></div></div>
+  <div class="sidebar-caption">LEARNING</div>
+  <nav id="menu">
+    <button class="active" data-view="course"><span class="menu-icon">📚</span><span>Course & Lessons</span></button>
+    <button data-view="vocab"><span class="menu-icon">🧠</span><span>Vocabulary Lab</span></button>
+    <button data-view="grammar"><span class="menu-icon">📘</span><span>Grammar Gym</span></button>
+    <button data-view="speaking"><span class="menu-icon">🗣️</span><span>Speaking Studio</span></button>
+    <button data-view="pronunciation"><span class="menu-icon">🎧</span><span>Pronunciation Lab</span></button>
+    <button data-view="reading"><span class="menu-icon">📖</span><span>Reading</span></button>
+    <button data-view="writing"><span class="menu-icon">✍️</span><span>Writing</span></button>
+  </nav>
+  <div class="sidebar-caption">PRACTICE & TOOLS</div>
+  <nav class="menu-tools">
+    <button data-view="review"><span class="menu-icon">🔁</span><span>Review</span></button>
+    <button data-view="smart"><span class="menu-icon">🧠</span><span>Smart Revision</span><span class="menu-dot"></span></button>
+    <button data-view="missions"><span class="menu-icon">🌍</span><span>Real-Life Missions</span></button>
+    <button data-view="listening"><span class="menu-icon">🎧</span><span>Listening Lab</span></button>
+    <button data-view="sentences"><span class="menu-icon">🧩</span><span>Sentence Builder</span></button>
+    <button data-view="daily"><span class="menu-icon">⚡</span><span>Daily Challenge</span></button>
+  </nav>
+  <div class="sidebar-caption">YOUR PROGRESS</div>
+  <nav class="menu-progress">
+    <button data-view="progress"><span class="menu-icon">📈</span><span>Progress Center</span></button>
+    <button data-view="coach"><span class="menu-icon">🤖</span><span>Learning Coach</span></button>
+    <button data-view="passport"><span class="menu-icon">🏆</span><span>A1 Achievement Passport</span></button>
+  </nav>
+  <div class="sidebar-foot"><span class="sidebar-status"></span> A1 Beginner <span class="sidebar-version">CEFR</span></div>
+</aside>
+<div class="student-content">
 <section id="courseView"></section><section id="vocabView" class="hidden"></section><section id="grammarView" class="hidden"></section><section id="pronunciationView" class="hidden"></section>
 <section id="smartView" class="hidden"></section><section id="missionsView" class="hidden"></section><section id="listeningView" class="hidden"></section><section id="sentencesView" class="hidden"></section><section id="dailyView" class="hidden"></section><section id="coachView" class="hidden"></section><section id="passportView" class="hidden"></section><section id="readingView" class="hidden"></section><section id="writingView" class="hidden"></section><section id="speakingView" class="hidden"></section><section id="reviewView" class="hidden"></section><section id="progressView" class="hidden"></section>
+</div></div>
 </main><div class="mf-video-note"><strong>🎬 Trusted video resources:</strong> Lesson videos link to the official British Council LearnEnglish “Starting Out” series for A1/A2 learners. Videos and companion activities are hosted on the provider website.</div><footer>Doma Academy (Mr. Fluent) · A1 Beginner · Student Learning Area</footer>
 <script>
 const units=[
