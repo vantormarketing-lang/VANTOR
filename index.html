@@ -1279,6 +1279,20 @@ async function mrfluentOpenEnglishLevel(levelId){
   if(!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){showToast('Complete the required placement test first.');mrfluentRenderPlacement();return}
   const assignedCode=String(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code||'').toUpperCase();
   if(String(level.code||'').toUpperCase()!==assignedCode){showToast('Start with your assigned level. Other levels are locked for now.');return}
+  // Navigate to the existing standalone level HTML files already in the repository.
+  // Do not render lesson text below the level cards.
+  const standaloneLevelPages={
+    A1:'./MR_FLUENT_A1_STUDENT_GRADE_MATCH_V11.html',
+    A2:'./MR_FLUENT_A2_STUDENT_HUB_V4.html',
+    B1:'./MR_FLUENT_B1_STUDENT_HUB_V4.html',
+    B2:'./MR_FLUENT_B2_STUDENT_HUB_V3.html',
+    C1:'./MR_FLUENT_C1_STUDENT_HUB_V3.html',
+    C2:'./MR_FLUENT_C2_STUDENT_HUB_V3.html'
+  };
+  const standalonePage=standaloneLevelPages[String(level.code||'').trim().toUpperCase()];
+  if(!standalonePage){showToast('No existing student page is configured for this level.');return}
+  window.location.assign(standalonePage);
+  return;
   document.body.classList.add('mf-course-route','mf-course-level-route');
   document.body.classList.remove('mf-course-list-route');
   const workspace=$('mrfluentEnglishWorkspace');if(workspace)workspace.hidden=false;
