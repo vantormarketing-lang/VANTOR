@@ -1247,6 +1247,8 @@ async function mrfluentOpenEnglishLevel(levelId){
   const level=mrFluentEnglishLevels.find(l=>String(l.id)===String(levelId));if(!level)return showToast('Course level is unavailable.');
   if(!mrFluentEnglishPlacement){showToast('Complete the required placement test first.');mrfluentRenderPlacement();return}
   if(level.code!==mrFluentEnglishPlacement.level_code){showToast('Start with your assigned level. Other levels are locked for now.');return}
+  // A1 uses its own standalone course page instead of rendering lessons beneath the level cards.
+  if(String(level.code).toUpperCase()==='A1'){window.location.href='./MR_FLUENT_A1_COURSE.html';return}
   const host=$('mrfluentEnglishLevelContent');host.innerHTML='<div class="empty">Loading '+esc(level.code)+' lessons…</div>';
   const u=await sb.from('mrfluent_english_units').select('id,level_id,unit_number,title,description,sort_order,is_published').eq('level_id',levelId).eq('is_published',true).order('sort_order',{ascending:true});
   if(u.error){host.innerHTML='<div class="empty">Could not load units: '+esc(u.error.message)+'</div>';return}
@@ -6071,19 +6073,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 </script>
 
 
-<!-- MR FLUENT A1 COURSE: open as a standalone page -->
-<section id="a1-complete-course" style="padding:36px 0;background:#09090d;color:#f5f5f5;">
-  <div style="max-width:1180px;margin:0 auto;padding:0 18px;">
-    <div style="border:1px solid rgba(190,70,110,.4);border-radius:18px;padding:24px;background:linear-gradient(135deg,#171018,#0d0c14);display:flex;gap:22px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
-      <div style="flex:1;min-width:240px;">
-        <p style="color:#e7a0bb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px;">MR. FLUENT · A1 BEGINNER</p>
-        <h2 style="margin:0 0 10px;font-size:clamp(24px,4vw,36px);">Complete A1 Course &amp; Lessons</h2>
-        <p style="margin:0;color:#c7c3cc;line-height:1.8;">افتح صفحة مستقلة فيها دروس A1 والتدريبات والاختبارات والتقدم الدراسي.</p>
-      </div>
-      <a href="MR_FLUENT_A1_COURSE.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:12px;background:#e7a0bb;color:#190d16;font-weight:800;text-decoration:none;">Open A1 Course ↗</a>
-    </div>
-  </div>
-</section>
+
 
 </body>
 </html>
