@@ -1275,44 +1275,36 @@ async function mrfluentOpenEnglishLevel(levelId){
   await mrfluentRefreshEnglishCourse();
   if(mrFluentEnglishAccessError){showToast('Could not verify your English Course membership. Refresh the page or contact the admin.');return}
   if(!mrFluentEnglishSubscription){await mrfluentStartEnglishSubscription();return}
-  const level=mrFluentEnglishLevels.find(l=>String(l.id)===String(levelId));if(!level)return showToast('Course level is unavailable.');
-  if(!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){showToast('Complete the required placement test first.');mrfluentRenderPlacement();return}
-  const assignedCode=String(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code||'').toUpperCase();
-  if(String(level.code||'').toUpperCase()!==assignedCode){showToast('Start with your assigned level. Other levels are locked for now.');return}
-  // Navigate to the existing standalone level HTML files already in the repository.
-  // Do not render lesson text below the level cards.
+
+  const level=mrFluentEnglishLevels.find(l=>String(l.id)===String(levelId));
+  if(!level){showToast('Course level is unavailable.');return}
+  if(!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){
+    showToast('Complete the required placement test first.');
+    mrfluentRenderPlacement();
+    return;
+  }
+
+  const code=String(level.code||'').trim().toUpperCase();
+  const assignedCode=String(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code||'').trim().toUpperCase();
+  if(code!==assignedCode){
+    showToast('Start with your assigned level. Other levels are locked for now.');
+    return;
+  }
+
+  // These are the six standalone course files already present in the VANTOR repository.
+  // Keep paths relative so links work on the GitHub Pages project path /VANTOR/.
   const standaloneLevelPages={
-    A1:'./MR_FLUENT_A1_STUDENT_GRADE_MATCH_V11.html',
-    A2:'./MR_FLUENT_A2_STUDENT_HUB_V4.html',
-    B1:'./MR_FLUENT_B1_STUDENT_HUB_V4.html',
-    B2:'./MR_FLUENT_B2_STUDENT_HUB_V3.html',
-    C1:'./MR_FLUENT_C1_STUDENT_HUB_V3.html',
-    C2:'./MR_FLUENT_C2_STUDENT_HUB_V3.html'
+    A1:'./MR_FLUENT_A1_COURSE.html',
+    A2:'./MR_FLUENT_A2_COURSE.html',
+    B1:'./MR_FLUENT_B1_COURSE.html',
+    B2:'./MR_FLUENT_B2_COURSE.html',
+    C1:'./MR_FLUENT_C1_COURSE.html',
+    C2:'./MR_FLUENT_C2_COURSE.html'
   };
-  const standalonePage=standaloneLevelPages[String(level.code||'').trim().toUpperCase()];
+  const standalonePage=standaloneLevelPages[code];
   if(!standalonePage){showToast('No existing student page is configured for this level.');return}
   window.location.assign(standalonePage);
-  return;
-  document.body.classList.add('mf-course-route','mf-course-level-route');
-  document.body.classList.remove('mf-course-list-route');
-  const workspace=$('mrfluentEnglishWorkspace');if(workspace)workspace.hidden=false;
-  document.body.style.overflow='';
-  const backButton=workspace?.querySelector('.mf-course-workspace-top .btn');
-  if(backButton){backButton.textContent='← Back to levels';backButton.onclick=mrfluentRouteBack}
-  const host=$('mrfluentEnglishLevelContent');host.innerHTML='<div class="empty">Loading '+esc(level.code)+' lessons…</div>';
-  const u=await sb.from('mrfluent_english_units').select('id,level_id,unit_number,title,description,sort_order,is_published').eq('level_id',levelId).eq('is_published',true).order('sort_order',{ascending:true});
-  if(u.error){host.innerHTML='<div class="empty">Could not load units: '+esc(u.error.message)+'</div>';return}
-  const units=u.data||[];let lessons=[];
-  if(units.length){const lr=await sb.from('mrfluent_english_lessons').select('id,unit_id,title,lesson_type,description,content_text,video_url,sort_order,is_published').in('unit_id',units.map(x=>x.id)).eq('is_published',true).order('sort_order',{ascending:true});if(lr.error){host.innerHTML='<div class="empty">Could not load lessons: '+esc(lr.error.message)+'</div>';return}lessons=lr.data||[]}
-  const progressResult=await sb.from('mrfluent_english_lesson_progress').select('lesson_id').eq('student_id',sessionUser.id);
-  if(progressResult.error){host.innerHTML='<div class="empty">Could not load lesson progress: '+esc(progressResult.error.message)+'</div>';return}
-  mrFluentEnglishCompletedLessonIds=new Set((progressResult.data||[]).map(x=>String(x.lesson_id)));
-  const byUnit=new Map();lessons.forEach(l=>{if(!byUnit.has(l.unit_id))byUnit.set(l.unit_id,[]);byUnit.get(l.unit_id).push(l)});
-  host.innerHTML='<h3>'+esc(level.code+' — '+level.title)+'</h3><p class="mf-course-footnote">Course access is independent from Grade Access. Only published lessons appear here.</p>'+(units.length?units.map(unit=>'<div class="mf-course-unit"><h4>Unit '+esc(unit.unit_number)+' · '+esc(unit.title)+'</h4>'+(unit.description?'<p>'+esc(unit.description)+'</p>':'')+((byUnit.get(unit.id)||[]).length?(byUnit.get(unit.id)||[]).map(lesson=>'<details class="mf-course-lesson"><summary>'+esc(lesson.title)+' <span class="pill">'+esc(lesson.lesson_type||'lesson')+'</span></summary>'+(lesson.description?'<p><b>'+esc(lesson.description)+'</b></p>':'')+(lesson.content_text?'<p>'+esc(lesson.content_text).replace(/\r?\n/g,'<br>')+'</p>':'<p>This lesson is published but the teacher has not added the lesson text yet.</p>')+(lesson.video_url?'<a class="mf-course-video" href="'+esc(lesson.video_url)+'" target="_blank" rel="noopener noreferrer">▶ Open lesson video</a>':'')+'<div style="margin-top:10px"><button class="btn '+(mrFluentEnglishCompletedLessonIds.has(String(lesson.id))?'secondary':'primary')+'" type="button" '+(mrFluentEnglishCompletedLessonIds.has(String(lesson.id))?'disabled':'')+' onclick="mrfluentCompleteEnglishLesson(\''+esc(lesson.id)+'\')">'+(mrFluentEnglishCompletedLessonIds.has(String(lesson.id))?'✓ Completed':'Mark lesson complete')+'</button></div></details>').join(''):'<p class="mf-course-footnote">No published lessons in this unit yet.</p>')+'</div>').join(''):'<div class="empty">No published units for this level yet. Check back soon.</div>');
-  host.scrollIntoView({behavior:'smooth',block:'start'});
 }
-
-
 async function mrfluentCompleteEnglishLesson(lessonId){
  if(!sessionUser){openAuth('login');return}
  const r=await sb.rpc('mrfluent_complete_english_lesson',{p_lesson_id:lessonId});
