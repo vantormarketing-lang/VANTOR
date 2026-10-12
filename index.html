@@ -46,13 +46,40 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 @media(max-width:800px){.prep-lessons{grid-template-columns:1fr}.grammar-map{grid-template-columns:1fr 1fr}.assessment-strip{grid-template-columns:1fr}}@media(max-width:520px){.grammar-map{grid-template-columns:1fr}}
 
 
-/* Independent English Course membership and level browser */
-.mf-english-course-section{padding:clamp(44px,7vw,82px) 0;background:radial-gradient(circle at 8% 4%,rgba(188,76,105,.11),transparent 40%),linear-gradient(180deg,rgba(17,10,18,.75),rgba(8,7,13,.94));border-top:1px solid rgba(209,127,150,.15);border-bottom:1px solid rgba(209,127,150,.13)}
-.mf-english-course-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,280px);gap:22px;align-items:center;padding:clamp(18px,3.5vw,30px);border:1px solid rgba(203,113,143,.26);border-radius:22px;background:linear-gradient(135deg,rgba(37,18,35,.9),rgba(15,12,25,.95));box-shadow:0 14px 42px rgba(0,0,0,.18)}
-.mf-english-course-hero h3{font-size:clamp(22px,3vw,30px);margin:10px 0}.mf-english-course-hero p{color:var(--muted,#aaa);line-height:1.8;max-width:680px}.mf-english-course-price{display:grid;gap:5px;padding:18px;border-radius:17px;background:rgba(7,7,12,.42);border:1px solid rgba(211,125,152,.18)}.mf-english-course-price strong{font-size:34px}.mf-english-course-price small{font-size:15px}.mf-english-course-price span{font-size:12px;color:var(--muted,#aaa);margin-bottom:8px}.mf-english-course-price .btn{width:100%;white-space:normal}
-.mf-course-status{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:16px 0;padding:12px 14px;border-radius:13px;background:rgba(26,19,31,.75);border:1px solid rgba(203,113,143,.17);font-size:12px;line-height:1.6}.mf-course-level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.mf-course-level{padding:17px;border-radius:17px;background:linear-gradient(150deg,rgba(27,19,32,.94),rgba(13,11,19,.96));border:1px solid rgba(202,115,143,.19);min-width:0}.mf-course-level h3{margin:6px 0;font-size:17px}.mf-course-level p{font-size:12px;line-height:1.65;color:var(--muted,#aaa)}.mf-course-level .btn{width:100%;margin-top:12px}.mf-course-content{margin-top:18px;padding:clamp(14px,3vw,22px);border:1px solid rgba(203,113,143,.2);border-radius:18px;background:rgba(13,10,18,.72);min-width:0}.mf-course-content h3{margin:0 0 12px}.mf-course-unit{padding:13px 0;border-top:1px solid rgba(200,130,152,.15)}.mf-course-unit h4{font-size:14px;margin:0 0 9px}.mf-course-lesson{border:1px solid rgba(200,130,152,.15);background:rgba(30,19,32,.5);border-radius:11px;padding:10px 12px;margin:8px 0}.mf-course-lesson summary{cursor:pointer;font-size:12px;font-weight:700}.mf-course-lesson p{font-size:12px;line-height:1.8;color:#e0d5df;white-space:normal;overflow-wrap:anywhere}.mf-course-video{display:inline-block;margin-top:7px;color:#f4a8c0;text-decoration:underline;font-size:12px}.mf-course-footnote{margin:12px 2px 0;color:var(--muted,#999);font-size:11px;line-height:1.7}.mf-course-status .pill{flex:none}
-@media(max-width:760px){.mf-english-course-hero{grid-template-columns:1fr}.mf-course-level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mf-course-level{padding:13px}.mf-course-level h3{font-size:15px}}
-@media(max-width:430px){.mf-course-level-grid{grid-template-columns:1fr}.mf-course-level{display:grid;grid-template-columns:1fr}.mf-course-level .btn{width:100%}.mf-english-course-price strong{font-size:30px}}
+/* Independent English Course membership and level browser — Design 5: compact horizontal banner */
+.mf-english-course-section{padding:24px 0 28px;background:radial-gradient(ellipse at 5% 50%,rgba(180,30,172,.10),transparent 38%),linear-gradient(180deg,rgba(17,10,24,.36),rgba(8,7,13,.2));border-top:1px solid rgba(209,127,205,.10);border-bottom:1px solid rgba(209,127,205,.10)}
+.mf-english-course-section>.container{width:min(1400px,96%)}
+.mf-english-course-hero{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(145px,205px) minmax(0,1fr) minmax(180px,230px);gap:20px;align-items:center;min-height:154px;padding:12px 22px 12px 14px;border:1px solid rgba(214,63,195,.76);border-radius:19px;background:radial-gradient(ellipse at 0% 50%,rgba(170,25,170,.30),transparent 35%),linear-gradient(110deg,#21102b 0%,#17102c 50%,#2b1031 100%);box-shadow:0 12px 32px rgba(0,0,0,.22),0 0 24px rgba(186,36,171,.08)}
+.mf-english-course-hero:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(circle at 83% 18%,rgba(229,51,195,.15),transparent 24%),linear-gradient(130deg,transparent 60%,rgba(124,29,151,.16));pointer-events:none}
+.mf-english-course-hero:after{content:"";position:absolute;z-index:-1;width:180px;height:180px;right:25%;top:-145px;border-radius:50%;border:1px solid rgba(242,91,213,.15);box-shadow:0 0 0 20px rgba(229,51,195,.025),0 0 0 42px rgba(229,51,195,.02);pointer-events:none}
+.mf-course-art{display:grid;place-items:center;width:100%;height:126px;min-width:0;position:relative;border-radius:14px;background:linear-gradient(135deg,rgba(94,28,137,.20),rgba(9,9,25,.03))}
+.mf-course-art svg{display:block;width:100%;max-width:205px;height:100%;filter:drop-shadow(0 8px 10px rgba(0,0,0,.23))}
+.mf-course-copy{min-width:0;position:relative;z-index:1}
+.mf-course-kicker{display:inline-flex;align-items:center;gap:6px;margin-bottom:5px;padding:4px 10px;border-radius:999px;background:linear-gradient(100deg,#9824ae,#5a258f);color:#fff;font-size:9px;font-weight:900;letter-spacing:.09em;line-height:1.2}
+.mf-course-kicker:before{content:"";width:5px;height:5px;border-radius:50%;background:#ff95e8;box-shadow:0 0 8px #ff72dc}
+.mf-course-copy h3{font-size:clamp(19px,2.2vw,27px);line-height:1.18;letter-spacing:-.45px;margin:0 0 5px;color:#fff;font-weight:900;overflow-wrap:anywhere}
+.mf-course-copy h3 span{background:linear-gradient(90deg,#e68adf,#ff4fc2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mf-course-arabic{margin:0 0 7px;color:#efd6ed;font-family:Arial,Tahoma,sans-serif;font-size:12px;font-weight:700;line-height:1.45;direction:rtl;text-align:left}
+.mf-course-meta{display:flex;align-items:center;gap:11px;flex-wrap:wrap;color:#c4b3d0;font-size:11px;line-height:1.5}
+.mf-course-levels{display:inline-flex;align-items:center;gap:6px;color:#f2a4e5;font-weight:900;white-space:nowrap}
+.mf-course-levels .level-bars{display:inline-flex;align-items:end;gap:2px;height:13px}
+.mf-course-levels .level-bars i{display:block;width:3px;border-radius:2px;background:#ed68d0}
+.mf-course-levels .level-bars i:nth-child(1){height:5px}.mf-course-levels .level-bars i:nth-child(2){height:9px}.mf-course-levels .level-bars i:nth-child(3){height:13px}
+.mf-course-divider{width:1px;height:20px;background:rgba(237,104,208,.43);flex:none}
+.mf-course-tagline{font-family:Arial,Tahoma,sans-serif;color:#d8c3db;direction:rtl}
+.mf-english-course-price{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:7px;min-width:0;padding:0 0 0 17px;border:0;border-left:1px solid rgba(236,104,215,.22);border-radius:0;background:transparent;text-align:center}
+.mf-course-price-row{display:flex;align-items:baseline;justify-content:center;gap:7px;flex-wrap:wrap}
+.mf-english-course-price strong{font-size:23px;line-height:1.1;color:#fff;font-weight:900;white-space:nowrap}
+.mf-english-course-price strong small{font-size:11px;color:#f2a1e5}
+.mf-english-course-price span{font-size:10px;color:#c3a9c9;margin:0}
+.mf-english-course-price .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:39px;padding:9px 12px;white-space:normal;border:1px solid rgba(255,185,241,.48);border-radius:999px;background:linear-gradient(100deg,#a824b4,#e22caf);color:#fff;font-size:11px;font-weight:900;line-height:1.3;box-shadow:0 5px 18px rgba(202,30,178,.23);transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.mf-english-course-price .btn:hover{transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 8px 22px rgba(202,30,178,.32)}
+.mf-english-course-price .btn[hidden]{display:none!important}
+.mf-course-status{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0 0;padding:9px 12px;border-radius:11px;background:rgba(26,19,31,.56);border:1px solid rgba(203,113,143,.12);font-size:11px;line-height:1.6}
+.mf-course-level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.mf-course-level{padding:17px;border-radius:17px;background:linear-gradient(150deg,rgba(27,19,32,.94),rgba(13,11,19,.96));border:1px solid rgba(202,115,143,.19);min-width:0}.mf-course-level h3{margin:6px 0;font-size:17px}.mf-course-level p{font-size:12px;line-height:1.65;color:var(--muted,#aaa)}.mf-course-level .btn{width:100%;margin-top:12px}.mf-course-content{margin-top:18px;padding:clamp(14px,3vw,22px);border:1px solid rgba(203,113,143,.2);border-radius:18px;background:rgba(13,10,18,.72);min-width:0}.mf-course-content h3{margin:0 0 12px}.mf-course-unit{padding:13px 0;border-top:1px solid rgba(200,130,152,.15)}.mf-course-unit h4{font-size:14px;margin:0 0 9px}.mf-course-lesson{border:1px solid rgba(200,130,152,.15);background:rgba(30,19,32,.5);border-radius:11px;padding:10px 12px;margin:8px 0}.mf-course-lesson summary{cursor:pointer;font-size:12px;font-weight:700}.mf-course-lesson p{font-size:12px;line-height:1.8;color:#e0d5df;white-space:normal;overflow-wrap:anywhere}.mf-course-video{display:inline-block;margin-top:7px;color:#f4a8c0;text-decoration:underline;font-size:12px}.mf-course-footnote{margin:9px 2px 0;color:var(--muted,#999);font-size:10px;line-height:1.65}.mf-course-status .pill{flex:none}
+@media(max-width:900px){.mf-english-course-hero{grid-template-columns:140px minmax(0,1fr) 184px;gap:13px;padding:12px}.mf-course-art{height:112px}.mf-course-copy h3{font-size:20px}.mf-english-course-price{padding-left:12px}.mf-course-tagline{font-size:10px}}
+@media(max-width:700px){.mf-english-course-section{padding:18px 0 22px}.mf-english-course-hero{grid-template-columns:95px minmax(0,1fr);gap:10px;padding:12px;min-height:0;border-radius:16px}.mf-course-art{height:102px}.mf-course-copy h3{font-size:clamp(17px,4vw,22px)}.mf-course-arabic{font-size:11px}.mf-course-meta{gap:7px;font-size:10px}.mf-course-divider{height:16px}.mf-english-course-price{grid-column:1/-1;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:9px;padding:10px 0 0;border-left:0;border-top:1px solid rgba(236,104,215,.20)}.mf-course-price-row{justify-content:flex-start;gap:5px}.mf-english-course-price strong{font-size:20px}.mf-english-course-price .btn{min-height:38px}}
+@media(max-width:430px){.mf-english-course-section>.container{width:94%}.mf-english-course-hero{grid-template-columns:72px minmax(0,1fr);gap:8px;padding:9px}.mf-course-art{height:86px;border-radius:10px}.mf-course-art svg{width:120%;max-width:none}.mf-course-kicker{font-size:8px;padding:3px 8px}.mf-course-copy h3{font-size:16px;letter-spacing:-.2px}.mf-course-arabic{font-size:10px;margin-bottom:5px}.mf-course-meta{font-size:9px;gap:5px}.mf-course-divider{height:14px}.mf-course-tagline{line-height:1.3}.mf-english-course-price{gap:6px}.mf-english-course-price strong{font-size:18px}.mf-english-course-price span{font-size:9px}.mf-english-course-price .btn{padding:8px 10px;font-size:10px}}
 
 
 /* Separate, branded English Course workspace; hidden unless membership is approved. */
@@ -1134,14 +1161,65 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <section id="grades"><div class="container"><div class="section-head"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade.</h2><p>Select your school grade to see access options and start your English journey.</p></div><span class="pill" id="gradeLoadStatus">Loading grades…</span></div><div class="grid3" id="gradeGrid"><div class="empty">Loading grades from Mr. Fluent…</div></div></div></section>
 <section id="english-course" class="mf-english-course-section">
   <div class="container">
-    <div class="section-head"><div><div class="eyebrow">Separate monthly membership</div><h2>Complete English Course.</h2><p>One independent subscription gives access to all six CEFR levels, from A1 Beginner to C2 Proficiency. It does not affect your school-grade subscription.</p></div><span class="pill">100 EGP / 30 days</span></div>
     <div class="mf-english-course-hero">
-      <div><span class="pill">A1 → C2</span><h3>Build English step by step.</h3><p>Grammar, vocabulary, listening, speaking, reading and writing organized into levels and units. Published lessons unlock after the English Course payment is approved.</p></div>
-      <div class="mf-english-course-price"><strong>100 <small>EGP</small></strong><span>per 30 days</span><button class="btn primary" id="mrfluentEnglishSubscribeBtn" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button><button class="btn primary" id="mrfluentEnglishOpenBtn" type="button" hidden onclick="mrfluentOpenCourseWorkspace()">Open English Course →</button></div>
+      <div class="mf-course-art" aria-hidden="true">
+        <svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">
+          <defs>
+            <linearGradient id="mfBookCover5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9a45f2"/><stop offset=".52" stop-color="#5527bb"/><stop offset="1" stop-color="#2b176d"/></linearGradient>
+            <linearGradient id="mfBookSpine5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff72d6"/><stop offset="1" stop-color="#a22bd2"/></linearGradient>
+            <linearGradient id="mfPage5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff9ff"/><stop offset="1" stop-color="#d9c8f2"/></linearGradient>
+            <clipPath id="mfUkFlagClip5"><rect x="0" y="0" width="40" height="26" rx="4"/></clipPath>
+          </defs>
+          <circle cx="66" cy="66" r="55" fill="#7b1e9c" opacity=".16"/>
+          <circle cx="26" cy="37" r="8" fill="#e936be" opacity=".65"/>
+          <circle cx="186" cy="33" r="3" fill="#ef62d9"/>
+          <path d="M20 100l8-8m-4 0l8 8M184 54l5-5m-2.5 0l5 5" stroke="#f05cd1" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+          <g transform="translate(13 9) rotate(-10 84 62)">
+            <ellipse cx="83" cy="111" rx="72" ry="10" fill="#080611" opacity=".55"/>
+            <path d="M22 39Q22 31 31 29L131 14Q140 13 141 23L147 92Q148 101 139 103L37 118Q28 119 27 109Z" fill="#170b29" stroke="#f15acb" stroke-width="2"/>
+            <path d="M25 35L127 19Q135 18 136 27L141 91Q142 98 135 99L32 114Q25 115 24 107Z" fill="url(#mfPage5)" stroke="#fff" stroke-opacity=".7"/>
+            <path d="M29 29L128 13Q139 11 140 23L145 85L44 103Q34 104 33 94Z" fill="#31205d"/>
+            <path d="M28 25L128 10Q139 8 140 20L145 82L44 100Q34 101 33 91Z" fill="url(#mfBookCover5)" stroke="#f28bdf" stroke-width="1.4"/>
+            <path d="M31 28L42 31L48 98L37 100Z" fill="url(#mfBookSpine5)" opacity=".9"/>
+            <path d="M47 36L119 25" stroke="#e5a3ef" stroke-opacity=".65" stroke-width="1.6"/>
+            <path d="M49 43L114 33" stroke="#f6c7f1" stroke-opacity=".35" stroke-width="1.4"/>
+            <text x="86" y="60" text-anchor="middle" font-size="24" font-weight="900" letter-spacing="1" fill="#fff">ABC</text>
+            <text x="87" y="77" text-anchor="middle" font-size="7" font-weight="800" letter-spacing="2" fill="#f7c4f1">ENGLISH</text>
+            <path d="M51 85L120 72" stroke="#ffc5f3" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+          </g>
+          <g transform="translate(146 80) rotate(7 22 16)">
+            <circle cx="22" cy="16" r="25" fill="#210c35" stroke="#f78bdd" stroke-width="2.6"/>
+            <g transform="translate(2 3)" clip-path="url(#mfUkFlagClip5)">
+              <rect width="40" height="26" fill="#17327f"/>
+              <path d="M0 0L40 26M40 0L0 26" stroke="#fff" stroke-width="7"/>
+              <path d="M0 0L40 26M40 0L0 26" stroke="#d82853" stroke-width="3"/>
+              <path d="M20 0V26M0 13H40" stroke="#fff" stroke-width="9"/>
+              <path d="M20 0V26M0 13H40" stroke="#d82853" stroke-width="4.5"/>
+            </g>
+            <rect x="2" y="3" width="40" height="26" rx="4" fill="none" stroke="#fff" stroke-opacity=".7"/>
+          </g>
+          <path d="M166 31l4-8m-9 5l8 3M32 18l3-7m-8 6l7 3" stroke="#ff8be2" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="mf-course-copy">
+        <span class="mf-course-kicker">COURSE</span>
+        <h3>Mr. Fluent <span>English Course</span></h3>
+        <p class="mf-course-arabic" dir="rtl" lang="ar">الكورس الإنجليزي الكامل</p>
+        <div class="mf-course-meta">
+          <span class="mf-course-levels"><span class="level-bars" aria-hidden="true"><i></i><i></i><i></i></span>A1 → C2</span>
+          <span class="mf-course-divider" aria-hidden="true"></span>
+          <span class="mf-course-tagline" dir="rtl" lang="ar">كل مستويات اللغة في مكان واحد.</span>
+        </div>
+      </div>
+      <div class="mf-english-course-price">
+        <div class="mf-course-price-row"><strong>100 <small>EGP</small></strong><span>per 30 days</span></div>
+        <button class="btn primary" id="mrfluentEnglishSubscribeBtn" type="button" onclick="mrfluentStartEnglishSubscription()">Explore Course →</button>
+        <button class="btn primary" id="mrfluentEnglishOpenBtn" type="button" hidden onclick="mrfluentOpenCourseWorkspace()">Open English Course →</button>
+      </div>
     </div>
     <div id="mrfluentEnglishCourseStatus" class="mf-course-status" aria-live="polite"><span class="pill">Loading</span> Checking your English Course access…</div>
-    <div class="mf-course-footnote">Your course and placement test stay locked until the payment is approved by the admin. Once active, press <b>Open English Course</b> to enter your private learning space.</div>
-    <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn secondary" type="button" onclick="mrfluentRefreshEnglishCourse()">Refresh Course Status</button></div>
+    <div class="mf-course-footnote">The course and placement test unlock after your payment is approved by the admin. This membership is separate from your school-grade subscription.</div>
+    <div style="display:flex;justify-content:flex-end;margin:8px 0 0"><button class="btn secondary" type="button" onclick="mrfluentRefreshEnglishCourse()" style="font-size:10px;padding:6px 10px">Refresh Course Status</button></div>
   </div>
 </section>
 <div id="mrfluentEnglishWorkspace" class="mf-course-workspace" hidden aria-label="English Course student workspace">
@@ -1150,30 +1228,6 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
   <div id="mrfluentEnglishLevels" class="mf-course-level-grid" hidden><div class="empty">Complete the placement test to see your level.</div></div>
   <div id="mrfluentEnglishLevelContent" class="mf-course-content" aria-live="polite"><div class="empty">Your lessons will appear here after access is verified.</div></div>
 </div>
-
-
-<section id="subjects"><div class="container"><div class="head"><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2><p>Open any learning area directly. Sign in when the content belongs to your active grade.</p></div><div class="tools"><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')" onkeydown="if(event.key==='Enter'||event.key===' ')openStudentTool('lessons')"><div class="tool-icon">A</div><h3>Grammar</h3><p>Open your grade lessons and filter grammar content.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">V</div><h3>Vocabulary</h3><p>Open unit vocabulary lessons and revision.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">R</div><h3>Reading</h3><p>Open reading lessons and comprehension practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">W</div><h3>Writing</h3><p>Open writing lessons and guided practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">L</div><h3>Listening</h3><p>Open listening lessons and media.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('quizzes')"><div class="tool-icon">Q</div><h3>Quizzes</h3><p>Open your published quizzes and start one.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('homework')"><div class="tool-icon">H</div><h3>Homework</h3><p>Open assignments and submit your answers.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('certificates')"><div class="tool-icon">C</div><h3>Certificates</h3><p>Open certificates issued to your account.</p></div></div></div></section>
-<section id="dashboard"><div class="container">
-  <div class="head"><div class="eyebrow">Your learning command center</div><h2>Student Dashboard</h2><p>Track your English progress, jump back into lessons, review quizzes and manage your student account.</p></div>
-  <div class="dashboard-grid-pro">
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>My English Progress</h3><p id="dashGradeLabel">Log in to load your active grade.</p></div><span class="pill" id="dashAccessPill">Student</span></div><div id="dashboardGradeProgress"><div class="empty">Log in to load your English progress.</div></div></div>
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Quick Actions</h3><p>Open the part of your course you need.</p></div></div><div class="quick-grid"><button class="quick-card" onclick="openStudentTool('lessons')"><b>Lessons</b><span>Watch videos and study content</span></button><button class="quick-card" onclick="openStudentTool('quizzes')"><b>Quizzes</b><span>Practice and check your score</span></button><button class="quick-card" onclick="openStudentTool('homework')"><b>Homework</b><span>Submit assignments and view feedback</span></button><button class="quick-card" onclick="openDomaV2Reports()"><b>Reports</b><span>See your full learning history</span></button><button class="quick-card" onclick="openDrawer('overview')"><b>Subscriptions &amp; Sync</b><span>Check plans, expiry dates and sync learning progress</span></button></div></div>
-  </div>
-  <div class="progress-summary" style="margin-top:15px">
-    <div class="progress-mini"><b id="dashLessons">—</b><span>Lessons completed</span></div>
-    <div class="progress-mini"><b id="dashQuizzes">—</b><span>Quiz attempts</span></div>
-    <div class="progress-mini"><b id="dashCerts">—</b><span>Certificates</span></div>
-  </div>
-  <div class="dashboard-grid-pro" style="margin-top:15px">
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Learning Breakdown</h3><p>Live activity from your student account.</p></div></div><div id="dashBreakdown"><div class="empty">Log in to load your learning breakdown.</div></div></div>
-    <div class="dash-pro-card"><div class="dash-pro-head"><div><h3>Recent Activity</h3><p>Your latest study actions.</p></div></div><div id="dashActivity"><div class="empty">Log in to load recent activity.</div></div></div>
-  </div>
-  <div class="notice" id="dashNotice" style="margin-top:15px">Your personalized dashboard appears after login.</div>
-  <div class="doma-v2-actions"><button class="btn secondary" onclick="openDomaV2Reports()">Open Detailed Reports</button><button class="btn secondary" onclick="openDomaV2Notifications()">My Notifications</button></div>
-</div></section>
-
-<section id="teachers"><div class="container"><div class="head"><div class="eyebrow">Learning areas</div><h2>Everything you need for English.</h2><p>Study the skills that matter for your school English curriculum, all inside your grade area.</p></div><div class="teachers"><div class="card teacher"><div class="avatar">G</div><h3>Grammar</h3><p>Rules, examples &amp; practice</p><small>Build accurate English sentences.</small></div><div class="card teacher"><div class="avatar">V</div><h3>Vocabulary</h3><p>Words, meanings &amp; usage</p><small>Revise key words by unit.</small></div><div class="card teacher"><div class="avatar">R</div><h3>Reading</h3><p>Comprehension &amp; questions</p><small>Practice school-style reading.</small></div><div class="card teacher"><div class="avatar">W</div><h3>Writing</h3><p>Models &amp; guided practice</p><small>Improve structure and expression.</small></div><div class="card teacher"><div class="avatar">L</div><h3>Listening</h3><p>Audio &amp; comprehension</p><small>Train your listening skills.</small></div><div class="card teacher"><div class="avatar">Q</div><h3>Quizzes &amp; Homework</h3><p>Practice &amp; feedback</p><small>Check your learning and results.</small></div></div></div></section>
-
 
 <section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div><h2>Choose your learning access.</h2><p>Choose school-grade access for 150 EGP per month, or the independent Mr. Fluent English Course for 100 EGP every 30 days. Each membership is approved separately.</p></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">150 <small>EGP / month</small></div><ul><li>Access for your selected school grade</li><li>Lessons &amp; published curriculum</li><li>Quizzes &amp; assessments</li><li>Homework &amp; student results</li><li>Progress tracking &amp; certificates</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>Mr. Fluent English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Access to all six CEFR levels, from A1 to C2</li><li>Placement test to help find your level</li><li>Grammar, vocabulary &amp; pronunciation practice</li><li>Listening, speaking, reading &amp; writing</li><li>Lessons, unit practice &amp; assessments</li><li>Independent from your school-grade subscription</li><li>Access begins after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq">
 <details><summary>What are the two subscription options?</summary><p>Grade Access costs 150 EGP per month and unlocks the selected school grade. The separate Mr. Fluent English Course costs 100 EGP every 30 days and includes the A1–C2 English course. They are independent memberships; paying for one does not activate the other.</p></details>
@@ -1713,7 +1767,7 @@ async function mrfluentRefreshEnglishCourse(){
   const openBtn=$('mrfluentEnglishOpenBtn');
   if(subscribeBtn){
     subscribeBtn.hidden=!!mrFluentEnglishSubscription;
-    subscribeBtn.textContent=mrFluentEnglishAccessError?'Check membership':mrFluentEnglishPendingRequest?'Payment pending':sessionUser?'Subscribe to English Course':'Log in to subscribe';
+    subscribeBtn.textContent=mrFluentEnglishAccessError?'Check membership':mrFluentEnglishPendingRequest?'Payment pending':sessionUser?'Explore Course →':'Log in to explore course';
     subscribeBtn.disabled=!!mrFluentEnglishPendingRequest||!!mrFluentEnglishAccessError;
   }
   if(openBtn)openBtn.hidden=!mrFluentEnglishSubscription;
