@@ -1572,23 +1572,28 @@ async function domaOpenGrade(name){
   if(!sessionUser){openAuth('signup');return}
   const g=(Array.isArray(grades)?grades:[]).find(x=>x&&x.name===name);
   if(!g){showToast('Grade is not available right now. Please refresh and try again.');return}
-  // Always allow the user to reach the grade's plan options, even if the
-  // subscription lookup or dashboard refresh temporarily fails.
-  try{await refreshStudentState()}catch(e){console.warn('Grade access refresh failed; showing plan options.',e)}
-  let subs=[];
-  try{subs=await getActiveSubscriptions()}catch(e){console.warn('Subscription lookup failed; showing plan options without granting access.',e)}
-  const active=(Array.isArray(subs)?subs:[]).find(s=>String(s.grade_id)===String(g.id));
-  if(active){
-    currentGrade=g;
-    currentSubscription=active;
-    window.domaSelectedGradeId=String(g.id);
-    window.currentGrade=currentGrade;
-    window.currentSubscription=currentSubscription;
-    try{closeGradeModal()}catch(e){}
-    try{await openDrawer('overview');return}catch(e){console.warn('Could not open dashboard; showing plan options.',e)}
-  }
+
+  // Show the plan modal immediately. Network/profile refresh must never block
+  // a newly registered student from seeing the subscription options.
   try{showGradeInfo(name)}
-  catch(error){console.error('Grade plan display failed:',error);showToast('Could not show grade options. Please refresh the page and try again.')}
+  catch(error){console.error('Grade plan display failed:',error);showToast('Could not show grade options. Please refresh the page and try again.');return}
+
+  // Check paid access in the background. Only an active subscription opens
+  // the grade dashboard; lookup failures leave the plan modal visible.
+  (async()=>{
+    try{
+      let subs=await getActiveSubscriptions();
+      const active=(Array.isArray(subs)?subs:[]).find(s=>String(s.grade_id)===String(g.id));
+      if(!active)return;
+      currentGrade=g;
+      currentSubscription=active;
+      window.domaSelectedGradeId=String(g.id);
+      window.currentGrade=currentGrade;
+      window.currentSubscription=currentSubscription;
+      try{closeGradeModal()}catch(e){}
+      try{await openDrawer('overview')}catch(e){console.warn('Could not open dashboard; plan options remain available.',e)}
+    }catch(error){console.warn('Subscription lookup failed; leaving grade plan options open.',error)}
+  })();
 }
 
 // Explicitly expose grade/account actions for the resilient backup grade cards.
