@@ -1,7 +1,7 @@
-const CACHE_NAME = 'doma-admin-offline-v16';
+const CACHE_NAME = 'doma-admin-offline-v17';
 const ADMIN_URL = new URL('./admin.html', self.registration.scope).href;
-const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=doma-admin-v7', self.registration.scope).href;
-const ICON64_URL = new URL('./doma-leaf-book-icon.svg?v=doma-admin-v7', self.registration.scope).href;
+const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=doma-admin-v8', self.registration.scope).href;
+const ICON64_URL = new URL('./doma-leaf-book-icon.svg?v=doma-admin-v8', self.registration.scope).href;
 const ICON192_URL = new URL('./mr-fluent-icon-192.png?v=12', self.registration.scope).href;
 const ICON512_URL = new URL('./mr-fluent-icon-512.png?v=12', self.registration.scope).href;
 const ICON_MASKABLE_URL = new URL('./mr-fluent-icon-maskable-512.png?v=12', self.registration.scope).href;
