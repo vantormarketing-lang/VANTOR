@@ -127,9 +127,17 @@ if (/\.from\(\s*['"]quiz_questions['"]\s*\)\s*\.select\s*\(/.test(student)) {
 const studentVersion = (student.match(/doma-student-v[0-9]+/g) || []).at(-1);
 const sw = read('sw.js');
 if (studentVersion && !sw.includes(studentVersion)) fail('sw.js: student PWA version does not match index.html');
-const adminVersion = (admin.match(/doma-admin-v[0-9]+/g) || []).at(-1);
+const adminVersions = [...new Set(admin.match(/doma-admin-v[0-9]+/g) || [])];
+const adminVersion = adminVersions.at(-1);
 const adminSw = read('admin-sw.js');
+if (adminVersions.length > 1) fail('admin.html: multiple Admin PWA cache versions are present');
 if (adminVersion && !adminSw.includes(adminVersion)) fail('admin-sw.js: admin PWA version does not match admin.html');
+if (adminVersion && !admin.includes('admin-sw.js?doma-admin=' + adminVersion.replace('doma-admin-', ''))) {
+  fail('admin.html: service worker registration URL version does not match the Admin PWA version');
+}
+if (!admin.includes('const fallback=window.loadSection;') || !admin.includes('fallback!==route')) {
+  fail('admin.html: core Admin section loaders must fall back to the original section dispatcher');
+}
 
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
