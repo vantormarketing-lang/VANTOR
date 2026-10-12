@@ -1995,7 +1995,7 @@ function domaLessonDisplayTitle(lesson,unitMap){
   // hard-coded first-preparatory map replaced real titles with generic labels
   // such as "Story Time" and "Team-Project Roundtable", making grades look alike.
   const title=String(lesson?.title||'Lesson').trim();
-  return title.replace(/^lesson\\s+\\d+\\s*:\\s*/i,'').trim() || 'Lesson';
+  return title.replace(/^lesson\s+\d+\s*:\s*/i,'').trim() || 'Lesson';
 }
 
 async function openPublicLesson(title){
