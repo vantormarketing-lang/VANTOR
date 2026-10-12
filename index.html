@@ -8092,5 +8092,38 @@ header.hero#home .container.hero-grid > div:first-child {
 }
 </style>
 
+
+<style id="doma-hero-green-copy-wide-layout">
+/* Give the homepage hero copy more breathing room and highlight its supporting text in green. */
+header.hero#home > .container.hero-grid {
+  width: min(1280px, 95%) !important;
+}
+header.hero#home .container.hero-grid > div:first-child {
+  width: 100% !important;
+  max-width: 1120px !important;
+}
+header.hero#home .container.hero-grid > div:first-child > h1 {
+  max-width: 100% !important;
+}
+header.hero#home .container.hero-grid > div:first-child > p {
+  color: #72e6ac !important;
+  max-width: 980px !important;
+  line-height: 1.8 !important;
+}
+@media (max-width: 700px) {
+  header.hero#home > .container.hero-grid {
+    width: 94% !important;
+  }
+  header.hero#home .container.hero-grid > div:first-child {
+    max-width: none !important;
+  }
+  header.hero#home .container.hero-grid > div:first-child > p {
+    max-width: 100% !important;
+    color: #72e6ac !important;
+    line-height: 1.55 !important;
+  }
+}
+</style>
+
 </body>
 </html>
