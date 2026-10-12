@@ -5774,7 +5774,8 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     if(typeof window.renderStudentQuizzes==='function'&&!window.renderStudentQuizzes.__offlineV2Wrapper){
       const original=window.renderStudentQuizzes;
       const wrapped=async function(){
-        if(offlineAvailable() && await renderOfflineQuizzes())return;
+        // Prefer the live database whenever the browser is online so admin Free/Locked changes appear immediately.
+        if(!navigator.onLine && offlineAvailable() && await renderOfflineQuizzes())return;
         return original.apply(this,arguments);
       };
       wrapped.__offlineV2Wrapper=true;window.renderStudentQuizzes=wrapped;
