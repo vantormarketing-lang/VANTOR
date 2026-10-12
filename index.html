@@ -2312,7 +2312,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
       if(title)title.textContent='Welcome back'+(name?' , '+name:'')+'.';
       if(textEl)textEl.textContent=grade?'Your course is ready. Open Lessons and start the next topic.':'Choose your grade and start with the available preview lessons.';
       if(box)box.style.display='none';
-      if(actions)actions.innerHTML=grade?'<button class="btn primary" type="button" onclick="openStudentTool(\'lessons\')">Open Lessons →</button><button class="btn secondary" type="button" onclick="openStudentTool(\'overview\')">View Progress</button>':'<button class="btn primary" type="button" onclick="document.getElementById(\'grades\').scrollIntoView({behavior:\'smooth\'})">Choose Grade →</button><button class="btn secondary" type="button" onclick="openStudentTool(\'profile\')">My Profile</button>';
+      if(actions)actions.innerHTML='<button class="btn primary" type="button" onclick="openStudentTool(\'overview\')">Open My Account →</button>';
     }
   }
 
