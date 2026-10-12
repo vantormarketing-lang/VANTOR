@@ -1023,6 +1023,14 @@ body.mf-course-list-route #mrfluentEnglishLevelContent{display:none!important}
 }
 </style>
 
+
+<style id="doma-grid-display-recovery-v1">
+/* Recovery safeguard: preserve visible school-grade grid at every breakpoint. */
+#gradeGrid.grid3{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;visibility:visible!important;opacity:1!important}
+#gradeGrid.grid3>.grade{display:block!important;min-width:0!important}
+@media(max-width:900px){#gradeGrid.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:520px){#gradeGrid.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}}
+</style>
 </head>
 <body>
 <nav class="nav">
