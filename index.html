@@ -1316,13 +1316,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>Mr. Fluent</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">English Course</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
 <header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Learn. Speak. <span>Master.</span></h1><h2 id="homeContinueTitleMobile" class="hero-start-title">Start your English journey.</h2><p>A focused English learning platform for Egyptian preparatory and secondary students — lessons, practice, challenges, progress and certificates in one place.</p><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a><button class="btn secondary" onclick="openAuth(\'signup\')">Create Student Account</button></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">150 EGP / Month</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory &amp; Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>Access</strong><span>After payment approval</span></div></div></div></div></header>
 
-<section class="home-welcome" id="home-upgrade" aria-label="Student greeting">
-  <div class="container">
-    <div class="home-status" id="homeAccountStatus" aria-live="polite">
-      <span class="pill">Guest</span><span class="home-status-text">Log in to personalize your learning space.</span>
-    </div>
-  </div>
-</section>
+
 
 <section class="how-it-works" id="how-it-works">
   <div class="container">
@@ -7844,6 +7838,45 @@ html,body{background:#080808!important}
   .nav-actions #navAction .nav-action-icon{width:11px!important;height:11px!important}
   .nav-actions .menu{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;padding:0!important;border-radius:10px!important;background:linear-gradient(145deg,#762337 0%,#551528 100%)!important;border:1px solid #a33d57!important}
   .nav-actions .menu svg{width:25px!important;height:25px!important}
+}
+</style>
+
+<style id="doma-purple-menu-and-compact-mobile-home">
+/* Purple menu button: burgundy replaced, two white curved strokes retained. */
+.nav-actions button.menu{
+  border:1px solid #9b7bf5!important;
+  background:linear-gradient(145deg,#6d3dc5 0%,#382064 100%)!important;
+  color:#fff!important;
+  box-shadow:0 4px 13px rgba(124,58,237,.28),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+.nav-actions button.menu svg{width:25px;height:25px;display:block;overflow:visible}
+.nav-actions button.menu .menu-stroke{stroke:#fff!important}
+.nav-actions button.menu:focus-visible{outline:2px solid #b9a0ff!important;outline-offset:2px}
+@media(max-width:700px){
+  /* Remove the artificial full-screen hero height; keep all content aligned at the top. */
+  header.hero#home{
+    display:block!important;position:relative!important;width:100%!important;
+    height:auto!important;min-height:auto!important;
+    padding-top:calc(64px + env(safe-area-inset-top,0px))!important;
+    padding-bottom:10px!important;margin:0!important;
+    align-items:initial!important;justify-content:initial!important;
+  }
+  header.hero#home .container.hero-grid{
+    display:block!important;width:92%!important;min-height:0!important;height:auto!important;
+    margin:0 auto!important;padding:0!important;transform:none!important;
+  }
+  header.hero#home .hero-start-title{margin:0 0 5px!important;line-height:1.2!important}
+  header.hero#home p{font-size:12px!important;line-height:1.5!important;margin:0 0 10px!important}
+  header.hero#home .actions{gap:6px!important}
+  header.hero#home .actions .btn{min-height:34px!important;padding:8px 10px!important}
+  header.hero#home .tagrow{margin-top:8px!important;gap:5px!important}
+  header.hero#home .mini-proof{margin-top:9px!important;gap:6px!important}
+  section.how-it-works{padding-top:14px!important;padding-bottom:26px!important}
+  section.how-it-works .head{margin-bottom:10px!important}
+  section.how-it-works .head h2{margin-bottom:5px!important}
+  section.how-it-works .head>p{margin-top:3px!important}
+  section.how-it-works .head .how-arabic-intro{margin:3px auto 0!important}
+  section.how-it-works .how-grid{margin-top:10px!important}
 }
 </style>
 </body>
