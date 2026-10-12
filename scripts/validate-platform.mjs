@@ -101,6 +101,13 @@ if (!admin.includes('createSignedUrl(path,300)') || !admin.includes('data-doma-h
   fail('admin.html: secure signed-link handling for private homework attachments is missing');
 }
 
+const quizSecurity = read('database/SECURE_QUIZ_REVIEW_RPC.sql');
+if (!quizSecurity.includes("Answer review is disabled for this quiz") ||
+    !quizSecurity.includes("coalesce(qps.show_review, true)") ||
+    !quizSecurity.includes("IF NOT v_is_staff THEN")) {
+  fail('database/SECURE_QUIZ_REVIEW_RPC.sql: student review must enforce the Show Review setting while preserving staff access');
+}
+
 const battleRequirements = [
   'doma_create_battle_session',
   'doma_join_battle_session',
