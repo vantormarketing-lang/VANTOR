@@ -1223,6 +1223,76 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
   #faq .faq p { font-size:10px; padding-top:7px; }
 }
 </style>
+
+<style id="doma-mobile-footer-refresh-v1">
+/* Match the footer symbol to the primary Mr. Fluent header logo. */
+#mrFluentFooterLogo {
+  background:linear-gradient(145deg,rgba(83,38,139,.58),rgba(15,10,29,.98))!important;
+  border-color:rgba(180,126,255,.7)!important;
+  box-shadow:0 8px 25px #000,0 0 18px rgba(139,92,246,.22)!important;
+}
+#mrFluentFooterLogo svg { width:31px!important;height:31px!important;overflow:visible; }
+
+/* In phone view, stack the footer logo and brand text; arrange link groups beside one another. */
+@media (max-width:640px) {
+  .footer { padding:26px 0 18px!important; }
+  .footer .footgrid {
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:18px 12px!important;
+    align-items:start;
+  }
+  .footer .footgrid>div:first-child {
+    grid-column:1/-1;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    text-align:center!important;
+    min-width:0;
+  }
+  .footer .footgrid>div:first-child .brand {
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:7px!important;
+    margin:0 auto!important;
+    text-align:center!important;
+  }
+  .footer .footgrid>div:first-child .brand>span:last-child { text-align:center; }
+  .footer .footgrid>div:first-child .brand small { margin-top:3px; }
+  .footer .footgrid>div:first-child p {
+    max-width:310px;
+    margin:10px auto 0!important;
+    text-align:center!important;
+    font-size:10px!important;
+    line-height:1.55;
+  }
+  .footer .footgrid>div:not(:first-child) { min-width:0; }
+  .footer .footgrid>div:not(:first-child) h4 { margin-bottom:7px!important; }
+  .footer .footgrid>div:not(:first-child) a {
+    font-size:10px!important;
+    line-height:1.5;
+    margin:5px 0!important;
+    overflow-wrap:anywhere;
+  }
+  .footer .copy {
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    align-items:start;
+    margin-top:20px!important;
+    padding-top:13px!important;
+    font-size:9px!important;
+    line-height:1.5;
+  }
+  .footer .copy span {
+    min-width:0;
+    text-align:left;
+    overflow-wrap:anywhere;
+  }
+}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -1239,38 +1309,14 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <path d="M5.8 32.3V20.8l7.2 6.1 7-6.1v14.1" fill="none" stroke="url(#mfLetters)" stroke-width="3.1" stroke-linejoin="round" stroke-linecap="square"/>
 <path d="M22.5 34.9V22h11.1M22.5 28.1h7.4" fill="none" stroke="url(#mfLetters)" stroke-width="3.1" stroke-linecap="square" stroke-linejoin="round"/>
 </svg></span><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a>
-<div class="links"><a href="#grades">Grades</a><a href="#english-course">English Course</a><a href="#subjects">Learning</a><a href="#dashboard">Dashboard</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
+<div class="links"><a href="#grades">Grades</a><a href="#english-course">English Course</a><a href="#english-course">Learning</a><a href="#dashboard">Dashboard</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
 <div class="nav-actions"><button class="iconbtn" onclick="openSearch()">⌕</button><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary" id="navAction" onclick="openAuth(\'signup\')">Get Started</button><button class="menu" onclick="toggleMobileMenu()">☰</button></div>
 </div>
 </nav>
-<div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>Mr. Fluent</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">English Course</a><a class="side-link" href="#subjects" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
+<div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>Mr. Fluent</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">English Course</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
 <header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Learn. Speak. <span>Master.</span></h1><p>A focused English learning platform for Egyptian preparatory and secondary students — lessons, practice, challenges, progress and certificates in one place.</p><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a><button class="btn secondary" onclick="openAuth(\'signup\')">Create Student Account</button></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">150 EGP / Month</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory &amp; Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>Access</strong><span>After payment approval</span></div></div></div></div></header>
 
-<section class="home-upgrade" id="home-upgrade">
-  <div class="container">
-    <div class="home-upgrade-grid">
-      <div class="upgrade-card continue-card">
-        <div class="upgrade-kicker">
-          <div class="eyebrow">Your next step</div>
-          <span class="streak-badge" id="homeStreakBadge">🔥 0-day streak</span>
-        </div>
-        <h3 id="homeContinueTitle" style="margin-top:8px">Start your English journey.</h3>
-        <p id="homeContinueText">Create your account, choose a grade, and open your first lesson.</p>
-        <div id="homeContinueLesson" class="continue-lesson" style="display:none"></div>
-        <div class="upgrade-actions" id="homeContinueActions">
-          <button class="btn primary" type="button" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Your Grade →</button>
-          <button class="btn secondary" type="button" onclick="openAuth('signup')">Create Account</button>
-        </div>
-        <div class="upgrade-metrics">
-          <div class="upgrade-metric"><b>36</b><span>1st Prep lessons</span></div>
-          <div class="upgrade-metric"><b>9</b><span>1st Prep quizzes</span></div>
-          <div class="upgrade-metric"><b>8</b><span>1st Prep homework</span></div>
-        </div>
-      </div>
 
-    </div>
-  </div>
-</section>
 
 <section class="how-it-works" id="how-it-works">
   <div class="container">
@@ -1386,7 +1432,18 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <details><summary>How do I sync my progress to another device?</summary><p>On the device that has your latest browser-based progress, log in and open Account → Overview, then choose Sync this device. On the second device, log in to the same account and choose Restore & merge from account. This combines data rather than deleting the other device's saved progress. Cloud sync is already configured for DOMA.</p></details>
 <details><summary>Can I study from my phone?</summary><p>Yes. DOMA works on mobile and desktop browsers. Sign in to the same student account to access account-based learning records on another device.</p></details>
 </div></div></section>
-<footer class="footer"><div class="container"><div class="footgrid"><div><a class="brand" href="#home"><span class="mark"><svg fill="none" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div><div><h4>Platform</h4><a href="#grades">Grades</a><a href="#first-prep">1st Preparatory</a><a href="#subjects">Learning</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div><div><h4>Learning</h4><a href="#subjects">Grammar</a><a href="#subjects">Vocabulary</a><a href="#subjects">Reading</a><a href="#subjects">Writing</a></div><div><h4>Account</h4><a href="#" onclick="openAuth('login');return false">Log In</a><a href="#" onclick="openAuth('signup');return false">Create Account</a><a href="#dashboard">My Progress</a><a href="#faq">FAQ</a></div></div><div class="copy"><span>© 2026 Mr. Fluent — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div></div></footer>
+<footer class="footer"><div class="container"><div class="footgrid"><div><a class="brand" href="#home"><span aria-label="Mr. Fluent logo" id="mrFluentFooterLogo" class="mark"><svg viewBox="0 0 40 40" role="img" aria-label="Mr. Fluent graduation cap and MF monogram" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="mfCapFooter" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0c9ff"/><stop offset=".48" stop-color="#b05cff"/><stop offset="1" stop-color="#6d28d9"/></linearGradient>
+  <linearGradient id="mfLettersFooter" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#f4d9ff"/><stop offset=".48" stop-color="#c084fc"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+</defs>
+<path d="M20 3.4 2.8 10.5 20 17.3 37.2 10.5Z" fill="url(#mfCapFooter)" stroke="#e8c7ff" stroke-width=".7" stroke-linejoin="round"/>
+<path d="M8.5 13.2v4.1c5.8 5.1 17.2 5.1 23 0v-4.1L20 18Z" fill="#8b5cf6" opacity=".95"/>
+<path d="M36.8 10.8v8.1" stroke="#edc9ff" stroke-width="1.4" stroke-linecap="round"/>
+<circle cx="36.8" cy="20.5" r="1.8" fill="#e9c7ff"/>
+<path d="M5.8 32.3V20.8l7.2 6.1 7-6.1v14.1" fill="none" stroke="url(#mfLettersFooter)" stroke-width="3.1" stroke-linejoin="round" stroke-linecap="square"/>
+<path d="M22.5 34.9V22h11.1M22.5 28.1h7.4" fill="none" stroke="url(#mfLettersFooter)" stroke-width="3.1" stroke-linecap="square" stroke-linejoin="round"/>
+</svg></span><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a><p style="margin-top:12px">An English learning platform built for Egyptian preparatory and secondary students.</p></div><div><h4>Platform</h4><a href="#grades">Grades</a><a href="#first-prep">1st Preparatory</a><a href="#english-course">Learning</a><a href="#dashboard">Student Dashboard</a><a href="#pricing">Pricing</a></div><div><h4>Learning</h4><a href="#english-course">Grammar</a><a href="#english-course">Vocabulary</a><a href="#english-course">Reading</a><a href="#english-course">Writing</a></div><div><h4>Account</h4><a href="#" onclick="openAuth('login');return false">Log In</a><a href="#" onclick="openAuth('signup');return false">Create Account</a><a href="#dashboard">My Progress</a><a href="#faq">FAQ</a></div></div><div class="copy"><span>© 2026 Mr. Fluent — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div></div></footer>
 <div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h3 id="modalTitle">Mr. Fluent</h3><button class="close" onclick="closeModal()">×</button></div><p id="modalText"></p><div id="modalBody"></div></div></div>
 <div class="modal" id="gradeModal"><div class="modalbox"><div class="modalhead"><h3 id="gradeModalTitle">Grade Access</h3><button class="close" onclick="closeGradeModal()">×</button></div><p id="gradeModalText"></p><div id="gradeModalBody"></div></div></div>
 <div class="drawer" id="drawer"><div class="drawer-shell"><aside class="drawer-side"><div class="drawer-brand"><a class="brand" href="#home"><span class="mark"><svg fill="none" viewbox="0 0 32 32"><path d="M5 23V9l7.2 8L19.5 6 27 15.2V27l-7.5-9.3L12.2 25 5 17.5" stroke="#c05269" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9 6h14" stroke="#fff" stroke-linecap="round" stroke-width="1.7"></path></svg></span><span>Mr. Fluent<small>STUDENT AREA</small></span></a></div>
