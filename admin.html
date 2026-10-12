@@ -819,6 +819,39 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(min-width:561px) and (max-width:960px){.content .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:560px){.content .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.content .grid-2{grid-template-columns:1fr!important}}
 </style>
+
+<style id="doma-admin-grid-final-recovery-v2">
+/* Keep dashboard grids/cards rendered in the active admin workspace; leave other tabs alone. */
+#section-dashboard.active .grid,
+#section-dashboard.active .grid-2 {
+  display:grid !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow:visible !important;
+  align-items:stretch !important;
+}
+#section-dashboard.active .grid > .card,
+#section-dashboard.active .grid-2 > .card {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  min-width:0 !important;
+}
+@media(min-width:961px){
+  #section-dashboard.active .grid {grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:12px !important}
+  #section-dashboard.active .grid-2 {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:12px !important}
+}
+@media(min-width:561px) and (max-width:960px){
+  #section-dashboard.active .grid {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important}
+  #section-dashboard.active .grid-2 {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important}
+}
+@media(max-width:560px){
+  #section-dashboard.active .grid {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px !important}
+  #section-dashboard.active .grid-2 {grid-template-columns:1fr !important;gap:10px !important}
+}
+</style>
 </head>
 <body>
 <div id="login" class="login">
