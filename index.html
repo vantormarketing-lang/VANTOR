@@ -1474,7 +1474,7 @@ async function domaStartSubscription(name,plan){
   const subs=await getActiveSubscriptions();const active=subs.find(s=>s.grade_id===grade.id);if(active){currentGrade=grade;currentSubscription=active;await openDrawer('overview');return}
   const reqs=await getRequests();const pending=reqs.find(r=>r.grade_id===grade.id&&r.status==='pending');const pr=gradePrices[grade.id]||{};const amount=150;
   $('gradeModalTitle').textContent='Subscribe — '+name;$('gradeModalText').textContent='Send the selected amount to Mobile Cash and upload your receipt.';
-  $('gradeModalBody').innerHTML=`<div class="card feature"><div class="formgrid"><div class="card feature"><span class="pill">Selected grade</span><h3 style="margin-top:7px">${esc(name)}</h3></div><div class="card feature"><span class="pill">Selected plan</span><h3 style="margin-top:7px">Monthly — ${amount} EGP</h3></div><div class="card feature full"><span class="pill">Mobile Cash</span><h3 style="font-size:26px;margin-top:5px">${MOBILE_CASH}</h3><p>Send ${amount} EGP to this number, then upload a clear receipt image.</p></div><input id="domaSenderPhone" class="field" placeholder="Mobile Cash sender number"><input id="domaReceipt" class="field" type="file" accept="image/*"></div><div id="subStatus" class="status"></div><div class="account-actions"><button class="btn secondary" onclick="closeGradeModal()">Cancel</button><button class="btn primary" onclick="domaSubmitSubscription()">Submit Payment Request</button></div></div>`+(pending?`<div class="notice">A pending request already exists for this grade from ${fmtDate(pending.created_at)}. Wait for admin review before sending another request.</div>`:'');
+  $('gradeModalBody').innerHTML=`<div class="card feature"><div class="formgrid"><div class="card feature"><span class="pill">Selected grade</span><h3 style="margin-top:7px">${esc(name)}</h3></div><div class="card feature"><span class="pill">Selected plan</span><h3 style="margin-top:7px">Monthly — ${amount} EGP</h3></div><div class="card feature full"><span class="pill">Mobile Cash</span><h3 style="font-size:26px;margin-top:5px">${MOBILE_CASH}</h3><p>Send ${amount} EGP to this number, then upload a clear receipt image.</p></div><input id="domaSenderPhone" class="field" placeholder="Mobile Cash sender number"><input id="domaReceipt" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"></div><div id="subStatus" class="status"></div><div class="account-actions"><button class="btn secondary" onclick="closeGradeModal()">Cancel</button><button class="btn primary" onclick="domaSubmitSubscription()">Submit Payment Request</button></div></div>`+(pending?`<div class="notice">A pending request already exists for this grade from ${fmtDate(pending.created_at)}. Wait for admin review before sending another request.</div>`:'');
   $('gradeModal').classList.add('show')
 }
 
@@ -1484,12 +1484,14 @@ async function domaSubmitSubscription(){
   if(!phone)return showStatus('subStatus','Please enter the Mobile Cash sender number.','error');
   if(!file)return showStatus('subStatus','Please upload the payment receipt.','error');
   if(file.size>5*1024*1024)return showStatus('subStatus','Receipt must be 5 MB or less.','error');
+  const ext=(file.name.split('.').pop()||'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+  const receiptMime=String(file.type||'').toLowerCase()||({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',heic:'image/heic',heif:'image/heif'})[ext]||'';
+  if(!['image/jpeg','image/png','image/webp','image/gif','image/heic','image/heif'].includes(receiptMime))return showStatus('subStatus','Use a JPEG, PNG, WebP, GIF, HEIC or HEIF image for the payment receipt.','error');
   const grade=grades.find(g=>g.name===pendingGradeName);if(!grade)return showStatus('subStatus','Grade could not be found.','error');
   const reqs=await getRequests();if(reqs.some(r=>r.grade_id===grade.id&&r.status==='pending'))return showStatus('subStatus','A pending request already exists for this grade. Please wait for admin review.','error');
   showStatus('subStatus','Uploading receipt securely…');
-  const ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg';
   const path=sessionUser.id+'/'+crypto.randomUUID()+'.'+ext;
-  const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});
+  const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:receiptMime,upsert:false});
   if(up.error)return showStatus('subStatus','Receipt upload failed: '+up.error.message,'error');
   const r=await sb.rpc('doma_create_subscription_request',{p_grade_id:grade.id,p_plan:selectedPlan,p_student_phone:phone,p_proof_path:path});
   if(r.error){await sb.storage.from('payment-proofs').remove([path]);return showStatus('subStatus','Request failed: '+r.error.message,'error')}
@@ -1642,7 +1644,7 @@ async function mrfluentStartEnglishSubscription(){
   if(mrFluentEnglishSubscription){mrfluentOpenCourseWorkspace();return}
   if(mrFluentEnglishPendingRequest){showToast('Your English Course payment request is already pending admin approval.');return}
   $('gradeModalTitle').textContent='English Course — Monthly Subscription';$('gradeModalText').textContent='This is separate from Grade Access. Pay 100 EGP for 30 days, then upload the receipt for admin review.';
-  $('gradeModalBody').innerHTML='<div class="card feature"><div class="formgrid"><div class="card feature"><span class="pill">Complete English Course</span><h3 style="margin-top:7px">A1 → C2 · 100 EGP / 30 days</h3><p>One membership unlocks all published course levels and is independent from your school-grade subscription.</p></div><div class="card feature full"><span class="pill">Mobile Cash</span><h3 style="font-size:26px;margin-top:5px">'+esc(MOBILE_CASH)+'</h3><p>Send 100 EGP to this number, then upload a clear receipt image.</p></div><input id="mrfluentEnglishSenderPhone" class="field" placeholder="Mobile Cash sender number" autocomplete="tel"><input id="mrfluentEnglishReceipt" class="field" type="file" accept="image/*"><div id="mrfluentEnglishPaymentStatus" class="status"></div></div><div class="account-actions"><button class="btn secondary" type="button" onclick="closeGradeModal()">Cancel</button><button class="btn primary" type="button" onclick="mrfluentSubmitEnglishCoursePayment()">Submit Course Payment</button></div></div>';
+  $('gradeModalBody').innerHTML='<div class="card feature"><div class="formgrid"><div class="card feature"><span class="pill">Complete English Course</span><h3 style="margin-top:7px">A1 → C2 · 100 EGP / 30 days</h3><p>One membership unlocks all published course levels and is independent from your school-grade subscription.</p></div><div class="card feature full"><span class="pill">Mobile Cash</span><h3 style="font-size:26px;margin-top:5px">'+esc(MOBILE_CASH)+'</h3><p>Send 100 EGP to this number, then upload a clear receipt image.</p></div><input id="mrfluentEnglishSenderPhone" class="field" placeholder="Mobile Cash sender number" autocomplete="tel"><input id="mrfluentEnglishReceipt" class="field" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"><div id="mrfluentEnglishPaymentStatus" class="status"></div></div><div class="account-actions"><button class="btn secondary" type="button" onclick="closeGradeModal()">Cancel</button><button class="btn primary" type="button" onclick="mrfluentSubmitEnglishCoursePayment()">Submit Course Payment</button></div></div>';
   $('gradeModal').classList.add('show');
 }
 async function mrfluentSubmitEnglishCoursePayment(){
@@ -1651,10 +1653,12 @@ async function mrfluentSubmitEnglishCoursePayment(){
   if(!phone)return showStatus('mrfluentEnglishPaymentStatus','Enter the Mobile Cash sender number.','error');
   if(!file)return showStatus('mrfluentEnglishPaymentStatus','Upload the payment receipt.','error');
   if(file.size>5*1024*1024)return showStatus('mrfluentEnglishPaymentStatus','Receipt must be 5 MB or less.','error');
+  const ext=(file.name.split('.').pop()||'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+  const receiptMime=String(file.type||'').toLowerCase()||({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',heic:'image/heic',heif:'image/heif'})[ext]||'';
+  if(!['image/jpeg','image/png','image/webp','image/gif','image/heic','image/heif'].includes(receiptMime))return showStatus('mrfluentEnglishPaymentStatus','Use a JPEG, PNG, WebP, GIF, HEIC or HEIF image for the payment receipt.','error');
   showStatus('mrfluentEnglishPaymentStatus','Uploading receipt securely…');
-  const ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg';
   const path=sessionUser.id+'/'+crypto.randomUUID()+'.'+ext;
-  const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});
+  const up=await sb.storage.from('payment-proofs').upload(path,file,{contentType:receiptMime,upsert:false});
   if(up.error)return showStatus('mrfluentEnglishPaymentStatus','Receipt upload failed: '+up.error.message,'error');
   const r=await sb.rpc('mrfluent_create_english_course_request',{p_sender_phone:phone,p_proof_path:path});
   if(r.error){await sb.storage.from('payment-proofs').remove([path]);return showStatus('mrfluentEnglishPaymentStatus','Course request failed: '+r.error.message,'error')}
