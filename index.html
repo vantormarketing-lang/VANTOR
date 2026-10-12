@@ -7896,30 +7896,50 @@ html,body{background:#080808!important}
 
 
 
-<style id="mr-fluent-hero-spacing-v2">
-/* Give the hero more breathing room and separate it clearly from the steps section. */
-header.hero { padding-bottom: 112px !important; }
-header.hero .hero-grid { padding-top: 18px !important; }
-header.hero .eyebrow { margin-top: 18px !important; margin-bottom: 22px !important; }
-header.hero h1 { margin-top: 12px !important; margin-bottom: 28px !important; }
-header.hero .hero-grid > div:first-child > p { margin-bottom: 32px !important; }
-section#how-it-works { padding-top: 108px !important; }
-@media (max-width: 640px) {
-  header.hero { padding-top: 194px !important; padding-bottom: 124px !important; }
-  header.hero .hero-grid { padding-top: 16px !important; }
-  header.hero .eyebrow { margin-top: 18px !important; margin-bottom: 24px !important; }
-  header.hero h1 {
-    font-size: clamp(34px, 8.2vw, 46px) !important;
-    line-height: 1.1 !important;
-    letter-spacing: -1.6px !important;
-    margin-top: 14px !important;
-    margin-bottom: 30px !important;
-  }
-  header.hero .hero-grid > div:first-child > p { margin-bottom: 34px !important; }
-  section#how-it-works { padding-top: 112px !important; }
-  #mrFluentPrimaryLogo { width: 34px !important; height: 34px !important; border-radius: 9px !important; }
-  #mrFluentPrimaryLogo svg { width: 25px !important; height: 25px !important; }
+<style id="mr-fluent-hero-spacing-v3">
+/* Final hero refinement: smaller title, slightly lower placement, clear gap before steps. */
+header.hero { padding-bottom: 64px !important; }
+header.hero .hero-grid { padding-top: 28px !important; }
+header.hero .eyebrow { margin-top: 16px !important; margin-bottom: 18px !important; }
+header.hero h1 {
+  font-size: clamp(30px, 3.6vw, 40px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -1.5px !important;
+  margin-top: 18px !important;
+  margin-bottom: 22px !important;
 }
+header.hero .hero-grid > div:first-child > p { margin-bottom: 26px !important; }
+section#how-it-works { padding-top: 64px !important; }
+#mrFluentPrimaryLogo { width: 30px !important; height: 30px !important; border-radius: 8px !important; }
+#mrFluentPrimaryLogo svg { width: 23px !important; height: 23px !important; }
+.brand small { font-size: 7px !important; letter-spacing: 1.5px !important; }
+@media (max-width: 700px) {
+  header.hero { padding-top: calc(82px + env(safe-area-inset-top, 0px)) !important; padding-bottom: 44px !important; }
+  header.hero .hero-grid { padding-top: 18px !important; }
+  header.hero .eyebrow { margin-top: 14px !important; margin-bottom: 14px !important; }
+  header.hero h1 {
+    font-size: clamp(25px, 7.2vw, 32px) !important;
+    line-height: 1.1 !important;
+    letter-spacing: -1.1px !important;
+    margin-top: 18px !important;
+    margin-bottom: 18px !important;
+  }
+  header.hero .hero-grid > div:first-child > p { margin-bottom: 22px !important; }
+  section#how-it-works { padding-top: 48px !important; }
+  #mrFluentPrimaryLogo { width: 28px !important; height: 28px !important; border-radius: 8px !important; }
+  #mrFluentPrimaryLogo svg { width: 21px !important; height: 21px !important; }
+  .brand small { font-size: 6px !important; letter-spacing: 1.2px !important; }
+}
+/* Remove the obsolete hero signup box if an older markup copy is served. */
+(function(){
+  function removeOldHeroSignup(){
+    document.querySelectorAll('header.hero button, header.hero a, header.hero [role="button"]').forEach(function(el){
+      if ((el.textContent || '').replace(/\\s+/g, ' ').trim().toLowerCase() === 'create student account') el.remove();
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', removeOldHeroSignup, {once:true});
+  else removeOldHeroSignup();
+})();
 </style>
 
 </body>
