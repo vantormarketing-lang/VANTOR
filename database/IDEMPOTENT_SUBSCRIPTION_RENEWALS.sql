@@ -31,7 +31,7 @@ BEGIN
            status='active'
      WHERE id=grp.keep_id;
   END LOOP;
-END
+END;
 $consolidate_school_subscriptions$;
 
 CREATE UNIQUE INDEX IF NOT EXISTS subscriptions_one_active_per_student_grade_uq
@@ -245,7 +245,7 @@ BEGIN
 
   RETURN v_id;
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_approve_subscription_request(uuid,text) FROM PUBLIC,anon;
 GRANT EXECUTE ON FUNCTION public.doma_approve_subscription_request(uuid,text) TO authenticated;
@@ -262,7 +262,7 @@ BEGIN
   END IF;
   RETURN public.doma_approve_subscription_request(p_request_id, p_note);
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_approve_subscription_request_v2(uuid,text) FROM PUBLIC,anon;
 GRANT EXECUTE ON FUNCTION public.doma_approve_subscription_request_v2(uuid,text) TO authenticated;
