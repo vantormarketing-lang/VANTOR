@@ -1310,13 +1310,39 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <path d="M22.5 34.9V22h11.1M22.5 28.1h7.4" fill="none" stroke="url(#mfLetters)" stroke-width="3.1" stroke-linecap="square" stroke-linejoin="round"/>
 </svg></span><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a>
 <div class="links"><a href="#grades">Grades</a><a href="#english-course">English Course</a><a href="#english-course">Learning</a><a href="#dashboard">Dashboard</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
-<div class="nav-actions"><button class="iconbtn" onclick="openSearch()">⌕</button><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary" id="navAction" onclick="openAuth(\'signup\')">Get Started</button><button class="menu" onclick="toggleMobileMenu()">☰</button></div>
+<div class="nav-actions"><button class="iconbtn" onclick="openSearch()">⌕</button><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary nav-action-nature" id="navAction" type="button" onclick="openAuth(\'signup\')"><svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Get Started</span></button><button class="menu" type="button" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu()"><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><path class="menu-stroke menu-stroke-1" d="M6 10.5C12.7 6.6 21.5 6.4 29.5 9.2" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path class="menu-stroke menu-stroke-2" d="M8 17.3C13.5 20 21 20.1 27.8 17.1" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path class="menu-stroke menu-stroke-3" d="M15 24.4C18.5 26 22.2 25.2 25.7 23.2" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></div>
 </div>
 </nav>
 <div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>Mr. Fluent</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">English Course</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
 <header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Learn. Speak. <span>Master.</span></h1><p>A focused English learning platform for Egyptian preparatory and secondary students — lessons, practice, challenges, progress and certificates in one place.</p><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a><button class="btn secondary" onclick="openAuth(\'signup\')">Create Student Account</button></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">150 EGP / Month</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory &amp; Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>Access</strong><span>After payment approval</span></div></div></div></div></header>
 
-
+<section class="home-upgrade" id="home-upgrade" aria-label="Your learning overview">
+  <div class="container">
+    <div class="home-upgrade-grid">
+      <div class="upgrade-card continue-card">
+        <div class="upgrade-kicker">
+          <div class="eyebrow">Your next step</div>
+          <span class="streak-badge" id="homeStreakBadge">🔥 0-day streak</span>
+        </div>
+        <div class="home-status" id="homeAccountStatus" style="margin-top:10px">
+          <span class="pill">Guest</span><span class="home-status-text">Log in to personalize your learning space.</span>
+        </div>
+        <h3 id="homeContinueTitle" style="margin-top:8px">Start your English journey.</h3>
+        <p id="homeContinueText">Create your account, choose a grade, and open your first lesson.</p>
+        <div id="homeContinueLesson" class="continue-lesson" style="display:none"></div>
+        <div class="upgrade-actions" id="homeContinueActions">
+          <button class="btn primary" type="button" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Your Grade →</button>
+          <button class="btn secondary" type="button" onclick="openAuth('signup')">Create Account</button>
+        </div>
+        <div class="upgrade-metrics" aria-label="Learning resources">
+          <div class="upgrade-metric"><b>36</b><span>1st Prep lessons</span></div>
+          <div class="upgrade-metric"><b>9</b><span>1st Prep quizzes</span></div>
+          <div class="upgrade-metric"><b>8</b><span>1st Prep homework</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="how-it-works" id="how-it-works">
   <div class="container">
@@ -1648,9 +1674,23 @@ async function domaSignup(){
 }
 
 async function domaLogout(){if(sb)await sb.auth.signOut();sessionUser=null;currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaSelectedGradeId=null;window.currentLessons=[];window.domaStudentProfile=null;closeDrawer();updateNav();renderDashboardLoggedOut();showToast('You have been logged out.')}
+function navActionMarkup(label,loggedOutAction){
+  const icon=loggedOutAction
+    ? '<svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M11.5 3.5H17v13h-5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 10h9m-3.5-3.5L12 10l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : '<svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+  return icon+'<span>'+label+'</span>';
+}
 function updateNav(){
-  if(sessionUser){$('navLogin').textContent='My Account';$('navLogin').onclick=()=>openDrawer('overview');$('navAction').textContent='Log Out';$('navAction').onclick=domaLogout}
-  else{$('navLogin').textContent='Log In';$('navLogin').onclick=()=>openAuth('login');$('navAction').textContent='Get Started';$('navAction').onclick=()=>openAuth('signup')}
+  const action=$('navAction');
+  if(sessionUser){
+    $('navLogin').textContent='My Account';
+    $('navLogin').onclick=()=>openDrawer('overview');
+    if(action){action.innerHTML=navActionMarkup('Log Out',true);action.onclick=domaLogout;action.setAttribute('aria-label','Log Out');}
+  }else{
+    $('navLogin').textContent='Log In';
+    $('navLogin').onclick=()=>openAuth('login');
+    if(action){action.innerHTML=navActionMarkup('Get Started',false);action.onclick=()=>openAuth('signup');action.setAttribute('aria-label','Get Started');}
+  }
 }
 
 async function getProfile(){if(!sessionUser)return null;const r=await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id',sessionUser.id).maybeSingle();if(r.error){console.warn(r.error);return await ensureProfile(sessionUser)}return r.data||await ensureProfile(sessionUser)}
@@ -2786,7 +2826,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
       if(actions)actions.innerHTML='<button class="btn secondary" type="button" onclick="openStudentTool(\'lessons\')">Open Lessons</button><button class="btn secondary" type="button" onclick="openStudentTool(\'overview\')">Open Dashboard</button>';
     }else{
       const name=profile.full_name?String(profile.full_name).split(' ')[0]:'Student';
-      if(title)title.textContent='Welcome back'+(name?' , '+name:'')+'.';
+      if(title)title.textContent='Welcome back'+(name?', '+name:'')+'.';
       if(textEl)textEl.textContent=grade?'Your course is ready. Open Lessons and start the next topic.':'Choose your grade and start with the available preview lessons.';
       if(box)box.style.display='none';
       if(actions)actions.innerHTML='<button class="btn primary" type="button" onclick="openStudentTool(\'overview\')">Open My Account →</button>';
@@ -7661,5 +7701,101 @@ html,body{
   .hero-grid{min-height:calc(100svh - 88px)!important;min-height:calc(100dvh - 88px)!important;align-content:center}
 }
 </style>
+
+<style id="doma-final-home-nav-tune">
+/* Compact green/nature CTA, using the chosen leaf treatment while keeping login/logout behavior intact. */
+.nav-actions #navAction.nav-action-nature{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:34px;padding:7px 12px;border-radius:10px;
+  color:#f4fff9;background:linear-gradient(135deg,#123f2e 0%,#14724f 58%,#159c68 100%);
+  border:1px solid rgba(76,225,164,.72);
+  box-shadow:0 5px 17px rgba(16,156,103,.17),inset 0 1px 0 rgba(255,255,255,.12);
+  font-size:11px;line-height:1.1;white-space:nowrap;
+}
+.nav-actions #navAction.nav-action-nature:hover{
+  background:linear-gradient(135deg,#16533c 0%,#18865d 58%,#20b87a 100%);
+  border-color:#63e8b0;transform:translateY(-1px);
+}
+.nav-actions #navAction .nav-action-icon{width:14px;height:14px;flex:none;display:block}
+.nav-actions .menu{
+  border-color:rgba(73,216,160,.52)!important;
+  background:linear-gradient(145deg,#0d1a16,#120d13)!important;
+  color:#5cdda8!important;
+  box-shadow:0 0 0 1px rgba(55,185,130,.06),0 4px 12px rgba(0,0,0,.22);
+}
+.nav-actions .menu svg{display:block;width:25px;height:25px;overflow:visible}
+.nav-actions .menu .menu-stroke-3{color:#ce83ef;stroke:#ce83ef}
+.nav-actions .menu:focus-visible,.nav-actions #navAction:focus-visible{outline:2px solid #80edc2;outline-offset:2px}
+
+/* Restore the compact personalized greeting directly below the hero. */
+#home-upgrade{display:block!important;visibility:visible!important;padding:26px 0 18px}
+#home-upgrade .home-upgrade-grid{grid-template-columns:minmax(0,760px);justify-content:center}
+#home-upgrade .continue-card{padding:16px}
+#home-upgrade .upgrade-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:12px}
+#home-upgrade .upgrade-metric{padding:9px}
+#home-upgrade .upgrade-metric b{font-size:16px}
+#home-upgrade .upgrade-metric span{font-size:9px;line-height:1.35}
+#home-upgrade .home-status-text{overflow-wrap:anywhere}
+#homeStudentInsightsHost,#studentGamificationHost{display:none!important}
+
+/* Keep the selected English Course banner short and horizontal on phones. */
+@media(max-width:700px){
+  .nav-actions #navAction.nav-action-nature{
+    min-height:27px!important;height:27px!important;max-width:78px!important;
+    padding:4px 5px!important;font-size:8.5px!important;line-height:1.1!important;gap:3px!important;
+    border-radius:7px!important;
+  }
+  .nav-actions #navAction .nav-action-icon{width:11px;height:11px}
+  .nav-actions .menu{width:33px!important;height:33px!important;padding:0!important;border-radius:10px!important}
+  .nav-actions .menu svg{width:25px;height:25px}
+  #home-upgrade{padding:18px 0 12px}
+  #home-upgrade .continue-card{padding:12px}
+  #home-upgrade .upgrade-kicker{gap:6px;align-items:center}
+  #home-upgrade .upgrade-kicker .eyebrow{font-size:9px}
+  #home-upgrade .streak-badge{font-size:8px;padding:5px 7px}
+  #home-upgrade h3#homeContinueTitle{font-size:16px;line-height:1.35}
+  #home-upgrade #homeContinueText{font-size:10px;line-height:1.5}
+  #home-upgrade .upgrade-actions{gap:6px;margin-top:10px}
+  #home-upgrade .upgrade-actions .btn{font-size:9px;padding:8px 9px;min-height:31px}
+  #home-upgrade .upgrade-metric{padding:7px 5px}
+  #home-upgrade .upgrade-metric b{font-size:14px}
+  #home-upgrade .upgrade-metric span{font-size:8px}
+  .mf-english-course-section{padding:14px 0 16px!important}
+  .mf-english-course-section>.container{width:94%!important}
+  .mf-english-course-hero{
+    grid-template-columns:minmax(42px,54px) minmax(0,1fr) minmax(82px,96px)!important;
+    gap:7px!important;padding:8px!important;min-height:0!important;border-radius:14px!important;
+  }
+  .mf-course-art{height:58px!important;border-radius:9px!important}
+  .mf-course-art svg{width:100%!important;height:100%!important;max-width:100%!important}
+  .mf-course-copy{min-width:0!important}
+  .mf-course-kicker{font-size:7px!important;padding:2px 6px!important;letter-spacing:.7px!important}
+  .mf-course-copy h3{font-size:13px!important;line-height:1.2!important;letter-spacing:-.2px!important;margin:4px 0!important}
+  .mf-course-arabic{font-size:9px!important;line-height:1.25!important;margin:2px 0 4px!important}
+  .mf-course-meta{font-size:8px!important;gap:4px!important;line-height:1.25!important}
+  .mf-course-divider,.mf-course-tagline{display:none!important}
+  .mf-course-levels{gap:4px!important}
+  .mf-course-price-row{display:flex!important;flex-direction:column!important;align-items:center!important;gap:1px!important;line-height:1.1!important}
+  .mf-english-course-price{
+    grid-column:auto!important;display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;justify-content:center!important;gap:5px!important;
+    padding:0 0 0 7px!important;border-left:1px solid rgba(236,104,215,.24)!important;
+    border-top:0!important;min-width:0!important;
+  }
+  .mf-course-price-row strong{font-size:16px!important;line-height:1.1!important}
+  .mf-course-price-row strong small{font-size:8px!important}
+  .mf-course-price-row span{display:block!important;font-size:7px!important;white-space:nowrap!important}
+  .mf-english-course-price .btn{width:100%!important;min-width:0!important;min-height:28px!important;padding:6px 3px!important;font-size:8px!important;line-height:1.15!important;white-space:normal!important}
+  .mf-course-status{font-size:9px!important;line-height:1.4!important;margin-top:8px!important;padding:7px 9px!important}
+  .mf-course-footnote{font-size:8px!important;line-height:1.4!important;margin-top:7px!important}
+}
+/* These overview/analytics recaps were explicitly removed; keep them from being re-injected on mobile/desktop. */
+#dashboard .progress-summary{display:none!important}
+#dashboard .dashboard-grid-pro[style*="margin-top:15px"]{display:none!important}
+#drawerBody .student-plus5-grid,
+#drawerBody .student-plus5-grid+.student-plus5-card,
+#drawerBody .plus5-statgrid{display:none!important}
+</style>
+
 </body>
 </html>
