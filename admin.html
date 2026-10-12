@@ -2074,9 +2074,7 @@ async function mfLoadEnglishCourseSales(){
   if(!host)return;
   host.innerHTML='<div class="empty">Loading English Course payment requests…</div>';
   const [r,s]=await Promise.all([
-    db.from('mrfluent_english_course_requests')
-      .select('id,student_id,amount,sender_phone,proof_path,status,admin_note,created_at,reviewed_at')
-      .order('created_at',{ascending:false}).limit(500),
+    db.rpc('mrfluent_admin_list_english_course_requests'),
     db.from('mrfluent_english_course_subscriptions')
       .select('id,student_id,amount,starts_at,expires_at,status,created_at')
       .order('expires_at',{ascending:false}).limit(500)
