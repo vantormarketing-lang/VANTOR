@@ -2038,6 +2038,45 @@ async function renderStudentHomework(){
     });
   });
 }
+function parseStudentHomeworkAttachment(answerText){
+  const text=String(answerText||'');
+  const marker='storage://homework-submissions/';
+  const match=text.match(/storage:\/\/homework-submissions\/[^\s<>"']+/);
+  let path=null;
+  if(match){
+    path=match[0].slice(marker.length).replace(/[),.;!?]+$/,'');
+  }else{
+    const urls=text.match(/https?:\/\/[^\s<>"']+/g)||[];
+    for(const raw of urls){
+      try{
+        const url=new URL(raw.replace(/[),.;!?]+$/,''));
+        const publicMarker='/storage/v1/object/public/homework-submissions/';
+        const at=url.pathname.indexOf(publicMarker);
+        if(at>=0){path=decodeURIComponent(url.pathname.slice(at+publicMarker.length));break;}
+      }catch(_){}
+    }
+  }
+  if(!path||path.startsWith('/')||path.split('/').includes('..')||!path.includes('/'))return null;
+  return path;
+}
+async function loadStudentHomeworkAttachment(answerText){
+  const host=$('hwAttachmentStatus');
+  if(!host)return;
+  host.textContent='';
+  const path=parseStudentHomeworkAttachment(answerText);
+  if(!path)return;
+  host.innerHTML='<div class="muted" style="font-size:11px;margin-bottom:6px">A file is attached to your previous submission.</div><a id="hwOpenPreviousAttachment" class="btn secondary" href="#" target="_blank" rel="noopener noreferrer">Preparing secure attachment link…</a>';
+  const result=await sb.storage.from('homework-submissions').createSignedUrl(path,300);
+  if(result.error||!result.data?.signedUrl){
+    host.innerHTML='<div class="notice" style="font-size:11px">Could not open the previous attachment. You can attach the file again if you still have it.</div>';
+    return;
+  }
+  const link=$('hwOpenPreviousAttachment');
+  if(link){
+    link.href=result.data.signedUrl;
+    link.textContent='Open previous attachment ↗';
+  }
+}
 async function openHomework(id){
   if(!sessionUser){return openAuth('login')}
   const homeworkId=String(id||'');
@@ -2045,10 +2084,16 @@ async function openHomework(id){
   if(!h){showToast('This homework could not be opened.');return}
   $('modalTitle').textContent=h.title||'Homework Assignment';
   $('modalText').textContent='Read the assignment below, write your answer, then save your submission.';
-  $('modalBody').innerHTML='<div class="doma-hw-modal-task" style="padding:12px;border:1px solid #2d181f;border-radius:10px;background:#0c090a;margin-bottom:12px;color:#b7adb1;font-size:11px;line-height:1.7"><strong style="display:block;color:#fff;margin-bottom:5px">Assignment</strong>'+esc(h.description||'Complete this assignment and submit your answer.')+'</div><textarea id="hwAnswer" class="field full" rows="10" placeholder="Write your answer here…"></textarea><input id="hwFile" class="field full" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,application/pdf" style="margin-top:8px"><small class="muted full" style="font-size:9px">Optional: attach a photo or PDF (max 10 MB).</small><div id="hwStatus" class="status full"></div><div class="account-actions"><button type="button" class="btn secondary" id="cancelHwBtn">Cancel</button><button type="button" class="btn primary" id="saveHwBtn">Save Submission</button></div>';
+  $('modalBody').innerHTML='<div class="doma-hw-modal-task" style="padding:12px;border:1px solid #2d181f;border-radius:10px;background:#0c090a;margin-bottom:12px;color:#b7adb1;font-size:11px;line-height:1.7"><strong style="display:block;color:#fff;margin-bottom:5px">Assignment</strong>'+esc(h.description||'Complete this assignment and submit your answer.')+'</div><textarea id="hwAnswer" class="field full" rows="10" placeholder="Write your answer here…"></textarea><input id="hwFile" class="field full" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,application/pdf" style="margin-top:8px"><small class="muted full" style="font-size:9px">Optional: attach a photo or PDF (max 10 MB).</small><div id="hwAttachmentStatus" class="full" style="margin-top:8px"></div><div id="hwStatus" class="status full"></div><div class="account-actions"><button type="button" class="btn secondary" id="cancelHwBtn">Cancel</button><button type="button" class="btn primary" id="saveHwBtn">Save Submission</button></div>';
   const r=await sb.from('homework_submissions').select('answer_text').eq('homework_id',homeworkId).eq('student_id',sessionUser.id).maybeSingle();
   if(r.error){showStatus('hwStatus','Could not load your previous answer: '+r.error.message,'error')}
-  else if($('hwAnswer'))$('hwAnswer').value=r.data?.answer_text||'';
+  else if($('hwAnswer')){
+    const savedAnswer=r.data?.answer_text||'';
+    $('hwAnswer').value=savedAnswer;
+    try{await loadStudentHomeworkAttachment(savedAnswer)}catch(_){
+      if($('hwAttachmentStatus'))$('hwAttachmentStatus').innerHTML='<div class="notice" style="font-size:11px">Could not prepare the private attachment link. You can attach the file again if needed.</div>';
+    }
+  }
   $('cancelHwBtn').onclick=()=>closeModal();
   $('saveHwBtn').onclick=()=>submitHomework(homeworkId);
   $('modal').classList.add('show');
