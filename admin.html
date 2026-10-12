@@ -810,6 +810,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 </style>
 
+ 
+<style id="doma-grid-display-recovery-v1">
+/* Recovery safeguard: force dashboard grid containers to retain grid display. */
+.content .grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;align-items:stretch!important}
+.content .grid-2{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.content .grid>.card,.content .grid-2>.card{min-width:0!important;visibility:visible}
+@media(min-width:561px) and (max-width:960px){.content .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){.content .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.content .grid-2{grid-template-columns:1fr!important}}
+</style>
 </head>
 <body>
 <div id="login" class="login">
