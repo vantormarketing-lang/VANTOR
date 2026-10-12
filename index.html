@@ -262,7 +262,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
 <link rel="manifest" href="./manifest.webmanifest?v=doma-student-v18">
-<meta name="theme-color" content="#071226">
+<meta name="theme-color" content="#080808">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1316,30 +1316,10 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>Mr. Fluent</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">English Course</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#dashboard" onclick="closeMobileMenu()">Dashboard</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
 <header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Learn. Speak. <span>Master.</span></h1><h2 id="homeContinueTitleMobile" class="hero-start-title">Start your English journey.</h2><p>A focused English learning platform for Egyptian preparatory and secondary students — lessons, practice, challenges, progress and certificates in one place.</p><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a><button class="btn secondary" onclick="openAuth(\'signup\')">Create Student Account</button></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">150 EGP / Month</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory &amp; Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>Access</strong><span>After payment approval</span></div></div></div></div></header>
 
-<section class="home-upgrade" id="home-upgrade" aria-label="Your learning overview">
+<section class="home-welcome" id="home-upgrade" aria-label="Student greeting">
   <div class="container">
-    <div class="home-upgrade-grid">
-      <div class="upgrade-card continue-card">
-        <div class="upgrade-kicker">
-          <div class="eyebrow">Your next step</div>
-          <span class="streak-badge" id="homeStreakBadge">🔥 0-day streak</span>
-        </div>
-        <div class="home-status" id="homeAccountStatus" style="margin-top:10px">
-          <span class="pill">Guest</span><span class="home-status-text">Log in to personalize your learning space.</span>
-        </div>
-        <h3 id="homeContinueTitle" style="margin-top:8px">Start your English journey.</h3>
-        <p id="homeContinueText">Create your account, choose a grade, and open your first lesson.</p>
-        <div id="homeContinueLesson" class="continue-lesson" style="display:none"></div>
-        <div class="upgrade-actions" id="homeContinueActions">
-          <button class="btn primary" type="button" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Your Grade →</button>
-          <button class="btn secondary" type="button" onclick="openAuth('signup')">Create Account</button>
-        </div>
-        <div class="upgrade-metrics" aria-label="Learning resources">
-          <div class="upgrade-metric"><b>36</b><span>1st Prep lessons</span></div>
-          <div class="upgrade-metric"><b>9</b><span>1st Prep quizzes</span></div>
-          <div class="upgrade-metric"><b>8</b><span>1st Prep homework</span></div>
-        </div>
-      </div>
+    <div class="home-status" id="homeAccountStatus" aria-live="polite">
+      <span class="pill">Guest</span><span class="home-status-text">Log in to personalize your learning space.</span>
     </div>
   </div>
 </section>
@@ -2806,7 +2786,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
     const badge=document.getElementById('homeStreakBadge');if(badge)badge.textContent='🔥 '+calcStreak()+'-day streak';
     const status=document.getElementById('homeAccountStatus');
     const title=document.getElementById('homeContinueTitle'),mobileTitle=document.getElementById('homeContinueTitleMobile'),textEl=document.getElementById('homeContinueText'),box=document.getElementById('homeContinueLesson'),actions=document.getElementById('homeContinueActions');
-    const setTitle=value=>{if(title)title.textContent=value;if(mobileTitle)mobileTitle.textContent=value;};
+    const setTitle=value=>{if(title)title.textContent=value;if(mobileTitle)mobileTitle.textContent='Start your English journey.';};
     if(typeof sessionUser==='undefined' || !sessionUser){
       if(status)status.innerHTML='<span class="pill">Guest</span><span class="home-status-text">Log in to personalize your learning space.</span>';
       setTitle('Start your English journey.');
@@ -2817,7 +2797,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
     const profile=window.domaStudentProfile||{};
     const grade=typeof currentGrade!=='undefined'&&currentGrade?currentGrade:null;
     const sub=typeof currentSubscription!=='undefined'&&currentSubscription?currentSubscription:null;
-    if(status)status.innerHTML='<span class="pill">'+(grade?'Active student':'Account ready')+'</span><span class="home-status-text">'+(grade?esc(grade.name):'Choose a grade to unlock your course')+'</span>';
+    const welcomeName=profile.full_name?String(profile.full_name).trim().split(/\\s+/)[0]:'Student';\n    if(status)status.innerHTML='<span class="pill">Welcome back, '+esc(welcomeName)+'</span><span class="home-status-text">'+(grade?esc(grade.name):'Choose a grade to unlock your course')+'</span>';
     const latest=getLocal();
     if(grade && latest.recentLesson && (!latest.recentLesson.gradeId || latest.recentLesson.gradeId===grade.id)){
       const rl=latest.recentLesson;
@@ -7833,6 +7813,35 @@ html,body{
   #home-upgrade #homeContinueTitle{display:none!important}
   #home-upgrade{padding-top:14px!important}
   .nav-actions .menu{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;padding:0!important;border-radius:10px!important}
+  .nav-actions .menu svg{width:25px!important;height:25px!important}
+}
+</style>
+<style id="doma-mobile-top-and-statusbar-final">
+html,body{background:#080808!important}
+.home-welcome{display:block!important;padding:9px 0 14px!important;background:#080808!important}
+.home-welcome .container{width:min(1180px,92%)!important;margin:0 auto!important}
+.home-welcome .home-status{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;padding:9px 12px!important;border:1px solid #35151f!important;border-radius:11px!important;background:#10090c!important;min-height:0!important}
+.home-welcome .home-status .pill{margin:0!important;max-width:100%;overflow-wrap:anywhere}
+.home-welcome .home-status-text{font-size:10px!important;line-height:1.4!important;color:#b3a5aa!important}
+@media(max-width:700px){
+  html,body{width:100%!important;max-width:100%!important;min-height:100dvh!important;margin:0!important;padding:0!important;background:#080808!important;overflow-x:clip!important}
+  body{min-height:100svh!important;min-height:100dvh!important}
+  .nav{top:0!important;left:0!important;right:0!important;width:100%!important;background:#080808!important;backdrop-filter:none!important;padding-top:env(safe-area-inset-top,0px)!important}
+  .navin{height:calc(58px + env(safe-area-inset-top,0px))!important;min-height:calc(58px + env(safe-area-inset-top,0px))!important}
+  header.hero#home{display:block!important;position:relative!important;width:100%!important;height:auto!important;min-height:100svh!important;min-height:100dvh!important;padding-top:calc(70px + env(safe-area-inset-top,0px))!important;padding-bottom:max(24px,env(safe-area-inset-bottom,0px))!important;margin:0!important;align-items:initial!important;justify-content:initial!important;background:#080808!important}
+  header.hero#home .container.hero-grid{display:block!important;width:92%!important;min-height:0!important;height:auto!important;align-content:normal!important;align-items:initial!important;justify-content:initial!important;gap:0!important;margin:0 auto!important;padding:0!important;transform:none!important}
+  header.hero#home .container.hero-grid>div{display:block!important;position:static!important;top:auto!important;left:auto!important;transform:none!important;margin:0!important;width:100%!important;align-self:auto!important}
+  header.hero#home .eyebrow{margin:0 0 8px!important;text-align:left!important}
+  header.hero#home h1{display:block!important;position:static!important;top:auto!important;transform:none!important;margin:0 0 3px!important;text-align:left!important;line-height:1.04!important}
+  header.hero#home .hero-start-title{display:block!important;position:static!important;top:auto!important;transform:none!important;margin:0 0 10px!important;text-align:left!important;line-height:1.25!important}
+  header.hero#home p{margin-top:0!important}
+  .home-welcome{padding:8px 0 12px!important;background:#080808!important}
+  .home-welcome .home-status{padding:8px 10px!important;gap:6px!important;border-radius:10px!important}
+  .home-welcome .home-status .pill{font-size:9px!important;padding:4px 7px!important}
+  .home-welcome .home-status-text{font-size:9px!important}
+  .nav-actions #navAction{min-height:27px!important;height:27px!important;padding:5px 8px!important;font-size:9px!important;line-height:1.1!important;border-radius:7px!important}
+  .nav-actions #navAction .nav-action-icon{width:11px!important;height:11px!important}
+  .nav-actions .menu{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;padding:0!important;border-radius:10px!important;background:linear-gradient(145deg,#762337 0%,#551528 100%)!important;border:1px solid #a33d57!important}
   .nav-actions .menu svg{width:25px!important;height:25px!important}
 }
 </style>
