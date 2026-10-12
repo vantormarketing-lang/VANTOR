@@ -101,6 +101,20 @@ if (!admin.includes('createSignedUrl(path,300)') || !admin.includes('data-doma-h
   fail('admin.html: secure signed-link handling for private homework attachments is missing');
 }
 
+const gradeGateStart = student.indexOf('async function checkActiveSubscription(){');
+const gradeGateEnd = student.indexOf('function renderLockedScreen()', gradeGateStart);
+const gradeGate = gradeGateStart >= 0 && gradeGateEnd > gradeGateStart
+  ? student.slice(gradeGateStart, gradeGateEnd)
+  : '';
+if (!student.includes('window.domaSelectedGradeId=String(g.id);') ||
+    !gradeGate.includes("const preferredGradeId=String(window.domaSelectedGradeId||currentGrade?.id||'');") ||
+    !gradeGate.includes("validSubs.find(sub=>String(sub.grade_id)===preferredGradeId)") ||
+    gradeGate.includes("find(s=>{") && gradeGate.includes("})||null;\n    if(!active)")) {
+  fail('index.html: subscription navigation must preserve the explicitly selected grade');
+} else {
+  ok('index.html: selected-grade navigation regression guard is present');
+}
+
 const quizSecurity = read('database/SECURE_QUIZ_REVIEW_RPC.sql');
 if (!quizSecurity.includes("Answer review is disabled for this quiz") ||
     !quizSecurity.includes("coalesce(qps.show_review, true)") ||
