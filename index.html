@@ -4825,7 +4825,8 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   function send(event,payload){try{return X.channel?X.channel.send({type:'broadcast',event,payload:payload||{}}):null}catch(e){return null}}
   async function subscribeRoom(room){
     closeChannel();
-    X.channel=sb.channel('doma-academy-battle-'+room,{config:{broadcast:{self:false},presence:{key:sessionUser.id}}});
+    await sb.realtime.setAuth();
+    X.channel=sb.channel('doma-academy-battle-'+room,{config:{private:true,broadcast:{self:false},presence:{key:sessionUser.id}}});
     X.channel.on('broadcast',{event:'join'},x=>onJoin(x.payload||{}));
     X.channel.on('broadcast',{event:'lobby'},x=>onLobby(x.payload||{}));
     X.channel.on('broadcast',{event:'start'},x=>onStart(x.payload||{}));
@@ -4964,19 +4965,20 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     X.resultSaved=false;
     X.advancing=false;
 
+    // Register as the guest before joining the private Realtime topic so its
+    // authorization policy can verify this account as a session participant.
+    const joined=await sb.rpc('doma_join_battle_session',{p_room_code:X.room});
+    if(joined.error){
+      X.role=null;
+      return showToast('Could not join that Battle: '+joined.error.message);
+    }
     try{
       await subscribeRoom(X.room);
     }catch(e){
+      await sb.rpc('doma_cancel_battle_session',{p_room_code:X.room}).catch(()=>{});
       closeChannel();
       X.role=null;
-      return showToast('Could not connect to that Battle room.');
-    }
-
-    const joined=await sb.rpc('doma_join_battle_session',{p_room_code:X.room});
-    if(joined.error){
-      closeChannel();
-      X.role=null;
-      return showToast('Could not join that Battle: '+joined.error.message);
+      return showToast('Could not connect to that private Battle room.');
     }
     send('join',{id:X.player.id,name:X.player.name});
     renderWaitingGuest('Connected. Waiting for Player 1…');
