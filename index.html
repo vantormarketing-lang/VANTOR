@@ -1428,7 +1428,7 @@ async function domaSignup(){
   closeModal();await refreshStudentState();showToast('Account created successfully.');openDrawer('overview');
 }
 
-async function domaLogout(){if(sb)await sb.auth.signOut();sessionUser=null;currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaStudentProfile=null;closeDrawer();updateNav();renderDashboardLoggedOut();showToast('You have been logged out.')}
+async function domaLogout(){if(sb)await sb.auth.signOut();sessionUser=null;currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaSelectedGradeId=null;window.currentLessons=[];window.domaStudentProfile=null;closeDrawer();updateNav();renderDashboardLoggedOut();showToast('You have been logged out.')}
 function updateNav(){
   if(sessionUser){$('navLogin').textContent='My Account';$('navLogin').onclick=()=>openDrawer('overview');$('navAction').textContent='Log Out';$('navAction').onclick=domaLogout}
   else{$('navLogin').textContent='Log In';$('navLogin').onclick=()=>openAuth('login');$('navAction').textContent='Get Started';$('navAction').onclick=()=>openAuth('signup')}
@@ -1580,6 +1580,7 @@ async function domaOpenGrade(name){
   if(active){
     currentGrade=g;
     currentSubscription=active;
+    window.domaSelectedGradeId=String(g.id);
     window.currentGrade=currentGrade;
     window.currentSubscription=currentSubscription;
     closeGradeModal();
@@ -6808,23 +6809,43 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     const getSubs=currentSubsFunction();
     if(!getSubs){decorateLinks(false);return false;}
     let subs=[];
-    try{subs=await getSubs.call(window)||[];}catch(e){console.warn('Subscription access check failed; learning tools stay locked.',e);decorateLinks(false);return false;}
+    try{subs=await getSubs.call(window)||[];}
+    catch(e){console.warn('Subscription access check failed; learning tools stay locked.',e);decorateLinks(false);return false;}
+
     const now=Date.now();
-    const active=(Array.isArray(subs)?subs:[]).find(s=>{
+    const validSubs=(Array.isArray(subs)?subs:[]).filter(s=>{
       const status=String(s?.status||'').trim().toLowerCase();
       const expiry=s?.expires_at?new Date(s.expires_at).getTime():null;
       return status==='active'&&(expiry===null||(!Number.isNaN(expiry)&&expiry>now));
-    })||null;
+    });
+
+    // Preserve the explicitly opened grade; never replace it with subs[0].
+    // This prevents navigation from showing another grade's lessons to the student.
+    const preferredGradeId=String(window.domaSelectedGradeId||currentGrade?.id||'');
+    let active=preferredGradeId
+      ? (validSubs.find(sub=>String(sub.grade_id)===preferredGradeId)||null)
+      : (validSubs[0]||null);
+
     if(!active){
-      try{currentSubscription=null;currentGrade=null;window.currentSubscription=null;window.currentGrade=null;}catch(_){}
+      try{
+        currentSubscription=null;
+        window.currentSubscription=null;
+        window.domaStudentAccessActive=false;
+      }catch(_){}
       decorateLinks(false);
       return false;
     }
+
     try{
-      currentSubscription=active;window.currentSubscription=active;
+      currentSubscription=active;
+      window.currentSubscription=active;
       const availableGrades=(typeof grades!=='undefined'&&Array.isArray(grades))?grades:[];
       const g=availableGrades.find(x=>String(x.id)===String(active.grade_id));
-      if(g){currentGrade=g;window.currentGrade=g;}
+      if(g){
+        currentGrade=g;
+        window.currentGrade=g;
+        window.domaSelectedGradeId=String(g.id);
+      }
       window.domaStudentAccessActive=true;
     }catch(_){}
     decorateLinks(true);
