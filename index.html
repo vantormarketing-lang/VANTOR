@@ -2553,10 +2553,39 @@ section#how-it-works .how-card p { font-size: 11px !important; line-height: 1.5 
   #grades .grid3 > * h3,
   #grades .grid3 > * b { font-size: 16px !important; }
   #grades .grid3 > * p { font-size: 12px !important; }
-  section#how-it-works .how-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
-  section#how-it-works .how-card { padding: 10px !important; }
-  section#how-it-works .how-card b { font-size: 12px !important; }
-  section#how-it-works .how-card p { font-size: 10px !important; }
+
+  /* Extra-compact step cards on phone screens only. */
+  section#how-it-works .how-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+  section#how-it-works .how-card {
+    padding: 7px !important;
+    border-radius: 9px !important;
+    min-height: 0 !important;
+  }
+  section#how-it-works .how-card .step-no {
+    top: 7px !important;
+    left: 7px !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 6px !important;
+    font-size: 8px !important;
+  }
+  section#how-it-works .how-card b {
+    margin-top: 22px !important;
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
+  }
+  section#how-it-works .how-card small {
+    font-size: 8px !important;
+    line-height: 1.3 !important;
+  }
+  section#how-it-works .how-card p {
+    font-size: 9px !important;
+    line-height: 1.35 !important;
+    margin-top: 4px !important;
+  }
 }
 </style>
 
