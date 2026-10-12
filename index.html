@@ -1440,11 +1440,11 @@ function renderGrades(list=grades){
       <div class="grade-body"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${meta.badge?'<span class="pill">'+esc(meta.badge)+'</span>':''}<span class="pill">Monthly 150 EGP</span></div>
       <h3>English — ${esc(g.name)}</h3><p>${esc(desc)}</p>
       <div class="grade-meta"><span>Monthly: ${pr.monthly||150} EGP</span></div>
-      <div class="grade-actions"><button class="btn primary" onclick='domaOpenGrade(${JSON.stringify(g.name)})'>Open Grade →</button><button class="btn secondary" onclick='showGradeInfo(${JSON.stringify(g.name)})'>Details</button></div></div></article>`
+      <div class="grade-actions"><button class="btn primary" onclick='domaOpenGrade(${inlineJsArg(g.name)})'>Open Grade →</button><button class="btn secondary" onclick='showGradeInfo(${inlineJsArg(g.name)})'>Details</button></div></div></article>`
   }).join(''):'<div class="empty">No active grades are available.</div>'
 }
 function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim(),stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const text=(card.dataset.gradeSearch||''),okQ=!q||text.includes(q),okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'block':'none'})}
-function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>150 EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${JSON.stringify(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${JSON.stringify(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
+function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>150 EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${inlineJsArg(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${inlineJsArg(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
 
 async function domaOpenGrade(name){
   pendingGradeName=name;
@@ -4141,6 +4141,15 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
 
   function esc(v){return typeof window.esc==='function'?window.esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
   function $(id){return document.getElementById(id)}
+  function inlineJsArg(value){
+    return JSON.stringify(String(value ?? ''))
+      .replace(/&/g,'\\u0026')
+      .replace(/</g,'\\u003c')
+      .replace(/>/g,'\\u003e')
+      .replace(/'/g,'\\u0027')
+      .replace(/\u2028/g,'\\u2028')
+      .replace(/\u2029/g,'\\u2029');
+  }
   function norm(s){return String(s||'').toLowerCase().replace(/[“”‘’]/g,"'").replace(/\s+/g,' ').trim()}
   function speak(text){
     try{
