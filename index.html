@@ -2797,7 +2797,8 @@ document.addEventListener('DOMContentLoaded',boot);</script>
     const profile=window.domaStudentProfile||{};
     const grade=typeof currentGrade!=='undefined'&&currentGrade?currentGrade:null;
     const sub=typeof currentSubscription!=='undefined'&&currentSubscription?currentSubscription:null;
-    const welcomeName=profile.full_name?String(profile.full_name).trim().split(/\\s+/)[0]:'Student';\n    if(status)status.innerHTML='<span class="pill">Welcome back, '+esc(welcomeName)+'</span><span class="home-status-text">'+(grade?esc(grade.name):'Choose a grade to unlock your course')+'</span>';
+    const welcomeName=profile.full_name?String(profile.full_name).trim().split(/\s+/)[0]:'Student';
+    if(status)status.innerHTML='<span class="pill">Welcome back, '+esc(welcomeName)+'</span><span class="home-status-text">'+(grade?esc(grade.name):'Choose a grade to unlock your course')+'</span>';
     const latest=getLocal();
     if(grade && latest.recentLesson && (!latest.recentLesson.gradeId || latest.recentLesson.gradeId===grade.id)){
       const rl=latest.recentLesson;
