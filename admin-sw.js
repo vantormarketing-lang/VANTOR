@@ -1,8 +1,8 @@
-const CACHE_NAME = 'doma-admin-offline-v22';
+const CACHE_NAME = 'doma-admin-offline-v23';
 const ADMIN_URL = new URL('./admin.html', self.registration.scope).href;
-const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=doma-admin-v13', self.registration.scope).href;
-const ICON64_URL = new URL('./doma-leaf-book-icon.svg?v=doma-admin-v13', self.registration.scope).href;
-const ICON192_URL = new URL('./mr-fluent-icon-192.png?v=16', self.registration.scope).href;
+const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=doma-admin-v14', self.registration.scope).href;
+const ICON64_URL = new URL('./doma-leaf-book-icon.svg?v=doma-admin-v14', self.registration.scope).href;
+const ICON192_URL = new URL('./mr-fluent-icon-192.png?v=17', self.registration.scope).href;
 const SHELL = [ADMIN_URL, MANIFEST_URL, ICON64_URL, ICON192_URL];
 
 self.addEventListener('message', event => { if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting(); });
