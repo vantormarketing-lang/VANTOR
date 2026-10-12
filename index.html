@@ -7930,7 +7930,8 @@ section#how-it-works { padding-top: 64px !important; }
   #mrFluentPrimaryLogo svg { width: 21px !important; height: 21px !important; }
   .brand small { font-size: 6px !important; letter-spacing: 1.2px !important; }
 }
-/* Remove the obsolete hero signup box if an older markup copy is served. */
+</style>
+<script id="mr-fluent-remove-old-hero-signup">
 (function(){
   function removeOldHeroSignup(){
     document.querySelectorAll('header.hero button, header.hero a, header.hero [role="button"]').forEach(function(el){
@@ -7940,7 +7941,7 @@ section#how-it-works { padding-top: 64px !important; }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', removeOldHeroSignup, {once:true});
   else removeOldHeroSignup();
 })();
-</style>
+</script>
 
 </body>
 </html>
