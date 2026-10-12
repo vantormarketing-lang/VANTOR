@@ -25,7 +25,7 @@ WITH seed(level_code,unit_number,unit_title,unit_description) AS (VALUES
 ('C2',4,'Synthesis, mediation & expert communication','Integrate complex sources and mediate disagreements with precision.')
 )
 UPDATE public.mrfluent_english_units u
-SET title=s.unit_title,description=s.unit_description,updated_at=now()
+SET title=s.unit_title,description=s.unit_description,is_published=true,updated_at=now()
 FROM seed s JOIN public.mrfluent_english_levels l ON l.code=s.level_code
 WHERE u.level_id=l.id AND u.unit_number=s.unit_number;
 
@@ -94,13 +94,14 @@ WITH seed(level_code,unit_number,sort_order,title,goal,explain,vocab,examples,qu
 UPDATE public.mrfluent_english_lessons le
 SET title=s.title,
     description=s.goal,
+    is_published=true,
     lesson_type=CASE
-      WHEN lower(s.title) ~ '(vocabulary|collocation|lexical|near-synonym|idiom)' THEN 'vocabulary'
-      WHEN lower(s.title) ~ '(grammar|tense|passive|clause|sentence building|syntax|word order)' THEN 'grammar'
-      WHEN lower(s.title) ~ '(writing|essay|report|email|summary|paragraph)' THEN 'writing'
-      WHEN lower(s.title) ~ '(listening)' THEN 'listening'
-      WHEN lower(s.title) ~ '(reading|critical reading)' THEN 'reading'
-      WHEN lower(s.title) ~ '(speaking|discussion|debate|communication)' THEN 'speaking'
+      WHEN lower(s.title) ~ '(vocabulary|collocation|lexical|near-synonym|idiom|phrasal verb|word choice|connotation)' THEN 'vocabulary'
+      WHEN lower(s.title) ~ '(grammar|tense|passive|clause|sentence building|syntax|word order|present simple|past simple|past perfect|present perfect|future form|comparative|conditional|modal|reported speech|inversion|fronting|hedging|concession|nominalisation|relative clause|compound adjective)' THEN 'grammar'
+      WHEN lower(s.title) ~ '(writing|essay|report|email|summary|paragraph|letter|memo|proposal)' THEN 'writing'
+      WHEN lower(s.title) ~ '(listening|audio|note-taking)' THEN 'listening'
+      WHEN lower(s.title) ~ '(reading|critical reading|narrative|storytelling|source analysis)' THEN 'reading'
+      WHEN lower(s.title) ~ '(speaking|discussion|debate|communication|fluency|mediation|presentation|negotiation)' THEN 'speaking'
       ELSE 'lesson'
     END,
     content_text =
