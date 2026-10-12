@@ -1933,6 +1933,9 @@ document.addEventListener('DOMContentLoaded',function(){
       if(current==='dashboard') tasks.push(loadDashboard());
       if(current==='sales') tasks.push(loadSales(true),loadDashboard());
       if(current==='students') tasks.push(loadStudents());
+      // Mr. Fluent has separate request tables and loaders; refresh them too.
+      if(current==='course-sales') tasks.push(mfLoadEnglishCourseSales());
+      if(current==='english-course') tasks.push(mfLoadEnglishCourseAdmin());
       await Promise.allSettled(tasks);
     }catch(e){console.warn('Admin live refresh failed:',e)}
     finally{
@@ -1945,6 +1948,8 @@ document.addEventListener('DOMContentLoaded',function(){
       .on('postgres_changes',{event:'*',schema:'public',table:'profiles'},sync)
       .on('postgres_changes',{event:'*',schema:'public',table:'subscription_requests'},sync)
       .on('postgres_changes',{event:'*',schema:'public',table:'subscriptions'},sync)
+      .on('postgres_changes',{event:'*',schema:'public',table:'mrfluent_english_course_requests'},sync)
+      .on('postgres_changes',{event:'*',schema:'public',table:'mrfluent_english_course_subscriptions'},sync)
       .subscribe(status=>{if(status==='SUBSCRIBED')sync();else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Admin realtime status:',status)});
   }catch(e){console.warn('Admin realtime setup failed:',e)}
   // Fallback polling: requests still refresh even if the browser's realtime connection drops.
