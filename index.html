@@ -234,15 +234,15 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v9">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v10">
 <meta name="theme-color" content="#071226">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v9">
-<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v9">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v9">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v10">
+<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v10">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v10">
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
@@ -278,7 +278,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v9', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v10', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -494,7 +494,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v9', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v10', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -889,6 +889,137 @@ body.mf-course-list-route #mrfluentEnglishLevelContent{display:none!important}
     line-height: 1.45 !important;
     margin-top: 3px !important;
   }
+}
+</style>
+
+
+<style id="doma-mobile-compact-premium-20261012">
+/* Compact premium mobile pass: smaller icons, tighter cards, calmer spacing. */
+@media (max-width: 700px) {
+  .container { width: min(100% - 28px, 1180px) !important; }
+  .navin { height: 60px !important; gap: 8px !important; }
+  .brand { gap: 7px !important; letter-spacing: 1px !important; font-size: 14px !important; }
+  #mrFluentPrimaryLogo.mark {
+    width: 32px !important; height: 32px !important; min-width: 32px !important;
+    border-radius: 9px !important;
+  }
+  #mrFluentPrimaryLogo svg { width: 25px !important; height: 25px !important; }
+  .brand small { font-size: 7px !important; letter-spacing: 1.5px !important; }
+  .nav-actions { gap: 5px !important; }
+  .nav-actions .iconbtn, .nav-actions .menu {
+    min-width: 36px; min-height: 36px; padding: 7px 9px !important;
+    border-radius: 9px !important; font-size: 12px !important;
+  }
+
+  .hero { padding: 98px 0 34px !important; min-height: 0 !important; }
+  .hero:after { width: 360px !important; height: 360px !important; right: -210px !important; top: 40px !important; }
+  .hero-grid { gap: 18px !important; }
+  .hero .eyebrow { font-size: 9px !important; letter-spacing: 2.2px !important; margin-bottom: 9px !important; }
+  .hero h1 { font-size: clamp(35px, 9.4vw, 44px) !important; letter-spacing: -1.8px !important; line-height: 1.04 !important; margin-bottom: 13px !important; }
+  .hero p { font-size: 13px !important; line-height: 1.7 !important; margin-bottom: 17px !important; }
+  .hero .actions { gap: 8px !important; }
+  .hero .actions .btn { min-height: 42px; flex: 1 1 135px; padding: 10px 12px !important; font-size: 11px !important; border-radius: 10px !important; }
+  .tagrow { gap: 6px !important; margin-top: 13px !important; }
+  .tag { padding: 5px 7px !important; font-size: 8px !important; letter-spacing: 1.1px !important; }
+  .mini-proof { gap: 13px !important; margin-top: 19px !important; }
+  .proof strong { font-size: 17px !important; }
+  .proof span { font-size: 8px !important; max-width: 95px; line-height: 1.4; }
+
+  .hero-card { padding: 10px !important; border-radius: 15px !important; }
+  .hero-panel { min-height: 0 !important; padding: 14px !important; border-radius: 11px !important; gap: 24px; }
+  .hero-logo { font-size: 38px !important; letter-spacing: -2px !important; }
+  .hero-panel h3 { font-size: 18px !important; margin-top: 10px !important; }
+  .hero-panel p { font-size: 10px !important; line-height: 1.6 !important; }
+  .hero-stat { gap: 7px !important; margin-top: 13px !important; }
+  .hero-stat-btn { padding: 9px !important; border-radius: 9px !important; }
+  .hero-stat-btn b { font-size: 10px !important; }
+  .hero-stat-btn span { font-size: 8px !important; line-height: 1.5; }
+
+  section { padding: 46px 0 !important; }
+  .head { margin-bottom: 23px !important; }
+  .head h2 { font-size: 27px !important; letter-spacing: -.8px !important; line-height: 1.2 !important; }
+  .head p { font-size: 11px !important; line-height: 1.65 !important; }
+  .section-head { align-items: flex-start !important; gap: 9px !important; margin-bottom: 15px !important; }
+  .section-head h2 { font-size: 25px !important; letter-spacing: -.7px !important; line-height: 1.2 !important; }
+  .section-head p { font-size: 10px !important; line-height: 1.55 !important; }
+  .searchbar { margin-top: -14px !important; }
+  .searchbox { padding: 9px !important; gap: 8px !important; border-radius: 12px !important; }
+  .field { padding: 10px 11px !important; font-size: 12px !important; }
+
+  /* Keep the school-grade cards compact without making their labels hard to read. */
+  #gradeGrid.grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 9px !important; }
+  #gradeGrid .grade { border-radius: 12px !important; }
+  #gradeGrid .grade-cover { height: 82px !important; padding: 10px !important; }
+  #gradeGrid .grade-cover strong { font-size: 20px !important; letter-spacing: -.5px !important; }
+  #gradeGrid .stage { font-size: 7px !important; letter-spacing: .7px !important; padding: 4px 5px !important; }
+  #gradeGrid .grade-body { padding: 11px !important; }
+  #gradeGrid .grade-body h3 { font-size: 13px !important; line-height: 1.35 !important; }
+  #gradeGrid .grade-body p { font-size: 9px !important; min-height: 0 !important; line-height: 1.5 !important; margin: 5px 0 9px !important; }
+  #gradeGrid .grade-meta { gap: 5px !important; font-size: 8px !important; margin-bottom: 9px !important; }
+  #gradeGrid .grade-actions { gap: 5px !important; }
+  #gradeGrid .grade-actions .btn { width: 100%; min-height: 38px; padding: 8px 7px !important; font-size: 9px !important; border-radius: 8px !important; }
+
+  /* Learning tools: two tidy columns and smaller visual marks. */
+  .tools { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 9px !important; }
+  .tool { padding: 13px !important; border-radius: 12px !important; }
+  .tool-icon { width: 29px !important; height: 29px !important; border-radius: 8px !important; font-size: 13px !important; }
+  .tool h3 { font-size: 12px !important; line-height: 1.3 !important; margin: 8px 0 4px !important; }
+  .tool p { font-size: 9px !important; line-height: 1.5 !important; }
+  .feature { padding: 14px !important; }
+  .feature b { font-size: 21px !important; }
+  .feature h3 { font-size: 13px !important; margin: 6px 0 4px !important; }
+  .feature p { font-size: 10px !important; line-height: 1.55 !important; }
+
+  .teachers { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 9px !important; }
+  .teacher { padding: 13px !important; border-radius: 12px !important; }
+  .avatar { width: 48px !important; height: 48px !important; font-size: 16px !important; margin-bottom: 9px !important; }
+  .teacher h3 { font-size: 12px !important; }
+  .teacher p { font-size: 9px !important; }
+  .pricing { gap: 10px !important; }
+  .plan { padding: 16px !important; }
+  .plan h3 { font-size: 16px !important; }
+  .money { font-size: 25px !important; }
+  .plan li { font-size: 10px !important; padding: 6px 0 !important; }
+  .faq details { padding: 12px 13px !important; }
+  .faq summary { font-size: 11px !important; }
+  .faq p { font-size: 10px !important; }
+  .cta { padding: 27px 16px !important; border-radius: 15px !important; }
+  .cta h2 { font-size: 27px !important; line-height: 1.2 !important; }
+  .cta p { font-size: 11px !important; line-height: 1.65 !important; }
+  .btn { border-radius: 9px !important; }
+  .footer { padding-top: 28px !important; }
+  .footgrid { gap: 16px !important; }
+  .footer h4 { font-size: 11px !important; }
+  .footer a, .footer p { font-size: 10px !important; }
+
+  /* The selected purple glass level tiles stay compact and readable. */
+  #mrfluentEnglishWorkspace .mf-course-level-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level { min-height: 58px !important; height: 58px !important; padding: 6px !important; }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level > span:first-child { font-size: 16px !important; }
+  #mrfluentEnglishWorkspace .mf-course-workspace-top { padding: 13px !important; margin-bottom: 12px !important; border-radius: 14px !important; gap: 10px !important; align-items: center !important; }
+  #mrfluentEnglishWorkspace .mf-course-workspace-top h2 { font-size: 20px !important; margin: 7px 0 4px !important; letter-spacing: -.4px !important; }
+  #mrfluentEnglishWorkspace .mf-course-workspace-top p { font-size: 10px !important; line-height: 1.55 !important; }
+  #mrfluentEnglishWorkspace .mf-course-workspace-top .pill { font-size: 8px !important; padding: 4px 6px !important; }
+  #mrfluentEnglishWorkspace .mf-course-workspace-top > .btn {
+    width: 38px !important; min-width: 38px !important; max-width: 38px !important;
+    height: 38px !important; min-height: 38px !important; flex: 0 0 38px !important;
+    padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    font-size: 0 !important; border-radius: 11px !important;
+  }
+  #mrfluentEnglishWorkspace .mf-course-workspace-top > .btn::before { content: "←"; font-size: 20px !important; line-height: 1 !important; }
+  #mrfluentEnglishWorkspace .mf-placement-panel { padding: 12px !important; border-radius: 13px !important; margin-bottom: 10px !important; }
+  #mrfluentEnglishWorkspace .mf-placement-result { padding: 10px !important; margin-top: 9px !important; border-radius: 11px !important; font-size: 11px !important; }
+  #mrfluentEnglishWorkspace .mf-placement-result p { font-size: 10px !important; line-height: 1.55 !important; margin-top: 5px !important; }
+}
+@media (max-width: 380px) {
+  .container { width: min(100% - 22px, 1180px) !important; }
+  .brand { font-size: 13px !important; }
+  #mrFluentPrimaryLogo.mark { width: 30px !important; height: 30px !important; min-width: 30px !important; }
+  #mrFluentPrimaryLogo svg { width: 23px !important; height: 23px !important; }
+  #gradeGrid.grid3 { gap: 7px !important; }
+  #gradeGrid .grade-body { padding: 9px !important; }
+  #gradeGrid .grade-body h3 { font-size: 12px !important; }
+  #mrfluentEnglishWorkspace .mf-course-level-grid { gap: 6px !important; }
 }
 </style>
 
