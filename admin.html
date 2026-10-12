@@ -1206,9 +1206,9 @@ async function loadStudents(){
 }
 async function studentDetails(id){const [p,s,pr,cs,cr]=await Promise.all([db.from('profiles').select('id,full_name,email,grade_id,created_at,favorite_team,phone').eq('id',id).single(),db.from('subscriptions').select('id,grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',id).order('expires_at',{ascending:false}),db.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at,lessons(title)').eq('student_id',id).order('last_opened_at',{ascending:false}).limit(100),db.from('mrfluent_english_course_subscriptions').select('amount,starts_at,expires_at,status,created_at').eq('student_id',id).order('expires_at',{ascending:false}).limit(10),db.from('mrfluent_english_course_requests').select('amount,status,created_at,admin_note').eq('student_id',id).order('created_at',{ascending:false}).limit(10)]);if(p.error)return toast(p.error.message);const team=p.data.favorite_team||'Not selected';const courseSubs=cs.error?[]:(cs.data||[]);const courseReqs=cr.error?[]:(cr.data||[]);openModal('Student Details',`<div class="grid-2"><div class="card"><b>${esc(p.data.full_name||'Student')}</b><p class="muted">${esc(p.data.email||'')}</p><p>Phone: <b>${esc(p.data.phone||'Not saved')}</b></p><p>Grade: ${esc(gradeName(p.data.grade_id))}</p><p>Favorite team: <b>${esc(team)}</b></p></div><div class="card"><b>Grade subscriptions</b><p class="muted">${(s.data||[]).map(x=>esc(gradeName(x.grade_id)+' · '+x.plan+' · '+x.status+' · '+fmtDate(x.expires_at))).join('<br>')||'None'}</p></div></div><div class="card" style="margin-top:12px"><b>Independent English Course Membership</b><p class="muted">${courseSubs.map(x=>esc(x.amount+' EGP · '+x.status+' · '+fmtDate(x.starts_at)+' – '+fmtDate(x.expires_at))).join('<br>')||'No course subscription'}${courseReqs.length?'<br><br><b>Course payment requests</b><br>'+courseReqs.map(x=>esc(x.amount+' EGP · '+x.status+' · '+fmtDate(x.created_at)+(x.admin_note?' · '+x.admin_note:''))).join('<br>'):''}</p></div><div class="card" style="margin-top:12px"><b>Recent Progress</b><p class="muted">${(pr.data||[]).slice(0,15).map(x=>esc((x.lessons?.title||'Lesson')+' · '+x.progress_percent+'% · '+(x.completed?'Completed':'In progress'))).join('<br>')||'No progress yet.'}</p></div>`)}
 
-async function loadSales(){
+async function loadSales(silent=false){
   const box=$('salesTable');
-  if(box)box.innerHTML='<div class="empty">Loading subscription requests…</div>';
+  if(box&&!silent)box.innerHTML='<div class="empty">Loading subscription requests…</div>';
   const [rq,sub]=await Promise.all([
     db.rpc('doma_admin_list_subscription_requests'),
     db.rpc('doma_admin_list_subscriptions')
@@ -1923,15 +1923,34 @@ document.addEventListener('DOMContentLoaded',function(){
 <script id="doma-admin-final-live-sync">
 (function(){
   'use strict';
-  function sync(){try{loadDashboard();if(current==='students')loadStudents();if(current==='sales')loadSales();}catch(_){} }
+  let running=false, queued=false;
+  async function sync(){
+    if(running){queued=true;return}
+    if(!window.db || !window.__domaStaffProfile) return;
+    running=true;
+    try{
+      const tasks=[];
+      if(current==='dashboard') tasks.push(loadDashboard());
+      if(current==='sales') tasks.push(loadSales(true),loadDashboard());
+      if(current==='students') tasks.push(loadStudents());
+      await Promise.allSettled(tasks);
+    }catch(e){console.warn('Admin live refresh failed:',e)}
+    finally{
+      running=false;
+      if(queued){queued=false;sync()}
+    }
+  }
   try{
     window.__domaFinalLiveChannel=db.channel('doma-admin-final-live-sync')
       .on('postgres_changes',{event:'*',schema:'public',table:'profiles'},sync)
       .on('postgres_changes',{event:'*',schema:'public',table:'subscription_requests'},sync)
       .on('postgres_changes',{event:'*',schema:'public',table:'subscriptions'},sync)
-      .subscribe();
-  }catch(_){}
-  setInterval(sync,30000);
+      .subscribe(status=>{if(status==='SUBSCRIBED')sync();else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Admin realtime status:',status)});
+  }catch(e){console.warn('Admin realtime setup failed:',e)}
+  // Fallback polling: requests still refresh even if the browser's realtime connection drops.
+  setInterval(sync,8000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync()});
+  window.addEventListener('online',sync);
 })();
 </script>
 <script id="doma-confirm-overlay-js">
