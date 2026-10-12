@@ -1593,6 +1593,11 @@ async function domaOpenGrade(name){
     showToast('Could not open this grade. Check your connection and try again.');
   }
 }
+
+// Explicitly expose grade/account actions for the resilient backup grade cards.
+window.domaOpenGrade=domaOpenGrade;
+window.showGradeInfo=showGradeInfo;
+window.openAuth=openAuth;
 async function domaStartSubscription(name,plan){
   pendingGradeName=name;selectedPlan='monthly';plan='monthly';closeGradeModal();
   if(!sessionUser){openAuth('login');return}
