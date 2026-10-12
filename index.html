@@ -7892,5 +7892,23 @@ html,body{background:#080808!important}
   }
 }
 </style>
+
+<style id="mr-fluent-hero-mobile-refinement">
+/* Mobile homepage refinement: lower and scale the Learn / Speak / Master heading. */
+@media (max-width: 640px) {
+  header.hero { padding-top: 174px !important; }
+  header.hero .hero-grid > div:first-child { padding-top: 8px !important; }
+  header.hero h1 {
+    font-size: clamp(34px, 8.2vw, 46px) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -1.6px !important;
+    margin-top: 8px !important;
+    margin-bottom: 18px !important;
+  }
+  #mrFluentPrimaryLogo { width: 34px !important; height: 34px !important; border-radius: 9px !important; }
+  #mrFluentPrimaryLogo svg { width: 25px !important; height: 25px !important; }
+}
+</style>
+
 </body>
 </html>
