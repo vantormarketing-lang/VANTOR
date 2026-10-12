@@ -1,6 +1,11 @@
--- Private, server-authoritative Battle sessions and scoring.
--- Applied live via server_authoritative_battle_sessions and
--- use_server_clock_for_battle_scoring. Designed to be rerun safely.
+-- Private, server-authoritative Battle sessions, scoring, and Realtime access.
+-- Applied live by migrations:
+-- server_authoritative_battle_sessions
+-- use_server_clock_for_battle_scoring
+-- authorize_private_battle_realtime
+-- expire_stale_battle_rooms
+-- Client Battle channels must use config.private=true; the server session links
+-- each topic to exactly two verified authenticated users.
 CREATE TABLE IF NOT EXISTS public.doma_battle_sessions (
   room_code text PRIMARY KEY CHECK (room_code = upper(trim(room_code)) AND length(room_code) BETWEEN 4 AND 64),
   quiz_id uuid NOT NULL REFERENCES public.quizzes(id) ON DELETE RESTRICT,
@@ -50,6 +55,12 @@ DECLARE
   v_room text := upper(trim(coalesce(p_room_code,'')));
 BEGIN
   IF v_uid IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;
+
+  -- Prune old sessions when a new room is created; historical match rows are kept.
+  DELETE FROM public.doma_battle_sessions
+   WHERE (status IN ('finished','cancelled') AND created_at < now()-interval '30 days')
+      OR (status='waiting' AND created_at < now()-interval '1 day')
+      OR (status='started' AND created_at < now()-interval '1 day');
   IF length(v_room)<4 OR length(v_room)>64 THEN RAISE EXCEPTION 'Invalid Battle room code'; END IF;
   IF p_quiz_id IS NULL OR p_grade_id IS NULL THEN RAISE EXCEPTION 'Choose a valid quiz and grade'; END IF;
   IF coalesce(cardinality(p_question_ids),0) NOT BETWEEN 2 AND 20 THEN
@@ -97,7 +108,7 @@ BEGIN
   RETURN jsonb_build_object('ok',true,'room_code',v_room,'host_id',v_uid,'status','waiting',
     'question_count',cardinality(p_question_ids));
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_create_battle_session(text,uuid,uuid,uuid[]) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_create_battle_session(text,uuid,uuid,uuid[]) TO authenticated;
@@ -121,6 +132,9 @@ BEGIN
   SELECT * INTO v_session FROM public.doma_battle_sessions
    WHERE room_code=upper(trim(coalesce(p_room_code,''))) FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'Battle room not found or expired'; END IF;
+  IF v_session.created_at < now()-interval '15 minutes' THEN
+    RAISE EXCEPTION 'This Battle room has expired. Create a new room.';
+  END IF;
   IF v_session.status <> 'waiting' OR v_session.guest_id IS NOT NULL THEN
     RAISE EXCEPTION 'This Battle room is no longer accepting players';
   END IF;
@@ -150,7 +164,7 @@ BEGIN
     'guest_id',v_uid,'quiz_id',v_session.quiz_id,'grade_id',v_session.grade_id,
     'question_count',cardinality(v_session.question_ids),'status','waiting');
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_join_battle_session(text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_join_battle_session(text) TO authenticated;
@@ -179,7 +193,7 @@ BEGIN
   END IF;
   RAISE EXCEPTION 'This Battle can no longer be cancelled';
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_cancel_battle_session(text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_cancel_battle_session(text) TO authenticated;
@@ -199,6 +213,9 @@ BEGIN
   SELECT * INTO v_session FROM public.doma_battle_sessions
    WHERE room_code=upper(trim(coalesce(p_room_code,''))) FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'Battle room not found'; END IF;
+  IF v_session.created_at < now()-interval '15 minutes' THEN
+    RAISE EXCEPTION 'This Battle room has expired. Create a new room.';
+  END IF;
   IF v_session.host_id<>v_uid THEN RAISE EXCEPTION 'Only the room host can start this Battle'; END IF;
   IF v_session.status<>'waiting' OR v_session.guest_id IS NULL THEN
     RAISE EXCEPTION 'A second player must join before the Battle starts';
@@ -215,7 +232,7 @@ BEGIN
     'question_deadline',v_session.question_deadline,'host_score',v_session.host_score,
     'guest_score',v_session.guest_score,'question_ids',v_session.question_ids);
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_start_battle_session(text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_start_battle_session(text) TO authenticated;
@@ -297,7 +314,7 @@ BEGIN
     'question_deadline',v_session.question_deadline
   );
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_submit_battle_answer(text,integer,uuid,text,integer) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_submit_battle_answer(text,integer,uuid,text,integer) TO authenticated;
@@ -346,7 +363,7 @@ BEGIN
     'question_deadline',v_session.question_deadline,'host_score',v_session.host_score,
     'guest_score',v_session.guest_score,'next_question_id',v_session.question_ids[v_next+1]);
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_advance_battle_session(text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_advance_battle_session(text) TO authenticated;
@@ -415,32 +432,32 @@ BEGIN
   RETURN jsonb_build_object('ok',true,'id',v_existing.id,'already_recorded',true,
     'host_score',v_session.host_score,'guest_score',v_session.guest_score);
 END;
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.doma_record_battle(text,uuid,text,uuid,uuid,text,integer,uuid,text,integer,uuid) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_record_battle(text,uuid,text,uuid,uuid,text,integer,uuid,text,integer,uuid) TO authenticated;
 
-
-
--- Private Realtime channel membership, applied by authorize_private_battle_realtime.
 CREATE OR REPLACE FUNCTION public.doma_is_battle_participant(p_room_code text)
-RETURNS boolean
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
-SET search_path TO 'pg_catalog','public'
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'public'
 AS $function$
   SELECT auth.uid() IS NOT NULL
      AND EXISTS (
-       SELECT 1 FROM public.doma_battle_sessions b
-        WHERE b.room_code=upper(trim(coalesce(p_room_code,'')))
-          AND b.status IN ('waiting','started','finished')
-          AND auth.uid() IN (b.host_id,b.guest_id)
+       SELECT 1
+         FROM public.doma_battle_sessions s
+        WHERE s.room_code=upper(trim(coalesce(p_room_code,'')))
+          AND s.status IN ('waiting','started','finished')
+          AND auth.uid() IN (s.host_id,s.guest_id)
      );
 $function$;
-REVOKE ALL ON FUNCTION public.doma_is_battle_participant(text) FROM PUBLIC,anon;
+
+REVOKE ALL ON FUNCTION public.doma_is_battle_participant(text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.doma_is_battle_participant(text) TO authenticated;
 
+-- The Realtime policies only match topics for a registered room and require
+-- membership in its session for both presence and broadcast messages.
 DROP POLICY IF EXISTS "doma battle participants receive private broadcasts" ON realtime.messages;
 CREATE POLICY "doma battle participants receive private broadcasts"
 ON realtime.messages FOR SELECT TO authenticated
