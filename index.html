@@ -78,7 +78,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
    Mr. Fluent — MASTER HOMEPAGE / STUDENT EXPERIENCE UPGRADE
 ========================================================= */
 .home-upgrade{padding:44px 0 22px;background:linear-gradient(180deg,#0b0809 0%,#0c080a 100%);border-top:1px solid #171014;border-bottom:1px solid #211419}
-.home-upgrade-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
+.home-upgrade-grid{display:grid;grid-template-columns:minmax(0,760px);justify-content:center;gap:16px;align-items:stretch}
 .upgrade-card{border:1px solid #2b191f;background:linear-gradient(145deg,#130b0f,#0e090b);border-radius:16px;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.22)}
 .upgrade-card h3{font-size:18px}.upgrade-card p{font-size:11px;color:#8f8589;line-height:1.7;margin-top:5px}
 .upgrade-kicker{display:flex;align-items:center;justify-content:space-between;gap:12px}.upgrade-kicker .eyebrow{margin-bottom:0}
@@ -95,7 +95,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .continue-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#7a253b,#2d101a);display:grid;place-items:center;font-weight:900;box-shadow:0 10px 20px rgba(96,20,40,.2)}
 .continue-lesson strong{display:block;font-size:12px}.continue-lesson span{display:block;font-size:9px;color:#7d7477;margin-top:3px}
 .how-it-works{padding:56px 0}.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
-.how-card{position:relative;padding:18px;border:1px solid #2c181f;background:#100b0d;border-radius:14px}.how-card b{display:block;font-size:11px;margin-top:28px}.how-card p{font-size:9px;color:#7f7579;line-height:1.7;margin-top:5px}.step-no{position:absolute;top:14px;left:14px;width:27px;height:27px;border-radius:9px;border:1px solid #633041;color:#d8899c;display:grid;place-items:center;font-weight:900;font-size:10px;background:#170b10}
+.how-card{position:relative;padding:18px;border:1px solid #2c181f;background:#100b0d;border-radius:14px}.how-card b{display:block;font-size:11px;margin-top:28px}.how-card p{font-size:9px;color:#7f7579;line-height:1.7;margin-top:5px}.how-arabic{display:block;direction:rtl;text-align:right;font-family:Arial,Tahoma,sans-serif;font-size:9px;line-height:1.45;color:#ba9da7;font-weight:500;margin-top:3px}.how-arabic-intro{max-width:690px;margin:5px auto 0!important;text-align:center!important}.step-no{position:absolute;top:14px;left:14px;width:27px;height:27px;border-radius:9px;border:1px solid #633041;color:#d8899c;display:grid;place-items:center;font-weight:900;font-size:10px;background:#170b10}
 .why-section{padding:16px 0 55px}.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.why-card{padding:18px;border:1px solid #2b181f;border-radius:14px;background:linear-gradient(145deg,#120c0e,#0c090a)}.why-card .why-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#170b10;border:1px solid #5e2a3b;color:#d98b9d;font-weight:900}.why-card h3{font-size:13px;margin-top:12px}.why-card p{font-size:10px;color:#81777b;line-height:1.7;margin-top:5px}
 .prep-tools{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.prep-search{min-width:230px}
 .back-top{position:fixed;right:18px;bottom:18px;z-index:9500;width:42px;height:42px;border-radius:13px;border:1px solid #4c2632;background:#120a0d;color:#fff;display:none;place-items:center;box-shadow:0 16px 35px rgba(0,0,0,.35)}.back-top.show{display:grid}
@@ -1114,47 +1114,42 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
           <div class="upgrade-metric"><b>8</b><span>1st Prep homework</span></div>
         </div>
       </div>
-      <div class="upgrade-card">
-        <div class="upgrade-kicker"><div><div class="eyebrow">Student shortcuts</div><h3 style="margin-top:6px">Everything in one place.</h3></div><span class="pill">Mr. Fluent</span></div>
-        <div class="home-status" id="homeAccountStatus" style="margin-top:12px"><span class="pill">Guest</span><span class="home-status-text">Log in to personalize your learning space.</span></div>
-        <div class="home-shortcuts">
-          <button class="home-shortcut" type="button" onclick="openStudentTool('lessons')"><b>▶ Lessons</b><span>Videos, content and progress</span></button>
-          <button class="home-shortcut" type="button" onclick="openStudentTool('quizzes')"><b>✓ Quizzes</b><span>Practice and check results</span></button>
-          <button class="home-shortcut" type="button" onclick="openStudentTool('homework')"><b>☰ Homework</b><span>Submit and view feedback</span></button>
-          <button class="home-shortcut" type="button" onclick="openStudentTool('certificates')"><b>▣ Certificates</b><span>View issued certificates</span></button>
-        </div>
-      </div>
+
     </div>
   </div>
 </section>
 
 <section class="how-it-works" id="how-it-works">
   <div class="container">
-    <div class="head"><div class="eyebrow">How it works</div><h2>Simple steps from signup to progress.</h2><p>Everything is organized around the grade you study at school.</p></div>
+    <div class="head"><div class="eyebrow">How it works</div><h2>Simple steps from signup to progress.</h2><p>Everything is organized around the grade you study at school.</p><p class="how-arabic how-arabic-intro" dir="rtl" lang="ar">خطوات بسيطة من إنشاء حسابك لحد متابعة تقدّمك، وكل شيء مترتب حسب صفك الدراسي.</p></div>
     <div class="how-grid">
-      <div class="how-card"><div class="step-no">01</div><b>Create your student account</b><p>Use your name, mobile number and password to create your private learning space.</p></div>
-      <div class="how-card"><div class="step-no">02</div><b>Choose your grade</b><p>Select the school grade you are studying and review the access options.</p></div>
-      <div class="how-card"><div class="step-no">03</div><b>Activate your access</b><p>Send the payment proof and wait for the admin approval message.</p></div>
-      <div class="how-card"><div class="step-no">04</div><b>Study and track</b><p>Open lessons, watch videos, take quizzes, submit homework and follow your progress.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="why-section" id="why-doma">
-  <div class="container">
-    <div class="head"><div class="eyebrow">Built for students</div><h2>One learning space for your English year.</h2><p>Designed to keep lessons, practice, feedback and progress connected.</p></div>
-    <div class="why-grid">
-      <div class="why-card"><div class="why-icon">V</div><h3>Real lesson videos</h3><p>Lessons can include YouTube, Google Drive or direct video links managed from Admin.</p></div>
-      <div class="why-card"><div class="why-icon">P</div><h3>Live progress</h3><p>Your completed lessons, quiz attempts and certificates are connected to your student account.</p></div>
-      <div class="why-card"><div class="why-icon">H</div><h3>Homework feedback</h3><p>Submit assignments in the platform and return later to see grades and teacher feedback.</p></div>
-      <div class="why-card"><div class="why-icon">Q</div><h3>Secure assessments</h3><p>Quiz questions and scoring use the secure Supabase RPC flow already connected to Mr. Fluent.</p></div>
-      <div class="why-card"><div class="why-icon">C</div><h3>Certificates</h3><p>Eligible completed learning can produce a certificate that students can print or save as PDF.</p></div>
-      <div class="why-card"><div class="why-icon">M</div><h3>Mobile-friendly</h3><p>The student area adapts for desktop and mobile screens so students can learn anywhere.</p></div>
+      <div class="how-card"><div class="step-no">01</div><b>Create your student account</b><small class="how-arabic" dir="rtl" lang="ar">أنشئ حسابك كطالب</small><p>Use your name, mobile number and password to create your private learning space.</p></div>
+      <div class="how-card"><div class="step-no">02</div><b>Choose your grade</b><small class="how-arabic" dir="rtl" lang="ar">اختار صفك الدراسي</small><p>Select the school grade you are studying and review the access options.</p></div>
+      <div class="how-card"><div class="step-no">03</div><b>Activate your access</b><small class="how-arabic" dir="rtl" lang="ar">فعّل اشتراكك</small><p>Send the payment proof and wait for the admin approval message.</p></div>
+      <div class="how-card"><div class="step-no">04</div><b>Study and track</b><small class="how-arabic" dir="rtl" lang="ar">ذاكر وتابع تقدّمك</small><p>Open lessons, watch videos, take quizzes, submit homework and follow your progress.</p></div>
     </div>
   </div>
 </section>
 
 <section id="grades"><div class="container"><div class="section-head"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade.</h2><p>Select your school grade to see access options and start your English journey.</p></div><span class="pill" id="gradeLoadStatus">Loading grades…</span></div><div class="grid3" id="gradeGrid"><div class="empty">Loading grades from Mr. Fluent…</div></div></div></section>
+<section id="english-course" class="mf-english-course-section">
+  <div class="container">
+    <div class="section-head"><div><div class="eyebrow">Separate monthly membership</div><h2>Complete English Course.</h2><p>One independent subscription gives access to all six CEFR levels, from A1 Beginner to C2 Proficiency. It does not affect your school-grade subscription.</p></div><span class="pill">100 EGP / 30 days</span></div>
+    <div class="mf-english-course-hero">
+      <div><span class="pill">A1 → C2</span><h3>Build English step by step.</h3><p>Grammar, vocabulary, listening, speaking, reading and writing organized into levels and units. Published lessons unlock after the English Course payment is approved.</p></div>
+      <div class="mf-english-course-price"><strong>100 <small>EGP</small></strong><span>per 30 days</span><button class="btn primary" id="mrfluentEnglishSubscribeBtn" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button><button class="btn primary" id="mrfluentEnglishOpenBtn" type="button" hidden onclick="mrfluentOpenCourseWorkspace()">Open English Course →</button></div>
+    </div>
+    <div id="mrfluentEnglishCourseStatus" class="mf-course-status" aria-live="polite"><span class="pill">Loading</span> Checking your English Course access…</div>
+    <div class="mf-course-footnote">Your course and placement test stay locked until the payment is approved by the admin. Once active, press <b>Open English Course</b> to enter your private learning space.</div>
+    <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn secondary" type="button" onclick="mrfluentRefreshEnglishCourse()">Refresh Course Status</button></div>
+  </div>
+</section>
+<div id="mrfluentEnglishWorkspace" class="mf-course-workspace" hidden aria-label="English Course student workspace">
+  <div class="mf-course-workspace-top"><div><span class="pill">MR. FLUENT · ENGLISH COURSE</span><h2>My English Learning Space</h2><p>Your placement test, level and lessons are available here while your membership is active.</p></div><button class="btn secondary mf-course-back-icon" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentCloseCourseWorkspace()"><span aria-hidden="true">←</span></button></div>
+  <div id="mrfluentEnglishPlacement" class="mf-placement-panel" aria-live="polite"><div class="empty">Checking course access…</div></div>
+  <div id="mrfluentEnglishLevels" class="mf-course-level-grid" hidden><div class="empty">Complete the placement test to see your level.</div></div>
+  <div id="mrfluentEnglishLevelContent" class="mf-course-content" aria-live="polite"><div class="empty">Your lessons will appear here after access is verified.</div></div>
+</div>
 
 
 <section id="subjects"><div class="container"><div class="head"><div class="eyebrow">English Only</div><h2>Everything students need for school English.</h2><p>Open any learning area directly. Sign in when the content belongs to your active grade.</p></div><div class="tools"><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')" onkeydown="if(event.key==='Enter'||event.key===' ')openStudentTool('lessons')"><div class="tool-icon">A</div><h3>Grammar</h3><p>Open your grade lessons and filter grammar content.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">V</div><h3>Vocabulary</h3><p>Open unit vocabulary lessons and revision.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">R</div><h3>Reading</h3><p>Open reading lessons and comprehension practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">W</div><h3>Writing</h3><p>Open writing lessons and guided practice.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('lessons')"><div class="tool-icon">L</div><h3>Listening</h3><p>Open listening lessons and media.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('quizzes')"><div class="tool-icon">Q</div><h3>Quizzes</h3><p>Open your published quizzes and start one.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('homework')"><div class="tool-icon">H</div><h3>Homework</h3><p>Open assignments and submit your answers.</p></div><div class="card tool clickable-tool" role="button" tabindex="0" onclick="openStudentTool('certificates')"><div class="tool-icon">C</div><h3>Certificates</h3><p>Open certificates issued to your account.</p></div></div></div></section>
@@ -1180,24 +1175,6 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <section id="teachers"><div class="container"><div class="head"><div class="eyebrow">Learning areas</div><h2>Everything you need for English.</h2><p>Study the skills that matter for your school English curriculum, all inside your grade area.</p></div><div class="teachers"><div class="card teacher"><div class="avatar">G</div><h3>Grammar</h3><p>Rules, examples &amp; practice</p><small>Build accurate English sentences.</small></div><div class="card teacher"><div class="avatar">V</div><h3>Vocabulary</h3><p>Words, meanings &amp; usage</p><small>Revise key words by unit.</small></div><div class="card teacher"><div class="avatar">R</div><h3>Reading</h3><p>Comprehension &amp; questions</p><small>Practice school-style reading.</small></div><div class="card teacher"><div class="avatar">W</div><h3>Writing</h3><p>Models &amp; guided practice</p><small>Improve structure and expression.</small></div><div class="card teacher"><div class="avatar">L</div><h3>Listening</h3><p>Audio &amp; comprehension</p><small>Train your listening skills.</small></div><div class="card teacher"><div class="avatar">Q</div><h3>Quizzes &amp; Homework</h3><p>Practice &amp; feedback</p><small>Check your learning and results.</small></div></div></div></section>
 
 
-<section id="english-course" class="mf-english-course-section">
-  <div class="container">
-    <div class="section-head"><div><div class="eyebrow">Separate monthly membership</div><h2>Complete English Course.</h2><p>One independent subscription gives access to all six CEFR levels, from A1 Beginner to C2 Proficiency. It does not affect your school-grade subscription.</p></div><span class="pill">100 EGP / 30 days</span></div>
-    <div class="mf-english-course-hero">
-      <div><span class="pill">A1 → C2</span><h3>Build English step by step.</h3><p>Grammar, vocabulary, listening, speaking, reading and writing organized into levels and units. Published lessons unlock after the English Course payment is approved.</p></div>
-      <div class="mf-english-course-price"><strong>100 <small>EGP</small></strong><span>per 30 days</span><button class="btn primary" id="mrfluentEnglishSubscribeBtn" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button><button class="btn primary" id="mrfluentEnglishOpenBtn" type="button" hidden onclick="mrfluentOpenCourseWorkspace()">Open English Course →</button></div>
-    </div>
-    <div id="mrfluentEnglishCourseStatus" class="mf-course-status" aria-live="polite"><span class="pill">Loading</span> Checking your English Course access…</div>
-    <div class="mf-course-footnote">Your course and placement test stay locked until the payment is approved by the admin. Once active, press <b>Open English Course</b> to enter your private learning space.</div>
-    <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn secondary" type="button" onclick="mrfluentRefreshEnglishCourse()">Refresh Course Status</button></div>
-  </div>
-</section>
-<div id="mrfluentEnglishWorkspace" class="mf-course-workspace" hidden aria-label="English Course student workspace">
-  <div class="mf-course-workspace-top"><div><span class="pill">MR. FLUENT · ENGLISH COURSE</span><h2>My English Learning Space</h2><p>Your placement test, level and lessons are available here while your membership is active.</p></div><button class="btn secondary mf-course-back-icon" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentCloseCourseWorkspace()"><span aria-hidden="true">←</span></button></div>
-  <div id="mrfluentEnglishPlacement" class="mf-placement-panel" aria-live="polite"><div class="empty">Checking course access…</div></div>
-  <div id="mrfluentEnglishLevels" class="mf-course-level-grid" hidden><div class="empty">Complete the placement test to see your level.</div></div>
-  <div id="mrfluentEnglishLevelContent" class="mf-course-content" aria-live="polite"><div class="empty">Your lessons will appear here after access is verified.</div></div>
-</div>
 <section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div><h2>Choose your learning access.</h2><p>Choose school-grade access for 150 EGP per month, or the independent Mr. Fluent English Course for 100 EGP every 30 days. Each membership is approved separately.</p></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">150 <small>EGP / month</small></div><ul><li>Access for your selected school grade</li><li>Lessons &amp; published curriculum</li><li>Quizzes &amp; assessments</li><li>Homework &amp; student results</li><li>Progress tracking &amp; certificates</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>Mr. Fluent English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Access to all six CEFR levels, from A1 to C2</li><li>Placement test to help find your level</li><li>Grammar, vocabulary &amp; pronunciation practice</li><li>Listening, speaking, reading &amp; writing</li><li>Lessons, unit practice &amp; assessments</li><li>Independent from your school-grade subscription</li><li>Access begins after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq">
 <details><summary>What are the two subscription options?</summary><p>Grade Access costs 150 EGP per month and unlocks the selected school grade. The separate Mr. Fluent English Course costs 100 EGP every 30 days and includes the A1–C2 English course. They are independent memberships; paying for one does not activate the other.</p></details>
 <details><summary>How do I activate Grade Access?</summary><p>Create or log in to your student account, choose one of the supported school grades, submit the payment request, send the shown Mobile Cash amount, and upload a clear receipt with the sender number. Access opens only after the admin approves the payment.</p></details>
