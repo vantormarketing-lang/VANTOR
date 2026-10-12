@@ -1848,11 +1848,27 @@ window.pro7LoadLive=loadLive7;window.pro7LoadSupport=loadSupport7;window.pro7Loa
       'live-classes':window.pro7LoadLive,support:window.pro7LoadSupport,parents:window.pro7LoadParents
     };
     const fn=pro[name]||core[name];
-    if(typeof fn==='function'){return Promise.resolve(fn()).catch(err=>{
+    if(typeof fn==='function'){return Promise.resolve().then(()=>fn()).catch(err=>{
       const host=document.querySelector('#section-'+name+' .table-wrap, #section-'+name+' > div[id]');
       if(host)host.innerHTML='<div class="empty">'+escapeHtml(err?.message||String(err))+'</div>';
       console.error('DOMA section load failed:',name,err);
     });}
+
+    // Core loaders live inside the original Admin script and are not all exported
+    // as window.loadX properties. If the global router has no exported handler,
+    // fall back to the original loadSection dispatcher instead of showing a blank tab.
+    const fallback=window.loadSection;
+    if(typeof fallback==='function' && fallback!==route){
+      return Promise.resolve().then(()=>fallback(name)).catch(err=>{
+        const host=document.querySelector('#section-'+name+' .table-wrap, #section-'+name+' > div[id]');
+        if(host)host.innerHTML='<div class="empty">'+escapeHtml(err?.message||String(err))+'</div>';
+        console.error('DOMA fallback section load failed:',name,err);
+      });
+    }
+
+    const host=document.querySelector('#section-'+name+' .table-wrap, #section-'+name+' > div[id]');
+    if(host)host.innerHTML='<div class="empty">This section could not find its data loader. Refresh the page and try again.</div>';
+    console.error('DOMA section loader was not registered:',name);
     return Promise.resolve();
   }
   function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
