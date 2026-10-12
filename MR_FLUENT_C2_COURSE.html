@@ -291,13 +291,13 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
       if (user && typeof user.id === 'string') userId = user.id;
     }
   } catch (_) {}
-  const namespace = userId ? PREFIX + '__user__' + userId + '__' : '';
+  const namespace = userId ? PREFIX + '__user__' + userId + '__' : PREFIX + '__guest__';
   const storageProto = Storage.prototype;
   const nativeGet = storageProto.getItem, nativeSet = storageProto.setItem, nativeRemove = storageProto.removeItem;
   function mappedKey(value) {
     const key = String(value);
-    if (!userId || !key.startsWith(PREFIX)) return key;
-    if (key.startsWith(PREFIX + '__user__')) return key;
+    if (!key.startsWith(PREFIX)) return key;
+    if (key.startsWith(PREFIX + '__user__') || key.startsWith(PREFIX + '__guest__')) return key;
     return namespace + key.slice(PREFIX.length);
   }
   storageProto.getItem = function(key) { return nativeGet.call(this, mappedKey(key)); };
@@ -305,14 +305,19 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
   storageProto.removeItem = function(key) { return nativeRemove.call(this, mappedKey(key)); };
   function isCurrentKey(key) {
     if (typeof key !== 'string' || !key.startsWith(PREFIX)) return false;
-    return userId ? key.startsWith(namespace) : !key.startsWith(PREFIX + '__user__');
+    return key.startsWith(namespace);
   }
   function isLegacyKey(key) {
-    return typeof key === 'string' && key.startsWith(PREFIX) && !key.startsWith(PREFIX + '__user__');
+    return typeof key === 'string' && key.startsWith(PREFIX) &&
+      !key.startsWith(PREFIX + '__user__') && !key.startsWith(PREFIX + '__guest__');
   }
   function logicalKey(key) {
-    if (typeof key !== 'string' || !key.startsWith(PREFIX + '__user__')) return key;
-    const separator = key.indexOf('__', (PREFIX + '__user__').length);
+    if (typeof key !== 'string') return key;
+    const guestMarker = PREFIX + '__guest__';
+    if (key.startsWith(guestMarker)) return PREFIX + key.slice(guestMarker.length);
+    const userMarker = PREFIX + '__user__';
+    if (!key.startsWith(userMarker)) return key;
+    const separator = key.indexOf('__', userMarker.length);
     return separator < 0 ? key : PREFIX + key.slice(separator + 2);
   }
   function snapshot() {
@@ -327,13 +332,16 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
     const data = {};
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && isLegacyKey(key)) data[key] = nativeGet.call(localStorage, key);
+      if (key && (isLegacyKey(key) || (userId && key.startsWith(PREFIX + '__guest__')))) data[key] = nativeGet.call(localStorage, key);
     }
     return data;
   }
+  function clearPreviousKeys(keys) {
+    (keys || []).forEach(key => nativeRemove.call(localStorage, key));
+  }
   window.mfCourseStorage = {prefix:PREFIX,userId:userId,namespace:namespace,isCurrentKey:isCurrentKey,
     isLevelKey:key=>typeof key==='string'&&key.startsWith(PREFIX),isLegacyKey:isLegacyKey,
-    logicalKey:logicalKey,snapshot:snapshot,legacySnapshot:legacySnapshot};
+    logicalKey:logicalKey,snapshot:snapshot,legacySnapshot:legacySnapshot,clearPreviousKeys:clearPreviousKeys};
 })();
 </script>
 <style id="doma-reading-quality-fixes">#readingView .reading-passage{white-space:pre-line;line-height:1.85;overflow-wrap:anywhere}#mfCloudSyncStatus{display:block;flex-basis:100%;margin-top:8px}#mfCloudSyncStatus.good{color:#18794e}#mfCloudSyncStatus.bad{color:#b42318}</style>
@@ -559,7 +567,8 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfC2writing"
     if (window.mfCourseStorage && window.mfCourseStorage.userId === user.id && Object.keys(snapshot).length === 0) {
       const legacy = window.mfCourseStorage.legacySnapshot();
       if (Object.keys(legacy).length && window.confirm('Older ' + LEVEL + ' progress on this browser was saved before progress was separated by account. Assign those old local items to the signed-in account and sync them? Choose Cancel to leave the old items untouched.')) {
-        Object.entries(legacy).forEach(([key, value]) => localStorage.setItem(key, value));
+        Object.entries(legacy).forEach(([key, value]) => localStorage.setItem(window.mfCourseStorage.logicalKey(key), value));
+        window.mfCourseStorage.clearPreviousKeys(Object.keys(legacy));
         snapshot = localSnapshot();
         migratedLegacy = Object.keys(snapshot).length > 0;
       }
