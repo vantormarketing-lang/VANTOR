@@ -1904,23 +1904,56 @@ function updateStudentShell(){const p=window.domaStudentProfile||{};const actual
 
 async function ensureActiveGrade(){
   if(!sessionUser)return null;
-  if(currentGrade&&currentSubscription && currentSubscription.expires_at && new Date(currentSubscription.expires_at)>new Date())return {grade:currentGrade,sub:currentSubscription};
-  const subs=await getActiveSubscriptions();
-  if(!subs.length){
+
+  // Keep the grade explicitly chosen from the grade cards when its subscription
+  // is active. A missing expires_at means "no expiry configured" in the access
+  // RPC and must not silently switch the student to the first subscription.
+  const requestedGradeId = currentGrade?.id ? String(currentGrade.id) : '';
+  const cachedGradeId = currentSubscription?.grade_id ? String(currentSubscription.grade_id) : '';
+  const cachedExpiry = currentSubscription?.expires_at;
+  const cachedExpiryValid = !cachedExpiry || new Date(cachedExpiry) > new Date();
+
+  if(currentGrade && currentSubscription &&
+     cachedGradeId === String(currentGrade.id) &&
+     cachedExpiryValid){
+    return {grade:currentGrade,sub:currentSubscription};
+  }
+
+  let subs=await getActiveSubscriptions();
+  const findSubscriptionFor = gradeId => gradeId
+    ? subs.find(s=>String(s.grade_id)===String(gradeId))||null
+    : null;
+
+  // First honour the student's currently selected grade; only fall back to the
+  // profile grade or first active subscription when the selected grade is not active.
+  let selectedSub=findSubscriptionFor(requestedGradeId);
+  if(!selectedSub){
+    const profile=window.domaStudentProfile||null;
+    selectedSub=findSubscriptionFor(profile?.grade_id);
+  }
+  if(!selectedSub)selectedSub=subs[0]||null;
+
+  if(!selectedSub){
     try{
       await refreshStudentState();
-      const retry=await getActiveSubscriptions();
-      if(retry.length){
-        const rs=retry[0],rg=grades.find(x=>String(x.id)===String(rs.grade_id));
-        if(rg){currentGrade=rg;currentSubscription=rs;window.currentGrade=currentGrade;window.currentSubscription=currentSubscription;return {grade:rg,sub:rs};}
+      subs=await getActiveSubscriptions();
+      selectedSub=findSubscriptionFor(requestedGradeId);
+      if(!selectedSub){
+        const profile=window.domaStudentProfile||null;
+        selectedSub=findSubscriptionFor(profile?.grade_id);
       }
+      if(!selectedSub)selectedSub=subs[0]||null;
     }catch(e){console.warn('Active grade retry failed.',e)}
-    return null;
   }
-  const s=subs[0],g=grades.find(x=>String(x.id)===String(s.grade_id));
-  if(!g)return null;
-  currentGrade=g;currentSubscription=s;window.currentGrade=currentGrade;window.currentSubscription=currentSubscription;
-  return {grade:g,sub:s};
+
+  if(!selectedSub)return null;
+  const grade=grades.find(g=>String(g.id)===String(selectedSub.grade_id));
+  if(!grade)return null;
+  currentGrade=grade;
+  currentSubscription=selectedSub;
+  window.currentGrade=currentGrade;
+  window.currentSubscription=currentSubscription;
+  return {grade:grade,sub:selectedSub};
 }
 async function studentView(view){
   currentStudentView=view;document.querySelectorAll('.side-link[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
