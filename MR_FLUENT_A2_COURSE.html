@@ -464,6 +464,44 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfA2writing"
     }
     return data;
   }
+  function completedLessonPositions(snapshot){
+    const raw = snapshot[PREFIX + 'done'];
+    if(!raw) return [];
+    let saved;
+    try { saved = JSON.parse(raw); }
+    catch (_) { throw new Error('Saved lesson progress has an invalid format. Export a local backup before retrying.'); }
+    if(!Array.isArray(saved)) throw new Error('Saved lesson progress has an invalid format. Export a local backup before retrying.');
+    const unique = new Map();
+    saved.forEach(function(value){
+      const match = /^(\\d+)-(\\d+)$/.exec(String(value));
+      if(!match) return;
+      const unitIndex = Number(match[1]), lessonIndex = Number(match[2]);
+      if(unitIndex < 0 || unitIndex > 3 || lessonIndex < 0 || lessonIndex > 2) return;
+      unique.set(unitIndex + '-' + lessonIndex, {
+        unitNumber: unitIndex + 1,
+        sortOrder: lessonIndex + 1,
+        lessonNumber: unitIndex * 3 + lessonIndex + 1
+      });
+    });
+    return Array.from(unique.values()).sort(function(a,b){return a.lessonNumber-b.lessonNumber;});
+  }
+
+  async function syncCompletedLessonsToAccount(snapshot){
+    const positions = completedLessonPositions(snapshot);
+    for(const position of positions){
+      const result = await client.rpc('mrfluent_complete_static_english_lesson', {
+        p_level_code: LEVEL,
+        p_unit_number: position.unitNumber,
+        p_sort_order: position.sortOrder
+      });
+      if(result.error){
+        throw new Error('Cloud backup was saved, but lesson completion sync failed at lesson ' +
+          position.lessonNumber + ': ' + (result.error.message || 'Unknown database error'));
+      }
+    }
+    return positions.length;
+  }
+
   async function syncToAccount(){
     const user = await signedInUser();
     const snapshot = localSnapshot();
@@ -487,7 +525,9 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfA2writing"
       }
       throw new Error(result.error.message || 'Could not save progress to your account.');
     }
-    status('✓ ' + LEVEL + ' progress synced to your DOMA account (' + Object.keys(snapshot).length + ' saved items).');
+    const syncedLessons = await syncCompletedLessonsToAccount(snapshot);
+    status('✓ ' + LEVEL + ' progress backup synced (' + Object.keys(snapshot).length +
+      ' saved items); ' + syncedLessons + ' completed lesson(s) reconciled with your DOMA account.');
   }
   async function restoreFromAccount(){
     const user = await signedInUser();
