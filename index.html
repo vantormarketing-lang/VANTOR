@@ -234,15 +234,15 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v7">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v8">
 <meta name="theme-color" content="#071226">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v7">
-<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v7">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v7">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v8">
+<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v8">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v8">
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
@@ -278,7 +278,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v7', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v8', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -494,7 +494,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v7', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v8', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -651,6 +651,94 @@ body.mf-course-level-route #mrfluentEnglishPlacement,
 body.mf-course-level-route #mrfluentEnglishLevels{display:none!important}
 body.mf-course-level-route #mrfluentEnglishLevelContent{display:block!important;margin-top:0!important}
 body.mf-course-list-route #mrfluentEnglishLevelContent{display:none!important}
+</style>
+
+
+<style id="doma-mobile-violet-level-tiles">
+/* Mobile-only adaptation of selected level tile design #2 */
+@media (max-width: 640px) {
+  #mrfluentEnglishWorkspace .mf-course-level-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    align-items: stretch;
+  }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    padding: 6px !important;
+    overflow: hidden !important;
+    border-radius: 11px !important;
+    color: #f7edff !important;
+    background: linear-gradient(145deg, rgba(116,70,187,.53), rgba(61,42,125,.47)) !important;
+    border: 1px solid rgba(185,155,255,.46) !important;
+    box-shadow: inset 0 0 16px rgba(184,162,255,.07), 0 5px 12px rgba(0,0,0,.22) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level > span:first-child {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #fbf7ff !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    letter-spacing: .5px !important;
+    box-shadow: none !important;
+  }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level > h3,
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level > p,
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level > span:not(:first-child) {
+    display: none !important;
+  }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level > button {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 3 !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: inherit !important;
+    background: transparent !important;
+    color: transparent !important;
+    box-shadow: none !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    cursor: pointer;
+  }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level > button:focus-visible {
+    outline: 2px solid #e2ceff !important;
+    outline-offset: -4px !important;
+  }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level[aria-disabled="true"]::after {
+    content: "🔒";
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    z-index: 2;
+    font-size: 9px;
+    line-height: 1;
+    opacity: .78;
+    pointer-events: none;
+  }
+  #mrfluentEnglishWorkspace .mf-course-level-grid .mf-course-level:not([aria-disabled="true"]) {
+    border-color: rgba(221,196,255,.82) !important;
+    box-shadow: inset 0 0 18px rgba(184,162,255,.13), 0 0 13px rgba(122,74,205,.22) !important;
+  }
+}
 </style>
 
 </head>
