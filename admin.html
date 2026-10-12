@@ -781,6 +781,35 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:600px){.modal{padding:10px}.modal-card{max-height:94vh}.actions{gap:5px}.btn.small{padding:7px 9px}.doma-confirm-overlay{padding:12px}.doma-confirm-dialog{padding:17px}.doma-confirm-actions{display:grid;grid-template-columns:1fr 1fr}.doma-confirm-actions .btn{min-width:0}}
 @media(prefers-reduced-motion:reduce){.card,.btn,.nav-btn,tbody tr{transition:none!important}.btn:hover,.nav-btn:hover{transform:none}}
 </style>
+
+<style id="doma-admin-four-card-rows-v1">
+/* Compact four-across admin tiles in the existing burnt-orange / espresso design. */
+@media(min-width:961px){
+  .content .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+  .content .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+  .content .card{padding:14px!important;border-radius:14px!important;min-width:0}
+  .content .grid .card{min-height:100px}
+  .content .grid .stat{min-height:104px!important;padding:14px 15px!important}
+  .content .grid .stat .num{font-size:26px!important;margin-top:6px!important;overflow-wrap:anywhere}
+  .content .grid .stat .muted{font-size:11px!important;line-height:1.4}
+  #section-dashboard .head + .grid + .grid .card{min-height:112px!important;padding:15px!important}
+  #section-dashboard .head + .grid + .grid .card b{font-size:13px!important;margin-bottom:6px!important}
+  #section-dashboard .head + .grid + .grid .card p{font-size:11px!important;line-height:1.6!important}
+}
+@media(min-width:561px) and (max-width:960px){
+  .content .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .content .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .content .card{padding:13px!important}
+}
+@media(max-width:560px){
+  .content .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .content .grid-2{grid-template-columns:1fr!important;gap:10px!important}
+  .content .grid .card{padding:12px!important;min-width:0}
+  .content .grid .stat .num{font-size:23px!important;overflow-wrap:anywhere}
+  #section-dashboard .head + .grid .stat{min-height:94px!important}
+}
+</style>
+
 </head>
 <body>
 <div id="login" class="login">
