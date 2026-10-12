@@ -1909,8 +1909,52 @@ window.downloadCSV=function(filename,rows){
   toast('Exported '+filename);
 };
 window.linkifyAnswer=function(t){
-  return esc(t).replace(/(https?:\/\/[^\s<>"']+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#d98ea0;word-break:break-all">$1</a>');
+  function attachmentLink(path){
+    return '<a href="#" data-doma-homework-attachment="1" data-doma-storage-path="'+esc(path)+'" style="color:#d98ea0;word-break:break-all">Open private homework attachment</a>';
+  }
+  function legacyHomeworkPath(value){
+    try{
+      const u=new URL(value);
+      const marker='/storage/v1/object/public/homework-submissions/';
+      const at=u.pathname.indexOf(marker);
+      if(at<0)return null;
+      return decodeURIComponent(u.pathname.slice(at+marker.length));
+    }catch(_){return null;}
+  }
+  return String(t??'').replace(/(storage:\/\/homework-submissions\/[^\s<>"']+|https?:\/\/[^\s<>"']+)/g,function(raw){
+    const trailing=(raw.match(/[),.;!?]+$/)||[''])[0];
+    const value=trailing?raw.slice(0,-trailing.length):raw;
+    if(value.startsWith('storage://homework-submissions/')){
+      let path=value.slice('storage://homework-submissions/'.length);
+      try{path=decodeURIComponent(path)}catch(_){}
+      return attachmentLink(path)+esc(trailing);
+    }
+    const legacy=legacyHomeworkPath(value);
+    if(legacy!==null)return attachmentLink(legacy)+esc(trailing);
+    return '<a href="'+esc(value)+'" target="_blank" rel="noopener noreferrer" style="color:#d98ea0;word-break:break-all">'+esc(value)+'</a>'+esc(trailing);
+  }).replace(/\n/g,'<br>');
 };
+document.addEventListener('click',async function(event){
+  const link=event.target&&event.target.closest&&event.target.closest('a[data-doma-homework-attachment]');
+  if(!link)return;
+  event.preventDefault();
+  if(link.dataset.busy==='1')return;
+  link.dataset.busy='1';
+  const tab=window.open('about:blank','_blank');
+  if(tab)tab.opener=null;
+  try{
+    const path=link.getAttribute('data-doma-storage-path');
+    if(!path||path.startsWith('/')||path.split('/').includes('..'))throw new Error('Invalid attachment path.');
+    const result=await db.storage.from('homework-submissions').createSignedUrl(path,300);
+    if(result.error)throw result.error;
+    if(!result.data?.signedUrl)throw new Error('A secure attachment link was not returned.');
+    if(tab)tab.location.href=result.data.signedUrl;
+    else window.location.href=result.data.signedUrl;
+  }catch(error){
+    if(tab)tab.close();
+    toast('Could not open the private homework attachment: '+(error?.message||String(error)));
+  }finally{delete link.dataset.busy;}
+},true);
 /* ---------- Exporters ---------- */
 window.exportStudentsCSV=async function(){
   var r=await db.from('profiles').select('full_name,email,phone,favorite_team,grade_id,created_at').eq('role','student').order('created_at',{ascending:false}).limit(5000);
