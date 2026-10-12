@@ -7610,6 +7610,56 @@ html,body{min-height:100%;min-height:100dvh;background:#080808}
 #drawerBody .student-plus5-grid{grid-template-columns:1fr!important}
 #drawerBody .student-plus5-grid+.student-plus5-card{display:none!important}
 .doma-v2-sub{display:none!important}
+
+/* Final mobile fit: use the actual device viewport and keep top actions compact. */
+html,body{
+  width:100%;
+  max-width:100%;
+  min-height:100%;
+  min-height:100svh;
+  min-height:100dvh;
+  overflow-x:clip;
+}
+@media(max-width:700px){
+  .nav{
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    width:100%;
+    padding-top:env(safe-area-inset-top,0px)!important;
+  }
+  .navin{
+    height:calc(58px + env(safe-area-inset-top,0px))!important;
+    min-height:calc(58px + env(safe-area-inset-top,0px))!important;
+    padding-left:2px;
+    padding-right:2px;
+  }
+  .nav-actions .btn,
+  .nav-actions #navLogin,
+  .nav-actions #navAction{
+    min-height:27px!important;
+    height:27px!important;
+    padding:4px 6px!important;
+    font-size:9px!important;
+    line-height:1.1!important;
+    border-radius:7px!important;
+    white-space:nowrap!important;
+    gap:3px!important;
+  }
+  .nav-actions #navAction{max-width:78px!important}
+  .nav-actions #navLogin{max-width:54px!important}
+  .nav-actions .iconbtn{width:29px!important;min-width:29px!important;height:29px!important;min-height:29px!important}
+  .hero{
+    min-height:100svh!important;
+    min-height:100dvh!important;
+    padding-top:calc(88px + env(safe-area-inset-top,0px))!important;
+    padding-bottom:max(24px,env(safe-area-inset-bottom,0px))!important;
+    display:flex;
+    align-items:center;
+  }
+  .hero>.container{width:min(1180px,92%);margin-inline:auto}
+  .hero-grid{min-height:calc(100svh - 88px)!important;min-height:calc(100dvh - 88px)!important;align-content:center}
+}
 </style>
 </body>
 </html>
