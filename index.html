@@ -2038,18 +2038,23 @@ async function renderStudentHomework(){
     });
   });
 }
+function cleanHomeworkAttachmentToken(value){
+  let token=String(value||'').replace(/[),;!?]+$/,'');
+  token=token.replace(/(\.(?:pdf|jpe?g|png|webp|gif|heic|heif))\.$/i,'$1');
+  return token;
+}
 function parseStudentHomeworkAttachment(answerText){
   const text=String(answerText||'');
   const marker='storage://homework-submissions/';
   const match=text.match(/storage:\/\/homework-submissions\/[^\s<>"']+/);
   let path=null;
   if(match){
-    path=match[0].slice(marker.length).replace(/[),.;!?]+$/,'');
+    path=cleanHomeworkAttachmentToken(match[0].slice(marker.length));
   }else{
     const urls=text.match(/https?:\/\/[^\s<>"']+/g)||[];
     for(const raw of urls){
       try{
-        const url=new URL(raw.replace(/[),.;!?]+$/,''));
+        const url=new URL(cleanHomeworkAttachmentToken(raw));
         const publicMarker='/storage/v1/object/public/homework-submissions/';
         const at=url.pathname.indexOf(publicMarker);
         if(at>=0){path=decodeURIComponent(url.pathname.slice(at+publicMarker.length));break;}
