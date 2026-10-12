@@ -3638,7 +3638,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    const access=await ensureActiveGrade();if(!access){host.innerHTML='<div class="empty">Choose an active grade first.</div>';return}
    const qs=await sb.from('quizzes').select('id,title').eq('grade_id',access.grade.id).eq('is_published',true).order('created_at',{ascending:false});if(qs.error){host.innerHTML='<div class="empty">Could not load quizzes: '+e5(qs.error.message)+'</div>';return}
    const ids=(qs.data||[]).map(q=>q.id);if(!ids.length){host.innerHTML='<div class="empty">No published quiz questions are available yet.</div>';return}
-   let qr=null;try{const __rpc=await sb.rpc('doma_get_question_bank',{p_quiz_ids:ids});if(!__rpc.error&&Array.isArray(__rpc.data))qr={data:__rpc.data};}catch(e){}if(!qr)qr=await sb.from('quiz_questions').select('id,quiz_id,question,options,points,sort_order').in('quiz_id',ids).order('sort_order',{ascending:true});if(qr.error){host.innerHTML='<div class="empty">Question Bank is not available for students yet. '+e5(qr.error.message)+'</div>';return}
+   let qr=null;try{const __rpc=await sb.rpc('doma_get_question_bank',{p_quiz_ids:ids});if(__rpc.error)throw __rpc.error;if(!Array.isArray(__rpc.data))throw new Error('Question Bank response was invalid.');qr={data:__rpc.data,error:null};}catch(e){qr={data:null,error:{message:e?.message||'Secure Question Bank is unavailable.'}};}if(qr.error){host.innerHTML='<div class="empty">Question Bank is not available for students yet. '+e5(qr.error.message)+'</div>';return}
    const qmap=Object.fromEntries((qs.data||[]).map(q=>[q.id,q.title]));let rows=qr.data||[];const render=()=>{const term=($('plus5QBSearch')?.value||'').trim().toLowerCase();const quiz=($('plus5QBQuiz')?.value||'');const list=rows.filter(q=>(!quiz||q.quiz_id===quiz)&&(!term||String(q.question||'').toLowerCase().includes(term)));$('plus5QBList').innerHTML=list.length?list.slice(0,80).map((q,i)=>'<div class="plus5-q"><strong>'+e5((i+1)+'. '+q.question)+'</strong><span class="plus5-small">'+e5(qmap[q.quiz_id]||'Quiz')+' • '+n5(q.points||1)+' point'+(n5(q.points||1)===1?'':'s')+'</span><div>'+((Array.isArray(q.options)?q.options:[]).map((o,j)=>'<label><input type="radio" name="plus5q_'+e5(q.id)+'" value="'+e5(String(o))+'"> '+e5(String(o))+'</label>').join(''))+'</div></div>').join(''):'<div class="empty">No matching questions.</div>'};
    host.innerHTML='<div class="student-plus5-card"><h3>🧠 Smart Question Bank</h3><p class="student-plus5-muted">Search and practice questions from your published quizzes. This is practice mode; it does not submit an official quiz attempt.</p><div class="plus5-toolbar"><input id="plus5QBSearch" class="field" style="flex:1" placeholder="Search a question…"><select id="plus5QBQuiz" class="field"><option value="">All quizzes</option>'+qs.data.map(q=>'<option value="'+e5(q.id)+'">'+e5(q.title)+'</option>').join('')+'</select><button class="btn secondary" type="button" id="plus5QBRandom">Random</button></div><div id="plus5QBList" class="plus5-list"></div><div class="account-actions"><button class="btn primary" type="button" id="plus5QBOfficial">Open Official Quizzes</button><span id="plus5QBScore" class="pill">Practice mode</span></div></div>';
    render();$('plus5QBSearch').oninput=render;$('plus5QBQuiz').onchange=render;$('plus5QBRandom').onclick=()=>{const pool=rows.filter(q=>!$('plus5QBQuiz').value||q.quiz_id===$('plus5QBQuiz').value);if(!pool.length)return;const q=pool[Math.floor(Math.random()*pool.length)];$('plus5QBSearch').value=String(q.question||'').slice(0,80);render()};   $('plus5QBOfficial').onclick=()=>studentView('quizzes');
@@ -5359,13 +5359,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
           else questionErrors.push(q.title||q.id);
         }catch(_){questionErrors.push(q.title||q.id)}
 
-        if(!qr){
-          try{
-            const rr=await sb.from('quiz_questions').select('id,quiz_id,question,options,points,sort_order').eq('quiz_id',q.id).order('sort_order',{ascending:true});
-            if(!rr.error)qr=rr.data||[];
-          }catch(_){ }
-        }
-        quizQuestions[q.id]=Array.isArray(qr)?qr:[];
+                quizQuestions[q.id]=Array.isArray(qr)?qr:[];
 
         try{
           const ps=await sb.from('quiz_pro_settings').select('*').eq('quiz_id',q.id).maybeSingle();
