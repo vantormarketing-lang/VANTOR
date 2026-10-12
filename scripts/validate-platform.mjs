@@ -89,7 +89,7 @@ for (const level of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
 }
 
 const student = read('index.html');
-if (/storage\\.from\\(\s*['"]homework-submissions['"]\s*\)\s*\.getPublicUrl\s*\(/.test(student)) {
+if (/storage\.from\(\s*['"]homework-submissions['"]\s*\)\s*\.getPublicUrl\s*\(/.test(student)) {
   fail('index.html: homework attachments must not be exposed with getPublicUrl()');
 }
 if (!student.includes('storage://homework-submissions/')) {
