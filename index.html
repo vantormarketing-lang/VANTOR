@@ -4829,7 +4829,6 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     X.channel.on('broadcast',{event:'join'},x=>onJoin(x.payload||{}));
     X.channel.on('broadcast',{event:'lobby'},x=>onLobby(x.payload||{}));
     X.channel.on('broadcast',{event:'start'},x=>onStart(x.payload||{}));
-    X.channel.on('broadcast',{event:'answer'},x=>onAnswer(x.payload||{}));
     X.channel.on('broadcast',{event:'score'},x=>onScore(x.payload||{}));
     X.channel.on('broadcast',{event:'next'},x=>onNext(x.payload||{}));
     X.channel.on('broadcast',{event:'finish'},x=>onFinish(x.payload||{}));
@@ -4893,52 +4892,239 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   window.domaBattleCopyCode=function(){if(!X.room)return;if(navigator.clipboard){navigator.clipboard.writeText(X.room).then(()=>showToast('Battle code copied.')).catch(()=>showToast(X.room))}else showToast(X.room)}
   window.domaBattleLeave=function(){try{send('leave',{id:sessionUser?.id})}catch(e){}closeDomaBattle();openDomaBattle()}
   async function createBattle(){
-    if(!sessionUser)return openAuth('login');const sel=document.getElementById('domaBattleQuiz');const count=Math.max(2,Math.min(20,Number(document.getElementById('domaBattleCount')?.value||10)));const quizId=sel?.value;if(!quizId)return showToast('Choose a published quiz first.');
-    /* Use select('*') here because the existing DOMA schema may not contain every optional answer column.
-       The previous explicit select could fail before the room code was generated. */
-    const q=await sb.from('quiz_questions').select('*').eq('quiz_id',quizId).order('sort_order',{ascending:true});
-    if(q.error)return showToast('Could not load Battle questions: '+q.error.message);
-    let rows=q.data||[];
+    if(!sessionUser)return openAuth('login');
+    const sel=document.getElementById('domaBattleQuiz');
+    const count=Math.max(2,Math.min(20,Number(document.getElementById('domaBattleCount')?.value||10)));
+    const quizId=sel?.value;
+    const gradeId=activeGradeId();
+    if(!quizId)return showToast('Choose a published quiz first.');
+    if(!gradeId)return showToast('Activate your grade subscription first.');
+
+    const loaded=await sb.rpc('doma_get_quiz_questions',{p_quiz_id:quizId});
+    if(loaded.error)return showToast('Could not load Battle questions: '+loaded.error.message);
+    let rows=Array.isArray(loaded.data)?loaded.data.slice():[];
     if(rows.length<2)return showToast('This quiz needs at least 2 questions for Battle Mode.');
     rows=rows.sort(()=>Math.random()-.5).slice(0,count);
-    X.role='host';X.room=makeCode();X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};X.host={id:X.player.id,name:X.player.name,score:0,answered:false};X.guest=null;X.quiz={id:quizId,title:sel.selectedOptions[0]?.textContent||'Quiz'};X.questions=rows;X.index=0;
+
+    X.role='host';
+    X.room=makeCode();
+    X.gradeId=gradeId;
+    X.player={id:sessionUser.id,name:await playerName()};
+    X.host={id:X.player.id,name:X.player.name,score:0,answered:false};
+    X.guest=null;
+    X.quiz={id:quizId,title:sel.selectedOptions[0]?.textContent||'Quiz'};
+    X.questions=rows;
+    X.index=0;
+    X.finished=false;
+    X.resultSaved=false;
+    X.advancing=false;
+
+    const created=await sb.rpc('doma_create_battle_session',{
+      p_room_code:X.room,
+      p_quiz_id:quizId,
+      p_grade_id:gradeId,
+      p_question_ids:rows.map(q=>q.id)
+    });
+    if(created.error){
+      closeChannel();
+      X.room=null;
+      return showToast('Could not create secure Battle room: '+created.error.message);
+    }
+
     try{
       await subscribeRoom(X.room);
     }catch(e){
+      await sb.rpc('doma_cancel_battle_session',{p_room_code:X.room}).catch(()=>{});
       const code=X.room;
+      closeChannel();
+      X.role=null;
       renderLobby();
-      showStatus('Battle room created as '+code+'. Realtime connection failed — keep this page open and try Join from the other device.');
+      showStatus('Could not establish the live Battle connection for '+code+'. Please create a new room and try again.');
       return;
     }
-    renderLobby();handlePresence();
+    renderLobby();
+    handlePresence();
   }
+
   async function joinBattle(){
     if(!sessionUser)return openAuth('login');
     const input=String(document.getElementById('domaBattleCodeInput')?.value||'').replace(/\s+/g,'').trim().toUpperCase();
     if(input==='DOMA-AB12-CD'||input==='DOMA-K7P2-XQ')return showToast('ده مثال فقط. استخدم الكود الحقيقي الظاهر عند Player 1 بعد Create Battle Room.');
     if(!/^DOMA-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(input))return showToast('Enter the REAL Battle Code from Player 1.');
-    X.role='guest';X.room=input;X.gradeId=activeGradeId();X.player={id:sessionUser.id,name:await playerName()};
-    try{await subscribeRoom(X.room)}catch(e){return showToast('Could not connect to that Battle room.')}
-    renderWaitingGuest('Connected. Waiting for Player 1…');startJoinHeartbeat();handlePresence();
+    X.role='guest';
+    X.room=input;
+    X.gradeId=activeGradeId();
+    X.player={id:sessionUser.id,name:await playerName()};
+    X.finished=false;
+    X.resultSaved=false;
+    X.advancing=false;
+
+    try{
+      await subscribeRoom(X.room);
+    }catch(e){
+      closeChannel();
+      X.role=null;
+      return showToast('Could not connect to that Battle room.');
+    }
+
+    const joined=await sb.rpc('doma_join_battle_session',{p_room_code:X.room});
+    if(joined.error){
+      closeChannel();
+      X.role=null;
+      return showToast('Could not join that Battle: '+joined.error.message);
+    }
+    send('join',{id:X.player.id,name:X.player.name});
+    renderWaitingGuest('Connected. Waiting for Player 1…');
+    startJoinHeartbeat();
+    handlePresence();
   }
   function renderLobby(){body().innerHTML='<div class="doma-battle-card"><div class="eyebrow">BATTLE ROOM</div><div class="doma-battle-code">'+escB(X.room)+'</div><div class="doma-battle-status" id="domaBattleStatus">Waiting for Player 2…</div><div class="doma-battle-actions"><button class="btn secondary" type="button" onclick="domaBattleCopyCode()">Copy Code</button><button class="btn secondary" type="button" onclick="domaBattleLeave()">Leave</button><button class="btn primary" type="button" id="domaBattleStart" disabled>Start Battle</button></div></div><div class="doma-battle-card" style="margin-top:14px"><h3>'+escB(X.quiz?.title||'Quiz')+'</h3><p class="doma-battle-note">'+X.questions.length+' questions • 20 seconds per question • faster correct answers score more.</p><div class="doma-battle-players"><div class="doma-battle-player active"><div class="name">'+escB(X.host?.name||'You')+'</div><div class="score">0</div><span class="pill">Player 1</span></div><div class="doma-battle-player" id="domaBattleGuest"><div class="name">Waiting…</div><div class="score">—</div><span class="pill">Player 2</span></div></div></div>';document.getElementById('domaBattleStart').onclick=startBattle}
   function renderWaitingGuest(text){body().innerHTML='<div class="doma-battle-card"><div class="eyebrow">BATTLE ROOM</div><div class="doma-battle-code">'+escB(X.room)+'</div><div class="doma-battle-status" id="domaBattleStatus">'+escB(text)+'</div><div class="doma-battle-actions"><button class="btn secondary" type="button" onclick="domaBattleLeave()">Leave Battle</button></div></div>'}
   function onJoin(p){if(X.role!=='host'||X.started||!p.id||p.id===X.host?.id)return;if(X.guest&&X.guest.id===p.id)return;if(X.guest)return;X.guest={id:p.id,name:p.name||'Player 2',score:0,answered:false};const slot=document.getElementById('domaBattleGuest');if(slot)slot.innerHTML='<div class="name">'+escB(X.guest.name)+'</div><div class="score">0</div><span class="pill">Player 2 • Ready</span>';const btn=document.getElementById('domaBattleStart');if(btn)btn.disabled=false;showStatus('Player 2 joined. You can start the Battle now.');send('lobby',{host:X.host,guest:X.guest,quiz:X.quiz,count:X.questions.length,gradeId:X.gradeId});clearInterval(X.presenceTimer);X.presenceTimer=setInterval(()=>{if(X.role==='host'&&X.guest&&!X.finished)send('lobby',{host:X.host,guest:X.guest,quiz:X.quiz,count:X.questions.length,gradeId:X.gradeId});},1200)}
   function onLobby(p){if(X.role!=='guest'||X.started||X.finished)return;X.host=p.host||null;X.guest=p.guest||null;X.quiz=p.quiz||null;X.gradeId=p.gradeId||X.gradeId;clearInterval(X.joinTimer);X.joinTimer=null;renderWaitingGuest('Player 1 is ready. Waiting for Start…')}
   function publicQ(q){let opts=q?.options;try{if(typeof opts==='string')opts=JSON.parse(opts)}catch(e){}if(!Array.isArray(opts))opts=[];return {id:q.id,question:q.question||'',options:opts.map(String),points:Number(q.points||1),sort_order:q.sort_order||0}}
-  function startBattle(){if(X.role!=='host'||!X.guest)return;X.started=true;clearInterval(X.presenceTimer);X.presenceTimer=null;X.index=0;X.host.answered=false;X.guest.answered=false;sendQuestion()}
-  function sendQuestion(){if(X.index>=X.questions.length)return finishBattle();X.answered=false;X.host.answered=false;if(X.guest)X.guest.answered=false;X.deadline=Date.now()+BATTLE_MS;const q=publicQ(X.questions[X.index]);const packet={index:X.index,total:X.questions.length,deadline:X.deadline,question:q,questions:X.questions.map(publicQ),quiz:X.quiz};renderQuestion(q);send('start',packet);startTimer()}
+  async function startBattle(){
+    if(X.role!=='host'||!X.guest||X.started)return;
+    const started=await sb.rpc('doma_start_battle_session',{p_room_code:X.room});
+    if(started.error)return showToast('Could not start the secure Battle: '+started.error.message);
+    X.started=true;
+    clearInterval(X.presenceTimer);X.presenceTimer=null;
+    X.index=Number(started.data?.question_index||0);
+    X.deadline=new Date(started.data?.question_deadline||Date.now()+BATTLE_MS).getTime();
+    X.host.score=Number(started.data?.host_score||0);
+    X.guest.score=Number(started.data?.guest_score||0);
+    X.host.answered=false;X.guest.answered=false;
+    sendQuestion();
+  }
+  function sendQuestion(){
+    if(X.index>=X.questions.length)return void advanceQuestion();
+    X.answered=false;X.host.answered=false;if(X.guest)X.guest.answered=false;
+    if(!X.deadline)X.deadline=Date.now()+BATTLE_MS;
+    const q=publicQ(X.questions[X.index]);
+    const packet={index:X.index,total:X.questions.length,deadline:X.deadline,question:q,questions:X.questions.map(publicQ),quiz:X.quiz,
+      hostScore:Number(X.host?.score||0),guestScore:Number(X.guest?.score||0)};
+    renderQuestion(q);send('start',packet);startTimer();
+  }
   function renderQuestion(q){document.getElementById('domaBattleTitle').textContent='Battle • '+(X.index+1)+' / '+X.questions.length;document.getElementById('domaBattleSubtitle').textContent=X.quiz?.title||'Live quiz';const me=X.role==='host'?X.host:X.guest,opp=X.role==='host'?X.guest:X.host;body().innerHTML='<div class="doma-battle-live"><div class="doma-battle-side"><span class="pill">You</span><div style="font-weight:800;margin-top:4px">'+escB(me?.name||X.player?.name||'You')+'</div><div style="font-size:24px;font-weight:900">'+Number(me?.score||0)+'</div></div><div class="doma-battle-vs">VS</div><div class="doma-battle-side right"><span class="pill">Opponent</span><div style="font-weight:800;margin-top:4px">'+escB(opp?.name||'Opponent')+'</div><div style="font-size:24px;font-weight:900">'+Number(opp?.score||0)+'</div></div></div><div class="doma-battle-question"><div class="doma-battle-qmeta"><span class="doma-battle-qnum">QUESTION '+(X.index+1)+' OF '+X.questions.length+'</span><span class="doma-battle-timer" id="domaBattleTimer">20s</span></div><h3>'+escB(q?.question||'Question')+'</h3><div class="doma-battle-options">'+(q?.options||[]).map(o=>'<button type="button" class="doma-battle-option" data-doma-battle-option="'+escB(String(o))+'">'+escB(String(o))+'</button>').join('')+'</div><div class="doma-battle-status" id="domaBattleAnswerStatus" style="margin-top:12px">Choose your answer. Speed matters.</div></div>';document.querySelectorAll('[data-doma-battle-option]').forEach(b=>b.onclick=()=>answer(b.dataset.domaBattleOption,b))}
   function startTimer(){clearInterval(X.timer);X.timer=setInterval(()=>{const left=Math.max(0,X.deadline-Date.now());const sec=Math.ceil(left/1000);const t=document.getElementById('domaBattleTimer');if(t)t.textContent=sec+'s';if(left<=0){clearInterval(X.timer);X.timer=null;if(X.role==='host')advanceQuestion()}},100)}
-  function answer(value,btn){if(X.answered||X.finished)return;X.answered=true;document.querySelectorAll('[data-doma-battle-option]').forEach(b=>b.disabled=true);btn.classList.add('selected');const payload={playerId:sessionUser.id,answer:String(value),timeLeft:Math.max(0,X.deadline-Date.now()),index:X.index};if(X.role==='host')processAnswer(payload);else send('answer',payload);const st=document.getElementById('domaBattleAnswerStatus');if(st)st.textContent='Answer submitted. Waiting for the other player…'}
-  function processAnswer(p){if(X.role!=='host'||p.index!==X.index)return;const pl=p.playerId===X.host?.id?X.host:(p.playerId===X.guest?.id?X.guest:null);if(!pl||pl.answered)return;pl.answered=true;const q=X.questions[X.index];const correct=String(q?.correct_answer??q?.answer??'');const ok=correct!==''&&String(p.answer)===correct;const points=ok?Number(q?.points||1)*(1+Math.round((Number(p.timeLeft||0)/BATTLE_MS)*100)/100):0;pl.score+=Math.round(points);send('score',{playerId:pl.id,score:pl.score,correct:ok,points:Math.round(points),index:X.index})}
-  function onAnswer(p){if(X.role!=='host'||!X.guest||p.playerId!==X.guest.id)return;processAnswer(p)}
-  function onScore(p){if(X.role==='host')return;const pl=p.playerId===X.host?.id?X.host:(p.playerId===X.guest?.id?X.guest:null);if(pl)pl.score=Number(p.score||0);const st=document.getElementById('domaBattleAnswerStatus');if(st&&p.playerId===sessionUser.id)st.textContent=p.correct?'Correct! +'+Number(p.points||0)+' points.':'Answer submitted. +0 points.';const scoreEls=document.querySelectorAll('.doma-battle-side div[style*="font-size:24px"]');if(scoreEls.length>=2){const me=X.role==='host'?X.host:X.guest,opp=X.role==='host'?X.guest:X.host;scoreEls[0].textContent=Number(me?.score||0);scoreEls[1].textContent=Number(opp?.score||0)}}
-  function onStart(p){if(X.role!=='guest'||X.finished)return;X.started=true;clearInterval(X.joinTimer);X.joinTimer=null;if(Array.isArray(p.questions))X.questions=p.questions;X.quiz=X.quiz||p.quiz;X.index=Number(p.index||0);X.deadline=Number(p.deadline||Date.now()+BATTLE_MS);X.answered=false;renderQuestion(publicQ(p.question||X.questions[X.index]));startTimer()}
-  function onNext(p){if(X.role==='guest'&&!X.finished&&X.started&&Number(p.index)===X.index+1){X.index=Number(p.index);X.deadline=Number(p.deadline||Date.now()+BATTLE_MS);X.answered=false;renderQuestion(publicQ(p.question||X.questions[X.index]));startTimer()}}
-  function advanceQuestion(){if(X.role!=='host')return;if(X.finished)return;if(X.host&&!X.host.answered)X.host.answered=true;if(X.guest&&!X.guest.answered)X.guest.answered=true;X.index++;if(X.index>=X.questions.length){finishBattle();return}X.deadline=Date.now()+BATTLE_MS;X.answered=false;const q=publicQ(X.questions[X.index]);renderQuestion(q);send('next',{index:X.index,total:X.questions.length,deadline:X.deadline,question:q,quiz:X.quiz});startTimer()}
-  function finishBattle(){if(X.finished)return;X.finished=true;clearInterval(X.timer);X.timer=null;const h=Number(X.host?.score||0),g=Number(X.guest?.score||0),winner=h===g?'draw':(h>g?'host':'guest');send('finish',{hostScore:h,guestScore:g,winner});renderResult(h,g,winner)}
-  function onFinish(p){if(X.finished)return;X.finished=true;clearInterval(X.timer);X.timer=null;renderResult(Number(p.hostScore||0),Number(p.guestScore||0),p.winner)}
+  async function answer(value,btn){
+    if(X.answered||X.finished||!sessionUser)return;
+    X.answered=true;
+    document.querySelectorAll('[data-doma-battle-option]').forEach(b=>b.disabled=true);
+    btn.classList.add('selected');
+    const st=document.getElementById('domaBattleAnswerStatus');
+    if(st)st.textContent='Checking answer securely…';
+    const result=await sb.rpc('doma_submit_battle_answer',{
+      p_room_code:X.room,
+      p_question_index:X.index,
+      p_question_id:X.questions[X.index]?.id,
+      p_answer:String(value),
+      p_time_remaining_ms:Math.max(0,Math.min(BATTLE_MS,X.deadline-Date.now()))
+    });
+    if(result.error){
+      X.answered=false;
+      document.querySelectorAll('[data-doma-battle-option]').forEach(b=>b.disabled=false);
+      if(st)st.textContent='Answer was not recorded: '+result.error.message;
+      return;
+    }
+    const data=result.data||{};
+    if(X.host)X.host.score=Number(data.host_score||0);
+    if(X.guest)X.guest.score=Number(data.guest_score||0);
+    const player=X.player?.id===X.host?.id?X.host:X.guest;
+    if(player)player.answered=true;
+    if(st)st.textContent=data.correct?'Correct! +'+Number(data.points||0)+' points.':'Answer submitted. '+(Number(data.points||0)>0?'+'+Number(data.points||0)+' points.':'No points this time.');
+    send('score',{
+      playerId:sessionUser.id,correct:!!data.correct,points:Number(data.points||0),
+      score:Number(data.player_score||0),hostScore:Number(data.host_score||0),
+      guestScore:Number(data.guest_score||0),bothAnswered:!!data.both_answered,index:X.index
+    });
+    updateBattleScoreDisplay();
+    if(X.role==='host'&&data.both_answered)void advanceQuestion();
+  }
+  function updateBattleScoreDisplay(){
+    const scoreEls=document.querySelectorAll('.doma-battle-side div[style*="font-size:24px"]');
+    if(scoreEls.length>=2){
+      const me=X.role==='host'?X.host:X.guest,opp=X.role==='host'?X.guest:X.host;
+      scoreEls[0].textContent=Number(me?.score||0);
+      scoreEls[1].textContent=Number(opp?.score||0);
+    }
+  }
+  function onScore(p){
+    if(!p||p.index!==X.index)return;
+    if(X.host&&p.hostScore!==undefined)X.host.score=Number(p.hostScore||0);
+    if(X.guest&&p.guestScore!==undefined)X.guest.score=Number(p.guestScore||0);
+    const pl=p.playerId===X.host?.id?X.host:(p.playerId===X.guest?.id?X.guest:null);
+    if(pl)pl.answered=true;
+    const st=document.getElementById('domaBattleAnswerStatus');
+    if(st&&p.playerId===sessionUser?.id)st.textContent=p.correct?'Correct! +'+Number(p.points||0)+' points.':'Answer submitted. '+(Number(p.points||0)>0?'+'+Number(p.points||0)+' points.':'No points this time.');
+    updateBattleScoreDisplay();
+    if(X.role==='host'&&p.bothAnswered)void advanceQuestion();
+  }
+  function onStart(p){
+    if(X.role!=='guest'||X.finished)return;
+    X.started=true;clearInterval(X.joinTimer);X.joinTimer=null;
+    if(Array.isArray(p.questions))X.questions=p.questions;
+    X.quiz=X.quiz||p.quiz;X.index=Number(p.index||0);
+    X.deadline=new Date(p.deadline||Date.now()+BATTLE_MS).getTime();
+    if(X.host)X.host.score=Number(p.hostScore||0);
+    if(X.guest)X.guest.score=Number(p.guestScore||0);
+    X.answered=false;renderQuestion(publicQ(p.question||X.questions[X.index]));startTimer();
+  }
+  function onNext(p){
+    if(X.role==='guest'&&!X.finished&&X.started&&Number(p.index)===X.index+1){
+      X.index=Number(p.index);X.deadline=new Date(p.deadline||Date.now()+BATTLE_MS).getTime();
+      if(X.host)X.host.score=Number(p.hostScore||0);
+      if(X.guest)X.guest.score=Number(p.guestScore||0);
+      X.answered=false;renderQuestion(publicQ(p.question||X.questions[X.index]));startTimer();
+    }
+  }
+  async function advanceQuestion(){
+    if(X.role!=='host'||X.finished||X.advancing)return;
+    X.advancing=true;
+    clearInterval(X.timer);X.timer=null;
+    try{
+      const result=await sb.rpc('doma_advance_battle_session',{p_room_code:X.room});
+      if(result.error){
+        if(/Wait until both players answer or the question timer expires/i.test(result.error.message||'')){
+          X.timer=setInterval(()=>{if(Date.now()>=X.deadline){clearInterval(X.timer);X.timer=null;void advanceQuestion()}},150);
+          return;
+        }
+        showToast('Could not advance Battle: '+result.error.message);
+        return;
+      }
+      const data=result.data||{};
+      if(X.host)X.host.score=Number(data.host_score||0);
+      if(X.guest)X.guest.score=Number(data.guest_score||0);
+      if(data.finished){
+        X.finished=true;
+        const h=Number(data.host_score||0),g=Number(data.guest_score||0);
+        const winner=h===g?'draw':(h>g?'host':'guest');
+        send('finish',{hostScore:h,guestScore:g,winner});
+        renderResult(h,g,winner);
+        return;
+      }
+      X.index=Number(data.question_index);
+      X.deadline=new Date(data.question_deadline||Date.now()+BATTLE_MS).getTime();
+      X.answered=false;
+      if(X.host)X.host.answered=false;
+      if(X.guest)X.guest.answered=false;
+      const q=publicQ(X.questions[X.index]);
+      renderQuestion(q);
+      send('next',{index:X.index,total:X.questions.length,deadline:X.deadline,question:q,quiz:X.quiz,
+        hostScore:Number(data.host_score||0),guestScore:Number(data.guest_score||0)});
+      startTimer();
+    }finally{
+      X.advancing=false;
+    }
+  }
+  function finishBattle(){void advanceQuestion()}
+  function onFinish(p){
+    if(X.finished)return;
+    X.finished=true;clearInterval(X.timer);X.timer=null;
+    if(X.host)X.host.score=Number(p.hostScore||0);
+    if(X.guest)X.guest.score=Number(p.guestScore||0);
+    renderResult(Number(p.hostScore||0),Number(p.guestScore||0),p.winner);
+  }
   async function recordBattleResult(h,g){
     if(X.resultSaved||!sessionUser||!X.room||!X.host?.id||!X.guest?.id)return;
     X.resultSaved=true;
