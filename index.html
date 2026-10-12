@@ -1569,25 +1569,29 @@ function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradeP
 
 async function domaOpenGrade(name){
   pendingGradeName=name;
-  if(!sessionUser){openAuth('signup');return}
-  const g=grades.find(x=>x.name===name);
-  if(!g)return showToast('Grade is not available right now.');
-  // Refresh the server-side access state at the moment the student opens a
-  // grade. This is important after the Admin approves a payment in another tab/device.
-  try{await refreshStudentState()}catch(e){console.warn('Grade access refresh failed.',e)}
-  const subs=await getActiveSubscriptions();
-  const active=subs.find(s=>String(s.grade_id)===String(g.id));
-  if(active){
-    currentGrade=g;
-    currentSubscription=active;
-    window.domaSelectedGradeId=String(g.id);
-    window.currentGrade=currentGrade;
-    window.currentSubscription=currentSubscription;
-    closeGradeModal();
-    await openDrawer('overview');
-    return;
+  try{
+    if(!sessionUser){openAuth('signup');return}
+    const g=(Array.isArray(grades)?grades:[]).find(x=>x&&x.name===name);
+    if(!g){showToast('Grade is not available right now. Please refresh and try again.');return}
+    // Refresh access state, but never leave the click without visible feedback.
+    try{await refreshStudentState()}catch(e){console.warn('Grade access refresh failed.',e)}
+    const subs=await getActiveSubscriptions();
+    const active=(Array.isArray(subs)?subs:[]).find(s=>String(s.grade_id)===String(g.id));
+    if(active){
+      currentGrade=g;
+      currentSubscription=active;
+      window.domaSelectedGradeId=String(g.id);
+      window.currentGrade=currentGrade;
+      window.currentSubscription=currentSubscription;
+      closeGradeModal();
+      await openDrawer('overview');
+      return;
+    }
+    showGradeInfo(name);
+  }catch(error){
+    console.error('Open Grade failed:',error);
+    showToast('Could not open this grade. Check your connection and try again.');
   }
-  showGradeInfo(name);
 }
 async function domaStartSubscription(name,plan){
   pendingGradeName=name;selectedPlan='monthly';plan='monthly';closeGradeModal();
