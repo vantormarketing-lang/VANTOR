@@ -101,6 +101,29 @@ if (!admin.includes('createSignedUrl(path,300)') || !admin.includes('data-doma-h
   fail('admin.html: secure signed-link handling for private homework attachments is missing');
 }
 
+const battleRequirements = [
+  'doma_create_battle_session',
+  'doma_join_battle_session',
+  'doma_start_battle_session',
+  'doma_submit_battle_answer',
+  'doma_advance_battle_session',
+  'doma_record_battle',
+  'config:{private:true',
+  'await sb.realtime.setAuth();'
+];
+for (const feature of battleRequirements) {
+  if (!student.includes(feature)) fail(`index.html: secure Battle feature is missing: ${feature}`);
+}
+if (/\.from\(\s*['"]quiz_questions['"]\s*\)\s*\.select\s*\(/.test(student)) {
+  fail('index.html: student page must not query quiz_questions directly; use guarded RPCs');
+}
+const studentVersion = (student.match(/doma-student-v[0-9]+/g) || []).at(-1);
+const sw = read('sw.js');
+if (studentVersion && !sw.includes(studentVersion)) fail('sw.js: student PWA version does not match index.html');
+const adminVersion = (admin.match(/doma-admin-v[0-9]+/g) || []).at(-1);
+const adminSw = read('admin-sw.js');
+if (adminVersion && !adminSw.includes(adminVersion)) fail('admin-sw.js: admin PWA version does not match admin.html');
+
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
   for (const message of errors) console.error('FAIL', message);
