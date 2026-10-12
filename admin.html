@@ -2090,16 +2090,22 @@ async function mfLoadEnglishCourseSales(){
   const reqTable=(items,allowReview,emptyText)=>items.length
     ?'<div class="table-wrap"><table><thead><tr><th>Request ID</th><th>Student</th><th>Amount</th><th>Sender phone</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+makeReqRows(items,allowReview)+'</tbody></table></div>'
     :'<div class="empty">'+emptyText+'</div>';
-  const subRows=subs.map(x=>{
+  const subRowsFor=items=>items.map(x=>{
     const p=profileById[x.student_id]||{};
-    const future=new Date(x.starts_at).getTime()>now;
-    const st=future&&x.status==='active'?'Scheduled':(new Date(x.expires_at).getTime()<=now&&x.status==='active'?'Expired':x.status);
+    const rawStatus=String(x.status||'').trim().toLowerCase();
+    const starts=new Date(x.starts_at).getTime(), expires=new Date(x.expires_at).getTime();
+    const st=rawStatus==='active'&&starts>now?'Scheduled':(rawStatus==='active'&&expires<=now?'Expired':rawStatus||'unknown');
     return '<tr><td><b>'+mfEsc(p.full_name||'Student')+'</b><div class="muted">'+mfEsc(p.phone||p.email||x.student_id)+'</div></td><td>'+mfEsc(x.amount)+' EGP</td><td>'+fmtDate(x.starts_at)+'</td><td>'+fmtDate(x.expires_at)+'</td><td><span class="pill '+(st==='active'?'ok':st==='Scheduled'?'warn':'')+'">'+mfEsc(st)+'</span></td></tr>';
   }).join('');
+  const activeSubs=subs.filter(x=>String(x.status||'').trim().toLowerCase()==='active'&&Number.isFinite(new Date(x.starts_at).getTime())&&Number.isFinite(new Date(x.expires_at).getTime())&&new Date(x.starts_at).getTime()<=now&&new Date(x.expires_at).getTime()>now);
+  const activeSubsTable=activeSubs.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Starts</th><th>Expires</th><th>Status</th></tr></thead><tbody>'+subRowsFor(activeSubs)+'</tbody></table></div>':'<div class="empty">No currently active English Course memberships. Click Refresh to reload.</div>';
+  const historyTable=subs.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Starts</th><th>Expires</th><th>Status</th></tr></thead><tbody>'+subRowsFor(subs)+'</tbody></table></div>':'<div class="empty">No English Course memberships yet.</div>';
+  $('mfCourseSalesStats').innerHTML=[['Pending requests',pendingReqs.length],['Active memberships',activeSubs.length],['Approved requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='approved').length],['Rejected requests',reqs.filter(x=>String(x.status||'').trim().toLowerCase()==='rejected').length]].map(([a,b])=>'<div class="card stat"><div class="muted">'+mfEsc(a)+'</div><div class="num">'+b+'</div></div>').join('');
   host.innerHTML=(profileLoadError?'<div class="empty">Payments loaded, but student names/phones could not be loaded: '+mfEsc(profileLoadError)+'</div>':'')+
     '<h3 style="margin:6px 0 10px">Pending payment requests</h3>'+reqTable(pendingReqs,true,'No pending English Course payments. Approved/rejected requests are kept in history below.')+
     '<h3 style="margin:22px 0 10px">Reviewed request history</h3>'+reqTable(reviewedReqs,false,'No reviewed payment requests yet.')+
-    '<h3 style="margin:22px 0 10px">Membership history</h3>'+(subs.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Amount</th><th>Starts</th><th>Expires</th><th>Status</th></tr></thead><tbody>'+subRows+'</tbody></table></div>':'<div class="empty">No English Course memberships yet.</div>');
+    '<h3 style="margin:22px 0 10px">Active Memberships</h3>'+activeSubsTable+
+    '<h3 style="margin:22px 0 10px">Membership history</h3>'+historyTable;
 }
 async function mfApproveEnglishCourseRequest(id){
   if(!id)return;
