@@ -1921,18 +1921,31 @@ window.linkifyAnswer=function(t){
       return decodeURIComponent(u.pathname.slice(at+marker.length));
     }catch(_){return null;}
   }
-  return String(t??'').replace(/(storage:\/\/homework-submissions\/[^\s<>"']+|https?:\/\/[^\s<>"']+)/g,function(raw){
+  function escapedText(value){return esc(value).replace(/\r?\n/g,'<br>');}
+  const text=String(t??'');
+  const pattern=/(storage:\/\/homework-submissions\/[^\s<>"']+|https?:\/\/[^\s<>"']+)/g;
+  let output='',last=0,match;
+  while((match=pattern.exec(text))!==null){
+    output+=escapedText(text.slice(last,match.index));
+    const raw=match[0];
     const trailing=(raw.match(/[),.;!?]+$/)||[''])[0];
     const value=trailing?raw.slice(0,-trailing.length):raw;
     if(value.startsWith('storage://homework-submissions/')){
       let path=value.slice('storage://homework-submissions/'.length);
       try{path=decodeURIComponent(path)}catch(_){}
-      return attachmentLink(path)+esc(trailing);
+      output+=attachmentLink(path)+esc(trailing);
+    }else{
+      const legacy=legacyHomeworkPath(value);
+      if(legacy!==null){
+        output+=attachmentLink(legacy)+esc(trailing);
+      }else{
+        output+='<a href="'+esc(value)+'" target="_blank" rel="noopener noreferrer" style="color:#d98ea0;word-break:break-all">'+esc(value)+'</a>'+esc(trailing);
+      }
     }
-    const legacy=legacyHomeworkPath(value);
-    if(legacy!==null)return attachmentLink(legacy)+esc(trailing);
-    return '<a href="'+esc(value)+'" target="_blank" rel="noopener noreferrer" style="color:#d98ea0;word-break:break-all">'+esc(value)+'</a>'+esc(trailing);
-  }).replace(/\n/g,'<br>');
+    last=match.index+raw.length;
+  }
+  output+=escapedText(text.slice(last));
+  return output;
 };
 document.addEventListener('click',async function(event){
   const link=event.target&&event.target.closest&&event.target.closest('a[data-doma-homework-attachment]');
