@@ -234,15 +234,15 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v15">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v16">
 <meta name="theme-color" content="#071226">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v15">
-<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v15">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v15">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v16">
+<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v16">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v16">
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
@@ -278,7 +278,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v15', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v16', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -494,7 +494,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v15', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v16', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -1031,6 +1031,45 @@ body.mf-course-list-route #mrfluentEnglishLevelContent{display:none!important}
 @media(max-width:900px){#gradeGrid.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:520px){#gradeGrid.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}}
 </style>
+
+<style id="doma-grade-grid-final-recovery-v2">
+/* Keep the public school-grade list visible unless the page is explicitly in the full-screen Mr. Fluent route. */
+body:not(.mf-course-route) #grades,
+body:not(.mf-course-route) #grades > .container {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+body:not(.mf-course-route) #gradeGrid.grid3 {
+  display:grid !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  align-items:stretch !important;
+  gap:14px !important;
+  width:100% !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  min-width:0 !important;
+  width:auto !important;
+}
+@media(max-width:900px) {
+  body:not(.mf-course-route) #gradeGrid.grid3 {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important}
+}
+@media(max-width:520px) {
+  body:not(.mf-course-route) #gradeGrid.grid3 {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px !important}
+  body:not(.mf-course-route) #gradeGrid .grade-cover {height:76px !important}
+}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -1431,7 +1470,12 @@ async function getRequests(){
 async function loadGrades(){
   const g=await sb.from('grades').select('id,name,stage,sort_order,is_active').order('sort_order',{ascending:true});
   if(g.error){$('gradeLoadStatus').textContent='Supabase error';$('gradeGrid').innerHTML='<div class="empty">Could not load grades: '+esc(g.error.message)+'</div>';return}
-  grades=(g.data||[]).filter(x=>x.is_active!==false);gradePrices={};
+  grades=(g.data||[]).filter(x=>x.is_active!==false);
+  const gradeGrid=$('gradeGrid');
+  if(gradeGrid){gradeGrid.removeAttribute('hidden');gradeGrid.style.setProperty('display','grid','important');gradeGrid.style.setProperty('visibility','visible','important');gradeGrid.style.setProperty('opacity','1','important')}
+  if($('publicSearch'))$('publicSearch').value='';
+  if($('publicStage'))$('publicStage').value='all';
+  gradePrices={};
   const p=await sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount');
   if(!p.error){(p.data||[]).forEach(x=>gradePrices[x.grade_id]={monthly:Number(x.monthly_amount)||150,annual:Number(x.annual_amount)||150})}
   for(const g of grades){if(!gradePrices[g.id]&&DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]}}
@@ -1449,7 +1493,19 @@ function renderGrades(list=grades){
       <h3>English — ${esc(g.name)}</h3><p>${esc(desc)}</p>
       <div class="grade-meta"><span>Monthly: ${pr.monthly||150} EGP</span></div>
       <div class="grade-actions"><button class="btn primary" onclick='domaOpenGrade(${inlineJsArg(g.name)})'>Open Grade →</button><button class="btn secondary" onclick='showGradeInfo(${inlineJsArg(g.name)})'>Details</button></div></div></article>`
-  }).join(''):'<div class="empty">No active grades are available.</div>'
+  }).join(''):'<div class="empty">No active grades are available.</div>';
+  const grid=$('gradeGrid');
+  if(grid){
+    grid.removeAttribute('hidden');
+    grid.style.setProperty('display','grid','important');
+    grid.style.setProperty('visibility','visible','important');
+    grid.style.setProperty('opacity','1','important');
+    grid.querySelectorAll('.grade').forEach(card=>{
+      card.style.setProperty('display','block','important');
+      card.style.setProperty('visibility','visible','important');
+      card.style.setProperty('opacity','1','important');
+    });
+  }
 }
 function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim(),stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const text=(card.dataset.gradeSearch||''),okQ=!q||text.includes(q),okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'block':'none'})}
 function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>150 EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${inlineJsArg(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${inlineJsArg(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
