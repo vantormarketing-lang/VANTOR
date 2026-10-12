@@ -932,7 +932,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head" style="margin-top:22px"><div><h3>Lessons</h3><p>Lesson text and video URL are visible only when the lesson is published and the student has an active English Course subscription.</p></div></div><div id="mfCourseLessonsTable" class="table-wrap"></div>
       </section>
       <section id="section-course-sales" class="section">
-        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-STATUS-RACEFIX-20261011-E</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Live status refresh · no-cache reads + latest-load-wins protection</div></div>
+        <div class="head"><div><h2>English Course Payments</h2><p>Review receipts and approve/reject the separate 150 EGP English Course membership. Grade subscriptions are not affected.</p><p style="margin-top:8px"><span class="pill warn" id="mfCourseBuildMarker">ACTIVE BUILD: MF-COURSE-STATUS-RACEFIX-20261011-E</span></p></div><button class="btn secondary" id="mfCourseSalesRefresh">Refresh</button><div class="muted" style="font-size:11px;margin-top:6px">Manual refresh only · click Refresh to reload payment requests</div></div>
         <div class="info-box" style="margin-bottom:14px"><b>English Course plan:</b> 150 EGP / 30 days. Approval activates all published levels A1–C2 for the student. Renewals extend from the later of today or the current expiry date.</div>
         <div id="mfCourseSalesStats" class="grid" style="margin-bottom:14px"></div>
         <div id="mfCourseSalesTable" class="table-wrap"></div>
@@ -1920,42 +1920,15 @@ document.addEventListener('DOMContentLoaded',function(){
 })();
 </script>
 
-<script id="doma-admin-final-live-sync">
+<script id="doma-admin-final-live-sync-disabled">
+// Automatic polling and Realtime-triggered reloads are intentionally disabled.
+// Each admin section refreshes only through its explicit Refresh button or navigation.
 (function(){
-  'use strict';
-  let running=false, queued=false;
-  async function sync(){
-    if(running){queued=true;return}
-    if(typeof db==='undefined' || !window.__domaStaffProfile) return;
-    running=true;
-    try{
-      const tasks=[];
-      if(current==='dashboard') tasks.push(loadDashboard());
-      if(current==='sales') tasks.push(loadSales(true),loadDashboard());
-      if(current==='students') tasks.push(loadStudents());
-      // Mr. Fluent has separate request tables and loaders; refresh them too.
-      if(current==='course-sales') tasks.push(mfLoadEnglishCourseSales());
-      if(current==='english-course') tasks.push(mfLoadEnglishCourseAdmin());
-      await Promise.allSettled(tasks);
-    }catch(e){console.warn('Admin live refresh failed:',e)}
-    finally{
-      running=false;
-      if(queued){queued=false;sync()}
-    }
-  }
   try{
-    window.__domaFinalLiveChannel=db.channel('doma-admin-final-live-sync')
-      .on('postgres_changes',{event:'*',schema:'public',table:'profiles'},sync)
-      .on('postgres_changes',{event:'*',schema:'public',table:'subscription_requests'},sync)
-      .on('postgres_changes',{event:'*',schema:'public',table:'subscriptions'},sync)
-      .on('postgres_changes',{event:'*',schema:'public',table:'mrfluent_english_course_requests'},sync)
-      .on('postgres_changes',{event:'*',schema:'public',table:'mrfluent_english_course_subscriptions'},sync)
-      .subscribe(status=>{if(status==='SUBSCRIBED')sync();else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Admin realtime status:',status)});
-  }catch(e){console.warn('Admin realtime setup failed:',e)}
-  // Fallback polling: requests still refresh even if the browser's realtime connection drops.
-  setInterval(sync,8000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync()});
-  window.addEventListener('online',sync);
+    if(window.__domaFinalLiveChannel && typeof window.__domaFinalLiveChannel.unsubscribe==='function'){
+      window.__domaFinalLiveChannel.unsubscribe();
+    }
+  }catch(e){}
 })();
 </script>
 <script id="doma-confirm-overlay-js">
