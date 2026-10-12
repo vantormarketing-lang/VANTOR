@@ -277,7 +277,65 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
 @media(prefers-reduced-motion:reduce){.student-sidebar,.mobile-menu-toggle{transition:none!important}}
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script id="mf-user-scoped-storage-v1">
+(function(){
+  'use strict';
+  const PREFIX = 'mfC1';
+  const PROJECT_REF = 'dtptxhkcogpoleftguas';
+  let userId = null;
+  try {
+    const raw = localStorage.getItem('sb-' + PROJECT_REF + '-auth-token');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const user = parsed.user || parsed.currentSession?.user || parsed.session?.user;
+      if (user && typeof user.id === 'string') userId = user.id;
+    }
+  } catch (_) {}
+  const namespace = userId ? PREFIX + '__user__' + userId + '__' : '';
+  const storageProto = Storage.prototype;
+  const nativeGet = storageProto.getItem, nativeSet = storageProto.setItem, nativeRemove = storageProto.removeItem;
+  function mappedKey(value) {
+    const key = String(value);
+    if (!userId || !key.startsWith(PREFIX)) return key;
+    if (key.startsWith(PREFIX + '__user__')) return key;
+    return namespace + key.slice(PREFIX.length);
+  }
+  storageProto.getItem = function(key) { return nativeGet.call(this, mappedKey(key)); };
+  storageProto.setItem = function(key, value) { return nativeSet.call(this, mappedKey(key), String(value)); };
+  storageProto.removeItem = function(key) { return nativeRemove.call(this, mappedKey(key)); };
+  function isCurrentKey(key) {
+    if (typeof key !== 'string' || !key.startsWith(PREFIX)) return false;
+    return userId ? key.startsWith(namespace) : !key.startsWith(PREFIX + '__user__');
+  }
+  function isLegacyKey(key) {
+    return typeof key === 'string' && key.startsWith(PREFIX) && !key.startsWith(PREFIX + '__user__');
+  }
+  function logicalKey(key) {
+    if (typeof key !== 'string' || !key.startsWith(PREFIX + '__user__')) return key;
+    const separator = key.indexOf('__', (PREFIX + '__user__').length);
+    return separator < 0 ? key : PREFIX + key.slice(separator + 2);
+  }
+  function snapshot() {
+    const data = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && isCurrentKey(key)) data[key] = nativeGet.call(localStorage, key);
+    }
+    return data;
+  }
+  function legacySnapshot() {
+    const data = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && isLegacyKey(key)) data[key] = nativeGet.call(localStorage, key);
+    }
+    return data;
+  }
+  window.mfCourseStorage = {prefix:PREFIX,userId:userId,namespace:namespace,isCurrentKey:isCurrentKey,
+    isLevelKey:key=>typeof key==='string'&&key.startsWith(PREFIX),isLegacyKey:isLegacyKey,
+    logicalKey:logicalKey,snapshot:snapshot,legacySnapshot:legacySnapshot};
+})();
+</script>
 <style id="doma-reading-quality-fixes">#readingView .reading-passage{white-space:pre-line;line-height:1.85;overflow-wrap:anywhere}#mfCloudSyncStatus{display:block;flex-basis:100%;margin-top:8px}#mfCloudSyncStatus.good{color:#18794e}#mfCloudSyncStatus.bad{color:#b42318}</style>
 </head>
 <body>
@@ -337,9 +395,9 @@ const readingPassage={"title":"What urban gardens can—and cannot—tell us","t
 const readingQs=extraQuizBank["reading-story"];
 function bindQuizzes(){document.querySelectorAll(".quiz").forEach(f=>{if(f.dataset.bound==="1")return;f.dataset.bound="1";f.addEventListener("submit",e=>{e.preventDefault();let key=f.dataset.key;let qs;if(extraQuizBank[key])qs=extraQuizBank[key];else if(key==="smart-revision")qs=extraRevisionQs;else if(key.startsWith("mission-"))qs=missions[Number(key.slice(8))].qs;else if(key.startsWith("listening-"))qs=listeningItems[Number(key.slice(10))].qs;else if(key==="reading")qs=units[2].lessons[1].qs;else if(key.startsWith("lesson-")){let id=key.slice(7),[ui,li]=id.split("-").map(Number);qs=units[ui].lessons[li].qs}else if(key.startsWith("unit-"))qs=units[Number(key.slice(5))].test;else qs=finalQs;let n=0;qs.forEach((q,i)=>{let a=f.querySelector(`input[name="q${i}"]:checked`);if(a&&Number(a.value)===q[2])n++});let pct=Math.round(n/qs.length*100);const missed=qs.map((q,i)=>({q,i,chosen:f.querySelector(`input[name="q${i}"]:checked`)})).filter(x=>!x.chosen||Number(x.chosen.value)!==x.q[2]);scores[key]={n,total:qs.length,pct};localStorage.setItem("mfC1scores",JSON.stringify(scores));let pass=pct>=(key.startsWith("lesson-")?67:80);let fb=f.querySelector(".feedback");fb.className="feedback "+(pass?"good":"bad");fb.textContent=`${pass?"Great work!":"Keep practising."} Score: ${n}/${qs.length} (${pct}%). ${key.startsWith("lesson-")?"Practice target: at least 2/3.":"Pass mark: 80%."}`+(missed.length?" Review: "+missed.slice(0,4).map(x=>`${x.i+1}) ${x.q[0]} → ${x.q[1][x.q[2]]}`).join(" | "):" All answers correct — excellent work!");renderProgress()})})}
 function renderProgress(){document.getElementById("doneCount").textContent=`${completed.size} / 12`;let pct=Math.round(completed.size/12*100);document.getElementById("progressFill").style.width=pct+"%";document.getElementById("progressText").textContent=`Your completion progress: ${pct}%`;let scoreRows=Object.entries(scores).map(([k,v])=>`<li>${esc(k.replace("lesson-","Lesson ").replace("unit-","Unit test "))}: ${v.n}/${v.total} (${v.pct}%)</li>`).join("");const passed=Object.values(scores).filter(v=>v.pct>=80).length;const achievements=[{label:"🌱 First steps",ok:completed.size>=1},{label:"📚 3 lessons done",ok:completed.size>=3},{label:"🏅 Halfway there",ok:completed.size>=6},{label:"🎓 C1 learner",ok:completed.size>=12},{label:"🧠 First quiz",ok:Object.keys(scores).length>=1},{label:"⭐ 3 strong scores",ok:passed>=3}];document.getElementById("progressView").innerHTML=`<article class="unit"><h2>📈 Progress Center</h2><p><b>${completed.size} of 12 lessons</b> marked complete.</p><div class="progressbar"><span style="width:${pct}%"></span></div><p>${pct}% lesson completion</p><div class="lab-grid"><div class="lab-card"><div class="small">Quiz attempts</div><div class="word-en">${Object.keys(scores).length}</div></div><div class="lab-card"><div class="small">Scores at 80%+</div><div class="word-en">${passed}</div></div><div class="lab-card"><div class="small">Lessons completed</div><div class="word-en">${completed.size}/12</div></div></div><h3>🏆 Achievements</h3><div class="badge-list">${achievements.map(a=>`<span class="achievement ${a.ok?"":"locked"}">${a.label}${a.ok?" ✓":" · locked"}</span>`).join("")}</div><h3>Quiz results</h3>${scoreRows?`<ul>${scoreRows}</ul>`:"<p>No quiz results yet. Complete a lesson practice to start tracking scores.</p>"}<div class="lab-actions"><button type="button" id="mfExportProgress">⬇ Export my progress</button><button type="button" id="mfImportProgress">⬆ Import progress backup</button><input type="file" id="mfImportProgressFile" accept="application/json,.json" class="hidden" aria-label="Choose progress backup file"><button type="button" id="mfSyncProgressToCloud">☁ Sync to DOMA account</button><button type="button" id="mfRestoreProgressFromCloud">☁ Restore from account</button><span id="mfCloudSyncStatus" class="small" role="status" aria-live="polite">Cloud sync is optional. Run the included SQL migration once in Supabase before using these buttons.</span><button id="resetProgress">Reset local progress</button></div><p class="small">Progress is stored in this browser on this device. Export a JSON backup to move it to another browser/device; importing replaces matching saved items for this level. This backup does not sync to your account or Supabase.</p></article>`;const exportBtn=document.getElementById("mfExportProgress"),importBtn=document.getElementById("mfImportProgress"),fileInput=document.getElementById("mfImportProgressFile");
-if(exportBtn)exportBtn.onclick=()=>{const data={product:"Mr. Fluent",level:"C1",exportedAt:new Date().toISOString(),data:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("mfC1"))data.data[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="mr-fluent-c1-progress-backup.json";a.click();URL.revokeObjectURL(url)};
+if(exportBtn)exportBtn.onclick=()=>{const data={product:"Mr. Fluent",level:"C1",exportedAt:new Date().toISOString(),data:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&window.mfCourseStorage&&window.mfCourseStorage.isCurrentKey(k))data.data[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="mr-fluent-c1-progress-backup.json";a.click();URL.revokeObjectURL(url)};
 if(importBtn&&fileInput)importBtn.onclick=()=>fileInput.click();
-if(fileInput)fileInput.onchange=async()=>{const file=fileInput.files&&fileInput.files[0];if(!file)return;try{const backup=JSON.parse(await file.text());if(backup.product!=="Mr. Fluent"||!backup.data||typeof backup.data!=="object")throw new Error("Invalid backup");const entries=Object.entries(backup.data).filter(([k,v])=>k.startsWith("mfC1")&&typeof v==="string");if(!entries.length)throw new Error("No matching level data");if(!confirm("Import "+entries.length+" saved items for C1? This replaces matching saved items for this level."))return;entries.forEach(([k,v])=>localStorage.setItem(k,v));completed=new Set(JSON.parse(localStorage.getItem("mfC1done")||"[]"));scores=JSON.parse(localStorage.getItem("mfC1scores")||"{}");renderCourse();bindQuizzes();bindCourseAudio();renderProgress();renderCourseView();alert("Progress backup imported for C1.")}catch(e){alert("Could not import this backup. Choose a valid Mr. Fluent C1 progress JSON file.")}finally{fileInput.value=""}};
+if(fileInput)fileInput.onchange=async()=>{const file=fileInput.files&&fileInput.files[0];if(!file)return;try{const backup=JSON.parse(await file.text());if(backup.product!=="Mr. Fluent"||!backup.data||typeof backup.data!=="object")throw new Error("Invalid backup");const entries=Object.entries(backup.data).filter(([k,v])=>window.mfCourseStorage.isLevelKey(k)&&typeof v==="string").map(([k,v])=>[window.mfCourseStorage.logicalKey(k),v]);if(!entries.length)throw new Error("No matching level data");if(!confirm("Import "+entries.length+" saved items for C1? This replaces matching saved items for this level."))return;entries.forEach(([k,v])=>localStorage.setItem(k,v));completed=new Set(JSON.parse(localStorage.getItem("mfC1done")||"[]"));scores=JSON.parse(localStorage.getItem("mfC1scores")||"{}");renderCourse();bindQuizzes();bindCourseAudio();renderProgress();renderCourseView();alert("Progress backup imported for C1.")}catch(e){alert("Could not import this backup. Choose a valid Mr. Fluent C1 progress JSON file.")}finally{fileInput.value=""}};
 document.getElementById("resetProgress").onclick=()=>{if(confirm("Reset your local C1 progress and quiz results?")){completed.clear();scores={};localStorage.removeItem("mfC1done");localStorage.removeItem("mfC1scores");localStorage.removeItem("mfC1knownWords");renderCourse();bindQuizzes();bindCourseAudio();renderProgress();renderCourseView()}}}
 function renderCourseView(){document.querySelectorAll(".completeBtn").forEach(b=>b.onclick=()=>{let id=b.dataset.id;if(completed.has(id))completed.delete(id);else completed.add(id);localStorage.setItem("mfC1done",JSON.stringify([...completed]));b.classList.toggle("active",completed.has(id));b.textContent=completed.has(id)?"✓ Completed":"Mark lesson complete";renderProgress()})}
 function simpleViews(){
@@ -448,15 +506,15 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfC1writing"
     return result.data.user;
   }
   function localSnapshot(){
-    const data = {};
-    for(let i=0;i<localStorage.length;i++){
-      const key = localStorage.key(i);
-      if(key && key.startsWith(PREFIX)) data[key] = localStorage.getItem(key);
+    return window.mfCourseStorage ? window.mfCourseStorage.snapshot() : {};
+  }
+  function assertStorageUser(user){
+    if(!window.mfCourseStorage || window.mfCourseStorage.userId !== user.id){
+      throw new Error('Your account-specific course storage could not be verified. Return to the DOMA app, make sure you are signed in, then reopen this course before syncing or restoring progress.');
     }
-    return data;
   }
   function completedLessonPositions(snapshot){
-    const raw = snapshot[PREFIX + 'done'];
+    const raw = localStorage.getItem(PREFIX + 'done');
     if(!raw) return [];
     let saved;
     try { saved = JSON.parse(raw); }
@@ -495,7 +553,17 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfC1writing"
 
   async function syncToAccount(){
     const user = await signedInUser();
-    const snapshot = localSnapshot();
+    assertStorageUser(user);
+    let snapshot = localSnapshot();
+    let migratedLegacy = false;
+    if (window.mfCourseStorage && window.mfCourseStorage.userId === user.id && Object.keys(snapshot).length === 0) {
+      const legacy = window.mfCourseStorage.legacySnapshot();
+      if (Object.keys(legacy).length && window.confirm('Older ' + LEVEL + ' progress on this browser was saved before progress was separated by account. Assign those old local items to the signed-in account and sync them? Choose Cancel to leave the old items untouched.')) {
+        Object.entries(legacy).forEach(([key, value]) => localStorage.setItem(key, value));
+        snapshot = localSnapshot();
+        migratedLegacy = Object.keys(snapshot).length > 0;
+      }
+    }
     if(Object.keys(snapshot).length === 0){
       status('No local progress found for ' + LEVEL + '. Complete a lesson or quiz first, or use Restore from account if this device is new.');
       return;
@@ -519,9 +587,14 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfC1writing"
     const syncedLessons = await syncCompletedLessonsToAccount(snapshot);
     status('✓ ' + LEVEL + ' progress backup synced (' + Object.keys(snapshot).length +
       ' saved items); ' + syncedLessons + ' completed lesson(s) reconciled with your DOMA account.');
+    if (migratedLegacy) {
+      sessionStorage.setItem('mfCloudRestoreNotice', LEVEL + ' legacy progress imported and synced to this account.');
+      window.location.reload();
+    }
   }
   async function restoreFromAccount(){
     const user = await signedInUser();
+    assertStorageUser(user);
     const result = await client.from('mrfluent_course_progress_v1')
       .select('data,updated_at')
       .eq('user_id', user.id)
@@ -542,11 +615,11 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfC1writing"
     const oldKeys = [];
     for(let i=0;i<localStorage.length;i++){
       const key = localStorage.key(i);
-      if(key && key.startsWith(PREFIX)) oldKeys.push(key);
+      if(key && window.mfCourseStorage && window.mfCourseStorage.isCurrentKey(key)) oldKeys.push(key);
     }
     oldKeys.forEach(key=>localStorage.removeItem(key));
     Object.entries(cloudData).forEach(([key,value])=>{
-      if(key.startsWith(PREFIX) && typeof value === 'string') localStorage.setItem(key, value);
+      if(window.mfCourseStorage && window.mfCourseStorage.isLevelKey(key) && typeof value === 'string') localStorage.setItem(window.mfCourseStorage.logicalKey(key), value);
     });
     sessionStorage.setItem('mfCloudRestoreNotice', LEVEL + ' progress restored from your DOMA account.');
     window.location.reload();
