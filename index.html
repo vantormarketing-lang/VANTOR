@@ -1905,13 +1905,13 @@ function updateStudentShell(){const p=window.domaStudentProfile||{};const actual
 async function ensureActiveGrade(){
   if(!sessionUser)return null;
 
-  // Keep the grade explicitly chosen from the grade cards when its subscription
-  // is active. A missing expires_at means "no expiry configured" in the access
-  // RPC and must not silently switch the student to the first subscription.
+  // Keep the grade explicitly chosen from the grade cards when the cached
+  // subscription is still valid. Otherwise resolve access again from the server,
+  // then match the requested grade instead of defaulting immediately to subs[0].
   const requestedGradeId = currentGrade?.id ? String(currentGrade.id) : '';
   const cachedGradeId = currentSubscription?.grade_id ? String(currentSubscription.grade_id) : '';
   const cachedExpiry = currentSubscription?.expires_at;
-  const cachedExpiryValid = !cachedExpiry || new Date(cachedExpiry) > new Date();
+  const cachedExpiryValid = Boolean(cachedExpiry) && new Date(cachedExpiry) > new Date();
 
   if(currentGrade && currentSubscription &&
      cachedGradeId === String(currentGrade.id) &&
