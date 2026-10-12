@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doma-admin-offline-v14';
+const CACHE_NAME = 'doma-admin-offline-v15';
 const ADMIN_URL = new URL('./admin.html', self.registration.scope).href;
 const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=doma-admin-v7', self.registration.scope).href;
 const ICON64_URL = new URL('./doma-leaf-book-icon.svg?v=doma-admin-v7', self.registration.scope).href;
