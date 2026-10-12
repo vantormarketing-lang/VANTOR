@@ -1990,22 +1990,12 @@ async function renderStudentOverview(){
 }
 
 function openStudentTool(view){if(!sessionUser){openAuth('login');return}openDrawer(view)}
-const DOMA_1ST_PREP_LESSON_TITLES = {
-  1:['A Day in My Digital Life','How We Use Technology','Digital Devices','Story Time','An Email to a Friend','Team-Project Roundtable'],
-  2:['My Learning Journey','Learning Challenges and Solutions','Benefits of Learning Together','Story Time','My Learning Plan','Team-Project Roundtable'],
-  3:['An Egyptian Hero','Heroes and Role Models','A Great Egyptian Thinker Dr. Gamal Hemdan','Story Time','A Hero Who Made a Difference - Dr Mohamed Ghoniem','Team-Project Roundtable'],
-  4:['Think Before You Choose','Decisions and Consequences','An Interview with an Athlete','Story Time','Asking for and Giving Advice','Team-Project Roundtable'],
-  5:['Discover Your Future!','An Interview with a Scientist','My Plan for a Future Career','Story Time','My Dream Job!','Team-Project Roundtable'],
-  6:['Being a Global Citizen','Global Citizen Talk','Ocean Circle','Story Time','Let’s Make a Difference','Team-Project Roundtable']
-};
 function domaLessonDisplayTitle(lesson,unitMap){
-  const gradeName = grades.find(g=>String(g.id)===String(lesson?.grade_id))?.name || currentGrade?.name || '';
-  if(gradeName!=='1st Preparatory'){
-    return lesson?.title || 'Lesson';
-  }
-  const unitNumber=Number(unitMap?.get(lesson?.unit_id)?.unit_number ?? unitMap?.get(lesson?.unit_id) ?? 0);
-  const no=Number(lesson?.sort_order ?? 0);
-  return DOMA_1ST_PREP_LESSON_TITLES[unitNumber]?.[no-1] || lesson?.title || 'Lesson';
+  // Use the actual title stored with the selected grade's lesson. The previous
+  // hard-coded first-preparatory map replaced real titles with generic labels
+  // such as "Story Time" and "Team-Project Roundtable", making grades look alike.
+  const title=String(lesson?.title||'Lesson').trim();
+  return title.replace(/^lesson\\s+\\d+\\s*:\\s*/i,'').trim() || 'Lesson';
 }
 
 async function openPublicLesson(title){
