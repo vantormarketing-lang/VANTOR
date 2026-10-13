@@ -949,4 +949,283 @@ header,body>header,main,footer{
 header:before,header:after{display:none!important;content:none!important}
 </style>
 
+
+<style id="mf-centered-transparent-mobile-menu-v1">
+/* Transparent, centered full-screen navigation; the page behind it is strongly isolated. */
+@media(max-width:700px){
+  html body.mobile-menu-open #mobileMenuBackdrop:not([hidden]){
+    display:block!important;
+    position:fixed!important;
+    inset:0!important;
+    z-index:1400!important;
+    background:rgba(12,8,16,.95)!important;
+    -webkit-backdrop-filter:blur(22px)!important;
+    backdrop-filter:blur(22px)!important;
+    opacity:1!important;
+  }
+  html body #mobileCourseMenu{
+    position:fixed!important;
+    inset:0!important;
+    left:0!important;
+    right:0!important;
+    top:0!important;
+    bottom:0!important;
+    width:100vw!important;
+    max-width:none!important;
+    height:100vh!important;
+    height:100dvh!important;
+    max-height:none!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:calc(72px + env(safe-area-inset-top,0px)) 18px calc(20px + env(safe-area-inset-bottom,0px))!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+    background:transparent!important;
+    background-color:transparent!important;
+    background-image:none!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    color:#fff5fa!important;
+    z-index:1401!important;
+    transform:translateX(105%)!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+    transition:transform .24s ease,visibility .24s ease!important;
+  }
+  html body #mobileCourseMenu::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+  html body.mobile-menu-open #mobileCourseMenu{
+    transform:translateX(0)!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+  html body:not(.mobile-menu-open) #mobileCourseMenu{
+    transform:translateX(105%)!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  html body #mobileCourseMenu .sidebar-brand{
+    position:sticky!important;
+    top:0!important;
+    z-index:3!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:10px!important;
+    flex:0 0 auto!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+    padding:5px 52px 17px!important;
+    margin:0 auto 8px!important;
+    text-align:center!important;
+    background:transparent!important;
+    background-color:transparent!important;
+    background-image:none!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  html body #mobileCourseMenu .sidebar-mark{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:auto!important;
+    min-width:0!important;
+    height:auto!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#ffc2dc!important;
+    font-size:1.05rem!important;
+    font-weight:900!important;
+    letter-spacing:.04em!important;
+  }
+  html body #mobileCourseMenu .sidebar-brand strong{
+    display:block!important;
+    color:#fff8fc!important;
+    font-size:1rem!important;
+    font-weight:900!important;
+    letter-spacing:.12em!important;
+    line-height:1.35!important;
+    text-align:center!important;
+  }
+  html body #mobileCourseMenu .sidebar-brand span{
+    display:block!important;
+    color:#e9bbd0!important;
+    font-size:.68rem!important;
+    letter-spacing:.10em!important;
+    line-height:1.45!important;
+    text-align:center!important;
+  }
+  html body #mobileCourseMenu .mobile-menu-close{
+    position:fixed!important;
+    top:calc(11px + env(safe-area-inset-top,0px))!important;
+    right:16px!important;
+    z-index:1410!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:42px!important;
+    width:42px!important;
+    min-height:42px!important;
+    height:42px!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#ffc2dc!important;
+    font-size:31px!important;
+    font-weight:400!important;
+    line-height:1!important;
+    opacity:1!important;
+  }
+  html body #mobileCourseMenu .sidebar-caption{
+    flex:0 0 auto!important;
+    padding:12px 0 5px!important;
+    margin:0!important;
+    color:#e9a9c7!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+    text-align:center!important;
+    font-size:.67rem!important;
+    font-weight:800!important;
+    letter-spacing:.15em!important;
+  }
+  html body #mobileCourseMenu nav,
+  html body #mobileCourseMenu nav#menu,
+  html body #mobileCourseMenu nav.menu-tools,
+  html body #mobileCourseMenu nav.menu-progress{
+    display:flex!important;
+    flex:0 0 auto!important;
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    align-items:stretch!important;
+    width:min(100%,520px)!important;
+    margin:0 auto!important;
+    padding:0!important;
+    gap:2px!important;
+    overflow:visible!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  html body #mobileCourseMenu nav button{
+    position:relative!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:39px!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:8px 42px!important;
+    border:0!important;
+    border-radius:8px!important;
+    background:transparent!important;
+    background-image:none!important;
+    box-shadow:none!important;
+    color:#fff5fa!important;
+    font-size:.92rem!important;
+    font-weight:650!important;
+    line-height:1.25!important;
+    text-align:center!important;
+    white-space:normal!important;
+  }
+  html body #mobileCourseMenu nav button .menu-icon{
+    position:absolute!important;
+    left:13px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:26px!important;
+    flex:0 0 26px!important;
+    font-size:1.04rem!important;
+    text-align:center!important;
+    filter:none!important;
+  }
+  html body #mobileCourseMenu nav button>span:nth-child(2){
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    flex:1 1 auto!important;
+    text-align:center!important;
+  }
+  html body #mobileCourseMenu nav button.active{
+    color:#ffc2dc!important;
+    background:transparent!important;
+    background-image:none!important;
+    border:0!important;
+    box-shadow:none!important;
+    text-shadow:0 0 16px rgba(255,194,220,.22)!important;
+  }
+  html body #mobileCourseMenu nav button:hover,
+  html body #mobileCourseMenu nav button:focus-visible{
+    color:#ffc2dc!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+    outline:1px solid rgba(255,194,220,.28)!important;
+    outline-offset:-2px!important;
+  }
+  html body #mobileCourseMenu .menu-dot{
+    position:absolute!important;
+    right:14px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    background:#ffc2dc!important;
+    box-shadow:none!important;
+  }
+  html body #mobileCourseMenu .sidebar-foot{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    flex:0 0 auto!important;
+    gap:7px!important;
+    margin:12px auto 0!important;
+    padding:8px 0 0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#d9afc2!important;
+    text-align:center!important;
+  }
+  html body #mobileCourseMenu .sidebar-status{
+    background:#8de3b0!important;
+    box-shadow:none!important;
+  }
+  html body.mobile-menu-open{overflow:hidden!important}
+}
+@media(max-width:380px){
+  html body #mobileCourseMenu{padding-left:12px!important;padding-right:12px!important}
+  html body #mobileCourseMenu nav button{min-height:36px!important;font-size:.87rem!important;padding-left:38px!important;padding-right:38px!important}
+  html body #mobileCourseMenu .sidebar-caption{padding-top:9px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body #mobileCourseMenu{transition:none!important}
+}
+</style>
+<script id="mf-close-menu-on-overlay-space-v1">
+(function(){
+  const drawer=document.getElementById('mobileCourseMenu');
+  const closer=document.getElementById('mobileMenuClose');
+  if(!drawer||!closer)return;
+  drawer.addEventListener('click',function(event){
+    if(event.target===drawer && document.body.classList.contains('mobile-menu-open')) closer.click();
+  });
+})();
+</script>
+
 </body></html>
