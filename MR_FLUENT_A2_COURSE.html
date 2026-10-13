@@ -823,6 +823,27 @@ html body .student-layout>.student-content{grid-area:content!important}
 html,body{background-color:#080d1c;min-height:100%;color-scheme:dark}
 html{min-height:100%;background:#080d1c}
 body{min-height:100vh;min-height:100dvh;background-attachment:fixed!important}
+
+/* FINAL FIX: one identical solid background across the whole level page */
+:root{--page-unified-bg:#080d1c}
+html,body{
+  background:#080d1c!important;
+  background-color:#080d1c!important;
+  background-image:none!important;
+  min-height:100%!important;
+}
+body{
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  background-attachment:initial!important;
+}
+header,body>header,main,footer{
+  background:#080d1c!important;
+  background-color:#080d1c!important;
+  background-image:none!important;
+  box-shadow:none!important;
+}
+header:before,header:after{display:none!important;content:none!important}
 </style>
 
 </body></html>
