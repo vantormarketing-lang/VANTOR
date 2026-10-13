@@ -1776,7 +1776,7 @@ async function loadGrades(){
     if(status)status.textContent=usedFallback?'6 grades · connection fallback':'6 grades';
   }catch(error){
     console.error('Grade cards renderer failed; showing a safe grade list.',error);
-    if(grid)grid.innerHTML=FALLBACK_GRADES.map(g=>'<article class="card grade"><div class="grade-cover"><div><div class="stage">'+esc(g.stage)+'</div><strong>'+esc(g.name)+'</strong></div><span class="pill">English</span></div><div class="grade-body"><h3>English — '+esc(g.name)+'</h3><p>Grade-specific English lessons, practice, quizzes and homework.</p><div class="grade-actions"><button class="btn primary" type="button" onclick="domaOpenGrade(\''+g.name+'\')">Open Grade →</button><button class="btn secondary" type="button" onclick="showGradeInfo(\''+g.name+'\')">Details</button></div></div></article>').join('');
+    if(grid)grid.innerHTML=FALLBACK_GRADES.map(g=>'<article class="card grade grade-selectable" role="button" tabindex="0" aria-label="Choose '+esc(g.name)+'" data-grade-search="'+esc((g.name+' '+g.stage+' English').toLowerCase())+'" onclick="domaOpenGrade(\\''+g.name+'\\')" onkeydown="if(event.key===\\'Enter\\'||event.key===\\' \\'){event.preventDefault();this.click()}"><div class="grade-cover"><strong>'+esc(g.name)+'</strong></div><div class="grade-body"><h3>English — '+esc(g.name)+'</h3><div class="grade-meta"><span>150 EGP / Month</span></div></div></article>').join('');
     revealGradeGrid();
     if(status)status.textContent='6 grades · safe display';
   }
@@ -1786,15 +1786,15 @@ async function loadGrades(){
 function updatePricingRange(){const values=Object.values(gradePrices);if(!values.length)return;const m=values.map(x=>x.monthly),a=values.map(x=>x.annual);document.querySelectorAll('[data-pricing-range]').forEach(el=>el.textContent=Math.min(...m)+'–'+Math.max(...m));document.querySelectorAll('[data-pricing-range-annual]').forEach(el=>el.textContent=Math.min(...a)+'–'+Math.max(...a))}
 function renderGrades(list=grades){
   $('gradeGrid').innerHTML=list.length?list.map(g=>{
-    const pr={monthly:150,annual:150};
-    const meta=DOMA_GRADE_CURRICULUM[g.name]||{};
-    const desc=meta.summary||'Grade-specific grammar, vocabulary, reading, writing, listening, quizzes, homework and exam practice.';
-    return `<article class="card grade" data-grade-search="${esc((g.name+' '+g.stage+' grammar vocabulary reading writing listening quizzes homework '+desc).toLowerCase())}">
-      <div class="grade-cover"><div><div class="stage">${esc(g.stage)}</div><strong>${esc(g.name)}</strong></div><span class="pill">English</span></div>
-      <div class="grade-body"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${meta.badge?'<span class="pill">'+esc(meta.badge)+'</span>':''}<span class="pill">Monthly 150 EGP</span></div>
-      <h3>English — ${esc(g.name)}</h3><p>${esc(desc)}</p>
-      <div class="grade-meta"><span>Monthly: ${pr.monthly||150} EGP</span></div>
-      <div class="grade-actions"><button class="btn primary" onclick='domaOpenGrade(${domaInlineJsArg(g.name)})'>Open Grade →</button><button class="btn secondary" onclick='showGradeInfo(${domaInlineJsArg(g.name)})'>Details</button></div></div></article>`
+    const pr=gradePrices[g.id]||DEFAULT_PRICES[g.name]||{monthly:150,annual:150};
+    const searchable=(g.name+' '+g.stage+' English').toLowerCase();
+    return `<article class="card grade grade-selectable" role="button" tabindex="0" aria-label="Choose ${esc(g.name)}" data-grade-search="${esc(searchable)}" onclick='domaOpenGrade(${domaInlineJsArg(g.name)})' onkeydown='if(event.key==="Enter"||event.key===" "){event.preventDefault();this.click()}'>
+      <div class="grade-cover"><strong>${esc(g.name)}</strong></div>
+      <div class="grade-body">
+        <h3>English — ${esc(g.name)}</h3>
+        <div class="grade-meta"><span>${Number(pr.monthly)||150} EGP / Month</span></div>
+      </div>
+    </article>`
   }).join(''):'<div class="empty">No active grades are available.</div>';
   const grid=$('gradeGrid');
   if(grid){
@@ -7510,32 +7510,24 @@ window.renderUnifiedSubscriptionCenter=renderUnifiedSubscriptionCenter;
     if(!grid)return;
     setFallbackData();
     grid.innerHTML=FALLBACK.map(function(g){
-      var stage=g.stage==='Preparatory'?'Middle School':'Secondary School';
-      return '<article class="card grade" data-grade-search="'+esc((g.name+' '+g.stage+' English grammar vocabulary reading writing listening quizzes homework').toLowerCase())+'" style="display:block!important;visibility:visible!important;opacity:1!important;min-width:0!important;width:auto!important">'+
-        '<div class="grade-cover"><div><div class="stage">'+esc(stage)+'</div><strong>'+esc(g.name)+'</strong></div><span class="pill">English</span></div>'+
-        '<div class="grade-body"><h3>English — '+esc(g.name)+'</h3><p>Grade-specific lessons, vocabulary, grammar, reading, writing, quizzes and homework.</p>'+
-        '<div class="grade-meta"><span>Monthly access: 150 EGP</span></div>'+
-        '<div class="grade-actions"><button class="btn primary" type="button" data-doma-grade-open="'+esc(g.name)+'">Open Grade →</button>'+
-        '<button class="btn secondary" type="button" data-doma-grade-details="'+esc(g.name)+'">Details</button></div></div></article>';
+      var searchable=(g.name+' '+g.stage+' English grammar vocabulary reading writing listening quizzes homework').toLowerCase();
+      return '<article class="card grade grade-selectable" role="button" tabindex="0" aria-label="Choose '+esc(g.name)+'" data-grade-search="'+esc(searchable)+'" data-doma-grade-open="'+esc(g.name)+'" style="display:block!important;visibility:visible!important;opacity:1!important;min-width:0!important;width:auto!important">'+
+        '<div class="grade-cover"><strong>'+esc(g.name)+'</strong></div>'+
+        '<div class="grade-body"><h3>English — '+esc(g.name)+'</h3><div class="grade-meta"><span>150 EGP / Month</span></div></div></article>';
     }).join('');
     var status=byId('gradeLoadStatus');
     if(status)status.textContent='6 grades available';
-    grid.querySelectorAll('[data-doma-grade-open]').forEach(function(button){
-      button.addEventListener('click',function(){
-        var name=button.getAttribute('data-doma-grade-open');
+    grid.querySelectorAll('[data-doma-grade-open]').forEach(function(card){
+      function openCard(){
+        var name=card.getAttribute('data-doma-grade-open');
         setFallbackData();
         if(typeof window.domaOpenGrade==='function'){window.domaOpenGrade(name);return;}
         if(typeof window.openAuth==='function'){window.openAuth('signup');return;}
         var status=byId('gradeLoadStatus');if(status)status.textContent='Grade selected: '+name+' — refresh the page to open account options.';
-      });
-    });
-    grid.querySelectorAll('[data-doma-grade-details]').forEach(function(button){
-      button.addEventListener('click',function(){
-        var name=button.getAttribute('data-doma-grade-details');
-        setFallbackData();
-        if(typeof window.showGradeInfo==='function'){window.showGradeInfo(name);return;}
-        if(typeof window.openAuth==='function'){window.openAuth('signup');return;}
-        var status=byId('gradeLoadStatus');if(status)status.textContent='Sign in to view access options for '+name+'.';
+      }
+      card.addEventListener('click',openCard);
+      card.addEventListener('keydown',function(event){
+        if(event.key==='Enter'||event.key===' '){event.preventDefault();openCard();}
       });
     });
   }
@@ -8122,6 +8114,97 @@ header.hero#home .container.hero-grid > div:first-child > p {
     color: #72e6ac !important;
     line-height: 1.55 !important;
   }
+}
+</style>
+
+
+<style id="doma-clean-grade-cards-v1">
+/* Clean grade tiles: grade name, English label and monthly price only. */
+#gradeGrid .grade-selectable {
+  cursor: pointer !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+#gradeGrid .grade-selectable:hover {
+  transform: translateY(-3px) !important;
+  border-color: #874052 !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.23) !important;
+}
+#gradeGrid .grade-selectable:focus-visible {
+  outline: 2px solid #c05269 !important;
+  outline-offset: 3px !important;
+}
+#gradeGrid .grade-selectable .grade-cover {
+  height: 112px !important;
+  min-height: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 14px !important;
+}
+#gradeGrid .grade-selectable .grade-cover strong {
+  display: block !important;
+  font-size: clamp(19px, 2vw, 25px) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -.5px !important;
+  overflow-wrap: anywhere !important;
+}
+#gradeGrid .grade-selectable .grade-body {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  flex: 1 1 auto !important;
+  padding: 14px 16px 16px !important;
+}
+#gradeGrid .grade-selectable .grade-body h3 {
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+  margin: 0 !important;
+}
+#gradeGrid .grade-selectable .grade-meta {
+  display: block !important;
+  margin: 0 !important;
+  color: #72d7a0 !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+  font-weight: 700 !important;
+}
+@media (max-width: 700px) {
+  #gradeGrid.grid3 { gap: 8px !important; }
+  #gradeGrid .grade-selectable { border-radius: 12px !important; }
+  #gradeGrid .grade-selectable .grade-cover {
+    height: 72px !important;
+    padding: 8px !important;
+  }
+  #gradeGrid .grade-selectable .grade-cover strong {
+    font-size: clamp(14px, 4vw, 18px) !important;
+    line-height: 1.2 !important;
+    letter-spacing: -.35px !important;
+    text-align: center !important;
+  }
+  #gradeGrid .grade-selectable .grade-body {
+    gap: 6px !important;
+    padding: 9px 9px 10px !important;
+  }
+  #gradeGrid .grade-selectable .grade-body h3 {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+  #gradeGrid .grade-selectable .grade-meta {
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+}
+@media (max-width: 380px) {
+  #gradeGrid .grade-selectable .grade-cover { height: 66px !important; }
+  #gradeGrid .grade-selectable .grade-body { padding: 8px !important; }
+  #gradeGrid .grade-selectable .grade-cover strong { font-size: 13px !important; }
+  #gradeGrid .grade-selectable .grade-body h3 { font-size: 10px !important; }
+  #gradeGrid .grade-selectable .grade-meta { font-size: 9px !important; }
 }
 </style>
 
