@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v59">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v60">
 <meta name="theme-color" content="#080808">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -1319,7 +1319,24 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 </div>
 </nav>
 <div class="modal" id="mobileNav" style="align-items:flex-start;padding-top:78px"><div class="modalbox" style="max-width:420px"><div class="modalhead"><h3>Mr. Fluent</h3><button class="close" onclick="closeMobileMenu()">×</button></div><div style="display:grid;gap:7px"><a class="side-link" href="#grades" onclick="closeMobileMenu()">Grades</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">English Course</a><a class="side-link" href="#english-course" onclick="closeMobileMenu()">Learning</a><a class="side-link" href="#pricing" onclick="closeMobileMenu()">Pricing</a><a class="side-link" href="#faq" onclick="closeMobileMenu()">FAQ</a></div></div></div>
-<header class="hero" id="home"><div class="container hero-grid"><div><div class="eyebrow">Learn English. Build Your Future.</div><h1>Learn. Speak. <span>Master.</span></h1><div class="actions"><a class="btn primary" href="#grades">Choose Your Grade →</a></div><div class="tagrow"><span class="tag">6 Grades</span><span class="tag">100 EGP / Month</span><span class="tag">English Only</span><span class="tag">Quizzes</span><span class="tag">Homework</span><span class="tag">Certificates</span></div><div class="mini-proof"><div class="proof"><strong>6</strong><span>Preparatory &amp; Secondary grades</span></div><div class="proof"><strong>6</strong><span>Core English skills</span></div><div class="proof"><strong>Access</strong><span>After payment approval</span></div></div></div></div></header>
+<header class="hero" id="home">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow hero-eyebrow">YOUR ENGLISH JOURNEY STARTS HERE</div>
+      <h1 class="hero-main-title">Learn English.<br><span>Speak with Confidence.</span></h1>
+      <p class="hero-description">Choose your school grade or explore the independent Mr. Fluent English Course.</p>
+      <div class="actions hero-actions">
+        <a class="btn primary" href="#grades">Choose Your Grade <span aria-hidden="true">→</span></a>
+        <a class="btn secondary" href="#english-course">Explore English Course <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="hero-highlights" aria-label="Learning features">
+        <div class="hero-highlight"><span class="hero-highlight-dot" aria-hidden="true"></span><span>6 School Grades</span></div>
+        <div class="hero-highlight"><span class="hero-highlight-dot" aria-hidden="true"></span><span>Quizzes &amp; Practice</span></div>
+        <div class="hero-highlight"><span class="hero-highlight-dot" aria-hidden="true"></span><span>Track Your Progress</span></div>
+      </div>
+    </div>
+  </div>
+</header>
 
 
 
@@ -10369,6 +10386,233 @@ html body #pricing .pricing > .card.plan:hover{
     font-size:8px!important;
     line-height:1.25!important;
   }
+}
+</style>
+
+
+<style id="doma-hero-redesign-v60">
+/* Homepage opening: a clearer promise, two obvious learning routes, and three concise benefits. */
+html body header.hero#home{
+  background:
+    radial-gradient(circle at 82% 26%,rgba(46,223,224,.12),transparent 32%),
+    radial-gradient(circle at 18% 78%,rgba(118,35,75,.16),transparent 34%),
+    linear-gradient(155deg,#070d12 0%,#09151b 58%,#0b0b12 100%)!important;
+}
+html body header.hero#home::after{
+  border-color:rgba(76,203,204,.16)!important;
+  box-shadow:0 0 0 70px rgba(46,223,224,.025),0 0 0 140px rgba(118,35,75,.025)!important;
+  pointer-events:none!important;
+}
+html body header.hero#home .hero-copy{
+  width:100%!important;
+  max-width:900px!important;
+  padding-top:8px!important;
+}
+html body header.hero#home .hero-eyebrow{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  margin:0 0 18px!important;
+  color:#79e5dc!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1.5!important;
+  letter-spacing:2.3px!important;
+}
+html body header.hero#home .hero-eyebrow::before{
+  content:""!important;
+  display:block!important;
+  width:24px!important;
+  height:2px!important;
+  flex:0 0 24px!important;
+  border-radius:99px!important;
+  background:linear-gradient(90deg,#48d6ce,#9debd7)!important;
+  box-shadow:0 0 10px rgba(72,214,206,.35)!important;
+}
+html body header.hero#home h1.hero-main-title{
+  max-width:860px!important;
+  margin:0 0 19px!important;
+  color:#f4ffff!important;
+  font-size:clamp(38px,5.7vw,68px)!important;
+  font-weight:900!important;
+  line-height:1.04!important;
+  letter-spacing:-2.5px!important;
+  overflow-wrap:normal!important;
+}
+html body header.hero#home h1.hero-main-title span{
+  display:inline-block!important;
+  margin-top:5px!important;
+  color:#74e2d3!important;
+  background:linear-gradient(95deg,#8af0db 0%,#55d9d3 52%,#b8f4e3 100%)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  text-shadow:none!important;
+}
+html body header.hero#home .hero-description{
+  max-width:650px!important;
+  margin:0 0 24px!important;
+  color:#c0d0d5!important;
+  font-size:15px!important;
+  line-height:1.75!important;
+  font-weight:450!important;
+}
+html body header.hero#home .hero-actions{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:11px!important;
+  margin:0!important;
+}
+html body header.hero#home .hero-actions .btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:9px!important;
+  min-height:46px!important;
+  padding:12px 17px!important;
+  border-radius:11px!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1.3!important;
+  text-decoration:none!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+html body header.hero#home .hero-actions .btn.primary{
+  border:1px solid rgba(93,231,215,.78)!important;
+  background:linear-gradient(135deg,#67dfd0,#38bab8)!important;
+  color:#06252a!important;
+  box-shadow:0 8px 22px rgba(46,223,224,.15),inset 0 1px 0 rgba(255,255,255,.35)!important;
+}
+html body header.hero#home .hero-actions .btn.secondary{
+  border:1px solid rgba(98,205,204,.48)!important;
+  background:linear-gradient(145deg,rgba(23,54,62,.76),rgba(14,28,39,.86))!important;
+  color:#e8ffff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+html body header.hero#home .hero-actions .btn:hover{
+  transform:translateY(-2px)!important;
+}
+html body header.hero#home .hero-actions .btn.primary:hover{
+  box-shadow:0 10px 25px rgba(46,223,224,.22),inset 0 1px 0 rgba(255,255,255,.4)!important;
+}
+html body header.hero#home .hero-actions .btn.secondary:hover{
+  border-color:rgba(98,235,221,.82)!important;
+  box-shadow:0 0 16px rgba(46,223,224,.1)!important;
+}
+html body header.hero#home .hero-highlights{
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:wrap!important;
+  gap:9px!important;
+  margin:23px 0 0!important;
+  padding:0!important;
+}
+html body header.hero#home .hero-highlight{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  min-height:34px!important;
+  padding:8px 11px!important;
+  border:1px solid rgba(120,195,196,.18)!important;
+  border-radius:999px!important;
+  background:linear-gradient(145deg,rgba(20,49,56,.72),rgba(12,25,32,.72))!important;
+  color:#cee4e6!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+  font-weight:650!important;
+  letter-spacing:.1px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+html body header.hero#home .hero-highlight-dot{
+  display:block!important;
+  width:6px!important;
+  height:6px!important;
+  flex:0 0 6px!important;
+  border-radius:50%!important;
+  background:#71e5d4!important;
+  box-shadow:0 0 9px rgba(113,229,212,.42)!important;
+}
+@media(max-width:700px){
+  html body header.hero#home{
+    min-height:calc(100svh - env(safe-area-inset-top,0px))!important;
+    padding-top:calc(92px + env(safe-area-inset-top,0px))!important;
+    padding-bottom:34px!important;
+    display:flex!important;
+    align-items:center!important;
+  }
+  html body header.hero#home .hero-grid{
+    min-height:0!important;
+    width:100%!important;
+    padding-top:12px!important;
+    padding-bottom:8px!important;
+    align-content:center!important;
+  }
+  html body header.hero#home .hero-copy{
+    padding-top:0!important;
+  }
+  html body header.hero#home .hero-eyebrow{
+    margin-bottom:15px!important;
+    font-size:8.5px!important;
+    letter-spacing:1.7px!important;
+  }
+  html body header.hero#home h1.hero-main-title{
+    max-width:100%!important;
+    margin-bottom:15px!important;
+    font-size:clamp(31px,8.2vw,43px)!important;
+    line-height:1.09!important;
+    letter-spacing:-1.35px!important;
+  }
+  html body header.hero#home h1.hero-main-title span{
+    margin-top:4px!important;
+  }
+  html body header.hero#home .hero-description{
+    margin-bottom:18px!important;
+    font-size:12px!important;
+    line-height:1.6!important;
+    max-width:100%!important;
+  }
+  html body header.hero#home .hero-actions{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:8px!important;
+    width:100%!important;
+  }
+  html body header.hero#home .hero-actions .btn{
+    width:100%!important;
+    min-height:43px!important;
+    padding:11px 12px!important;
+    font-size:11px!important;
+    border-radius:10px!important;
+  }
+  html body header.hero#home .hero-highlights{
+    gap:7px!important;
+    margin-top:18px!important;
+  }
+  html body header.hero#home .hero-highlight{
+    min-height:30px!important;
+    gap:6px!important;
+    padding:7px 9px!important;
+    font-size:9px!important;
+  }
+}
+@media(max-width:380px){
+  html body header.hero#home .hero-eyebrow{
+    font-size:7.8px!important;
+    letter-spacing:1.35px!important;
+  }
+  html body header.hero#home h1.hero-main-title{
+    font-size:clamp(29px,8vw,34px)!important;
+    letter-spacing:-1.1px!important;
+  }
+  html body header.hero#home .hero-highlight{
+    padding:6px 8px!important;
+    font-size:8.5px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html body header.hero#home .hero-actions .btn{transition:none!important}
 }
 </style>
 
