@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v34">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v35">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v34">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v35">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2315,7 +2315,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v34', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v35', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -3134,7 +3134,7 @@ html,body,*{
 </style>
 
 
-<style id="doma-mobile-centered-isolated-drawer-v34">
+<style id="doma-mobile-centered-isolated-drawer-v35">
 /* Centered Teal Glass navigation drawer with a fully isolated, scrollable menu. */
 @media(max-width:760px){
   body.doma-admin-drawer-open{
@@ -3247,7 +3247,7 @@ html,body,*{
 </style>
 
 
-<style id="doma-mobile-menu-minimal-neon-text-v34">
+<style id="doma-mobile-menu-minimal-neon-text-v35">
 /* Minimal single-color navigation panel: no scroll track, no item boxes, mint neon text only. */
 @media(max-width:760px){
   #sidebar.sidebar{
@@ -3344,6 +3344,58 @@ html,body,*{
   #sidebar .nav-btn#logout{
     margin-top:10px!important;
     color:#a4ffd0!important;
+  }
+}
+</style>
+
+
+<style id="doma-mobile-menu-high-contrast-text-v35">
+/* Boost menu readability with larger near-white aqua text and restrained mint neon glow. */
+@media(max-width:760px){
+  #sidebar .nav-btn,
+  #sidebar .nav-btn:hover,
+  #sidebar .nav-btn:focus,
+  #sidebar .nav-btn:focus-visible,
+  #sidebar .nav-btn.active{
+    min-height:44px!important;
+    padding:11px 12px!important;
+    font-size:14px!important;
+    line-height:1.3!important;
+    font-weight:700!important;
+    letter-spacing:.005em!important;
+    color:#eaffff!important;
+    -webkit-text-fill-color:#eaffff!important;
+    text-shadow:0 0 3px rgba(104,255,236,.28),0 0 8px rgba(83,237,222,.15)!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  #sidebar .nav-btn:hover,
+  #sidebar .nav-btn:focus-visible{
+    color:#ffffff!important;
+    -webkit-text-fill-color:#ffffff!important;
+    text-shadow:0 0 4px rgba(110,255,233,.52),0 0 12px rgba(83,237,222,.28)!important;
+  }
+  #sidebar .nav-btn.active{
+    color:#8ffff0!important;
+    -webkit-text-fill-color:#8ffff0!important;
+    font-weight:800!important;
+    text-shadow:0 0 4px rgba(110,255,233,.65),0 0 13px rgba(83,237,222,.32)!important;
+  }
+  #sidebar .nav-title{
+    margin:15px 0 5px!important;
+    padding:6px 12px 4px!important;
+    font-size:10px!important;
+    line-height:1.25!important;
+    font-weight:850!important;
+    letter-spacing:.14em!important;
+    color:#72f4d4!important;
+    -webkit-text-fill-color:#72f4d4!important;
+    text-shadow:0 0 6px rgba(84,245,196,.24)!important;
+  }
+  #sidebar .nav-btn#logout{
+    color:#edfffa!important;
+    -webkit-text-fill-color:#edfffa!important;
   }
 }
 </style>
