@@ -859,6 +859,30 @@ html body .student-layout>.student-content{grid-area:content!important}
   }
 }
 
+
+/* Remove any thin line above the back/menu controls */
+html body .course-top-controls{
+  border-top:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+html body .course-top-controls::before,
+html body .course-top-controls::after{
+  display:none!important;
+  content:none!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+@media(max-width:700px){
+  html body .course-top-controls{
+    border-top:0!important;
+    border-bottom:0!important;
+    background:#fffdf9!important;
+    background-image:none!important;
+    box-shadow:none!important;
+  }
+}
+
 /* FINAL COLOR MATCH: page background matches the light course cards; text colors stay unchanged */
 :root{--page-unified-bg:#fffdf9}
 html,body{
