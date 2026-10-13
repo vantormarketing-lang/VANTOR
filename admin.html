@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v31">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v32">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v31">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v32">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2315,7 +2315,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v31', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v32', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -3054,7 +3054,7 @@ async function mfRejectEnglishCourseRequest(id){
 </style>
 
 
-<style id="doma-mobile-statusbar-solid-match-v31">
+<style id="doma-mobile-statusbar-solid-match-v32">
 /* Match the first screen strip exactly to Android's installed-app theme color. */
 @media(max-width:760px){
   html{
@@ -3076,16 +3076,16 @@ async function mfRejectEnglishCourseRequest(id){
 </style>
 
 
-<style id="doma-mobile-quickactions-top-gap-v31">
+<style id="doma-mobile-quickactions-top-gap-v32">
 /* Add a little breathing room between the preceding dashboard design and Quick Actions. */
 @media(max-width:760px){
   .doma-mobile-quickactions{
     margin-top:35px!important;
   }
 }
-</sty
+</style>
 
-<style id="doma-mobile-wordmark-polish-v31">
+<style id="doma-mobile-wordmark-polish-v32">
 /* Premium compact DOMA wordmark badge for the mobile admin header. */
 @media(max-width:760px){
   .doma-mobile-header-logo{
@@ -3107,7 +3107,31 @@ async function mfRejectEnglishCourseRequest(id){
   }
 }
 </style>
-le>
+
+
+<style id="doma-teal-scrollbars-v32">
+/* Teal Glass scrollbars to replace the legacy brown scrollbar palette. */
+html,body,*{
+  scrollbar-color:#27bdb8 #061e24!important;
+  scrollbar-width:thin!important;
+}
+::-webkit-scrollbar{
+  width:10px!important;
+  height:10px!important;
+}
+::-webkit-scrollbar-track{
+  background:linear-gradient(180deg,#04171c,#082a31)!important;
+  border-radius:10px!important;
+}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#52e8dc,#128f97)!important;
+  border:2px solid #061e24!important;
+  border-radius:10px!important;
+}
+::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,#8afff0,#28c9c2)!important;
+}
+</style>
 
 </body>
 </html>
