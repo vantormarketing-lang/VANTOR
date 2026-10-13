@@ -347,8 +347,8 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
 <style id="doma-reading-quality-fixes">#readingView .reading-passage{white-space:pre-line;line-height:1.85;overflow-wrap:anywhere}#mfCloudSyncStatus{display:block;flex-basis:100%;margin-top:8px}#mfCloudSyncStatus.good{color:#18794e}#mfCloudSyncStatus.bad{color:#b42318}</style>
 </head>
 <body>
-<button type="button" id="mobileMenuToggle" class="mobile-menu-toggle" aria-controls="mobileCourseMenu" aria-expanded="false" aria-label="Open course navigation">☰ <span>Menu</span></button>
-<header><div class="a1-hero"><div class="a1-hero-copy"><a href="./index.html" style="display:inline-flex;margin-bottom:16px;padding:9px 13px;border:1px solid #334362;border-radius:10px;color:#dbeafe;text-decoration:none;font-weight:700">← Back to Mr. Fluent</a><div class="pill">✦ MR. FLUENT ACADEMY · CEFR C2</div><h1>Master nuance, register and complex expression</h1><p>Refine near-native control of implication, rhetorical choices, stylistic variation, synthesis and precision under demanding conditions.</p><p class="ar">ابدأ رحلتك في الإنجليزية خطوة بخطوة — دروس منظمة، فيديوهات تعليمية حقيقية، تدريبات واختبارات ومتابعة للتقدم.</p></div><div class="a1-hero-card"><div class="a1-hero-card-top"><div><div class="a1-eyebrow">STUDENT LEARNING HUB</div><div class="a1-logo">Mr. Fluent<span>.</span></div></div><span class="a1-level">C2 · PROFICIENCY</span></div><div><h2>Study. Practice. Track. Improve.</h2><p>Your personal English study space.</p><div class="a1-hero-stats"><div><b>12</b><span>Lessons</span></div><div><b>4</b><span>Unit tests</span></div><div><b>01</b><span>Final test</span></div></div></div></div></div></header>
+<div class="course-top-controls"><a href="./index.html" class="course-back-arrow" aria-label="Back to Mr. Fluent" title="Back to Mr. Fluent">←</a><button type="button" id="mobileMenuToggle" class="mobile-menu-toggle" aria-controls="mobileCourseMenu" aria-expanded="false" aria-label="Open course navigation">☰ <span>Menu</span></button></div>
+<header><div class="a1-hero"><div class="a1-hero-copy"><div class="pill">✦ MR. FLUENT ACADEMY · CEFR C2</div><h1>Master nuance, register and complex expression</h1><p>Refine near-native control of implication, rhetorical choices, stylistic variation, synthesis and precision under demanding conditions.</p><p class="ar">ابدأ رحلتك في الإنجليزية خطوة بخطوة — دروس منظمة، فيديوهات تعليمية حقيقية، تدريبات واختبارات ومتابعة للتقدم.</p></div><div class="a1-hero-card"><div class="a1-hero-card-top"><div><div class="a1-eyebrow">STUDENT LEARNING HUB</div><div class="a1-logo">Mr. Fluent<span>.</span></div></div><span class="a1-level">C2 · PROFICIENCY</span></div><div><h2>Study. Practice. Track. Improve.</h2><p>Your personal English study space.</p><div class="a1-hero-stats"><div><b>12</b><span>Lessons</span></div><div><b>4</b><span>Unit tests</span></div><div><b>01</b><span>Final test</span></div></div></div></div></div></header>
 <main class="wrap">
 <div class="topgrid"><div class="stat"><strong>12 lessons</strong>📚 4 units × 3 lessons</div><div class="stat"><strong>4 unit tests</strong>🧩 Check each unit</div><div class="stat"><strong>1 final test</strong>🏆 Review C2 skills</div><div class="stat"><strong id="doneCount">0 / 12</strong>✅ Lessons marked complete</div></div>
 <div class="box"><b>🎬 Real video practice</b><p>Each lesson includes a level-matched video resource from British Council LearnEnglish. Open the official resource in a new tab; video, transcript and activities depend on the provider page.</p><div class="progressbar"><span id="progressFill"></span></div><p class="small" id="progressText">Your completion progress: 0%</p></div>
@@ -687,4 +687,128 @@ document.getElementById("writingDraft").value=localStorage.getItem("mfC2writing"
   drawer.setAttribute('aria-hidden',mobile()?'true':'false');
 })();
 </script>
+
+<style id="mrfluent-course-top-controls-right-v93">
+/* Pair the unboxed back arrow with the mobile menu control across all CEFR course pages. */
+html body .course-top-controls{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:10px 18px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  direction:ltr;
+  position:relative;
+  z-index:20;
+  min-height:56px;
+}
+html body .course-back-arrow{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 44px!important;
+  width:44px!important;
+  height:44px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#f2d7ff!important;
+  font-family:Arial,sans-serif!important;
+  font-size:34px!important;
+  font-weight:500!important;
+  line-height:1!important;
+  text-decoration:none!important;
+  cursor:pointer!important;
+  transition:color .16s ease,transform .16s ease!important;
+}
+html body .course-back-arrow:hover{
+  color:#ffbfd6!important;
+  transform:translateX(-2px)!important;
+}
+html body .course-top-controls .mobile-menu-toggle{
+  display:none!important;
+  position:static!important;
+  inset:auto!important;
+  z-index:auto!important;
+  margin:0!important;
+}
+html body .student-layout{
+  grid-template-columns:minmax(0,1fr) 268px!important;
+  grid-template-areas:"content sidebar"!important;
+}
+html body .student-layout>.student-sidebar{grid-area:sidebar!important}
+html body .student-layout>.student-content{grid-area:content!important}
+@media(max-width:900px) and (min-width:701px){
+  html body .student-layout{grid-template-columns:minmax(0,1fr) 220px!important}
+}
+@media(max-width:700px){
+  html body .course-top-controls{
+    position:sticky!important;
+    top:0!important;
+    z-index:1390!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:calc(7px + env(safe-area-inset-top,0px)) 12px 7px!important;
+    min-height:0!important;
+    background:rgba(8,8,8,.92)!important;
+    border-bottom:1px solid rgba(255,255,255,.065)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    backdrop-filter:blur(14px)!important;
+  }
+  html body .course-back-arrow{
+    flex-basis:42px!important;
+    width:42px!important;
+    height:42px!important;
+    font-size:31px!important;
+  }
+  html body .course-top-controls .mobile-menu-toggle{
+    display:inline-flex!important;
+    position:static!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:7px!important;
+    flex:0 0 auto!important;
+    min-height:42px!important;
+    height:42px!important;
+    margin:0!important;
+    padding:8px 12px!important;
+    border-radius:12px!important;
+  }
+  html body .student-layout{
+    display:block!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-areas:none!important;
+  }
+  html body .student-layout .student-sidebar{
+    position:fixed!important;
+    left:auto!important;
+    right:0!important;
+    top:0!important;
+    bottom:0!important;
+    height:100vh!important;
+    height:100dvh!important;
+    z-index:1401!important;
+  }
+  html body:not(.mobile-menu-open) .student-layout .student-sidebar{
+    transform:translateX(105%)!important;
+  }
+  html body.mobile-menu-open .student-layout .student-sidebar{
+    transform:translateX(0)!important;
+  }
+}
+@media(max-width:380px){
+  html body .course-top-controls{padding-left:9px!important;padding-right:9px!important}
+  html body .course-top-controls .mobile-menu-toggle{padding:7px 9px!important}
+  html body .course-back-arrow{flex-basis:40px!important;width:40px!important;height:40px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body .course-back-arrow{transition:none!important}
+}
+</style>
+
 </body></html>
