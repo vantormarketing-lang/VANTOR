@@ -261,8 +261,8 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v61">
-<meta name="theme-color" content="#080808">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v62">
+<meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v27', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v28', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v27', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v28', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -10785,6 +10785,102 @@ html body header.hero#home .hero-highlight-dot{
   }
   html body header.hero#home .hero-highlight{
     font-size:8.3px!important;
+  }
+}
+</style>
+
+
+<style id="doma-unified-page-background-tight-steps-v62">
+/* One continuous page backdrop shared by the hero, sections, footer and device status-bar area. */
+html{
+  min-height:100%;
+  background:#070d12!important;
+  color-scheme:dark!important;
+}
+html body{
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  background-color:#070d12!important;
+  background-image:
+    linear-gradient(180deg,#070d12 0px,#070d12 90px,rgba(7,13,18,.96) 170px,rgba(7,13,18,0) 360px),
+    radial-gradient(ellipse at 80% 24%,rgba(46,223,224,.075),transparent 38%),
+    radial-gradient(ellipse at 14% 60%,rgba(118,35,75,.10),transparent 42%),
+    linear-gradient(155deg,#070d12 0%,#09151b 58%,#0b0b12 100%)!important;
+  background-repeat:no-repeat!important;
+  background-attachment:fixed!important;
+}
+/* Keep the nav visually legible while matching the same dark canvas. */
+html body .nav{
+  background:rgba(7,13,18,.94)!important;
+  border-bottom-color:rgba(98,205,204,.12)!important;
+}
+/* Remove separate full-width backgrounds; cards inside sections keep their own styling. */
+html body>section,
+html body>footer,
+html body .home-welcome,
+html body #home-upgrade,
+html body .home-upgrade,
+html body .mf-english-course-section,
+html body footer.footer,
+html body section#how-it-works,
+html body section#grades,
+html body section#pricing,
+html body section#faq,
+html body section#english-course{
+  background-color:transparent!important;
+  background-image:none!important;
+}
+/* The hero sits on the shared page background and only takes the height its content needs. */
+html body header.hero#home{
+  min-height:0!important;
+  height:auto!important;
+  padding-top:132px!important;
+  padding-bottom:18px!important;
+  background:transparent!important;
+  background-image:none!important;
+}
+html body header.hero#home .hero-grid{
+  min-height:0!important;
+  height:auto!important;
+  align-content:start!important;
+  align-items:start!important;
+  padding:0!important;
+  margin:0 auto!important;
+}
+html body section.how-it-works#how-it-works{
+  margin-top:0!important;
+  padding:16px 0 28px!important;
+}
+html body section.how-it-works#how-it-works .head{
+  margin-bottom:10px!important;
+}
+html body section.how-it-works#how-it-works .how-grid{
+  margin-top:12px!important;
+}
+@media(max-width:700px){
+  html body header.hero#home{
+    min-height:0!important;
+    padding-top:calc(76px + env(safe-area-inset-top,0px))!important;
+    padding-bottom:14px!important;
+  }
+  html body header.hero#home .hero-grid{
+    min-height:0!important;
+    height:auto!important;
+    padding:0!important;
+  }
+  html body section.how-it-works#how-it-works{
+    padding:10px 0 22px!important;
+  }
+  html body section.how-it-works#how-it-works .head{
+    margin-bottom:9px!important;
+  }
+  html body section.how-it-works#how-it-works .how-grid{
+    margin-top:9px!important;
+  }
+}
+@media(max-width:380px){
+  html body header.hero#home{
+    padding-top:calc(72px + env(safe-area-inset-top,0px))!important;
   }
 }
 </style>
