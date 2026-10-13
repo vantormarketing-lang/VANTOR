@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v71">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v72">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v37', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v38', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v37', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v38', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -11025,6 +11025,27 @@ html body section.how-it-works#how-it-works .how-grid{
   html body section.how-it-works#how-it-works .how-grid{
     margin-top:8px!important;
   }
+}
+</style>
+
+
+<style id="doma-nav-wordmark-gradient-v72">
+/* One continuous, premium lavender-to-teal gradient per line — not one color per word. */
+html body .nav .brand>span:last-child{
+  color:transparent!important;
+  background-image:linear-gradient(105deg,#d2bbff 0%,#a9c9f2 48%,#82e0d9 100%)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  text-shadow:none!important;
+}
+html body .nav .brand>span:last-child small{
+  color:transparent!important;
+  background-image:linear-gradient(105deg,#b6a4ee 0%,#91b9db 50%,#78c9c5 100%)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  text-shadow:none!important;
 }
 </style>
 
