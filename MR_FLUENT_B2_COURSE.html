@@ -854,6 +854,53 @@ html body .course-top-controls::after{
   }
 }
 
+
+/* Make the back arrow clearly visible on the light background */
+html body .course-back-arrow{
+  color:#741744!important;
+  -webkit-text-fill-color:#741744!important;
+  text-shadow:0 0 1px rgba(116,23,68,.22)!important;
+  opacity:1!important;
+}
+html body .course-back-arrow:hover,
+html body .course-back-arrow:focus-visible{
+  color:#a12460!important;
+  -webkit-text-fill-color:#a12460!important;
+  outline:2px solid rgba(161,36,96,.32)!important;
+  outline-offset:2px!important;
+}
+/* Match the page scrollbar to the unified page background */
+html{
+  scrollbar-color:#fffdf9 #fffdf9!important;
+  scrollbar-width:thin!important;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar{
+  width:7px!important;
+  height:7px!important;
+}
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track{
+  background:#fffdf9!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb{
+  background:#fffdf9!important;
+  border:1px solid #fffdf9!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+}
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-corner{
+  background:#fffdf9!important;
+}
+
 /* FINAL COLOR MATCH: page background matches the light course cards; text colors stay unchanged */
 :root{--page-unified-bg:#fffdf9}
 html,body{background:#fffdf9!important;background-color:#fffdf9!important;background-image:none!important;min-height:100%!important;color-scheme:light}
