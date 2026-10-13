@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v62">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v63">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v28', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v29', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v28', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v29', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -1324,7 +1324,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
     <div class="hero-copy">
       <div class="eyebrow hero-eyebrow">YOUR ENGLISH JOURNEY STARTS HERE</div>
       <h1 class="hero-main-title">Learn English.<br><span>Speak with Confidence.</span></h1>
-      <p class="hero-description">Choose your school grade or explore the independent Mr. Fluent English Course.</p>
+
       <div class="actions hero-actions">
         <a class="btn primary" href="#grades">Choose Your Grade <span aria-hidden="true">→</span></a>
         <a class="btn secondary" href="#english-course">Explore English Course <span aria-hidden="true">→</span></a>
@@ -10881,6 +10881,38 @@ html body section.how-it-works#how-it-works .how-grid{
 @media(max-width:380px){
   html body header.hero#home{
     padding-top:calc(72px + env(safe-area-inset-top,0px))!important;
+  }
+}
+</style>
+
+
+<style id="doma-nav-seam-mint-brand-v63">
+/* Remove the divider below the top navigation and align it to the single page canvas. */
+html body .nav{
+  background:#070d12!important;
+  background-image:none!important;
+  border:0!important;
+  border-bottom:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+/* A restrained mint-green wordmark glow for the top-left Mr. Fluent brand. */
+html body .nav .brand>span:last-child{
+  color:#8af5cd!important;
+  text-shadow:0 0 5px rgba(95,249,190,.30),0 0 12px rgba(72,229,166,.18)!important;
+}
+html body .nav .brand>span:last-child small{
+  color:#7db8a2!important;
+  text-shadow:0 0 5px rgba(95,249,190,.14)!important;
+}
+/* The requested helper sentence below the main title is removed from the markup. */
+html body header.hero#home h1.hero-main-title{
+  margin-bottom:14px!important;
+}
+@media(max-width:700px){
+  html body header.hero#home h1.hero-main-title{
+    margin-bottom:12px!important;
   }
 }
 </style>
