@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v26">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v27">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v26">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v27">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2315,7 +2315,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v26', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v27', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -2938,6 +2938,96 @@ async function mfRejectEnglishCourseRequest(id){
   #section-dashboard>.doma-final-admin-panel,
   #section-dashboard>.admin-health{
     margin-top:0!important;
+  }
+}
+</style>
+
+
+<style id="doma-mobile-login-teal-glass-v27">
+/* Match the mobile admin sign-in card and credentials fields to the Teal Glass UI. */
+@media(max-width:760px){
+  .login{
+    min-height:100vh!important;
+    min-height:100dvh!important;
+    padding:18px!important;
+    background:
+      radial-gradient(circle at 12% 6%,rgba(18,156,168,.2),transparent 34%),
+      radial-gradient(circle at 90% 88%,rgba(28,111,160,.15),transparent 34%),
+      linear-gradient(180deg,#04171c 0%,#061e24 52%,#041319 100%)!important;
+    color:#edffff!important;
+  }
+  .login-card{
+    width:min(440px,100%)!important;
+    padding:24px 21px!important;
+    border:1px solid rgba(65,215,214,.35)!important;
+    border-radius:22px!important;
+    background:linear-gradient(145deg,rgba(8,52,61,.94),rgba(3,25,34,.97) 78%)!important;
+    box-shadow:inset 0 1px 0 rgba(230,255,255,.07),0 24px 65px rgba(0,0,0,.38),0 0 28px rgba(39,211,209,.065)!important;
+    color:#edffff!important;
+    backdrop-filter:blur(20px)!important;
+    -webkit-backdrop-filter:blur(20px)!important;
+  }
+  .login-card .logo{
+    color:#efffff!important;
+    letter-spacing:.075em!important;
+  }
+  .login-card .logo span{
+    color:#72f2e9!important;
+    text-shadow:0 0 20px rgba(65,227,220,.15)!important;
+  }
+  .login-card>.muted{
+    color:#9bc9cc!important;
+  }
+  .login-card h1{
+    color:#efffff!important;
+  }
+  .login-card label{
+    color:#b6e2e3!important;
+    font-weight:650!important;
+    letter-spacing:.02em!important;
+  }
+  .login-card input,
+  .login-card input[type="email"],
+  .login-card input[type="password"]{
+    width:100%!important;
+    min-height:46px!important;
+    padding:12px 13px!important;
+    color:#efffff!important;
+    caret-color:#80ffe7!important;
+    -webkit-text-fill-color:#efffff!important;
+    background:linear-gradient(145deg,rgba(3,30,39,.98),rgba(3,23,32,.99))!important;
+    border:1px solid rgba(67,202,204,.38)!important;
+    border-radius:12px!important;
+    box-shadow:inset 0 1px 0 rgba(230,255,255,.035)!important;
+    color-scheme:dark!important;
+    outline:none!important;
+  }
+  .login-card input::placeholder{
+    color:#739da2!important;
+    opacity:1!important;
+  }
+  .login-card input:focus{
+    border-color:rgba(83,242,226,.82)!important;
+    box-shadow:0 0 0 3px rgba(53,211,205,.14),0 0 19px rgba(53,211,205,.07)!important;
+  }
+  .login-card .btn{
+    min-height:45px!important;
+    border-radius:12px!important;
+    color:#f0ffff!important;
+    background:linear-gradient(135deg,#0d99a3,#08727f 78%)!important;
+    border:1px solid rgba(83,242,226,.53)!important;
+    box-shadow:inset 0 1px 0 rgba(230,255,255,.16),0 8px 22px rgba(0,0,0,.2)!important;
+    font-weight:800!important;
+  }
+  .login-card .btn:disabled{
+    opacity:.7!important;
+  }
+  .login-card .error{
+    color:#ffb8bd!important;
+  }
+  .login-card .muted:last-child{
+    color:#8db5b9!important;
+    line-height:1.6!important;
   }
 }
 </style>
