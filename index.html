@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v57">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v58">
 <meta name="theme-color" content="#080808">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v24', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v25', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v24', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v25', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -10111,6 +10111,193 @@ html body section.how-it-works#how-it-works .how-grid > .how-card:hover{
 }
 @media(prefers-reduced-motion:reduce){
   html body section.how-it-works#how-it-works .how-grid > .how-card:nth-child(n){transition:none!important}
+}
+</style>
+
+
+<style id="doma-learning-access-glass-cards-v58">
+/* Grade and independent course access cards: matching Teal Glass grade tiles, with stronger text contrast. */
+html body #pricing .pricing{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:16px!important;
+}
+html body #pricing .pricing > .card.plan:nth-child(n){
+  --access-rgb:46,223,224;
+  position:relative!important;
+  isolation:isolate!important;
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  padding:22px!important;
+  border:1px solid rgba(var(--access-rgb),.58)!important;
+  border-radius:16px!important;
+  background:linear-gradient(150deg,rgba(var(--access-rgb),.17),rgba(4,29,37,.93) 76%)!important;
+  background-color:rgba(4,29,37,.92)!important;
+  color:#f1ffff!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.075),0 8px 20px rgba(0,0,0,.18)!important;
+  backdrop-filter:blur(18px) saturate(1.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+html body #pricing .pricing > .card.plan:nth-child(1){--access-rgb:46,223,224!important}
+html body #pricing .pricing > .card.plan:nth-child(2){--access-rgb:67,186,231!important}
+html body #pricing .pricing > .card.plan:nth-child(n)::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  background:linear-gradient(118deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.025) 48%,rgba(255,255,255,.012) 100%)!important;
+}
+html body #pricing .pricing > .card.plan:nth-child(n)>*{
+  position:relative!important;
+  z-index:1!important;
+}
+html body #pricing .pricing > .card.plan .pill{
+  align-self:flex-start!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  border:1px solid rgba(var(--access-rgb),.48)!important;
+  border-radius:999px!important;
+  background:rgba(var(--access-rgb),.1)!important;
+  color:rgba(var(--access-rgb),1)!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+}
+html body #pricing .pricing > .card.plan h3{
+  color:#f2ffff!important;
+  font-size:20px!important;
+  line-height:1.3!important;
+  font-weight:850!important;
+  overflow-wrap:anywhere!important;
+}
+html body #pricing .pricing > .card.plan .money{
+  color:#ffffff!important;
+  font-weight:900!important;
+  line-height:1.15!important;
+  text-shadow:0 0 14px rgba(var(--access-rgb),.12)!important;
+}
+html body #pricing .pricing > .card.plan .money small{
+  color:#c5e7ec!important;
+  font-weight:600!important;
+  text-shadow:none!important;
+}
+html body #pricing .pricing > .card.plan ul{
+  padding:0!important;
+  margin:15px 0!important;
+  list-style:none!important;
+}
+html body #pricing .pricing > .card.plan li{
+  color:#e0f0f3!important;
+  border-bottom:1px solid rgba(188,231,237,.14)!important;
+  font-size:11px!important;
+  line-height:1.55!important;
+  padding:7px 0!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+html body #pricing .pricing > .card.plan li:before{
+  color:rgba(var(--access-rgb),1)!important;
+  font-weight:900!important;
+  margin-right:7px!important;
+}
+html body #pricing .pricing > .card.plan .btn{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:40px!important;
+  margin-top:auto!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(var(--access-rgb),.72)!important;
+  border-radius:10px!important;
+  background:linear-gradient(135deg,rgba(var(--access-rgb),.22),rgba(8,41,51,.86))!important;
+  color:#f5ffff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 13px rgba(var(--access-rgb),.08)!important;
+  font-weight:800!important;
+  line-height:1.35!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+html body #pricing .pricing > .card.plan .btn:hover{
+  background:rgba(var(--access-rgb),.2)!important;
+  border-color:rgba(var(--access-rgb),1)!important;
+  box-shadow:0 0 14px rgba(var(--access-rgb),.16)!important;
+}
+html body #pricing .pricing > .card.plan:hover{
+  border-color:rgba(var(--access-rgb),.92)!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.1),0 0 16px rgba(var(--access-rgb),.13),0 10px 23px rgba(0,0,0,.2)!important;
+  transform:translateY(-2px)!important;
+}
+@media(max-width:900px){
+  html body #pricing .pricing{gap:10px!important}
+  html body #pricing .pricing > .card.plan:nth-child(n){padding:14px!important}
+}
+@media(max-width:700px){
+  html body #pricing .pricing{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:9px!important;
+    align-items:stretch!important;
+  }
+  html body #pricing .pricing > .card.plan:nth-child(n){
+    min-width:0!important;
+    height:100%!important;
+    padding:11px 9px!important;
+    border-radius:13px!important;
+  }
+  html body #pricing .pricing > .card.plan .pill{
+    font-size:8.5px!important;
+    line-height:1.35!important;
+    padding:4px 6px!important;
+  }
+  html body #pricing .pricing > .card.plan h3{
+    margin:7px 0!important;
+    font-size:13px!important;
+    line-height:1.35!important;
+  }
+  html body #pricing .pricing > .card.plan .money{
+    font-size:21px!important;
+    line-height:1.2!important;
+  }
+  html body #pricing .pricing > .card.plan .money small{
+    display:block!important;
+    margin-top:3px!important;
+    font-size:9px!important;
+    line-height:1.35!important;
+  }
+  html body #pricing .pricing > .card.plan ul{
+    margin:9px 0 12px!important;
+  }
+  html body #pricing .pricing > .card.plan li{
+    font-size:9.5px!important;
+    line-height:1.5!important;
+    padding:5px 0!important;
+  }
+  html body #pricing .pricing > .card.plan li:before{
+    margin-right:4px!important;
+  }
+  html body #pricing .pricing > .card.plan .btn{
+    min-height:37px!important;
+    padding:8px 5px!important;
+    font-size:9.5px!important;
+    line-height:1.35!important;
+  }
+}
+@media(max-width:360px){
+  html body #pricing .pricing{gap:7px!important}
+  html body #pricing .pricing > .card.plan:nth-child(n){padding:9px 7px!important}
+  html body #pricing .pricing > .card.plan h3{font-size:12px!important}
+  html body #pricing .pricing > .card.plan li{font-size:9px!important}
+  html body #pricing .pricing > .card.plan .btn{font-size:9px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body #pricing .pricing > .card.plan:nth-child(n),
+  html body #pricing .pricing > .card.plan .btn{transition:none!important}
 }
 </style>
 
