@@ -261,15 +261,15 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v77">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v78">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v77">
-<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v77">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v77">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v78">
+<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v78">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v78">
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v43', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v44', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -522,7 +522,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v43', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v44', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -1451,7 +1451,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 
 
 
-<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">100 <small>EGP / month</small></div><ul><li>Access for your selected school grade</li><li>Lessons &amp; published curriculum</li><li>Quizzes &amp; assessments</li><li>Homework &amp; student results</li><li>Progress tracking &amp; certificates</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>Mr. Fluent English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Access to all six CEFR levels, from A1 to C2</li><li>Placement test to help find your level</li><li>Grammar, vocabulary &amp; pronunciation practice</li><li>Listening, speaking, reading &amp; writing</li><li>Lessons, unit practice &amp; assessments</li><li>Independent from your school-grade subscription</li><li>Access begins after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe to English Course</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq">
+<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">100 <small>EGP / month</small></div><ul><li>Lessons &amp; quizzes</li><li>Homework &amp; progress</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Placement test + A1–C2 levels</li><li>Speaking, grammar &amp; writing</li><li>Independent from Grade Access</li><li>Opens after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq">
 <details><summary>What are the two subscription options?</summary><p>Grade Access costs 100 EGP per month and unlocks the selected school grade. The separate Mr. Fluent English Course costs 100 EGP every 30 days and includes the A1–C2 English course. They are independent memberships; paying for one does not activate the other.</p></details>
 <details><summary>How do I activate Grade Access?</summary><p>Create or log in to your student account, choose one of the supported school grades, submit the payment request, send the shown Mobile Cash amount, and upload a clear receipt with the sender number. Access opens only after the admin approves the payment.</p></details>
 <details><summary>How do I activate Mr. Fluent English Course?</summary><p>Log in to your student account, choose Mr. Fluent English Course for 100 EGP per 30 days, follow the payment instructions, and upload the receipt. The placement test and course levels remain locked until the admin approves the payment.</p></details>
@@ -11247,6 +11247,149 @@ html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]:focus
 }
 @media(prefers-reduced-motion:reduce){
   html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]{transition:none!important}
+}
+</style>
+
+
+<style id="doma-pricing-horizontal-stack-v78">
+/* Wide, compact membership cards in one vertical column — keep mobile cards easy to scan. */
+html body section#pricing .pricing{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  width:100%!important;
+  max-width:820px!important;
+  gap:12px!important;
+  margin:0 auto!important;
+}
+html body section#pricing .pricing>.card.plan{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 150px!important;
+  grid-template-areas:"tag tag" "title price" "details action"!important;
+  align-items:center!important;
+  column-gap:16px!important;
+  row-gap:7px!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:16px 18px!important;
+  border-radius:14px!important;
+}
+html body section#pricing .pricing>.card.plan>.pill{
+  grid-area:tag!important;
+  justify-self:start!important;
+  font-size:9px!important;
+  line-height:1.25!important;
+  padding:4px 8px!important;
+}
+html body section#pricing .pricing>.card.plan>h3{
+  grid-area:title!important;
+  min-width:0!important;
+  font-size:15px!important;
+  line-height:1.3!important;
+  margin:0!important;
+}
+html body section#pricing .pricing>.card.plan>.money{
+  grid-area:price!important;
+  justify-self:end!important;
+  white-space:nowrap!important;
+  font-size:24px!important;
+  line-height:1.1!important;
+  text-align:right!important;
+}
+html body section#pricing .pricing>.card.plan>.money small{
+  font-size:9px!important;
+}
+html body section#pricing .pricing>.card.plan>ul{
+  grid-area:details!important;
+  min-width:0!important;
+  align-self:center!important;
+  margin:0!important;
+  display:grid!important;
+  gap:2px!important;
+}
+html body section#pricing .pricing>.card.plan>ul>li{
+  padding:2px 0!important;
+  border-bottom:0!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+}
+html body section#pricing .pricing>.card.plan>ul>li:before{
+  margin-right:6px!important;
+}
+html body section#pricing .pricing>.card.plan>.btn{
+  grid-area:action!important;
+  justify-self:stretch!important;
+  align-self:center!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:34px!important;
+  padding:7px 8px!important;
+  font-size:10px!important;
+  line-height:1.25!important;
+  white-space:normal!important;
+}
+@media(max-width:700px){
+  html body section#pricing{
+    padding-top:24px!important;
+    padding-bottom:24px!important;
+  }
+  html body section#pricing .head{
+    margin-bottom:10px!important;
+  }
+  html body section#pricing .pricing{
+    max-width:100%!important;
+    gap:9px!important;
+  }
+  html body section#pricing .pricing>.card.plan{
+    grid-template-columns:minmax(0,1fr) 92px!important;
+    column-gap:8px!important;
+    row-gap:5px!important;
+    padding:10px 11px!important;
+    border-radius:12px!important;
+  }
+  html body section#pricing .pricing>.card.plan>.pill{
+    font-size:8px!important;
+    padding:3px 6px!important;
+  }
+  html body section#pricing .pricing>.card.plan>h3{
+    font-size:12px!important;
+    line-height:1.25!important;
+  }
+  html body section#pricing .pricing>.card.plan>.money{
+    font-size:18px!important;
+    letter-spacing:-.35px!important;
+  }
+  html body section#pricing .pricing>.card.plan>.money small{
+    font-size:8px!important;
+    display:inline!important;
+  }
+  html body section#pricing .pricing>.card.plan>ul{
+    gap:1px!important;
+  }
+  html body section#pricing .pricing>.card.plan>ul>li{
+    font-size:9px!important;
+    line-height:1.3!important;
+    padding:1px 0!important;
+    overflow-wrap:anywhere!important;
+  }
+  html body section#pricing .pricing>.card.plan>ul>li:before{
+    margin-right:4px!important;
+  }
+  html body section#pricing .pricing>.card.plan>.btn{
+    min-height:31px!important;
+    padding:6px 5px!important;
+    font-size:9px!important;
+    border-radius:8px!important;
+  }
+}
+@media(max-width:360px){
+  html body section#pricing .pricing>.card.plan{
+    grid-template-columns:minmax(0,1fr) 82px!important;
+    column-gap:6px!important;
+    padding:9px!important;
+  }
+  html body section#pricing .pricing>.card.plan>.money{font-size:16px!important}
+  html body section#pricing .pricing>.card.plan>ul>li{font-size:8.5px!important}
 }
 </style>
 
