@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v69">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v70">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v35', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v36', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v35', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v36', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -1312,7 +1312,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
   <div class="container hero-grid">
     <div class="hero-copy">
       <div class="eyebrow hero-eyebrow">YOUR ENGLISH JOURNEY STARTS HERE</div>
-      <h1 class="hero-main-title">Learn English.<br><span>Speak with Confidence.</span></h1>
+      
 
       <div class="actions hero-actions">
         <a class="btn primary" href="#grades">Choose Your Grade <span aria-hidden="true">→</span></a>
@@ -1331,7 +1331,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 
 <section class="how-it-works" id="how-it-works">
   <div class="container">
-    <div class="head"><div class="eyebrow">How it works</div><h2>Simple steps from signup to progress.</h2></div>
+    <div class="head"><div class="eyebrow">How it works</div></div>
     <div class="how-grid">
       <div class="how-card"><div class="step-no">01</div><b>Create your student account</b><small class="how-arabic" dir="rtl" lang="ar">أنشئ حسابك كطالب</small><p>Use your name, mobile number and password to create your private learning space.</p></div>
       <div class="how-card"><div class="step-no">02</div><b>Choose your grade</b><small class="how-arabic" dir="rtl" lang="ar">اختار صفك الدراسي</small><p>Select the school grade you are studying and review the access options.</p></div>
@@ -10948,6 +10948,60 @@ html body header.hero#home .hero-actions .btn.primary:hover,
 html body header.hero#home .hero-actions .btn.secondary:hover{
   border-color:rgba(98,235,221,.82)!important;
   box-shadow:0 0 16px rgba(46,223,224,.1)!important;
+}
+</style>
+
+
+<style id="doma-hero-and-steps-eyebrow-v70">
+/* Keep the small hero eyebrow, remove its leading dash, and simplify the page opening. */
+html body header.hero#home .hero-copy{
+  padding-top:24px!important;
+  margin-top:0!important;
+}
+html body header.hero#home .hero-eyebrow{
+  color:#c4a1ff!important;
+  -webkit-text-fill-color:#c4a1ff!important;
+  text-shadow:none!important;
+  margin:0 0 9px!important;
+}
+html body header.hero#home .hero-eyebrow::before{
+  content:none!important;
+  display:none!important;
+}
+html body header.hero#home h1.hero-main-title{
+  display:none!important;
+}
+html body section.how-it-works#how-it-works{
+  padding-top:28px!important;
+}
+html body section.how-it-works#how-it-works .head{
+  margin-bottom:8px!important;
+}
+html body section.how-it-works#how-it-works .head .eyebrow{
+  margin-bottom:0!important;
+}
+html body section.how-it-works#how-it-works .head h2{
+  display:none!important;
+}
+html body section.how-it-works#how-it-works .how-grid{
+  margin-top:8px!important;
+}
+@media(max-width:700px){
+  html body header.hero#home .hero-copy{
+    padding-top:14px!important;
+  }
+  html body header.hero#home .hero-eyebrow{
+    margin-bottom:8px!important;
+  }
+  html body section.how-it-works#how-it-works{
+    padding-top:18px!important;
+  }
+  html body section.how-it-works#how-it-works .head{
+    margin-bottom:7px!important;
+  }
+  html body section.how-it-works#how-it-works .how-grid{
+    margin-top:7px!important;
+  }
 }
 </style>
 
