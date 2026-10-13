@@ -1310,7 +1310,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <path d="M22.5 34.9V22h11.1M22.5 28.1h7.4" fill="none" stroke="url(#mfLetters)" stroke-width="3.1" stroke-linecap="square" stroke-linejoin="round"/>
 </svg></span><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a>
 <div class="links"><a href="#grades">Grades</a><a href="#english-course">English Course</a><a href="#english-course">Learning</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
-<div class="nav-actions"><button class="iconbtn" onclick="openSearch()">⌕</button><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary nav-action-nature" id="navAction" type="button" onclick="openAuth(\'signup\')"><svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Get Started</span></button><button class="menu" type="button" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu()"><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+<div class="nav-actions"><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary nav-action-nature" id="navAction" type="button" onclick="openAuth(\'signup\')"><svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Get Started</span></button><button class="menu" type="button" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu()"><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
   <g fill="none" stroke-linecap="round">
     <path class="menu-stroke menu-stroke-1" d="M9 13H27"/>
     <path class="menu-stroke menu-stroke-2" d="M9 23H27"/>
@@ -9307,6 +9307,42 @@ header.hero#home .container.hero-grid > div:first-child > p {
     display:inline-flex !important; align-items:center !important; justify-content:center !important;
   }
   .nav-actions button.menu svg, .nav-actions .menu svg { width:19px !important; height:19px !important; flex:0 0 19px !important; }
+}
+</style>
+<style id="doma-nav-remove-search-space-and-mint-bars-v51">
+/* Remove the header search shortcut; leave the actual search feature intact elsewhere. */
+/* A slightly wider, deliberate gap separates Get Started from the menu button. */
+.nav-actions > .menu { margin-left: 8px !important; }
+.nav-actions > button.menu .menu-stroke,
+.nav-actions > .menu .menu-stroke {
+  stroke: #b9f8d7 !important;
+  stroke-width: 2.8 !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 1.5px rgba(104,244,180,.22)) !important;
+}
+@media (max-width: 700px) {
+  .nav-actions > #navAction {
+    height: 27px !important;
+    min-height: 27px !important;
+    box-sizing: border-box !important;
+  }
+  .nav-actions > .menu {
+    width: 27px !important;
+    min-width: 27px !important;
+    height: 27px !important;
+    min-height: 27px !important;
+    padding: 0 !important;
+    margin-left: 8px !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .nav-actions > .menu svg {
+    width: 19px !important;
+    height: 19px !important;
+    flex: 0 0 19px !important;
+  }
 }
 </style>
 </body>
