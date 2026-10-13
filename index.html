@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v70">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v71">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v36', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v37', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v36', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v37', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -11001,6 +11001,29 @@ html body section.how-it-works#how-it-works .how-grid{
   }
   html body section.how-it-works#how-it-works .how-grid{
     margin-top:7px!important;
+  }
+}
+</style>
+
+
+<style id="doma-mobile-first-screen-spacing-v71">
+/* Mobile-only rhythm: clearer gaps while keeping the hero and steps within the first screen. */
+@media(max-width:700px){
+  html body header.hero#home .hero-eyebrow{
+    margin-bottom:18px!important;
+  }
+  html body header.hero#home{
+    padding-bottom:22px!important;
+  }
+  html body section.how-it-works#how-it-works{
+    padding-top:24px!important;
+    padding-bottom:22px!important;
+  }
+  html body section.how-it-works#how-it-works .head{
+    margin-bottom:10px!important;
+  }
+  html body section.how-it-works#how-it-works .how-grid{
+    margin-top:8px!important;
   }
 }
 </style>
