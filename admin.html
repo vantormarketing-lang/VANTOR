@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v19">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v20">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v19">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v20">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2314,7 +2314,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v19', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v20', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -2565,6 +2565,133 @@ async function mfRejectEnglishCourseRequest(id){
     text-shadow:0 0 12px rgba(57,230,226,.14);
   }
   .top{min-height:56px!important;padding-top:8px!important;padding-bottom:8px!important}
+}
+</style>
+
+
+<style id="doma-mobile-teal-glass-polish-v20">
+/* Finish the mobile palette: replace legacy espresso/brown card fills with coordinated teal glass. */
+@media(max-width:760px){
+  :root{
+    --mobile-panel-top:rgba(8,48,57,.94);
+    --mobile-panel-bottom:rgba(3,25,34,.97);
+    --mobile-panel-edge:rgba(64,215,214,.32);
+    --mobile-text:#edffff;
+    --mobile-muted-text:#a7cdd0;
+  }
+  /* Four dashboard figures: retain separate accents, but use the same cool glass surface. */
+  #section-dashboard .head+.grid .stat,
+  #section-dashboard.active .head+.grid .stat,
+  #section-dashboard .head+.grid>.card.stat{
+    background:linear-gradient(145deg,rgba(var(--mobile-stat-rgb,45,205,211),.18) 0%,rgba(7,43,52,.92) 55%,rgba(3,25,33,.97) 100%)!important;
+    background-color:rgba(5,35,43,.94)!important;
+    border:1px solid rgba(var(--mobile-stat-rgb,64,215,214),.43)!important;
+    box-shadow:inset 0 1px 0 rgba(226,255,255,.07),0 8px 20px rgba(0,0,0,.16)!important;
+    color:var(--mobile-text)!important;
+  }
+  #section-dashboard .head+.grid .stat:nth-child(1){--mobile-stat-rgb:45,218,218}
+  #section-dashboard .head+.grid .stat:nth-child(2){--mobile-stat-rgb:65,177,232}
+  #section-dashboard .head+.grid .stat:nth-child(3){--mobile-stat-rgb:232,184,97}
+  #section-dashboard .head+.grid .stat:nth-child(4){--mobile-stat-rgb:83,220,174}
+  #section-dashboard .head+.grid .stat:after{
+    background:radial-gradient(circle,rgba(var(--mobile-stat-rgb,45,205,211),.2),rgba(var(--mobile-stat-rgb,45,205,211),.04) 48%,transparent 73%)!important;
+  }
+  #section-dashboard .head+.grid .stat .muted{color:#bce4e6!important}
+  #section-dashboard .head+.grid .stat .num{color:#f4ffff!important;text-shadow:0 2px 16px rgba(var(--mobile-stat-rgb,45,205,211),.12)!important}
+  /* Dynamic dashboard and report tiles that used to retain their old brown hard-coded fills. */
+  #section-dashboard .head+.grid+.grid .card,
+  #section-dashboard .card,
+  #section-dashboard .admin-health,
+  #section-dashboard #domaStableHealth,
+  #section-dashboard #domaFinalAdminPanel,
+  #section-dashboard .doma-final-admin-panel,
+  #section-dashboard .doma-final-admin-card,
+  #section-dashboard .doma-final-review-row,
+  #section-dashboard .student-pro-stat,
+  #section-dashboard .history-row,
+  #section-dashboard .qbank-card,
+  #section-dashboard .admin-upgrade-card,
+  #section-dashboard .doma-pro6-admin-card,
+  #section-dashboard .doma-mobile-quick-card{
+    background:linear-gradient(145deg,rgba(8,53,62,.91),rgba(4,29,38,.97) 72%,rgba(3,23,31,.98))!important;
+    background-color:rgba(4,31,40,.96)!important;
+    border-color:rgba(65,205,207,.29)!important;
+    box-shadow:inset 0 1px 0 rgba(220,255,255,.045),0 8px 22px rgba(0,0,0,.14)!important;
+    color:var(--mobile-text)!important;
+  }
+  .card,.table-wrap,.modal-card,.admin-health,.info-box,.empty,
+  .qbank-card,.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,
+  .doma-final-review-row,.student-pro-stat,.history-row,.pro7-live-preview,
+  .daily-form-note,.pro7-admin-ticket,.admin-health .card{
+    background:linear-gradient(145deg,rgba(8,49,59,.91),rgba(4,27,36,.97) 74%,rgba(3,22,30,.98))!important;
+    background-color:rgba(4,29,38,.96)!important;
+    border-color:rgba(65,205,207,.28)!important;
+    color:var(--mobile-text)!important;
+  }
+  .doma-final-admin-card small,.student-pro-stat small,.doma-final-admin-card span,
+  .admin-health p,.card p,.qbank-card small,.history-row span,.doma-final-review-row p{
+    color:var(--mobile-muted-text)!important;
+  }
+  .doma-final-admin-card b,.student-pro-stat b,.admin-health h3,
+  .card h3,.card h4,.card b,.head h2,.modal-head h3{
+    color:#eaffff!important;
+  }
+  .info-box,.daily-form-note,.pro7-live-preview{
+    border-color:rgba(63,208,208,.31)!important;
+    color:#dffafa!important;
+  }
+  .table-wrap table th,table th{
+    background:rgba(8,66,76,.92)!important;
+    color:#bdf6f2!important;
+    border-bottom-color:rgba(64,205,204,.23)!important;
+  }
+  table td{border-bottom-color:rgba(70,174,180,.16)!important}
+  tbody tr:hover{background:rgba(30,155,164,.09)!important}
+  input,select,textarea,.field,.login-card input,.toolbar input,.toolbar select,
+  .modal-card input,.modal-card select,.modal-card textarea,.form-row input,
+  .form-row select,.form-row textarea,select.field,
+  #lessonGrade,#lessonType,#unitGrade,#quizGrade,#hwGrade,#lGrade,#lUnit,#lType,
+  #lFree,#lPub,#qGrade,#qFree,#qPub,#hGrade,#hFree,#hPub,#rsStatus,#cStudent,
+  #nStudent,#bGrade,#copyQuiz,#dwPublished,#finalProgressGrade,#domaTeacherStudent,
+  #npTarget,#npTargetValue,#npTemplateSelect,#pro7LG,#pro7LP,#pro7ParentPick,
+  #pro7LinkParent,#pro7LinkStudent{
+    color:#eaffff!important;
+    background:linear-gradient(145deg,rgba(5,39,48,.98),rgba(3,24,32,.99))!important;
+    border-color:rgba(65,195,199,.34)!important;
+    box-shadow:none!important;
+  }
+  select option,select optgroup,select option:checked,select option:hover{
+    background:#082b35!important;color:#eaffff!important;
+  }
+  .btn.secondary{
+    color:#ddffff!important;
+    background:linear-gradient(135deg,rgba(11,81,92,.93),rgba(5,44,56,.97))!important;
+    border-color:rgba(67,205,205,.32)!important;
+  }
+  .toast{
+    color:#eaffff!important;
+    background:linear-gradient(145deg,rgba(8,65,74,.98),rgba(4,29,39,.99))!important;
+    border-color:rgba(65,215,214,.38)!important;
+  }
+  .modal-card{border-color:rgba(65,205,207,.36)!important}
+  .modal-head{
+    background:linear-gradient(145deg,rgba(7,57,66,.98),rgba(4,33,43,.98))!important;
+    border-bottom-color:rgba(65,205,207,.24)!important;
+  }
+  .doma-confirm-dialog{
+    background:linear-gradient(145deg,rgba(8,52,61,.99),rgba(3,27,36,.995))!important;
+    border-color:rgba(65,205,207,.4)!important;color:#eaffff!important;
+  }
+  .doma-confirm-heading h3{color:#eaffff!important}
+  .doma-confirm-message{
+    background:rgba(3,24,32,.55)!important;
+    border-color:rgba(65,205,207,.24)!important;color:#d8f4f4!important;
+  }
+  .doma-confirm-close{
+    background:rgba(7,53,63,.8)!important;
+    border-color:rgba(65,205,207,.28)!important;color:#d8f4f4!important;
+  }
+  .expiry-badge{background:rgba(106,143,51,.22)!important}
 }
 </style>
 
