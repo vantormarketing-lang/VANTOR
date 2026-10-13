@@ -2130,23 +2130,48 @@ async function mrfluentCompleteEnglishLesson(lessonId){
  if(current)await mrfluentOpenEnglishLevel(current.id);
 }
 async function refreshStudentState(){
-  if(!sessionUser&&sb){const s=await sb.auth.getSession();sessionUser=s.data?.session?.user||null}
+  if(!sessionUser&&sb){
+    const s=await gradeRequestWithTimeout(sb.auth.getSession(),'Student session lookup',5000)
+      .catch(error=>{console.warn('Student session lookup timed out or failed.',error);return null});
+    sessionUser=s?.data?.session?.user||null;
+  }
   updateNav();
-  if(!sessionUser){currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaStudentProfile=null;window.domaStudentSubscriptions=[];window.domaStudentRequests=[];renderDashboardLoggedOut();try{await mrfluentRefreshEnglishCourse()}catch(e){console.warn(e)}return}
-  const profile=await getProfile(),subs=await getActiveSubscriptions(),reqs=await getRequests();
-  const selectedGradeId = currentGrade?.id ? String(currentGrade.id) : '';
-  const selectedSub = selectedGradeId ? (subs.find(s=>String(s.grade_id)===selectedGradeId)||null) : null;
+  if(!sessionUser){
+    currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;
+    window.domaStudentProfile=null;window.domaStudentSubscriptions=[];window.domaStudentRequests=[];
+    renderDashboardLoggedOut();
+    try{await gradeRequestWithTimeout(mrfluentRefreshEnglishCourse(),'English Course refresh',5000)}catch(e){console.warn(e)}
+    return;
+  }
+
+  // Load account data independently so a slow or unavailable endpoint cannot
+  // leave the student Overview stuck on "Loading…".
+  const [profile,subs,reqs]=await Promise.all([
+    gradeRequestWithTimeout(getProfile(),'Student profile lookup',6000)
+      .catch(error=>{console.warn('Student profile lookup timed out or failed.',error);return window.domaStudentProfile||null}),
+    gradeRequestWithTimeout(getActiveSubscriptions(),'Active grade subscriptions lookup',6000)
+      .catch(error=>{console.warn('Active subscriptions lookup timed out or failed.',error);return []}),
+    gradeRequestWithTimeout(getRequests(),'Subscription requests lookup',6000)
+      .catch(error=>{console.warn('Subscription requests lookup timed out or failed.',error);return []})
+  ]);
+  const selectedGradeId=currentGrade?.id?String(currentGrade.id):'';
+  const selectedSub=selectedGradeId?(subs.find(s=>String(s.grade_id)===selectedGradeId)||null):null;
   const preferredGrade=profile?.grade_id?grades.find(g=>String(g.id)===String(profile.grade_id))||null:null;
   const preferredSub=preferredGrade?subs.find(s=>String(s.grade_id)===String(preferredGrade.id)):null;
   currentSubscription=selectedSub||preferredSub||subs[0]||null;
   currentGrade=currentSubscription?grades.find(g=>String(g.id)===String(currentSubscription.grade_id))||null:null;
-  // Expose the active state for the expiry reminder and UI enhancement scripts.
   window.currentSubscription=currentSubscription;
   window.currentGrade=currentGrade;
   window.domaStudentProfile=profile;window.domaStudentSubscriptions=subs;window.domaStudentRequests=reqs;
-  await renderDashboardData(profile,subs,reqs);updateStudentShell();
+
+  try{
+    await gradeRequestWithTimeout(renderDashboardData(profile,subs,reqs),'Student dashboard summary',7000);
+  }catch(error){console.warn('Student dashboard summary was unavailable; continuing to render the student area.',error)}
+  updateStudentShell();
   if(typeof window.domaRefreshExpiry==='function')window.domaRefreshExpiry();
-  try{await mrfluentRefreshEnglishCourse()}catch(e){console.warn('English Course refresh failed:',e)}
+  try{
+    await gradeRequestWithTimeout(mrfluentRefreshEnglishCourse(),'English Course status refresh',5000);
+  }catch(e){console.warn('English Course refresh timed out; grade dashboard remains available.',e)}
 }
 function renderDashboardLoggedOut(){
   if(!$('dashboardGradeProgress'))return;
@@ -2254,16 +2279,32 @@ async function ensureActiveGrade(){
   return {grade:grade,sub:selectedSub};
 }
 async function studentView(view){
-  currentStudentView=view;document.querySelectorAll('.side-link[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  currentStudentView=view;
+  document.querySelectorAll('.side-link[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   const meta={overview:['Overview','Your English learning command center.'],lessons:['Lessons','Published lessons for your active grade.'],quizzes:['Quizzes','Practice and check your understanding.'],homework:['Homework','Assignments and submissions.'],certificates:['Certificates','Your issued completion certificates.'],notifications:['Notifications','Important updates from Mr. Fluent.'],assistant:['Study Assistant','Get practical study guidance from your course data.'],questionbank:['Question Bank','Search and practice questions from your published quizzes.'],analytics:['My Analytics','Detailed progress and learning performance.'],challenge:['Daily Challenge','A small goal to keep your English streak moving.']};
-  $('drawerTitle').textContent=meta[view]?.[0]||'Student Area';$('drawerSubtitle').textContent=meta[view]?.[1]||'';$('drawerBody').innerHTML='<div class="empty">Loading…</div>';
-  if(view==='overview')await renderStudentOverview();
-  if(view==='lessons')await renderStudentLessons();
-  if(view==='quizzes')await renderStudentQuizzes();
-  if(view==='homework')await renderStudentHomework();
-  if(view==='certificates')await renderStudentCertificates();
-  if(view==='notifications')await renderStudentNotifications();
-  if(view==='assistant')await renderStudyAssistant();if(view==='questionbank')await renderStudentQuestionBank();if(view==='analytics')await renderStudentAnalytics();if(view==='challenge')await renderDailyChallenge()
+  $('drawerTitle').textContent=meta[view]?.[0]||'Student Area';
+  $('drawerSubtitle').textContent=meta[view]?.[1]||'';
+  $('drawerBody').innerHTML='<div class="empty">Loading…</div>';
+  try{
+    await gradeRequestWithTimeout((async()=>{
+      if(view==='overview')await renderStudentOverview();
+      if(view==='lessons')await renderStudentLessons();
+      if(view==='quizzes')await renderStudentQuizzes();
+      if(view==='homework')await renderStudentHomework();
+      if(view==='certificates')await renderStudentCertificates();
+      if(view==='notifications')await renderStudentNotifications();
+      if(view==='assistant')await renderStudyAssistant();
+      if(view==='questionbank')await renderStudentQuestionBank();
+      if(view==='analytics')await renderStudentAnalytics();
+      if(view==='challenge')await renderDailyChallenge();
+    })(),view==='overview'?'Student Overview':'Student area',view==='overview'?19000:15000);
+  }catch(error){
+    console.error('Student view failed to load:',view,error);
+    if(currentStudentView===view&&$('drawerBody')){
+      const safeView=['overview','lessons','quizzes','homework','certificates','notifications','assistant','questionbank','analytics','challenge'].includes(view)?view:'overview';
+      $('drawerBody').innerHTML='<div class="empty" role="status"><strong>Could not finish loading '+esc(meta[view]?.[0]||'this section')+'.</strong><p style="margin:8px 0">A request may be slow. Your account and saved progress have not been changed.</p><button class="btn primary" type="button" onclick="studentView(\''+safeView+'\')">Try Again</button> <button class="btn secondary" type="button" onclick="window.location.reload()">Refresh Page</button></div>';
+    }
+  }
 }
 async function renderStudentOverview(){
   await refreshStudentState();
