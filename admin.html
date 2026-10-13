@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v32">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v33">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v32">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v33">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2315,7 +2315,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v32', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v33', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -3130,6 +3130,119 @@ html,body,*{
 }
 ::-webkit-scrollbar-thumb:hover{
   background:linear-gradient(180deg,#8afff0,#28c9c2)!important;
+}
+</style>
+
+
+<style id="doma-mobile-centered-isolated-drawer-v33">
+/* Centered Teal Glass navigation drawer with a fully isolated, scrollable menu. */
+@media(max-width:760px){
+  body.doma-admin-drawer-open{
+    overflow:hidden!important;
+    overscroll-behavior:none!important;
+  }
+
+  /* Hide the side panel off-screen when closed; center it when the open-state class is set. */
+  #sidebar.sidebar{
+    position:fixed!important;
+    left:50%!important;
+    right:auto!important;
+    top:50%!important;
+    bottom:auto!important;
+    width:min(88vw,360px)!important;
+    max-width:calc(100vw - 28px)!important;
+    height:auto!important;
+    max-height:calc(100vh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    max-height:calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    padding:18px 14px calc(18px + env(safe-area-inset-bottom))!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-y!important;
+    border:1px solid rgba(74,226,216,.38)!important;
+    border-radius:22px!important;
+    background:linear-gradient(145deg,rgba(7,43,51,.985),rgba(3,24,32,.99) 68%,rgba(4,30,37,.99))!important;
+    box-shadow:inset 0 1px 0 rgba(222,255,250,.10),0 28px 85px rgba(0,0,0,.72),0 0 32px rgba(32,208,203,.12)!important;
+    backdrop-filter:blur(28px) saturate(1.2)!important;
+    -webkit-backdrop-filter:blur(28px) saturate(1.2)!important;
+    opacity:0!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+    transform:translate(-50%,-50%) scale(.965)!important;
+    transform-origin:center center!important;
+    transition:opacity .2s ease,transform .2s ease,visibility .2s ease!important;
+    z-index:151!important;
+  }
+
+  body.doma-admin-drawer-open #sidebar.sidebar.open{
+    left:50%!important;
+    top:50%!important;
+    right:auto!important;
+    bottom:auto!important;
+    transform:translate(-50%,-50%) scale(1)!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    z-index:151!important;
+  }
+
+  /* Cover and blur the entire application, including the bottom navigation, while the drawer is open. */
+  .doma-mobile-drawer-backdrop,
+  .doma-mobile-drawer-backdrop.open,
+  body.doma-admin-drawer-open .doma-mobile-drawer-backdrop{
+    position:fixed!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100vh!important;
+    height:100dvh!important;
+    display:none!important;
+    border:0!important;
+    border-radius:0!important;
+    padding:0!important;
+    background:rgba(1,10,15,.76)!important;
+    backdrop-filter:blur(10px) saturate(.55)!important;
+    -webkit-backdrop-filter:blur(10px) saturate(.55)!important;
+    z-index:145!important;
+    cursor:default!important;
+  }
+  body.doma-admin-drawer-open .doma-mobile-drawer-backdrop.open{
+    display:block!important;
+  }
+
+  /* Match the panel's scroll track and handle to the Teal Glass palette. */
+  #sidebar.sidebar,
+  #sidebar.sidebar *{
+    scrollbar-color:#30cfc8 #06252d!important;
+    scrollbar-width:thin!important;
+  }
+  #sidebar.sidebar::-webkit-scrollbar{width:7px!important}
+  #sidebar.sidebar::-webkit-scrollbar-track{
+    background:#06252d!important;
+    border-radius:10px!important;
+  }
+  #sidebar.sidebar::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,#69f3e6,#159ca4)!important;
+    border:1px solid #06252d!important;
+    border-radius:10px!important;
+  }
+  #sidebar .side-logo{
+    padding:4px 8px 18px!important;
+    margin-bottom:10px!important;
+    border-bottom:1px solid rgba(74,226,216,.2)!important;
+  }
+  #sidebar .nav-title{
+    color:#72d9d4!important;
+  }
+  #sidebar .nav-btn{
+    width:100%!important;
+    min-height:40px!important;
+    padding:10px 12px!important;
+    text-align:left!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #sidebar.sidebar{transition:none!important}
 }
 </style>
 
