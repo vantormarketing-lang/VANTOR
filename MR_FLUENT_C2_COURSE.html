@@ -816,6 +816,20 @@ html{min-height:100%;background:#080d1c}
 body{min-height:100vh;min-height:100dvh;background-attachment:fixed!important}
 
 
+
+/* Remove the colored strip behind the back arrow and menu */
+@media(max-width:700px){
+  html body .course-top-controls{
+    background:#fffdf9!important;
+    background-color:#fffdf9!important;
+    background-image:none!important;
+    border-bottom:0!important;
+    box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}
+
 /* FINAL COLOR MATCH: page background matches the light course cards; text colors stay unchanged */
 :root{--page-unified-bg:#fffdf9}
 html,body{background:#fffdf9!important;background-color:#fffdf9!important;background-image:none!important;min-height:100%!important;color-scheme:light}
