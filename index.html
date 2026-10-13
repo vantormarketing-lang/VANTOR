@@ -261,15 +261,15 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v76">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v77">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v76">
-<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v76">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v76">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v77">
+<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v77">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v77">
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v42', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v43', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -522,7 +522,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v42', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v43', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -11207,6 +11207,46 @@ html body section#faq .faq details:hover{
 }
 @media(prefers-reduced-motion:reduce){
   html body section#faq .faq details{transition:none!important}
+}
+</style>
+
+
+<style id="doma-course-refresh-grade-glass-v77">
+/* Match Refresh Course Status to the school-grade cards' teal glass and soft neon style. */
+html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]{
+  border:1px solid rgba(95,231,190,.58)!important;
+  border-radius:10px!important;
+  background:
+    linear-gradient(145deg,rgba(72,218,169,.17),rgba(4,35,38,.92) 78%)!important;
+  background-color:rgba(4,35,38,.92)!important;
+  color:#e4fff5!important;
+  font-size:10px!important;
+  line-height:1.25!important;
+  font-weight:750!important;
+  padding:6px 10px!important;
+  box-shadow:
+    inset 0 1px 0 rgba(232,255,246,.10),
+    0 0 5px rgba(76,231,177,.16),
+    0 5px 14px rgba(0,0,0,.15)!important;
+  backdrop-filter:blur(18px) saturate(1.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease!important;
+}
+html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]:hover{
+  border-color:rgba(133,255,210,.86)!important;
+  background:linear-gradient(145deg,rgba(72,218,169,.24),rgba(4,35,38,.94) 78%)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(232,255,246,.14),
+    0 0 8px rgba(76,231,177,.28),
+    0 7px 16px rgba(0,0,0,.18)!important;
+  transform:translateY(-1px)!important;
+}
+html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]:focus-visible{
+  outline:2px solid #8dffd4!important;
+  outline-offset:3px!important;
+}
+@media(prefers-reduced-motion:reduce){
+  html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]{transition:none!important}
 }
 </style>
 
