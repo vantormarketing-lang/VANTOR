@@ -261,15 +261,15 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v80">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v81">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v80">
-<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v80">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v80">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v81">
+<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v81">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v81">
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
@@ -2626,7 +2626,20 @@ async function renderStudentCertificates(){const r=await sb.from('certificates')
 function printCertificate(title,code,issued){
   const w=window.open('','_blank','width=900,height=650');
   if(!w)return;
-  w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:40px 24px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">Mr. Fluent</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">LEARN • SPEAK • MASTER</p></div></body></html>');
+  w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:40px 24px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">Mr. Fluent</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">LEARN • SPEAK • MASTER</p></div>
+<style id="doma-pricing-section-gap-v81">
+/* Add breathing room above Simple Access without enlarging either pricing card. */
+html body section#pricing{
+  margin-top:28px!important;
+}
+@media(max-width:700px){
+  html body section#pricing{
+    margin-top:20px!important;
+  }
+}
+</style>
+
+</body></html>');
   w.document.close();
   w.print();
 }
@@ -11251,7 +11264,7 @@ html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]:focus
 </style>
 
 
-<style id="doma-pricing-horizontal-stack-v80">
+<style id="doma-pricing-horizontal-stack-v81">
 /* Wide, compact membership cards in one vertical column — keep mobile cards easy to scan. */
 html body section#pricing .pricing{
   display:flex!important;
