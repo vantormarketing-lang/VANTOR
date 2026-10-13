@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v38">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v39">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v38">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v39">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -871,7 +871,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <aside id="sidebar" class="sidebar">
     <div class="side-logo"><div class="logo">DOMA <span>ACADEMY</span></div><small class="muted">Production Admin</small></div>
     <nav>
-      <button type="button" class="nav-btn" id="domaSidebarHomeButton">⌂ Website Home</button>
+      <button type="button" class="nav-btn" id="domaSidebarHomeButton">↶ Admin Home</button>
       <div class="nav-title">Main</div>
       <button class="nav-btn" data-section="dashboard">▦ Dashboard</button>
       <div class="nav-title">Content</div>
@@ -1101,7 +1101,7 @@ function gradeOptions(selected=''){return '<option value="">Select grade</option
 function unitOptions(gradeId='',selected=''){const list=units.filter(u=>!gradeId||u.grade_id===gradeId);return '<option value="">No unit</option>'+list.map(u=>`<option value="${u.id}" ${u.id===selected?'selected':''}>${esc(gradeName(u.grade_id))} — ${esc(u.unit_number+' · '+u.title)}</option>`).join('')}
 
 function show(name){current=name;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='section-'+name));document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===name));$('pageTitle').textContent=document.querySelector('.nav-btn[data-section="'+name+'"]')?.textContent.trim()||'Dashboard';$('sidebar').classList.remove('open');const router=window.__domaRouteSection;if(typeof router==='function')return router(name);return loadSection(name)}
-$('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');$('domaSidebarHomeButton').onclick=()=>{window.location.href='index.html'};
+$('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');$('domaSidebarHomeButton').onclick=()=>show('dashboard');
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
 
 async function authUser(){return (await db.auth.getUser()).data.user}
@@ -2316,7 +2316,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v38', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v39', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
