@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v72">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v73">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v38', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v39', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v38', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v39', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -1345,9 +1345,9 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
   <div class="container">
     <div class="section-head">
       <div>
-        <div class="eyebrow">English Curriculum</div>
+        
         <h2>Choose your grade.</h2>
-        <p>Select your school grade to see access options and start your English journey.</p>
+        
       </div>
       <span class="pill" id="gradeLoadStatus" aria-live="polite">Loading grades…</span>
     </div>
@@ -11046,6 +11046,61 @@ html body .nav .brand>span:last-child small{
   background-clip:text!important;
   -webkit-text-fill-color:transparent!important;
   text-shadow:none!important;
+}
+</style>
+
+
+<style id="doma-grade-heading-centered-v73">
+/* A single centered grade heading, sized like the small "How It Works" eyebrow. */
+html body section#grades .section-head{
+  position:relative!important;
+  display:block!important;
+  text-align:center!important;
+  margin:0 0 12px!important;
+}
+html body section#grades .section-head>div{
+  width:100%!important;
+  max-width:none!important;
+  text-align:center!important;
+  margin:0 auto!important;
+}
+html body section#grades .section-head h2{
+  display:block!important;
+  width:100%!important;
+  margin:0 auto!important;
+  padding:0!important;
+  color:#c4a1ff!important;
+  -webkit-text-fill-color:#c4a1ff!important;
+  font-size:10px!important;
+  line-height:1.5!important;
+  font-weight:800!important;
+  letter-spacing:4px!important;
+  text-transform:uppercase!important;
+  text-align:center!important;
+  text-shadow:none!important;
+}
+html body section#grades .section-head>#gradeLoadStatus{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+html body section#grades #gradeGrid{
+  margin-top:0!important;
+}
+@media(max-width:700px){
+  html body section#grades .section-head{
+    margin-bottom:10px!important;
+  }
+  html body section#grades .section-head h2{
+    font-size:10px!important;
+    letter-spacing:3.5px!important;
+  }
 }
 </style>
 
