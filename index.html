@@ -1342,24 +1342,17 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
   </div>
 </section>
 
-<section id="grades" class="mf-pastel-grade-screen">
+<section id="grades">
   <div class="container">
-    <div class="mf-pastel-statusbar" aria-hidden="true">
-      <span class="mf-pastel-clock">9:41</span>
-      <span class="mf-pastel-system-icons"><svg viewBox="0 0 52 16"><path d="M2 14V10M8 14V7M14 14V4M20 14V1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M28 5c4-4 10-4 14 0M31 8c2-2 6-2 8 0M35 11h1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="44" y="3" width="6" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="46" y="5" width="3" height="5" rx=".5" fill="currentColor"/></svg></span>
-    </div>
-    <div class="mf-pastel-screen-header">
-      <a class="mf-pastel-back" href="#home" aria-label="Back to home">‹</a>
-      <h2>Choose Your Grade</h2>
-      <span id="gradeLoadStatus" class="mf-pastel-load-status" aria-live="polite">Loading grades…</span>
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">English Curriculum</div>
+        <h2>Choose your grade.</h2>
+        <p>Select your school grade to see access options and start your English journey.</p>
+      </div>
+      <span class="pill" id="gradeLoadStatus" aria-live="polite">Loading grades…</span>
     </div>
     <div class="grid3" id="gradeGrid"><div class="empty">Loading grades from Mr. Fluent…</div></div>
-    <nav class="mf-pastel-bottom-nav" aria-label="Student navigation">
-      <a href="#home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10 8.5-7 8.5 7M5.5 9v11h13V9M9.5 20v-6h5v6" /></svg><span>Home</span></a>
-      <a href="#english-course"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22zM4 5.5V22M8 7h8M8 11h7" /></svg><span>Courses</span></a>
-      <a class="is-active" href="#grades" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="6" height="6" rx="1.3"/><rect x="14.5" y="3.5" width="6" height="6" rx="1.3"/><rect x="3.5" y="14.5" width="6" height="6" rx="1.3"/><rect x="14.5" y="14.5" width="6" height="6" rx="1.3"/></svg><span>Grades</span></a>
-      <a href="#dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="4"/><path d="M4.5 21c.6-4.2 3.3-6.3 7.5-6.3s6.9 2.1 7.5 6.3" /></svg><span>Profile</span></a>
-    </nav>
   </div>
 </section>
 <section id="english-course" class="mf-english-course-section">
@@ -8583,5 +8576,68 @@ header.hero#home .container.hero-grid > div:first-child > p {
 @media(prefers-reduced-motion:reduce){#gradeGrid .mf-pastel-grade-card{transition:none!important}}
 </style>
 
+<style id="doma-grade-cards-site-background-final-v1">
+/* Keep the approved Design 2 pastel-glass grade cards, but remove the mock phone shell.
+   The real website background shows through; no fake status bar, device frame, or bottom nav. */
+#grades {
+  background: transparent !important;
+  color: inherit !important;
+  padding-top: 24px !important;
+  padding-bottom: 42px !important;
+}
+#grades > .container {
+  width: min(1280px, 95%) !important;
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  color: inherit !important;
+}
+#grades .section-head {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  margin-bottom: 18px !important;
+}
+#grades .section-head h2 { margin: 0 !important; }
+#grades .section-head p { margin-top: 7px !important; }
+#gradeGrid.grid3 {
+  display: grid !important;
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+#gradeGrid > .mf-pastel-grade-card {
+  min-width: 0 !important;
+}
+@media (max-width: 700px) {
+  #grades { padding-top: 14px !important; padding-bottom: 30px !important; }
+  #grades > .container { width: 94% !important; }
+  #grades .section-head {
+    align-items: flex-start !important;
+    gap: 8px !important;
+    margin-bottom: 14px !important;
+  }
+  #grades .section-head h2 { font-size: clamp(20px,5.4vw,27px) !important; }
+  #grades .section-head p { font-size: 12px !important; line-height: 1.5 !important; }
+  #grades .section-head > span { flex-shrink: 0 !important; font-size: 10px !important; }
+  #gradeGrid.grid3 {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 9px !important;
+  }
+}
+@media (max-width: 380px) {
+  #gradeGrid.grid3 { gap: 7px !important; }
+}
+</style>
 </body>
 </html>
