@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v64">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v65">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v30', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v31', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v30', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v31', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -1297,18 +1297,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <body>
 <nav class="nav">
 <div class="container navin">
-<a class="brand" href="#home"><span aria-label="Mr. Fluent logo" id="mrFluentPrimaryLogo" class="mark"><svg viewBox="0 0 40 40" role="img" aria-label="Mr. Fluent graduation cap and MF monogram" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <linearGradient id="mfCap" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0c9ff"/><stop offset=".48" stop-color="#b05cff"/><stop offset="1" stop-color="#6d28d9"/></linearGradient>
-  <linearGradient id="mfLetters" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#f4d9ff"/><stop offset=".48" stop-color="#c084fc"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
-</defs>
-<path d="M20 3.4 2.8 10.5 20 17.3 37.2 10.5Z" fill="url(#mfCap)" stroke="#e8c7ff" stroke-width=".7" stroke-linejoin="round"/>
-<path d="M8.5 13.2v4.1c5.8 5.1 17.2 5.1 23 0v-4.1L20 18Z" fill="#8b5cf6" opacity=".95"/>
-<path d="M36.8 10.8v8.1" stroke="#edc9ff" stroke-width="1.4" stroke-linecap="round"/>
-<circle cx="36.8" cy="20.5" r="1.8" fill="#e9c7ff"/>
-<path d="M5.8 32.3V20.8l7.2 6.1 7-6.1v14.1" fill="none" stroke="url(#mfLetters)" stroke-width="3.1" stroke-linejoin="round" stroke-linecap="square"/>
-<path d="M22.5 34.9V22h11.1M22.5 28.1h7.4" fill="none" stroke="url(#mfLetters)" stroke-width="3.1" stroke-linecap="square" stroke-linejoin="round"/>
-</svg></span><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a>
+<a class="brand" href="#home"><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a>
 <div class="links"><a href="#grades">Grades</a><a href="#english-course">English Course</a><a href="#english-course">Learning</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
 <div class="nav-actions"><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary nav-action-nature" id="navAction" type="button" onclick="openAuth(\'signup\')"><svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Get Started</span></button><button class="menu" type="button" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu()"><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
   <g fill="none" stroke-linecap="round">
@@ -10886,7 +10875,7 @@ html body section.how-it-works#how-it-works .how-grid{
 </style>
 
 
-<style id="doma-nav-burgundy-brand-v64">
+<style id="doma-nav-wordmark-only-v65">
 /* Remove the divider below the top navigation and align it to the single page canvas. */
 html body .nav{
   background:#070d12!important;
@@ -10897,7 +10886,7 @@ html body .nav{
   backdrop-filter:none!important;
   -webkit-backdrop-filter:none!important;
 }
-/* Soft burgundy wordmark with a restrained matching glow. */
+/* Wordmark-only brand: Mr. Fluent fills the former icon position with a soft burgundy glow. */
 html body .nav .brand>span:last-child{
   color:#c96b83!important;
   text-shadow:0 0 4px rgba(190,55,89,.22),0 0 9px rgba(137,35,62,.12)!important;
