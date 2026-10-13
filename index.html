@@ -8136,19 +8136,25 @@ header.hero#home .container.hero-grid > div:first-child > p {
 </style>
 
 
-<style id="doma-clean-grade-cards-v1">
-/* Six clean grade cards with visible Open Grade action. */
+<style id="doma-burgundy-gradient-grade-cards-v2">
+/* Design 4: dark burgundy gradient cards; retain the two-column mobile layout and Open Grade action. */
 #gradeGrid .grade-selectable {
+  position: relative !important;
   cursor: default !important;
   overflow: hidden !important;
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  transition: border-color .18s ease, box-shadow .18s ease !important;
+  border: 1px solid rgba(232, 91, 132, .48) !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #3c0a1d 0%, #260713 52%, #16040b 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 231, 239, .07), 0 9px 25px rgba(0, 0, 0, .28) !important;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
 }
 #gradeGrid .grade-selectable:hover {
-  border-color: #874052 !important;
-  box-shadow: 0 12px 28px rgba(0,0,0,.23) !important;
+  transform: translateY(-3px) !important;
+  border-color: rgba(255, 131, 166, .9) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 231, 239, .1), 0 14px 30px rgba(50, 0, 17, .42), 0 0 0 1px rgba(220, 54, 103, .14) !important;
 }
 #gradeGrid .grade-selectable .grade-cover {
   height: 100px !important;
@@ -8157,14 +8163,19 @@ header.hero#home .container.hero-grid > div:first-child > p {
   align-items: center !important;
   justify-content: center !important;
   padding: 14px !important;
+  background: linear-gradient(132deg, #85183d 0%, #5a102b 46%, #31091b 100%) !important;
+  border-bottom: 1px solid rgba(255, 177, 200, .2) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 240, 245, .08) !important;
 }
 #gradeGrid .grade-selectable .grade-cover strong {
   display: block !important;
+  color: #fff4f8 !important;
   font-size: clamp(19px, 2vw, 25px) !important;
   line-height: 1.2 !important;
   letter-spacing: -.5px !important;
   overflow-wrap: anywhere !important;
   text-align: center !important;
+  text-shadow: 0 2px 12px rgba(10, 0, 4, .42) !important;
 }
 #gradeGrid .grade-selectable .grade-body {
   display: flex !important;
@@ -8174,8 +8185,10 @@ header.hero#home .container.hero-grid > div:first-child > p {
   gap: 8px !important;
   flex: 1 1 auto !important;
   padding: 13px 15px 15px !important;
+  background: linear-gradient(180deg, rgba(55, 8, 26, .86) 0%, rgba(22, 4, 11, .98) 100%) !important;
 }
 #gradeGrid .grade-selectable .grade-body h3 {
+  color: #fff0f5 !important;
   font-size: 15px !important;
   line-height: 1.35 !important;
   margin: 0 !important;
@@ -8183,7 +8196,7 @@ header.hero#home .container.hero-grid > div:first-child > p {
 #gradeGrid .grade-selectable .grade-meta {
   display: block !important;
   margin: 0 !important;
-  color: #72d7a0 !important;
+  color: #f3a9c0 !important;
   font-size: 12px !important;
   line-height: 1.3 !important;
   font-weight: 700 !important;
@@ -8193,8 +8206,17 @@ header.hero#home .container.hero-grid > div:first-child > p {
   min-height: 36px !important;
   padding: 8px 10px !important;
   font-size: 11px !important;
+  font-weight: 800 !important;
+  color: #fff8fb !important;
+  border: 1px solid rgba(255, 177, 200, .42) !important;
+  background: linear-gradient(135deg, #8e1b40 0%, #67112f 56%, #4a0a23 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 240, 245, .1) !important;
   border-radius: 9px !important;
   line-height: 1.2 !important;
+}
+#gradeGrid .grade-selectable .grade-open-button:hover {
+  background: linear-gradient(135deg, #aa2851 0%, #781638 56%, #570c28 100%) !important;
+  border-color: rgba(255, 199, 215, .76) !important;
 }
 @media (max-width: 700px) {
   #gradeGrid.grid3 { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 8px !important; }
