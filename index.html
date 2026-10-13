@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v54">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v55">
 <meta name="theme-color" content="#080808">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v21', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v22', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v21', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v22', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -9658,6 +9658,154 @@ header.hero#home .container.hero-grid > div:first-child > p {
 @media(prefers-reduced-motion:reduce){
   #gradeGrid > .mf-pastel-grade-card,
   #gradeGrid > .mf-pastel-grade-card .mf-pastel-grade-button{transition:none!important}
+}
+</style>
+
+
+<style id="doma-grade-cards-hard-override-v55">
+/* Higher-specificity final override: the legacy nth-child palettes must not override Teal Glass. */
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n){
+  --grade-rgb:46,223,224;
+  display:flex!important;
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  min-width:0!important;
+  border:1px solid rgba(var(--grade-rgb),.53)!important;
+  border-radius:14px!important;
+  background:linear-gradient(150deg,rgba(var(--grade-rgb),.16),rgba(4,29,37,.88) 76%)!important;
+  background-color:rgba(4,29,37,.88)!important;
+  color:#f1ffff!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.065),0 8px 18px rgba(0,0,0,.12)!important;
+  backdrop-filter:blur(18px) saturate(1.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(1){--grade-rgb:46,223,224!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(2){--grade-rgb:67,186,231!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(3){--grade-rgb:105,228,183!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(4){--grade-rgb:131,174,255!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(5){--grade-rgb:226,178,83!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(6){--grade-rgb:62,220,208!important}
+
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n)::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  border-radius:inherit!important;
+  background:linear-gradient(118deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.025) 48%,rgba(255,255,255,.01) 100%)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n)>*{
+  position:relative!important;
+  z-index:1!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-top{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  min-width:0!important;
+  background:transparent!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-icon{
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 31px!important;
+  width:31px!important;
+  height:31px!important;
+  padding:5px!important;
+  border-radius:10px!important;
+  color:rgb(var(--grade-rgb))!important;
+  background:rgba(var(--grade-rgb),.15)!important;
+  border:1px solid rgba(var(--grade-rgb),.53)!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.065)!important;
+  text-shadow:0 0 13px rgba(var(--grade-rgb),.24)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-icon svg{
+  display:block!important;width:100%!important;height:100%!important;color:inherit!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-title{
+  color:#f1ffff!important;
+  font-size:12px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  text-shadow:none!important;
+  overflow-wrap:anywhere!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-subtitle{
+  margin-top:3px!important;
+  color:#a3c6c8!important;
+  font-size:9px!important;
+  line-height:1.3!important;
+  font-weight:500!important;
+  text-shadow:none!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-price{
+  display:block!important;
+  width:100%!important;
+  margin-top:4px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#b8e9e7!important;
+  font-size:10px!important;
+  line-height:1.3!important;
+  font-weight:750!important;
+  text-align:left!important;
+  text-shadow:none!important;
+  box-shadow:none!important;
+  opacity:1!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-price span{
+  color:#b8e9e7!important;font-weight:750!important;opacity:1!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-button,
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .grade-open-button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:32px!important;
+  margin-top:4px!important;
+  padding:7px 9px!important;
+  border:1px solid rgba(var(--grade-rgb),.53)!important;
+  border-radius:10px!important;
+  background:rgba(var(--grade-rgb),.12)!important;
+  color:#f1ffff!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+  font-weight:750!important;
+  text-align:center!important;
+  text-shadow:none!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.05)!important;
+  cursor:pointer!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-button:hover,
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-button:focus-visible,
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .grade-open-button:hover{
+  background:rgba(var(--grade-rgb),.22)!important;
+  border-color:rgba(var(--grade-rgb),.9)!important;
+  color:#ffffff!important;
+  box-shadow:0 0 13px rgba(var(--grade-rgb),.17)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-button:active,
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .grade-open-button:active{
+  transform:scale(.98)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n):hover{
+  border-color:rgba(var(--grade-rgb),.9)!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.085),0 0 16px rgba(var(--grade-rgb),.13),0 10px 23px rgba(0,0,0,.18)!important;
+  transform:translateY(-2px)!important;
+}
+@media(max-width:700px){
+  html body #gradeGrid.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n){min-height:148px!important;padding:10px!important;border-radius:14px!important}
+}
+@media(max-width:380px){
+  html body #gradeGrid.grid3{gap:7px!important}
+  html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n){min-height:144px!important;padding:8px!important;border-radius:12px!important}
 }
 </style>
 
