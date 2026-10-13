@@ -1342,7 +1342,26 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
   </div>
 </section>
 
-<section id="grades"><div class="container"><div class="section-head"><div><div class="eyebrow">English Curriculum</div><h2>Choose your grade.</h2><p>Select your school grade to see access options and start your English journey.</p></div><span class="pill" id="gradeLoadStatus">Loading grades…</span></div><div class="grid3" id="gradeGrid"><div class="empty">Loading grades from Mr. Fluent…</div></div></div></section>
+<section id="grades" class="mf-pastel-grade-screen">
+  <div class="container">
+    <div class="mf-pastel-statusbar" aria-hidden="true">
+      <span class="mf-pastel-clock">9:41</span>
+      <span class="mf-pastel-system-icons"><svg viewBox="0 0 52 16"><path d="M2 14V10M8 14V7M14 14V4M20 14V1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M28 5c4-4 10-4 14 0M31 8c2-2 6-2 8 0M35 11h1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="44" y="3" width="6" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="46" y="5" width="3" height="5" rx=".5" fill="currentColor"/></svg></span>
+    </div>
+    <div class="mf-pastel-screen-header">
+      <a class="mf-pastel-back" href="#home" aria-label="Back to home">‹</a>
+      <h2>Choose Your Grade</h2>
+      <span id="gradeLoadStatus" class="mf-pastel-load-status" aria-live="polite">Loading grades…</span>
+    </div>
+    <div class="grid3" id="gradeGrid"><div class="empty">Loading grades from Mr. Fluent…</div></div>
+    <nav class="mf-pastel-bottom-nav" aria-label="Student navigation">
+      <a href="#home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10 8.5-7 8.5 7M5.5 9v11h13V9M9.5 20v-6h5v6" /></svg><span>Home</span></a>
+      <a href="#english-course"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22zM4 5.5V22M8 7h8M8 11h7" /></svg><span>Courses</span></a>
+      <a class="is-active" href="#grades" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="6" height="6" rx="1.3"/><rect x="14.5" y="3.5" width="6" height="6" rx="1.3"/><rect x="3.5" y="14.5" width="6" height="6" rx="1.3"/><rect x="14.5" y="14.5" width="6" height="6" rx="1.3"/></svg><span>Grades</span></a>
+      <a href="#dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="4"/><path d="M4.5 21c.6-4.2 3.3-6.3 7.5-6.3s6.9 2.1 7.5 6.3" /></svg><span>Profile</span></a>
+    </nav>
+  </div>
+</section>
 <section id="english-course" class="mf-english-course-section">
   <div class="container">
     <div class="mf-english-course-hero">
@@ -1783,13 +1802,7 @@ async function loadGrades(){
     if(status)status.textContent=usedFallback?'6 grades · connection fallback':'6 grades';
   }catch(error){
     console.error('Grade cards renderer failed; showing a safe grade list.',error);
-    if(grid)grid.innerHTML=FALLBACK_GRADES.map(g=>'<article class="card grade grade-selectable" data-grade-search="'+esc((g.name+' '+g.stage+' English').toLowerCase())+'"><div class="grade-cover"><strong>'+esc(g.name)+'</strong></div><div class="grade-body"><h3>English — '+esc(g.name)+'</h3><div class="grade-meta"><span>150 EGP / Month</span></div><button class="btn primary grade-open-button" type="button" data-doma-grade-open="'+esc(g.name)+'">Open Grade →</button></div></article>').join('');
-    if(grid)grid.querySelectorAll('[data-doma-grade-open]').forEach(button=>button.addEventListener('click',()=>domaOpenGrade(button.getAttribute('data-doma-grade-open'))));
-    if(grid)grid.querySelectorAll('[data-doma-grade-open]').forEach(card=>{
-      const openCard=()=>domaOpenGrade(card.getAttribute('data-doma-grade-open'));
-      card.addEventListener('click',openCard);
-      card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openCard();}});
-    });
+    if(grid){grid.innerHTML=FALLBACK_GRADES.map(g=>domaPastelGradeCardMarkup(g,150)).join('');domaBindGradeActions(grid);}
     revealGradeGrid();
     if(status)status.textContent='6 grades · safe display';
   }
@@ -1797,6 +1810,30 @@ async function loadGrades(){
   try{await refreshStudentState()}catch(error){console.warn('Student account refresh failed; grade cards remain available.',error)}
 }
 function updatePricingRange(){const values=Object.values(gradePrices);if(!values.length)return;const m=values.map(x=>x.monthly),a=values.map(x=>x.annual);document.querySelectorAll('[data-pricing-range]').forEach(el=>el.textContent=Math.min(...m)+'–'+Math.max(...m));document.querySelectorAll('[data-pricing-range-annual]').forEach(el=>el.textContent=Math.min(...a)+'–'+Math.max(...a))}
+function domaPastelGradeCardMarkup(g,monthly){
+  const name=String(g&&g.name||'');
+  const stage=String(g&&g.stage||'').toLowerCase();
+  const searchable=(name+' '+stage+' English').toLowerCase();
+  const isSecondary=stage.includes('secondary')||/secondary/i.test(name);
+  const icon=isSecondary
+    ? '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 10.5c6-3 12-2.4 18 1.8v27c-6-4.2-12-4.8-18-1.8zM42 10.5c-6-3-12-2.4-18 1.8v27c6-4.2 12-4.8 18-1.8z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 17h7M11 23h7M30 17h7M30 23h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+    : '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 17 24 7 44 17 24 27 4 17Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M12 21v10c7 5 17 5 24 0V21M42 18v11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  return '<article class="card grade grade-selectable mf-pastel-grade-card" data-grade-search="'+esc(searchable)+'">'+
+    '<div class="mf-pastel-grade-top"><span class="mf-pastel-grade-icon" aria-hidden="true">'+icon+'</span><div class="mf-pastel-grade-labels"><h3 class="mf-pastel-grade-title">'+esc(name)+'</h3><p class="mf-pastel-grade-subtitle">English — '+esc(name)+'</p></div></div>'+
+    '<div class="grade-meta mf-pastel-grade-price"><span>'+(Number(monthly)||150)+' EGP / Month</span></div>'+
+    '<button class="btn primary grade-open-button mf-pastel-grade-button" type="button" data-doma-grade-open="'+esc(name)+'">Open Grade →</button>'+
+  '</article>';
+}
+window.domaPastelGradeCardMarkup=domaPastelGradeCardMarkup;
+function domaBindGradeActions(grid){
+  if(!grid)return;
+  grid.querySelectorAll('[data-doma-grade-open]').forEach(button=>button.addEventListener('click',event=>{
+    event.stopPropagation();
+    const name=button.getAttribute('data-doma-grade-open');
+    if(typeof window.domaOpenGrade==='function')window.domaOpenGrade(name);
+    else if(typeof window.openAuth==='function')window.openAuth('signup');
+  }));
+}
 function renderGrades(list=grades){
   const orderMap=new Map(FALLBACK_GRADES.map((g,index)=>[String(g.name).toLowerCase(),index]));
   const orderedList=(list||[]).slice().sort((a,b)=>{
@@ -1805,32 +1842,24 @@ function renderGrades(list=grades){
     const bi=orderMap.has(bName)?orderMap.get(bName):999+Number(b.sort_order||999);
     return ai-bi;
   });
-  $('gradeGrid').innerHTML=orderedList.length?orderedList.map(g=>{
-    const pr=gradePrices[g.id]||DEFAULT_PRICES[g.name]||{monthly:150,annual:150};
-    const searchable=(g.name+' '+g.stage+' English').toLowerCase();
-    return `<article class="card grade grade-selectable" data-grade-search="${esc(searchable)}">
-      <div class="grade-cover"><strong>${esc(g.name)}</strong></div>
-      <div class="grade-body">
-        <h3>English — ${esc(g.name)}</h3>
-        <div class="grade-meta"><span>${Number(pr.monthly)||150} EGP / Month</span></div>
-        <button class="btn primary grade-open-button" type="button" onclick='domaOpenGrade(${domaInlineJsArg(g.name)})'>Open Grade →</button>
-      </div>
-    </article>`
-  }).join(''):'<div class="empty">No active grades are available.</div>';
   const grid=$('gradeGrid');
-  if(grid){
-    grid.removeAttribute('hidden');
-    grid.style.setProperty('display','grid','important');
-    grid.style.setProperty('visibility','visible','important');
-    grid.style.setProperty('opacity','1','important');
-    grid.querySelectorAll('.grade').forEach(card=>{
-      card.style.setProperty('display','block','important');
-      card.style.setProperty('visibility','visible','important');
-      card.style.setProperty('opacity','1','important');
-    });
-  }
+  if(!grid)return;
+  grid.innerHTML=orderedList.length?orderedList.map(g=>{
+    const pr=gradePrices[g.id]||DEFAULT_PRICES[g.name]||{monthly:150,annual:150};
+    return domaPastelGradeCardMarkup(g,pr.monthly);
+  }).join(''):'<div class="empty">No active grades are available.</div>';
+  grid.removeAttribute('hidden');
+  grid.style.setProperty('display','grid','important');
+  grid.style.setProperty('visibility','visible','important');
+  grid.style.setProperty('opacity','1','important');
+  grid.querySelectorAll('.grade').forEach(card=>{
+    card.style.setProperty('display','flex','important');
+    card.style.setProperty('visibility','visible','important');
+    card.style.setProperty('opacity','1','important');
+  });
+  domaBindGradeActions(grid);
 }
-function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim(),stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const text=(card.dataset.gradeSearch||''),okQ=!q||text.includes(q),okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'block':'none'})}
+function filterGrades(){const q=($('publicSearch').value||'').toLowerCase().trim(),stage=$('publicStage').value;document.querySelectorAll('#gradeGrid .grade').forEach(card=>{const text=(card.dataset.gradeSearch||''),okQ=!q||text.includes(q),okS=stage==='all'||text.includes(stage);card.style.display=okQ&&okS?'flex':'none'})}
 function showGradeInfo(name){const grade=grades.find(g=>g.name===name),pr=gradePrices[grade?.id]||{monthly:150,annual:150};$('gradeModalTitle').textContent=name;$('gradeModalText').textContent='Monthly access only. Payment is through Mobile Cash, then upload your receipt for admin review.';$('gradeModalBody').innerHTML=`<div class="grid3"><div class="card feature"><span class="pill">Monthly</span><h3>150 EGP</h3><p>30 days access after approval.</p><button class="btn primary" onclick='domaStartSubscription(${domaInlineJsArg(name)},"monthly")'>Choose Monthly</button></div><div class="card feature"><span class="pill">Included</span><h3>Full Grade Area</h3><p>Lessons, quizzes, homework, progress, results and certificates.</p><button class="btn secondary" onclick='domaOpenGrade(${domaInlineJsArg(name)})'>Continue →</button></div></div>`;$('gradeModal').classList.add('show')}
 
 async function domaOpenGrade(name){
@@ -7531,11 +7560,12 @@ window.renderUnifiedSubscriptionCenter=renderUnifiedSubscriptionCenter;
     if(!grid)return;
     setFallbackData();
     grid.innerHTML=FALLBACK.map(function(g){
-      var searchable=(g.name+' '+g.stage+' English grammar vocabulary reading writing listening quizzes homework').toLowerCase();
-      return '<article class="card grade grade-selectable" data-grade-search="'+esc(searchable)+'" style="display:block!important;visibility:visible!important;opacity:1!important;min-width:0!important;width:auto!important">'+
-        '<div class="grade-cover"><strong>'+esc(g.name)+'</strong></div>'+
-        '<div class="grade-body"><h3>English — '+esc(g.name)+'</h3><div class="grade-meta"><span>150 EGP / Month</span></div>'+
-        '<button class="btn primary grade-open-button" type="button" data-doma-grade-open="'+esc(g.name)+'">Open Grade →</button></div></article>';
+      if(typeof window.domaPastelGradeCardMarkup==='function')return window.domaPastelGradeCardMarkup(g,150);
+      var secondary=/secondary/i.test(String(g.name||''));
+      var icon=secondary
+        ? '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 10.5c6-3 12-2.4 18 1.8v27c-6-4.2-12-4.8-18-1.8zM42 10.5c-6-3-12-2.4-18 1.8v27c6-4.2 12-4.8 18-1.8z" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>'
+        : '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 17 24 7 44 17 24 27 4 17ZM12 21v10c7 5 17 5 24 0V21" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>';
+      return '<article class="card grade grade-selectable mf-pastel-grade-card" data-grade-search="'+esc((g.name+' '+g.stage+' English').toLowerCase())+'"><div class="mf-pastel-grade-top"><span class="mf-pastel-grade-icon">'+icon+'</span><div class="mf-pastel-grade-labels"><h3 class="mf-pastel-grade-title">'+esc(g.name)+'</h3><p class="mf-pastel-grade-subtitle">English — '+esc(g.name)+'</p></div></div><div class="grade-meta mf-pastel-grade-price"><span>150 EGP / Month</span></div><button class="btn primary grade-open-button mf-pastel-grade-button" type="button" data-doma-grade-open="'+esc(g.name)+'">Open Grade →</button></article>';
     }).join('');
     var status=byId('gradeLoadStatus');
     if(status)status.textContent='6 grades available';
@@ -7555,7 +7585,7 @@ window.renderUnifiedSubscriptionCenter=renderUnifiedSubscriptionCenter;
     if(document.body.classList.contains('mf-course-route')&&!force)return;
     if(cardsMissing(refs.grid))renderBackupCards(refs.grid);
     else refs.grid.querySelectorAll('.grade').forEach(function(card){
-      card.style.setProperty('display','block','important');
+      card.style.setProperty('display','flex','important');
       card.style.setProperty('visibility','visible','important');
       card.style.setProperty('opacity','1','important');
     });
@@ -7566,7 +7596,7 @@ window.renderUnifiedSubscriptionCenter=renderUnifiedSubscriptionCenter;
         var current=byId('gradeGrid');
         if(cardsMissing(current))renderBackupCards(current);
         else current.querySelectorAll('.grade').forEach(function(card){
-          card.style.setProperty('display','block','important');
+          card.style.setProperty('display','flex','important');
           card.style.setProperty('visibility','visible','important');
           card.style.setProperty('opacity','1','important');
         });
@@ -8489,6 +8519,68 @@ header.hero#home .container.hero-grid > div:first-child > p {
 @media (prefers-reduced-motion: reduce) {
   #gradeGrid .grade-selectable { transition: none !important; }
 }
+</style>
+
+
+<style id="doma-pastel-glass-mobile-implementation-v1">
+/* Selected mockup #2: pale pastel screen, glass cards, 2 columns x 3 rows. */
+#grades.mf-pastel-grade-screen{padding:30px 12px 62px!important;background:transparent!important;color:#252640!important}
+#grades.mf-pastel-grade-screen>.container{box-sizing:border-box!important;width:min(100%,448px)!important;max-width:448px!important;margin:0 auto!important;padding:12px 14px 5px!important;border:1px solid rgba(255,255,255,.94)!important;border-radius:30px!important;background:linear-gradient(148deg,#eceaff 0%,#e5efff 29%,#f3e9f8 65%,#e0f6f3 100%)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 22px 60px rgba(8,12,35,.28),0 0 0 1px rgba(209,214,255,.15)!important;overflow:hidden!important;color:#252640!important}
+#grades .mf-pastel-statusbar{min-height:22px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 5px 7px!important;color:#2c2c45!important;font-size:10px!important;font-weight:800!important;line-height:1!important}
+#grades .mf-pastel-system-icons{display:flex!important;align-items:center!important}
+#grades .mf-pastel-system-icons svg{width:46px!important;height:14px!important;display:block!important}
+#grades .mf-pastel-screen-header{display:grid!important;grid-template-columns:30px minmax(0,1fr) 10px!important;align-items:center!important;gap:5px!important;min-height:38px!important;margin:0 0 12px!important;padding:0 1px 7px!important;border-bottom:1px solid rgba(255,255,255,.64)!important}
+#grades .mf-pastel-back{display:flex!important;align-items:center!important;justify-content:flex-start!important;height:34px!important;color:#6a628c!important;font-size:34px!important;line-height:1!important;text-decoration:none!important;font-weight:400!important}
+#grades .mf-pastel-screen-header h2{color:#25243e!important;font-size:17px!important;line-height:1.2!important;text-align:center!important;font-weight:800!important;letter-spacing:-.35px!important;margin:0!important;padding:0!important;text-transform:none!important}
+#grades .mf-pastel-load-status{display:block!important;width:8px!important;height:8px!important;min-width:8px!important;overflow:hidden!important;border-radius:50%!important;padding:0!important;margin:0!important;border:1px solid rgba(255,255,255,.95)!important;background:#45bd9c!important;color:transparent!important;font-size:0!important;box-shadow:0 0 0 3px rgba(69,189,156,.12)!important}
+#gradeGrid.grid3,#grades #gradeGrid.grid3{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important;width:100%!important;min-width:0!important;height:auto!important;max-height:none!important;overflow:visible!important;opacity:1!important;visibility:visible!important}
+#gradeGrid>.mf-pastel-grade-card,#gradeGrid .mf-pastel-grade-card.grade-selectable{box-sizing:border-box!important;position:relative!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;align-items:stretch!important;gap:7px!important;min-width:0!important;width:auto!important;min-height:143px!important;margin:0!important;padding:10px!important;overflow:hidden!important;border-radius:16px!important;border:1px solid rgba(255,255,255,.94)!important;background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(231,237,255,.78))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 6px 14px rgba(73,69,111,.10)!important;backdrop-filter:blur(18px) saturate(1.15)!important;-webkit-backdrop-filter:blur(18px) saturate(1.15)!important;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important}
+#gradeGrid>.mf-pastel-grade-card::before{content:""!important;position:absolute!important;inset:0!important;pointer-events:none!important;border-radius:inherit!important;background:linear-gradient(118deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.04) 48%,rgba(255,255,255,.22) 100%)!important;z-index:0!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(1){background:linear-gradient(145deg,#fff0f7 0%,#f2e5ff 54%,#e0eeff 100%)!important;border-color:#f1cbe9!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(2){background:linear-gradient(145deg,#eaf8ff 0%,#e4eaff 54%,#f2eaff 100%)!important;border-color:#c8dcff!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(3){background:linear-gradient(145deg,#f8efff 0%,#fbe9f7 55%,#e9efff 100%)!important;border-color:#ddc5f5!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(4){background:linear-gradient(145deg,#e6fbf3 0%,#e2f3ff 54%,#edf1ff 100%)!important;border-color:#b6e6d9!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(5){background:linear-gradient(145deg,#fff6e8 0%,#ffedde 53%,#f0edff 100%)!important;border-color:#f4d6b2!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(6){background:linear-gradient(145deg,#e4fbfb 0%,#e5f7f0 53%,#f2eaff 100%)!important;border-color:#b9e9e8!important}
+#gradeGrid .mf-pastel-grade-top,#gradeGrid .mf-pastel-grade-price,#gradeGrid .mf-pastel-grade-button{position:relative!important;z-index:1!important}
+#gradeGrid .mf-pastel-grade-top{display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important;min-height:43px!important}
+#gradeGrid .mf-pastel-grade-icon{display:flex!important;align-items:center!important;justify-content:center!important;width:39px!important;height:39px!important;min-width:39px!important;border-radius:50%!important;color:#fff!important;background:linear-gradient(145deg,#e77aa8,#a976e0)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 4px 10px rgba(95,66,145,.17)!important}
+#gradeGrid .mf-pastel-grade-icon svg{width:23px!important;height:23px!important;display:block!important;stroke:currentColor!important}
+#gradeGrid .mf-pastel-grade-labels{min-width:0!important;flex:1 1 auto!important}
+#gradeGrid .mf-pastel-grade-title{color:#25243e!important;font-size:11.5px!important;font-weight:800!important;line-height:1.18!important;letter-spacing:-.12px!important;margin:0!important;padding:0!important;overflow-wrap:anywhere!important}
+#gradeGrid .mf-pastel-grade-subtitle{color:#64657b!important;font-size:8.5px!important;font-weight:500!important;line-height:1.25!important;margin:3px 0 0!important;padding:0!important;min-height:0!important;overflow-wrap:anywhere!important}
+#gradeGrid .mf-pastel-grade-price{display:block!important;color:#4c6688!important;font-size:9.5px!important;font-weight:800!important;line-height:1.2!important;margin:auto 0 0!important;padding:1px 0 0!important}
+#gradeGrid .mf-pastel-grade-button{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;min-height:30px!important;padding:7px 4px!important;border-radius:10px!important;border:1px solid rgba(255,255,255,.75)!important;color:#fff!important;font-size:10px!important;font-weight:800!important;line-height:1.15!important;letter-spacing:0!important;white-space:nowrap!important;text-shadow:0 1px 2px rgba(25,22,56,.15)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 9px rgba(76,66,130,.13)!important;cursor:pointer!important;margin:0!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(1) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(1) .mf-pastel-grade-button{background:linear-gradient(120deg,#d95791,#9368d6)!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(2) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(2) .mf-pastel-grade-button{background:linear-gradient(120deg,#4f91dc,#6967d8)!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(3) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(3) .mf-pastel-grade-button{background:linear-gradient(120deg,#9563d2,#cf6399)!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(4) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(4) .mf-pastel-grade-button{background:linear-gradient(120deg,#269d8a,#568bd7)!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(5) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(5) .mf-pastel-grade-button{background:linear-gradient(120deg,#d88c47,#8971d7)!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(6) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(6) .mf-pastel-grade-button{background:linear-gradient(120deg,#179d9b,#8067d3)!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(1) .mf-pastel-grade-price{color:#9a4d7d!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(2) .mf-pastel-grade-price{color:#4a71b2!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(3) .mf-pastel-grade-price{color:#8757ad!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(4) .mf-pastel-grade-price{color:#267f78!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(5) .mf-pastel-grade-price{color:#9b6937!important}
+#gradeGrid>.mf-pastel-grade-card:nth-child(6) .mf-pastel-grade-price{color:#2c8289!important}
+#gradeGrid .mf-pastel-grade-card:hover{transform:translateY(-2px)!important;border-color:rgba(255,255,255,.98)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 0 0 1px rgba(202,201,245,.5),0 12px 24px rgba(62,65,111,.17)!important}
+#grades .mf-pastel-bottom-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:3px!important;margin:11px -1px 0!important;padding:9px 0 2px!important;border-top:1px solid rgba(255,255,255,.72)!important;background:rgba(247,248,255,.2)!important}
+#grades .mf-pastel-bottom-nav a{display:flex!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;gap:3px!important;min-width:0!important;padding:1px 0 3px!important;color:#77758e!important;font-size:9px!important;font-weight:600!important;line-height:1.15!important;text-decoration:none!important;border-radius:9px!important}
+#grades .mf-pastel-bottom-nav a svg{width:19px!important;height:19px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.65!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+#grades .mf-pastel-bottom-nav a.is-active{color:#ae61c6!important;text-shadow:0 0 10px rgba(174,97,198,.18)!important}
+@media(max-width:380px){
+  #grades.mf-pastel-grade-screen{padding-left:5px!important;padding-right:5px!important}
+  #grades.mf-pastel-grade-screen>.container{padding:10px 9px 4px!important;border-radius:25px!important}
+  #gradeGrid.grid3,#grades #gradeGrid.grid3{gap:7px!important}
+  #gradeGrid>.mf-pastel-grade-card{padding:8px!important;min-height:137px!important;gap:6px!important;border-radius:14px!important}
+  #gradeGrid .mf-pastel-grade-icon{width:34px!important;height:34px!important;min-width:34px!important}
+  #gradeGrid .mf-pastel-grade-icon svg{width:20px!important;height:20px!important}
+  #gradeGrid .mf-pastel-grade-title{font-size:10.5px!important}
+  #gradeGrid .mf-pastel-grade-subtitle{font-size:8px!important}
+  #gradeGrid .mf-pastel-grade-price{font-size:9px!important}
+  #gradeGrid .mf-pastel-grade-button{min-height:29px!important;font-size:9px!important}
+}
+@media(prefers-reduced-motion:reduce){#gradeGrid .mf-pastel-grade-card{transition:none!important}}
 </style>
 
 </body>
