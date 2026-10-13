@@ -845,6 +845,20 @@ html body .student-layout>.student-content{grid-area:content!important}
   html body .course-back-arrow{transition:none!important}
 }
 
+
+/* Remove the colored strip behind the back arrow and menu */
+@media(max-width:700px){
+  html body .course-top-controls{
+    background:#fffdf9!important;
+    background-color:#fffdf9!important;
+    background-image:none!important;
+    border-bottom:0!important;
+    box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}
+
 /* FINAL COLOR MATCH: page background matches the light course cards; text colors stay unchanged */
 :root{--page-unified-bg:#fffdf9}
 html,body{
