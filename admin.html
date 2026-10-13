@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v22">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v23">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v22">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v23">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2314,7 +2314,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v22', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v23', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -2802,6 +2802,50 @@ async function mfRejectEnglishCourseRequest(id){
     line-height:1.1!important;
     white-space:nowrap!important;
     box-shadow:inset 0 1px 0 rgba(220,255,255,.08),0 5px 14px rgba(0,0,0,.13)!important;
+  }
+}
+</style>
+
+
+<style id="doma-mobile-mint-nav-v23">
+/* Mint Green emphasis for the four mobile bottom-navigation actions. */
+@media(max-width:760px){
+  .doma-mobile-bottom-nav .doma-mobile-tab{
+    color:#9bf7bd!important;
+    border:1px solid rgba(132,255,184,.2)!important;
+    background:rgba(91,255,166,.045)!important;
+    box-shadow:inset 0 1px 0 rgba(223,255,235,.035)!important;
+  }
+  .doma-mobile-bottom-nav .doma-mobile-tab-icon{
+    color:#9bf7bd!important;
+    background:rgba(95,255,171,.085)!important;
+    border:1px solid rgba(132,255,184,.14)!important;
+    text-shadow:0 0 10px rgba(113,255,169,.19)!important;
+    box-shadow:none!important;
+  }
+  .doma-mobile-bottom-nav .doma-mobile-tab-label{
+    color:#9bf7bd!important;
+    font-weight:750!important;
+    text-shadow:0 0 9px rgba(113,255,169,.12)!important;
+  }
+  .doma-mobile-bottom-nav .doma-mobile-tab.active{
+    color:#d5ffe4!important;
+    border-color:rgba(148,255,192,.46)!important;
+    background:rgba(91,255,166,.105)!important;
+    box-shadow:inset 0 1px 0 rgba(235,255,242,.09),0 0 13px rgba(88,255,164,.08)!important;
+  }
+  .doma-mobile-bottom-nav .doma-mobile-tab.active .doma-mobile-tab-icon{
+    color:#dcffe8!important;
+    background:linear-gradient(145deg,rgba(89,246,157,.25),rgba(35,131,86,.24))!important;
+    border-color:rgba(159,255,195,.38)!important;
+    box-shadow:0 0 14px rgba(90,255,161,.16)!important;
+  }
+  .doma-mobile-bottom-nav .doma-mobile-tab.active .doma-mobile-tab-label{
+    color:#d5ffe4!important;
+  }
+  .doma-mobile-bottom-nav .doma-mobile-tab:focus-visible{
+    outline:2px solid #9bf7bd!important;
+    outline-offset:1px!important;
   }
 }
 </style>
