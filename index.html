@@ -8251,51 +8251,70 @@ header.hero#home .container.hero-grid > div:first-child > p {
 </style>
 
 <style id="doma-burgundy-green-gradient-grade-cards-v2">
-/* One unified dark burgundy + emerald gradient for every grade card. Green Open Grade buttons. */
+/* Unified two-tone grade cards: a balanced burgundy-to-emerald gradient.
+   Every grade uses the same palette; the Open Grade action stays green. */
 #gradeGrid .grade-selectable {
   position: relative !important;
-  border: 1.5px solid rgba(83, 224, 149, .78) !important;
+  border: 1.5px solid transparent !important;
   border-radius: 16px !important;
-  background: linear-gradient(125deg, #3b101f 0%, #2a1722 30%, #123628 70%, #091c16 100%) !important;
-  box-shadow: inset 0 0 10px rgba(79, 214, 137, .09),
-              inset 0 1px 0 rgba(255, 239, 245, .08),
-              0 0 4px rgba(71, 218, 137, .72),
-              0 0 11px rgba(37, 174, 101, .36),
-              0 0 16px rgba(109, 24, 53, .3),
-              0 9px 25px rgba(0, 0, 0, .3) !important;
+  background:
+    linear-gradient(125deg, #3d0d22 0%, #391727 27%, #33272b 44%, #26352c 56%, #17442e 76%, #0d2c1d 100%) padding-box,
+    linear-gradient(125deg, #a43a5b 0%, #85304d 34%, #526c53 51%, #4bc183 70%, #2b8e5b 100%) border-box !important;
+  box-shadow:
+    inset 0 0 9px rgba(177, 45, 87, .10),
+    inset 0 0 9px rgba(53, 191, 116, .10),
+    0 0 4px rgba(151, 43, 80, .72),
+    0 0 5px rgba(49, 180, 105, .62),
+    0 0 13px rgba(111, 26, 58, .25),
+    0 0 13px rgba(24, 126, 71, .22),
+    0 9px 25px rgba(0, 0, 0, .3) !important;
   transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
 }
 #gradeGrid .grade-selectable:hover {
   transform: translateY(-3px) !important;
-  border-color: #a8ffd0 !important;
-  box-shadow: inset 0 0 12px rgba(79, 214, 137, .16),
-              0 0 6px rgba(106, 255, 173, .96),
-              0 0 17px rgba(37, 211, 121, .6),
-              0 0 25px rgba(109, 24, 53, .34),
-              0 14px 30px rgba(0, 0, 0, .4) !important;
+  box-shadow:
+    inset 0 0 12px rgba(177, 45, 87, .14),
+    inset 0 0 12px rgba(53, 191, 116, .14),
+    0 0 6px rgba(184, 62, 103, .85),
+    0 0 7px rgba(74, 227, 139, .84),
+    0 0 17px rgba(111, 26, 58, .36),
+    0 0 18px rgba(24, 126, 71, .32),
+    0 14px 30px rgba(0, 0, 0, .4) !important;
 }
 #gradeGrid .grade-selectable .grade-cover {
-  background: linear-gradient(118deg, #771c39 0%, #4c2432 36%, #176441 76%, #0b3928 100%) !important;
-  border-bottom: 1px solid rgba(108, 236, 162, .35) !important;
+  background: linear-gradient(125deg,
+    #862040 0%,
+    #74253f 25%,
+    #5b2e40 42%,
+    #3b4337 56%,
+    #1b6840 77%,
+    #10452d 100%) !important;
+  border-bottom: 1px solid rgba(173, 201, 170, .30) !important;
   box-shadow: inset 0 1px 0 rgba(255, 240, 245, .08) !important;
 }
 #gradeGrid .grade-selectable .grade-cover strong {
-  color: #f6fff9 !important;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, .42) !important;
+  color: #fff6f8 !important;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, .45) !important;
 }
 #gradeGrid .grade-selectable .grade-body {
-  background: linear-gradient(128deg, rgba(51, 15, 29, .97) 0%, rgba(31, 27, 31, .98) 47%, rgba(9, 39, 27, .99) 100%) !important;
+  background: linear-gradient(125deg,
+    rgba(51, 14, 29, .98) 0%,
+    rgba(48, 23, 33, .98) 28%,
+    rgba(43, 37, 35, .98) 46%,
+    rgba(29, 48, 35, .98) 57%,
+    rgba(15, 57, 35, .99) 78%,
+    rgba(9, 37, 24, .99) 100%) !important;
 }
 #gradeGrid .grade-selectable .grade-body h3 {
-  color: #f2fff7 !important;
+  color: #fff5f7 !important;
 }
 #gradeGrid .grade-selectable .grade-meta {
-  color: #90e8b5 !important;
+  color: #c7dfce !important;
 }
 #gradeGrid .grade-selectable .grade-open-button {
   width: 100% !important;
   color: #f4fff8 !important;
-  border: 1px solid rgba(159, 255, 197, .8) !important;
+  border: 1px solid rgba(157, 255, 196, .82) !important;
   background: linear-gradient(120deg, #35b972 0%, #228c58 54%, #126641 100%) !important;
   box-shadow: inset 0 1px 0 rgba(238, 255, 245, .18),
               0 0 7px rgba(45, 209, 119, .24) !important;
