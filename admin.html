@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v24">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v25">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v24">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v25">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2315,7 +2315,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v24', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v25', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -2881,6 +2881,46 @@ async function mfRejectEnglishCourseRequest(id){
   #section-dashboard>#domaFinalAdminPanel,
   #section-dashboard>.doma-final-admin-panel{
     margin-top:32px!important;
+  }
+}
+</style>
+
+
+<style id="doma-mobile-topline-and-health-gap-v25">
+/* Fine alignment of the DOMA wordmark and extra separation after Quick Actions. */
+@media(max-width:760px){
+  .top{
+    position:sticky!important;
+    align-items:center!important;
+  }
+  .top>div:first-child{
+    align-items:center!important;
+  }
+  .doma-mobile-brand{
+    align-self:center!important;
+    margin-top:0!important;
+    transform:translateY(-1px)!important;
+  }
+  .doma-mobile-header-logo{
+    position:absolute!important;
+    top:50%!important;
+    right:12px!important;
+    transform:translateY(-50%)!important;
+    align-self:center!important;
+    margin:0!important;
+    padding:0 1px!important;
+    line-height:1!important;
+  }
+
+  /* Make the gap after all six Quick Actions noticeably larger. */
+  .doma-mobile-quickactions{
+    margin-bottom:72px!important;
+  }
+  #section-dashboard>#domaStableHealth,
+  #section-dashboard>#domaFinalAdminPanel,
+  #section-dashboard>.doma-final-admin-panel,
+  #section-dashboard>.admin-health{
+    margin-top:46px!important;
   }
 }
 </style>
