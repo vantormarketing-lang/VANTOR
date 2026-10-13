@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v30">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v31">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v30">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v31">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -917,7 +917,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div><h1 id="pageTitle">Dashboard</h1><small class="muted">DOMA ACADEMY</small></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
-        <span class="doma-mobile-header-logo">DOMA</span>
+        <span class="doma-mobile-header-logo">𝑫𝑶𝑴𝑨</span>
         <span class="connection"><i id="connectionDot" class="dot"></i><span id="connectionText">Checking…</span></span>
         <button class="btn secondary" id="openSite">Open Website ↗</button>
       </div>
@@ -2315,7 +2315,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v30', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v31', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -3054,7 +3054,7 @@ async function mfRejectEnglishCourseRequest(id){
 </style>
 
 
-<style id="doma-mobile-statusbar-solid-match-v30">
+<style id="doma-mobile-statusbar-solid-match-v31">
 /* Match the first screen strip exactly to Android's installed-app theme color. */
 @media(max-width:760px){
   html{
@@ -3076,14 +3076,38 @@ async function mfRejectEnglishCourseRequest(id){
 </style>
 
 
-<style id="doma-mobile-quickactions-top-gap-v30">
+<style id="doma-mobile-quickactions-top-gap-v31">
 /* Add a little breathing room between the preceding dashboard design and Quick Actions. */
 @media(max-width:760px){
   .doma-mobile-quickactions{
     margin-top:35px!important;
   }
 }
+</sty
+
+<style id="doma-mobile-wordmark-polish-v31">
+/* Premium compact DOMA wordmark badge for the mobile admin header. */
+@media(max-width:760px){
+  .doma-mobile-header-logo{
+    min-width:68px!important;
+    padding:7px 10px 6px!important;
+    border:1px solid rgba(120,255,226,.42)!important;
+    border-radius:11px!important;
+    background:linear-gradient(145deg,rgba(26,126,118,.3),rgba(3,35,42,.82) 75%)!important;
+    color:#d4fff1!important;
+    font-family:Georgia,"Times New Roman",serif!important;
+    font-size:13px!important;
+    font-style:italic!important;
+    font-weight:900!important;
+    letter-spacing:1.55px!important;
+    line-height:1!important;
+    text-shadow:0 0 10px rgba(104,255,214,.32),0 1px 1px rgba(0,0,0,.55)!important;
+    box-shadow:inset 0 1px 0 rgba(235,255,250,.12),0 0 15px rgba(47,232,195,.09)!important;
+    -webkit-font-smoothing:antialiased!important;
+  }
+}
 </style>
+le>
 
 </body>
 </html>
