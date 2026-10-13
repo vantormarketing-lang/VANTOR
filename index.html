@@ -261,15 +261,15 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v81">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v82">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v81">
-<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v81">
-<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v81">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-student-v82">
+<link rel="apple-touch-icon" href="./doma-leaf-book-icon.svg?v=doma-student-v82">
+<link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=doma-student-v82">
 <script id="mr-fluent-offline-bootstrap">
 (function(){
   'use strict';
@@ -1451,7 +1451,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 
 
 
-<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">100 <small>EGP / month</small></div><ul><li>Lessons &amp; quizzes</li><li>Homework &amp; progress</li><li>Grade-specific content</li><li>Track results &amp; achievements</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Placement test + A1–C2</li><li>Speaking · Grammar · Writing</li><li>Separate from Grade Access</li><li>Opens after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><div class="eyebrow">Need to know</div><h2>Frequently Asked Questions</h2></div><div class="faq">
+<section id="pricing"><div class="container"><div class="head"><div class="eyebrow">Simple access</div></div><div class="pricing"><div class="card plan"><span class="pill">School subscription</span><h3>Grade Access</h3><div class="money">100 <small>EGP / month</small></div><ul><li>Lessons &amp; quizzes</li><li>Homework &amp; progress</li><li>Grade-specific content</li><li>Track results &amp; achievements</li></ul><button class="btn primary" onclick="document.getElementById('grades').scrollIntoView({behavior:'smooth'})">Choose Grade</button></div><div class="card plan"><span class="pill">A1 → C2 · 30 days</span><h3>English Course</h3><div class="money">100 <small>EGP / 30 days</small></div><ul><li>Placement test + A1–C2</li><li>Speaking · Grammar · Writing</li><li>Separate from Grade Access</li><li>Opens after admin approval</li></ul><button class="btn primary" type="button" onclick="mrfluentStartEnglishSubscription()">Subscribe</button></div></div></div></section><section id="faq"><div class="container"><div class="head"><h2 class="faq-section-title">Frequently Asked Questions</h2></div><div class="faq">
 <details><summary>What are the two subscription options?</summary><p>Grade Access costs 100 EGP per month and unlocks the selected school grade. The separate Mr. Fluent English Course costs 100 EGP every 30 days and includes the A1–C2 English course. They are independent memberships; paying for one does not activate the other.</p></details>
 <details><summary>How do I activate Grade Access?</summary><p>Create or log in to your student account, choose one of the supported school grades, submit the payment request, send the shown Mobile Cash amount, and upload a clear receipt with the sender number. Access opens only after the admin approves the payment.</p></details>
 <details><summary>How do I activate Mr. Fluent English Course?</summary><p>Log in to your student account, choose Mr. Fluent English Course for 100 EGP per 30 days, follow the payment instructions, and upload the receipt. The placement test and course levels remain locked until the admin approves the payment.</p></details>
@@ -2627,7 +2627,7 @@ function printCertificate(title,code,issued){
   const w=window.open('','_blank','width=900,height=650');
   if(!w)return;
   w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:40px 24px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">Mr. Fluent</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">LEARN • SPEAK • MASTER</p></div>
-<style id="doma-pricing-section-gap-v81">
+<style id="doma-pricing-section-gap-v82">
 /* Add breathing room above Simple Access without enlarging either pricing card. */
 html body section#pricing{
   margin-top:28px!important;
@@ -2636,6 +2636,36 @@ html body section#pricing{
   html body section#pricing{
     margin-top:20px!important;
   }
+}
+</style>
+
+
+<style id="doma-faq-heading-simple-access-style-v82">
+/* FAQ title mirrors the small centered purple Simple Access label. */
+html body section#faq .head{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  margin:0 auto 10px!important;
+  padding:0!important;
+}
+html body section#faq .head .faq-section-title{
+  display:block!important;
+  width:100%!important;
+  margin:0 auto!important;
+  padding:0!important;
+  color:#c4a1ff!important;
+  -webkit-text-fill-color:#c4a1ff!important;
+  font-size:10px!important;
+  line-height:1.5!important;
+  font-weight:800!important;
+  letter-spacing:4px!important;
+  text-transform:uppercase!important;
+  text-align:center!important;
+  text-shadow:none!important;
+}
+html body section#faq .faq{
+  margin-top:0!important;
 }
 </style>
 
@@ -11264,7 +11294,7 @@ html body #english-course button[onclick="mrfluentRefreshEnglishCourse()"]:focus
 </style>
 
 
-<style id="doma-pricing-horizontal-stack-v81">
+<style id="doma-pricing-horizontal-stack-v82">
 /* Wide, compact membership cards in one vertical column — keep mobile cards easy to scan. */
 html body section#pricing .pricing{
   display:flex!important;
