@@ -1776,199 +1776,7 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   window.printAdminCertificate=function(title,code,issued){
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div>
-<style id="doma-mobile-teal-glass-v18">
-/* Mobile-only Teal Glass admin redesign. Desktop UI and existing business logic remain unchanged. */
-.doma-mobile-quickactions,.doma-mobile-bottom-nav,.doma-mobile-drawer-backdrop{display:none}
-@media(max-width:760px){
-  :root{--mobile-teal:#39e6e2;--mobile-teal-soft:#9af7f1;--mobile-glass:rgba(5,35,42,.83);--mobile-edge:rgba(65,231,224,.36);--mobile-muted:#a3c6c8}
-  body{background:radial-gradient(circle at 8% 5%,rgba(18,156,168,.22),transparent 32%),radial-gradient(circle at 92% 28%,rgba(28,111,160,.13),transparent 34%),linear-gradient(180deg,#04171c 0%,#061e24 52%,#041319 100%);color:#f1ffff}
-  .app{min-height:100vh}
-  .main{margin-left:0!important;min-width:0;padding-bottom:calc(92px + env(safe-area-inset-bottom))!important}
-  .top{position:sticky;top:0;z-index:35;min-height:66px;padding:9px 12px!important;gap:8px;background:rgba(3,22,28,.92)!important;border-bottom:1px solid rgba(57,230,226,.24)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-  .top>div:first-child{gap:9px!important;min-width:0}
-  .top h1{font-size:16px!important;line-height:1.2;margin:0 0 3px!important;color:#f3ffff}
-  .top small{font-size:9px!important;letter-spacing:.09em;color:#8bbdc1!important}
-  #mobileMenu{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;padding:0!important;border:1px solid rgba(57,230,226,.68)!important;border-radius:12px!important;background:linear-gradient(145deg,rgba(20,133,143,.31),rgba(4,45,53,.72))!important;color:#72f7f0!important;font-size:20px;box-shadow:0 0 17px rgba(26,214,213,.15)}
-  .connection{font-size:9px;white-space:nowrap;color:#9adad7!important}
-  #openSite{display:none!important}
-  .content{padding:12px 11px calc(112px + env(safe-area-inset-bottom))!important}
-  #section-dashboard>.head{display:flex;align-items:flex-start;gap:8px;padding:3px 1px 0;margin-bottom:4px}
-  #section-dashboard>.head>div{min-width:0}
-  #section-dashboard>.head h2{font-size:16px;line-height:1.25;margin:0 0 4px;color:#eaffff}
-  #section-dashboard>.head p{font-size:10px;line-height:1.5;margin:0;color:#9abdc0;max-width:255px}
-  #section-dashboard>.head>.btn{font-size:10px;white-space:nowrap;padding:7px 9px;border-radius:10px}
-  #section-dashboard .head+.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin-top:12px!important}
-  #section-dashboard .head+.grid .stat{position:relative;isolation:isolate;overflow:hidden;min-width:0;min-height:86px!important;padding:12px 11px!important;border-radius:15px!important;border:1px solid rgba(var(--mobile-stat-rgb,55,220,220),.42)!important;background:linear-gradient(145deg,rgba(var(--mobile-stat-rgb,36,195,201),.17),rgba(4,34,42,.88) 70%)!important;box-shadow:inset 0 1px 0 rgba(220,255,255,.065),0 9px 22px rgba(0,0,0,.13)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-  #section-dashboard .head+.grid .stat:before{content:"";position:absolute;left:0;top:13px;bottom:13px;width:3px;border-radius:0 4px 4px 0;background:linear-gradient(180deg,rgba(var(--mobile-stat-rgb,55,220,220),1),rgba(var(--mobile-stat-rgb,55,220,220),.22));box-shadow:0 0 14px rgba(var(--mobile-stat-rgb,55,220,220),.25)}
-  #section-dashboard .head+.grid .stat:nth-child(1){--mobile-stat-rgb:44,224,222}
-  #section-dashboard .head+.grid .stat:nth-child(2){--mobile-stat-rgb:54,173,235}
-  #section-dashboard .head+.grid .stat:nth-child(3){--mobile-stat-rgb:239,177,82}
-  #section-dashboard .head+.grid .stat:nth-child(4){--mobile-stat-rgb:92,220,174}
-  #section-dashboard .head+.grid .stat .muted{font-size:10px;line-height:1.35;color:#bbdfe0!important;letter-spacing:.01em;min-height:25px}
-  #section-dashboard .head+.grid .stat .num{font-size:24px!important;line-height:1.05;font-weight:800;color:#f3ffff!important;margin-top:6px;text-shadow:0 2px 17px rgba(57,230,226,.12)}
-  #section-dashboard>.grid[style*="margin-top"]{display:none!important}
-  .doma-mobile-quickactions{display:block!important;margin:17px 0 16px}
-  .doma-mobile-quick-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 10px}
-  .doma-mobile-quick-head strong{font-size:13px;letter-spacing:.01em;color:#edffff}
-  .doma-mobile-quick-head span{font-size:9px;color:#83b5b9;letter-spacing:.08em;text-transform:uppercase}
-  .doma-mobile-quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-  .doma-mobile-quick-card{appearance:none;display:flex;min-width:0;min-height:82px;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:9px 4px;border-radius:14px;border:1px solid rgba(var(--quick-rgb,54,219,217),.53);background:linear-gradient(150deg,rgba(var(--quick-rgb,54,219,217),.16),rgba(4,29,37,.88) 76%);box-shadow:inset 0 1px 0 rgba(230,255,255,.065),0 8px 18px rgba(0,0,0,.12);color:#f1ffff;text-align:center;font:inherit;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
-  .doma-mobile-quick-card:active{transform:scale(.97);box-shadow:0 0 16px rgba(57,230,226,.18)}
-  .doma-mobile-quick-card:nth-child(1){--quick-rgb:46,223,224}
-  .doma-mobile-quick-card:nth-child(2){--quick-rgb:67,186,231}
-  .doma-mobile-quick-card:nth-child(3){--quick-rgb:105,228,183}
-  .doma-mobile-quick-card:nth-child(4){--quick-rgb:131,174,255}
-  .doma-mobile-quick-card:nth-child(5){--quick-rgb:226,178,83}
-  .doma-mobile-quick-card:nth-child(6){--quick-rgb:62,220,208}
-  .doma-mobile-quick-icon{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:rgba(var(--quick-rgb),.15);color:rgb(var(--quick-rgb));font-size:20px;line-height:1;font-weight:800;text-shadow:0 0 13px rgba(var(--quick-rgb),.24)}
-  .doma-mobile-quick-label{font-size:10px;line-height:1.2;font-weight:700;overflow-wrap:anywhere}
-  .card,.table-wrap,.modal-card,.admin-health,.info-box,.empty{background:linear-gradient(145deg,rgba(8,45,52,.87),rgba(4,24,31,.94))!important;border-color:rgba(69,196,198,.25)!important;color:#ecffff}
-  .muted{color:var(--mobile-muted)!important}
-  .btn{border-radius:11px}
-  .btn:not(.secondary){background:linear-gradient(135deg,#0e9eaa,#08727f)!important;border-color:rgba(92,243,236,.58)!important;color:white!important}
-  .btn.secondary{background:rgba(18,68,77,.7)!important;border-color:rgba(71,192,194,.3)!important;color:#ddffff!important}
-  input,select,textarea,.field{background:rgba(3,22,29,.84)!important;border-color:rgba(64,190,194,.32)!important;color:#eaffff!important}
-  table th{background:rgba(11,66,75,.8)!important;color:#baf8f3!important}
-  table td{border-color:rgba(76,163,168,.16)!important}
-  .sidebar{z-index:61!important;width:min(84vw,305px)!important;padding-top:calc(16px + env(safe-area-inset-top))!important;background:linear-gradient(180deg,rgba(3,23,29,.99),rgba(4,35,42,.99) 60%,rgba(3,22,29,.99))!important;border-right:1px solid rgba(57,230,226,.35)!important;box-shadow:20px 0 55px rgba(0,0,0,.54)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-  .side-logo{border-bottom:1px solid rgba(57,230,226,.16);margin-bottom:12px}
-  .side-logo .logo{color:#f1ffff}
-  .side-logo .logo span{color:#55e8e1}
-  .nav-title{color:#65c8c8!important;font-size:10px!important;letter-spacing:.13em!important}
-  .nav-btn{border:1px solid transparent!important;border-radius:11px!important;color:#c4e3e4!important}
-  .nav-btn:hover,.nav-btn.active{background:linear-gradient(135deg,rgba(16,125,134,.3),rgba(10,63,76,.64))!important;color:#efffff!important;border-color:rgba(57,230,226,.28)!important;box-shadow:inset 3px 0 0 #42e1dc,0 0 15px rgba(25,186,191,.07)!important}
-  .doma-mobile-drawer-backdrop{display:none;position:fixed;inset:0;bottom:calc(78px + env(safe-area-inset-bottom));z-index:59;border:0;background:rgba(0,11,16,.66);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
-  .doma-mobile-drawer-backdrop.open{display:block}
-  .doma-mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:100;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));min-height:70px;background:rgba(3,19,25,.94);border-top:1px solid rgba(57,230,226,.31);box-shadow:0 -10px 32px rgba(0,0,0,.22);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-  .doma-mobile-tab{appearance:none;display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:3px 2px;border:1px solid transparent;border-radius:13px;background:transparent;color:#88acb0;font:inherit;cursor:pointer;transition:color .18s ease,background .18s ease}
-  .doma-mobile-tab-icon{display:grid;place-items:center;width:30px;height:28px;border-radius:10px;font-size:19px;line-height:1;font-weight:800}
-  .doma-mobile-tab-label{font-size:9px;line-height:1.1;font-weight:700;letter-spacing:.02em}
-  .doma-mobile-tab.active{color:#62f4ed}
-  .doma-mobile-tab.active .doma-mobile-tab-icon{background:linear-gradient(145deg,rgba(42,205,204,.24),rgba(15,94,107,.3));box-shadow:0 0 17px rgba(45,220,219,.16);color:#8cfff8}
-  .doma-mobile-tab:active{background:rgba(37,177,180,.12)}
-  .modal{padding:10px}
-  .modal-card{max-width:100%;max-height:88vh;overflow:auto;border-radius:18px}
-  .actions{gap:6px}
-}
-</style>
-<script id="doma-mobile-teal-glass-script-v18">
-(function(){
-  'use strict';
-  function install(){
-    var app=document.getElementById('app');
-    var dashboard=document.getElementById('section-dashboard');
-    if(!app||!dashboard)return;
-    if(!document.getElementById('domaMobileQuickActions')){
-      var quick=document.createElement('div');
-      quick.id='domaMobileQuickActions';
-      quick.className='doma-mobile-quickactions';
-      quick.innerHTML='<div class="doma-mobile-quick-head"><strong>⚡ Quick Actions</strong><span>Quick access</span></div>'+
-        '<div class="doma-mobile-quick-grid">'+
-        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="students" aria-label="Manage Students"><span class="doma-mobile-quick-icon">♙</span><span class="doma-mobile-quick-label">Manage Students</span></button>'+
-        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="grades" aria-label="Grades"><span class="doma-mobile-quick-icon">✧</span><span class="doma-mobile-quick-label">Grades</span></button>'+
-        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="lessons" aria-label="Lessons"><span class="doma-mobile-quick-icon">▣</span><span class="doma-mobile-quick-label">Lessons</span></button>'+
-        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="quizzes" aria-label="Exams and Quizzes"><span class="doma-mobile-quick-icon">✓</span><span class="doma-mobile-quick-label">Quizzes</span></button>'+
-        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="analytics" aria-label="Reports"><span class="doma-mobile-quick-icon">▥</span><span class="doma-mobile-quick-label">Reports</span></button>'+
-        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="settings" aria-label="Settings"><span class="doma-mobile-quick-icon">⚙</span><span class="doma-mobile-quick-label">Settings</span></button>'+
-        '</div>';
-      var legacyGrid=dashboard.querySelector(':scope > .grid[style*="margin-top"]');
-      if(legacyGrid)legacyGrid.insertAdjacentElement('afterend',quick);
-      else dashboard.appendChild(quick);
-    }
-    var nav=document.getElementById('domaMobileBottomNav');
-    if(!nav){
-      nav=document.createElement('nav');
-      nav.id='domaMobileBottomNav';
-      nav.className='doma-mobile-bottom-nav';
-      nav.setAttribute('aria-label','Admin mobile navigation');
-      nav.innerHTML=
-        '<button type="button" class="doma-mobile-tab active" data-mobile-tab="home"><span class="doma-mobile-tab-icon">⌂</span><span class="doma-mobile-tab-label">Home</span></button>'+
-        '<button type="button" class="doma-mobile-tab" data-mobile-tab="students"><span class="doma-mobile-tab-icon">♙</span><span class="doma-mobile-tab-label">Students</span></button>'+
-        '<button type="button" class="doma-mobile-tab" data-mobile-tab="courses"><span class="doma-mobile-tab-icon">▣</span><span class="doma-mobile-tab-label">Courses</span></button>'+
-        '<button type="button" class="doma-mobile-tab" data-mobile-tab="more"><span class="doma-mobile-tab-icon">•••</span><span class="doma-mobile-tab-label">More</span></button>';
-      app.appendChild(nav);
-    }
-    var backdrop=document.getElementById('domaMobileDrawerBackdrop');
-    if(!backdrop){
-      backdrop=document.createElement('button');
-      backdrop.type='button';
-      backdrop.id='domaMobileDrawerBackdrop';
-      backdrop.className='doma-mobile-drawer-backdrop';
-      backdrop.setAttribute('aria-label','Close navigation menu');
-      app.appendChild(backdrop);
-    }
-    var sidebar=document.getElementById('sidebar');
-    var menu=document.getElementById('mobileMenu');
-    function sync(){
-      var sectionButton=document.querySelector('.nav-btn.active[data-section]');
-      var section=sectionButton?sectionButton.dataset.section:'dashboard';
-      var drawerOpen=!!(sidebar&&sidebar.classList.contains('open'));
-      backdrop.classList.toggle('open',drawerOpen);
-      var selected='more';
-      if(!drawerOpen){
-        if(section==='dashboard')selected='home';
-        else if(['students','activity','progress','results','certificates'].indexOf(section)!==-1)selected='students';
-        else if(['grades','units','lessons','quizzes','question-bank','homework','english-course','course-sales'].indexOf(section)!==-1)selected='courses';
-      }
-      nav.querySelectorAll('[data-mobile-tab]').forEach(function(button){
-        var active=button.dataset.mobileTab===selected;
-        button.classList.toggle('active',active);
-        if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
-      });
-    }
-    function go(section){
-      var button=document.querySelector('.nav-btn[data-section="'+section+'"]');
-      if(button)button.click();
-      else if(typeof window.loadSection==='function')window.loadSection(section);
-      window.setTimeout(sync,80);
-    }
-    if(!nav.dataset.wired){
-      nav.dataset.wired='1';
-      nav.querySelectorAll('[data-mobile-tab]').forEach(function(button){
-        button.addEventListener('click',function(){
-          var tab=button.dataset.mobileTab;
-          if(tab==='more'){
-            if(menu)menu.click();
-            window.setTimeout(sync,40);
-          }else if(tab==='home')go('dashboard');
-          else if(tab==='students')go('students');
-          else if(tab==='courses')go('lessons');
-        });
-      });
-    }
-    var quick=document.getElementById('domaMobileQuickActions');
-    if(quick&&!quick.dataset.wired){
-      quick.dataset.wired='1';
-      quick.querySelectorAll('[data-mobile-section]').forEach(function(button){
-        button.addEventListener('click',function(){go(button.dataset.mobileSection)});
-      });
-    }
-    if(backdrop&&!backdrop.dataset.wired){
-      backdrop.dataset.wired='1';
-      backdrop.addEventListener('click',function(){if(sidebar)sidebar.classList.remove('open');sync()});
-    }
-    if(menu&&!menu.dataset.tealGlassSync){
-      menu.dataset.tealGlassSync='1';
-      menu.addEventListener('click',function(){window.setTimeout(sync,40)});
-    }
-    document.querySelectorAll('.nav-btn[data-section]').forEach(function(button){
-      if(button.dataset.mobileSync)return;
-      button.dataset.mobileSync='1';
-      button.addEventListener('click',function(){window.setTimeout(sync,50)});
-    });
-    if(sidebar&&!sidebar.dataset.mobileObserver){
-      sidebar.dataset.mobileObserver='1';
-      new MutationObserver(sync).observe(sidebar,{attributes:true,attributeFilter:['class']});
-    }
-    sync();
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
-  else install();
-})();
-</script>
-
-</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
 };
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
@@ -2522,6 +2330,197 @@ async function mfRejectEnglishCourseRequest(id){
   }
   if(document.readyState === 'complete') registerAdminServiceWorker();
   else window.addEventListener('load', registerAdminServiceWorker, {once:true});
+})();
+</script>
+
+<style id="doma-mobile-teal-glass-v18">
+/* Mobile-only Teal Glass admin redesign. Desktop UI and existing business logic remain unchanged. */
+.doma-mobile-quickactions,.doma-mobile-bottom-nav,.doma-mobile-drawer-backdrop{display:none}
+@media(max-width:760px){
+  :root{--mobile-teal:#39e6e2;--mobile-teal-soft:#9af7f1;--mobile-glass:rgba(5,35,42,.83);--mobile-edge:rgba(65,231,224,.36);--mobile-muted:#a3c6c8}
+  body{background:radial-gradient(circle at 8% 5%,rgba(18,156,168,.22),transparent 32%),radial-gradient(circle at 92% 28%,rgba(28,111,160,.13),transparent 34%),linear-gradient(180deg,#04171c 0%,#061e24 52%,#041319 100%);color:#f1ffff}
+  .app{min-height:100vh}
+  .main{margin-left:0!important;min-width:0;padding-bottom:calc(92px + env(safe-area-inset-bottom))!important}
+  .top{position:sticky;top:0;z-index:35;min-height:66px;padding:9px 12px!important;gap:8px;background:rgba(3,22,28,.92)!important;border-bottom:1px solid rgba(57,230,226,.24)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+  .top>div:first-child{gap:9px!important;min-width:0}
+  .top h1{font-size:16px!important;line-height:1.2;margin:0 0 3px!important;color:#f3ffff}
+  .top small{font-size:9px!important;letter-spacing:.09em;color:#8bbdc1!important}
+  #mobileMenu{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;padding:0!important;border:1px solid rgba(57,230,226,.68)!important;border-radius:12px!important;background:linear-gradient(145deg,rgba(20,133,143,.31),rgba(4,45,53,.72))!important;color:#72f7f0!important;font-size:20px;box-shadow:0 0 17px rgba(26,214,213,.15)}
+  .connection{font-size:9px;white-space:nowrap;color:#9adad7!important}
+  #openSite{display:none!important}
+  .content{padding:12px 11px calc(112px + env(safe-area-inset-bottom))!important}
+  #section-dashboard>.head{display:flex;align-items:flex-start;gap:8px;padding:3px 1px 0;margin-bottom:4px}
+  #section-dashboard>.head>div{min-width:0}
+  #section-dashboard>.head h2{font-size:16px;line-height:1.25;margin:0 0 4px;color:#eaffff}
+  #section-dashboard>.head p{font-size:10px;line-height:1.5;margin:0;color:#9abdc0;max-width:255px}
+  #section-dashboard>.head>.btn{font-size:10px;white-space:nowrap;padding:7px 9px;border-radius:10px}
+  #section-dashboard .head+.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin-top:12px!important}
+  #section-dashboard .head+.grid .stat{position:relative;isolation:isolate;overflow:hidden;min-width:0;min-height:86px!important;padding:12px 11px!important;border-radius:15px!important;border:1px solid rgba(var(--mobile-stat-rgb,55,220,220),.42)!important;background:linear-gradient(145deg,rgba(var(--mobile-stat-rgb,36,195,201),.17),rgba(4,34,42,.88) 70%)!important;box-shadow:inset 0 1px 0 rgba(220,255,255,.065),0 9px 22px rgba(0,0,0,.13)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  #section-dashboard .head+.grid .stat:before{content:"";position:absolute;left:0;top:13px;bottom:13px;width:3px;border-radius:0 4px 4px 0;background:linear-gradient(180deg,rgba(var(--mobile-stat-rgb,55,220,220),1),rgba(var(--mobile-stat-rgb,55,220,220),.22));box-shadow:0 0 14px rgba(var(--mobile-stat-rgb,55,220,220),.25)}
+  #section-dashboard .head+.grid .stat:nth-child(1){--mobile-stat-rgb:44,224,222}
+  #section-dashboard .head+.grid .stat:nth-child(2){--mobile-stat-rgb:54,173,235}
+  #section-dashboard .head+.grid .stat:nth-child(3){--mobile-stat-rgb:239,177,82}
+  #section-dashboard .head+.grid .stat:nth-child(4){--mobile-stat-rgb:92,220,174}
+  #section-dashboard .head+.grid .stat .muted{font-size:10px;line-height:1.35;color:#bbdfe0!important;letter-spacing:.01em;min-height:25px}
+  #section-dashboard .head+.grid .stat .num{font-size:24px!important;line-height:1.05;font-weight:800;color:#f3ffff!important;margin-top:6px;text-shadow:0 2px 17px rgba(57,230,226,.12)}
+  #section-dashboard>.grid[style*="margin-top"]{display:none!important}
+  .doma-mobile-quickactions{display:block!important;margin:17px 0 16px}
+  .doma-mobile-quick-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 10px}
+  .doma-mobile-quick-head strong{font-size:13px;letter-spacing:.01em;color:#edffff}
+  .doma-mobile-quick-head span{font-size:9px;color:#83b5b9;letter-spacing:.08em;text-transform:uppercase}
+  .doma-mobile-quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .doma-mobile-quick-card{appearance:none;display:flex;min-width:0;min-height:82px;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:9px 4px;border-radius:14px;border:1px solid rgba(var(--quick-rgb,54,219,217),.53);background:linear-gradient(150deg,rgba(var(--quick-rgb,54,219,217),.16),rgba(4,29,37,.88) 76%);box-shadow:inset 0 1px 0 rgba(230,255,255,.065),0 8px 18px rgba(0,0,0,.12);color:#f1ffff;text-align:center;font:inherit;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .doma-mobile-quick-card:active{transform:scale(.97);box-shadow:0 0 16px rgba(57,230,226,.18)}
+  .doma-mobile-quick-card:nth-child(1){--quick-rgb:46,223,224}
+  .doma-mobile-quick-card:nth-child(2){--quick-rgb:67,186,231}
+  .doma-mobile-quick-card:nth-child(3){--quick-rgb:105,228,183}
+  .doma-mobile-quick-card:nth-child(4){--quick-rgb:131,174,255}
+  .doma-mobile-quick-card:nth-child(5){--quick-rgb:226,178,83}
+  .doma-mobile-quick-card:nth-child(6){--quick-rgb:62,220,208}
+  .doma-mobile-quick-icon{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:rgba(var(--quick-rgb),.15);color:rgb(var(--quick-rgb));font-size:20px;line-height:1;font-weight:800;text-shadow:0 0 13px rgba(var(--quick-rgb),.24)}
+  .doma-mobile-quick-label{font-size:10px;line-height:1.2;font-weight:700;overflow-wrap:anywhere}
+  .card,.table-wrap,.modal-card,.admin-health,.info-box,.empty{background:linear-gradient(145deg,rgba(8,45,52,.87),rgba(4,24,31,.94))!important;border-color:rgba(69,196,198,.25)!important;color:#ecffff}
+  .muted{color:var(--mobile-muted)!important}
+  .btn{border-radius:11px}
+  .btn:not(.secondary){background:linear-gradient(135deg,#0e9eaa,#08727f)!important;border-color:rgba(92,243,236,.58)!important;color:white!important}
+  .btn.secondary{background:rgba(18,68,77,.7)!important;border-color:rgba(71,192,194,.3)!important;color:#ddffff!important}
+  input,select,textarea,.field{background:rgba(3,22,29,.84)!important;border-color:rgba(64,190,194,.32)!important;color:#eaffff!important}
+  table th{background:rgba(11,66,75,.8)!important;color:#baf8f3!important}
+  table td{border-color:rgba(76,163,168,.16)!important}
+  .sidebar{z-index:61!important;width:min(84vw,305px)!important;padding-top:calc(16px + env(safe-area-inset-top))!important;background:linear-gradient(180deg,rgba(3,23,29,.99),rgba(4,35,42,.99) 60%,rgba(3,22,29,.99))!important;border-right:1px solid rgba(57,230,226,.35)!important;box-shadow:20px 0 55px rgba(0,0,0,.54)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+  .side-logo{border-bottom:1px solid rgba(57,230,226,.16);margin-bottom:12px}
+  .side-logo .logo{color:#f1ffff}
+  .side-logo .logo span{color:#55e8e1}
+  .nav-title{color:#65c8c8!important;font-size:10px!important;letter-spacing:.13em!important}
+  .nav-btn{border:1px solid transparent!important;border-radius:11px!important;color:#c4e3e4!important}
+  .nav-btn:hover,.nav-btn.active{background:linear-gradient(135deg,rgba(16,125,134,.3),rgba(10,63,76,.64))!important;color:#efffff!important;border-color:rgba(57,230,226,.28)!important;box-shadow:inset 3px 0 0 #42e1dc,0 0 15px rgba(25,186,191,.07)!important}
+  .doma-mobile-drawer-backdrop{display:none;position:fixed;inset:0;bottom:calc(78px + env(safe-area-inset-bottom));z-index:59;border:0;background:rgba(0,11,16,.66);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+  .doma-mobile-drawer-backdrop.open{display:block}
+  .doma-mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:100;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));min-height:70px;background:rgba(3,19,25,.94);border-top:1px solid rgba(57,230,226,.31);box-shadow:0 -10px 32px rgba(0,0,0,.22);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+  .doma-mobile-tab{appearance:none;display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:3px 2px;border:1px solid transparent;border-radius:13px;background:transparent;color:#88acb0;font:inherit;cursor:pointer;transition:color .18s ease,background .18s ease}
+  .doma-mobile-tab-icon{display:grid;place-items:center;width:30px;height:28px;border-radius:10px;font-size:19px;line-height:1;font-weight:800}
+  .doma-mobile-tab-label{font-size:9px;line-height:1.1;font-weight:700;letter-spacing:.02em}
+  .doma-mobile-tab.active{color:#62f4ed}
+  .doma-mobile-tab.active .doma-mobile-tab-icon{background:linear-gradient(145deg,rgba(42,205,204,.24),rgba(15,94,107,.3));box-shadow:0 0 17px rgba(45,220,219,.16);color:#8cfff8}
+  .doma-mobile-tab:active{background:rgba(37,177,180,.12)}
+  .modal{padding:10px}
+  .modal-card{max-width:100%;max-height:88vh;overflow:auto;border-radius:18px}
+  .actions{gap:6px}
+}
+</style>
+<script id="doma-mobile-teal-glass-script-v18">
+(function(){
+  'use strict';
+  function install(){
+    var app=document.getElementById('app');
+    var dashboard=document.getElementById('section-dashboard');
+    if(!app||!dashboard)return;
+    if(!document.getElementById('domaMobileQuickActions')){
+      var quick=document.createElement('div');
+      quick.id='domaMobileQuickActions';
+      quick.className='doma-mobile-quickactions';
+      quick.innerHTML='<div class="doma-mobile-quick-head"><strong>⚡ Quick Actions</strong><span>Quick access</span></div>'+
+        '<div class="doma-mobile-quick-grid">'+
+        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="students" aria-label="Manage Students"><span class="doma-mobile-quick-icon">♙</span><span class="doma-mobile-quick-label">Manage Students</span></button>'+
+        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="grades" aria-label="Grades"><span class="doma-mobile-quick-icon">✧</span><span class="doma-mobile-quick-label">Grades</span></button>'+
+        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="lessons" aria-label="Lessons"><span class="doma-mobile-quick-icon">▣</span><span class="doma-mobile-quick-label">Lessons</span></button>'+
+        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="quizzes" aria-label="Exams and Quizzes"><span class="doma-mobile-quick-icon">✓</span><span class="doma-mobile-quick-label">Quizzes</span></button>'+
+        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="analytics" aria-label="Reports"><span class="doma-mobile-quick-icon">▥</span><span class="doma-mobile-quick-label">Reports</span></button>'+
+        '<button type="button" class="doma-mobile-quick-card" data-mobile-section="settings" aria-label="Settings"><span class="doma-mobile-quick-icon">⚙</span><span class="doma-mobile-quick-label">Settings</span></button>'+
+        '</div>';
+      var legacyGrid=dashboard.querySelector(':scope > .grid[style*="margin-top"]');
+      if(legacyGrid)legacyGrid.insertAdjacentElement('afterend',quick);
+      else dashboard.appendChild(quick);
+    }
+    var nav=document.getElementById('domaMobileBottomNav');
+    if(!nav){
+      nav=document.createElement('nav');
+      nav.id='domaMobileBottomNav';
+      nav.className='doma-mobile-bottom-nav';
+      nav.setAttribute('aria-label','Admin mobile navigation');
+      nav.innerHTML=
+        '<button type="button" class="doma-mobile-tab active" data-mobile-tab="home"><span class="doma-mobile-tab-icon">⌂</span><span class="doma-mobile-tab-label">Home</span></button>'+
+        '<button type="button" class="doma-mobile-tab" data-mobile-tab="students"><span class="doma-mobile-tab-icon">♙</span><span class="doma-mobile-tab-label">Students</span></button>'+
+        '<button type="button" class="doma-mobile-tab" data-mobile-tab="courses"><span class="doma-mobile-tab-icon">▣</span><span class="doma-mobile-tab-label">Courses</span></button>'+
+        '<button type="button" class="doma-mobile-tab" data-mobile-tab="more"><span class="doma-mobile-tab-icon">•••</span><span class="doma-mobile-tab-label">More</span></button>';
+      app.appendChild(nav);
+    }
+    var backdrop=document.getElementById('domaMobileDrawerBackdrop');
+    if(!backdrop){
+      backdrop=document.createElement('button');
+      backdrop.type='button';
+      backdrop.id='domaMobileDrawerBackdrop';
+      backdrop.className='doma-mobile-drawer-backdrop';
+      backdrop.setAttribute('aria-label','Close navigation menu');
+      app.appendChild(backdrop);
+    }
+    var sidebar=document.getElementById('sidebar');
+    var menu=document.getElementById('mobileMenu');
+    function sync(){
+      var sectionButton=document.querySelector('.nav-btn.active[data-section]');
+      var section=sectionButton?sectionButton.dataset.section:'dashboard';
+      var drawerOpen=!!(sidebar&&sidebar.classList.contains('open'));
+      backdrop.classList.toggle('open',drawerOpen);
+      var selected='more';
+      if(!drawerOpen){
+        if(section==='dashboard')selected='home';
+        else if(['students','activity','progress','results','certificates'].indexOf(section)!==-1)selected='students';
+        else if(['grades','units','lessons','quizzes','question-bank','homework','english-course','course-sales'].indexOf(section)!==-1)selected='courses';
+      }
+      nav.querySelectorAll('[data-mobile-tab]').forEach(function(button){
+        var active=button.dataset.mobileTab===selected;
+        button.classList.toggle('active',active);
+        if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
+      });
+    }
+    function go(section){
+      var button=document.querySelector('.nav-btn[data-section="'+section+'"]');
+      if(button)button.click();
+      else if(typeof window.loadSection==='function')window.loadSection(section);
+      window.setTimeout(sync,80);
+    }
+    if(!nav.dataset.wired){
+      nav.dataset.wired='1';
+      nav.querySelectorAll('[data-mobile-tab]').forEach(function(button){
+        button.addEventListener('click',function(){
+          var tab=button.dataset.mobileTab;
+          if(tab==='more'){
+            if(menu)menu.click();
+            window.setTimeout(sync,40);
+          }else if(tab==='home')go('dashboard');
+          else if(tab==='students')go('students');
+          else if(tab==='courses')go('lessons');
+        });
+      });
+    }
+    var quick=document.getElementById('domaMobileQuickActions');
+    if(quick&&!quick.dataset.wired){
+      quick.dataset.wired='1';
+      quick.querySelectorAll('[data-mobile-section]').forEach(function(button){
+        button.addEventListener('click',function(){go(button.dataset.mobileSection)});
+      });
+    }
+    if(backdrop&&!backdrop.dataset.wired){
+      backdrop.dataset.wired='1';
+      backdrop.addEventListener('click',function(){if(sidebar)sidebar.classList.remove('open');sync()});
+    }
+    if(menu&&!menu.dataset.tealGlassSync){
+      menu.dataset.tealGlassSync='1';
+      menu.addEventListener('click',function(){window.setTimeout(sync,40)});
+    }
+    document.querySelectorAll('.nav-btn[data-section]').forEach(function(button){
+      if(button.dataset.mobileSync)return;
+      button.dataset.mobileSync='1';
+      button.addEventListener('click',function(){window.setTimeout(sync,50)});
+    });
+    if(sidebar&&!sidebar.dataset.mobileObserver){
+      sidebar.dataset.mobileObserver='1';
+      new MutationObserver(sync).observe(sidebar,{attributes:true,attributeFilter:['class']});
+    }
+    sync();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
 })();
 </script>
 </body>
