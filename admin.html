@@ -11,9 +11,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v33">
+<link rel="icon" type="image/svg+xml" href="./doma-leaf-book-icon.svg?v=doma-admin-v34">
 <link rel="apple-touch-icon" href="./mr-fluent-icon-192.png?v=18">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v33">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-v34">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2315,7 +2315,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v33', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v34', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -3134,7 +3134,7 @@ html,body,*{
 </style>
 
 
-<style id="doma-mobile-centered-isolated-drawer-v33">
+<style id="doma-mobile-centered-isolated-drawer-v34">
 /* Centered Teal Glass navigation drawer with a fully isolated, scrollable menu. */
 @media(max-width:760px){
   body.doma-admin-drawer-open{
@@ -3243,6 +3243,108 @@ html,body,*{
 }
 @media(prefers-reduced-motion:reduce){
   #sidebar.sidebar{transition:none!important}
+}
+</style>
+
+
+<style id="doma-mobile-menu-minimal-neon-text-v34">
+/* Minimal single-color navigation panel: no scroll track, no item boxes, mint neon text only. */
+@media(max-width:760px){
+  #sidebar.sidebar{
+    padding:12px 14px calc(14px + env(safe-area-inset-bottom))!important;
+    border:0!important;
+    outline:0!important;
+    background:#06272e!important;
+    box-shadow:0 24px 70px rgba(0,0,0,.5),0 0 28px rgba(98,255,185,.07)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+    scrollbar-width:none!important;
+    -ms-overflow-style:none!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-y!important;
+  }
+  /* Keep touch scrolling active while hiding the visible scrollbar entirely. */
+  #sidebar.sidebar::-webkit-scrollbar,
+  #sidebar.sidebar *::-webkit-scrollbar{
+    display:none!important;
+    width:0!important;
+    height:0!important;
+    background:transparent!important;
+  }
+  #sidebar.sidebar,
+  #sidebar.sidebar *{
+    scrollbar-width:none!important;
+    -ms-overflow-style:none!important;
+  }
+
+  /* Remove the DOMA ACADEMY / Production Admin heading block at the top. */
+  #sidebar .side-logo{
+    display:none!important;
+    border:0!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  #sidebar nav{
+    margin:0!important;
+    padding:0!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  /* Plain text navigation: no separate card fills, frames, or button shadows. */
+  #sidebar .nav-btn,
+  #sidebar .nav-btn:hover,
+  #sidebar .nav-btn:focus,
+  #sidebar .nav-btn:focus-visible,
+  #sidebar .nav-btn.active{
+    display:block!important;
+    width:100%!important;
+    min-height:39px!important;
+    margin:2px 0!important;
+    padding:10px 11px!important;
+    border:0!important;
+    outline:none!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#8bffc1!important;
+    text-align:left!important;
+    font-weight:700!important;
+    text-shadow:0 0 5px rgba(106,255,180,.42),0 0 13px rgba(91,255,171,.23)!important;
+    transition:color .15s ease,text-shadow .15s ease!important;
+  }
+  #sidebar .nav-btn:hover,
+  #sidebar .nav-btn:focus-visible{
+    color:#d4ffe5!important;
+    text-shadow:0 0 6px rgba(132,255,195,.75),0 0 18px rgba(99,255,177,.45)!important;
+  }
+  #sidebar .nav-btn.active{
+    color:#caffdf!important;
+    font-weight:850!important;
+    text-shadow:0 0 7px rgba(132,255,195,.8),0 0 19px rgba(99,255,177,.47)!important;
+  }
+
+  /* Section captions use the same mint family, a little dimmer than action labels. */
+  #sidebar .nav-title{
+    margin:13px 0 4px!important;
+    padding:5px 11px 3px!important;
+    border:0!important;
+    background:transparent!important;
+    color:#5ee6a0!important;
+    font-size:9px!important;
+    font-weight:800!important;
+    letter-spacing:.16em!important;
+    text-shadow:0 0 8px rgba(94,230,160,.25)!important;
+  }
+  #sidebar .nav-btn#logout{
+    margin-top:10px!important;
+    color:#a4ffd0!important;
+  }
 }
 </style>
 
