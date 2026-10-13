@@ -261,7 +261,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v63">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-student-v64">
 <meta name="theme-color" content="#070d12">
 <meta name="application-name" content="𝑫𝑶𝑴𝑨">
 <meta name="apple-mobile-web-app-title" content="𝑫𝑶𝑴𝑨">
@@ -305,7 +305,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v29', {scope:'./'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v30', {scope:'./'});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
     await Promise.race([ready, timeout]);
@@ -521,7 +521,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v29', {scope:'./'}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v30', {scope:'./'}).catch(function(){});
     });
   }
 })();
@@ -10886,7 +10886,7 @@ html body section.how-it-works#how-it-works .how-grid{
 </style>
 
 
-<style id="doma-nav-seam-mint-brand-v63">
+<style id="doma-nav-burgundy-brand-v64">
 /* Remove the divider below the top navigation and align it to the single page canvas. */
 html body .nav{
   background:#070d12!important;
@@ -10897,14 +10897,14 @@ html body .nav{
   backdrop-filter:none!important;
   -webkit-backdrop-filter:none!important;
 }
-/* A restrained mint-green wordmark glow for the top-left Mr. Fluent brand. */
+/* Soft burgundy wordmark with a restrained matching glow. */
 html body .nav .brand>span:last-child{
-  color:#8af5cd!important;
-  text-shadow:0 0 5px rgba(95,249,190,.30),0 0 12px rgba(72,229,166,.18)!important;
+  color:#c96b83!important;
+  text-shadow:0 0 4px rgba(190,55,89,.22),0 0 9px rgba(137,35,62,.12)!important;
 }
 html body .nav .brand>span:last-child small{
-  color:#7db8a2!important;
-  text-shadow:0 0 5px rgba(95,249,190,.14)!important;
+  color:#a76a79!important;
+  text-shadow:0 0 4px rgba(190,55,89,.10)!important;
 }
 /* The requested helper sentence below the main title is removed from the markup. */
 html body header.hero#home h1.hero-main-title{
