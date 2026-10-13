@@ -1813,7 +1813,7 @@ function domaPastelGradeCardMarkup(g,monthly){
     : '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 17 24 7 44 17 24 27 4 17Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M12 21v10c7 5 17 5 24 0V21M42 18v11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   return '<article class="card grade grade-selectable mf-pastel-grade-card" data-grade-search="'+esc(searchable)+'">'+
     '<div class="mf-pastel-grade-top"><span class="mf-pastel-grade-icon" aria-hidden="true">'+icon+'</span><div class="mf-pastel-grade-labels"><h3 class="mf-pastel-grade-title">'+esc(name)+'</h3><p class="mf-pastel-grade-subtitle">English — '+esc(name)+'</p></div></div>'+
-    '<div class="grade-meta mf-pastel-grade-price"><span>'+(Number(monthly)||150)+' EGP / Month</span></div>'+
+    '<div class="grade-meta mf-pastel-grade-price"><span>150 EGP / Month</span></div>'+
     '<button class="btn primary grade-open-button mf-pastel-grade-button" type="button" data-doma-grade-open="'+esc(name)+'">Open Grade →</button>'+
   '</article>';
 }
@@ -1838,8 +1838,7 @@ function renderGrades(list=grades){
   const grid=$('gradeGrid');
   if(!grid)return;
   grid.innerHTML=orderedList.length?orderedList.map(g=>{
-    const pr=gradePrices[g.id]||DEFAULT_PRICES[g.name]||{monthly:150,annual:150};
-    return domaPastelGradeCardMarkup(g,pr.monthly);
+    return domaPastelGradeCardMarkup(g,150);
   }).join(''):'<div class="empty">No active grades are available.</div>';
   grid.removeAttribute('hidden');
   grid.style.setProperty('display','grid','important');
@@ -8640,40 +8639,104 @@ header.hero#home .container.hero-grid > div:first-child > p {
 }
 </style>
 
-<style id="doma-grade-design4-ocean-blue-v1">
-/* Selected Design 4: deep ocean blue, electric blue and cyan glass cards.
-   Keep the website background and existing grade layout; style only the cards. */
-#grades{background:transparent!important;color:inherit!important}
-#grades>.container{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
-#gradeGrid>.mf-pastel-grade-card{
- color:#eaf8ff!important;border:1.5px solid transparent!important;border-radius:16px!important;
- background:linear-gradient(145deg,rgba(5,31,60,.98) 0%,rgba(4,39,73,.97) 54%,rgba(3,19,42,.99) 100%) padding-box,linear-gradient(135deg,#46eaff 0%,#168bff 45%,#6d75ff 100%) border-box!important;
- box-shadow:inset 0 1px 0 rgba(219,249,255,.16),inset 0 -14px 28px rgba(3,14,39,.24),0 0 5px rgba(44,199,255,.42),0 7px 20px rgba(0,5,24,.22)!important;
- transition:transform .18s ease,box-shadow .18s ease!important
+<style id="doma-grade-design4-mint-green-v2">
+/* Approved Design 4 recolored to mint green; no phone shell or invented page background. */
+#grades { background: transparent !important; color: inherit !important; }
+#grades > .container {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
-#gradeGrid>.mf-pastel-grade-card::before{background:linear-gradient(122deg,rgba(255,255,255,.13) 0%,rgba(87,213,255,.08) 28%,rgba(83,100,255,.035) 58%,rgba(255,255,255,.015) 100%)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(1){background:linear-gradient(145deg,rgba(4,57,83,.98),rgba(5,37,70,.98) 56%,rgba(3,22,44,.99)) padding-box,linear-gradient(135deg,#65f4ff,#00bfe8 55%,#1686ff) border-box!important;box-shadow:inset 0 1px 0 rgba(222,255,255,.16),0 0 5px rgba(31,220,255,.34),0 7px 20px rgba(0,5,24,.22)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(2){background:linear-gradient(145deg,rgba(5,39,91,.98),rgba(5,34,76,.98) 55%,rgba(3,18,49,.99)) padding-box,linear-gradient(135deg,#45c7ff,#176fff 52%,#6179ff) border-box!important;box-shadow:inset 0 1px 0 rgba(222,245,255,.16),0 0 5px rgba(49,129,255,.38),0 7px 20px rgba(0,5,24,.22)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(3){background:linear-gradient(145deg,rgba(28,29,91,.98),rgba(15,28,73,.98) 55%,rgba(5,19,46,.99)) padding-box,linear-gradient(135deg,#8d8bff,#4e7cff 54%,#27d8ff) border-box!important;box-shadow:inset 0 1px 0 rgba(231,236,255,.15),0 0 5px rgba(117,111,255,.37),0 7px 20px rgba(0,5,24,.22)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(4){background:linear-gradient(145deg,rgba(4,45,82,.98),rgba(4,34,73,.98) 55%,rgba(3,18,44,.99)) padding-box,linear-gradient(135deg,#31d7ff,#168bff 53%,#4d70ff) border-box!important;box-shadow:inset 0 1px 0 rgba(222,249,255,.16),0 0 5px rgba(40,184,255,.36),0 7px 20px rgba(0,5,24,.22)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(5){background:linear-gradient(145deg,rgba(4,47,76,.98),rgba(5,35,68,.98) 55%,rgba(3,17,42,.99)) padding-box,linear-gradient(135deg,#48eeff,#188cff 52%,#596cff) border-box!important;box-shadow:inset 0 1px 0 rgba(222,253,255,.16),0 0 5px rgba(34,203,255,.35),0 7px 20px rgba(0,5,24,.22)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(6){background:linear-gradient(145deg,rgba(20,31,91,.98),rgba(10,30,72,.98) 55%,rgba(3,17,43,.99)) padding-box,linear-gradient(135deg,#47daff,#327cff 48%,#9a74ff) border-box!important;box-shadow:inset 0 1px 0 rgba(228,243,255,.16),0 0 5px rgba(87,128,255,.38),0 7px 20px rgba(0,5,24,.22)!important}
-#gradeGrid .mf-pastel-grade-title{color:#f3fbff!important}
-#gradeGrid .mf-pastel-grade-subtitle{color:#b6d9ee!important}
-#gradeGrid .mf-pastel-grade-price{color:#57efff!important;font-weight:800!important;text-shadow:0 0 9px rgba(34,211,255,.15)!important}
-#gradeGrid .mf-pastel-grade-icon{color:#fff!important;border:1px solid rgba(226,250,255,.34)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 12px rgba(0,8,30,.3)!important}
-#gradeGrid .mf-pastel-grade-button{color:#f5fdff!important;border:1px solid rgba(139,237,255,.62)!important;background:linear-gradient(120deg,#087da9 0%,#0874df 56%,#335ce5 100%)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.23),0 0 8px rgba(36,169,255,.2)!important;text-shadow:0 1px 2px rgba(0,12,38,.26)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(1) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(1) .mf-pastel-grade-button{background:linear-gradient(120deg,#00bcd4,#087cbb)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(2) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(2) .mf-pastel-grade-button{background:linear-gradient(120deg,#168cff,#274fdb)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(3) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(3) .mf-pastel-grade-button{background:linear-gradient(120deg,#686bff,#287bd8)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(4) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(4) .mf-pastel-grade-button{background:linear-gradient(120deg,#078cb9,#155cda)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(5) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(5) .mf-pastel-grade-button{background:linear-gradient(120deg,#039db9,#1378dd)!important}
-#gradeGrid>.mf-pastel-grade-card:nth-child(6) .mf-pastel-grade-icon,#gradeGrid>.mf-pastel-grade-card:nth-child(6) .mf-pastel-grade-button{background:linear-gradient(120deg,#3676ee,#6455d9)!important}
-#gradeGrid .mf-pastel-grade-card:hover{transform:translateY(-2px)!important;box-shadow:inset 0 1px 0 rgba(235,253,255,.2),0 0 0 1px rgba(68,219,255,.28),0 0 14px rgba(30,155,255,.36),0 12px 25px rgba(0,5,24,.34)!important}
-#gradeGrid .mf-pastel-grade-button:hover,#gradeGrid .mf-pastel-grade-button:focus-visible{border-color:rgba(225,251,255,.95)!important;filter:brightness(1.13)!important;box-shadow:0 0 10px rgba(46,205,255,.48),0 0 19px rgba(39,118,255,.26)!important}
-@media(max-width:700px){#gradeGrid.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}#gradeGrid>.mf-pastel-grade-card{border-radius:14px!important}}
-@media(max-width:380px){#gradeGrid.grid3{gap:7px!important}#gradeGrid>.mf-pastel-grade-card{border-radius:12px!important}}
-@media(prefers-reduced-motion:reduce){#gradeGrid>.mf-pastel-grade-card{transition:none!important}}
+#gradeGrid > .mf-pastel-grade-card {
+  position: relative !important;
+  min-width: 0 !important;
+  color: #effff8 !important;
+  border: 1.5px solid transparent !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(145deg, rgba(7, 39, 39, .98) 0%, rgba(5, 48, 41, .98) 52%, rgba(3, 25, 29, .99) 100%) padding-box,
+    linear-gradient(135deg, #a8ffd8 0%, #58efb4 45%, #159d79 100%) border-box !important;
+  box-shadow:
+    inset 0 1px 0 rgba(232, 255, 246, .17),
+    inset 0 -14px 28px rgba(3, 22, 24, .22),
+    0 0 5px rgba(92, 245, 182, .4),
+    0 7px 20px rgba(0, 13, 14, .28) !important;
+  transition: transform .18s ease, box-shadow .18s ease !important;
+}
+#gradeGrid > .mf-pastel-grade-card::before {
+  background: linear-gradient(122deg,
+    rgba(255, 255, 255, .13) 0%,
+    rgba(118, 255, 200, .09) 30%,
+    rgba(46, 211, 154, .035) 62%,
+    rgba(255, 255, 255, .015) 100%) !important;
+}
+#gradeGrid .mf-pastel-grade-title {
+  color: #f4fff9 !important;
+  text-shadow: 0 1px 5px rgba(0, 12, 9, .32) !important;
+}
+#gradeGrid .mf-pastel-grade-subtitle {
+  color: #d0f4e4 !important;
+}
+#gradeGrid .mf-pastel-grade-price {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: 2px !important;
+  padding: 6px 8px !important;
+  border: 1px solid rgba(134, 255, 204, .42) !important;
+  border-radius: 8px !important;
+  background: linear-gradient(90deg, rgba(20, 140, 96, .31), rgba(19, 112, 83, .2)) !important;
+  color: #d6ffeb !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  font-weight: 900 !important;
+  letter-spacing: .15px !important;
+  text-shadow: 0 0 8px rgba(74, 255, 181, .22) !important;
+  box-shadow: inset 0 1px 0 rgba(238, 255, 247, .08) !important;
+}
+#gradeGrid .mf-pastel-grade-price span {
+  color: #d6ffeb !important;
+  opacity: 1 !important;
+}
+#gradeGrid .mf-pastel-grade-icon {
+  color: #f3fff9 !important;
+  background: linear-gradient(135deg, #5beab1 0%, #20ba88 55%, #10785f 100%) !important;
+  border: 1px solid rgba(187, 255, 222, .72) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 4px 12px rgba(0, 27, 20, .3) !important;
+}
+#gradeGrid .mf-pastel-grade-button {
+  color: #062b20 !important;
+  border: 1px solid rgba(197, 255, 229, .94) !important;
+  background: linear-gradient(120deg, #b1ffdb 0%, #62efb6 48%, #22c68b 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 0 8px rgba(64, 235, 168, .28) !important;
+  text-shadow: none !important;
+  font-weight: 850 !important;
+}
+#gradeGrid .mf-pastel-grade-button:hover,
+#gradeGrid .mf-pastel-grade-button:focus-visible {
+  color: #032319 !important;
+  border-color: #effff7 !important;
+  background: linear-gradient(120deg, #d0ffe9 0%, #83f8c6 48%, #3cdda2 100%) !important;
+  box-shadow: 0 0 10px rgba(101, 255, 190, .62), 0 0 18px rgba(34, 198, 139, .32) !important;
+}
+#gradeGrid .mf-pastel-grade-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: inset 0 1px 0 rgba(242,255,249,.2), 0 0 0 1px rgba(131,255,202,.28), 0 0 14px rgba(58,226,163,.32), 0 12px 25px rgba(0,13,14,.36) !important;
+}
+@media (max-width: 700px) {
+  #gradeGrid.grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 9px !important; }
+  #gradeGrid > .mf-pastel-grade-card { border-radius: 14px !important; }
+  #gradeGrid .mf-pastel-grade-price { font-size: 11px !important; padding: 6px 5px !important; }
+}
+@media (max-width: 380px) {
+  #gradeGrid.grid3 { gap: 7px !important; }
+  #gradeGrid > .mf-pastel-grade-card { border-radius: 12px !important; }
+  #gradeGrid .mf-pastel-grade-price { font-size: 10px !important; padding: 5px 4px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #gradeGrid > .mf-pastel-grade-card { transition: none !important; }
+}
 </style>
 
 </body>
