@@ -1776,7 +1776,12 @@ async function loadGrades(){
     if(status)status.textContent=usedFallback?'6 grades · connection fallback':'6 grades';
   }catch(error){
     console.error('Grade cards renderer failed; showing a safe grade list.',error);
-    if(grid)grid.innerHTML=FALLBACK_GRADES.map(g=>'<article class="card grade grade-selectable" role="button" tabindex="0" aria-label="Choose '+esc(g.name)+'" data-grade-search="'+esc((g.name+' '+g.stage+' English').toLowerCase())+'" onclick="domaOpenGrade(\\''+g.name+'\\')" onkeydown="if(event.key===\\'Enter\\'||event.key===\\' \\'){event.preventDefault();this.click()}"><div class="grade-cover"><strong>'+esc(g.name)+'</strong></div><div class="grade-body"><h3>English — '+esc(g.name)+'</h3><div class="grade-meta"><span>150 EGP / Month</span></div></div></article>').join('');
+    if(grid)grid.innerHTML=FALLBACK_GRADES.map(g=>'<article class="card grade grade-selectable" role="button" tabindex="0" aria-label="Choose '+esc(g.name)+'" data-grade-search="'+esc((g.name+' '+g.stage+' English').toLowerCase())+'" data-doma-grade-open="'+esc(g.name)+'"><div class="grade-cover"><strong>'+esc(g.name)+'</strong></div><div class="grade-body"><h3>English — '+esc(g.name)+'</h3><div class="grade-meta"><span>150 EGP / Month</span></div></div></article>').join('');
+    if(grid)grid.querySelectorAll('[data-doma-grade-open]').forEach(card=>{
+      const openCard=()=>domaOpenGrade(card.getAttribute('data-doma-grade-open'));
+      card.addEventListener('click',openCard);
+      card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openCard();}});
+    });
     revealGradeGrid();
     if(status)status.textContent='6 grades · safe display';
   }
