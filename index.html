@@ -11930,6 +11930,24 @@ html body #english-course .mf-course-section-heading h2 span::before{
   margin:0 8px 1px 0;border-radius:50%;vertical-align:middle;
   background:#e3a1ff;box-shadow:0 0 5px #e3a1ff,0 0 12px rgba(191,91,255,.95),0 0 20px rgba(129,56,255,.68);
 }
+
+/* Matching glowing markers inside each signup field, aligned on the left. */
+#modal.doma-auth-signup #signupName,
+#modal.doma-auth-signup #signupPhone,
+#modal.doma-auth-signup #signupPass,
+#modal.doma-auth-signup #signupTeam{
+  padding-left:36px!important;
+  background-image:
+    radial-gradient(circle at 14px 50%,#fff0ff 0 2px,#e3a1ff 2.5px 3.5px,rgba(191,91,255,.55) 4px,rgba(129,56,255,.12) 6px,transparent 9px),
+    linear-gradient(rgba(47,3,20,.97),rgba(47,3,20,.97))!important;
+  background-repeat:no-repeat!important;
+  box-shadow:0 5px 18px rgba(0,0,0,.25),0 0 8px rgba(166,82,255,.12),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+#modal.doma-auth-signup .doma-auth-switch::before{
+  content:"";display:inline-block;width:7px;height:7px;min-width:7px;
+  margin:0 8px 1px 0;border-radius:50%;vertical-align:middle;
+  background:#e3a1ff;box-shadow:0 0 5px #e3a1ff,0 0 12px rgba(191,91,255,.95),0 0 20px rgba(129,56,255,.68);
+}
 #modal.doma-auth-photo #authStatus{color:#fff!important}
 @media(max-width:600px){
   #modal.doma-auth-photo{padding:0!important;background-size:cover!important;background-position:center center!important}
@@ -11941,7 +11959,7 @@ html body #english-course .mf-course-section-heading h2 span::before{
 </style>
 <script id="doma-auth-photo-loader-v2">
 (()=>{
-  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v98';
+  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v99';
   fetch(url,{cache:'no-store'}).then(response=>{
     if(!response.ok)throw new Error('Photo asset unavailable.');
     return response.text();
