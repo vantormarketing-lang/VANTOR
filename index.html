@@ -1559,11 +1559,11 @@ function openAuth(type){
   if(type==='login'){
     title.textContent='Log in to Mr. Fluent';
     text.textContent='Use your student account to open your dashboard and active grade.';
-    body.innerHTML='<div class="formgrid"><input id="loginPhone" class="field" type="text" inputmode="text" autocapitalize="off" placeholder="Mobile number (or existing email)" autocomplete="username" required><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password" required><div class="full" style="font-size:10px;color:#8c858a;margin-top:-4px">Use the same mobile number you registered with. Existing accounts can still use their email.</div><div class="full" style="text-align:right;margin-top:-4px"><button type="button" style="background:none;border:0;color:#d98b9d;cursor:pointer;font-size:10px" onclick="domaForgotPassword()">Forgot password?</button></div><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
+    body.innerHTML='<div class="formgrid"><input id="loginPhone" class="field" type="text" inputmode="text" autocapitalize="off" placeholder="Mobile number (or existing email)" autocomplete="username" required><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password" required><div class="full doma-auth-note" style="margin-top:-4px">Use the same mobile number you registered with. Existing accounts can still use their email.</div><div class="full" style="text-align:right;margin-top:-4px"><button type="button" style="background:none;border:0;color:#d98b9d;cursor:pointer;font-size:10px" onclick="domaForgotPassword()">Forgot password?</button></div><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
   }else{
     title.textContent='Create your student account';
     text.textContent='Create an account first, then choose your grade and access plan.';
-    body.innerHTML='<div class="formgrid"><input id="signupName" class="field full" placeholder="Full name" autocomplete="name" required><input id="signupPhone" class="field full" type="tel" inputmode="tel" placeholder="Phone" autocomplete="tel" required><input id="signupPass" class="field full" type="password" placeholder="Password" autocomplete="new-password" minlength="6" required><select id="signupTeam" class="field full" aria-label="Favorite football team (optional)"><option value="">Favorite football team (optional)</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select><div class="full" style="font-size:10px;color:#8c858a;margin-top:-3px">Choose a team if you like. This field is optional. No email or SMS needed. Keep this number safe; phone verification and SMS password reset are unavailable in this free setup.</div><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
+    body.innerHTML='<div class="formgrid"><input id="signupName" class="field full" placeholder="Full name" autocomplete="name" required><input id="signupPhone" class="field full" type="tel" inputmode="tel" placeholder="Phone" autocomplete="tel" required><input id="signupPass" class="field full" type="password" placeholder="Password" autocomplete="new-password" minlength="6" required><select id="signupTeam" class="field full" aria-label="Favorite football team (optional)"><option value="">Favorite football team (optional)</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select><div class="full doma-auth-note" style="margin-top:-3px">Choose a team if you like. This field is optional. No email or SMS needed. Keep this number safe; phone verification and SMS password reset are unavailable in this free setup.</div><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
   }
   $('modal').classList.add('show')
 }
@@ -11889,21 +11889,31 @@ html body #english-course .mf-course-section-heading h2 span::before{
 #modal.doma-auth-photo .formgrid .field,
 #modal.doma-auth-photo .formgrid input,
 #modal.doma-auth-photo .formgrid select{
-  color:#fff!important;background:rgba(76,8,32,.84)!important;
-  border:1px solid rgba(255,255,255,.72)!important;border-radius:12px!important;
+  color:#fff!important;background:rgba(47,3,20,.97)!important;
+  border:1px solid rgba(130,38,75,.42)!important;border-radius:12px!important;
   box-shadow:0 5px 18px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.15)!important;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;filter:none!important;
 }
 #modal.doma-auth-photo .formgrid input::placeholder{color:rgba(255,255,255,.96)!important}
 #modal.doma-auth-photo .formgrid select option{color:#fff;background:#2a0817}
 #modal.doma-auth-photo .formgrid .btn.primary{
-  color:#fff!important;background:linear-gradient(135deg,#9f234c,#68162f)!important;
-  border:1px solid rgba(255,255,255,.68)!important;box-shadow:0 8px 20px rgba(0,0,0,.3)!important;
+  color:#fff!important;background:linear-gradient(135deg,#720b32 0%,#581044 52%,#35104f 100%)!important;
+  border:1px solid rgba(119,39,92,.58)!important;box-shadow:0 8px 20px rgba(0,0,0,.3)!important;
 }
 #modal.doma-auth-photo .close{
-  color:#fff!important;background:rgba(76,8,32,.84)!important;border:1px solid rgba(255,255,255,.5)!important;border-radius:10px!important;
+  color:#fff!important;background:rgba(47,3,20,.97)!important;border:1px solid rgba(130,38,75,.42)!important;border-radius:10px!important;
 }
 #modal.doma-auth-photo .doma-auth-switch{color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.85)!important}
+#modal.doma-auth-photo .doma-auth-note{
+  display:block!important;color:#fff!important;font-size:12px!important;line-height:1.65!important;
+  font-weight:500!important;text-shadow:0 2px 7px rgba(0,0,0,.98)!important;
+}
+#modal.doma-auth-photo .doma-auth-switch{
+  color:#fff!important;font-size:12px!important;line-height:1.6!important;
+}
+#modal.doma-auth-photo .doma-auth-switch button{
+  color:#ffd9ee!important;font-size:12px!important;font-weight:800!important;
+}
 #modal.doma-auth-photo .doma-auth-switch button{color:#fff!important}
 #modal.doma-auth-photo #authStatus{color:#fff!important}
 @media(max-width:600px){
@@ -11916,7 +11926,7 @@ html body #english-course .mf-course-section-heading h2 span::before{
 </style>
 <script id="doma-auth-photo-loader-v2">
 (()=>{
-  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v96';
+  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v97';
   fetch(url,{cache:'no-store'}).then(response=>{
     if(!response.ok)throw new Error('Photo asset unavailable.');
     return response.text();
