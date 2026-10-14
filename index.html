@@ -3038,8 +3038,7 @@ document.addEventListener('DOMContentLoaded',boot);</script>
   function postBoot(){installCurriculumSearch();installBackTop();installKeyboardCards();updateHomePersonal();}
   document.addEventListener('DOMContentLoaded',()=>setTimeout(postBoot,250));
   window.addEventListener('load',()=>setTimeout(postBoot,250));
-  window.addEventListener('scroll',()=>{}, {passive:true});
-})();
+  })();
 </script>
 
 <script id="doma-all-upgrades-script">
@@ -11774,6 +11773,92 @@ html body #english-course .mf-course-section-heading h2 span::before{
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto!important}
+}
+</style>
+
+
+<style id="doma-mobile-no-redraw-scroll-v2">
+/* Mobile scroll pass: remove expensive viewport-wide effects that repeatedly repaint while scrolling. */
+@media (max-width:700px) and (hover:none) {
+  html {
+    scroll-behavior:auto!important;
+    background:#070d12!important;
+  }
+  html body {
+    background:#070d12!important;
+    background-color:#070d12!important;
+    background-image:none!important;
+    background-attachment:scroll!important;
+    background-repeat:initial!important;
+    background-size:auto!important;
+  }
+  /* Avoid the oversized decorative circle and its multiple giant shadows behind the hero. */
+  html body header.hero#home::after {
+    display:none!important;
+    content:none!important;
+    box-shadow:none!important;
+    filter:none!important;
+  }
+  /* Fixed translucent layers and blur filters are costly on phones while the viewport moves. */
+  html body .nav,
+  html body header.hero#home,
+  html body section,
+  html body footer.footer,
+  html body .card,
+  html body .grade,
+  html body .feature,
+  html body .tool,
+  html body .home-shortcut,
+  html body .searchbox,
+  html body .faq details,
+  html body .plan,
+  html body #gradeGrid *,
+  html body #how-it-works *,
+  html body #pricing *,
+  html body #faq *,
+  html body #english-course * {
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+  /* Keep card surfaces and borders, but stop effects from animating or lifting under touch scrolling. */
+  html body .grade,
+  html body .tool,
+  html body .feature,
+  html body .home-shortcut,
+  html body .faq details,
+  html body .plan,
+  html body #gradeGrid *,
+  html body #how-it-works *,
+  html body #pricing *,
+  html body #english-course * {
+    animation:none!important;
+    transition:none!important;
+  }
+  html body .grade:hover,
+  html body .tool:hover,
+  html body .feature:hover,
+  html body .home-shortcut:hover,
+  html body .faq details:hover,
+  html body .plan:hover,
+  html body #gradeGrid *:hover,
+  html body #how-it-works *:hover,
+  html body #pricing *:hover,
+  html body #english-course *:hover {
+    transform:none!important;
+  }
+  /* Avoid painting a large blurred/fixed header on every scroll frame. */
+  html body .nav {
+    background:rgba(7,13,18,.98)!important;
+    box-shadow:none!important;
+  }
+  /* Tell the browser these cards have independent layouts, reducing neighbouring layout invalidations. */
+  html body #gradeGrid > article,
+  html body #how-it-works .how-grid > *,
+  html body #pricing .pricing > *,
+  html body #faq .faq > details,
+  html body #english-course .mf-english-course-price {
+    contain:layout style!important;
+  }
 }
 </style>
 
