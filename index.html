@@ -11731,5 +11731,51 @@ html body footer.footer .footer-brand-wordmark small{
 }
 </style>
 
+
+<style id="doma-home-scroll-performance-v1">
+/* Reduce repaint cost while scrolling the long homepage without changing its layout or content. */
+html body{
+  background-attachment:scroll!important;
+}
+/* Keep the fixed header visually dark, but avoid a costly live backdrop blur during scrolling. */
+html body .nav{
+  background:rgba(7,13,18,.98)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+/* Small pulsing heading dots are decorative; keep them static to reduce continuous repaint work. */
+html body .eyebrow::before,
+html body section#grades .section-head h2::before,
+html body section#pricing .head .eyebrow::before,
+html body section#faq .head .faq-section-title::before,
+html body footer.footer .footer-intro .footer-description::before,
+html body #english-course .mf-course-copy h3 span::before,
+html body #english-course .mf-course-section-heading h2 span::before{
+  animation:none!important;
+}
+/* Touch devices have no meaningful hover; avoid card lift animations while scrolling on phones/tablets. */
+@media(hover:none), (pointer:coarse){
+  html body .grade,
+  html body .tool,
+  html body .clickable-tool,
+  html body .home-shortcut,
+  html body .primary,
+  html body .secondary{
+    transition:none!important;
+  }
+  html body .grade:hover,
+  html body .tool:hover,
+  html body .clickable-tool:hover,
+  html body .home-shortcut:hover,
+  html body .primary:hover,
+  html body .secondary:hover{
+    transform:none!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+}
+</style>
+
 </body>
 </html>
