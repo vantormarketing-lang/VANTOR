@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v98';
-const BRAND_VERSION = 'doma-student-v98';
+const CACHE_NAME = 'mr-fluent-offline-student-v99';
+const BRAND_VERSION = 'doma-student-v99';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
