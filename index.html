@@ -11968,10 +11968,49 @@ html body #english-course .mf-course-section-heading h2 span::before{
     padding:18px!important;margin:0!important;
   }
 }
+
+/* Slightly lower the account form and center its headings without moving the background. */
+#modal.doma-auth-photo .modalbox{
+  transform:translateY(14px)!important;
+}
+#modal.doma-auth-photo .modalhead{
+  position:relative!important;width:100%!important;justify-content:center!important;
+}
+#modal.doma-auth-photo .modalhead h3{
+  width:100%!important;text-align:center!important;position:relative!important;
+  padding:0 32px!important;box-sizing:border-box!important;
+}
+#modal.doma-auth-photo .modalhead .close{
+  position:absolute!important;right:0!important;top:50%!important;
+  transform:translateY(-50%)!important;z-index:2!important;
+}
+#modal.doma-auth-photo .modalhead h3::before,
+#modal.doma-auth-photo .modalhead h3::after{
+  content:""!important;display:inline-block!important;width:7px!important;height:7px!important;min-width:7px!important;
+  margin:0 9px 2px!important;border-radius:50%!important;vertical-align:middle!important;
+  background:#e3a1ff!important;
+  box-shadow:0 0 5px #e3a1ff,0 0 12px rgba(191,91,255,.95),0 0 20px rgba(129,56,255,.68)!important;
+}
+#modal.doma-auth-photo .doma-auth-switch{
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  flex-wrap:wrap!important;gap:4px!important;text-align:center!important;width:100%!important;
+}
+#modal.doma-auth-photo .doma-auth-switch::after{
+  content:""!important;display:inline-block!important;width:7px!important;height:7px!important;min-width:7px!important;
+  margin:0 0 1px 5px!important;border-radius:50%!important;vertical-align:middle!important;
+  background:#ffe4ed!important;
+  box-shadow:0 0 5px #fb7185,0 0 12px rgba(244,63,94,.95),0 0 20px rgba(244,63,94,.55)!important;
+}
+@media(max-width:600px){
+  #modal.doma-auth-photo .modalbox{transform:translateY(10px)!important}
+  #modal.doma-auth-photo .modalhead h3{padding:0 30px!important}
+  #modal.doma-auth-photo .modalhead h3::before,
+  #modal.doma-auth-photo .modalhead h3::after{margin-left:5px!important;margin-right:5px!important}
+}
 </style>
 <script id="doma-auth-photo-loader-v2">
 (()=>{
-  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v101';
+  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v102';
   fetch(url,{cache:'no-store'}).then(response=>{
     if(!response.ok)throw new Error('Photo asset unavailable.');
     return response.text();
