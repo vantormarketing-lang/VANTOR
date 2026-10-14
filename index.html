@@ -1293,6 +1293,79 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
     overflow-wrap:anywhere;
   }
 }
+
+/* Adham signature at the right side of the top navigation. */
+.adham-signature{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;
+  flex:0 0 auto!important;margin:0 2px 0 0!important;padding:7px 10px!important;white-space:nowrap!important;
+  border:1px solid rgba(194,145,255,.31)!important;border-radius:999px!important;
+  background:linear-gradient(115deg,rgba(82,12,62,.3),rgba(48,19,79,.3),rgba(7,61,72,.28))!important;
+  -webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important;
+  box-shadow:0 4px 16px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+.adham-signature-name{
+  display:inline-block!important;font-family:Inter,Arial,Helvetica,sans-serif!important;
+  font-size:17px!important;line-height:1.1!important;font-weight:900!important;letter-spacing:.8px!important;
+  color:#e8d1ff!important;background:linear-gradient(100deg,#f6e7ff 0%,#cda2ff 42%,#f7a7d9 72%,#9bf2ee 100%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;
+  filter:drop-shadow(0 0 7px rgba(188,104,255,.27))!important;
+}
+.adham-dot{
+  display:inline-block!important;width:6px!important;height:6px!important;min-width:6px!important;flex:0 0 6px!important;
+  border-radius:50%!important;animation:adhamSignatureGlow 2.4s ease-in-out infinite alternate!important;
+}
+.adham-dot-start{background:#8df8ff!important;box-shadow:0 0 5px #8df8ff,0 0 12px rgba(72,229,255,.9)!important}
+.adham-dot-end{background:#ff9bdd!important;box-shadow:0 0 5px #ff9bdd,0 0 12px rgba(255,74,191,.85)!important;animation-delay:.8s!important}
+@keyframes adhamSignatureGlow{
+  from{opacity:.72;filter:brightness(.9)}
+  to{opacity:1;filter:brightness(1.4)}
+}
+@media(max-width:1000px){
+  .adham-signature{gap:4px!important;padding:5px 7px!important;margin-right:0!important}
+  .adham-signature-name{font-size:15px!important;letter-spacing:.4px!important}
+  .adham-dot{width:5px!important;height:5px!important;min-width:5px!important;flex-basis:5px!important}
+}
+@media(max-width:390px){
+  .navin{gap:5px!important}
+  .nav-actions{gap:5px!important}
+  .adham-signature{gap:3px!important;padding:4px 5px!important}
+  .adham-signature-name{font-size:13px!important;letter-spacing:0!important}
+}
+/* Full-screen abstract glass background replaces the personal portrait. */
+#modal.doma-auth-photo{
+  background-color:#080711!important;
+  background-image:
+    radial-gradient(ellipse at 12% 17%,rgba(183,48,128,.46) 0%,transparent 37%),
+    radial-gradient(ellipse at 85% 15%,rgba(106,48,197,.42) 0%,transparent 35%),
+    radial-gradient(ellipse at 83% 82%,rgba(9,151,163,.28) 0%,transparent 37%),
+    radial-gradient(ellipse at 23% 87%,rgba(114,20,85,.39) 0%,transparent 43%),
+    linear-gradient(135deg,#080711 0%,#16091e 43%,#0b0e1f 72%,#06151b 100%)!important;
+}
+#modal.doma-auth-photo::before{
+  content:""!important;position:absolute!important;inset:-8%!important;z-index:0!important;pointer-events:none!important;
+  background:
+    radial-gradient(ellipse at 14% 22%,rgba(225,74,167,.36) 0%,transparent 38%),
+    radial-gradient(ellipse at 84% 20%,rgba(128,73,242,.32) 0%,transparent 37%),
+    radial-gradient(ellipse at 76% 84%,rgba(41,200,207,.2) 0%,transparent 39%)!important;
+  filter:blur(38px)!important;opacity:.94!important;
+}
+#modal.doma-auth-photo .modalbox{
+  position:relative!important;z-index:1!important;
+  background:linear-gradient(135deg,rgba(27,10,42,.58),rgba(10,25,40,.45))!important;
+  border:1px solid rgba(211,173,255,.38)!important;border-radius:24px!important;
+  box-shadow:0 26px 85px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.16),0 0 30px rgba(158,91,255,.12)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(130%)!important;backdrop-filter:blur(22px) saturate(130%)!important;
+  padding:24px!important;
+}
+@media(max-width:600px){
+  .adham-signature{padding:4px 5px!important;gap:3px!important}
+  .adham-signature-name{font-size:13px!important}
+  #modal.doma-auth-photo .modalbox{
+    padding:18px!important;border-radius:21px!important;
+    -webkit-backdrop-filter:blur(18px) saturate(125%)!important;backdrop-filter:blur(18px) saturate(125%)!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1300,7 +1373,7 @@ body:not(.mf-course-route) #gradeGrid.grid3 > .grade {
 <div class="container navin">
 <a class="brand" href="#home"><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a>
 <div class="links"><a href="#grades">Grades</a><a href="#english-course">English Course</a><a href="#english-course">Learning</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
-<div class="nav-actions"><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary nav-action-nature" id="navAction" type="button" onclick="openAuth(\'signup\')"><svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Get Started</span></button><button class="menu" type="button" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu()"><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+<div class="nav-actions"><div class="adham-signature" id="adhamSignature" aria-label="Adham"><span class="adham-dot adham-dot-start" aria-hidden="true"></span><span class="adham-signature-name">𝓐𝓭𝓱𝓪𝓶</span><span class="adham-dot adham-dot-end" aria-hidden="true"></span></div><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary nav-action-nature" id="navAction" type="button" onclick="openAuth(\'signup\')"><svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Get Started</span></button><button class="menu" type="button" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu()"><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
   <g fill="none" stroke-linecap="round">
     <path class="menu-stroke menu-stroke-1" d="M9 13H27"/>
     <path class="menu-stroke menu-stroke-2" d="M9 23H27"/>
@@ -11894,7 +11967,12 @@ html body #english-course .mf-course-section-heading h2 span::before{
   width:100vw!important;height:100vh!important;height:100dvh!important;min-height:100dvh!important;
   box-sizing:border-box!important;margin:0!important;padding:0!important;
   background-color:#080808!important;
-  background-image:var(--doma-auth-photo-image,none)!important;
+  background-image:
+    radial-gradient(ellipse at 12% 17%,rgba(183,48,128,.46) 0%,transparent 37%),
+    radial-gradient(ellipse at 85% 15%,rgba(106,48,197,.42) 0%,transparent 35%),
+    radial-gradient(ellipse at 83% 82%,rgba(9,151,163,.28) 0%,transparent 37%),
+    radial-gradient(ellipse at 23% 87%,rgba(114,20,85,.39) 0%,transparent 43%),
+    linear-gradient(135deg,#080711 0%,#16091e 43%,#0b0e1f 72%,#06151b 100%)!important;
   background-position:center center!important;background-repeat:no-repeat!important;background-size:cover!important;
   background-attachment:fixed!important;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
@@ -12128,26 +12206,6 @@ html body #modal.doma-auth-photo.doma-auth-signup .modalhead{
 }
 
 </style>
-<script id="doma-auth-photo-loader-v2">
-(()=>{
-  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v108';
-  fetch(url,{cache:'no-store'}).then(response=>{
-    if(!response.ok)throw new Error('Photo asset unavailable.');
-    return response.text();
-  }).then(raw=>{
-    const base64=raw.trim();
-    if(base64.length!==23968||!/^[A-Za-z0-9+/]+={0,2}$/.test(base64))
-      throw new Error('Photo data failed validation.');
-    const src='data:image/webp;base64,'+base64;
-    const probe=new Image();
-    probe.onload=()=>{
-      const modal=document.getElementById('modal');
-      if(modal)modal.style.setProperty('--doma-auth-photo-image','url("'+src+'")');
-    };
-    probe.onerror=()=>console.warn('The account background photo could not be decoded.');
-    probe.src=src;
-  }).catch(error=>console.warn('Could not load account background photo.',error));
-})();
-</script>
+
 </body>
 </html>
