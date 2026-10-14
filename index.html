@@ -11991,6 +11991,12 @@ html body #english-course .mf-course-section-heading h2 span::before{
   background:#e3a1ff!important;
   box-shadow:0 0 5px #e3a1ff,0 0 12px rgba(191,91,255,.95),0 0 20px rgba(129,56,255,.68)!important;
 }
+#modal.doma-auth-photo .doma-auth-switch::before{
+  content:""!important;display:inline-block!important;width:7px!important;height:7px!important;min-width:7px!important;
+  margin:0 5px 1px 0!important;border-radius:50%!important;vertical-align:middle!important;
+  background:#ffe4ed!important;
+  box-shadow:0 0 5px #fb7185,0 0 12px rgba(244,63,94,.95),0 0 20px rgba(244,63,94,.55)!important;
+}
 #modal.doma-auth-photo .doma-auth-switch{
   display:flex!important;justify-content:center!important;align-items:center!important;
   flex-wrap:wrap!important;gap:4px!important;text-align:center!important;width:100%!important;
@@ -12010,7 +12016,7 @@ html body #english-course .mf-course-section-heading h2 span::before{
 </style>
 <script id="doma-auth-photo-loader-v2">
 (()=>{
-  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v102';
+  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v103';
   fetch(url,{cache:'no-store'}).then(response=>{
     if(!response.ok)throw new Error('Photo asset unavailable.');
     return response.text();
