@@ -11970,14 +11970,6 @@ html body #english-course .mf-course-section-heading h2 span::before{
 }
 
 
-/* Signup layout: compact title on the left and account-switch prompt on the right. */
-#modal.doma-auth-signup .modalhead h3{
-  font-size:12px!important;line-height:1.6!important;font-weight:800!important;
-  text-align:left!important;padding:0 32px 0 0!important;
-}
-#modal.doma-auth-signup .doma-auth-switch{
-  justify-content:flex-end!important;text-align:right!important;
-}
 
 /* Slightly lower the account form and center its headings without moving the background. */
 #modal.doma-auth-photo .modalbox{
@@ -12023,10 +12015,31 @@ html body #english-course .mf-course-section-heading h2 span::before{
   #modal.doma-auth-photo .modalhead h3::before,
   #modal.doma-auth-photo .modalhead h3::after{margin-left:5px!important;margin-right:5px!important}
 }
+
+/* Highest-priority signup-only alignment rules, after all shared title/switch rules. */
+html body #modal.doma-auth-photo.doma-auth-signup .modalhead h3{
+  font-size:12px!important;line-height:1.6!important;font-weight:800!important;
+  text-align:left!important;padding:0 32px 0 0!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-switch{
+  justify-content:flex-end!important;text-align:right!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .modalhead{
+  justify-content:flex-start!important;
+}
+@media(max-width:600px){
+  html body #modal.doma-auth-photo.doma-auth-signup .modalhead h3{
+    text-align:left!important;padding:0 30px 0 0!important;
+  }
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-switch{
+    justify-content:flex-end!important;text-align:right!important;
+  }
+}
+
 </style>
 <script id="doma-auth-photo-loader-v2">
 (()=>{
-  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v105';
+  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v106';
   fetch(url,{cache:'no-store'}).then(response=>{
     if(!response.ok)throw new Error('Photo asset unavailable.');
     return response.text();
