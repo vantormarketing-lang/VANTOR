@@ -11864,31 +11864,35 @@ html body #english-course .mf-course-section-heading h2 span::before{
 }
 </style>
 
-<style id="doma-auth-photo-background-v1">
-/* The supplied portrait fills the account modal. Only the account modal is affected. */
+<style id="doma-auth-photo-background-v2">
+/* Full-screen account photo: no blur, filters, dark panels, or gaps. */
 #modal.doma-auth-photo{
-  position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;
-  box-sizing:border-box!important;padding:0!important;background-color:#080808!important;
+  position:fixed!important;inset:0!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;min-height:100dvh!important;
+  box-sizing:border-box!important;margin:0!important;padding:0!important;
+  background-color:#080808!important;
   background-image:var(--doma-auth-photo-image,none)!important;
   background-position:center center!important;background-repeat:no-repeat!important;background-size:cover!important;
+  background-attachment:fixed!important;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
 }
 #modal.doma-auth-photo .modalbox{
-  width:min(760px,100%)!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important;
+  width:min(760px,100%)!important;max-height:100vh!important;max-height:100dvh!important;
+  overflow:auto!important;overscroll-behavior:contain!important;box-sizing:border-box!important;
   background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;
   color:#fff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;
 }
 #modal.doma-auth-photo .modalhead h3,#modal.doma-auth-photo #modalText,
 #modal.doma-auth-photo .modalbox>p{
-  color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.9)!important;
+  color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.92)!important;
 }
 #modal.doma-auth-photo .formgrid .field,
 #modal.doma-auth-photo .formgrid input,
 #modal.doma-auth-photo .formgrid select{
-  color:#fff!important;background:rgba(15,12,14,.56)!important;
+  color:#fff!important;background:rgba(76,8,32,.84)!important;
   border:1px solid rgba(255,255,255,.72)!important;border-radius:12px!important;
-  box-shadow:0 5px 18px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.17)!important;
-  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  box-shadow:0 5px 18px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.15)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;filter:none!important;
 }
 #modal.doma-auth-photo .formgrid input::placeholder{color:rgba(255,255,255,.96)!important}
 #modal.doma-auth-photo .formgrid select option{color:#fff;background:#2a0817}
@@ -11897,40 +11901,38 @@ html body #english-course .mf-course-section-heading h2 span::before{
   border:1px solid rgba(255,255,255,.68)!important;box-shadow:0 8px 20px rgba(0,0,0,.3)!important;
 }
 #modal.doma-auth-photo .close{
-  color:#fff!important;background:rgba(20,12,15,.42)!important;border:1px solid rgba(255,255,255,.5)!important;border-radius:10px!important;
+  color:#fff!important;background:rgba(76,8,32,.84)!important;border:1px solid rgba(255,255,255,.5)!important;border-radius:10px!important;
 }
 #modal.doma-auth-photo .doma-auth-switch{color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.85)!important}
 #modal.doma-auth-photo .doma-auth-switch button{color:#fff!important}
 #modal.doma-auth-photo #authStatus{color:#fff!important}
 @media(max-width:600px){
   #modal.doma-auth-photo{padding:0!important;background-size:cover!important;background-position:center center!important}
-  #modal.doma-auth-photo .modalbox{width:min(100%,500px)!important;max-height:calc(100dvh - 18px)!important;padding:18px!important}
+  #modal.doma-auth-photo .modalbox{
+    width:min(100%,500px)!important;max-height:calc(100dvh - 12px)!important;
+    padding:18px!important;margin:0!important;
+  }
 }
 </style>
-<script id="doma-auth-photo-loader-v1">
+<script id="doma-auth-photo-loader-v2">
 (()=>{
-  const urls=[
-    './auth-photo-v95/part01.txt?v=doma-student-v95',
-    './auth-photo-v95/part02.txt?v=doma-student-v95',
-    './auth-photo-v95/part03.txt?v=doma-student-v95',
-    './auth-photo-v95/part04.txt?v=doma-student-v95'
-  ];
-  Promise.all(urls.map(async url=>{
-    const response=await fetch(url,{cache:'no-store'});
-    if(!response.ok)throw new Error('Photo asset unavailable: '+url);
+  const url='./auth-photo-v96/image.webp.b64.txt?v=doma-student-v96';
+  fetch(url,{cache:'no-store'}).then(response=>{
+    if(!response.ok)throw new Error('Photo asset unavailable.');
     return response.text();
-  })).then(parts=>{
-    const base64=parts.map(part=>part.trim()).join('');
-    if(base64.length!==18304||!/^[A-Za-z0-9+/]+={0,2}$/.test(base64))throw new Error('Photo data failed validation.');
+  }).then(raw=>{
+    const base64=raw.trim();
+    if(base64.length!==23968||!/^[A-Za-z0-9+/]+={0,2}$/.test(base64))
+      throw new Error('Photo data failed validation.');
     const src='data:image/webp;base64,'+base64;
     const probe=new Image();
     probe.onload=()=>{
       const modal=document.getElementById('modal');
       if(modal)modal.style.setProperty('--doma-auth-photo-image','url("'+src+'")');
     };
-    probe.onerror=()=>console.warn('The supplied account background image could not be decoded.');
+    probe.onerror=()=>console.warn('The account background photo could not be decoded.');
     probe.src=src;
-  }).catch(error=>console.warn('Could not load the supplied account background image.',error));
+  }).catch(error=>console.warn('Could not load account background photo.',error));
 })();
 </script>
 </body>
