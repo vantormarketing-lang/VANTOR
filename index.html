@@ -1650,7 +1650,6 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-switch{justify-cont
   </div>
 </section>
 <div id="mrfluentEnglishWorkspace" class="mf-course-workspace" hidden aria-label="English Course student workspace">
-  <div class="mf-course-workspace-top"><div><span class="pill">MR. FLUENT · ENGLISH COURSE</span><h2>My English Learning Space</h2><p>Your placement test, level and lessons are available here while your membership is active.</p></div><button class="btn secondary mf-course-back-icon" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentCloseCourseWorkspace()"><span aria-hidden="true">←</span></button></div>
   <div id="mrfluentEnglishPlacement" class="mf-placement-panel" aria-live="polite"><div class="empty">Checking course access…</div></div>
   <div id="mrfluentEnglishLevels" class="mf-course-level-grid" hidden><div class="empty">Complete the placement test to see your level.</div></div>
   <div id="mrfluentEnglishLevelContent" class="mf-course-content" aria-live="polite"><div class="empty">Your lessons will appear here after access is verified.</div></div>
@@ -2210,24 +2209,24 @@ let mrFluentPlacementStartedForUser=null;
 function mrfluentRenderPlacement(){
  const host=$('mrfluentEnglishPlacement'); if(!host)return;
  if(!sessionUser||!mrFluentEnglishSubscription){
-   host.innerHTML='<h3>Placement Test</h3><p>The test is required before levels can open. First subscribe for <b>100 EGP / 30 days</b> and wait for admin approval.</p>';
+   host.innerHTML='<div class="mf-placement-title-row"><h3>Placement Test</h3><button class="btn secondary mf-placement-back-button" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentRouteBack()"><span aria-hidden="true">←</span></button></div><p>The test is required before levels can open. First subscribe for <b>100 EGP / 30 days</b> and wait for admin approval.</p>';
    $('mrfluentEnglishLevels')?.setAttribute('hidden','');return;
  }
  const codes={A1:'A1 · Beginner',A2:'A2 · Elementary',B1:'B1 · Intermediate',B2:'B2 · Upper-Intermediate',C1:'C1 · Advanced',C2:'C2 · Proficiency'};
  if(mrFluentEnglishPlacement && Number(mrFluentEnglishPlacement.total_questions||0)>=20){
    const total=Number(mrFluentEnglishPlacement.total_questions||20);
-   host.innerHTML='<h3>Placement result saved</h3><div class="mf-placement-result"><b>'+esc(codes[mrFluentEnglishPlacement.level_code]||mrFluentEnglishPlacement.level_code)+'</b><p>Your result: '+esc(String(mrFluentEnglishPlacement.score))+' / '+esc(String(total))+'. Your result is saved to your account.</p><p>Starting level: '+esc(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code)+'. Complete every published lesson in a level to unlock the next one.</p></div>';
+   host.innerHTML='<div class="mf-placement-title-row"><h3>Placement result saved</h3><button class="btn secondary mf-placement-back-button" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentRouteBack()"><span aria-hidden="true">←</span></button></div><div class="mf-placement-result"><b>'+esc(codes[mrFluentEnglishPlacement.level_code]||mrFluentEnglishPlacement.level_code)+'</b><p>Your result: '+esc(String(mrFluentEnglishPlacement.score))+' / '+esc(String(total))+'. Your result is saved to your account.</p><p>Starting level: '+esc(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code)+'. Complete every published lesson in a level to unlock the next one.</p></div>';
    $('mrfluentEnglishLevels')?.removeAttribute('hidden');return;
  }
  if(mrFluentPlacementStartedForUser!==sessionUser.id){
    $('mrfluentEnglishLevels')?.setAttribute('hidden','');
-   host.innerHTML='<section class="mf-placement-intro"><div class="mf-placement-intro-brand"><span class="mf-placement-intro-book" aria-hidden="true">▤</span><span><b>Mr. Fluent</b><small>English Course</small></span></div><div class="mf-placement-intro-heading"><h3>Placement <em>Test</em></h3><p>Your next level starts here</p></div><div class="mf-placement-intro-count"><span class="mf-placement-intro-count-icon" aria-hidden="true">✦</span><strong>100</strong><span>Questions</span></div><div class="mf-placement-intro-details"><div class="mf-placement-intro-detail"><span class="mf-placement-intro-icon" aria-hidden="true">▤</span><div><b>5 Blocks</b><small>20 questions each</small></div></div><div class="mf-placement-intro-detail"><span class="mf-placement-intro-icon" aria-hidden="true">◎</span><div><b>Pass Score</b><small>12/20 to continue</small></div></div><div class="mf-placement-intro-detail"><span class="mf-placement-intro-icon" aria-hidden="true">▥</span><div><b>Your Level</b><small>A1 – C2</small></div></div></div><p class="mf-placement-intro-note">Find your English level and start learning with confidence.</p><button type="button" class="btn primary mf-placement-start-button" id="mfPlacementStart" onclick="mrfluentStartPlacementTest()">Start Test <span aria-hidden="true">→</span></button></section>';
+   host.innerHTML='<section class="mf-placement-intro"><div class="mf-placement-intro-brand"><span class="mf-placement-intro-book" aria-hidden="true">▤</span><span><b>Mr. Fluent</b><small>English Course</small></span></div><div class="mf-placement-title-row"><div class="mf-placement-intro-heading"><h3>Placement <em>Test</em></h3><p>Your next level starts here</p></div><button class="btn secondary mf-placement-back-button" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentRouteBack()"><span aria-hidden="true">←</span></button></div><div class="mf-placement-intro-count"><span class="mf-placement-intro-count-icon" aria-hidden="true">✦</span><strong>100</strong><span>Questions</span></div><div class="mf-placement-intro-details"><div class="mf-placement-intro-detail"><span class="mf-placement-intro-icon" aria-hidden="true">▤</span><div><b>5 Blocks</b><small>20 questions each</small></div></div><div class="mf-placement-intro-detail"><span class="mf-placement-intro-icon" aria-hidden="true">◎</span><div><b>Pass Score</b><small>12/20 to continue</small></div></div><div class="mf-placement-intro-detail"><span class="mf-placement-intro-icon" aria-hidden="true">▥</span><div><b>Your Level</b><small>A1 – C2</small></div></div></div><p class="mf-placement-intro-note">Find your English level and start learning with confidence.</p><button type="button" class="btn primary mf-placement-start-button" id="mfPlacementStart" onclick="mrfluentStartPlacementTest()">Start Test <span aria-hidden="true">→</span></button></section>';
    return;
  }
  $('mrfluentEnglishLevels')?.setAttribute('hidden','');
  const stage=mrFluentPlacementStage, first=stage*20, batch=MR_FLUENT_PLACEMENT_QUESTIONS.slice(first,first+20);
  const labels=['Stage 1 of 5 · Beginner basics','Stage 2 of 5 · Elementary English','Stage 3 of 5 · Intermediate English','Stage 4 of 5 · Upper-intermediate English','Stage 5 of 5 · Advanced English'];
- host.innerHTML='<h3>English Placement Test · 100 Questions</h3><p>Pass each stage with at least <b>12 correct answers out of 20</b> to unlock the next stage. Questions gradually become harder.</p><div style="height:9px;background:#283153;border-radius:20px;overflow:hidden;margin:16px 0"><div style="height:100%;width:'+((stage+1)*20)+'%;background:linear-gradient(90deg,#8b5cf6,#c084fc);border-radius:20px"></div></div><p><b>'+labels[stage]+'</b> · Questions '+(first+1)+'–'+(first+20)+' · Pass mark 12/20</p><form id="mrfluentPlacementForm">'+batch.map((q,i)=>'<fieldset class="mf-placement-question"><legend>'+(first+i+1)+'. '+esc(q.q)+'</legend>'+q.o.map((opt,j)=>'<label class="mf-placement-option"><input type="radio" name="mf-placement-'+i+'" value="'+j+'" required><span>'+String.fromCharCode(65+j)+'. '+esc(opt)+'</span></label>').join('')+'</fieldset>').join('')+'<button class="btn primary" type="submit" id="mfPlacementSubmit">'+(stage===4?'Finish placement test':'Submit stage '+(stage+1)+' and continue')+'</button><div id="mfPlacementStatus" role="status" aria-live="polite"></div></form>';
+ host.innerHTML='<div class="mf-placement-title-row"><h3>English Placement Test · 100 Questions</h3><button class="btn secondary mf-placement-back-button" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentRouteBack()"><span aria-hidden="true">←</span></button></div><p>Pass each stage with at least <b>12 correct answers out of 20</b> to unlock the next stage. Questions gradually become harder.</p><div style="height:9px;background:#283153;border-radius:20px;overflow:hidden;margin:16px 0"><div style="height:100%;width:'+((stage+1)*20)+'%;background:linear-gradient(90deg,#8b5cf6,#c084fc);border-radius:20px"></div></div><p><b>'+labels[stage]+'</b> · Questions '+(first+1)+'–'+(first+20)+' · Pass mark 12/20</p><form id="mrfluentPlacementForm">'+batch.map((q,i)=>'<fieldset class="mf-placement-question"><legend>'+(first+i+1)+'. '+esc(q.q)+'</legend>'+q.o.map((opt,j)=>'<label class="mf-placement-option"><input type="radio" name="mf-placement-'+i+'" value="'+j+'" required><span>'+String.fromCharCode(65+j)+'. '+esc(opt)+'</span></label>').join('')+'</fieldset>').join('')+'<button class="btn primary" type="submit" id="mfPlacementSubmit">'+(stage===4?'Finish placement test':'Submit stage '+(stage+1)+' and continue')+'</button><div id="mfPlacementStatus" role="status" aria-live="polite"></div></form>';
  const form=document.getElementById('mrfluentPlacementForm');
  if(form)form.addEventListener('submit',async ev=>{
    ev.preventDefault();const btn=$('mfPlacementSubmit'),status=$('mfPlacementStatus');
@@ -12458,5 +12457,49 @@ html body #modal.doma-auth-photo.doma-auth-signup .modalhead{
 #mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-start-button span{font-size:22px;line-height:1}
 @media(min-width:700px){#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-intro-details{grid-template-columns:repeat(3,minmax(0,1fr))}#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-intro-detail{flex-direction:column;align-items:flex-start;gap:10px;border-bottom:0;border-right:1px solid rgba(93,170,207,.15);padding:16px}#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-intro-detail:last-child{border-right:0}}
 @media(max-width:620px){#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-intro-brand{margin-bottom:20px}#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-intro-count{width:158px;height:158px;margin:19px auto 17px}#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-intro-count strong{font-size:42px}#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-intro-detail{padding:11px 12px}#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-start-button{min-height:50px}}
+</style>
+
+
+
+<style id="mf-placement-back-title-row">
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ margin:0 0 12px;min-width:0;
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row>h3,
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row>.mf-placement-intro-heading{
+ flex:1 1 auto;min-width:0;margin:0!important;text-align:left;
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row .mf-placement-intro-heading h3{
+ margin:0!important;
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row .mf-placement-intro-heading p{
+ margin:7px 0 0!important;
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-back-button{
+ display:inline-flex!important;align-items:center;justify-content:center;
+ flex:0 0 42px;width:42px;min-width:42px;height:42px;padding:0!important;
+ border-radius:13px!important;background:rgba(18,102,139,.22)!important;
+ border:1px solid rgba(107,213,247,.52)!important;color:#eafaff!important;
+ font-size:0!important;box-shadow:0 4px 16px rgba(0,0,0,.14);
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-back-button span{
+ font-size:23px!important;line-height:1;color:#eafaff!important;
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-back-button:hover{
+ background:rgba(16,144,190,.35)!important;border-color:rgba(143,233,255,.85)!important;
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row .mf-placement-intro-heading h3{
+ font-size:clamp(27px,4.5vw,38px)!important;
+}
+#mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row>h3{
+ font-size:clamp(22px,3.7vw,31px)!important;line-height:1.25!important;
+}
+@media(max-width:620px){
+ #mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row{gap:9px;margin-bottom:12px}
+ #mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-back-button{flex-basis:40px;width:40px;min-width:40px;height:40px;border-radius:12px!important}
+ #mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row>h3{font-size:21px!important}
+ #mrfluentEnglishWorkspace #mrfluentEnglishPlacement .mf-placement-title-row .mf-placement-intro-heading h3{font-size:27px!important}
+}
 </style>
 
