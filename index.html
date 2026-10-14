@@ -1555,6 +1555,7 @@ function applyModalSearch(){const q=$('modalPublicSearch')?.value.trim()||'';$('
 
 function openAuth(type){
   $('modal').classList.add('doma-auth-photo');
+  $('modal').classList.toggle('doma-auth-signup',type==='signup');
   const title=$('modalTitle'),text=$('modalText'),body=$('modalBody');
   if(type==='login'){
     title.textContent='Log in to Mr. Fluent';
@@ -1562,8 +1563,8 @@ function openAuth(type){
     body.innerHTML='<div class="formgrid"><input id="loginPhone" class="field" type="text" inputmode="text" autocapitalize="off" placeholder="Mobile number (or existing email)" autocomplete="username" required><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password" required><div class="full doma-auth-note" style="margin-top:-4px">Use the same mobile number you registered with. Existing accounts can still use their email.</div><div class="full" style="text-align:right;margin-top:-4px"><button type="button" style="background:none;border:0;color:#d98b9d;cursor:pointer;font-size:10px" onclick="domaForgotPassword()">Forgot password?</button></div><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'signup\')">Create an account</button></div></div>';
   }else{
     title.textContent='Create your student account';
-    text.textContent='Create an account first, then choose your grade and access plan.';
-    body.innerHTML='<div class="formgrid"><input id="signupName" class="field full" placeholder="Full name" autocomplete="name" required><input id="signupPhone" class="field full" type="tel" inputmode="tel" placeholder="Phone" autocomplete="tel" required><input id="signupPass" class="field full" type="password" placeholder="Password" autocomplete="new-password" minlength="6" required><select id="signupTeam" class="field full" aria-label="Favorite football team (optional)"><option value="">Favorite football team (optional)</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select><div class="full doma-auth-note" style="margin-top:-3px">Choose a team if you like. This field is optional. No email or SMS needed. Keep this number safe; phone verification and SMS password reset are unavailable in this free setup.</div><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
+    text.textContent='';
+    body.innerHTML='<div class="formgrid"><input id="signupName" class="field full" placeholder="Full name" autocomplete="name" required><input id="signupPhone" class="field full" type="tel" inputmode="tel" placeholder="Phone" autocomplete="tel" required><input id="signupPass" class="field full" type="password" placeholder="Password" autocomplete="new-password" minlength="6" required><select id="signupTeam" class="field full" aria-label="Favorite football team (optional)"><option value="">Favorite football team (optional)</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select><button class="btn primary full" onclick="domaSignup()">Create Account</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">Already have an account? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(\'login\')">Log in</button></div></div>';
   }
   $('modal').classList.add('show')
 }
@@ -11915,6 +11916,20 @@ html body #english-course .mf-course-section-heading h2 span::before{
   color:#ffd9ee!important;font-size:12px!important;font-weight:800!important;
 }
 #modal.doma-auth-photo .doma-auth-switch button{color:#fff!important}
+/* Signup-only: remove the subtitle and bring a compact glowing title close to the fields. */
+#modal.doma-auth-signup #modalText{display:none!important}
+#modal.doma-auth-signup .modalhead{
+  margin-top:16px!important;margin-bottom:9px!important;gap:10px!important;
+}
+#modal.doma-auth-signup .modalhead h3{
+  font-size:15px!important;line-height:1.35!important;font-weight:800!important;
+  letter-spacing:.1px!important;color:#fff!important;
+}
+#modal.doma-auth-signup .modalhead h3::before{
+  content:"";display:inline-block;width:7px;height:7px;min-width:7px;
+  margin:0 8px 1px 0;border-radius:50%;vertical-align:middle;
+  background:#e3a1ff;box-shadow:0 0 5px #e3a1ff,0 0 12px rgba(191,91,255,.95),0 0 20px rgba(129,56,255,.68);
+}
 #modal.doma-auth-photo #authStatus{color:#fff!important}
 @media(max-width:600px){
   #modal.doma-auth-photo{padding:0!important;background-size:cover!important;background-position:center center!important}
