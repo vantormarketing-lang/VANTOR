@@ -1534,7 +1534,7 @@ const fmtDate=v=>v?new Date(v).toLocaleDateString('en-US',{year:'numeric',month:
 const fmtDateTime=v=>v?new Date(v).toLocaleString('en-US',{year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'—';
 function showToast(msg){const t=$('toast');t.textContent=msg||'';t.classList.add('show');clearTimeout(window.__domaToast);window.__domaToast=setTimeout(()=>t.classList.remove('show'),3000)}
 function showStatus(id,msg,kind='info'){const el=$(id);if(!el)return;el.textContent=msg||'';el.className='status show '+kind}
-function closeModal(){$('modal').classList.remove('show','doma-auth-photo')}
+function closeModal(){$('modal').classList.remove('show','doma-auth-photo','doma-auth-signup')}
 function closeGradeModal(){$('gradeModal').classList.remove('show')}
 function toggleMobileMenu(){$('mobileNav').classList.add('show')}
 function closeMobileMenu(){$('mobileNav').classList.remove('show')}
@@ -1545,7 +1545,7 @@ $('mobileNav').addEventListener('click',e=>{if(e.target===$('mobileNav'))closeMo
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeGradeModal();closeMobileMenu();if($('drawer').classList.contains('show'))closeDrawer()}});
 
 function openSearch(){
-  $('modal').classList.remove('doma-auth-photo');
+  $('modal').classList.remove('doma-auth-photo','doma-auth-signup');
   $('modalTitle').textContent='Find your English content';
   $('modalText').textContent='Search the visible grades by school stage, grade or English skill.';
   $('modalBody').innerHTML='<div class="formgrid"><input id="modalPublicSearch" class="field full" placeholder="grammar, vocabulary, 3rd secondary…"><button class="btn primary full" onclick="applyModalSearch()">Search Grades</button></div>';
