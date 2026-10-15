@@ -1,37 +1,99 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4423a8"/>
-      <stop offset="0.48" stop-color="#14284e"/>
-      <stop offset="1" stop-color="#062d38"/>
+    <linearGradient id="coffeeBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#51230e"/>
+      <stop offset=".43" stop-color="#281006"/>
+      <stop offset="1" stop-color="#170805"/>
     </linearGradient>
-    <radialGradient id="glow" cx="70%" cy="18%" r="62%">
-      <stop offset="0" stop-color="#26e88b" stop-opacity=".7"/>
-      <stop offset="1" stop-color="#26e88b" stop-opacity="0"/>
+    <radialGradient id="warmGlow" cx=".5" cy=".28" r=".7">
+      <stop offset="0" stop-color="#983b18" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#1b0804" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#08b95b"/>
-      <stop offset="1" stop-color="#8aff64"/>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffcf72"/>
+      <stop offset=".28" stop-color="#ff9c4a"/>
+      <stop offset=".58" stop-color="#e85aff"/>
+      <stop offset=".8" stop-color="#7c5cff"/>
+      <stop offset="1" stop-color="#ffbd62"/>
     </linearGradient>
-    <linearGradient id="pages" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#dce8f4"/>
+    <linearGradient id="capTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c07bff"/>
+      <stop offset=".42" stop-color="#772dff"/>
+      <stop offset="1" stop-color="#37128c"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
-      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000814" flood-opacity=".42"/>
+    <linearGradient id="capSide" x1="0" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#6e2ced"/>
+      <stop offset="1" stop-color="#210b5c"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff0a6"/>
+      <stop offset=".34" stop-color="#ffbb36"/>
+      <stop offset=".68" stop-color="#ffe786"/>
+      <stop offset="1" stop-color="#d77a16"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset=".6" stop-color="#fff0cf"/>
+      <stop offset="1" stop-color="#dfa867"/>
+    </linearGradient>
+    <linearGradient id="bookCover" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b14aff"/>
+      <stop offset=".5" stop-color="#6d27d9"/>
+      <stop offset="1" stop-color="#2b0c6d"/>
+    </linearGradient>
+    <linearGradient id="subtitle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffcb62"/>
+      <stop offset=".55" stop-color="#ffe5a1"/>
+      <stop offset="1" stop-color="#f5a3ff"/>
+    </linearGradient>
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="smallGlow" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="170%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#080202" flood-opacity=".65"/>
     </filter>
   </defs>
-  <rect width="512" height="512" rx="104" fill="url(#bg)"/>
-  <rect width="512" height="512" rx="104" fill="url(#glow)"/>
-  <path d="M78 374V180c0-10 8-18 18-18h320c10 0 18 8 18 18v194" fill="none" stroke="#64d9e5" stroke-opacity=".24" stroke-width="5"/>
+  <rect width="512" height="512" fill="url(#coffeeBg)"/>
+  <rect width="512" height="512" fill="url(#warmGlow)"/>
+  <rect x="15" y="15" width="482" height="482" rx="96" fill="none" stroke="url(#rim)" stroke-width="4" opacity=".92" filter="url(#smallGlow)"/>
+  <rect x="25" y="25" width="462" height="462" rx="86" fill="none" stroke="#ffd5a0" stroke-opacity=".12" stroke-width="1.5"/>
   <g filter="url(#shadow)">
-    <path d="M256 215C221 155 245 92 331 55c-2 70-28 125-75 160Z" fill="url(#leaf)"/>
-    <path d="M256 215c13-46 40-83 76-113" fill="none" stroke="#e0ffbd" stroke-opacity=".78" stroke-width="7" stroke-linecap="round"/>
-    <path d="M256 230c-41-43-83-52-132-35v155c49-17 91-8 132 35 41-43 83-52 132-35V195c-49-17-91-8-132 35Z" fill="url(#pages)" stroke="#f8fcff" stroke-width="8" stroke-linejoin="round"/>
-    <path d="M256 230v155" fill="none" stroke="#b5cde2" stroke-width="8" stroke-linecap="round"/>
-    <path d="M112 210v155c51-15 96-3 144 39 48-42 93-54 144-39V210" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M135 364c42-10 78 1 121 40 43-39 79-50 121-40" fill="none" stroke="#1a4056" stroke-opacity=".55" stroke-width="7" stroke-linecap="round"/>
+    <path d="M72 287 Q164 233 256 304 Q348 233 440 287 L440 331 Q347 311 256 365 Q165 311 72 331 Z" fill="url(#bookCover)" stroke="#c36cff" stroke-width="3"/>
+    <path d="M76 278 Q165 224 256 301 Q347 224 436 278 L426 309 Q345 292 256 349 Q167 292 86 309 Z" fill="#3a146e" stroke="#a74dff" stroke-width="2"/>
+    <path d="M78 267 Q166 219 256 294 Q346 219 434 267 L425 300 Q345 280 256 337 Q167 280 87 300 Z" fill="url(#page)" stroke="#ffe7bd" stroke-width="2.5"/>
+    <path d="M78 267 Q166 219 256 294 L256 337 Q167 280 87 300 Z" fill="url(#page)"/>
+    <path d="M434 267 Q346 219 256 294 L256 337 Q345 280 425 300 Z" fill="url(#page)"/>
+    <path d="M83 279 Q166 236 250 303 M88 291 Q166 251 250 315 M429 279 Q346 236 262 303 M424 291 Q346 251 262 315" fill="none" stroke="#dca36b" stroke-width="2" stroke-opacity=".58" stroke-linecap="round"/>
+    <path d="M256 295 L256 352" stroke="#d39a5e" stroke-width="3" stroke-linecap="round"/>
   </g>
-  <circle cx="390" cy="105" r="5" fill="#a6ffb0" opacity=".9"/>
-  <circle cx="414" cy="140" r="3" fill="#8de8ff" opacity=".85"/>
+  <g filter="url(#shadow)">
+    <path d="M137 149 L256 199 L375 149 L357 203 Q256 244 155 203 Z" fill="url(#capSide)" stroke="#9d5aff" stroke-width="2.5"/>
+    <path d="M81 132 L256 61 L431 132 L256 207 Z" fill="url(#capTop)" stroke="url(#rim)" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M82 132 L256 202 L430 132" fill="none" stroke="#e9c5ff" stroke-opacity=".56" stroke-width="2"/>
+    <ellipse cx="256" cy="99" rx="13" ry="7" fill="#40117c" stroke="#ebbdff" stroke-width="2"/>
+    <path d="M267 98 C307 101 344 115 363 142 L363 187" fill="none" stroke="#c46bff" stroke-width="9" stroke-linecap="round" opacity=".5" filter="url(#smallGlow)"/>
+    <path d="M267 98 C307 101 344 115 363 142 L363 187" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="363" cy="190" r="9" fill="url(#gold)" stroke="#fff0a6" stroke-width="2"/>
+    <path d="M363 198 L347 226 Q363 236 379 226 Z" fill="url(#gold)" stroke="#ffe9a2" stroke-width="1.5"/>
+    <path d="M350 223 L355 242 M357 225 L360 245 M364 225 L364 247 M371 225 L368 245 M377 223 L372 242" stroke="#ffd36e" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g fill="#ffda70" filter="url(#smallGlow)">
+    <path d="M78 174 L84 190 L101 196 L84 202 L78 218 L72 202 L55 196 L72 190 Z"/>
+    <path d="M430 176 L435 190 L450 196 L435 202 L430 216 L425 202 L410 196 L425 190 Z"/>
+  </g>
+  <g fill="#ffe3a0" opacity=".94">
+    <path d="M113 214 L117 224 L128 228 L117 232 L113 242 L109 232 L98 228 L109 224 Z"/>
+    <path d="M396 220 L400 230 L411 234 L400 238 L396 248 L392 238 L381 234 L392 230 Z"/>
+  </g>
+  <text x="108" y="411" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="900" letter-spacing="-2" fill="#fff9ee">Mr</text>
+  <circle cx="193" cy="392" r="8.5" fill="#a8ffff" filter="url(#softGlow)"/>
+  <circle cx="193" cy="392" r="6.5" fill="#6fe9ff"/>
+  <text x="214" y="411" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="900" letter-spacing="-2" fill="#fff9ee">Fluent</text>
+  <path d="M80 447 H142 M370 447 H432" stroke="url(#subtitle)" stroke-width="3" stroke-linecap="round"/>
+  <text x="256" y="458" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700" letter-spacing="2.2" text-anchor="middle" fill="url(#subtitle)">Learn English</text>
 </svg>
