@@ -1896,10 +1896,10 @@ html body nav.nav .brand .mrfluent-header-live-dot{
   <div class="container">
     <div class="head"><div class="eyebrow">How it works</div></div>
     <div class="how-grid">
-      <div class="how-card"><div class="step-no">01</div><b>Create your student account</b><small class="how-arabic" dir="rtl" lang="ar">أنشئ حسابك كطالب</small><p>Use your name, mobile number and password to create your private learning space.</p></div>
-      <div class="how-card"><div class="step-no">02</div><b>Choose your grade</b><small class="how-arabic" dir="rtl" lang="ar">اختار صفك الدراسي</small><p>Select the school grade you are studying and review the access options.</p></div>
-      <div class="how-card"><div class="step-no">03</div><b>Activate your access</b><small class="how-arabic" dir="rtl" lang="ar">فعّل اشتراكك</small><p>Send the payment proof and wait for the admin approval message.</p></div>
-      <div class="how-card"><div class="step-no">04</div><b>Study and track</b><small class="how-arabic" dir="rtl" lang="ar">ذاكر وتابع تقدّمك</small><p>Open lessons, watch videos, take quizzes, submit homework and follow your progress.</p></div>
+      <div class="how-card"><div class="step-no">01</div><b>Create your student account</b><small class="how-arabic" dir="rtl" lang="ar"><span class="how-arabic-live-dot" aria-hidden="true"></span><span class="how-arabic-text">أنشئ حسابك كطالب</span></small><p>Use your name, mobile number and password to create your private learning space.</p></div>
+      <div class="how-card"><div class="step-no">02</div><b>Choose your grade</b><small class="how-arabic" dir="rtl" lang="ar"><span class="how-arabic-live-dot" aria-hidden="true"></span><span class="how-arabic-text">اختار صفك الدراسي</span></small><p>Select the school grade you are studying and review the access options.</p></div>
+      <div class="how-card"><div class="step-no">03</div><b>Activate your access</b><small class="how-arabic" dir="rtl" lang="ar"><span class="how-arabic-live-dot" aria-hidden="true"></span><span class="how-arabic-text">فعّل اشتراكك</span></small><p>Send the payment proof and wait for the admin approval message.</p></div>
+      <div class="how-card"><div class="step-no">04</div><b>Study and track</b><small class="how-arabic" dir="rtl" lang="ar"><span class="how-arabic-live-dot" aria-hidden="true"></span><span class="how-arabic-text">ذاكر وتابع تقدّمك</span></small><p>Open lessons, watch videos, take quizzes, submit homework and follow your progress.</p></div>
     </div>
   </div>
 </section>
@@ -13049,3 +13049,56 @@ html body #modal.doma-auth-photo.doma-auth-signup .modalhead .close.auth-back{
 }
 </style>
 
+
+
+<style id="doma-how-it-works-arabic-glow-dots-v77">
+/* Soft breathing neon dots beside the four Arabic translations in How it works. */
+@keyframes domaHowArabicDotPulse {
+  0%,100% {
+    opacity:.62;
+    transform:scale(.82);
+    background:#70dfff;
+    box-shadow:0 0 3px 1px rgba(80,225,255,.48),0 0 7px 2px rgba(139,92,246,.28),0 0 12px 2px rgba(139,92,246,.12);
+  }
+  50% {
+    opacity:1;
+    transform:scale(1.14);
+    background:#e4ffff;
+    box-shadow:0 0 5px 2px rgba(140,248,255,.98),0 0 13px 5px rgba(123,110,255,.75),0 0 20px 6px rgba(225,100,255,.3);
+  }
+}
+html body section.how-it-works#how-it-works .how-grid > .how-card .how-arabic {
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:6px!important;
+  width:100%!important;
+  text-align:right!important;
+  direction:rtl!important;
+}
+html body section.how-it-works#how-it-works .how-grid > .how-card .how-arabic-text {
+  display:block!important;
+  min-width:0!important;
+  flex:0 1 auto!important;
+  text-align:right!important;
+}
+html body section.how-it-works#how-it-works .how-grid > .how-card .how-arabic-live-dot {
+  display:inline-block!important;
+  width:5px!important;
+  height:5px!important;
+  min-width:5px!important;
+  flex:0 0 5px!important;
+  border-radius:50%!important;
+  background:#8ff7ff!important;
+  box-shadow:0 0 4px 1px rgba(80,225,255,.8),0 0 10px 3px rgba(139,92,246,.52),0 0 18px 4px rgba(139,92,246,.22)!important;
+  transform-origin:center!important;
+  animation:domaHowArabicDotPulse 1.8s ease-in-out infinite!important;
+}
+@media(prefers-reduced-motion:reduce) {
+  html body section.how-it-works#how-it-works .how-grid > .how-card .how-arabic-live-dot {
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
+</style>
