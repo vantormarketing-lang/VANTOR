@@ -2441,7 +2441,7 @@ function domaPastelGradeCardMarkup(g,monthly){
     ? '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 10.5c6-3 12-2.4 18 1.8v27c-6-4.2-12-4.8-18-1.8zM42 10.5c-6-3-12-2.4-18 1.8v27c6-4.2 12-4.8 18-1.8z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 17h7M11 23h7M30 17h7M30 23h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
     : '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 17 24 7 44 17 24 27 4 17Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M12 21v10c7 5 17 5 24 0V21M42 18v11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   return '<article class="card grade grade-selectable mf-pastel-grade-card" data-grade-search="'+esc(searchable)+'">'+
-    '<div class="mf-pastel-grade-top"><span class="mf-pastel-grade-icon" aria-hidden="true">'+icon+'</span><div class="mf-pastel-grade-labels"><h3 class="mf-pastel-grade-title">'+esc(name)+'</h3><p class="mf-pastel-grade-subtitle">English — '+esc(name)+'</p></div></div>'+
+    '<div class="mf-pastel-grade-top"><span class="mf-pastel-grade-icon" aria-hidden="true">'+icon+'</span><div class="mf-pastel-grade-labels"><h3 class="mf-pastel-grade-title"><span class="mf-grade-title-text">'+esc(name)+'</span><span class="mf-grade-live-dot" aria-hidden="true"></span></h3><p class="mf-pastel-grade-subtitle">English — '+esc(name)+'</p></div></div>'+
     '<div class="grade-meta mf-pastel-grade-price"><span>100 EGP / Month</span></div>'+
     '<button class="btn primary grade-open-button mf-pastel-grade-button" type="button" data-doma-grade-open="'+esc(name)+'">Open Grade →</button>'+
   '</article>';
@@ -13096,6 +13096,56 @@ html body section.how-it-works#how-it-works .how-grid > .how-card .how-arabic-li
 }
 @media(prefers-reduced-motion:reduce) {
   html body section.how-it-works#how-it-works .how-grid > .how-card .how-arabic-live-dot {
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
+</style>
+
+
+<style id="doma-grade-card-live-dots-v78">
+/* Compact breathing neon indicator beside each school-grade title. */
+@keyframes domaGradeCardDotPulse {
+  0%,100% {
+    opacity:.62;
+    transform:scale(.82);
+    background:#70dfff;
+    box-shadow:0 0 3px 1px rgba(80,225,255,.48),0 0 7px 2px rgba(139,92,246,.28),0 0 12px 2px rgba(139,92,246,.12);
+  }
+  50% {
+    opacity:1;
+    transform:scale(1.14);
+    background:#e4ffff;
+    box-shadow:0 0 5px 2px rgba(140,248,255,.98),0 0 13px 5px rgba(123,110,255,.75),0 0 20px 6px rgba(225,100,255,.3);
+  }
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card .mf-pastel-grade-title {
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  flex-wrap:wrap!important;
+  gap:5px!important;
+  min-width:0!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card .mf-grade-title-text {
+  min-width:0!important;
+  overflow-wrap:anywhere!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card .mf-grade-live-dot {
+  display:inline-block!important;
+  width:5px!important;
+  height:5px!important;
+  min-width:5px!important;
+  flex:0 0 5px!important;
+  border-radius:50%!important;
+  background:#8ff7ff!important;
+  box-shadow:0 0 4px 1px rgba(80,225,255,.8),0 0 10px 3px rgba(139,92,246,.52),0 0 18px 4px rgba(139,92,246,.22)!important;
+  transform-origin:center!important;
+  animation:domaGradeCardDotPulse 1.8s ease-in-out infinite!important;
+}
+@media(prefers-reduced-motion:reduce) {
+  html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card .mf-grade-live-dot {
     animation:none!important;
     opacity:1!important;
     transform:none!important;
