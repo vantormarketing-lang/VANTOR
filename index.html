@@ -12803,6 +12803,43 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-whatsapp svg{
   }
 }
 </style>
+
+<style id="doma-signup-brand-glow-dots">
+/* Small luminous status dots beside DOMA Academy and Mr. Fluent on signup only. */
+@keyframes domaSignupBrandDotPulse{
+  0%,100%{opacity:.84;filter:brightness(1);transform:scale(.94)}
+  50%{opacity:1;filter:brightness(1.28);transform:scale(1.08)}
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-screen-wordmark>span::after{
+  content:""!important;
+  display:inline-block!important;
+  width:6px!important;height:6px!important;min-width:6px!important;
+  margin:0 0 5px 8px!important;
+  border-radius:50%!important;
+  vertical-align:middle!important;
+  background:#70f0ff!important;
+  box-shadow:0 0 4px #70f0ff,0 0 10px rgba(70,224,255,.98),0 0 19px rgba(70,157,255,.72)!important;
+  animation:domaSignupBrandDotPulse 1.9s ease-in-out infinite!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name::after{
+  content:""!important;
+  display:inline-block!important;
+  width:6px!important;height:6px!important;min-width:6px!important;
+  margin:0 0 3px 8px!important;
+  border-radius:50%!important;
+  vertical-align:middle!important;
+  background:#d5a0ff!important;
+  box-shadow:0 0 4px #d5a0ff,0 0 10px rgba(195,111,255,.98),0 0 19px rgba(139,71,255,.72)!important;
+  animation:domaSignupBrandDotPulse 1.9s ease-in-out infinite!important;
+}
+@media(prefers-reduced-motion:reduce){
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-screen-wordmark>span::after,
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name::after{
+    animation:none!important;
+  }
+}
+</style>
+
 </body>
 </html>
 
