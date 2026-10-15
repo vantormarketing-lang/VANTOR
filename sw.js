@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v113';
-const BRAND_VERSION = 'mr-a-name-v1';
+const CACHE_NAME = 'mr-fluent-offline-student-v114';
+const BRAND_VERSION = 'mr-a-photo-v114';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
@@ -8,7 +8,7 @@ const SHELL = [
   indexUrl.href,
   versioned('./manifest.webmanifest'),
   versioned('./doma-leaf-book-icon.svg'),
-  versioned('./mrfluent-auth-glass-v110.webp')
+  versioned('./mrfluent-auth-photo-v113.webp')
 ];
 
 self.addEventListener('install', event => {
