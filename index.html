@@ -13152,3 +13152,90 @@ html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card 
   }
 }
 </style>
+
+
+<style id="doma-extra-cards-glow-dots-v79">
+/* Shared soft neon pulse for remaining course, subscription, FAQ, and footer cards. */
+@keyframes domaExtraCardsDotPulse {
+  0%,100% {
+    opacity:.62;
+    transform:scale(.82);
+    background:#70dfff;
+    box-shadow:0 0 3px 1px rgba(80,225,255,.48),0 0 7px 2px rgba(139,92,246,.28),0 0 12px 2px rgba(139,92,246,.12);
+  }
+  50% {
+    opacity:1;
+    transform:scale(1.14);
+    background:#e4ffff;
+    box-shadow:0 0 5px 2px rgba(140,248,255,.98),0 0 13px 5px rgba(123,110,255,.75),0 0 20px 6px rgba(225,100,255,.3);
+  }
+}
+
+/* Main English Course card: place the glow dot beside its Arabic card title. */
+html body section#english-course .mf-english-course-hero .mf-course-copy .mf-course-arabic::after {
+  content:""!important;
+  display:inline-block!important;
+  width:6px!important;height:6px!important;min-width:6px!important;
+  margin-inline-start:7px!important;
+  border-radius:50%!important;
+  vertical-align:middle!important;
+  background:#8ff7ff!important;
+  box-shadow:0 0 4px 1px rgba(80,225,255,.8),0 0 10px 3px rgba(139,92,246,.52),0 0 18px 4px rgba(139,92,246,.22)!important;
+  transform-origin:center!important;
+  animation:domaExtraCardsDotPulse 1.8s ease-in-out infinite!important;
+}
+
+/* Subscription cards: one dot right beside each plan name. */
+html body section#pricing .pricing > .card.plan > h3::after {
+  content:""!important;
+  display:inline-block!important;
+  width:6px!important;height:6px!important;min-width:6px!important;
+  margin-inline-start:8px!important;
+  border-radius:50%!important;
+  vertical-align:middle!important;
+  background:#8ff7ff!important;
+  box-shadow:0 0 4px 1px rgba(80,225,255,.8),0 0 10px 3px rgba(139,92,246,.52),0 0 18px 4px rgba(139,92,246,.22)!important;
+  transform-origin:center!important;
+  animation:domaExtraCardsDotPulse 1.8s ease-in-out infinite!important;
+}
+
+/* FAQ cards: keep the indicator at the start of every clickable question. */
+html body section#faq .faq details > summary::before {
+  content:""!important;
+  display:inline-block!important;
+  width:6px!important;height:6px!important;min-width:6px!important;
+  margin:0 9px 1px 0!important;
+  border-radius:50%!important;
+  vertical-align:middle!important;
+  background:#8ff7ff!important;
+  box-shadow:0 0 4px 1px rgba(80,225,255,.8),0 0 10px 3px rgba(139,92,246,.52),0 0 18px 4px rgba(139,92,246,.22)!important;
+  transform-origin:center!important;
+  animation:domaExtraCardsDotPulse 1.8s ease-in-out infinite!important;
+}
+
+/* Footer navigation columns: position the dot beside Platform, Learning, and Account. */
+html body footer.footer .footgrid > .footer-link-card > h4::after {
+  content:""!important;
+  display:inline-block!important;
+  width:5px!important;height:5px!important;min-width:5px!important;
+  margin-inline-start:7px!important;
+  border-radius:50%!important;
+  vertical-align:middle!important;
+  background:#8ff7ff!important;
+  box-shadow:0 0 4px 1px rgba(80,225,255,.8),0 0 9px 2px rgba(139,92,246,.52),0 0 15px 3px rgba(139,92,246,.22)!important;
+  transform-origin:center!important;
+  animation:domaExtraCardsDotPulse 1.8s ease-in-out infinite!important;
+}
+
+/* Honor reduced-motion preferences while keeping all indicators visible. */
+@media(prefers-reduced-motion:reduce) {
+  html body section#english-course .mf-english-course-hero .mf-course-copy .mf-course-arabic::after,
+  html body section#pricing .pricing > .card.plan > h3::after,
+  html body section#faq .faq details > summary::before,
+  html body footer.footer .footgrid > .footer-link-card > h4::after {
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
+</style>
