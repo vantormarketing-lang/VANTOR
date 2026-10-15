@@ -12784,3 +12784,44 @@ html body #modal.doma-auth-photo.doma-auth-signup .modalhead{
 }
 </style>
 
+
+
+<style id="doma-signup-back-flex-fix">
+/* Final override: place signup back button in the heading row, opposite Create Account. */
+html body #modal.doma-auth-photo.doma-auth-signup .modalhead{
+  display:grid!important;
+  grid-template-columns:42px minmax(0,1fr) 42px!important;
+  grid-template-rows:minmax(42px,auto)!important;
+  align-items:center!important;
+  justify-content:stretch!important;
+  position:relative!important;
+  gap:8px!important;
+  min-height:42px!important;
+  margin:0 0 3px!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .modalhead h3{
+  grid-column:2!important;grid-row:1!important;
+  width:auto!important;min-width:0!important;max-width:100%!important;
+  margin:0!important;padding:0!important;
+  position:static!important;transform:none!important;
+  text-align:center!important;justify-self:stretch!important;align-self:center!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .modalhead .close.auth-back{
+  grid-column:3!important;grid-row:1!important;
+  position:static!important;inset:auto!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+  transform:none!important;justify-self:end!important;align-self:center!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:42px!important;height:42px!important;min-width:42px!important;
+  flex:0 0 42px!important;margin:0!important;z-index:7!important;
+}
+@media(max-width:700px){
+  html body #modal.doma-auth-photo.doma-auth-signup .modalhead{
+    grid-template-columns:38px minmax(0,1fr) 38px!important;
+    min-height:38px!important;gap:6px!important;
+  }
+  html body #modal.doma-auth-photo.doma-auth-signup .modalhead .close.auth-back{
+    width:38px!important;height:38px!important;min-width:38px!important;flex-basis:38px!important;
+  }
+}
+</style>
+
