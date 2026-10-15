@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v114';
-const BRAND_VERSION = 'mr-a-photo-v114';
+const CACHE_NAME = 'mr-fluent-offline-student-v115';
+const BRAND_VERSION = 'mr-a-selected-icon-v1';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
@@ -7,7 +7,7 @@ const SHELL = [
   scopeUrl.href,
   indexUrl.href,
   versioned('./manifest.webmanifest'),
-  versioned('./doma-leaf-book-icon.svg'),
+  versioned('./doma-mr-a-selected-icon.png'),
   versioned('./mrfluent-auth-photo-v113.webp')
 ];
 
