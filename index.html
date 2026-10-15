@@ -1787,11 +1787,80 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-switch{justify-cont
 }
 </style>
 
+
+<style id="mrfluent-header-pulsing-dot">
+/* Replace the punctuation after Mr with a softly pulsing live glow on the main-site brand only. */
+html body nav.nav .brand .mrfluent-header-wordmark{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:4px!important;
+  line-height:1.05!important;
+  white-space:nowrap!important;
+}
+html body nav.nav .brand .mrfluent-header-titleline{
+  display:inline-flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:5px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+html body nav.nav .brand .mrfluent-header-prefix,
+html body nav.nav .brand .mrfluent-header-name{
+  display:inline-block!important;
+  color:inherit!important;
+  font:inherit!important;
+  line-height:1!important;
+}
+html body nav.nav .brand .mrfluent-header-live-dot{
+  position:relative!important;
+  display:inline-block!important;
+  width:7px!important;
+  height:7px!important;
+  min-width:7px!important;
+  flex:0 0 7px!important;
+  margin:0 1px!important;
+  border-radius:50%!important;
+  background:#8ff7ff!important;
+  box-shadow:0 0 4px 1px rgba(80,225,255,.8),0 0 10px 3px rgba(139,92,246,.52),0 0 18px 4px rgba(139,92,246,.22)!important;
+  transform:scale(.88)!important;
+  transform-origin:center!important;
+  animation:mrfluent-header-dot-breathe 1.8s ease-in-out infinite!important;
+}
+@keyframes mrfluent-header-dot-breathe{
+  0%,100%{
+    opacity:.62;
+    transform:scale(.82);
+    background:#70dfff;
+    box-shadow:0 0 3px 1px rgba(80,225,255,.48),0 0 7px 2px rgba(139,92,246,.28),0 0 12px 2px rgba(139,92,246,.12);
+  }
+  50%{
+    opacity:1;
+    transform:scale(1.16);
+    background:#e4ffff;
+    box-shadow:0 0 5px 2px rgba(140,248,255,.98),0 0 13px 5px rgba(123,110,255,.75),0 0 23px 7px rgba(225,100,255,.3);
+  }
+}
+@media(max-width:700px){
+  html body nav.nav .brand .mrfluent-header-wordmark{gap:3px!important}
+  html body nav.nav .brand .mrfluent-header-titleline{gap:4px!important}
+  html body nav.nav .brand .mrfluent-header-live-dot{
+    width:6px!important;height:6px!important;min-width:6px!important;flex-basis:6px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html body nav.nav .brand .mrfluent-header-live-dot{animation:none!important;opacity:1!important;transform:none!important}
+}
+</style>
+
 </head>
 <body>
 <nav class="nav">
 <div class="container navin">
-<a class="brand" href="#home"><span>Mr. Fluent<small>LEARN • SPEAK • MASTER</small></span></a>
+<a class="brand" href="#home" aria-label="Mr Fluent home"><span class="mrfluent-header-wordmark"><span class="mrfluent-header-titleline"><span class="mrfluent-header-prefix">Mr</span><span class="mrfluent-header-live-dot" aria-hidden="true"></span><span class="mrfluent-header-name">Fluent</span></span><small>LEARN • SPEAK • MASTER</small></span></a>
 <div class="links"><a href="#grades">Grades</a><a href="#english-course">English Course</a><a href="#english-course">Learning</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
 <div class="nav-actions"><button class="btn secondary login" id="navLogin" onclick="openAuth(\'login\')">Log In</button><button class="btn primary nav-action-nature" id="navAction" type="button" onclick="openAuth(\'signup\')"><svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Get Started</span></button><button class="menu" type="button" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu()"><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
   <g fill="none" stroke-linecap="round">
