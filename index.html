@@ -2118,7 +2118,8 @@ function openAuth(type){
   <div class="doma-auth-switch full" style="color:#888;font-size:11px"><span>Already have an account?</span><button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth('login')">Log in</button></div>
 </div>`;
 
-    body.innerHTML += '<div class="doma-auth-brand-footer"><a class="doma-auth-footer-brand" href="#home" onclick="closeModal()"><span class="doma-auth-footer-name">Mr. Fluent</span><small>LEARN • SPEAK • MASTER</small></a><div class="doma-auth-footer-contact"><a class="doma-auth-footer-phone" href="tel:01095439588">01095439588</a><a class="doma-auth-whatsapp" href="https://wa.me/201095439588" target="_blank" rel="noopener noreferrer" aria-label="Chat with Mr. Fluent on WhatsApp"><svg viewBox="0 0 32 32" width="21" height="21" aria-hidden="true" focusable="false"><path d="M16 3.5a12.2 12.2 0 0 0-10.4 18.6L4 28l6.2-1.7A12.2 12.2 0 1 0 16 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11.1 9.5c-.3-.6-.6-.7-.9-.7h-.8c-.3 0-.7.2-1 .5-.4.4-1.4 1.4-1.4 3.4s1.4 4 1.7 4.3c.2.3 2.9 4.6 7.1 6.4 3.5 1.4 4.3 1.2 5.1 1.1.8-.1 2.5-1 2.8-2.1.4-1 .4-1.9.3-2.1-.1-.2-.5-.3-1.1-.6-.6-.3-2.5-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.6-.2.3-.5.3-1 .1-.6-.3-2.1-.8-3.8-2.4-1.4-1.2-2.3-2.7-2.6-3.2-.3-.5 0-.7.2-1 .2-.2.5-.6.7-.8.2-.3.3-.5.4-.8.1-.3 0-.6-.1-.8z" fill="currentColor"/></svg></a></div></div>';
+    $('modal').querySelector('.doma-auth-brand-footer')?.remove();
+    $('modal').insertAdjacentHTML('beforeend', '<div id="domaAuthFloatingFooter" class="doma-auth-brand-footer"><a class="doma-auth-footer-brand" href="#home" onclick="closeModal()"><span class="doma-auth-footer-name">Mr. Fluent</span><small>LEARN • SPEAK • MASTER</small></a><div class="doma-auth-footer-contact"><a class="doma-auth-footer-phone" href="https://wa.me/201095439588" target="_blank" rel="noopener noreferrer" aria-label="Chat with Mr. Fluent on WhatsApp">01095439588</a><a class="doma-auth-whatsapp" href="https://wa.me/201095439588" target="_blank" rel="noopener noreferrer" aria-label="Chat with Mr. Fluent on WhatsApp"><svg viewBox="0 0 32 32" width="21" height="21" aria-hidden="true" focusable="false"><path d="M16 3.5a12.2 12.2 0 0 0-10.4 18.6L4 28l6.2-1.7A12.2 12.2 0 1 0 16 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11.1 9.5c-.3-.6-.6-.7-.9-.7h-.8c-.3 0-.7.2-1 .5-.4.4-1.4 1.4-1.4 3.4s1.4 4 1.7 4.3c.2.3 2.9 4.6 7.1 6.4 3.5 1.4 4.3 1.2 5.1 1.1.8-.1 2.5-1 2.8-2.1.4-1 .4-1.9.3-2.1-.1-.2-.5-.3-1.1-.6-.6-.3-2.5-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.6-.2.3-.5.3-1 .1-.6-.3-2.1-.8-3.8-2.4-1.4-1.2-2.3-2.7-2.6-3.2-.3-.5 0-.7.2-1 .2-.2.5-.6.7-.8.2-.3.3-.5.4-.8.1-.3 0-.6-.1-.8z" fill="currentColor"/></svg></a></div></div>');
   }
   $('modal').classList.add('show')
 }
@@ -12685,6 +12686,123 @@ html body #modal.doma-auth-photo.doma-auth-signup .modalhead{
 
 </style>
 
+
+<style id="doma-signup-floating-footer-fix">
+/* Keep the signup brand/contact outside the glass card, anchored to the page's lower-right corner. */
+html body #modal.doma-auth-photo.doma-auth-signup{
+  padding-bottom:112px!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-brand-footer{
+  position:fixed!important;
+  right:clamp(14px,2.6vw,38px)!important;
+  bottom:clamp(12px,2.2vh,24px)!important;
+  z-index:20!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  justify-content:flex-end!important;
+  gap:6px!important;
+  width:max-content!important;
+  max-width:calc(100vw - 24px)!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  text-align:right!important;
+  pointer-events:auto!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-brand{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  gap:3px!important;
+  width:auto!important;
+  max-width:100%!important;
+  color:#f5eaff!important;
+  text-align:right!important;
+  text-decoration:none!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name{
+  color:#f8f0ff!important;
+  font-size:21px!important;
+  line-height:1.15!important;
+  letter-spacing:.4px!important;
+  text-shadow:0 2px 14px rgba(0,0,0,.55)!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-brand small{
+  color:rgba(220,205,242,.86)!important;
+  font-size:8px!important;
+  line-height:1.4!important;
+  letter-spacing:1.7px!important;
+  text-align:right!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-contact{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:9px!important;
+  width:auto!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-phone{
+  color:#69f3b0!important;
+  font-size:15px!important;
+  line-height:1.3!important;
+  font-weight:800!important;
+  letter-spacing:.3px!important;
+  text-decoration:none!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.55)!important;
+  cursor:pointer!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-phone:hover{
+  color:#a5ffd3!important;
+  text-decoration:underline!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-whatsapp{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:32px!important;
+  height:32px!important;
+  min-width:32px!important;
+  flex:0 0 32px!important;
+  border:1px solid rgba(85,255,177,.55)!important;
+  border-radius:50%!important;
+  background:rgba(20,150,92,.22)!important;
+  color:#57f2a9!important;
+  box-shadow:0 0 16px rgba(53,244,161,.13)!important;
+}
+html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-whatsapp svg{
+  width:19px!important;height:19px!important;
+}
+@media(max-width:700px){
+  html body #modal.doma-auth-photo.doma-auth-signup{
+    padding:91px 10px 116px!important;
+  }
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-brand-footer{
+    right:12px!important;
+    bottom:10px!important;
+    gap:4px!important;
+    max-width:calc(100vw - 24px)!important;
+  }
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name{
+    font-size:18px!important;
+  }
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-brand small{
+    font-size:7px!important;
+    letter-spacing:1.3px!important;
+  }
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-phone{
+    font-size:13px!important;
+  }
+  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-whatsapp{
+    width:29px!important;height:29px!important;min-width:29px!important;flex-basis:29px!important;
+  }
+}
+</style>
 </body>
 </html>
 
