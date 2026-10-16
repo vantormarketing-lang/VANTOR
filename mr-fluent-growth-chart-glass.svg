@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="fullBleed" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#122442"/><stop offset=".34" stop-color="#0b1b35"/>
-      <stop offset=".68" stop-color="#071329"/><stop offset="1" stop-color="#141533"/>
+      <stop offset="0" stop-color="#315d8d"/><stop offset=".34" stop-color="#203f6e"/>
+      <stop offset=".68" stop-color="#1c315e"/><stop offset="1" stop-color="#4a347d"/>
     </linearGradient>
     <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#203c61"/><stop offset=".28" stop-color="#102744"/>
-      <stop offset=".59" stop-color="#091a34"/><stop offset=".82" stop-color="#0a142b"/>
-      <stop offset="1" stop-color="#201849"/>
+      <stop offset="0" stop-color="#2c5681"/><stop offset=".28" stop-color="#1e4269"/>
+      <stop offset=".59" stop-color="#183556"/><stop offset=".82" stop-color="#182d50"/>
+      <stop offset="1" stop-color="#342768"/>
     </linearGradient>
     <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#f7fdff"/><stop offset=".15" stop-color="#a6c8e8"/>
@@ -53,11 +53,11 @@
     </filter>
   </defs>
 
-  <!-- Full-bleed glass background: no black or transparent margin at the edges. -->
+  <!-- Full-bleed blue-violet glass background, with a luminous rim and no black outer border. -->
   <rect width="512" height="512" fill="url(#fullBleed)"/>
   <rect width="512" height="512" fill="url(#violetAura)"/>
-  <rect x="4" y="4" width="504" height="504" rx="84" fill="url(#glass)" stroke="url(#edge)" stroke-width="4"/>
-  <rect x="12" y="12" width="488" height="488" rx="76" fill="none" stroke="url(#innerEdge)" stroke-width="2"/>
+  <rect x="0" y="0" width="512" height="512" rx="88" fill="url(#glass)" stroke="url(#edge)" stroke-width="7"/>
+  <rect x="10" y="10" width="492" height="492" rx="80" fill="none" stroke="url(#innerEdge)" stroke-width="2.5"/>
   <path d="M14 118 Q26 18 129 13 L409 13 Q286 65 192 147 Q100 219 14 254 Z" fill="url(#gloss)"/>
   <path d="M24 108 Q31 28 117 16" fill="none" stroke="#f5fdff" stroke-opacity=".72" stroke-width="3.4" stroke-linecap="round"/>
   <path d="M67 30 Q119 13 174 19" fill="none" stroke="#e0f5ff" stroke-opacity=".34" stroke-width="2.2" stroke-linecap="round"/>
