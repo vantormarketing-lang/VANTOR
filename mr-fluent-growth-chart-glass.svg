@@ -1,39 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
+    <linearGradient id="fullBleed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#122442"/><stop offset=".34" stop-color="#0b1b35"/>
+      <stop offset=".68" stop-color="#071329"/><stop offset="1" stop-color="#141533"/>
+    </linearGradient>
     <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#142747"/><stop offset=".38" stop-color="#09172e"/>
-      <stop offset=".72" stop-color="#061126"/><stop offset="1" stop-color="#11182f"/>
+      <stop offset="0" stop-color="#203c61"/><stop offset=".28" stop-color="#102744"/>
+      <stop offset=".59" stop-color="#091a34"/><stop offset=".82" stop-color="#0a142b"/>
+      <stop offset="1" stop-color="#201849"/>
     </linearGradient>
     <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#eff8ff"/><stop offset=".16" stop-color="#9ab9da"/>
-      <stop offset=".38" stop-color="#f8fbff"/><stop offset=".62" stop-color="#53749f"/>
-      <stop offset=".82" stop-color="#9baecc"/><stop offset="1" stop-color="#263d61"/>
+      <stop offset="0" stop-color="#f7fdff"/><stop offset=".15" stop-color="#a6c8e8"/>
+      <stop offset=".34" stop-color="#e1f5ff"/><stop offset=".55" stop-color="#7593bd"/>
+      <stop offset=".76" stop-color="#af9efc"/><stop offset="1" stop-color="#5476aa"/>
     </linearGradient>
     <linearGradient id="innerEdge" x1="0" y1="0" x2=".9" y2="1">
-      <stop offset="0" stop-color="#d9f3ff" stop-opacity=".7"/><stop offset=".3" stop-color="#5983b3" stop-opacity=".3"/>
-      <stop offset="1" stop-color="#9b5dfb" stop-opacity=".55"/>
+      <stop offset="0" stop-color="#e4f7ff" stop-opacity=".76"/>
+      <stop offset=".35" stop-color="#83b8ec" stop-opacity=".22"/>
+      <stop offset=".7" stop-color="#a97eff" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#9baeff" stop-opacity=".66"/>
     </linearGradient>
     <linearGradient id="barOne" x1="0" y1="0" x2=".9" y2="1">
-      <stop offset="0" stop-color="#f0fdff"/><stop offset=".42" stop-color="#9cd9ff"/><stop offset="1" stop-color="#4a83fa"/>
+      <stop offset="0" stop-color="#f4feff"/><stop offset=".38" stop-color="#a8e5ff"/><stop offset="1" stop-color="#3984fa"/>
     </linearGradient>
     <linearGradient id="barTwo" x1="0" y1="0" x2=".2" y2="1">
-      <stop offset="0" stop-color="#f1c6ff"/><stop offset=".42" stop-color="#a68bff"/><stop offset="1" stop-color="#603cff"/>
+      <stop offset="0" stop-color="#f6d7ff"/><stop offset=".42" stop-color="#b6a1ff"/><stop offset="1" stop-color="#6c4aff"/>
     </linearGradient>
     <linearGradient id="barThree" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#e3d3ff"/><stop offset=".34" stop-color="#ae78ff"/>
-      <stop offset=".72" stop-color="#7337f7"/><stop offset="1" stop-color="#4325c7"/>
+      <stop offset="0" stop-color="#e3d6ff"/><stop offset=".32" stop-color="#bb8aff"/>
+      <stop offset=".7" stop-color="#8544fa"/><stop offset="1" stop-color="#4a30d5"/>
     </linearGradient>
     <linearGradient id="trend" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#6fe7ff"/><stop offset=".34" stop-color="#ad9bff"/>
-      <stop offset=".72" stop-color="#f36bff"/><stop offset="1" stop-color="#e39aff"/>
+      <stop offset="0" stop-color="#75f1ff"/><stop offset=".34" stop-color="#b5a7ff"/>
+      <stop offset=".72" stop-color="#f87bff"/><stop offset="1" stop-color="#f0b0ff"/>
     </linearGradient>
     <linearGradient id="gloss" x1="0" y1="0" x2=".8" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity=".29"/><stop offset=".28" stop-color="#a6d8ff" stop-opacity=".1"/>
-      <stop offset=".7" stop-color="#847aff" stop-opacity=".025"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".30"/>
+      <stop offset=".25" stop-color="#b9e3ff" stop-opacity=".12"/>
+      <stop offset=".62" stop-color="#a48dff" stop-opacity=".035"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
-      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#00040f" flood-opacity=".8"/>
-    </filter>
+    <radialGradient id="violetAura" cx=".68" cy=".28" r=".78">
+      <stop offset="0" stop-color="#7446ff" stop-opacity=".18"/>
+      <stop offset=".55" stop-color="#426aff" stop-opacity=".045"/>
+      <stop offset="1" stop-color="#426aff" stop-opacity="0"/>
+    </radialGradient>
     <filter id="neon" x="-80%" y="-80%" width="260%" height="260%">
       <feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
@@ -41,30 +52,34 @@
       <feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <g filter="url(#shadow)">
-    <rect x="19" y="19" width="474" height="474" rx="73" fill="#030817" stroke="#071225" stroke-width="7"/>
-    <rect x="23" y="22" width="466" height="466" rx="70" fill="url(#glass)" stroke="url(#edge)" stroke-width="5"/>
-    <rect x="33" y="32" width="446" height="446" rx="59" fill="none" stroke="url(#innerEdge)" stroke-width="2.5"/>
-    <path d="M38 100 Q55 36 120 34 L390 34 Q266 82 183 153 Q114 210 39 250 Z" fill="url(#gloss)"/>
-    <path d="M40 89 Q47 40 108 31" fill="none" stroke="#f2faff" stroke-opacity=".62" stroke-width="3" stroke-linecap="round"/>
-    <path d="M84 46 Q130 29 174 34" fill="none" stroke="#d9f0ff" stroke-opacity=".32" stroke-width="2" stroke-linecap="round"/>
-    <path d="M420 34 Q474 48 478 101" fill="none" stroke="#b5dcff" stroke-opacity=".44" stroke-width="3" stroke-linecap="round"/>
-    <path d="M31 354 Q31 449 109 477" fill="none" stroke="#5174a1" stroke-opacity=".25" stroke-width="3"/>
-  </g>
+
+  <!-- Full-bleed glass background: no black or transparent margin at the edges. -->
+  <rect width="512" height="512" fill="url(#fullBleed)"/>
+  <rect width="512" height="512" fill="url(#violetAura)"/>
+  <rect x="4" y="4" width="504" height="504" rx="84" fill="url(#glass)" stroke="url(#edge)" stroke-width="4"/>
+  <rect x="12" y="12" width="488" height="488" rx="76" fill="none" stroke="url(#innerEdge)" stroke-width="2"/>
+  <path d="M14 118 Q26 18 129 13 L409 13 Q286 65 192 147 Q100 219 14 254 Z" fill="url(#gloss)"/>
+  <path d="M24 108 Q31 28 117 16" fill="none" stroke="#f5fdff" stroke-opacity=".72" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M67 30 Q119 13 174 19" fill="none" stroke="#e0f5ff" stroke-opacity=".34" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M395 16 Q486 31 495 117" fill="none" stroke="#c9e7ff" stroke-opacity=".5" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M17 364 Q17 461 100 494" fill="none" stroke="#6a93d4" stroke-opacity=".27" stroke-width="3"/>
+
+  <!-- Rising bars -->
   <g stroke-width="3" stroke-linejoin="round">
-    <rect x="79" y="296" width="69" height="99" rx="9" fill="url(#barOne)" stroke="#d8f5ff" stroke-opacity=".8"/>
-    <rect x="175" y="238" width="69" height="157" rx="9" fill="url(#barTwo)" stroke="#e3d4ff" stroke-opacity=".86"/>
-    <rect x="271" y="173" width="69" height="222" rx="9" fill="url(#barThree)" stroke="#d5c5ff" stroke-opacity=".9"/>
-    <path d="M90 309 V380 M186 251 V379 M282 186 V379" stroke="#fff" stroke-opacity=".42" stroke-width="3" stroke-linecap="round"/>
-    <path d="M91 305 H136 M187 247 H232 M283 182 H328" stroke="#fff" stroke-opacity=".52" stroke-width="3" stroke-linecap="round"/>
+    <rect x="79" y="296" width="69" height="99" rx="9" fill="url(#barOne)" stroke="#e2f9ff" stroke-opacity=".95"/>
+    <rect x="175" y="238" width="69" height="157" rx="9" fill="url(#barTwo)" stroke="#efe4ff" stroke-opacity=".95"/>
+    <rect x="271" y="173" width="69" height="222" rx="9" fill="url(#barThree)" stroke="#e7dbff" stroke-opacity=".97"/>
+    <path d="M90 309 V380 M186 251 V379 M282 186 V379" stroke="#fff" stroke-opacity=".46" stroke-width="3" stroke-linecap="round"/>
+    <path d="M91 305 H136 M187 247 H232 M283 182 H328" stroke="#fff" stroke-opacity=".65" stroke-width="3" stroke-linecap="round"/>
   </g>
-  <path d="M67 279 L143 218 L197 240 L339 108" fill="none" stroke="url(#trend)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" opacity=".47" filter="url(#neon)"/>
+  <!-- Luminous rising trend line and arrow -->
+  <path d="M67 279 L143 218 L197 240 L339 108" fill="none" stroke="url(#trend)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" opacity=".48" filter="url(#neon)"/>
   <path d="M67 279 L143 218 L197 240 L339 108" fill="none" stroke="url(#trend)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M69 276 L143 218 L197 240 L337 110" fill="none" stroke="#fff" stroke-opacity=".82" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M326 77 L382 65 L369 121 L356 98 Z" fill="#f18aff" opacity=".6" filter="url(#softNeon)"/>
-  <path d="M322 80 L378 66 L365 122 L351 97 Z" fill="url(#trend)" stroke="#f8eaff" stroke-opacity=".84" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M336 83 L368 75" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="3" stroke-linecap="round"/>
-  <path d="M49 434 Q59 462 97 469" fill="none" stroke="#7caeff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>
+  <path d="M69 276 L143 218 L197 240 L337 110" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M326 77 L382 65 L369 121 L356 98 Z" fill="#f18aff" opacity=".58" filter="url(#softNeon)"/>
+  <path d="M322 80 L378 66 L365 122 L351 97 Z" fill="url(#trend)" stroke="#fff5ff" stroke-opacity=".94" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M336 83 L368 75" fill="none" stroke="#fff" stroke-opacity=".94" stroke-width="3" stroke-linecap="round"/>
   <circle cx="69" cy="279" r="5" fill="#e8fcff" filter="url(#softNeon)"/>
   <circle cx="197" cy="240" r="4" fill="#fff0ff" filter="url(#softNeon)"/>
+  <path d="M430 413 Q453 400 475 416" fill="none" stroke="#bcb0ff" stroke-opacity=".2" stroke-width="2.4" stroke-linecap="round"/>
 </svg>

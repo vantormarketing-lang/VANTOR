@@ -1,7 +1,7 @@
-const CACHE_NAME = 'doma-admin-offline-v56';
+const CACHE_NAME = 'doma-admin-offline-v57';
 const ADMIN_URL = new URL('./admin.html', self.registration.scope).href;
-const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=mr-adham-icon-v3', self.registration.scope).href;
-const APP_ICON_URL = new URL('./mr-fluent-growth-chart-glass.svg?v=mr-a-growth-glass-v3', self.registration.scope).href;
+const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=mr-adham-icon-v4', self.registration.scope).href;
+const APP_ICON_URL = new URL('./mr-fluent-growth-chart-glass.svg?v=mr-a-growth-glass-v4', self.registration.scope).href;
 const SHELL = [ADMIN_URL, MANIFEST_URL, APP_ICON_URL];
 
 self.addEventListener('message', event => {
