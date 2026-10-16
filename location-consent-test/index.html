@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>اختبار مشاركة الموقع — موافقة صريحة</title>
+  <title>اختبار الموقع — طلب تلقائي</title>
   <style>
     :root { color-scheme: dark; }
     body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 20px; box-sizing: border-box; background: #160f16; color: #f8f1f6; font-family: system-ui, sans-serif; }
@@ -15,50 +15,62 @@
     button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
     #result { overflow-wrap: anywhere; padding: 12px; border-radius: 10px; background: #160f16; min-height: 28px; }
     small { color: #cbb8c9; }
+    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <main>
-    <h1>اختبار مشاركة الموقع</h1>
-    <p>هذه صفحة اختبار واضحة. لن يتم إرسال موقعك إلى خادم أو إلى أي شخص. إذا ضغطت على الزر ووافقت من المتصفح، فستُعرض الإحداثيات على هذه الصفحة فقط.</p>
-    <button id="share" type="button">مشاركة موقعي على هذا الجهاز</button>
-    <p id="result" role="status" aria-live="polite">لم يتم طلب موقعك بعد.</p>
-    <small>يمكنك رفض الإذن في أي وقت من إعدادات المتصفح.</small>
+    <h1>اختبار تحديد الموقع</h1>
+    <p>ستطلب هذه الصفحة إذن الموقع تلقائيًا عند فتحها. لن يتم إرسال إحداثياتك إلى خادم أو إلى أي شخص؛ ستظهر على هذه الصفحة فقط بعد سماح المتصفح.</p>
+    <p id="result" role="status" aria-live="polite">جارٍ طلب إذن الموقع من المتصفح…</p>
+    <button id="retry" type="button" hidden>إعادة المحاولة</button>
+    <small>إذا كان الإذن محظورًا، افتح إعدادات الموقع في المتصفح واسمح به يدويًا. لا يمكن للصفحة تجاوز رفض الإذن.</small>
   </main>
   <script>
-    const button = document.getElementById('share');
     const result = document.getElementById('result');
+    const retry = document.getElementById('retry');
+    let requestInProgress = false;
 
-    button.addEventListener('click', () => {
+    function requestLocation() {
+      if (requestInProgress) return;
       if (!window.isSecureContext) {
         result.textContent = 'هذه الصفحة ليست في سياق آمن. افتحها عبر HTTPS.';
+        retry.hidden = false;
         return;
       }
       if (!navigator.geolocation) {
         result.textContent = 'المتصفح لا يدعم تحديد الموقع.';
+        retry.hidden = false;
         return;
       }
-      button.disabled = true;
-      result.textContent = 'في انتظار إذنك من المتصفح...';
+
+      requestInProgress = true;
+      retry.hidden = true;
+      result.textContent = 'جارٍ انتظار استجابة المتصفح…';
       navigator.geolocation.getCurrentPosition(
         position => {
-          result.textContent = 'خط العرض: ' + position.coords.latitude.toFixed(6) +
-            ' — خط الطول: ' + position.coords.longitude.toFixed(6) +
-            ' — دقة تقديرية: ' + Math.round(position.coords.accuracy) + ' متر. لم تُرسل هذه البيانات إلى أي مكان.';
-          button.disabled = false;
+          const c = position.coords;
+          result.textContent = 'تم تحديد الموقع على هذا الجهاز فقط. خط العرض: ' +
+            c.latitude.toFixed(6) + ' — خط الطول: ' + c.longitude.toFixed(6) +
+            ' — الدقة التقديرية: ' + Math.round(c.accuracy) + ' متر. لم تُرسل البيانات إلى أي مكان.';
+          requestInProgress = false;
         },
         error => {
           const messages = {
-            1: 'لم توافق على مشاركة الموقع. لم يتم جمع أي إحداثيات.',
-            2: 'تعذر تحديد الموقع على هذا الجهاز حاليًا.',
-            3: 'انتهت مهلة تحديد الموقع. جرّب مرة أخرى مع تفعيل خدمات الموقع.'
+            1: 'المتصفح لم يسمح بالوصول للموقع أو أن الإذن محظور. يمكنك السماح به من إعدادات الموقع في المتصفح ثم إعادة المحاولة.',
+            2: 'تعذر تحديد الموقع على هذا الجهاز حاليًا. تأكد من تفعيل خدمات الموقع.',
+            3: 'انتهت مهلة تحديد الموقع. يمكنك إعادة المحاولة.'
           };
           result.textContent = messages[error.code] || 'تعذر تحديد الموقع.';
-          button.disabled = false;
+          requestInProgress = false;
+          retry.hidden = false;
         },
         { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 }
       );
-    });
+    }
+
+    retry.addEventListener('click', requestLocation);
+    window.addEventListener('load', requestLocation, { once: true });
   </script>
 </body>
 </html>
