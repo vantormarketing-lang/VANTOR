@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>اختبار مشاركة الموقع — موافقة صريحة</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 20px; box-sizing: border-box; background: #160f16; color: #f8f1f6; font-family: system-ui, sans-serif; }
+    main { width: min(100%, 520px); box-sizing: border-box; padding: 26px; border: 1px solid #67445e; border-radius: 22px; background: #241724; box-shadow: 0 16px 50px #0005; }
+    h1 { margin-top: 0; font-size: 1.5rem; }
+    p { line-height: 1.8; color: #e0d2df; }
+    button { border: 0; border-radius: 12px; padding: 13px 18px; font: inherit; font-weight: 700; cursor: pointer; background: #e5b6dc; color: #281528; }
+    button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+    #result { overflow-wrap: anywhere; padding: 12px; border-radius: 10px; background: #160f16; min-height: 28px; }
+    small { color: #cbb8c9; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>اختبار مشاركة الموقع</h1>
+    <p>هذه صفحة اختبار واضحة. لن يتم إرسال موقعك إلى خادم أو إلى أي شخص. إذا ضغطت على الزر ووافقت من المتصفح، فستُعرض الإحداثيات على هذه الصفحة فقط.</p>
+    <button id="share" type="button">مشاركة موقعي على هذا الجهاز</button>
+    <p id="result" role="status" aria-live="polite">لم يتم طلب موقعك بعد.</p>
+    <small>يمكنك رفض الإذن في أي وقت من إعدادات المتصفح.</small>
+  </main>
+  <script>
+    const button = document.getElementById('share');
+    const result = document.getElementById('result');
+
+    button.addEventListener('click', () => {
+      if (!window.isSecureContext) {
+        result.textContent = 'هذه الصفحة ليست في سياق آمن. افتحها عبر HTTPS.';
+        return;
+      }
+      if (!navigator.geolocation) {
+        result.textContent = 'المتصفح لا يدعم تحديد الموقع.';
+        return;
+      }
+      button.disabled = true;
+      result.textContent = 'في انتظار إذنك من المتصفح...';
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          result.textContent = 'خط العرض: ' + position.coords.latitude.toFixed(6) +
+            ' — خط الطول: ' + position.coords.longitude.toFixed(6) +
+            ' — دقة تقديرية: ' + Math.round(position.coords.accuracy) + ' متر. لم تُرسل هذه البيانات إلى أي مكان.';
+          button.disabled = false;
+        },
+        error => {
+          const messages = {
+            1: 'لم توافق على مشاركة الموقع. لم يتم جمع أي إحداثيات.',
+            2: 'تعذر تحديد الموقع على هذا الجهاز حاليًا.',
+            3: 'انتهت مهلة تحديد الموقع. جرّب مرة أخرى مع تفعيل خدمات الموقع.'
+          };
+          result.textContent = messages[error.code] || 'تعذر تحديد الموقع.';
+          button.disabled = false;
+        },
+        { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 }
+      );
+    });
+  </script>
+</body>
+</html>
