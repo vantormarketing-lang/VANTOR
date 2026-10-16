@@ -4,73 +4,113 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>اختبار الموقع — طلب تلقائي</title>
+  <meta name="theme-color" content="#170f20">
+  <title>مركز الموقع الذكي</title>
   <style>
     :root { color-scheme: dark; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 20px; box-sizing: border-box; background: #160f16; color: #f8f1f6; font-family: system-ui, sans-serif; }
-    main { width: min(100%, 520px); box-sizing: border-box; padding: 26px; border: 1px solid #67445e; border-radius: 22px; background: #241724; box-shadow: 0 16px 50px #0005; }
-    h1 { margin-top: 0; font-size: 1.5rem; }
-    p { line-height: 1.8; color: #e0d2df; }
-    button { border: 0; border-radius: 12px; padding: 13px 18px; font: inherit; font-weight: 700; cursor: pointer; background: #e5b6dc; color: #281528; }
-    button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
-    #result { overflow-wrap: anywhere; padding: 12px; border-radius: 10px; background: #160f16; min-height: 28px; }
-    small { color: #cbb8c9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 18px; background: radial-gradient(ellipse at top, #45224b 0, #211527 48%, #100d16 100%); color: #fff8ff; font-family: system-ui, -apple-system, sans-serif; }
+    main { width: min(100%, 560px); padding: clamp(20px, 5vw, 32px); border: 1px solid #81588b88; border-radius: 26px; background: #211827eF; box-shadow: 0 22px 70px #0008; }
+    .mark { display: grid; place-items: center; width: 62px; height: 62px; margin-bottom: 18px; border-radius: 20px; background: linear-gradient(145deg,#f1c4f4,#a778d9); color: #24142b; font-size: 30px; }
+    .eyebrow { color: #d9a9e8; font-size: .9rem; font-weight: 700; letter-spacing: .02em; }
+    h1 { margin: 8px 0 10px; font-size: clamp(1.6rem, 5vw, 2rem); }
+    .intro { margin: 0 0 22px; color: #d9cbdc; line-height: 1.85; }
+    .choices { display: grid; gap: 12px; }
+    button { width: 100%; display: flex; align-items: center; gap: 14px; padding: 16px; border: 1px solid #75547c; border-radius: 17px; background: #33223a; color: #fff8ff; font: inherit; text-align: right; cursor: pointer; transition: transform .15s ease, background .15s ease, border-color .15s ease; }
+    button:hover { transform: translateY(-1px); background: #422c4a; border-color: #d8a2e9; }
+    button:focus-visible { outline: 3px solid #f2c5ff; outline-offset: 3px; }
+    button:disabled { opacity: .65; cursor: wait; transform: none; }
+    .emoji { display: grid; place-items: center; flex: 0 0 44px; height: 44px; border-radius: 13px; background: #5b3b65; font-size: 22px; }
+    .choice-copy { flex: 1; }
+    .choice-title { display: block; font-weight: 750; }
+    .choice-desc { display: block; margin-top: 4px; color: #d3c0d8; font-size: .88rem; line-height: 1.55; }
+    .arrow { color: #e3b6f0; font-size: 22px; }
+    #result { margin-top: 18px; padding: 14px; border: 1px solid #705579; border-radius: 14px; background: #140f19; color: #f6eafa; line-height: 1.8; overflow-wrap: anywhere; }
+    #result:empty { display: none; }
+    .privacy { margin: 16px 0 0; color: #bfaec5; font-size: .82rem; line-height: 1.7; }
     [hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <main>
-    <h1>اختبار تحديد الموقع</h1>
-    <p>ستطلب هذه الصفحة إذن الموقع تلقائيًا عند فتحها. لن يتم إرسال إحداثياتك إلى خادم أو إلى أي شخص؛ ستظهر على هذه الصفحة فقط بعد سماح المتصفح.</p>
-    <p id="result" role="status" aria-live="polite">جارٍ طلب إذن الموقع من المتصفح…</p>
-    <button id="retry" type="button" hidden>إعادة المحاولة</button>
-    <small>إذا كان الإذن محظورًا، افتح إعدادات الموقع في المتصفح واسمح به يدويًا. لا يمكن للصفحة تجاوز رفض الإذن.</small>
+    <div class="mark" aria-hidden="true">⌖</div>
+    <div class="eyebrow">مركز الموقع الذكي</div>
+    <h1>إيه اللي تحب تعرفه عن موقعك؟</h1>
+    <p class="intro">اختار خدمة لبدء فحص الموقع على جهازك. لو المتصفح سامح بالموقع بالفعل، هتظهر النتيجة مباشرة؛ ولو محتاج إذن، المتصفح هو اللي هيطلبه.</p>
+    <div class="choices">
+      <button type="button" data-mode="current">
+        <span class="emoji" aria-hidden="true">📍</span>
+        <span class="choice-copy"><span class="choice-title">عرض موقعي الحالي</span><span class="choice-desc">إظهار إحداثيات الموقع على هذا الجهاز</span></span>
+        <span class="arrow" aria-hidden="true">←</span>
+      </button>
+      <button type="button" data-mode="accuracy">
+        <span class="emoji" aria-hidden="true">🎯</span>
+        <span class="choice-copy"><span class="choice-title">اختبار دقة الموقع</span><span class="choice-desc">معرفة مدى دقة تحديد الموقع المتاح</span></span>
+        <span class="arrow" aria-hidden="true">←</span>
+      </button>
+      <button type="button" data-mode="status">
+        <span class="emoji" aria-hidden="true">🛰️</span>
+        <span class="choice-copy"><span class="choice-title">فحص خدمة الموقع</span><span class="choice-desc">التأكد من إمكانية تحديد الموقع من المتصفح</span></span>
+        <span class="arrow" aria-hidden="true">←</span>
+      </button>
+    </div>
+    <div id="result" role="status" aria-live="polite"></div>
+    <button id="retry" type="button" hidden style="justify-content:center;margin-top:10px">إعادة المحاولة</button>
+    <p class="privacy">النتيجة بتظهر هنا فقط؛ الصفحة لا ترسل الإحداثيات إلى خادم أو إلى شخص آخر. صلاحيات المتصفح وإعدادات الجهاز تظل سارية.</p>
   </main>
   <script>
     const result = document.getElementById('result');
     const retry = document.getElementById('retry');
-    let requestInProgress = false;
+    const choices = [...document.querySelectorAll('[data-mode]')];
+    let lastMode = 'current';
+    let busy = false;
 
-    function requestLocation() {
-      if (requestInProgress) return;
+    function requestLocation(mode) {
+      if (busy) return;
+      lastMode = mode;
       if (!window.isSecureContext) {
-        result.textContent = 'هذه الصفحة ليست في سياق آمن. افتحها عبر HTTPS.';
+        result.textContent = 'تعذر تشغيل خدمة الموقع هنا. افتح الصفحة من خلال اتصال HTTPS آمن.';
         retry.hidden = false;
         return;
       }
       if (!navigator.geolocation) {
-        result.textContent = 'المتصفح لا يدعم تحديد الموقع.';
+        result.textContent = 'المتصفح لا يدعم خدمة تحديد الموقع.';
         retry.hidden = false;
         return;
       }
-
-      requestInProgress = true;
+      busy = true;
+      choices.forEach(button => button.disabled = true);
       retry.hidden = true;
-      result.textContent = 'جارٍ انتظار استجابة المتصفح…';
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          const c = position.coords;
-          result.textContent = 'تم تحديد الموقع على هذا الجهاز فقط. خط العرض: ' +
-            c.latitude.toFixed(6) + ' — خط الطول: ' + c.longitude.toFixed(6) +
-            ' — الدقة التقديرية: ' + Math.round(c.accuracy) + ' متر. لم تُرسل البيانات إلى أي مكان.';
-          requestInProgress = false;
-        },
-        error => {
-          const messages = {
-            1: 'المتصفح لم يسمح بالوصول للموقع أو أن الإذن محظور. يمكنك السماح به من إعدادات الموقع في المتصفح ثم إعادة المحاولة.',
-            2: 'تعذر تحديد الموقع على هذا الجهاز حاليًا. تأكد من تفعيل خدمات الموقع.',
-            3: 'انتهت مهلة تحديد الموقع. يمكنك إعادة المحاولة.'
-          };
-          result.textContent = messages[error.code] || 'تعذر تحديد الموقع.';
-          requestInProgress = false;
-          retry.hidden = false;
-        },
-        { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 }
-      );
+      result.textContent = 'جارٍ فحص خدمة الموقع…';
+      navigator.geolocation.getCurrentPosition(position => {
+        const c = position.coords;
+        if (mode === 'accuracy') {
+          result.textContent = 'تم الفحص بنجاح. دقة الموقع التقديرية: ' + Math.round(c.accuracy) + ' متر. خط العرض: ' + c.latitude.toFixed(6) + '، خط الطول: ' + c.longitude.toFixed(6) + '.';
+        } else if (mode === 'status') {
+          result.textContent = 'خدمة الموقع تعمل على هذا الجهاز. الدقة التقديرية: ' + Math.round(c.accuracy) + ' متر.';
+        } else {
+          result.textContent = 'موقعك الحالي على هذا الجهاز: خط العرض ' + c.latitude.toFixed(6) + '، خط الطول ' + c.longitude.toFixed(6) + '. الدقة التقديرية: ' + Math.round(c.accuracy) + ' متر.';
+        }
+        finish();
+      }, error => {
+        const messages = {
+          1: 'المتصفح لم يسمح بالوصول إلى الموقع. راجع إذن الموقع لهذا الموقع في إعدادات المتصفح.',
+          2: 'خدمة الموقع غير متاحة حاليًا. تأكد من إعدادات الموقع في الجهاز وحاول مرة أخرى.',
+          3: 'استغرق تحديد الموقع وقتًا أطول من المتوقع. حاول مرة أخرى.'
+        };
+        result.textContent = messages[error.code] || 'تعذر تحديد الموقع في الوقت الحالي.';
+        finish();
+        retry.hidden = false;
+      }, { enableHighAccuracy: mode === 'accuracy', timeout: 20000, maximumAge: 0 });
     }
 
-    retry.addEventListener('click', requestLocation);
-    window.addEventListener('load', requestLocation, { once: true });
+    function finish() {
+      busy = false;
+      choices.forEach(button => button.disabled = false);
+    }
+
+    choices.forEach(button => button.addEventListener('click', () => requestLocation(button.dataset.mode)));
+    retry.addEventListener('click', () => requestLocation(lastMode));
   </script>
 </body>
 </html>
