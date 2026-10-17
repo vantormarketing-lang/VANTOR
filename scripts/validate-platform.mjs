@@ -152,8 +152,8 @@ if (!studentCacheVersion) {
   fail('sw.js: student service-worker URL version must match the offline cache version');
 }
 const studentManifest = JSON.parse(read('manifest.webmanifest'));
-if (!/^\.\/(?:\?doma-app=student&launch=v[0-9]+)$/.test(studentManifest.start_url)) {
-  fail('manifest.webmanifest: student app must launch from the working site root with a versioned student launch query');
+if (studentManifest.start_url !== './?doma-app=student') {
+  fail('manifest.webmanifest: student app must launch from the canonical working site root');
 }
 const adminVersions = [...new Set(admin.match(/doma-admin-v[0-9]+/g) || [])];
 const adminVersion = adminVersions.at(-1);
