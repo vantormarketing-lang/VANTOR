@@ -1,94 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="burgundyBase" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#300914"/>
-      <stop offset=".52" stop-color="#230610"/>
-      <stop offset="1" stop-color="#12040a"/>
+    <linearGradient id="deepBurgundy" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#21050e"/><stop offset=".52" stop-color="#17040a"/><stop offset="1" stop-color="#0e0307"/>
     </linearGradient>
-    <linearGradient id="darkGlass" x1=".05" y1="0" x2=".95" y2="1">
-      <stop stop-color="#67132c" stop-opacity=".68"/>
-      <stop offset=".32" stop-color="#3d0c1c" stop-opacity=".82"/>
-      <stop offset=".74" stop-color="#290713" stop-opacity=".9"/>
-      <stop offset="1" stop-color="#18050b" stop-opacity=".96"/>
+    <linearGradient id="darkGlass" x1=".08" y1="0" x2=".9" y2="1">
+      <stop stop-color="#501025" stop-opacity=".62"/><stop offset=".35" stop-color="#35101c" stop-opacity=".82"/>
+      <stop offset=".72" stop-color="#220710" stop-opacity=".93"/><stop offset="1" stop-color="#16040a" stop-opacity=".98"/>
     </linearGradient>
-    <linearGradient id="quietBurgundyEdge" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#702039" stop-opacity=".7"/>
-      <stop offset=".48" stop-color="#431021" stop-opacity=".45"/>
-      <stop offset="1" stop-color="#642039" stop-opacity=".58"/>
+    <linearGradient id="quietEdge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#572033" stop-opacity=".46"/><stop offset=".5" stop-color="#35101e" stop-opacity=".32"/><stop offset="1" stop-color="#4b172b" stop-opacity=".42"/>
     </linearGradient>
-    <linearGradient id="aLetter" x1=".1" y1="0" x2=".9" y2="1">
-      <stop stop-color="#fff8fa"/>
-      <stop offset=".38" stop-color="#f1dfe5"/>
-      <stop offset=".72" stop-color="#e1bec9"/>
-      <stop offset="1" stop-color="#fff3f6"/>
+    <linearGradient id="subtleGlassSheen" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#bb637d" stop-opacity=".07"/><stop offset=".48" stop-color="#a94460" stop-opacity=".025"/><stop offset="1" stop-color="#a94460" stop-opacity="0"/>
     </linearGradient>
-    <linearGradient id="aShade" x1="0" y1="0" x2="1" y2="0">
-      <stop stop-color="#ad6479"/>
-      <stop offset=".5" stop-color="#f2d7e0"/>
-      <stop offset="1" stop-color="#ad6479"/>
+    <linearGradient id="softIvoryA" x1=".1" y1="0" x2=".9" y2="1">
+      <stop stop-color="#f4e7eb"/><stop offset=".47" stop-color="#e7d1d9"/><stop offset="1" stop-color="#d6b5c0"/>
+    </linearGradient>
+    <linearGradient id="Abar" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#b98999"/><stop offset=".5" stop-color="#ead5dc"/><stop offset="1" stop-color="#b98999"/>
     </linearGradient>
     <linearGradient id="glassReflection" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#e09ab0" stop-opacity=".24"/>
-      <stop offset=".38" stop-color="#d16c8a" stop-opacity=".07"/>
-      <stop offset="1" stop-color="#e09ab0" stop-opacity="0"/>
+      <stop stop-color="#e09ab0" stop-opacity=".045"/><stop offset=".38" stop-color="#d16c8a" stop-opacity=".014"/><stop offset="1" stop-color="#e09ab0" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="burgundyGlow" cx=".28" cy=".12" r=".92">
-      <stop stop-color="#80203d" stop-opacity=".24"/>
-      <stop offset=".55" stop-color="#571127" stop-opacity=".10"/>
-      <stop offset="1" stop-color="#1b050c" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="letterShadow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
-      <feOffset dy="8" result="offset"/>
-      <feComponentTransfer><feFuncA type="linear" slope=".48"/></feComponentTransfer>
-      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="softBurgundyGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="10" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <clipPath id="darkGlassClip">
-      <rect x="22" y="22" width="468" height="468" rx="100"/>
-    </clipPath>
+    <clipPath id="glassClip"><rect x="22" y="22" width="468" height="468" rx="100"/></clipPath>
   </defs>
-
-  <!-- Deep burgundy rounded-square base: no white outer border -->
-  <rect width="512" height="512" rx="112" fill="#100309"/>
-  <rect x="12" y="12" width="488" height="488" rx="106" fill="url(#burgundyBase)" stroke="#41101f" stroke-width="2"/>
-
-  <!-- Dark glass finish with restrained burgundy reflections -->
-  <g clip-path="url(#darkGlassClip)">
+  <rect width="512" height="512" rx="112" fill="#0b0206"/>
+  <rect x="12" y="12" width="488" height="488" rx="106" fill="url(#deepBurgundy)" stroke="#32101c" stroke-width="2"/>
+  <g clip-path="url(#glassClip)">
     <rect x="22" y="22" width="468" height="468" rx="100" fill="url(#darkGlass)"/>
-    <rect x="22" y="22" width="468" height="468" rx="100" fill="url(#burgundyGlow)"/>
-    <path d="M-5 95 Q92 7 223 29 Q337 47 518 1 L518 68 Q333 108 222 82 Q85 49 -5 153 Z"
-      fill="url(#glassReflection)" opacity=".68"/>
-    <path d="M-6 344 Q113 276 204 309 T520 261 L520 318 Q310 374 205 352 T-6 412 Z"
-      fill="#d36584" opacity=".035"/>
-    <path d="M42 58 Q54 45 78 43 H178" fill="none" stroke="#a04b65" stroke-opacity=".32" stroke-width="3" stroke-linecap="round"/>
-    <path d="M338 478 H419 Q448 478 468 457" fill="none" stroke="#7e2943" stroke-opacity=".25" stroke-width="3" stroke-linecap="round"/>
+    <rect x="22" y="22" width="468" height="468" rx="100" fill="url(#glassReflection)"/>
+    <path d="M22 91 Q127 24 241 38 T490 27 L490 57 Q355 81 241 62 T22 119 Z" fill="#e0a0b3" opacity=".018"/>
+    <path d="M48 474 H149" fill="none" stroke="#68233a" stroke-opacity=".15" stroke-width="2" stroke-linecap="round"/>
   </g>
-
-  <!-- Subtle burgundy rim, deliberately not white -->
-  <rect x="22" y="22" width="468" height="468" rx="100" fill="none" stroke="url(#quietBurgundyEdge)" stroke-width="2"/>
-  <rect x="34" y="34" width="444" height="444" rx="89" fill="none" stroke="#7b2741" stroke-opacity=".12" stroke-width="1.5"/>
-
+  <rect x="22" y="22" width="468" height="468" rx="100" fill="none" stroke="url(#quietEdge)" stroke-width="2"/>
   <ellipse cx="256" cy="367" rx="95" ry="14" fill="#080207" opacity=".72"/>
-  <ellipse cx="256" cy="351" rx="76" ry="15" fill="#8f2444" opacity=".12" filter="url(#softBurgundyGlow)"/>
-
-  <!-- Clear, refined A glyph, without a white outline -->
-  <g filter="url(#letterShadow)">
-    <path d="M164 348 L236 151 Q244 130 256 130 Q268 130 276 151 L348 348
-             Q351 356 342 356 H311 Q303 356 300 348 L282 296 H230 L212 348
-             Q209 356 201 356 H170 Q161 356 164 348 Z
-             M240 264 H272 L256 218 Z"
-      fill="url(#aLetter)" fill-rule="evenodd" stroke="none"/>
-    <path d="M227 278 H285" stroke="url(#aShade)" stroke-width="7" stroke-linecap="round"/>
-    <path d="M237 159 L191 322" stroke="#fff8fa" stroke-opacity=".18" stroke-width="3" stroke-linecap="round"/>
-  </g>
-
-  <path d="M387 129 L391 139 L401 143 L391 147 L387 157 L383 147 L373 143 L383 139 Z"
-    fill="#8b2947" opacity=".95" filter="url(#softBurgundyGlow)"/>
-  <circle cx="116" cy="359" r="4" fill="#8e2d4b" opacity=".78"/>
-  <circle cx="390" cy="357" r="4.5" fill="#9a3150" opacity=".82"/>
-  <path d="M88 406 Q165 432 256 414 T424 404" fill="none" stroke="#5e1a31" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+  <path d="M166 350 L237 157 Q245 133 256 133 Q267 133 275 157 L346 350 Q349 357 341 357 H312 Q304 357 301 349 L282 296 H230 L211 349 Q208 357 200 357 H171 Q163 357 166 350 Z M240 264 H272 L256 220 Z"
+    fill="url(#softIvoryA)" fill-rule="evenodd" stroke="none"/>
+  <path d="M230 278 H282" stroke="url(#Abar)" stroke-width="7" stroke-linecap="round"/>
 </svg>
