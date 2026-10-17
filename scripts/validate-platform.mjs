@@ -152,8 +152,14 @@ if (!studentCacheVersion) {
   fail('sw.js: student service-worker URL version must match the offline cache version');
 }
 const studentManifest = JSON.parse(read('manifest.webmanifest'));
-if (studentManifest.start_url !== './?doma-app=student') {
-  fail('manifest.webmanifest: student app must launch from the canonical working site root');
+if (studentManifest.start_url !== './?doma-app=student&launch=v134') {
+  fail('manifest.webmanifest: student app must launch from the v134 student start URL on the working site root');
+}
+if (studentManifest.id !== './?doma-app=student-pwa-v2') {
+  fail('manifest.webmanifest: student PWA must use the clean v2 identity for a fresh desktop installation');
+}
+if (studentManifest.display !== 'standalone') {
+  fail('manifest.webmanifest: student PWA must use standalone display mode');
 }
 const adminVersions = [...new Set(admin.match(/doma-admin-v[0-9]+/g) || [])];
 const adminVersion = adminVersions.at(-1);
