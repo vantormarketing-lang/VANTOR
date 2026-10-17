@@ -1,43 +1,84 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#25132c"/><stop offset=".48" stop-color="#11121f"/><stop offset="1" stop-color="#071510"/>
+    <linearGradient id="glassBase" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#28162d"/>
+      <stop offset=".52" stop-color="#111723"/>
+      <stop offset="1" stop-color="#071812"/>
     </linearGradient>
-    <linearGradient id="orbit" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#d7c4ff"/><stop offset=".48" stop-color="#9270e6"/><stop offset="1" stop-color="#6de0b1"/>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#e5d6ff"/>
+      <stop offset=".5" stop-color="#9278e7"/>
+      <stop offset="1" stop-color="#75e5bd"/>
     </linearGradient>
-    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#fffaff"/><stop offset=".42" stop-color="#dcd1ff"/><stop offset=".74" stop-color="#a8f2d1"/><stop offset="1" stop-color="#65dcb0"/>
+    <linearGradient id="crystal" x1=".12" y1="0" x2=".88" y2="1">
+      <stop stop-color="#fffaff"/>
+      <stop offset=".25" stop-color="#d8caff"/>
+      <stop offset=".58" stop-color="#a28de9"/>
+      <stop offset=".82" stop-color="#83e2c0"/>
+      <stop offset="1" stop-color="#d8fff0"/>
     </linearGradient>
-    <radialGradient id="light" cx=".35" cy=".2" r=".9">
-      <stop stop-color="#8d5ddd" stop-opacity=".27"/><stop offset="1" stop-color="#8d5ddd" stop-opacity="0"/>
+    <linearGradient id="facetLeft" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#f8efff"/>
+      <stop offset="1" stop-color="#9c7ee2"/>
+    </linearGradient>
+    <linearGradient id="facetRight" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#b9fff0"/>
+      <stop offset="1" stop-color="#4bba98"/>
+    </linearGradient>
+    <radialGradient id="aura" cx=".5" cy=".48" r=".5">
+      <stop stop-color="#9a76ef" stop-opacity=".28"/>
+      <stop offset=".65" stop-color="#69dfb6" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#101522" stop-opacity="0"/>
     </radialGradient>
-    <filter id="glow" x="-45%" y="-45%" width="190%" height="190%">
-      <feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/><feOffset dy="5"/>
-      <feComponentTransfer><feFuncA type="linear" slope=".38"/></feComponentTransfer>
+    <filter id="crystalShadow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+      <feOffset dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope=".35"/></feComponentTransfer>
       <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <rect width="512" height="512" rx="122" fill="#07090d"/>
-  <rect x="13" y="13" width="486" height="486" rx="111" fill="url(#glass)" stroke="#46314f" stroke-width="2"/>
-  <rect x="23" y="23" width="466" height="466" rx="102" fill="url(#light)"/>
-  <circle cx="256" cy="256" r="177" fill="none" stroke="#c7b4ff" stroke-opacity=".13" stroke-width="2"/>
-  <path d="M133 292 A177 177 0 0 1 210 105" fill="none" stroke="url(#orbit)" stroke-width="5" stroke-linecap="round" opacity=".9"/>
-  <path d="M302 407 A177 177 0 0 0 424 263" fill="none" stroke="url(#orbit)" stroke-width="5" stroke-linecap="round" opacity=".9"/>
-  <path d="M139 327 C153 238 171 157 204 157 C229 157 240 244 256 274 C272 244 284 157 308 157 C341 157 359 238 373 327"
-        fill="none" stroke="#654b8e" stroke-opacity=".48" stroke-width="35" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 7)"/>
-  <path d="M139 327 C153 238 171 157 204 157 C229 157 240 244 256 274 C272 244 284 157 308 157 C341 157 359 238 373 327"
-        fill="none" stroke="url(#mark)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)"/>
-  <path d="M151 348 Q256 394 361 348" fill="none" stroke="#f5fff9" stroke-opacity=".17" stroke-width="3" stroke-linecap="round"/>
-  <g fill="none" stroke="#70e1b4" stroke-linecap="round" filter="url(#glow)">
-    <path d="M373 198 Q397 218 373 239" stroke-width="7"/>
-    <path d="M393 181 Q431 218 393 256" stroke-width="6" opacity=".85"/>
+
+  <rect width="512" height="512" rx="124" fill="#07090d"/>
+  <rect x="13" y="13" width="486" height="486" rx="111" fill="url(#glassBase)" stroke="#40304d" stroke-width="2"/>
+  <rect x="24" y="24" width="464" height="464" rx="101" fill="url(#aura)"/>
+  <circle cx="256" cy="256" r="178" fill="none" stroke="#ffffff" stroke-opacity=".055" stroke-width="2"/>
+  <circle cx="256" cy="256" r="154" fill="none" stroke="url(#rim)" stroke-opacity=".2" stroke-width="2"/>
+
+  <ellipse cx="256" cy="256" rx="139" ry="78" transform="rotate(-38 256 256)"
+    fill="none" stroke="url(#rim)" stroke-width="5" stroke-linecap="round" opacity=".88"/>
+  <ellipse cx="256" cy="256" rx="139" ry="78" transform="rotate(38 256 256)"
+    fill="none" stroke="#b9a5f4" stroke-opacity=".65" stroke-width="3" stroke-linecap="round"/>
+  <path d="M151 350 A135 135 0 0 0 361 350" fill="none" stroke="#75e5bd" stroke-opacity=".65" stroke-width="4" stroke-linecap="round"/>
+
+  <circle cx="256" cy="248" r="112" fill="#8d72d9" opacity=".10" filter="url(#softGlow)"/>
+  <g filter="url(#crystalShadow)" stroke-linejoin="round">
+    <path d="M256 131 L321 208 L300 302 L256 357 L212 302 L191 208 Z"
+      fill="url(#crystal)" stroke="#f4eaff" stroke-width="4"/>
+    <path d="M256 131 L256 245 L191 208 Z" fill="url(#facetLeft)" opacity=".95"/>
+    <path d="M256 131 L321 208 L256 245 Z" fill="#f5f0ff" opacity=".72"/>
+    <path d="M191 208 L256 245 L212 302 Z" fill="#8f78d4" opacity=".9"/>
+    <path d="M321 208 L256 245 L300 302 Z" fill="url(#facetRight)" opacity=".95"/>
+    <path d="M212 302 L256 245 L256 357 Z" fill="#c8b7f5" opacity=".92"/>
+    <path d="M300 302 L256 245 L256 357 Z" fill="#66cfa7" opacity=".9"/>
+    <path d="M256 131 L256 245 M191 208 L321 208 M212 302 L300 302 M256 245 L256 357"
+      fill="none" stroke="#fffaff" stroke-opacity=".7" stroke-width="2.5"/>
   </g>
-  <circle cx="126" cy="180" r="5" fill="#d8c5ff"/>
-  <circle cx="390" cy="333" r="5" fill="#72e2b5"/>
-  <path d="M111 358 L116 370 L128 375 L116 380 L111 392 L106 380 L94 375 L106 370 Z" fill="#cfbaff" filter="url(#glow)"/>
-  <circle cx="363" cy="126" r="4" fill="#8fe9c2"/>
+
+  <g fill="#e8deff" filter="url(#softGlow)">
+    <circle cx="128" cy="199" r="6"/>
+    <circle cx="378" cy="205" r="5"/>
+  </g>
+  <g fill="#7be3bb" filter="url(#softGlow)">
+    <circle cx="360" cy="338" r="7"/>
+    <circle cx="149" cy="333" r="4"/>
+  </g>
+  <path d="M107 138 L112 150 L124 155 L112 160 L107 172 L102 160 L90 155 L102 150 Z"
+    fill="#d9c8ff" opacity=".9" filter="url(#softGlow)"/>
+  <path d="M399 311 L403 321 L413 325 L403 329 L399 339 L395 329 L385 325 L395 321 Z"
+    fill="#81e9c2" opacity=".92" filter="url(#softGlow)"/>
+  <path d="M171 392 Q256 418 341 392" fill="none" stroke="url(#rim)" stroke-opacity=".38" stroke-width="3" stroke-linecap="round"/>
 </svg>
