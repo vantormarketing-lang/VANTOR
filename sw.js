@@ -1,11 +1,13 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v130';
+const CACHE_NAME = 'mr-fluent-offline-student-v131';
 const BRAND_VERSION = 'doma-glass-v9';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
+const appStartUrl = new URL('./index.html?doma-app=student&launch=v131', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const SHELL = [
   scopeUrl.href,
   indexUrl.href,
+  appStartUrl.href,
   versioned('./manifest.webmanifest'),
   versioned('./doma-student-app-icon.svg'),
   versioned('./mrfluent-auth-photo-v113.webp')
@@ -26,6 +28,9 @@ async function navigationFallback(cachedRequest) {
   // Await each lookup so the index fallback is tried if the root URL is missing.
   const rootFallback = await caches.match(scopeUrl.href);
   if (rootFallback && rootFallback.ok) return rootFallback;
+
+  const appStartFallback = await caches.match(appStartUrl.href);
+  if (appStartFallback && appStartFallback.ok) return appStartFallback;
 
   const indexFallback = await caches.match(indexUrl.href);
   if (indexFallback && indexFallback.ok) return indexFallback;

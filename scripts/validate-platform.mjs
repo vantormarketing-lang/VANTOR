@@ -138,9 +138,23 @@ for (const feature of battleRequirements) {
 if (/\.from\(\s*['"]quiz_questions['"]\s*\)\s*\.select\s*\(/.test(student)) {
   fail('index.html: student page must not query quiz_questions directly; use guarded RPCs');
 }
-const studentVersion = (student.match(/doma-student-v[0-9]+/g) || []).at(-1);
+const studentInstallerVersions = [...new Set(
+  [...student.matchAll(/mrfluent=installer-v([0-9]+)/g)].map(match => match[1])
+)];
 const sw = read('sw.js');
-if (studentVersion && !sw.includes(studentVersion)) fail('sw.js: student PWA version does not match index.html');
+const studentCacheVersion = (sw.match(/const CACHE_NAME = ['"]mr-fluent-offline-student-v([0-9]+)['"]/) || [])[1];
+if (studentInstallerVersions.length !== 1) {
+  fail('index.html: student service-worker registration URLs must use one consistent version');
+}
+if (!studentCacheVersion) {
+  fail('sw.js: student PWA cache version is missing or invalid');
+} else if (studentInstallerVersions.length === 1 && studentCacheVersion !== studentInstallerVersions[0]) {
+  fail('sw.js: student service-worker URL version must match the offline cache version');
+}
+const studentManifest = JSON.parse(read('manifest.webmanifest'));
+if (!/^\.\/*index\.html(?:\?|$)/.test(studentManifest.start_url)) {
+  fail('manifest.webmanifest: student app must launch from the explicit index.html path');
+}
 const adminVersions = [...new Set(admin.match(/doma-admin-v[0-9]+/g) || [])];
 const adminVersion = adminVersions.at(-1);
 const adminSw = read('admin-sw.js');
