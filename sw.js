@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v129';
+const CACHE_NAME = 'mr-fluent-offline-student-v130';
 const BRAND_VERSION = 'doma-glass-v9';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
@@ -13,20 +13,22 @@ const SHELL = [
 
 async function hasUsableShell(cache) {
   const rootResponse = await cache.match(scopeUrl.href);
-  if (rootResponse) return true;
+  if (rootResponse && rootResponse.ok) return true;
   const indexResponse = await cache.match(indexUrl.href);
-  return Boolean(indexResponse);
+  return Boolean(indexResponse && indexResponse.ok);
 }
 
 async function navigationFallback(cachedRequest) {
-  if (cachedRequest) return cachedRequest;
+  // Only serve successful documents from cache; never turn a cached error page
+  // into the app's offline launch screen.
+  if (cachedRequest && cachedRequest.ok) return cachedRequest;
 
   // Await each lookup so the index fallback is tried if the root URL is missing.
   const rootFallback = await caches.match(scopeUrl.href);
-  if (rootFallback) return rootFallback;
+  if (rootFallback && rootFallback.ok) return rootFallback;
 
   const indexFallback = await caches.match(indexUrl.href);
-  if (indexFallback) return indexFallback;
+  if (indexFallback && indexFallback.ok) return indexFallback;
 
   return Response.error();
 }
@@ -82,8 +84,11 @@ self.addEventListener('fetch', event => {
         if (fresh && fresh.ok) {
           const cache = await caches.open(CACHE_NAME);
           cache.put(req, fresh.clone()).catch(() => {});
+          return fresh;
         }
-        return fresh;
+
+        // A 404/500 is not a usable app document. Fall back to a cached shell.
+        return navigationFallback(cached);
       } catch (_) {
         return navigationFallback(cached);
       }
