@@ -256,6 +256,13 @@ begin
  if not exists(select 1 from public.mrfluent_kids_levels l where l.id=v_request.requested_level_id and l.track_id=v_request.track_id and l.is_published=true) then
   raise exception 'The requested level is not published for this path.' using errcode='P0001';
  end if;
+ if not exists(
+  select 1 from public.mrfluent_kids_units u
+  join public.mrfluent_kids_lessons l on l.unit_id=u.id
+  where u.level_id=v_request.requested_level_id and u.is_published=true and l.is_published=true
+ ) then
+  raise exception 'Publish at least one reviewed unit and lesson for this Kids level before activating its subscription.' using errcode='P0001';
+ end if;
  -- Only the Kids membership is changed; the A1-C2 course and school-grade subscriptions remain untouched.
  update public.mrfluent_kids_subscriptions set status='cancelled',updated_at=now()
  where user_id=v_request.user_id and status='active' and track_id<>v_request.track_id;
