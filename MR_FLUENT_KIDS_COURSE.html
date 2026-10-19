@@ -289,7 +289,7 @@ function kidSidebarView(view,button){
  }else if(view==='games'){
   const practiceWords=d.words.slice(0,4);
   const choices=practiceWords.map((w,i)=>'<button type="button" class="lesson-link" onclick="kidStaticPracticeCheck(this,\'listen\','+i+',0)"><span>'+esc(w[0])+'</span><small dir="rtl">'+esc(w[1])+'</small></button>').join('');
-  const matchChoices=practiceWords.map((w,i)=>'<button type="button" class="lesson-link" onclick="kidStaticPracticeCheck(this,\'match\','+i+',1)"><span>'+esc(w[1])+'</span></button>').join('');
+  const matchChoices=practiceWords.map((w,i)=>'<button type="button" class="lesson-link" onclick="kidStaticPracticeCheck(this,\'match\','+i+',0)"><span>'+esc(w[1])+'</span></button>').join('');
   const target=practiceWords[0]||['cat','قطة'];
   const scrambled=target[0].split('').sort((a,b)=>((a.charCodeAt(0)*7)%11)-((b.charCodeAt(0)*7)%11)).join('');
   html='<h3>🎮 Games & Practice · ألعاب وتدريب</h3><p>'+esc(d.goal)+'</p>'+
