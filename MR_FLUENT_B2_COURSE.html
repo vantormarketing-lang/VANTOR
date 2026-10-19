@@ -530,6 +530,7 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
         detectSessionInUrl: false
       }
     });
+    window.__mrFluentCourseClient = client;
 
     const authResult = await client.auth.getUser();
     if (authResult.error || !authResult.data || !authResult.data.user) {
@@ -579,11 +580,11 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
   const PREFIX = 'mfB2';
   const SUPABASE_URL = 'https://dtptxhkcogpoleftguas.supabase.co';
   const SUPABASE_PUBLIC_KEY = 'sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-  const client = window.supabase && window.supabase.createClient
+  const client = window.__mrFluentCourseClient || (window.supabase && window.supabase.createClient
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
-        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
       })
-    : null;
+    : null);
 
   function status(message, isError){
     const node = document.getElementById('mfCloudSyncStatus');
