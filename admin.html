@@ -3557,8 +3557,11 @@ html,body,*{
   }
   async function approve(id){
     const r=kidsState.requests.find(x=>x.id===id);if(!r||r.status!=='pending')return kToast('This request is no longer pending.');
-    const t=kTrack(r.track_id);
+    const t=kTrack(r.track_id),requestedLevel=kLevel(r.requested_level_id);
     if(!t||t.price_egp==null||t.duration_days==null)return kToast('Set both price and duration for this path before approval.');
+    const publishedUnits=kidsState.units.filter(u=>u.level_id===r.requested_level_id&&u.is_published);
+    const hasPublishedLesson=publishedUnits.some(u=>kidsState.lessons.some(l=>l.unit_id===u.id&&l.is_published));
+    if(!hasPublishedLesson)return kToast('Publish at least one reviewed unit and lesson for '+(requestedLevel?requestedLevel.title:'this level')+' before activating access.');
     if(!confirm('Only continue after verifying payment with the parent/guardian. Activate '+t.title+' for EGP '+t.price_egp+' and '+t.duration_days+' days?'))return;
     const result=await db.rpc('mrfluent_kids_approve_enrollment_request',{p_request_id:id,p_admin_note:'Payment verified by admin.'});
     if(result.error)return kToast('Kids approval failed: '+result.error.message);
