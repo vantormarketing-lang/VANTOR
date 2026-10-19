@@ -1018,6 +1018,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="info-box" style="margin-bottom:14px"><b>Review carefully:</b> confirm the parent/guardian and payment before approving. Approval activates only the requested Kids path and does not change other subscriptions.</div>
         <div id="mfKidsRequestsTable" class="table-wrap"></div>
       </section>
+      <section id="section-kids-request-detail" class="section">
+        <div class="head"><div><h2>Kids Request Details</h2><p>Standalone review page for this registration request.</p></div><div class="actions"><button class="btn secondary" onclick="mfKidsBackToRequests()">← Back to requests</button><button class="btn secondary" onclick="mfKidsRefreshDetail()">Refresh details</button></div></div>
+        <div id="mfKidsRequestDetailContent"></div>
+      </section>
 
       <section id="section-kids-course" class="section">
         <div class="head"><div><h2>Mr. Fluent Kids</h2><p>Independent children's course. Pricing, curriculum, registration review and Kids subscriptions are separate from the A1–C2 course.</p></div><button class="btn secondary" id="mfKidsRefresh">Refresh Kids Data</button></div>
@@ -3491,7 +3495,7 @@ html,body,*{
     if(k$('mfKidsStats'))k$('mfKidsStats').innerHTML=[
       ['Paths',kidsState.tracks.length],['Levels',kidsState.levels.length],['Pending requests',pending.length],['Active memberships',activeSubs.length]
     ].map(([label,value])=>'<div class="card stat"><div class="muted">'+kEsc(label)+'</div><div class="num">'+value+'</div></div>').join('');
-    renderTracks();renderRequests();renderSubs();renderLevels();renderUnits();renderLessons();
+    renderTracks();renderRequests();renderRequestDetail();renderSubs();renderLevels();renderUnits();renderLessons();
   }
   function renderTracks(){
     const host=k$('mfKidsTracksTable');if(!host)return;
@@ -3503,6 +3507,7 @@ html,body,*{
       '<td>'+(t.is_published?kPill('Published','ok'):kPill('Hidden','warn'))+'</td>'+
       '<td><button class="btn secondary small" onclick="mfKidsSaveTrack(\''+t.id+'\')">Save pricing</button></td></tr>').join('')+'</tbody></table>';
   }
+  let activeRequestDetailId=null;
   function renderRequests(){
     const host=k$('mfKidsRequestsTable');if(!host)return;
     if(!kidsState.requests.length){host.innerHTML=kTableEmpty('No registration requests have been submitted yet.');return}
@@ -3510,10 +3515,47 @@ html,body,*{
       kidsState.requests.map(r=>{
         const p=kProfile(r.user_id),t=kTrack(r.track_id),l=kLevel(r.requested_level_id),pending=r.status==='pending';
         const identity=(p.full_name||('User '+String(r.user_id).slice(0,8)))+(p.phone?' · '+p.phone:'');
-        const action=pending?'<div class="actions"><button class="btn ok small" onclick="mfKidsApprove(\''+r.id+'\')">Verify & activate</button><button class="btn danger small" onclick="mfKidsReject(\''+r.id+'\')">Reject</button></div>':'—';
+        const action='<div class="actions"><button class="btn secondary small" onclick="mfKidsOpenRequest(\''+r.id+'\')">Open request</button>'+(pending?'<button class="btn ok small" onclick="mfKidsApprove(\''+r.id+'\')">Verify & activate</button><button class="btn danger small" onclick="mfKidsReject(\''+r.id+'\')">Reject</button>':'')+'</div>';
         return '<tr><td><b>'+kEsc(identity)+'</b><div class="muted" style="font-size:10px">Parent: '+kEsc(r.guardian_contact)+'</div>'+(r.note?'<div class="muted" style="font-size:10px">'+kEsc(r.note)+'</div>':'')+'<div class="muted" style="font-size:9px">'+kEsc(r.user_id)+'</div></td><td>'+kEsc(t?t.title:'Unknown track')+'<div class="muted" style="font-size:10px">'+kEsc(l?l.code+' · '+l.title:'Unknown level')+'</div></td><td>'+kEsc(kDate(r.created_at))+'</td><td>'+kPill(r.status,r.status==='pending'?'warn':r.status==='approved'?'ok':'')+(r.admin_note?'<div class="muted" style="font-size:10px">'+kEsc(r.admin_note)+'</div>':'')+'</td><td>'+action+'</td></tr>';
       }).join('')+'</tbody></table>';
   }
+  function renderRequestDetail(){
+    const host=k$('mfKidsRequestDetailContent');if(!host)return;
+    const r=kidsState.requests.find(x=>String(x.id)===String(activeRequestDetailId));
+    if(!r){host.innerHTML=kTableEmpty('Request not found. Refresh the request list and open it again.');return}
+    const p=kProfile(r.user_id),t=kTrack(r.track_id),l=kLevel(r.requested_level_id);
+    const pending=String(r.status||'').toLowerCase()==='pending';
+    const detailRow=(label,value)=>'<div class="card" style="padding:13px;min-width:0"><div class="muted" style="font-size:11px;margin-bottom:6px">'+kEsc(label)+'</div><div style="font-weight:700;overflow-wrap:anywhere;white-space:pre-wrap">'+kEsc(value==null||value===''?'—':typeof value==='object'?JSON.stringify(value,null,2):String(value))+'</div></div>';
+    const excluded=new Set(['id','user_id','track_id','requested_level_id','status','created_at','updated_at','reviewed_at','reviewed_by','guardian_contact','note','admin_note']);
+    const extras=Object.keys(r).filter(key=>!excluded.has(key)).map(key=>detailRow(key.replace(/_/g,' '),r[key])).join('');
+    const actions=pending?'<div class="actions" style="margin-top:16px"><button class="btn ok" onclick="mfKidsApprove(\''+r.id+'\')">Verify payment & activate access</button><button class="btn danger" onclick="mfKidsReject(\''+r.id+'\')">Reject request</button></div>':'<div style="margin-top:16px">'+kPill('Request already reviewed',r.status==='approved'?'ok':'')+'</div>';
+    host.innerHTML='<div class="info-box" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><div><h3 style="margin:0 0 5px">Registration request</h3><div class="muted" style="overflow-wrap:anywhere">ID: '+kEsc(r.id)+'</div></div><div>'+kPill(r.status,r.status==='pending'?'warn':r.status==='approved'?'ok':'')+'</div></div></div>'+
+      '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px">'+
+      detailRow('Student name',p.full_name||('User '+String(r.user_id||'').slice(0,8)))+
+      detailRow('Student phone',p.phone||'—')+
+      detailRow('Parent / guardian contact',r.guardian_contact)+
+      detailRow('Course path',t?t.title:'Unknown track')+
+      detailRow('Requested level',l?(l.code+' · '+l.title):'Unknown level')+
+      detailRow('Configured price',t&&t.price_egp!=null?('EGP '+t.price_egp):'Not configured')+
+      detailRow('Duration',t&&t.duration_days!=null?(t.duration_days+' days'):'Not configured')+
+      detailRow('Request date',kDate(r.created_at))+
+      detailRow('Last updated',kDate(r.updated_at))+
+      detailRow('Reviewed at',kDate(r.reviewed_at))+
+      detailRow('Reviewed by',r.reviewed_by||'—')+
+      detailRow('Student account ID',r.user_id)+
+      detailRow('Parent/student note',r.note)+
+      detailRow('Admin note / decision reason',r.admin_note)+extras+'</div>'+
+      '<div class="info-box" style="margin-top:14px"><b>Approval checklist:</b> verify the parent/guardian and payment, confirm the requested path and level, then approve. This action affects only the Kids subscription.</div>'+actions;
+  }
+  function openRequest(id){
+    if(!kidsState.requests.some(x=>String(x.id)===String(id))){kToast('Request is not loaded yet. Refresh the list first.');return}
+    activeRequestDetailId=id;
+    if(typeof show==='function')show('kids-request-detail');else renderRequestDetail();
+    renderRequestDetail();
+  }
+  function backToRequests(){if(typeof show==='function')show('kids-requests');else load()}
+  async function refreshDetail(){await load();if(activeRequestDetailId)renderRequestDetail()}
+
   function renderSubs(){
     const host=k$('mfKidsSubscriptionsTable');if(!host)return;
     if(!kidsState.subs.length){host.innerHTML=kTableEmpty('No Kids subscriptions have been activated yet.');return}
@@ -3665,7 +3707,7 @@ html,body,*{
     if(r.error)return kToast('Could not delete lesson: '+r.error.message);
     kToast('Kids lesson deleted.');await load();
   }
-  window.mfKidsSaveTrack=saveTrack;window.mfKidsApprove=approve;window.mfKidsReject=reject;
+  window.mfKidsSaveTrack=saveTrack;window.mfKidsApprove=approve;window.mfKidsReject=reject;window.mfKidsOpenRequest=openRequest;window.mfKidsBackToRequests=backToRequests;window.mfKidsRefreshDetail=refreshDetail;
   window.mfKidsCancelSub=cancelSub;window.mfKidsToggleLevel=(id,v)=>toggle('mrfluent_kids_levels',id,v);
   window.mfKidsToggleUnit=(id,v)=>toggle('mrfluent_kids_units',id,v);window.mfKidsToggleLesson=(id,v)=>toggle('mrfluent_kids_lessons',id,v);
   window.mfKidsEditLevel=openLevelForm;window.mfKidsSaveLevel=saveLevel;
@@ -3673,9 +3715,9 @@ html,body,*{
   window.mfKidsEditLesson=id=>openLessonForm(id);window.mfKidsSaveLesson=saveLesson;window.mfKidsDeleteLesson=deleteLesson;
   window.mfLoadKidsAdmin=load;
   const previousRouter=window.__domaRouteSection;
-  window.__domaRouteSection=function(name){if(name==='kids-course'||name==='kids-requests')return load();return typeof previousRouter==='function'?previousRouter(name):Promise.resolve()};
+  window.__domaRouteSection=function(name){if(name==='kids-course'||name==='kids-requests'||name==='kids-request-detail'){if(name==='kids-request-detail')renderRequestDetail();return load();}return typeof previousRouter==='function'?previousRouter(name):Promise.resolve()};
   const previousLoad=window.loadSection;
-  window.loadSection=function(name){if(name==='kids-course'||name==='kids-requests')return load();return typeof previousLoad==='function'?previousLoad(name):Promise.resolve()};
+  window.loadSection=function(name){if(name==='kids-course'||name==='kids-requests'||name==='kids-request-detail'){if(name==='kids-request-detail')renderRequestDetail();return load();}return typeof previousLoad==='function'?previousLoad(name):Promise.resolve()};
   document.addEventListener('DOMContentLoaded',function(){
     k$('mfKidsRefresh')?.addEventListener('click',load);
     k$('mfKidsRequestsRefresh')?.addEventListener('click',load);
