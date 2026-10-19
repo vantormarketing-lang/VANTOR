@@ -200,6 +200,8 @@ function openKidLevel(code){
  }
  const workspace=$('kidLevelWorkspace'),studentAccess=$('studentAccess'),content=$('kidLevelContent'),notice=$('kidLevelNotice');
  if(!workspace||!content)return;
+ const sidebarPanel=content.querySelector('[data-kid-sidebar-panel]');if(sidebarPanel)sidebarPanel.hidden=true;
+ document.querySelectorAll('.kid-student-sidebar nav button').forEach((b,i)=>b.classList.toggle('active',i===0));
  $('kidWorkspaceTitle').textContent=(level.code||'')+' · '+level.title;
  $('kidWorkspaceDescription').textContent=level.description||'Lessons, vocabulary, listening and practice for this level.';
  document.body.classList.add('kid-level-open');
