@@ -2259,6 +2259,17 @@ async function ensureProfile(user,name='',phone=''){
   return payload;
 }
 
+function domaReturnToKidsIfPending(){
+  try{
+    if(sessionStorage.getItem('mfKidsAfterAuth')!=='1')return false;
+    const level=sessionStorage.getItem('mfKidsRequestedLevel')||'K0';
+    sessionStorage.removeItem('mfKidsAfterAuth');
+    sessionStorage.removeItem('mfKidsRequestedLevel');
+    window.location.href='./MR_FLUENT_KIDS_COURSE.html?level='+encodeURIComponent(level);
+    return true;
+  }catch(_){return false;}
+}
+
 async function domaLogin(){
   const identifier=$('loginPhone')?.value.trim()||'',pass=$('loginPass')?.value||'';
   if(!identifier||!pass)return showStatus('authStatus','Enter your mobile number and password.','error');
@@ -2281,6 +2292,7 @@ async function domaLogin(){
   }
   sessionUser=r.data.user;
   await ensureProfile(sessionUser,'',sessionUser.user_metadata?.phone||'');
+  if(domaReturnToKidsIfPending())return;
   closeModal();await refreshStudentState();showToast('Welcome back to Mr. Fluent.');openDrawer('overview');
 }
 
@@ -2318,6 +2330,7 @@ async function domaSignup(){
   }
   sessionUser=user;
   await ensureProfile(user,name,normalized.local);
+  if(domaReturnToKidsIfPending())return;
   closeModal();await refreshStudentState();showToast('Account created successfully.');openDrawer('overview');
 }
 
