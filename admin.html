@@ -3587,6 +3587,9 @@ html,body,*{
   async function toggle(table,id,value){
     const allowed={mrfluent_kids_levels:'levels',mrfluent_kids_units:'units',mrfluent_kids_lessons:'lessons'};
     if(!allowed[table])return;
+    if(table==='mrfluent_kids_units'&&value&&!kidsState.lessons.some(l=>l.unit_id===id&&l.is_published)){
+      kToast('Publish at least one lesson in this unit before making it available to students.');return;
+    }
     const res=await db.from(table).update({is_published:value,updated_at:new Date().toISOString()}).eq('id',id).select('id');
     if(res.error)return kToast('Could not update publish status: '+res.error.message);
     await load();
@@ -3610,6 +3613,7 @@ html,body,*{
   async function saveUnit(id){
     const level_id=k$('kUnitLevel')?.value,title=k$('kUnitTitle')?.value.trim(),description=k$('kUnitDesc')?.value.trim()||'',sort_order=Number(k$('kUnitSort')?.value||1),is_published=k$('kUnitPublished')?.value==='true';
     if(!level_id||!title)return kToast('Choose a level and enter a unit title.');
+    if(is_published&&!kidsState.lessons.some(l=>l.unit_id===id&&l.is_published))return kToast('Publish at least one lesson in this unit before making it available to students.');
     const payload={level_id,title,description,sort_order,is_published,updated_at:new Date().toISOString()};
     const res=id?await db.from('mrfluent_kids_units').update(payload).eq('id',id).select('id'):await db.from('mrfluent_kids_units').insert(payload).select('id');
     if(res.error)return kToast('Could not save Kids unit: '+res.error.message);
