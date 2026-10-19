@@ -311,13 +311,14 @@ async function loadStudentLessons(levelId){
  }).join('')+'</div>';
 }
 function mfKidsSafeMediaUrl(value){
- try{const u=new URL(String(value||''),location.href);return (u.protocol==='https:'||u.protocol==='http:')?u.href:'';}catch(_){return '';}
+ if(value==null||!String(value).trim())return '';
+ try{const u=new URL(String(value).trim(),location.href);return (u.protocol==='https:'||u.protocol==='http:')?u.href:'';}catch(_){return '';}
 }
 function mfKidsAnswerGame(lessonId,index){
  const l=studentLessons.find(x=>x.id===lessonId);if(!l)return;
  const box=$('kid-game-'+lessonId),feedback=$('kid-game-feedback-'+lessonId);if(!box||!feedback)return;
- const correct=Number(box.dataset.correctIndex),chosen=Number(index);
- if(!Number.isInteger(correct)){feedback.textContent='Try each option and talk about your choice with a grown-up.';return;}
+ const rawCorrect=box.dataset.correctIndex,correct=Number(rawCorrect),chosen=Number(index);
+ if(rawCorrect===''||!Number.isInteger(correct)){feedback.textContent='Try each option and talk about your choice with a grown-up.';return;}
  if(chosen===correct){feedback.textContent='Brilliant! You found the right answer. ⭐';box.dataset.answered='true';}
  else{feedback.textContent='Good try! Listen and look again, then choose another answer.';}
 }
