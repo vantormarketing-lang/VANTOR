@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7f0">
+<meta name="description" content="Mr. Fluent Kids — a playful English learning adventure with phonics, stories, games and a level recommendation for primary-school learners.">
+<title>Mr. Fluent Kids | Learn English Through Play</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--ink:#30264b;--muted:#766d88;--purple:#7855dc;--purple2:#a88df6;--pink:#ff7eae;--teal:#35c9b1;--yellow:#ffc95f;--blue:#83bbff;--paper:#fffaf5;--white:#fff;--line:#ede3f7;--shadow:0 18px 48px rgba(65,42,117,.12)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Inter,ui-rounded,"Segoe UI",Arial,sans-serif}button,input,textarea,select{font:inherit}button,a{touch-action:manipulation}a{color:inherit;text-decoration:none}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #bca7ff;outline-offset:3px}.wrap{width:min(1160px,92%);margin:auto}.topbar{position:sticky;top:0;z-index:30;background:rgba(255,250,245,.91);backdrop-filter:blur(16px);border-bottom:1px solid rgba(120,85,220,.12)}.nav{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:76px}.brand{display:flex;align-items:center;gap:10px;font-weight:1000;letter-spacing:-.5px}.brand-mark{display:grid;place-items:center;width:48px;height:48px;border-radius:17px;background:linear-gradient(145deg,#8567e9,#4c34a1);box-shadow:0 8px 18px #7855dc35;color:#fff;font-size:27px}.brand small{display:block;color:#8b7da5;font-size:10px;letter-spacing:2px;font-weight:900}.nav-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:12px 17px;font-weight:900;font-size:13px;transition:transform .15s,box-shadow .15s,background .15s}.btn:hover{transform:translateY(-2px)}.btn-primary{color:#fff;background:linear-gradient(135deg,#8060e5,#6842c5);box-shadow:0 8px 17px #7652d52c}.btn-soft{background:#fff;color:#6e4bc1;border:1px solid #e9defb}.btn-mint{background:#d7f8ef;color:#246a60}.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}.hero{padding:58px 0 50px;overflow:hidden;position:relative}.hero:before{content:"";position:absolute;width:490px;height:490px;border-radius:50%;right:-140px;top:-175px;background:radial-gradient(circle,#ffdfed 0,#ffdfed00 69%);pointer-events:none}.hero:after{content:"";position:absolute;width:380px;height:380px;border-radius:50%;left:-160px;bottom:-220px;background:radial-gradient(circle,#d9f9f0 0,#d9f9f000 72%);pointer-events:none}.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:11px;font-weight:1000;letter-spacing:2px;text-transform:uppercase;color:#8260d4}.dot{width:9px;height:9px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 5px #ff7eae20;animation:pulse 1.9s infinite}@keyframes pulse{0%,100%{box-shadow:0 0 0 4px #ff7eae20}50%{box-shadow:0 0 0 8px #ff7eae09}}h1{font-size:clamp(40px,5.2vw,68px);line-height:1.02;letter-spacing:-2.8px;margin:17px 0}.gradient{background:linear-gradient(100deg,#7352d4,#a05ed2 48%,#e66c9a);background-clip:text;-webkit-background-clip:text;color:transparent}.hero p{max-width:610px;color:var(--muted);font-size:16px}.hero-buttons{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 14px}.trust-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.tag{border:1px solid #e9defb;background:#fff;padding:6px 10px;border-radius:999px;font-size:10px;color:#796a95;font-weight:800}.mascot-stage{position:relative;display:grid;place-items:center;min-height:350px;border:2px solid #fff;background:linear-gradient(145deg,#f1eaff,#fff2f7 58%,#e5fbf5);border-radius:38px;box-shadow:var(--shadow);overflow:hidden}.mascot-stage:before,.mascot-stage:after{content:"";position:absolute;border-radius:50%;background:#fff9}.mascot-stage:before{width:180px;height:180px;top:-62px;left:-54px}.mascot-stage:after{width:240px;height:240px;right:-95px;bottom:-115px}.mascot-art{position:relative;z-index:1;width:min(80%,290px);filter:drop-shadow(0 12px 8px #39296822)}.float-note{position:absolute;z-index:2;border-radius:16px;padding:10px 13px;background:#fff;box-shadow:0 10px 23px #4c2f7a14;font-size:11px;font-weight:1000}.float-note.one{top:24px;left:22px;transform:rotate(-5deg);color:#784ad2}.float-note.two{bottom:25px;right:18px;transform:rotate(4deg);color:#188d79}.sparkle{position:absolute;font-size:28px;z-index:2;animation:bob 3.2s ease-in-out infinite}.sparkle.s1{top:57px;right:45px;color:#ffbb43}.sparkle.s2{bottom:57px;left:35px;color:#ed76a3;animation-delay:.8s}@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(7deg)}}section{padding:47px 0}.section-head{text-align:center;max-width:740px;margin:0 auto 25px}.section-head h2{font-size:clamp(27px,3vw,39px);line-height:1.1;letter-spacing:-1.4px;margin:8px 0}.section-head p{margin:0 auto;color:var(--muted);font-size:14px}.track-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.track-card{position:relative;overflow:hidden;background:#fff;border:2px solid #efe5fb;border-radius:27px;padding:23px;box-shadow:0 12px 36px #43315c09;transition:transform .18s,border-color .18s}.track-card:hover,.track-card.selected{transform:translateY(-3px);border-color:#bca5ff}.track-card.zero{background:linear-gradient(145deg,#fff 5%,#fff5fa)}.track-card.primary{background:linear-gradient(145deg,#fff 5%,#f0fffa)}.track-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.track-emoji{width:64px;height:64px;display:grid;place-items:center;border-radius:22px;font-size:32px;background:#eee7ff}.primary .track-emoji{background:#d8f8ef}.track-card h3{font-size:22px;line-height:1.15;margin:13px 0 8px}.track-card p{color:var(--muted);font-size:13px;min-height:42px;margin:0}.track-meta{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.pill{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;background:#f6f1ff;color:#7358ba;border-radius:999px;font-weight:900;font-size:10px}.primary .pill{background:#e1faf3;color:#28796b}.level-chips{display:flex;gap:6px;flex-wrap:wrap;margin:15px 0 18px}.level-chip{font-size:10px;font-weight:1000;color:#776793;border:1px solid #eee5fb;padding:6px 9px;border-radius:10px;background:#fff}.path-controls{display:flex;gap:9px;flex-wrap:wrap}.notice{display:none;margin:13px 0 0;padding:11px 13px;border-radius:13px;font-size:12px;background:#fff0d0;color:#805b12;border:1px solid #ffe0a0}.notice.show{display:block}.quiz-shell{max-width:890px;margin:auto;background:#fff;border:2px solid #efe5fb;border-radius:28px;padding:23px;box-shadow:var(--shadow)}.quiz-intro{text-align:center;padding:8px 10px 16px}.quiz-intro p{color:var(--muted);font-size:13px}.quiz-host{display:grid;gap:13px}.q-card{padding:16px;border-radius:18px;background:#fffafd;border:1px solid #f0e6fb}.q-card h3{font-size:15px;margin:0 0 12px}.q-number{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:9px;background:#eee7ff;color:#6e4ac2;font-size:11px;margin-right:6px}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.answer{border:1.5px solid #eee7f9;background:#fff;border-radius:12px;padding:11px;text-align:left;font-size:12px;font-weight:800;color:#5f5376}.answer:hover{border-color:#b8a1fa;background:#f9f5ff}.answer.chosen{border-color:#8361df;background:#f0eaff;color:#5e3db0}.quiz-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px}.quiz-progress{font-size:11px;color:#887c9d;font-weight:800}.result-box{display:none;background:linear-gradient(135deg,#f0eaff,#fff3f8);border:1px solid #dacbff;border-radius:20px;padding:18px;margin-top:18px}.result-box.show{display:block}.result-box h3{margin:4px 0 6px}.result-box p{font-size:13px;color:#766b8a}.recommend-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff;border-radius:15px;padding:12px;margin:13px 0}.recommend-row strong{font-size:15px}.recommend-row small{display:block;color:#837696;font-size:10px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field-wrap{display:grid;gap:5px}.field-wrap label{font-size:11px;font-weight:900;color:#675779}.field{width:100%;border:1.5px solid #e9dff7;border-radius:12px;padding:12px 13px;background:#fff;color:var(--ink);outline:none}.field:focus{border-color:#9879ed}.field-help{font-size:10px;color:#8d829d}.request-card{max-width:800px;margin:auto;border:2px solid #efe5fb;border-radius:25px;background:#fff;padding:22px;box-shadow:0 12px 34px #49326e0a}.request-intro{display:flex;align-items:flex-start;gap:12px;margin-bottom:17px}.request-icon{width:44px;height:44px;display:grid;place-items:center;background:#fff1d1;border-radius:15px;font-size:23px;flex:none}.request-intro h3{margin:0;font-size:20px}.request-intro p{margin:4px 0 0;color:var(--muted);font-size:12px}.request-status{margin:13px 0 0;padding:12px;border-radius:12px;display:none;font-size:12px}.request-status.show{display:block}.request-status.ok{background:#def9ef;color:#216b5c}.request-status.err{background:#ffe8ee;color:#9d3157}.request-status.info{background:#f2edff;color:#6749aa}.demo-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px;align-items:stretch}.demo-lesson{background:linear-gradient(150deg,#7b5bd9,#5337aa);color:#fff;border-radius:27px;padding:23px;box-shadow:0 16px 36px #7152d52a}.demo-lesson .eyebrow{color:#e4d9ff}.demo-lesson h3{font-size:27px;margin:11px 0 7px}.demo-lesson p{color:#f0eaff;font-size:13px}.big-letter{display:flex;justify-content:center;align-items:center;gap:23px;margin:15px 0 6px;font-size:67px;font-weight:1000;color:#fff}.big-letter span:last-child{color:#ffd36e}.demo-game{border:2px solid #efe5fb;border-radius:27px;background:#fff;padding:23px;box-shadow:0 12px 30px #4830600a}.demo-game h3{font-size:21px;margin:4px 0 8px}.demo-game p{font-size:12px;color:var(--muted)}.game-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:15px 0}.game-option{border:1.5px solid #eee4f9;border-radius:15px;padding:12px 6px;background:#fff;text-align:center;color:#675579;font-weight:900;font-size:12px}.game-option span{display:block;font-size:30px;margin-bottom:4px}.game-option:hover{background:#f9f5ff;border-color:#b8a1fa}.game-option.correct{background:#dcf9ed;border-color:#69d3ad;color:#206f5e}.game-option.incorrect{background:#fff0f3;border-color:#f7a4bb;color:#9f3656}.game-feedback{min-height:24px;font-size:12px;font-weight:900;color:#6b55a2}.kid-area{border:2px solid #ece2f8;border-radius:25px;background:#fff;padding:20px;margin-top:15px}.kid-area h3{margin:0 0 4px;font-size:20px}.kid-area>p{margin:0 0 15px;color:var(--muted);font-size:12px}.student-unit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.unit-card{padding:13px;border:1.5px solid #eee5f8;border-radius:15px;background:#fffcff}.unit-card strong{display:block;font-size:13px}.unit-card p{color:var(--muted);font-size:10px}.lesson-link{display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;padding:10px;border-radius:11px;border:1px solid #e9def9;background:#fff;color:#6f4fbd;text-align:left;font-size:11px;font-weight:900}.lesson-view{display:none;background:#f6f1ff;border:1px solid #e4d8ff;padding:14px;border-radius:15px;margin-top:14px}.lesson-view.show{display:block}.footer{text-align:center;padding:30px 0 45px;color:#8b819b;font-size:11px}.footer a{color:#6c4bbb;font-weight:900}.small-print{font-size:10px;color:#90859e;margin-top:10px}@media(max-width:820px){.hero-grid{grid-template-columns:1fr}.mascot-stage{min-height:300px}.mascot-art{width:230px}.demo-grid{grid-template-columns:1fr}.track-grid{grid-template-columns:1fr}}@media(max-width:560px){.nav{min-height:67px}.brand-mark{width:41px;height:41px;border-radius:14px}.brand{font-size:14px}.brand small{font-size:8px;letter-spacing:1.5px}.nav-actions .btn{padding:10px 11px;font-size:11px}.hero{padding:35px 0 30px}h1{letter-spacing:-1.8px}.hero p{font-size:14px}.mascot-stage{min-height:260px;border-radius:27px}.mascot-art{width:205px}.float-note.one{top:14px;left:11px}.float-note.two{bottom:14px;right:9px}.section-head{margin-bottom:19px}.track-card,.quiz-shell,.request-card{padding:15px;border-radius:21px}.answers{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.demo-lesson,.demo-game{padding:17px;border-radius:22px}.game-options{gap:6px}.game-option{font-size:10px}.game-option span{font-size:25px}.student-unit-grid{grid-template-columns:1fr}.recommend-row{align-items:flex-start}.recommend-row .btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="./index.html" aria-label="Back to DOMA Academy"><span class="brand-mark">✦</span><span>Mr. Fluent Kids<small>LEARN • PLAY • GROW</small></span></a>
+  <div class="nav-actions"><a class="btn btn-soft" href="./index.html">← DOMA Academy</a><a class="btn btn-primary" href="./index.html#home">Log in</a></div>
+</div></div>
+<header class="hero"><div class="wrap hero-grid">
+  <div>
+    <div class="eyebrow"><span class="dot"></span> A little learning, a big adventure</div>
+    <h1>English starts with <span class="gradient">curiosity.</span></h1>
+    <p>Meet your new learning friends. Discover sounds, build words, play quick games and grow into stories — with a starting level picked for your child.</p>
+    <div class="hero-buttons"><a class="btn btn-primary" href="#tracks">Explore the adventures <span aria-hidden="true">→</span></a><a class="btn btn-soft" href="#placement">Find a starting level</a></div>
+    <div class="trust-tags"><span class="tag">🔤 Phonics first</span><span class="tag">🎮 Learning games</span><span class="tag">⭐ Gentle rewards</span><span class="tag">📱 Phone friendly</span></div>
+    <p class="small-print">Mr. Fluent Kids has its own access and subscription process, separate from the A1–C2 English Course.</p>
+  </div>
+  <div class="mascot-stage" aria-label="A friendly illustrated cartoon fox mascot">
+    <span class="float-note one">✨ Let's learn!</span><span class="float-note two">⭐ One star at a time</span><span class="sparkle s1">✦</span><span class="sparkle s2">✿</span>
+    <svg class="mascot-art" viewBox="0 0 300 300" role="img" aria-label="Mr. Fluent Kids cartoon fox mascot">
+      <defs><linearGradient id="foxOrange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffca80"/><stop offset="1" stop-color="#f28b62"/></linearGradient><linearGradient id="foxPurple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a88cf6"/><stop offset="1" stop-color="#7555d4"/></linearGradient></defs>
+      <ellipse cx="150" cy="267" rx="91" ry="14" fill="#7560b31d"/>
+      <path d="M92 99 65 28Q62 20 75 27L129 62Q150 54 171 63L226 26Q239 19 235 36L211 104" fill="url(#foxOrange)" stroke="#bd654c" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M80 43 111 67 96 82Z" fill="#ffb1bd"/><path d="m219 42-32 26 16 14Z" fill="#ffb1bd"/>
+      <path d="M76 116Q76 67 149 65Q223 67 224 116L218 175Q210 220 150 225Q91 220 82 175Z" fill="url(#foxOrange)" stroke="#bd654c" stroke-width="4"/>
+      <path d="M83 139Q105 118 126 136Q137 150 128 166Q111 180 84 168Z" fill="#fff5e7"/><path d="M217 139Q195 118 174 136Q163 150 172 166Q189 180 216 168Z" fill="#fff5e7"/>
+      <ellipse cx="119" cy="132" rx="8" ry="12" fill="#30264b"/><ellipse cx="182" cy="132" rx="8" ry="12" fill="#30264b"/><circle cx="122" cy="128" r="3" fill="#fff"/><circle cx="185" cy="128" r="3" fill="#fff"/>
+      <path d="M134 164Q150 151 166 164Q167 182 150 186Q133 182 134 164Z" fill="#fff6e9" stroke="#df9576" stroke-width="2"/><ellipse cx="150" cy="163" rx="8" ry="6" fill="#30264b"/><path d="M150 168v6m0 0q-8 8-14 0m14 0q8 8 14 0" fill="none" stroke="#30264b" stroke-width="3" stroke-linecap="round"/>
+      <path d="M111 202Q150 186 189 202L196 257Q150 277 104 257Z" fill="#fff9f0" stroke="#bd654c" stroke-width="4"/>
+      <path d="M115 205Q150 219 185 205" fill="none" stroke="#f09c74" stroke-width="3"/>
+      <path d="M94 227 77 246Q72 256 84 262L110 254" fill="url(#foxOrange)" stroke="#bd654c" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M205 227 223 246Q228 256 216 262L190 254" fill="url(#foxOrange)" stroke="#bd654c" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M107 255Q95 267 103 278H142Q150 270 139 255M162 255Q151 270 160 278H198Q207 267 193 255" fill="#7655d4" stroke="#5338a2" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M132 214 150 231 168 214" fill="none" stroke="#75ccbd" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="92" cy="156" r="6" fill="#ff8fba" opacity=".8"/><circle cx="208" cy="156" r="6" fill="#ff8fba" opacity=".8"/>
+    </svg>
+  </div>
+</div></header>
+
+<main>
+<section id="tracks"><div class="wrap">
+  <div class="section-head"><div class="eyebrow"><span class="dot"></span> Choose an adventure</div><h2>Two paths. <span class="gradient">One happy start.</span></h2><p>Start at the beginning or practise the English skills used at primary school. The level check recommends a suitable place to begin.</p></div>
+  <div class="track-grid" id="trackGrid">
+    <article class="track-card zero"><div class="track-top"><div class="track-emoji">🦊</div><span class="pill">6 levels</span></div><h3>Start from Zero</h3><p>Hear sounds, meet the alphabet, build little words, read sentences and discover stories.</p><div class="track-meta"><span class="pill">🔊 Sounds</span><span class="pill">🔤 Phonics</span><span class="pill">📚 Stories</span></div><div class="level-chips"><span class="level-chip">K0 Little Ears</span><span class="level-chip">K1 ABC Friends</span><span class="level-chip">K2 Tiny Words</span><span class="level-chip">K3–K5 More adventures</span></div><div class="path-controls"><button class="btn btn-primary" onclick="chooseTrack('START_ZERO')">Choose this path →</button><button class="btn btn-soft" onclick="beginPlacement('START_ZERO')">Find my level</button></div></article>
+    <article class="track-card primary"><div class="track-top"><div class="track-emoji">🎒</div><span class="pill">3 level groups</span></div><h3>Primary School Support</h3><p>Strengthen school English with vocabulary, reading, grammar, listening and guided writing.</p><div class="track-meta"><span class="pill">🧩 Vocabulary</span><span class="pill">📖 Reading</span><span class="pill">✍️ Writing</span></div><div class="level-chips"><span class="level-chip">Primary 1–2</span><span class="level-chip">Primary 3–4</span><span class="level-chip">Primary 5–6</span></div><div class="path-controls"><button class="btn btn-mint" onclick="chooseTrack('PRIMARY_SUPPORT')">Choose this path →</button><button class="btn btn-soft" onclick="beginPlacement('PRIMARY_SUPPORT')">Find my level</button></div></article>
+  </div>
+  <div id="connectionNotice" class="notice"></div>
+  <div id="levelExplorer" class="kid-area" hidden><h3 id="explorerTitle">Choose a starting level</h3><p>Select a suggested level yourself, or take the quick level check below. Your final course access is still controlled by the separate Kids subscription.</p><div class="level-chips" id="levelButtons"></div><div class="small-print" id="priceNote">The Kids subscription price will be set by the platform administrator.</div><button class="btn btn-primary" style="margin-top:12px" onclick="document.getElementById('placement').scrollIntoView({behavior:'smooth'})">Take the level check ↓</button></div>
+</div></section>
+
+<section id="placement" style="background:linear-gradient(180deg,#f7f2ff99,#fffaf500)"><div class="wrap">
+  <div class="section-head"><div class="eyebrow">Little level check</div><h2>Let's find your <span class="gradient">best starting point.</span></h2><p>A short, friendly check — not a school exam. You can also start at level zero without taking it.</p></div>
+  <div class="quiz-shell"><div class="quiz-intro"><div style="font-size:37px">🧭</div><h3 id="quizTitle" style="margin:4px 0">Pick a path to begin</h3><p id="quizDescription">Choose one of the two paths above. We’ll show a few questions and recommend a starting level.</p></div><div id="quizHost" class="quiz-host"></div><div class="quiz-footer"><span class="quiz-progress" id="quizProgress">No answers yet</span><button id="quizSubmit" class="btn btn-primary" onclick="submitPlacement()" disabled>Show my level ✨</button></div><div id="placementResult" class="result-box" aria-live="polite"></div></div>
+</div></section>
+
+<section id="sample"><div class="wrap">
+  <div class="section-head"><div class="eyebrow"><span class="dot"></span> Try a free mini lesson</div><h2>Meet the letter <span class="gradient">S s.</span></h2><p>A little sample of the style: listen, look, play, then earn a star for trying.</p></div>
+  <div class="demo-grid">
+    <article class="demo-lesson"><div class="eyebrow">ABC Friends • sample</div><h3>Say hello to S!</h3><p>S makes the beginning sound in “sun”, “snake” and “star”. Tap the speaker and say the sound together.</p><div class="big-letter"><span>S</span><span>s</span></div><button class="btn" style="background:#fff;color:#6443b5" onclick="speakSample()">🔊 Listen to the sound</button><p class="small-print" style="color:#e8ddff">Audio uses your browser's speech support when available.</p></article>
+    <article class="demo-game"><div class="eyebrow">Play & practise</div><h3>Which word begins with S?</h3><p>Tap the picture that starts with the S sound.</p><div class="game-options"><button class="game-option" onclick="checkSample('Sun',this)"><span>☀️</span>Sun</button><button class="game-option" onclick="checkSample('Apple',this)"><span>🍎</span>Apple</button><button class="game-option" onclick="checkSample('Ball',this)"><span>⚽</span>Ball</button></div><div id="gameFeedback" class="game-feedback" aria-live="polite">Choose one picture to play.</div><button id="gameReset" class="btn btn-soft" onclick="resetSample()">Play again ↻</button></article>
+  </div>
+</div></section>
+
+<section id="myKidsCourse" style="background:linear-gradient(180deg,#e9fbf5aa,#fffaf500)"><div class="wrap">
+  <div class="section-head"><div class="eyebrow">Your learning space</div><h2>My <span class="gradient">Kids Course.</span></h2><p>Your active level and saved lessons appear here after the Kids subscription is approved. This does not use or replace your A1–C2 access.</p></div>
+  <div id="studentAccess" class="kid-area"><p>Checking your separate Kids access…</p></div>
+</div></section>
+
+<section id="enrol"><div class="wrap">
+  <div class="section-head"><div class="eyebrow">Independent subscription</div><h2>Ready for a <span class="gradient">new adventure?</span></h2><p>Choose the path, get a starting-level recommendation, then send a registration request. The administrator must confirm the price and payment steps before activating access.</p></div>
+  <div class="request-card"><div class="request-intro"><div class="request-icon">🧑‍🧑‍🧒</div><div><h3>Parent or guardian registration</h3><p>This is a registration request, not a payment or an active subscription. A parent/guardian contact is required so the team can confirm pricing and next steps.</p></div></div>
+    <div class="form-grid"><div class="field-wrap"><label for="requestTrack">Learning path</label><select id="requestTrack" class="field" onchange="onRequestTrackChanged()"><option value="START_ZERO">Start from Zero</option><option value="PRIMARY_SUPPORT">Primary School Support</option></select></div><div class="field-wrap"><label for="requestLevel">Recommended starting level</label><select id="requestLevel" class="field"><option value="">Take the level check or choose a path</option></select></div><div class="field-wrap"><label for="guardianContact">Parent/guardian phone or contact *</label><input class="field" id="guardianContact" type="tel" autocomplete="tel" placeholder="Parent or guardian contact" required><span class="field-help">Use a parent's/guardian's contact details.</span></div><div class="field-wrap"><label for="requestNote">Note (optional)</label><input class="field" id="requestNote" maxlength="300" placeholder="Anything helpful for the teacher?"></div></div>
+    <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px"><span class="small-print" id="requestPrice">Subscription price has not been set yet.</span><button class="btn btn-primary" id="requestButton" onclick="submitEnrollmentRequest()">Send registration request →</button></div><div class="request-status" id="requestStatus" aria-live="polite"></div><div class="small-print">By submitting, you ask the academy to contact the parent/guardian about this course. No child chat or public leaderboard is included.</div>
+  </div>
+</div></section>
+</main>
+<footer class="footer"><div class="wrap">Part of <a href="./index.html">DOMA ACADEMY · Mr. Fluent</a> · Kids learning area · <a href="./index.html">Return to the main platform</a></div></footer>
+
+<script>
+const DOMA_URL='https://dtptxhkcogpoleftguas.supabase.co';
+const DOMA_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
+const FALLBACK_TRACKS=[
+ {id:null,code:'START_ZERO',title:'Start from Zero',description:'Build English from sounds and letters to words, sentences and stories.',price_egp:null,sort_order:1},
+ {id:null,code:'PRIMARY_SUPPORT',title:'Primary School Support',description:'Practise English skills used at primary school.',price_egp:null,sort_order:2}
+];
+const FALLBACK_LEVELS=[
+ {id:null,track_code:'START_ZERO',code:'K0',title:'Little Ears',description:'Sound awareness, rhyme and listening games.',sort_order:1},
+ {id:null,track_code:'START_ZERO',code:'K1',title:'ABC Friends',description:'Uppercase and lowercase letters with letter sounds.',sort_order:2},
+ {id:null,track_code:'START_ZERO',code:'K2',title:'Tiny Word Builders',description:'Short vowels and blending simple words.',sort_order:3},
+ {id:null,track_code:'START_ZERO',code:'K3',title:'Sound Teams',description:'Common letter teams and sound patterns.',sort_order:4},
+ {id:null,track_code:'START_ZERO',code:'K4',title:'Sentence Builders',description:'Decodable sentences and basic comprehension.',sort_order:5},
+ {id:null,track_code:'START_ZERO',code:'K5',title:'Story Adventures',description:'Short stories, vocabulary and simple conversations.',sort_order:6},
+ {id:null,track_code:'PRIMARY_SUPPORT',code:'P12',title:'Primary 1–2',description:'Foundations, useful vocabulary and short sentences.',sort_order:1},
+ {id:null,track_code:'PRIMARY_SUPPORT',code:'P34',title:'Primary 3–4',description:'Reading, vocabulary and core grammar in context.',sort_order:2},
+ {id:null,track_code:'PRIMARY_SUPPORT',code:'P56',title:'Primary 5–6',description:'Short texts, comprehension and guided writing.',sort_order:3}
+];
+const PLACEMENT={
+ START_ZERO:[
+  {q:'Which letter starts the word “sun”?',o:['S','M','B','T'],a:0},
+  {q:'Which one is a lowercase letter?',o:['b','B','D','R'],a:0},
+  {q:'Which word begins with the /m/ sound?',o:['moon','fish','sun','cat'],a:0},
+  {q:'Which word rhymes with “cat”?',o:['hat','pen','dog','map'],a:0},
+  {q:'Which word starts with the same sound as “snake”?',o:['star','ball','apple','dog'],a:0},
+  {q:'Which is a short word you may read by blending sounds?',o:['map','mountain','beautiful','together'],a:0}
+ ],
+ PRIMARY_SUPPORT:[
+  {q:'My name ___ Adam.',o:['am','is','are','be'],a:1},
+  {q:'She ___ to school every day.',o:['go','goes','going','gone'],a:1},
+  {q:'One child, two ___.',o:['childs','childes','children','child'],a:2},
+  {q:'“Mona has a red bag.” What colour is Mona’s bag?',o:['Blue','Green','Red','Black'],a:2},
+  {q:'Yesterday, we ___ a film.',o:['watch','watched','watching','watches'],a:1},
+  {q:'The book is ___ the table.',o:['on','at','between','from'],a:0}
+ ]
+};
+let kidsDb=null,currentUser=null,tracks=FALLBACK_TRACKS.slice(),levels=FALLBACK_LEVELS.slice();
+let selectedTrackCode=null,selectedLevelCode=null,quizAnswers={},quizQuestions=[],recommendation=null;
+let currentSubscription=null,studentLessons=[],studentUnits=[];
+const $=id=>document.getElementById(id);
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function toastStatus(id,msg,type){const el=$(id);if(!el)return;el.className=(id==='requestStatus'?'request-status':'notice')+' show '+(type||'');el.textContent=msg;}
+function findTrack(code){return tracks.find(t=>t.code===code)||FALLBACK_TRACKS.find(t=>t.code===code);}
+function levelsFor(trackCode){const t=findTrack(trackCode);return levels.filter(l=>String(l.track_id||'')===String(t&&t.id||'')||l.track_code===trackCode).sort((a,b)=>a.sort_order-b.sort_order);}
+function byLevelCode(code){return levels.find(l=>l.code===code)||FALLBACK_LEVELS.find(l=>l.code===code);}
+function priceLabel(track){return track&&track.price_egp!=null?'EGP '+Number(track.price_egp).toLocaleString('en-US')+' (course subscription)':'Price to be confirmed by the administrator';}
+function renderTrackMetadata(){
+ const grid=$('trackGrid');if(!grid)return;
+ const defs=[
+  {code:'START_ZERO',cls:'zero',emoji:'🦊',pill:'6 levels',title:'Start from Zero',desc:'Hear sounds, meet the alphabet, build little words, read sentences and discover stories.',tags:['🔊 Sounds','🔤 Phonics','📚 Stories'],chips:['K0 Little Ears','K1 ABC Friends','K2 Tiny Words','K3–K5 More adventures'],btn:'Choose this path →',second:'Find my level'},
+  {code:'PRIMARY_SUPPORT',cls:'primary',emoji:'🎒',pill:'3 level groups',title:'Primary School Support',desc:'Strengthen school English with vocabulary, reading, grammar, listening and guided writing.',tags:['🧩 Vocabulary','📖 Reading','✍️ Writing'],chips:['Primary 1–2','Primary 3–4','Primary 5–6'],btn:'Choose this path →',second:'Find my level'}
+ ];
+ grid.innerHTML=defs.map(d=>{
+  const t=findTrack(d.code),n=levelsFor(d.code).length|| (d.code==='START_ZERO'?6:3);
+  const price=priceLabel(t);
+  return '<article class="track-card '+d.cls+(selectedTrackCode===d.code?' selected':'')+'"><div class="track-top"><div class="track-emoji">'+d.emoji+'</div><span class="pill">'+n+' '+(d.code==='START_ZERO'?'levels':'level groups')+'</span></div><h3>'+esc(d.title)+'</h3><p>'+esc(t&&t.description||d.desc)+'</p><div class="track-meta">'+d.tags.map(x=>'<span class="pill">'+esc(x)+'</span>').join('')+'</div><div class="level-chips">'+d.chips.map(x=>'<span class="level-chip">'+esc(x)+'</span>').join('')+'</div><div class="path-controls"><button class="btn '+(d.code==='START_ZERO'?'btn-primary':'btn-mint')+'" onclick="chooseTrack(\''+d.code+'\')">'+d.btn+'</button><button class="btn btn-soft" onclick="beginPlacement(\''+d.code+'\')">'+d.second+'</button></div><div class="small-print">'+esc(price)+'</div></article>';
+ }).join('');
+}
+function updateLevelOptions(){
+ const trackCode=$('requestTrack').value||selectedTrackCode||'START_ZERO',host=$('requestLevel'),items=levelsFor(trackCode);
+ if(!host)return;
+ const current=selectedLevelCode||recommendation&&recommendation.level&&recommendation.level.code||'';
+ host.innerHTML='<option value="">Choose a starting level</option>'+items.map(l=>'<option value="'+esc(l.id||l.code)+'" '+((String(l.id||l.code)===String(current))?'selected':'')+'>'+esc(l.code+' — '+l.title)+'</option>').join('');
+ if(!items.length)host.innerHTML+='';
+}
+function chooseTrack(code){
+ selectedTrackCode=code;$('requestTrack').value=code;
+ const first=levelsFor(code)[0];if(first)selectedLevelCode=first.code;
+ updateLevelOptions();renderTrackMetadata();
+ $('explorerTitle').textContent='Choose a starting level · '+(findTrack(code)?.title||code);
+ renderLevelButtons();$('levelExplorer').hidden=false;
+ $('levelExplorer').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function renderLevelButtons(){
+ const code=selectedTrackCode||$('requestTrack').value||'START_ZERO';
+ const items=levelsFor(code);
+ $('levelButtons').innerHTML=items.map(l=>'<button class="level-chip" style="cursor:pointer;border-color:'+(selectedLevelCode===l.code?'#a890f6':'#eee5fb')+';background:'+(selectedLevelCode===l.code?'#f0eaff':'#fff')+'" onclick="pickManualLevel(\''+l.code+'\')">'+esc(l.code+' · '+l.title)+'</button>').join('');
+ const t=findTrack(code);$('priceNote').textContent='Separate Kids subscription · '+priceLabel(t);
+}
+function pickManualLevel(code){
+ const l=byLevelCode(code);if(!l)return;
+ selectedLevelCode=code;recommendation={track:findTrack(selectedTrackCode||$('requestTrack').value),level:l,score:null,total:null};
+ updateLevelOptions();renderLevelButtons();
+ const result=$('placementResult');result.classList.add('show');result.innerHTML='<div class="eyebrow">Your selected starting point</div><h3>'+esc(l.code+' · '+l.title)+'</h3><p>'+esc(l.description||'A suggested starting level for this learning path.')+'</p><div class="recommend-row"><div><strong>'+esc((findTrack(selectedTrackCode||$('requestTrack').value)||{}).title||'Mr. Fluent Kids')+'</strong><small>Chosen manually — no test score saved.</small></div><button class="btn btn-primary" onclick="goToEnrollment()">Request this level →</button></div>';
+}
+function beginPlacement(trackCode){
+ selectedTrackCode=trackCode;$('requestTrack').value=trackCode;selectedLevelCode=null;recommendation=null;quizAnswers={};quizQuestions=PLACEMENT[trackCode]||PLACEMENT.START_ZERO;
+ $('quizTitle').textContent=trackCode==='START_ZERO'?'Start from Zero · Sound & letter check':'Primary School Support · English check';
+ $('quizDescription').textContent='Choose one answer for each question. This quick check suggests a starting point; it does not judge the child.';
+ $('quizHost').innerHTML=quizQuestions.map((q,i)=>'<article class="q-card"><h3><span class="q-number">'+(i+1)+'</span>'+esc(q.q)+'</h3><div class="answers">'+q.o.map((op,j)=>'<button class="answer" id="answer-'+i+'-'+j+'" onclick="chooseAnswer('+i+','+j+')">'+esc(op)+'</button>').join('')+'</div></article>').join('');
+ $('quizProgress').textContent='0 of '+quizQuestions.length+' answers selected';$('quizSubmit').disabled=true;$('placementResult').classList.remove('show');
+ updateLevelOptions();document.getElementById('placement').scrollIntoView({behavior:'smooth'});
+}
+function chooseAnswer(qIndex,optionIndex){
+ quizAnswers[qIndex]=optionIndex;
+ quizQuestions[qIndex].o.forEach((v,j)=>{const b=$('answer-'+qIndex+'-'+j);if(b)b.classList.toggle('chosen',j===optionIndex);});
+ const n=Object.keys(quizAnswers).length;$('quizProgress').textContent=n+' of '+quizQuestions.length+' answers selected';$('quizSubmit').disabled=n!==quizQuestions.length;
+}
+async function submitPlacement(){
+ if(!quizQuestions.length||Object.keys(quizAnswers).length!==quizQuestions.length){$('quizProgress').textContent='Please answer each question first.';return;}
+ const score=quizQuestions.reduce((sum,q,i)=>sum+(quizAnswers[i]===q.a?1:0),0),trackCode=selectedTrackCode||$('requestTrack').value||'START_ZERO';
+ let code;
+ if(trackCode==='START_ZERO')code=['K0','K0','K1','K2','K3','K4','K5'][score];
+ else code=score<=1?'P12':(score<=3?'P34':'P56');
+ let lvl=levels.find(l=>l.code===code)||FALLBACK_LEVELS.find(l=>l.code===code);
+ const tr=findTrack(trackCode);
+ recommendation={track:tr,level:lvl,score:score,total:quizQuestions.length};
+ selectedTrackCode=trackCode;selectedLevelCode=code;
+ $('placementResult').classList.add('show');
+ $('placementResult').innerHTML='<div class="eyebrow">Your recommended level</div><h3>Great exploring! 🌟</h3><p>The quick check suggests this is a good place to begin. A teacher or parent can adjust it later if needed.</p><div class="recommend-row"><div><strong>'+esc(code+' · '+lvl.title)+'</strong><small>'+esc(tr.title)+' · '+score+' of '+quizQuestions.length+' answers correct</small></div><span class="pill">Suggested start</span></div><p>'+esc(lvl.description||'Start here and learn one small step at a time.')+'</p><div class="path-controls"><button class="btn btn-primary" onclick="goToEnrollment()">Request this level →</button><button class="btn btn-soft" onclick="chooseTrack(\''+trackCode+'\')">Explore levels</button></div>';
+ updateLevelOptions();renderLevelButtons();
+ if(kidsDb&&currentUser&&tr.id&&lvl.id){
+   const {error}=await kidsDb.from('mrfluent_kids_placement_results').insert({user_id:currentUser.id,track_id:tr.id,recommended_level_id:lvl.id,score:score,total_questions:quizQuestions.length});
+   if(error)console.warn('Could not save placement result:',error.message);
+ }
+}
+function goToEnrollment(){
+ const trackCode=selectedTrackCode||$('requestTrack').value||'START_ZERO';
+ $('requestTrack').value=trackCode;
+ if(recommendation&&recommendation.level){selectedLevelCode=recommendation.level.code;updateLevelOptions();}
+ document.getElementById('enrol').scrollIntoView({behavior:'smooth'});
+}
+function onRequestTrackChanged(){
+ const code=$('requestTrack').value;selectedTrackCode=code;
+ if(recommendation&&recommendation.track&&recommendation.track.code!==code){recommendation=null;selectedLevelCode=null;}
+ updateLevelOptions();renderTrackMetadata();
+}
+function setRequestStatus(message,type){const el=$('requestStatus');el.textContent=message;el.className='request-status show '+type;}
+async function submitEnrollmentRequest(){
+ if(!kidsDb){setRequestStatus('The connection is not ready. Refresh the page and try again.','err');return;}
+ if(!currentUser){setRequestStatus('Please sign in to your DOMA student account first, then return here.','info');return;}
+ const trackCode=$('requestTrack').value||selectedTrackCode||'START_ZERO',tr=findTrack(trackCode),selectedValue=$('requestLevel').value;
+ let lvl=levels.find(x=>String(x.id)===String(selectedValue)||x.code===selectedValue);
+ if(!lvl&&recommendation&&recommendation.track&&recommendation.track.code===trackCode)lvl=recommendation.level;
+ if(!lvl)lvl=levelsFor(trackCode)[0];
+ const contact=$('guardianContact').value.trim(),note=$('requestNote').value.trim();
+ if(!contact){setRequestStatus('Please enter a parent or guardian contact.','err');$('guardianContact').focus();return;}
+ if(contact.length<7){setRequestStatus('Please check the parent/guardian contact details.','err');$('guardianContact').focus();return;}
+ if(!tr||!tr.id||!lvl||!lvl.id){setRequestStatus('The course catalog did not finish loading. Refresh and try again.','err');return;}
+ const btn=$('requestButton');btn.disabled=true;btn.textContent='Sending request…';
+ const {data:pending,error:pendingError}=await kidsDb.from('mrfluent_kids_enrollment_requests').select('id,status,created_at').eq('user_id',currentUser.id).eq('track_id',tr.id).eq('status','pending').limit(1);
+ if(pendingError){btn.disabled=false;btn.textContent='Send registration request →';setRequestStatus('Could not check existing requests. '+pendingError.message,'err');return;}
+ if(pending&&pending.length){btn.disabled=false;btn.textContent='Send registration request →';setRequestStatus('A request for this path is already awaiting review. The administrator will contact the parent/guardian.','info');return;}
+ const payload={user_id:currentUser.id,track_id:tr.id,requested_level_id:lvl.id,guardian_contact:contact,note:note,status:'pending'};
+ const {error}=await kidsDb.from('mrfluent_kids_enrollment_requests').insert(payload);
+ btn.disabled=false;btn.textContent='Send registration request →';
+ if(error){setRequestStatus('The request could not be sent. Please try again or contact the academy.','err');console.error(error);return;}
+ setRequestStatus('Registration request sent. The administrator will confirm the price and payment steps with the parent/guardian before any course access is activated.','ok');
+ await loadStudentAccess();
+}
+async function initKids(){
+ try{
+  if(!window.supabase)throw new Error('Supabase client unavailable');
+  kidsDb=window.supabase.createClient(DOMA_URL,DOMA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  const sessionResult=await kidsDb.auth.getSession();currentUser=sessionResult.data&&sessionResult.data.session?sessionResult.data.session.user:null;
+ }catch(error){kidsDb=null;console.warn('Kids connection init failed',error);}
+ await loadCatalog();
+ if(kidsDb)await loadStudentAccess();
+ else {toastStatus('connectionNotice','Offline preview is available. Sign in/connect to submit a registration request.','show');$('studentAccess').innerHTML='<p>Sign in and connect to Supabase to check your individual Kids access.</p><a class="btn btn-primary" href="./index.html">Open DOMA Academy →</a>';}
+}
+async function loadCatalog(){
+ if(!kidsDb){renderTrackMetadata();updateLevelOptions();return;}
+ try{
+  const [tr,lv]=await Promise.all([
+   kidsDb.from('mrfluent_kids_tracks').select('id,code,title,description,price_egp,sort_order,is_published').eq('is_published',true).order('sort_order'),
+   kidsDb.from('mrfluent_kids_levels').select('id,track_id,code,title,description,sort_order,is_published').eq('is_published',true).order('sort_order')
+  ]);
+  if(tr.error)throw tr.error;
+  if(lv.error)throw lv.error;
+  if(tr.data&&tr.data.length)tracks=tr.data;
+  if(lv.data&&lv.data.length){levels=lv.data.map(l=>{const t=tracks.find(x=>x.id===l.track_id);return Object.assign({},l,{track_code:t&&t.code});});}
+ }catch(error){console.warn('Using fallback Kids catalog',error);toastStatus('connectionNotice','The catalog could not be refreshed. Showing the built-in preview catalog; registration needs a connection.','show');}
+ renderTrackMetadata();updateLevelOptions();
+}
+async function loadStudentAccess(){
+ const host=$('studentAccess');
+ if(!kidsDb){host.innerHTML='<p>Student access is unavailable while offline.</p>';return;}
+ if(!currentUser){host.innerHTML='<div class="request-intro"><div class="request-icon">🔐</div><div><h3>Sign in to see your Kids course</h3><p>Use the same DOMA account, then return to this page. A regular A1–C2 subscription does not automatically activate Kids.</p><a class="btn btn-primary" href="./index.html#home">Open DOMA login →</a></div></div>';return;}
+ const {data:subs,error:subsError}=await kidsDb.from('mrfluent_kids_subscriptions').select('id,track_id,level_id,status,starts_at,expires_at').eq('user_id',currentUser.id).eq('status','active').order('expires_at',{ascending:false});
+ if(subsError){host.innerHTML='<p>Could not verify the Kids subscription. Please refresh the page. Your A1–C2 course is unaffected.</p>';console.warn(subsError);return;}
+ const now=Date.now();
+ currentSubscription=(subs||[]).find(s=>(!s.starts_at||new Date(s.starts_at).getTime()<=now)&&(!s.expires_at||new Date(s.expires_at).getTime()>now))||null;
+ if(!currentSubscription){
+  const {data:requests}=await kidsDb.from('mrfluent_kids_enrollment_requests').select('id,status,created_at,track_id,requested_level_id').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(5);
+  const pending=(requests||[]).find(r=>r.status==='pending');
+  host.innerHTML='<div class="request-intro"><div class="request-icon">🧭</div><div><h3>No active Kids subscription yet</h3><p>Try the sample lesson for free, then choose a path and submit a separate Kids registration request. Existing Mr. Fluent A1–C2 access stays separate.</p>'+(pending?'<div class="pill">Registration pending review</div>':'<button class="btn btn-primary" onclick="document.getElementById(\'tracks\').scrollIntoView({behavior:\'smooth\'})">Choose a path →</button>')+'</div></div>';
+  if(pending)host.innerHTML+='<p class="small-print">Your request is awaiting review by the administrator.</p>';
+  return;
+ }
+ const track=tracks.find(t=>t.id===currentSubscription.track_id),level=levels.find(l=>l.id===currentSubscription.level_id);
+ host.innerHTML='<div class="request-intro"><div class="request-icon">🎉</div><div><h3>Kids access is active</h3><p>' + esc(track?track.title:'Mr. Fluent Kids')+' · '+esc(level?level.code+' — '+level.title:'Assigned level')+'</p><span class="pill">Expires '+esc(new Date(currentSubscription.expires_at).toLocaleDateString())+'</span></div></div><p>Course lessons are loaded from the protected Kids tables for this assigned level. If this area is empty, the lesson content has not been published yet.</p><div id="unitHost"></div><div id="lessonView" class="lesson-view"></div>';
+ await loadStudentLessons(currentSubscription.level_id);
+}
+async function loadStudentLessons(levelId){
+ const host=$('unitHost');if(!host||!kidsDb)return;
+ const u=await kidsDb.from('mrfluent_kids_units').select('id,title,description,sort_order').eq('level_id',levelId).eq('is_published',true).order('sort_order');
+ if(u.error){host.innerHTML='<p>Could not load units. The database is enforcing the subscription access rules.</p>';return;}
+ studentUnits=u.data||[];
+ if(!studentUnits.length){host.innerHTML='<div class="notice show">Your access is active, but lesson units have not been published yet. The sample game above is available while the curriculum is being prepared.</div>';return;}
+ const ids=studentUnits.map(x=>x.id);
+ const ls=await kidsDb.from('mrfluent_kids_lessons').select('id,unit_id,title,objective,lesson_type,lesson_payload,sort_order').in('unit_id',ids).eq('is_published',true).order('sort_order');
+ if(ls.error){host.innerHTML='<p>Could not load protected lessons. Refresh and try again.</p>';return;}
+ studentLessons=ls.data||[];
+ host.innerHTML='<div class="student-unit-grid">'+studentUnits.map(u=>'<article class="unit-card"><strong>'+esc(u.title)+'</strong><p>'+esc(u.description||'A small step in the learning adventure.')+'</p>'+studentLessons.filter(l=>l.unit_id===u.id).map(l=>'<button class="lesson-link" onclick="openStudentLesson(\''+l.id+'\')">'+esc(l.title)+' <span>Open →</span></button>').join('')+'</article>').join('')+'</div>';
+}
+function openStudentLesson(id){
+ const l=studentLessons.find(x=>x.id===id);if(!l)return;
+ const host=$('lessonView');if(!host)return;const payload=l.lesson_payload||{};
+ let details=esc(payload.intro||payload.text||l.objective||'Your learning activity is ready.');
+ if(Array.isArray(payload.steps)&&payload.steps.length)details+='<ul>'+payload.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>';
+ host.innerHTML='<h3>'+esc(l.title)+'</h3><p>'+details+'</p><p class="small-print">'+esc(l.objective||'Listen, look, practise and do your best.')+'</p><button class="btn btn-mint" onclick="completeStudentLesson(\''+l.id+'\')">Mark lesson complete ⭐</button>';
+ host.classList.add('show');host.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+async function completeStudentLesson(id){
+ if(!kidsDb||!currentUser)return;
+ const {error}=await kidsDb.from('mrfluent_kids_progress').upsert({user_id:currentUser.id,lesson_id:id,status:'completed',best_score:100,stars:1,completed_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'user_id,lesson_id'});
+ if(error){setRequestStatus('The lesson was opened, but progress could not be saved. Please retry.','err');console.warn(error);return;}
+ setRequestStatus('Lesson completed — one star saved! ⭐','ok');
+}
+function speakSample(){
+ if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){const f=$('gameFeedback');f.textContent='Speech is not available in this browser. Read the letter and try the picture game!';return;}
+ window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance('S, sss, sun, snake, star.');u.lang='en-US';u.rate=.78;window.speechSynthesis.speak(u);
+}
+function checkSample(answer,button){
+ document.querySelectorAll('.game-option').forEach(b=>b.classList.remove('correct','incorrect'));
+ if(answer==='Sun'){button.classList.add('correct');$('gameFeedback').textContent='Wonderful! Sun starts with the S sound. ⭐ You earned a star for trying!';}
+ else{button.classList.add('incorrect');$('gameFeedback').textContent='Nice try! Listen again: S says sss, like sun. Try another picture.';}
+}
+function resetSample(){document.querySelectorAll('.game-option').forEach(b=>b.classList.remove('correct','incorrect'));$('gameFeedback').textContent='Choose one picture to play.';}
+document.addEventListener('DOMContentLoaded',initKids);
+</script>
+</body>
+</html>
