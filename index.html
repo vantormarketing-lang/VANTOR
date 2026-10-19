@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v137', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v138', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -12930,6 +12930,22 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name::after{
 }
 </style>
 
+<script id="doma-kids-direct-account">
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  if(params.get('auth')!=='signup')return;
+  function showSignup(){
+    if(typeof window.openAuth==='function'){window.openAuth('signup');return;}
+    if(typeof openAuth==='function'){openAuth('signup');return;}
+    setTimeout(showSignup,180);
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){setTimeout(showSignup,220);},{once:true});
+  }else{
+    setTimeout(showSignup,220);
+  }
+})();
+</script>
 </body>
 </html>
 
