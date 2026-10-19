@@ -1951,7 +1951,7 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   }
   function openLevelForm(id){
     const l=kLevel(id);if(!l)return;
-    openModal('Edit Kids Level','<div class="form-grid"><label class="full">Title<input class="field" id="kLevelTitle" maxlength="100" value="'+kEsc(l.title)+'"></label><label class="full">Description<textarea class="field" id="kLevelDescription" rows="3" maxlength="600">'+kEsc(l.description||'')+'</textarea></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveLevel(\\''+l.id+'\\')">Save level</button></div>');
+    openModal('Edit Kids Level','<div class="form-grid"><label class="full">Title<input class="field" id="kLevelTitle" maxlength="100" value="'+kEsc(l.title)+'"></label><label class="full">Description<textarea class="field" id="kLevelDescription" rows="3" maxlength="600">'+kEsc(l.description||'')+'</textarea></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveLevel(\''+l.id+'\')">Save level</button></div>');
   }
   async function saveLevel(id){
     const title=k$('kLevelTitle')?.value.trim(),description=k$('kLevelDescription')?.value.trim()||'';
