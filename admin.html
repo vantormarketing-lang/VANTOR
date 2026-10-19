@@ -1798,227 +1798,7 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div>
-<script id="mrfluent-kids-admin-workflow-v1">
-(function(){
-  'use strict';
-  const kidsState={tracks:[],levels:[],units:[],lessons:[],requests:[],subs:[],profiles:[]};
-  const k$=id=>document.getElementById(id);
-  const kEsc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const kToast=msg=>{if(typeof toast==='function')toast(msg);else window.alert(msg)};
-  const kStaffId=async()=>{try{const x=await db.auth.getUser();return x.data&&x.data.user?x.data.user.id:null}catch(_){return null}};
-  const kTrack=id=>kidsState.tracks.find(x=>String(x.id)===String(id));
-  const kLevel=id=>kidsState.levels.find(x=>String(x.id)===String(id));
-  const kUnit=id=>kidsState.units.find(x=>String(x.id)===String(id));
-  const kProfile=id=>kidsState.profiles.find(x=>String(x.id)===String(id))||{};
-  const kDate=v=>{try{return v?new Date(v).toLocaleString():'—'}catch(_){return '—'}};
-  const kTableEmpty=msg=>'<div class="empty">'+kEsc(msg)+'</div>';
-  const kPill=(label,kind)=>'<span class="pill '+(kind||'')+'">'+kEsc(label)+'</span>';
-  async function load(){
-    const ids=['mfKidsTracksTable','mfKidsRequestsTable','mfKidsSubscriptionsTable','mfKidsLevelsTable','mfKidsUnitsTable','mfKidsLessonsTable'];
-    ids.forEach(id=>{if(k$(id))k$(id).innerHTML=kTableEmpty('Loading Kids course data…')});
-    try{
-      const results=await Promise.all([
-        db.from('mrfluent_kids_tracks').select('*').order('sort_order'),
-        db.from('mrfluent_kids_levels').select('*').order('sort_order'),
-        db.from('mrfluent_kids_units').select('*').order('created_at',{ascending:false}),
-        db.from('mrfluent_kids_lessons').select('*').order('created_at',{ascending:false}),
-        db.from('mrfluent_kids_enrollment_requests').select('*').order('created_at',{ascending:false}).limit(500),
-        db.from('mrfluent_kids_subscriptions').select('*').order('created_at',{ascending:false}).limit(500),
-        db.from('profiles').select('id,full_name,phone,role').limit(1000)
-      ]);
-      const labels=['tracks','levels','units','lessons','requests','subs','profiles'];
-      for(let i=0;i<results.length;i++){
-        if(results[i].error && i<6) throw new Error('Could not load '+labels[i]+': '+results[i].error.message);
-        kidsState[labels[i]]=results[i].error?[]:(results[i].data||[]);
-      }
-      render();
-    }catch(e){
-      console.error('Mr. Fluent Kids admin load failed:',e);
-      ids.forEach(id=>{if(k$(id))k$(id).innerHTML=kTableEmpty('Kids course data could not be loaded. Check staff permissions and the Kids schema migration. '+(e.message||''))});
-      if(k$('mfKidsStats'))k$('mfKidsStats').innerHTML='';
-    }
-  }
-  function render(){
-    const activeSubs=kidsState.subs.filter(s=>s.status==='active'&&(!s.expires_at||new Date(s.expires_at)>new Date()));
-    const pending=kidsState.requests.filter(r=>r.status==='pending');
-    if(k$('mfKidsStats'))k$('mfKidsStats').innerHTML=[
-      ['Paths',kidsState.tracks.length],['Levels',kidsState.levels.length],['Pending requests',pending.length],['Active memberships',activeSubs.length]
-    ].map(([label,value])=>'<div class="card stat"><div class="muted">'+kEsc(label)+'</div><div class="num">'+value+'</div></div>').join('');
-    renderTracks();renderRequests();renderSubs();renderLevels();renderUnits();renderLessons();
-  }
-  function renderTracks(){
-    const host=k$('mfKidsTracksTable');if(!host)return;
-    if(!kidsState.tracks.length){host.innerHTML=kTableEmpty('No Kids tracks are configured.');return}
-    host.innerHTML='<table><thead><tr><th>Track</th><th>Price (EGP)</th><th>Duration (days)</th><th>Status</th><th>Save</th></tr></thead><tbody>'+
-      kidsState.tracks.map(t=>'<tr><td><b>'+kEsc(t.title)+'</b><div class="muted" style="font-size:10px">'+kEsc(t.code)+'</div></td>'+
-      '<td><input class="field" style="min-width:110px" type="number" min="0" step="1" id="mfKidsPrice_'+kEsc(t.code)+'" value="'+(t.price_egp==null?'':kEsc(t.price_egp))+'" placeholder="Set price"></td>'+
-      '<td><input class="field" style="min-width:95px" type="number" min="1" max="365" step="1" id="mfKidsDays_'+kEsc(t.code)+'" value="'+(t.duration_days==null?'':kEsc(t.duration_days))+'" placeholder="Days"></td>'+
-      '<td>'+(t.is_published?kPill('Published','ok'):kPill('Hidden','warn'))+'</td>'+
-      '<td><button class="btn secondary small" onclick="mfKidsSaveTrack(\''+t.id+'\')">Save pricing</button></td></tr>').join('')+'</tbody></table>';
-  }
-  function renderRequests(){
-    const host=k$('mfKidsRequestsTable');if(!host)return;
-    if(!kidsState.requests.length){host.innerHTML=kTableEmpty('No registration requests have been submitted yet.');return}
-    host.innerHTML='<table><thead><tr><th>Student / Parent contact</th><th>Path / level</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+
-      kidsState.requests.map(r=>{
-        const p=kProfile(r.user_id),t=kTrack(r.track_id),l=kLevel(r.requested_level_id),pending=r.status==='pending';
-        const identity=(p.full_name||('User '+String(r.user_id).slice(0,8)))+(p.phone?' · '+p.phone:'');
-        const action=pending?'<div class="actions"><button class="btn ok small" onclick="mfKidsApprove(\''+r.id+'\')">Verify & activate</button><button class="btn danger small" onclick="mfKidsReject(\''+r.id+'\')">Reject</button></div>':'—';
-        return '<tr><td><b>'+kEsc(identity)+'</b><div class="muted" style="font-size:10px">Parent: '+kEsc(r.guardian_contact)+'</div>'+(r.note?'<div class="muted" style="font-size:10px">'+kEsc(r.note)+'</div>':'')+'<div class="muted" style="font-size:9px">'+kEsc(r.user_id)+'</div></td><td>'+kEsc(t?t.title:'Unknown track')+'<div class="muted" style="font-size:10px">'+kEsc(l?l.code+' · '+l.title:'Unknown level')+'</div></td><td>'+kEsc(kDate(r.created_at))+'</td><td>'+kPill(r.status,r.status==='pending'?'warn':r.status==='approved'?'ok':'')+(r.admin_note?'<div class="muted" style="font-size:10px">'+kEsc(r.admin_note)+'</div>':'')+'</td><td>'+action+'</td></tr>';
-      }).join('')+'</tbody></table>';
-  }
-  function renderSubs(){
-    const host=k$('mfKidsSubscriptionsTable');if(!host)return;
-    if(!kidsState.subs.length){host.innerHTML=kTableEmpty('No Kids subscriptions have been activated yet.');return}
-    host.innerHTML='<table><thead><tr><th>Student</th><th>Path / assigned level</th><th>Price</th><th>Period</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
-      kidsState.subs.map(s=>{
-        const p=kProfile(s.user_id),t=kTrack(s.track_id),l=kLevel(s.level_id);
-        const active=s.status==='active'&&new Date(s.expires_at)>new Date();
-        return '<tr><td>'+kEsc(p.full_name||s.user_id)+'<div class="muted" style="font-size:10px">'+kEsc(p.phone||'')+'</div></td><td>'+kEsc(t?t.title:'Unknown path')+'<div class="muted" style="font-size:10px">'+kEsc(l?l.code+' · '+l.title:'Unknown level')+'</div></td><td>'+kEsc(s.price_egp==null?'—':'EGP '+s.price_egp)+'</td><td>'+kEsc(kDate(s.starts_at))+'<div class="muted" style="font-size:10px">Until '+kEsc(kDate(s.expires_at))+'</div></td><td>'+kPill(active?'active':s.status,active?'ok':'')+'</td><td>'+(active?'<button class="btn danger small" onclick="mfKidsCancelSub(\''+s.id+'\')">Cancel Kids access</button>':'—')+'</td></tr>';
-      }).join('')+'</tbody></table>';
-  }
-  function renderLevels(){
-    const host=k$('mfKidsLevelsTable');if(!host)return;
-    if(!kidsState.levels.length){host.innerHTML=kTableEmpty('No Kids levels found.');return}
-    host.innerHTML='<table><thead><tr><th>Code</th><th>Level</th><th>Path</th><th>Published</th><th>Units</th><th>Actions</th></tr></thead><tbody>'+
-      kidsState.levels.map(l=>{
-        const t=kTrack(l.track_id),units=kidsState.units.filter(u=>u.level_id===l.id).length;
-        return '<tr><td><b>'+kEsc(l.code)+'</b></td><td>'+kEsc(l.title)+'<div class="muted" style="font-size:10px">'+kEsc(l.description||'')+'</div></td><td>'+kEsc(t?t.title:'—')+'</td><td>'+kPill(l.is_published?'Published':'Hidden',l.is_published?'ok':'warn')+'</td><td>'+units+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfKidsEditLevel(\''+l.id+'\')">Edit</button><button class="btn secondary small" onclick="mfKidsToggleLevel(\''+l.id+'\','+(!l.is_published)+')">'+(l.is_published?'Hide':'Publish')+'</button></div></td></tr>';
-      }).join('')+'</tbody></table>';
-  }
-  function renderUnits(){
-    const host=k$('mfKidsUnitsTable');if(!host)return;
-    if(!kidsState.units.length){host.innerHTML=kTableEmpty('No units yet. Create the first unit for K1 ABC Friends or Primary 1–2.');return}
-    host.innerHTML='<table><thead><tr><th>Unit</th><th>Level</th><th>Status</th><th>Lessons</th><th>Actions</th></tr></thead><tbody>'+
-      kidsState.units.map(u=>{const l=kLevel(u.level_id),n=kidsState.lessons.filter(x=>x.unit_id===u.id).length;
-        return '<tr><td><b>'+kEsc(u.title)+'</b><div class="muted" style="font-size:10px">'+kEsc(u.description||'')+'</div></td><td>'+kEsc(l?l.code+' · '+l.title:'—')+'</td><td>'+kPill(u.is_published?'Published':'Draft',u.is_published?'ok':'warn')+'</td><td>'+n+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfKidsEditUnit(\''+u.id+'\')">Edit</button><button class="btn secondary small" onclick="mfKidsToggleUnit(\''+u.id+'\','+(!u.is_published)+')">'+(u.is_published?'Unpublish':'Publish')+'</button><button class="btn danger small" onclick="mfKidsDeleteUnit(\''+u.id+'\')">Delete</button></div></td></tr>';
-      }).join('')+'</tbody></table>';
-  }
-  function renderLessons(){
-    const host=k$('mfKidsLessonsTable');if(!host)return;
-    if(!kidsState.lessons.length){host.innerHTML=kTableEmpty('No lessons yet. Create a lesson and keep it as a draft until reviewed.');return}
-    host.innerHTML='<table><thead><tr><th>Lesson</th><th>Unit / level</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+
-      kidsState.lessons.map(l=>{const u=kUnit(l.unit_id),lv=u&&kLevel(u.level_id);
-        return '<tr><td><b>'+kEsc(l.title)+'</b><div class="muted" style="font-size:10px">'+kEsc(l.objective||'')+'</div></td><td>'+kEsc(u?u.title:'—')+'<div class="muted" style="font-size:10px">'+kEsc(lv?lv.code:'')+'</div></td><td>'+kEsc(l.lesson_type)+'</td><td>'+kPill(l.is_published?'Published':'Draft',l.is_published?'ok':'warn')+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfKidsEditLesson(\''+l.id+'\')">Edit</button><button class="btn secondary small" onclick="mfKidsToggleLesson(\''+l.id+'\','+(!l.is_published)+')">'+(l.is_published?'Unpublish':'Publish')+'</button><button class="btn danger small" onclick="mfKidsDeleteLesson(\''+l.id+'\')">Delete</button></div></td></tr>';
-      }).join('')+'</tbody></table>';
-  }
-  async function saveTrack(id){
-    const t=kidsState.tracks.find(x=>x.id===id);if(!t)return;
-    const pRaw=k$('mfKidsPrice_'+t.code)?.value.trim()||'',dRaw=k$('mfKidsDays_'+t.code)?.value.trim()||'';
-    const price=pRaw===''?null:Number(pRaw),days=dRaw===''?null:Number(dRaw);
-    if(price!==null&&(!Number.isFinite(price)||price<0)){kToast('Enter a valid non-negative EGP price.');return}
-    if(days!==null&&(!Number.isInteger(days)||days<1||days>365)){kToast('Duration must be between 1 and 365 days.');return}
-    if((price===null)!==(days===null)){kToast('Set both price and duration, or leave both blank to disable approval.');return}
-    const r=await db.from('mrfluent_kids_tracks').update({price_egp:price,duration_days:days,updated_at:new Date().toISOString()}).eq('id',id).select('id');
-    if(r.error)return kToast('Could not save Kids pricing: '+r.error.message);
-    kToast('Kids path pricing saved.');await load();
-  }
-  async function approve(id){
-    const r=kidsState.requests.find(x=>x.id===id);if(!r||r.status!=='pending')return kToast('This request is no longer pending.');
-    const t=kTrack(r.track_id);
-    if(!t||t.price_egp==null||t.duration_days==null)return kToast('Set both price and duration for this path before approval.');
-    if(!confirm('Only continue after verifying payment with the parent/guardian. Activate '+t.title+' for EGP '+t.price_egp+' and '+t.duration_days+' days?'))return;
-    const result=await db.rpc('mrfluent_kids_approve_enrollment_request',{p_request_id:id,p_admin_note:'Payment verified by admin.'});
-    if(result.error)return kToast('Kids approval failed: '+result.error.message);
-    const data=Array.isArray(result.data)?result.data[0]:result.data;
-    if(!data||data.ok!==true)return kToast('Supabase did not confirm Kids activation. Review the request before retrying.');
-    const verify=await db.from('mrfluent_kids_enrollment_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();
-    if(verify.error||!verify.data||verify.data.status!=='approved')return kToast('Activation was attempted but the saved request status could not be verified. Refresh and inspect request '+id);
-    kToast('Kids course access activated. Adult course and grade memberships were not changed.');await load();
-  }
-  async function reject(id){
-    const r=kidsState.requests.find(x=>x.id===id);if(!r||r.status!=='pending')return;
-    const note=prompt('Reason / admin note (optional):','Not approved. Please contact the academy for next steps.');
-    if(note===null)return;
-    const staffId=await kStaffId();
-    const res=await db.from('mrfluent_kids_enrollment_requests').update({status:'rejected',admin_note:note,reviewed_by:staffId,reviewed_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq('id',id).eq('status','pending').select('id,status');
-    if(res.error)return kToast('Could not reject request: '+res.error.message);
-    if(!res.data||!res.data.length)return kToast('The request was already reviewed. Refresh the Kids section.');
-    kToast('Kids registration request rejected.');await load();
-  }
-  async function cancelSub(id){
-    if(!confirm('Cancel this Kids subscription? The separate A1–C2 course and school-grade access will not change.'))return;
-    const res=await db.from('mrfluent_kids_subscriptions').update({status:'cancelled',updated_at:new Date().toISOString()}).eq('id',id).eq('status','active').select('id');
-    if(res.error)return kToast('Could not cancel Kids subscription: '+res.error.message);
-    kToast('Kids subscription cancelled.');await load();
-  }
-  async function toggle(table,id,value){
-    const allowed={mrfluent_kids_levels:'levels',mrfluent_kids_units:'units',mrfluent_kids_lessons:'lessons'};
-    if(!allowed[table])return;
-    const res=await db.from(table).update({is_published:value,updated_at:new Date().toISOString()}).eq('id',id).select('id');
-    if(res.error)return kToast('Could not update publish status: '+res.error.message);
-    await load();
-  }
-  function openLevelForm(id){
-    const l=kLevel(id);if(!l)return;
-    openModal('Edit Kids Level','<div class="form-grid"><label class="full">Title<input class="field" id="kLevelTitle" maxlength="100" value="'+kEsc(l.title)+'"></label><label class="full">Description<textarea class="field" id="kLevelDescription" rows="3" maxlength="600">'+kEsc(l.description||'')+'</textarea></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveLevel(\''+l.id+'\')">Save level</button></div>');
-  }
-  async function saveLevel(id){
-    const title=k$('kLevelTitle')?.value.trim(),description=k$('kLevelDescription')?.value.trim()||'';
-    if(!title)return kToast('Level title is required.');
-    const res=await db.from('mrfluent_kids_levels').update({title,description,updated_at:new Date().toISOString()}).eq('id',id).select('id');
-    if(res.error)return kToast('Could not save Kids level: '+res.error.message);
-    if(typeof closeModal==='function')closeModal();kToast('Kids level saved.');await load();
-  }
-  function openUnitForm(id){
-    const u=id?kUnit(id):null,levels=kidsState.levels;
-    const opts=levels.map(l=>'<option value="'+l.id+'" '+((u?u.level_id===l.id: false)?'selected':'')+'>'+kEsc(l.code+' · '+l.title)+'</option>').join('');
-    openModal(id?'Edit Kids Unit':'Create Kids Unit','<div class="form-grid"><label class="full">Level<select class="field" id="kUnitLevel">'+opts+'</select></label><label class="full">Unit title<input class="field" id="kUnitTitle" maxlength="150" value="'+kEsc(u?u.title:'')+'" placeholder="e.g. Meet the alphabet"></label><label class="full">Description<textarea class="field" id="kUnitDesc" rows="3" maxlength="800">'+kEsc(u?u.description||'':'')+'</textarea></label><label>Sort order<input class="field" type="number" min="0" id="kUnitSort" value="'+(u?u.sort_order:1)+'"></label><label>Published<select class="field" id="kUnitPublished"><option value="false" '+(u&&!u.is_published?'selected':'')+'>Draft</option><option value="true" '+(u&&u.is_published?'selected':'')+'>Published</option></select></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveUnit('+(u?'\''+u.id+'\'':'null')+')">Save unit</button></div>');
-  }
-  async function saveUnit(id){
-    const level_id=k$('kUnitLevel')?.value,title=k$('kUnitTitle')?.value.trim(),description=k$('kUnitDesc')?.value.trim()||'',sort_order=Number(k$('kUnitSort')?.value||1),is_published=k$('kUnitPublished')?.value==='true';
-    if(!level_id||!title)return kToast('Choose a level and enter a unit title.');
-    const payload={level_id,title,description,sort_order,is_published,updated_at:new Date().toISOString()};
-    const res=id?await db.from('mrfluent_kids_units').update(payload).eq('id',id).select('id'):await db.from('mrfluent_kids_units').insert(payload).select('id');
-    if(res.error)return kToast('Could not save Kids unit: '+res.error.message);
-    if(typeof closeModal==='function')closeModal();kToast('Kids unit saved.');await load();
-  }
-  async function deleteUnit(id){
-    const u=kUnit(id);if(!u||!confirm('Delete this unit and its lessons? This cannot be undone.'))return;
-    const r=await db.from('mrfluent_kids_units').delete().eq('id',id).select('id');
-    if(r.error)return kToast('Could not delete unit: '+r.error.message);
-    kToast('Kids unit deleted.');await load();
-  }
-  function openLessonForm(id){
-    const l=id?kidsState.lessons.find(x=>x.id===id):null;
-    const opts=kidsState.units.map(u=>{const lv=kLevel(u.level_id);return '<option value="'+u.id+'" '+(l&&l.unit_id===u.id?'selected':'')+'>'+kEsc((lv?lv.code+' / ':'')+u.title)+'</option>'}).join('');
-    const payload=JSON.stringify(l&&l.lesson_payload||{intro:'',steps:[]},null,2);
-    openModal(id?'Edit Kids Lesson':'Create Kids Lesson','<div class="form-grid"><label class="full">Unit<select class="field" id="kLessonUnit">'+opts+'</select></label><label class="full">Lesson title<input class="field" id="kLessonTitle" maxlength="160" value="'+kEsc(l?l.title:'')+'"></label><label class="full">Learning objective<input class="field" id="kLessonObjective" maxlength="500" value="'+kEsc(l?l.objective||'':'')+'"></label><label>Type<select class="field" id="kLessonType">'+['learn','game','review','quiz','story'].map(t=>'<option value="'+t+'" '+(l&&l.lesson_type===t?'selected':'')+'>'+t+'</option>').join('')+'</select></label><label>Sort order<input class="field" type="number" min="0" id="kLessonSort" value="'+(l?l.sort_order:1)+'"></label><label class="full">Activity payload JSON<textarea class="field" id="kLessonPayload" rows="8" spellcheck="false">'+kEsc(payload)+'</textarea><span class="muted" style="font-size:10px">Example: {"intro":"Listen for S","steps":["Say sss","Pick the sun picture"]}</span></label><label>Illustration URL<input class="field" type="url" id="kLessonImage" value="'+kEsc(l?l.illustration_url||'':'')+'" placeholder="https://…"></label><label>Audio URL<input class="field" type="url" id="kLessonAudio" value="'+kEsc(l?l.audio_url||'':'')+'" placeholder="https://…"></label><label>Published<select class="field" id="kLessonPublished"><option value="false" '+(l&&!l.is_published?'selected':'')+'>Draft</option><option value="true" '+(l&&l.is_published?'selected':'')+'>Published</option></select></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveLesson('+(l?'\''+l.id+'\'':'null')+')">Save lesson</button></div>');
-  }
-  async function saveLesson(id){
-    const unit_id=k$('kLessonUnit')?.value,title=k$('kLessonTitle')?.value.trim(),objective=k$('kLessonObjective')?.value.trim()||'',lesson_type=k$('kLessonType')?.value||'learn',sort_order=Number(k$('kLessonSort')?.value||1),is_published=k$('kLessonPublished')?.value==='true',illustration_url=k$('kLessonImage')?.value.trim()||null,audio_url=k$('kLessonAudio')?.value.trim()||null;
-    let lesson_payload={};try{lesson_payload=JSON.parse(k$('kLessonPayload')?.value||'{}');if(!lesson_payload||typeof lesson_payload!=='object'||Array.isArray(lesson_payload))throw new Error('Payload must be a JSON object.')}catch(e){return kToast('Invalid activity JSON: '+e.message)}
-    if(!unit_id||!title)return kToast('Choose a unit and enter a lesson title.');
-    if(is_published&&!objective&&!lesson_payload.intro&&!lesson_payload.text)return kToast('Add an objective or lesson introduction before publishing.');
-    const payload={unit_id,title,objective,lesson_type,lesson_payload,sort_order,is_published,illustration_url,audio_url,updated_at:new Date().toISOString()};
-    const res=id?await db.from('mrfluent_kids_lessons').update(payload).eq('id',id).select('id'):await db.from('mrfluent_kids_lessons').insert(payload).select('id');
-    if(res.error)return kToast('Could not save Kids lesson: '+res.error.message);
-    if(typeof closeModal==='function')closeModal();kToast('Kids lesson saved.');await load();
-  }
-  async function deleteLesson(id){
-    const l=kidsState.lessons.find(x=>x.id===id);if(!l||!confirm('Delete this lesson? This cannot be undone.'))return;
-    const r=await db.from('mrfluent_kids_lessons').delete().eq('id',id).select('id');
-    if(r.error)return kToast('Could not delete lesson: '+r.error.message);
-    kToast('Kids lesson deleted.');await load();
-  }
-  window.mfKidsSaveTrack=saveTrack;window.mfKidsApprove=approve;window.mfKidsReject=reject;
-  window.mfKidsCancelSub=cancelSub;window.mfKidsToggleLevel=(id,v)=>toggle('mrfluent_kids_levels',id,v);
-  window.mfKidsToggleUnit=(id,v)=>toggle('mrfluent_kids_units',id,v);window.mfKidsToggleLesson=(id,v)=>toggle('mrfluent_kids_lessons',id,v);
-  window.mfKidsEditLevel=openLevelForm;window.mfKidsSaveLevel=saveLevel;
-  window.mfKidsEditUnit=id=>openUnitForm(id);window.mfKidsSaveUnit=saveUnit;window.mfKidsDeleteUnit=deleteUnit;
-  window.mfKidsEditLesson=id=>openLessonForm(id);window.mfKidsSaveLesson=saveLesson;window.mfKidsDeleteLesson=deleteLesson;
-  window.mfLoadKidsAdmin=load;
-  const previousRouter=window.__domaRouteSection;
-  window.__domaRouteSection=function(name){if(name==='kids-course')return load();return typeof previousRouter==='function'?previousRouter(name):Promise.resolve()};
-  const previousLoad=window.loadSection;
-  window.loadSection=function(name){if(name==='kids-course')return load();return typeof previousLoad==='function'?previousLoad(name):Promise.resolve()};
-  document.addEventListener('DOMContentLoaded',function(){
-    k$('mfKidsRefresh')?.addEventListener('click',load);
-    k$('mfKidsNewUnit')?.addEventListener('click',()=>openUnitForm(null));
-    k$('mfKidsNewLesson')?.addEventListener('click',()=>openLessonForm(null));
-  });
-})();
-</script>
+
 
 </body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
@@ -3663,5 +3443,226 @@ html,body,*{
 }
 </style>
 
+<script id="mrfluent-kids-admin-workflow-v1">
+(function(){
+  'use strict';
+  const kidsState={tracks:[],levels:[],units:[],lessons:[],requests:[],subs:[],profiles:[]};
+  const k$=id=>document.getElementById(id);
+  const kEsc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const kToast=msg=>{if(typeof toast==='function')toast(msg);else window.alert(msg)};
+  const kStaffId=async()=>{try{const x=await db.auth.getUser();return x.data&&x.data.user?x.data.user.id:null}catch(_){return null}};
+  const kTrack=id=>kidsState.tracks.find(x=>String(x.id)===String(id));
+  const kLevel=id=>kidsState.levels.find(x=>String(x.id)===String(id));
+  const kUnit=id=>kidsState.units.find(x=>String(x.id)===String(id));
+  const kProfile=id=>kidsState.profiles.find(x=>String(x.id)===String(id))||{};
+  const kDate=v=>{try{return v?new Date(v).toLocaleString():'—'}catch(_){return '—'}};
+  const kTableEmpty=msg=>'<div class="empty">'+kEsc(msg)+'</div>';
+  const kPill=(label,kind)=>'<span class="pill '+(kind||'')+'">'+kEsc(label)+'</span>';
+  async function load(){
+    const ids=['mfKidsTracksTable','mfKidsRequestsTable','mfKidsSubscriptionsTable','mfKidsLevelsTable','mfKidsUnitsTable','mfKidsLessonsTable'];
+    ids.forEach(id=>{if(k$(id))k$(id).innerHTML=kTableEmpty('Loading Kids course data…')});
+    try{
+      const results=await Promise.all([
+        db.from('mrfluent_kids_tracks').select('*').order('sort_order'),
+        db.from('mrfluent_kids_levels').select('*').order('sort_order'),
+        db.from('mrfluent_kids_units').select('*').order('created_at',{ascending:false}),
+        db.from('mrfluent_kids_lessons').select('*').order('created_at',{ascending:false}),
+        db.from('mrfluent_kids_enrollment_requests').select('*').order('created_at',{ascending:false}).limit(500),
+        db.from('mrfluent_kids_subscriptions').select('*').order('created_at',{ascending:false}).limit(500),
+        db.from('profiles').select('id,full_name,phone,role').limit(1000)
+      ]);
+      const labels=['tracks','levels','units','lessons','requests','subs','profiles'];
+      for(let i=0;i<results.length;i++){
+        if(results[i].error && i<6) throw new Error('Could not load '+labels[i]+': '+results[i].error.message);
+        kidsState[labels[i]]=results[i].error?[]:(results[i].data||[]);
+      }
+      render();
+    }catch(e){
+      console.error('Mr. Fluent Kids admin load failed:',e);
+      ids.forEach(id=>{if(k$(id))k$(id).innerHTML=kTableEmpty('Kids course data could not be loaded. Check staff permissions and the Kids schema migration. '+(e.message||''))});
+      if(k$('mfKidsStats'))k$('mfKidsStats').innerHTML='';
+    }
+  }
+  function render(){
+    const activeSubs=kidsState.subs.filter(s=>s.status==='active'&&(!s.expires_at||new Date(s.expires_at)>new Date()));
+    const pending=kidsState.requests.filter(r=>r.status==='pending');
+    if(k$('mfKidsStats'))k$('mfKidsStats').innerHTML=[
+      ['Paths',kidsState.tracks.length],['Levels',kidsState.levels.length],['Pending requests',pending.length],['Active memberships',activeSubs.length]
+    ].map(([label,value])=>'<div class="card stat"><div class="muted">'+kEsc(label)+'</div><div class="num">'+value+'</div></div>').join('');
+    renderTracks();renderRequests();renderSubs();renderLevels();renderUnits();renderLessons();
+  }
+  function renderTracks(){
+    const host=k$('mfKidsTracksTable');if(!host)return;
+    if(!kidsState.tracks.length){host.innerHTML=kTableEmpty('No Kids tracks are configured.');return}
+    host.innerHTML='<table><thead><tr><th>Track</th><th>Price (EGP)</th><th>Duration (days)</th><th>Status</th><th>Save</th></tr></thead><tbody>'+
+      kidsState.tracks.map(t=>'<tr><td><b>'+kEsc(t.title)+'</b><div class="muted" style="font-size:10px">'+kEsc(t.code)+'</div></td>'+
+      '<td><input class="field" style="min-width:110px" type="number" min="0" step="1" id="mfKidsPrice_'+kEsc(t.code)+'" value="'+(t.price_egp==null?'':kEsc(t.price_egp))+'" placeholder="Set price"></td>'+
+      '<td><input class="field" style="min-width:95px" type="number" min="1" max="365" step="1" id="mfKidsDays_'+kEsc(t.code)+'" value="'+(t.duration_days==null?'':kEsc(t.duration_days))+'" placeholder="Days"></td>'+
+      '<td>'+(t.is_published?kPill('Published','ok'):kPill('Hidden','warn'))+'</td>'+
+      '<td><button class="btn secondary small" onclick="mfKidsSaveTrack(\''+t.id+'\')">Save pricing</button></td></tr>').join('')+'</tbody></table>';
+  }
+  function renderRequests(){
+    const host=k$('mfKidsRequestsTable');if(!host)return;
+    if(!kidsState.requests.length){host.innerHTML=kTableEmpty('No registration requests have been submitted yet.');return}
+    host.innerHTML='<table><thead><tr><th>Student / Parent contact</th><th>Path / level</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+
+      kidsState.requests.map(r=>{
+        const p=kProfile(r.user_id),t=kTrack(r.track_id),l=kLevel(r.requested_level_id),pending=r.status==='pending';
+        const identity=(p.full_name||('User '+String(r.user_id).slice(0,8)))+(p.phone?' · '+p.phone:'');
+        const action=pending?'<div class="actions"><button class="btn ok small" onclick="mfKidsApprove(\''+r.id+'\')">Verify & activate</button><button class="btn danger small" onclick="mfKidsReject(\''+r.id+'\')">Reject</button></div>':'—';
+        return '<tr><td><b>'+kEsc(identity)+'</b><div class="muted" style="font-size:10px">Parent: '+kEsc(r.guardian_contact)+'</div>'+(r.note?'<div class="muted" style="font-size:10px">'+kEsc(r.note)+'</div>':'')+'<div class="muted" style="font-size:9px">'+kEsc(r.user_id)+'</div></td><td>'+kEsc(t?t.title:'Unknown track')+'<div class="muted" style="font-size:10px">'+kEsc(l?l.code+' · '+l.title:'Unknown level')+'</div></td><td>'+kEsc(kDate(r.created_at))+'</td><td>'+kPill(r.status,r.status==='pending'?'warn':r.status==='approved'?'ok':'')+(r.admin_note?'<div class="muted" style="font-size:10px">'+kEsc(r.admin_note)+'</div>':'')+'</td><td>'+action+'</td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+  function renderSubs(){
+    const host=k$('mfKidsSubscriptionsTable');if(!host)return;
+    if(!kidsState.subs.length){host.innerHTML=kTableEmpty('No Kids subscriptions have been activated yet.');return}
+    host.innerHTML='<table><thead><tr><th>Student</th><th>Path / assigned level</th><th>Price</th><th>Period</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
+      kidsState.subs.map(s=>{
+        const p=kProfile(s.user_id),t=kTrack(s.track_id),l=kLevel(s.level_id);
+        const active=s.status==='active'&&new Date(s.expires_at)>new Date();
+        return '<tr><td>'+kEsc(p.full_name||s.user_id)+'<div class="muted" style="font-size:10px">'+kEsc(p.phone||'')+'</div></td><td>'+kEsc(t?t.title:'Unknown path')+'<div class="muted" style="font-size:10px">'+kEsc(l?l.code+' · '+l.title:'Unknown level')+'</div></td><td>'+kEsc(s.price_egp==null?'—':'EGP '+s.price_egp)+'</td><td>'+kEsc(kDate(s.starts_at))+'<div class="muted" style="font-size:10px">Until '+kEsc(kDate(s.expires_at))+'</div></td><td>'+kPill(active?'active':s.status,active?'ok':'')+'</td><td>'+(active?'<button class="btn danger small" onclick="mfKidsCancelSub(\''+s.id+'\')">Cancel Kids access</button>':'—')+'</td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+  function renderLevels(){
+    const host=k$('mfKidsLevelsTable');if(!host)return;
+    if(!kidsState.levels.length){host.innerHTML=kTableEmpty('No Kids levels found.');return}
+    host.innerHTML='<table><thead><tr><th>Code</th><th>Level</th><th>Path</th><th>Published</th><th>Units</th><th>Actions</th></tr></thead><tbody>'+
+      kidsState.levels.map(l=>{
+        const t=kTrack(l.track_id),units=kidsState.units.filter(u=>u.level_id===l.id).length;
+        return '<tr><td><b>'+kEsc(l.code)+'</b></td><td>'+kEsc(l.title)+'<div class="muted" style="font-size:10px">'+kEsc(l.description||'')+'</div></td><td>'+kEsc(t?t.title:'—')+'</td><td>'+kPill(l.is_published?'Published':'Hidden',l.is_published?'ok':'warn')+'</td><td>'+units+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfKidsEditLevel(\''+l.id+'\')">Edit</button><button class="btn secondary small" onclick="mfKidsToggleLevel(\''+l.id+'\','+(!l.is_published)+')">'+(l.is_published?'Hide':'Publish')+'</button></div></td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+  function renderUnits(){
+    const host=k$('mfKidsUnitsTable');if(!host)return;
+    if(!kidsState.units.length){host.innerHTML=kTableEmpty('No units yet. Create the first unit for K1 ABC Friends or Primary 1–2.');return}
+    host.innerHTML='<table><thead><tr><th>Unit</th><th>Level</th><th>Status</th><th>Lessons</th><th>Actions</th></tr></thead><tbody>'+
+      kidsState.units.map(u=>{const l=kLevel(u.level_id),n=kidsState.lessons.filter(x=>x.unit_id===u.id).length;
+        return '<tr><td><b>'+kEsc(u.title)+'</b><div class="muted" style="font-size:10px">'+kEsc(u.description||'')+'</div></td><td>'+kEsc(l?l.code+' · '+l.title:'—')+'</td><td>'+kPill(u.is_published?'Published':'Draft',u.is_published?'ok':'warn')+'</td><td>'+n+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfKidsEditUnit(\''+u.id+'\')">Edit</button><button class="btn secondary small" onclick="mfKidsToggleUnit(\''+u.id+'\','+(!u.is_published)+')">'+(u.is_published?'Unpublish':'Publish')+'</button><button class="btn danger small" onclick="mfKidsDeleteUnit(\''+u.id+'\')">Delete</button></div></td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+  function renderLessons(){
+    const host=k$('mfKidsLessonsTable');if(!host)return;
+    if(!kidsState.lessons.length){host.innerHTML=kTableEmpty('No lessons yet. Create a lesson and keep it as a draft until reviewed.');return}
+    host.innerHTML='<table><thead><tr><th>Lesson</th><th>Unit / level</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+
+      kidsState.lessons.map(l=>{const u=kUnit(l.unit_id),lv=u&&kLevel(u.level_id);
+        return '<tr><td><b>'+kEsc(l.title)+'</b><div class="muted" style="font-size:10px">'+kEsc(l.objective||'')+'</div></td><td>'+kEsc(u?u.title:'—')+'<div class="muted" style="font-size:10px">'+kEsc(lv?lv.code:'')+'</div></td><td>'+kEsc(l.lesson_type)+'</td><td>'+kPill(l.is_published?'Published':'Draft',l.is_published?'ok':'warn')+'</td><td><div class="actions"><button class="btn secondary small" onclick="mfKidsEditLesson(\''+l.id+'\')">Edit</button><button class="btn secondary small" onclick="mfKidsToggleLesson(\''+l.id+'\','+(!l.is_published)+')">'+(l.is_published?'Unpublish':'Publish')+'</button><button class="btn danger small" onclick="mfKidsDeleteLesson(\''+l.id+'\')">Delete</button></div></td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+  async function saveTrack(id){
+    const t=kidsState.tracks.find(x=>x.id===id);if(!t)return;
+    const pRaw=k$('mfKidsPrice_'+t.code)?.value.trim()||'',dRaw=k$('mfKidsDays_'+t.code)?.value.trim()||'';
+    const price=pRaw===''?null:Number(pRaw),days=dRaw===''?null:Number(dRaw);
+    if(price!==null&&(!Number.isFinite(price)||price<0)){kToast('Enter a valid non-negative EGP price.');return}
+    if(days!==null&&(!Number.isInteger(days)||days<1||days>365)){kToast('Duration must be between 1 and 365 days.');return}
+    if((price===null)!==(days===null)){kToast('Set both price and duration, or leave both blank to disable approval.');return}
+    const r=await db.from('mrfluent_kids_tracks').update({price_egp:price,duration_days:days,updated_at:new Date().toISOString()}).eq('id',id).select('id');
+    if(r.error)return kToast('Could not save Kids pricing: '+r.error.message);
+    kToast('Kids path pricing saved.');await load();
+  }
+  async function approve(id){
+    const r=kidsState.requests.find(x=>x.id===id);if(!r||r.status!=='pending')return kToast('This request is no longer pending.');
+    const t=kTrack(r.track_id);
+    if(!t||t.price_egp==null||t.duration_days==null)return kToast('Set both price and duration for this path before approval.');
+    if(!confirm('Only continue after verifying payment with the parent/guardian. Activate '+t.title+' for EGP '+t.price_egp+' and '+t.duration_days+' days?'))return;
+    const result=await db.rpc('mrfluent_kids_approve_enrollment_request',{p_request_id:id,p_admin_note:'Payment verified by admin.'});
+    if(result.error)return kToast('Kids approval failed: '+result.error.message);
+    const data=Array.isArray(result.data)?result.data[0]:result.data;
+    if(!data||data.ok!==true)return kToast('Supabase did not confirm Kids activation. Review the request before retrying.');
+    const verify=await db.from('mrfluent_kids_enrollment_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();
+    if(verify.error||!verify.data||verify.data.status!=='approved')return kToast('Activation was attempted but the saved request status could not be verified. Refresh and inspect request '+id);
+    kToast('Kids course access activated. Adult course and grade memberships were not changed.');await load();
+  }
+  async function reject(id){
+    const r=kidsState.requests.find(x=>x.id===id);if(!r||r.status!=='pending')return;
+    const note=prompt('Reason / admin note (optional):','Not approved. Please contact the academy for next steps.');
+    if(note===null)return;
+    const staffId=await kStaffId();
+    const res=await db.from('mrfluent_kids_enrollment_requests').update({status:'rejected',admin_note:note,reviewed_by:staffId,reviewed_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq('id',id).eq('status','pending').select('id,status');
+    if(res.error)return kToast('Could not reject request: '+res.error.message);
+    if(!res.data||!res.data.length)return kToast('The request was already reviewed. Refresh the Kids section.');
+    kToast('Kids registration request rejected.');await load();
+  }
+  async function cancelSub(id){
+    if(!confirm('Cancel this Kids subscription? The separate A1–C2 course and school-grade access will not change.'))return;
+    const res=await db.from('mrfluent_kids_subscriptions').update({status:'cancelled',updated_at:new Date().toISOString()}).eq('id',id).eq('status','active').select('id');
+    if(res.error)return kToast('Could not cancel Kids subscription: '+res.error.message);
+    kToast('Kids subscription cancelled.');await load();
+  }
+  async function toggle(table,id,value){
+    const allowed={mrfluent_kids_levels:'levels',mrfluent_kids_units:'units',mrfluent_kids_lessons:'lessons'};
+    if(!allowed[table])return;
+    const res=await db.from(table).update({is_published:value,updated_at:new Date().toISOString()}).eq('id',id).select('id');
+    if(res.error)return kToast('Could not update publish status: '+res.error.message);
+    await load();
+  }
+  function openLevelForm(id){
+    const l=kLevel(id);if(!l)return;
+    openModal('Edit Kids Level','<div class="form-grid"><label class="full">Title<input class="field" id="kLevelTitle" maxlength="100" value="'+kEsc(l.title)+'"></label><label class="full">Description<textarea class="field" id="kLevelDescription" rows="3" maxlength="600">'+kEsc(l.description||'')+'</textarea></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveLevel(\''+l.id+'\')">Save level</button></div>');
+  }
+  async function saveLevel(id){
+    const title=k$('kLevelTitle')?.value.trim(),description=k$('kLevelDescription')?.value.trim()||'';
+    if(!title)return kToast('Level title is required.');
+    const res=await db.from('mrfluent_kids_levels').update({title,description,updated_at:new Date().toISOString()}).eq('id',id).select('id');
+    if(res.error)return kToast('Could not save Kids level: '+res.error.message);
+    if(typeof closeModal==='function')closeModal();kToast('Kids level saved.');await load();
+  }
+  function openUnitForm(id){
+    const u=id?kUnit(id):null,levels=kidsState.levels;
+    const opts=levels.map(l=>'<option value="'+l.id+'" '+((u?u.level_id===l.id: false)?'selected':'')+'>'+kEsc(l.code+' · '+l.title)+'</option>').join('');
+    openModal(id?'Edit Kids Unit':'Create Kids Unit','<div class="form-grid"><label class="full">Level<select class="field" id="kUnitLevel">'+opts+'</select></label><label class="full">Unit title<input class="field" id="kUnitTitle" maxlength="150" value="'+kEsc(u?u.title:'')+'" placeholder="e.g. Meet the alphabet"></label><label class="full">Description<textarea class="field" id="kUnitDesc" rows="3" maxlength="800">'+kEsc(u?u.description||'':'')+'</textarea></label><label>Sort order<input class="field" type="number" min="0" id="kUnitSort" value="'+(u?u.sort_order:1)+'"></label><label>Published<select class="field" id="kUnitPublished"><option value="false" '+(u&&!u.is_published?'selected':'')+'>Draft</option><option value="true" '+(u&&u.is_published?'selected':'')+'>Published</option></select></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveUnit('+(u?'\''+u.id+'\'':'null')+')">Save unit</button></div>');
+  }
+  async function saveUnit(id){
+    const level_id=k$('kUnitLevel')?.value,title=k$('kUnitTitle')?.value.trim(),description=k$('kUnitDesc')?.value.trim()||'',sort_order=Number(k$('kUnitSort')?.value||1),is_published=k$('kUnitPublished')?.value==='true';
+    if(!level_id||!title)return kToast('Choose a level and enter a unit title.');
+    const payload={level_id,title,description,sort_order,is_published,updated_at:new Date().toISOString()};
+    const res=id?await db.from('mrfluent_kids_units').update(payload).eq('id',id).select('id'):await db.from('mrfluent_kids_units').insert(payload).select('id');
+    if(res.error)return kToast('Could not save Kids unit: '+res.error.message);
+    if(typeof closeModal==='function')closeModal();kToast('Kids unit saved.');await load();
+  }
+  async function deleteUnit(id){
+    const u=kUnit(id);if(!u||!confirm('Delete this unit and its lessons? This cannot be undone.'))return;
+    const r=await db.from('mrfluent_kids_units').delete().eq('id',id).select('id');
+    if(r.error)return kToast('Could not delete unit: '+r.error.message);
+    kToast('Kids unit deleted.');await load();
+  }
+  function openLessonForm(id){
+    const l=id?kidsState.lessons.find(x=>x.id===id):null;
+    const opts=kidsState.units.map(u=>{const lv=kLevel(u.level_id);return '<option value="'+u.id+'" '+(l&&l.unit_id===u.id?'selected':'')+'>'+kEsc((lv?lv.code+' / ':'')+u.title)+'</option>'}).join('');
+    const payload=JSON.stringify(l&&l.lesson_payload||{intro:'',steps:[]},null,2);
+    openModal(id?'Edit Kids Lesson':'Create Kids Lesson','<div class="form-grid"><label class="full">Unit<select class="field" id="kLessonUnit">'+opts+'</select></label><label class="full">Lesson title<input class="field" id="kLessonTitle" maxlength="160" value="'+kEsc(l?l.title:'')+'"></label><label class="full">Learning objective<input class="field" id="kLessonObjective" maxlength="500" value="'+kEsc(l?l.objective||'':'')+'"></label><label>Type<select class="field" id="kLessonType">'+['learn','game','review','quiz','story'].map(t=>'<option value="'+t+'" '+(l&&l.lesson_type===t?'selected':'')+'>'+t+'</option>').join('')+'</select></label><label>Sort order<input class="field" type="number" min="0" id="kLessonSort" value="'+(l?l.sort_order:1)+'"></label><label class="full">Activity payload JSON<textarea class="field" id="kLessonPayload" rows="8" spellcheck="false">'+kEsc(payload)+'</textarea><span class="muted" style="font-size:10px">Example: {"intro":"Listen for S","steps":["Say sss","Pick the sun picture"]}</span></label><label>Illustration URL<input class="field" type="url" id="kLessonImage" value="'+kEsc(l?l.illustration_url||'':'')+'" placeholder="https://…"></label><label>Audio URL<input class="field" type="url" id="kLessonAudio" value="'+kEsc(l?l.audio_url||'':'')+'" placeholder="https://…"></label><label>Published<select class="field" id="kLessonPublished"><option value="false" '+(l&&!l.is_published?'selected':'')+'>Draft</option><option value="true" '+(l&&l.is_published?'selected':'')+'>Published</option></select></label></div><div class="actions" style="margin-top:15px"><button class="btn" onclick="mfKidsSaveLesson('+(l?'\''+l.id+'\'':'null')+')">Save lesson</button></div>');
+  }
+  async function saveLesson(id){
+    const unit_id=k$('kLessonUnit')?.value,title=k$('kLessonTitle')?.value.trim(),objective=k$('kLessonObjective')?.value.trim()||'',lesson_type=k$('kLessonType')?.value||'learn',sort_order=Number(k$('kLessonSort')?.value||1),is_published=k$('kLessonPublished')?.value==='true',illustration_url=k$('kLessonImage')?.value.trim()||null,audio_url=k$('kLessonAudio')?.value.trim()||null;
+    let lesson_payload={};try{lesson_payload=JSON.parse(k$('kLessonPayload')?.value||'{}');if(!lesson_payload||typeof lesson_payload!=='object'||Array.isArray(lesson_payload))throw new Error('Payload must be a JSON object.')}catch(e){return kToast('Invalid activity JSON: '+e.message)}
+    if(!unit_id||!title)return kToast('Choose a unit and enter a lesson title.');
+    if(is_published&&!objective&&!lesson_payload.intro&&!lesson_payload.text)return kToast('Add an objective or lesson introduction before publishing.');
+    const payload={unit_id,title,objective,lesson_type,lesson_payload,sort_order,is_published,illustration_url,audio_url,updated_at:new Date().toISOString()};
+    const res=id?await db.from('mrfluent_kids_lessons').update(payload).eq('id',id).select('id'):await db.from('mrfluent_kids_lessons').insert(payload).select('id');
+    if(res.error)return kToast('Could not save Kids lesson: '+res.error.message);
+    if(typeof closeModal==='function')closeModal();kToast('Kids lesson saved.');await load();
+  }
+  async function deleteLesson(id){
+    const l=kidsState.lessons.find(x=>x.id===id);if(!l||!confirm('Delete this lesson? This cannot be undone.'))return;
+    const r=await db.from('mrfluent_kids_lessons').delete().eq('id',id).select('id');
+    if(r.error)return kToast('Could not delete lesson: '+r.error.message);
+    kToast('Kids lesson deleted.');await load();
+  }
+  window.mfKidsSaveTrack=saveTrack;window.mfKidsApprove=approve;window.mfKidsReject=reject;
+  window.mfKidsCancelSub=cancelSub;window.mfKidsToggleLevel=(id,v)=>toggle('mrfluent_kids_levels',id,v);
+  window.mfKidsToggleUnit=(id,v)=>toggle('mrfluent_kids_units',id,v);window.mfKidsToggleLesson=(id,v)=>toggle('mrfluent_kids_lessons',id,v);
+  window.mfKidsEditLevel=openLevelForm;window.mfKidsSaveLevel=saveLevel;
+  window.mfKidsEditUnit=id=>openUnitForm(id);window.mfKidsSaveUnit=saveUnit;window.mfKidsDeleteUnit=deleteUnit;
+  window.mfKidsEditLesson=id=>openLessonForm(id);window.mfKidsSaveLesson=saveLesson;window.mfKidsDeleteLesson=deleteLesson;
+  window.mfLoadKidsAdmin=load;
+  const previousRouter=window.__domaRouteSection;
+  window.__domaRouteSection=function(name){if(name==='kids-course')return load();return typeof previousRouter==='function'?previousRouter(name):Promise.resolve()};
+  const previousLoad=window.loadSection;
+  window.loadSection=function(name){if(name==='kids-course')return load();return typeof previousLoad==='function'?previousLoad(name):Promise.resolve()};
+  document.addEventListener('DOMContentLoaded',function(){
+    k$('mfKidsRefresh')?.addEventListener('click',load);
+    k$('mfKidsNewUnit')?.addEventListener('click',()=>openUnitForm(null));
+    k$('mfKidsNewLesson')?.addEventListener('click',()=>openLessonForm(null));
+  });
+})();
+</script>
 </body>
 </html>
