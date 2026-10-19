@@ -388,9 +388,9 @@ async function initKids(){
  await loadCatalog();
  if(kidsDb)await loadStudentAccess();
  else {toastStatus('connectionNotice','Offline preview is available. Sign in/connect to submit a registration request.','show');$('studentAccess').innerHTML='<p>Sign in and connect to Supabase to check your individual Kids access.</p><a class="btn btn-primary" href="./index.html">Open DOMA Academy →</a>';}
- const params=new URLSearchParams(window.location.search),requested=params.get('level');
+ const params=new URLSearchParams(window.location.search),requested=params.get('level'),subscribeAfterAuth=params.get('subscribe')==='1';
  let restore=requested;try{if(!restore&&sessionStorage.getItem('mfKidsAfterAuth')==='1')restore=sessionStorage.getItem('mfKidsRequestedLevel');sessionStorage.removeItem('mfKidsAfterAuth');sessionStorage.removeItem('mfKidsRequestedLevel');}catch(_){}
- if(restore&&byLevelCode(restore))openKidLevel(restore);
+ if(restore&&byLevelCode(restore)){openKidLevel(restore);if(subscribeAfterAuth)setTimeout(()=>goKidSubscription(),0);}
 }
 async function loadCatalog(){
  if(!kidsDb){renderTrackMetadata();updateLevelOptions();return;}
