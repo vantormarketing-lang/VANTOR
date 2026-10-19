@@ -125,7 +125,7 @@ const PLACEMENT={
 };
 let kidsDb=null,currentUser=null,tracks=FALLBACK_TRACKS.slice(),levels=FALLBACK_LEVELS.slice();
 let selectedTrackCode=null,selectedLevelCode=null,quizAnswers={},quizQuestions=[],recommendation=null;
-let currentSubscription=null,studentLessons=[],studentUnits=[];
+let currentSubscription=null,studentLessons=[],studentUnits=[],studentProgress=[];
 const $=id=>document.getElementById(id);
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function toastStatus(id,msg,type){const el=$(id);if(!el)return;el.className=(id==='requestStatus'?'request-status':'notice')+' show '+(type||'');el.textContent=msg;}
@@ -287,17 +287,59 @@ async function loadStudentLessons(levelId){
  studentUnits=u.data||[];
  if(!studentUnits.length){host.innerHTML='<div class="notice show">Your access is active, but lesson units have not been published yet. The sample game above is available while the curriculum is being prepared.</div>';return;}
  const ids=studentUnits.map(x=>x.id);
- const ls=await kidsDb.from('mrfluent_kids_lessons').select('id,unit_id,title,objective,lesson_type,lesson_payload,sort_order').in('unit_id',ids).eq('is_published',true).order('sort_order');
+ const ls=await kidsDb.from('mrfluent_kids_lessons').select('id,unit_id,title,objective,lesson_type,lesson_payload,illustration_url,audio_url,sort_order').in('unit_id',ids).eq('is_published',true).order('sort_order');
  if(ls.error){host.innerHTML='<p>Could not load protected lessons. Refresh and try again.</p>';return;}
  studentLessons=ls.data||[];
- host.innerHTML='<div class="student-unit-grid">'+studentUnits.map(u=>'<article class="unit-card"><strong>'+esc(u.title)+'</strong><p>'+esc(u.description||'A small step in the learning adventure.')+'</p>'+studentLessons.filter(l=>l.unit_id===u.id).map(l=>'<button class="lesson-link" onclick="openStudentLesson(\''+l.id+'\')">'+esc(l.title)+' <span>Open →</span></button>').join('')+'</article>').join('')+'</div>';
+ studentProgress=[];
+ if(studentLessons.length){
+  const pg=await kidsDb.from('mrfluent_kids_progress').select('lesson_id,status,stars,best_score').eq('user_id',currentUser.id).in('lesson_id',studentLessons.map(l=>l.id));
+  if(!pg.error)studentProgress=pg.data||[];
+ }
+ host.innerHTML='<div class="student-unit-grid">'+studentUnits.map(u=>{
+  const lessons=studentLessons.filter(l=>l.unit_id===u.id);
+  return '<article class="unit-card"><strong>'+esc(u.title)+'</strong><p>'+esc(u.description||'A small step in the learning adventure.')+'</p>'+
+    (lessons.map(l=>{
+      const done=studentProgress.find(p=>p.lesson_id===l.id&&p.status==='completed');
+      return '<button class="lesson-link" onclick="openStudentLesson(\''+l.id+'\')">'+esc(l.title)+' <span>'+(done?'⭐ '+esc(done.stars||1)+' earned':'Open →')+'</span></button>';
+    }).join('')||'<p>No lessons published in this unit yet.</p>')+'</article>';
+ }).join('')+'</div>';
+}
+function mfKidsSafeMediaUrl(value){
+ try{const u=new URL(String(value||''),location.href);return (u.protocol==='https:'||u.protocol==='http:')?u.href:'';}catch(_){return '';}
+}
+function mfKidsAnswerGame(lessonId,index){
+ const l=studentLessons.find(x=>x.id===lessonId);if(!l)return;
+ const box=$('kid-game-'+lessonId),feedback=$('kid-game-feedback-'+lessonId);if(!box||!feedback)return;
+ const correct=Number(box.dataset.correctIndex),chosen=Number(index);
+ if(!Number.isInteger(correct)){feedback.textContent='Try each option and talk about your choice with a grown-up.';return;}
+ if(chosen===correct){feedback.textContent='Brilliant! You found the right answer. ⭐';box.dataset.answered='true';}
+ else{feedback.textContent='Good try! Listen and look again, then choose another answer.';}
 }
 function openStudentLesson(id){
  const l=studentLessons.find(x=>x.id===id);if(!l)return;
- const host=$('lessonView');if(!host)return;const payload=l.lesson_payload||{};
+ const host=$('lessonView');if(!host)return;
+ const payload=l.lesson_payload&&typeof l.lesson_payload==='object'?l.lesson_payload:{};
  let details=esc(payload.intro||payload.text||l.objective||'Your learning activity is ready.');
- if(Array.isArray(payload.steps)&&payload.steps.length)details+='<ul>'+payload.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>';
- host.innerHTML='<h3>'+esc(l.title)+'</h3><p>'+details+'</p><p class="small-print">'+esc(l.objective||'Listen, look, practise and do your best.')+'</p><button class="btn btn-mint" onclick="completeStudentLesson(\''+l.id+'\')">Mark lesson complete ⭐</button>';
+ if(Array.isArray(payload.steps)&&payload.steps.length)details+='<ol>'+payload.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol>';
+ const img=mfKidsSafeMediaUrl(l.illustration_url),audio=mfKidsSafeMediaUrl(l.audio_url);
+ const media=(img?'<img src="'+esc(img)+'" alt="'+esc(l.title)+' illustration" loading="lazy" style="display:block;max-width:min(100%,360px);max-height:240px;object-fit:contain;margin:14px auto;border-radius:16px">':'')+
+   (audio?'<audio controls preload="none" src="'+esc(audio)+'" style="display:block;width:100%;margin:14px 0">Your browser does not support audio.</audio>':'');
+ let game='';
+ if(l.lesson_type==='game'&&Array.isArray(payload.options)&&payload.options.length){
+  const options=payload.options.slice(0,6).map((option,i)=>{
+    const item=option&&typeof option==='object'?option:{label:String(option)};
+    const label=item.label||item.text||'Option '+(i+1),icon=item.emoji?'<span aria-hidden="true" style="font-size:24px;margin-right:7px">'+esc(item.emoji)+'</span>':'';
+    const optionImage=mfKidsSafeMediaUrl(item.image);
+    const picture=optionImage?'<img src="'+esc(optionImage)+'" alt="" loading="lazy" style="width:46px;height:46px;object-fit:contain;display:block;margin:0 auto 6px">':'';
+    return '<button class="lesson-link" style="display:block;text-align:center;margin-top:8px" onclick="mfKidsAnswerGame(\''+l.id+'\','+i+')">'+picture+icon+esc(label)+'</button>';
+  }).join('');
+  const c=Number(payload.correct_index);
+  game='<div id="kid-game-'+esc(l.id)+'" data-correct-index="'+(Number.isInteger(c)&&c>=0&&c<payload.options.length?c:'')+'" style="background:#fff;border:1px solid #e9def9;border-radius:14px;padding:12px;margin:13px 0"><b>'+esc(payload.question||'Choose an answer')+'</b>'+options+'<p id="kid-game-feedback-'+esc(l.id)+'" aria-live="polite" style="font-size:11px;color:#7358ba;min-height:20px">Choose an answer to play.</p></div>';
+ }
+ const done=studentProgress.find(p=>p.lesson_id===l.id&&p.status==='completed');
+ host.innerHTML='<h3>'+esc(l.title)+'</h3><p>'+details+'</p>'+media+game+
+   '<p class="small-print">'+esc(l.objective||'Listen, look, practise and do your best.')+'</p>'+
+   '<button class="btn btn-mint" onclick="completeStudentLesson(\''+l.id+'\')">'+(done?'Review complete lesson ⭐':'Mark lesson complete ⭐')+'</button>';
  host.classList.add('show');host.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 async function completeStudentLesson(id){
@@ -305,6 +347,8 @@ async function completeStudentLesson(id){
  const {error}=await kidsDb.from('mrfluent_kids_progress').upsert({user_id:currentUser.id,lesson_id:id,status:'completed',best_score:100,stars:1,completed_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'user_id,lesson_id'});
  if(error){setRequestStatus('The lesson was opened, but progress could not be saved. Please retry.','err');console.warn(error);return;}
  setRequestStatus('Lesson completed — one star saved! ⭐','ok');
+ await loadStudentLessons(currentSubscription.level_id);
+ const view=$('lessonView');if(view)view.classList.remove('show');
 }
 function speakSample(){
  if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){const f=$('gameFeedback');f.textContent='Speech is not available in this browser. Read the letter and try the picture game!';return;}
