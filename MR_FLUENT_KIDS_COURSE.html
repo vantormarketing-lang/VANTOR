@@ -139,7 +139,7 @@ function toastStatus(id,msg,type){const el=$(id);if(!el)return;el.className=(id=
 function findTrack(code){return tracks.find(t=>t.code===code)||FALLBACK_TRACKS.find(t=>t.code===code);}
 function levelsFor(trackCode){const t=findTrack(trackCode);return levels.filter(l=>String(l.track_id||'')===String(t&&t.id||'')||l.track_code===trackCode).sort((a,b)=>a.sort_order-b.sort_order);}
 function byLevelCode(code){return levels.find(l=>l.code===code)||FALLBACK_LEVELS.find(l=>l.code===code);}
-function priceLabel(track){return track&&track.price_egp!=null?'EGP '+Number(track.price_egp).toLocaleString('en-US')+' (course subscription)':'Price to be confirmed by the administrator';}
+function priceLabel(track){if(!track||track.price_egp==null||track.duration_days==null)return 'Price and duration to be confirmed by the administrator';return 'EGP '+Number(track.price_egp).toLocaleString('en-US')+' / '+Number(track.duration_days)+' days';}
 function renderTrackMetadata(){
  const grid=$('trackGrid');if(!grid)return;
  const defs=[
@@ -154,6 +154,8 @@ function renderTrackMetadata(){
 }
 function updateLevelOptions(){
  const trackCode=$('requestTrack').value||selectedTrackCode||'START_ZERO',host=$('requestLevel'),items=levelsFor(trackCode);
+ const track=findTrack(trackCode);
+ if($('requestPrice'))$('requestPrice').textContent='Separate Kids subscription · '+priceLabel(track);
  if(!host)return;
  const current=selectedLevelCode||recommendation&&recommendation.level&&recommendation.level.code||'';
  host.innerHTML='<option value="">Choose a starting level</option>'+items.map(l=>'<option value="'+esc(l.id||l.code)+'" '+((String(l.id||'')===String(current)||String(l.code)===String(current))?'selected':'')+'>'+esc(l.code+' — '+l.title)+'</option>').join('');
@@ -265,7 +267,7 @@ async function loadCatalog(){
  if(!kidsDb){renderTrackMetadata();updateLevelOptions();return;}
  try{
   const [tr,lv]=await Promise.all([
-   kidsDb.from('mrfluent_kids_tracks').select('id,code,title,description,price_egp,sort_order,is_published').eq('is_published',true).order('sort_order'),
+   kidsDb.from('mrfluent_kids_tracks').select('id,code,title,description,price_egp,duration_days,sort_order,is_published').eq('is_published',true).order('sort_order'),
    kidsDb.from('mrfluent_kids_levels').select('id,track_id,code,title,description,sort_order,is_published').eq('is_published',true).order('sort_order')
   ]);
   if(tr.error)throw tr.error;
