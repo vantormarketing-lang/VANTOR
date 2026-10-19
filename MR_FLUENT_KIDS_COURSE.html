@@ -287,11 +287,45 @@ function kidSidebarView(view,button){
  if(view==='vocab'){
   html='<h3>🧠 Vocabulary Lab</h3><p><strong>'+esc(code+' · '+(l.title||'Your level'))+'</strong></p><p>كلمات أساسية مع الترجمة العربية تحت كل كلمة. اقرأ الكلمة بصوت عالٍ، ثم استخدمها في جملة.</p><div class="kid-preview-vocab">'+vocab+'</div><div class="kid-practice-card"><h4>Try it · جرّب بنفسك</h4><p>غطِّ الترجمة العربية، واقرأ الكلمة الإنجليزية، ثم اكشف المعنى وتأكد من إجابتك.</p></div>';
  }else if(view==='games'){
-  html='<h3>🎮 Games & Practice</h3><p>'+esc(d.goal)+'</p><div class="kid-content-grid"><div class="kid-content-tile"><strong>1. Listen & choose</strong><p>استمع للصوت ثم اختر الكلمة أو الصورة الصحيحة.</p></div><div class="kid-content-tile"><strong>2. Match the meaning</strong><p>وصّل كل كلمة إنجليزية بمعناها العربي.</p></div><div class="kid-content-tile"><strong>3. Build a word</strong><p>رتّب الحروف لتكوين كلمة صحيحة، ثم اقرأها بصوت عالٍ.</p></div><div class="kid-content-tile"><strong>4. Say a sentence</strong><p>استخدم كلمة من الدرس في جملة قصيرة من عندك.</p></div></div><div class="kid-practice-card"><h4>Mini challenge · تحدّي صغير</h4><p>اختار 3 كلمات من القائمة، غطِّ ترجمتها، ثم حاول تذكر المعنى من غير مساعدة.</p></div>';
+  const practiceWords=d.words.slice(0,4);
+  const choices=practiceWords.map((w,i)=>'<button type="button" class="lesson-link" onclick="kidStaticPracticeCheck(this,\'listen\','+i+',0)"><span>'+esc(w[0])+'</span><small dir="rtl">'+esc(w[1])+'</small></button>').join('');
+  const matchChoices=practiceWords.map((w,i)=>'<button type="button" class="lesson-link" onclick="kidStaticPracticeCheck(this,\'match\','+i+',1)"><span>'+esc(w[1])+'</span></button>').join('');
+  const target=practiceWords[0]||['cat','قطة'];
+  const scrambled=target[0].split('').sort((a,b)=>((a.charCodeAt(0)*7)%11)-((b.charCodeAt(0)*7)%11)).join('');
+  html='<h3>🎮 Games & Practice · ألعاب وتدريب</h3><p>'+esc(d.goal)+'</p>'+
+   '<div class="kid-content-grid">'+
+   '<div class="kid-content-tile"><strong>1. 🔊 Listen & choose · اسمع واختار</strong><p>اضغط على زر الاستماع، ثم اختار الكلمة اللي سمعتها.</p><button type="button" class="btn btn-soft" onclick="mfKidsSpeak('+JSON.stringify(target[0]).replace(/"/g,'&quot;')+')">🔊 Listen · اسمع</button>'+choices+'<p id="kid-static-listen-feedback" aria-live="polite"></p></div>'+
+   '<div class="kid-content-tile"><strong>2. 🔗 Match the meaning · طابق المعنى</strong><p>اختار الكلمة الإنجليزية اللي معناها العربي هو: <b dir="rtl">'+esc(target[1])+'</b></p>'+matchChoices+'<p id="kid-static-match-feedback" aria-live="polite"></p></div>'+
+   '<div class="kid-content-tile"><strong>3. 🔤 Build a word · كوّن كلمة</strong><p>رتّب الحروف لتكوين الكلمة الصحيحة: <b>'+esc(scrambled)+'</b></p><input id="kid-static-build-input" aria-label="Build the English word" placeholder="اكتب الكلمة هنا" style="width:100%;padding:10px;border:1px solid #e9def9;border-radius:10px;margin:8px 0"><button type="button" class="btn btn-primary" onclick="kidStaticCheckBuild('+JSON.stringify(target[0]).replace(/"/g,'&quot;')+')">Check · تأكد</button><p id="kid-static-build-feedback" aria-live="polite"></p></div>'+
+   '<div class="kid-content-tile"><strong>4. 💬 Say a sentence · كوّن جملة</strong><p>اكتب جملة إنجليزية قصيرة باستخدام كلمة <b>'+esc(target[0])+'</b>.</p><input id="kid-static-sentence-input" aria-label="Write an English sentence" placeholder="I see a ... " style="width:100%;padding:10px;border:1px solid #e9def9;border-radius:10px;margin:8px 0"><button type="button" class="btn btn-primary" onclick="kidStaticCheckSentence('+JSON.stringify(target[0]).replace(/"/g,'&quot;')+')">Check · تأكد</button><p id="kid-static-sentence-feedback" aria-live="polite"></p></div>'+
+   '</div><div class="kid-practice-card"><h4>⭐ Mini challenge · تحدّي صغير</h4><p>جرّب الأنشطة الأربعة، وكل مرة اقرأ الكلمة الإنجليزية واسمع نطقها.</p></div>';
  }else{
   html='<h3>⭐ My Progress</h3><p><strong>'+esc(code+' · '+(l.title||'Your level'))+'</strong></p><p>خطة التعلّم: '+esc(d.goal)+'</p><div class="kid-content-grid"><div class="kid-content-tile"><strong>Learning goal</strong><p>'+esc(d.goal)+'</p></div><div class="kid-content-tile"><strong>Lesson roadmap</strong><p>تعلّم الكلمات، استمع وكرّر، طبّق في نشاط، ثم راجع إجاباتك.</p></div></div><h4>What you will practise</h4><ul class="kid-content-list">'+topics+'</ul><div class="kid-practice-card"><h4>Progress tip · نصيحة للتقدم</h4><p>راجع الكلمات بعد كل درس، وانتقل للدرس التالي بعد فهم المعنى وطريقة النطق.</p></div>';
  }
  panel.innerHTML=html+'<button class="btn btn-primary" type="button" onclick="kidSidebarView(\'lessons\',document.querySelector(\'.kid-student-sidebar nav button\'))">Open course lessons →</button>';
+}
+
+
+function kidStaticPracticeCheck(button,kind,index,correctIndex){
+ const id=kind==='listen'?'kid-static-listen-feedback':'kid-static-match-feedback';
+ const host=$(id);if(!host)return;
+ const ok=Number(index)===Number(correctIndex);
+ host.textContent=ok?'⭐ ممتاز! إجابة صحيحة — Correct!':'حاول مرة تانية — Try again!';
+ host.style.color=ok?'#187b5b':'#a34a65';
+ if(ok)button.style.background='#dcf9ed';
+}
+function kidStaticCheckBuild(answer){
+ const input=$('kid-static-build-input'),feedback=$('kid-static-build-feedback');if(!input||!feedback)return;
+ const ok=input.value.trim().toLowerCase()===String(answer).toLowerCase();
+ feedback.textContent=ok?'⭐ ممتاز! الكلمة صحيحة.':'لسه مش دي، جرّب ترتيب الحروف مرة تانية.';
+ feedback.style.color=ok?'#187b5b':'#a34a65';
+ if(ok)mfKidsSpeak(answer);
+}
+function kidStaticCheckSentence(word){
+ const input=$('kid-static-sentence-input'),feedback=$('kid-static-sentence-feedback');if(!input||!feedback)return;
+ const value=input.value.trim(),ok=value.split(/\\s+/).filter(Boolean).length>=3&&value.toLowerCase().includes(String(word).toLowerCase());
+ feedback.textContent=ok?'⭐ أحسنت! كتبت جملة فيها الكلمة المطلوبة.':'اكتب جملة قصيرة من 3 كلمات على الأقل وتضم الكلمة المطلوبة.';
+ feedback.style.color=ok?'#187b5b':'#a34a65';
 }
 
 function renderTrackMetadata(){
