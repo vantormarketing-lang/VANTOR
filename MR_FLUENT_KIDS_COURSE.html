@@ -156,7 +156,7 @@ function updateLevelOptions(){
  const trackCode=$('requestTrack').value||selectedTrackCode||'START_ZERO',host=$('requestLevel'),items=levelsFor(trackCode);
  if(!host)return;
  const current=selectedLevelCode||recommendation&&recommendation.level&&recommendation.level.code||'';
- host.innerHTML='<option value="">Choose a starting level</option>'+items.map(l=>'<option value="'+esc(l.id||l.code)+'" '+((String(l.id||l.code)===String(current))?'selected':'')+'>'+esc(l.code+' — '+l.title)+'</option>').join('');
+ host.innerHTML='<option value="">Choose a starting level</option>'+items.map(l=>'<option value="'+esc(l.id||l.code)+'" '+((String(l.id||'')===String(current)||String(l.code)===String(current))?'selected':'')+'>'+esc(l.code+' — '+l.title)+'</option>').join('');
  if(!items.length)host.innerHTML+='';
 }
 function chooseTrack(code){
