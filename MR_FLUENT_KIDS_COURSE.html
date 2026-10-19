@@ -87,6 +87,7 @@
   <div class="section-head"><div class="eyebrow">Independent subscription</div><h2>Ready for a <span class="gradient">new adventure?</span></h2><p>Choose the path, get a starting-level recommendation, then send a registration request. The administrator must confirm the price and payment steps before activating access.</p></div>
   <div class="request-card"><div class="request-intro"><div class="request-icon">🧑‍🧑‍🧒</div><div><h3>Parent or guardian registration</h3><p>This is a registration request, not a payment or an active subscription. A parent/guardian contact is required so the team can confirm pricing and next steps.</p></div></div>
     <div class="form-grid"><div class="field-wrap"><label for="requestTrack">Learning path</label><select id="requestTrack" class="field" onchange="onRequestTrackChanged()"><option value="START_ZERO">Start from Zero</option><option value="PRIMARY_SUPPORT">Primary School Support</option></select></div><div class="field-wrap"><label for="requestLevel">Recommended starting level</label><select id="requestLevel" class="field"><option value="">Take the level check or choose a path</option></select></div><div class="field-wrap"><label for="guardianContact">Parent/guardian phone or contact *</label><input class="field" id="guardianContact" type="tel" autocomplete="tel" placeholder="Parent or guardian contact" required><span class="field-help">Use a parent's/guardian's contact details.</span></div><div class="field-wrap"><label for="requestNote">Note (optional)</label><input class="field" id="requestNote" maxlength="300" placeholder="Anything helpful for the teacher?"></div></div>
+    <div style="margin-top:13px"><label style="display:flex;align-items:flex-start;gap:9px;font-size:11px;color:#786d88;line-height:1.5"><input id="guardianConsent" type="checkbox" style="width:16px;height:16px;flex:none;margin-top:2px"><span>I am the parent/guardian, or I have the parent/guardian’s permission to submit these details and request contact about Mr. Fluent Kids.</span></label></div>
     <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px"><span class="small-print" id="requestPrice">Subscription price has not been set yet.</span><button class="btn btn-primary" id="requestButton" onclick="submitEnrollmentRequest()">Send registration request →</button></div><div class="request-status" id="requestStatus" aria-live="polite"></div><div class="small-print">By submitting, you ask the academy to contact the parent/guardian about this course. No child chat or public leaderboard is included.</div>
   </div>
 </div></section>
@@ -229,6 +230,7 @@ async function submitEnrollmentRequest(){
  if(!lvl&&recommendation&&recommendation.track&&recommendation.track.code===trackCode)lvl=recommendation.level;
  if(!lvl)lvl=levelsFor(trackCode)[0];
  const contact=$('guardianContact').value.trim(),note=$('requestNote').value.trim();
+ if(!$('guardianConsent').checked){setRequestStatus('A parent/guardian must confirm permission before the request is sent.','err');$('guardianConsent').focus();return;}
  if(!contact){setRequestStatus('Please enter a parent or guardian contact.','err');$('guardianContact').focus();return;}
  if(contact.length<7){setRequestStatus('Please check the parent/guardian contact details.','err');$('guardianContact').focus();return;}
  if(!tr||!tr.id||!lvl||!lvl.id){setRequestStatus('The course catalog did not finish loading. Refresh and try again.','err');return;}
@@ -325,7 +327,7 @@ function mfKidsAnswerGame(lessonId,index){
  const box=$('kid-game-'+lessonId),feedback=$('kid-game-feedback-'+lessonId);if(!box||!feedback)return;
  const rawCorrect=box.dataset.correctIndex,correct=Number(rawCorrect),chosen=Number(index);
  if(rawCorrect===''||!Number.isInteger(correct)){feedback.textContent='Try each option and talk about your choice with a grown-up.';return;}
- if(chosen===correct){feedback.textContent='Brilliant! You found the right answer. ⭐';box.dataset.answered='true';}
+ if(chosen===correct){feedback.textContent='Brilliant! You found the right answer. ⭐';box.dataset.answered='true';const finish=$('kid-complete-'+lessonId);if(finish)finish.disabled=false;}
  else{feedback.textContent='Good try! Listen and look again, then choose another answer.';}
 }
 function openStudentLesson(id){
@@ -350,9 +352,10 @@ function openStudentLesson(id){
   game='<div id="kid-game-'+esc(l.id)+'" data-correct-index="'+(Number.isInteger(c)&&c>=0&&c<payload.options.length?c:'')+'" style="background:#fff;border:1px solid #e9def9;border-radius:14px;padding:12px;margin:13px 0"><b>'+esc(payload.question||'Choose an answer')+'</b>'+options+'<p id="kid-game-feedback-'+esc(l.id)+'" aria-live="polite" style="font-size:11px;color:#7358ba;min-height:20px">Choose an answer to play.</p></div>';
  }
  const done=studentProgress.find(p=>p.lesson_id===l.id&&p.status==='completed');
+ const gameNeedsAnswer=l.lesson_type==='game'&&Array.isArray(payload.options)&&payload.options.length>0&&payload.correct_index!==undefined&&payload.correct_index!==null&&String(payload.correct_index)!=='';
  host.innerHTML='<h3>'+esc(l.title)+'</h3><p>'+details+'</p>'+media+game+
    '<p class="small-print">'+esc(l.objective||'Listen, look, practise and do your best.')+'</p>'+
-   '<button class="btn btn-mint" onclick="completeStudentLesson(\''+l.id+'\')">'+(done?'Review complete lesson ⭐':'Mark lesson complete ⭐')+'</button>';
+   '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\''+l.id+'\')">'+(done?'Review complete lesson ⭐':'Mark lesson complete ⭐')+'</button>';
  host.classList.add('show');host.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 async function completeStudentLesson(id){
