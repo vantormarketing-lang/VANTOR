@@ -21,7 +21,7 @@
   <div>
     <div class="eyebrow"><span class="dot"></span> A little learning, a big adventure</div>
     <h1>English starts with <span class="gradient">curiosity.</span></h1>
-    <p>Meet your new learning friends. Discover sounds, build words, play quick games and grow into stories — with a starting level picked for your child.</p>
+    <p>Meet your new learning friends. Discover sounds, build words, play quick games and grow into stories — with a starting level picked for your child.</p><p dir="rtl" lang="ar" style="font-weight:800;color:#786d89">تعلّم الإنجليزية باللعب، خطوة بخطوة، من الحروف والأصوات إلى الكلمات والقصص.</p>
     <div class="hero-buttons"><a class="btn btn-primary" href="#tracks">Explore the adventures <span aria-hidden="true">→</span></a><a class="btn btn-soft" href="#placement">Find a starting level</a></div>
     <div class="trust-tags"><span class="tag">🔤 Phonics first</span><span class="tag">🎮 Learning games</span><span class="tag">⭐ Gentle rewards</span><span class="tag">📱 Phone friendly</span></div>
     <p class="small-print">Mr. Fluent Kids has its own access and subscription process, separate from the A1–C2 English Course.</p>
@@ -61,7 +61,7 @@
 
 <section id="placement" style="background:linear-gradient(180deg,#f7f2ff99,#fffaf500)"><div class="wrap">
   <div class="section-head"><div class="eyebrow">Little level check</div><h2>Let's find your <span class="gradient">best starting point.</span></h2><p>A short, friendly check — not a school exam. You can also start at level zero without taking it.</p></div>
-  <div class="quiz-shell"><div class="quiz-intro"><div style="font-size:37px">🧭</div><h3 id="quizTitle" style="margin:4px 0">Pick a path to begin</h3><p id="quizDescription">Choose one of the two paths above. We’ll show a few questions and recommend a starting level.</p></div><div id="quizHost" class="quiz-host"></div><div class="quiz-footer"><span class="quiz-progress" id="quizProgress">No answers yet</span><button id="quizSubmit" class="btn btn-primary" onclick="submitPlacement()" disabled>Show my level ✨</button></div><div id="placementResult" class="result-box" aria-live="polite"></div></div>
+  <div class="quiz-shell"><div class="quiz-intro"><div style="font-size:37px">🧭</div><h3 id="quizTitle" style="margin:4px 0">Pick a path to begin</h3><p id="quizDescription">Choose one of the two paths above. We’ll show a few questions and recommend a starting level.</p><p dir="rtl" lang="ar" style="font-size:12px;color:#887c9d">اختبار بسيط يساعدنا نقترح نقطة بداية مناسبة، ومش امتحان مدرسي.</p></div><div id="quizHost" class="quiz-host"></div><div class="quiz-footer"><span class="quiz-progress" id="quizProgress">No answers yet</span><button id="quizSubmit" class="btn btn-primary" onclick="submitPlacement()" disabled>Show my level ✨</button></div><div id="placementResult" class="result-box" aria-live="polite"></div></div>
 </div></section>
 
 <section id="sample"><div class="wrap">
@@ -107,12 +107,12 @@ const FALLBACK_LEVELS=[
 ];
 const PLACEMENT={
  START_ZERO:[
-  {q:'Which letter starts the word “sun”?',o:['S','M','B','T'],a:0},
-  {q:'Which one is a lowercase letter?',o:['b','B','D','R'],a:0},
-  {q:'Which word begins with the /m/ sound?',o:['moon','fish','sun','cat'],a:0},
-  {q:'Which word rhymes with “cat”?',o:['hat','pen','dog','map'],a:0},
-  {q:'Which word starts with the same sound as “snake”?',o:['star','ball','apple','dog'],a:0},
-  {q:'Which is a short word you may read by blending sounds?',o:['map','mountain','beautiful','together'],a:0}
+  {q:'Which letter starts the word “sun”?',o:['M','S','T','B'],a:1},
+  {q:'Which one is a lowercase letter?',o:['B','D','a','R'],a:2},
+  {q:'Which word begins with the /m/ sound?',o:['fish','moon','sun','cat'],a:1},
+  {q:'Which word rhymes with “cat”?',o:['pen','hat','dog','map'],a:1},
+  {q:'Which word starts with the same sound as “snake”?',o:['ball','star','apple','dog'],a:1},
+  {q:'Which is a short word you may read by blending sounds?',o:['mountain','map','beautiful','together'],a:1}
  ],
  PRIMARY_SUPPORT:[
   {q:'My name ___ Adam.',o:['am','is','are','be'],a:1},
