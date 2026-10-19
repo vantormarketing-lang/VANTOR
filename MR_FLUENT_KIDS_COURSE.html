@@ -248,6 +248,12 @@ async function initKids(){
   if(!window.supabase)throw new Error('Supabase client unavailable');
   kidsDb=window.supabase.createClient(DOMA_URL,DOMA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   const sessionResult=await kidsDb.auth.getSession();currentUser=sessionResult.data&&sessionResult.data.session?sessionResult.data.session.user:null;
+  kidsDb.auth.onAuthStateChange((_event,session)=>{
+    const next=session&&session.user?session.user:null;
+    if((next&&next.id||null)===(currentUser&&currentUser.id||null))return;
+    currentUser=next;
+    setTimeout(()=>{void loadStudentAccess();},0);
+  });
  }catch(error){kidsDb=null;console.warn('Kids connection init failed',error);}
  await loadCatalog();
  if(kidsDb)await loadStudentAccess();
