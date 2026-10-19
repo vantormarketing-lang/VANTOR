@@ -1797,10 +1797,7 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   window.printAdminCertificate=function(title,code,issued){
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div>
-
-
-</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
 };
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
