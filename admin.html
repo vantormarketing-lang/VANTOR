@@ -892,6 +892,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div class="nav-title">Sales</div>
       <button class="nav-btn" data-section="sales">₿ Grade Sales & Subscriptions</button>
       <button class="nav-btn" data-section="course-sales">🌐 English Course Payments</button>
+      <button class="nav-btn" data-section="kids-requests">🦊 Kids Course Requests</button>
       <div class="nav-title">Communication</div>
       <button class="nav-btn" data-section="notifications">✉ Notifications</button>
       <button class="nav-btn" data-section="reviews">★ Reviews</button>
@@ -1012,14 +1013,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div id="mfCourseSalesTable" class="table-wrap"></div>
       </section>
 
+      <section id="section-kids-requests" class="section">
+        <div class="head"><div><h2>Mr. Fluent Kids — Registration Requests</h2><p>Review new children’s-course requests, verify payment, then approve or reject. These requests are separate from school grades and the A1–C2 course.</p></div><button class="btn secondary" id="mfKidsRequestsRefresh">Refresh Requests</button></div>
+        <div class="info-box" style="margin-bottom:14px"><b>Review carefully:</b> confirm the parent/guardian and payment before approving. Approval activates only the requested Kids path and does not change other subscriptions.</div>
+        <div id="mfKidsRequestsTable" class="table-wrap"></div>
+      </section>
+
       <section id="section-kids-course" class="section">
         <div class="head"><div><h2>Mr. Fluent Kids</h2><p>Independent children's course. Pricing, curriculum, registration review and Kids subscriptions are separate from the A1–C2 course.</p></div><button class="btn secondary" id="mfKidsRefresh">Refresh Kids Data</button></div>
         <div class="info-box" style="margin-bottom:14px"><b>Before approval:</b> set a price and duration for each path, contact the parent/guardian, verify payment through the academy's approved process, then activate the Kids access. Approving here does not alter grade subscriptions or adult English Course access.</div>
         <div id="mfKidsStats" class="grid" style="margin-bottom:14px"></div>
         <div class="head" style="margin-top:16px"><div><h3>Path pricing & duration</h3><p>Each track has its own EGP price and duration. A blank price or duration blocks approval.</p></div></div>
         <div id="mfKidsTracksTable" class="table-wrap"></div>
-        <div class="head" style="margin-top:24px"><div><h3>Registration requests</h3><p>Review pending requests. Activation requires configured pricing and creates a separate subscription atomically.</p></div></div>
-        <div id="mfKidsRequestsTable" class="table-wrap"></div>
         <div class="head" style="margin-top:24px"><div><h3>Active and historical Kids subscriptions</h3><p>Cancel Kids access without affecting any other course or school-grade membership.</p></div></div>
         <div id="mfKidsSubscriptionsTable" class="table-wrap"></div>
         <div class="head" style="margin-top:24px"><div><h3>Levels</h3><p>The initial curriculum contains six Start from Zero levels and three Primary Support groups.</p></div></div>
@@ -3668,11 +3673,12 @@ html,body,*{
   window.mfKidsEditLesson=id=>openLessonForm(id);window.mfKidsSaveLesson=saveLesson;window.mfKidsDeleteLesson=deleteLesson;
   window.mfLoadKidsAdmin=load;
   const previousRouter=window.__domaRouteSection;
-  window.__domaRouteSection=function(name){if(name==='kids-course')return load();return typeof previousRouter==='function'?previousRouter(name):Promise.resolve()};
+  window.__domaRouteSection=function(name){if(name==='kids-course'||name==='kids-requests')return load();return typeof previousRouter==='function'?previousRouter(name):Promise.resolve()};
   const previousLoad=window.loadSection;
-  window.loadSection=function(name){if(name==='kids-course')return load();return typeof previousLoad==='function'?previousLoad(name):Promise.resolve()};
+  window.loadSection=function(name){if(name==='kids-course'||name==='kids-requests')return load();return typeof previousLoad==='function'?previousLoad(name):Promise.resolve()};
   document.addEventListener('DOMContentLoaded',function(){
     k$('mfKidsRefresh')?.addEventListener('click',load);
+    k$('mfKidsRequestsRefresh')?.addEventListener('click',load);
     k$('mfKidsNewUnit')?.addEventListener('click',()=>openUnitForm(null));
     k$('mfKidsNewLesson')?.addEventListener('click',()=>openLessonForm(null));
   });
