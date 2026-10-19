@@ -452,7 +452,14 @@ function openStudentLesson(id){
   details+='<ol class="kid-bilingual-list">'+payload.steps.map(step=>'<li><div class="kid-step-row"><div class="kid-bilingual-copy">'+mfKidsBilingual(step,extras)+'</div><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(String(step)).replace(/"/g,"&quot;")+')">🔊 اسمع</button></div></li>').join('')+'</ol>';
  }
  let vocab="";
- const entries=Object.entries(extras).filter(([k,v])=>String(k).trim()&&String(v).trim()).slice(0,9);
+ const entryMap=new Map(Object.entries(extras).filter(([k,v])=>String(k).trim()&&String(v).trim()));
+ (Array.isArray(payload.audio_words)?payload.audio_words:[]).forEach(word=>{
+  const label=String(word||'').trim();
+  if(!label||entryMap.has(label))return;
+  const translated=mfKidsWordTranslation(label,extras);
+  if(translated&&translated!=='كلمة')entryMap.set(label,translated);
+ });
+ const entries=Array.from(entryMap.entries()).filter(([k,v])=>String(k).trim()&&String(v).trim()).slice(0,9);
  if(entries.length){
   vocab='<div class="kid-vocab-grid">'+entries.map(([word,translation])=>'<div class="kid-vocab-item"><div class="kid-bilingual-copy">'+mfKidsBilingual(word,extras)+'</div><small class="kid-word-ar" dir="rtl">'+esc(translation)+'</small><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(word).replace(/"/g,"&quot;")+')">🔊 اسمع</button></div>').join('')+'</div>';
  }
