@@ -3590,6 +3590,11 @@ html,body,*{
     if(table==='mrfluent_kids_units'&&value&&!kidsState.lessons.some(l=>l.unit_id===id&&l.is_published)){
       kToast('Publish at least one lesson in this unit before making it available to students.');return;
     }
+    if(table==='mrfluent_kids_lessons'&&!value){
+      const lesson=kidsState.lessons.find(l=>l.id===id),unit=lesson&&kUnit(lesson.unit_id);
+      const otherPublished=kidsState.lessons.filter(l=>lesson&&l.unit_id===lesson.unit_id&&l.is_published&&l.id!==id).length;
+      if(unit&&unit.is_published&&!otherPublished){kToast('Unpublish the unit first so students do not see an empty unit.');return;}
+    }
     const res=await db.from(table).update({is_published:value,updated_at:new Date().toISOString()}).eq('id',id).select('id');
     if(res.error)return kToast('Could not update publish status: '+res.error.message);
     await load();
@@ -3636,6 +3641,11 @@ html,body,*{
     let lesson_payload={};try{lesson_payload=JSON.parse(k$('kLessonPayload')?.value||'{}');if(!lesson_payload||typeof lesson_payload!=='object'||Array.isArray(lesson_payload))throw new Error('Payload must be a JSON object.')}catch(e){return kToast('Invalid activity JSON: '+e.message)}
     if(!unit_id||!title)return kToast('Choose a unit and enter a lesson title.');
     if(is_published&&!objective&&!lesson_payload.intro&&!lesson_payload.text)return kToast('Add an objective or lesson introduction before publishing.');
+    if(id&&!is_published){
+      const prior=kidsState.lessons.find(l=>l.id===id),unit=prior&&kUnit(prior.unit_id);
+      const otherPublished=kidsState.lessons.filter(l=>prior&&l.unit_id===prior.unit_id&&l.is_published&&l.id!==id).length;
+      if(unit&&unit.is_published&&!otherPublished)return kToast('Unpublish the unit first so students do not see an empty unit.');
+    }
     const payload={unit_id,title,objective,lesson_type,lesson_payload,sort_order,is_published,illustration_url,audio_url,updated_at:new Date().toISOString()};
     const res=id?await db.from('mrfluent_kids_lessons').update(payload).eq('id',id).select('id'):await db.from('mrfluent_kids_lessons').insert(payload).select('id');
     if(res.error)return kToast('Could not save Kids lesson: '+res.error.message);
