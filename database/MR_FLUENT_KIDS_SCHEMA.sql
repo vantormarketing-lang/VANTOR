@@ -1,0 +1,11 @@
+-- Mr. Fluent Kids schema snapshot.
+-- Applied to Supabase project dtptxhkcogpoleftguas in migrations
+-- mrfluent_kids_foundation and mrfluent_kids_access_guards.
+-- This script is intended as a reviewable reference; object creation and policies
+-- are deliberately limited to mrfluent_kids_* objects so the existing A1-C2 schema is untouched.
+-- The live schema includes the table definitions, indexes, RLS policies, grants and seed data
+-- created by these two migrations. Do not paste duplicate ad-hoc policies into the old English Course tables.
+
+-- Learning tracks and levels are public metadata; paid unit/lesson rows require an active
+-- Kids subscription for the assigned level. Enrollment requests can only be submitted as
+-- pending by the signed-in owner; subscription approval and content management are staff-only.
