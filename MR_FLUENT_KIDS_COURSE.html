@@ -379,6 +379,7 @@ const MF_KIDS_AR = {
 };
 function mfKidsWordTranslation(word,extra){
  const lower=String(word||'').toLowerCase().replace(/[’]/g,"'");
+ if(String(word)==="I")return "أنا";
  if(extra){
   const keys=Object.keys(extra);
   const found=keys.find(k=>String(k).toLowerCase()===lower);
@@ -466,7 +467,7 @@ function openStudentLesson(id){
    const optionImage=mfKidsSafeMediaUrl(item.image);
    const picture=optionImage?'<img src="'+esc(optionImage)+'" alt="" loading="lazy" style="width:46px;height:46px;object-fit:contain;display:block;margin:0 auto 6px">':'';
    const translated=item.translation?'<small class="kid-option-translation" dir="rtl">'+esc(item.translation)+'</small>':'';
-   return '<button class="lesson-link" style="display:block;text-align:center;margin-top:8px" onclick="mfKidsAnswerGame(\\''+esc(l.id)+'\\','+i+')">'+picture+icon+'<span class="kid-game-option-copy kid-bilingual-copy">'+mfKidsBilingual(label,extras)+'</span>'+translated+'</button>';
+   return '<button class="lesson-link" style="display:block;text-align:center;margin-top:8px" onclick="mfKidsAnswerGame(\''+esc(l.id)+'\','+i+')">'+picture+icon+'<span class="kid-game-option-copy kid-bilingual-copy">'+mfKidsBilingual(label,extras)+'</span>'+translated+'</button>';
   }).join('');
   const c=Number(payload.correct_index);
   game='<div id="kid-game-'+esc(l.id)+'" data-correct-index="'+(Number.isInteger(c)&&c>=0&&c<payload.options.length?c:'')+'" style="background:#fff;border:1px solid #e9def9;border-radius:14px;padding:12px;margin:13px 0"><b class="kid-bilingual-copy">'+mfKidsBilingual(payload.question||'Choose an answer',extras)+'</b>'+options+'<p id="kid-game-feedback-'+esc(l.id)+'" aria-live="polite" style="font-size:11px;color:#7358ba;min-height:20px">اختار إجابة للعب.</p></div>';
@@ -475,7 +476,7 @@ function openStudentLesson(id){
  const gameNeedsAnswer=l.lesson_type==='game'&&Array.isArray(payload.options)&&payload.options.length>0&&payload.correct_index!==undefined&&payload.correct_index!==null&&String(payload.correct_index)!=='';
  host.innerHTML='<h3 class="kid-bilingual-copy">'+mfKidsBilingual(l.title,extras)+'</h3><p class="kid-bilingual-copy">'+details+'</p>'+vocab+media+mfKidsVideoMarkup()+(game||'')+
   '<p class="small-print kid-bilingual-copy">'+mfKidsBilingual(l.objective||'Listen, look, practise and do your best.',extras)+'</p>'+
-  '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\\''+esc(l.id)+'\\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ Mark lesson complete')+'</button>';
+  '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\''+esc(l.id)+'\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ Mark lesson complete')+'</button>';
  host.classList.add('show');host.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 async function completeStudentLesson(id){
