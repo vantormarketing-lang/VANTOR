@@ -78,6 +78,13 @@ body.kid-show-enrol #enrol{display:block!important}
 .kid-letter-word{direction:ltr}
 .kid-letter-translation{font-size:14px;font-weight:800;color:#4f4665;text-align:center;margin-top:3px}
 .kid-letter-card{min-width:0;padding:12px;border:1px solid #dfd2fb;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);box-shadow:0 8px 20px rgba(94,65,151,.09)}.kid-letter-top{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px}.kid-letter-symbol{font-size:clamp(38px,7vw,58px);font-weight:1000;line-height:1;color:#7650cf;text-align:center}.kid-letter-picture{width:76px;height:76px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:inset 0 0 0 1px #eee5ff}.kid-letter-word{font-size:18px;font-weight:900;text-align:center;margin-top:10px;overflow-wrap:anywhere}.kid-letter-translation{font-size:13px;text-align:center;color:#7458aa;margin-top:2px;direction:rtl}.kid-letter-sound{font-size:12px;color:#655486;text-align:center;margin-top:4px}.kid-letter-card .kid-audio-button{display:block;width:100%;margin-top:9px}.kid-letter-sentence{margin-top:14px;padding:12px;border-radius:14px;background:#f0eaff;text-align:center}.kid-letter-sentence .kid-word-ar{display:block;margin-top:3px}@media(max-width:420px){.kid-letter-grid{grid-template-columns:1fr}.kid-letter-top{grid-template-columns:minmax(0,1fr) 82px}.kid-letter-picture{width:82px;height:82px}}</style>
+<style id="kids-payment-proof-form">
+.kids-payment-instructions{margin-top:14px;padding:14px 16px;border:1px solid rgba(149,105,215,.23);border-radius:15px;background:linear-gradient(135deg,rgba(113,73,162,.11),rgba(255,154,207,.06));color:#6f647e;font-size:12px;line-height:1.7}
+.kids-payment-instructions strong{display:block;margin-bottom:4px;color:#8050a8;font-size:13px}
+.kids-payment-instructions p{margin:0}
+#requestReceipt{padding:10px!important;max-width:100%}
+#requestReceipt::file-selector-button{margin-right:10px;padding:8px 10px;border:1px solid rgba(149,105,215,.3);border-radius:9px;background:rgba(149,105,215,.1);color:inherit}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap nav">
@@ -152,9 +159,10 @@ body.kid-show-enrol #enrol{display:block!important}
 </div></section>
 
 <section id="enrol"><div class="wrap">
-  <div class="section-head"><div class="eyebrow">Independent subscription</div><h2>Ready for a <span class="gradient">new adventure?</span></h2><p>Choose the path, get a starting-level recommendation, then send a registration request. The administrator must confirm the price and payment steps before activating access.</p></div>
-  <div class="request-card"><div class="request-intro"><div class="request-icon">🧑‍🧑‍🧒</div><div><h3>Parent or guardian registration</h3><p>This is a registration request, not a payment or an active subscription. A parent/guardian contact is required so the team can confirm pricing and next steps.</p></div></div>
-    <div class="form-grid"><div class="field-wrap"><label for="requestTrack">Learning path</label><select id="requestTrack" class="field" onchange="onRequestTrackChanged()"><option value="START_ZERO">Start from Zero</option><option value="PRIMARY_SUPPORT">Primary School Support</option></select></div><div class="field-wrap"><label for="requestLevel">Recommended starting level</label><select id="requestLevel" class="field"><option value="">Take the level check or choose a path</option></select></div><div class="field-wrap"><label for="guardianContact">Parent/guardian phone or contact *</label><input class="field" id="guardianContact" type="tel" autocomplete="tel" placeholder="Parent or guardian contact" required><span class="field-help">Use a parent's/guardian's contact details.</span></div><div class="field-wrap"><label for="requestNote">Note (optional)</label><input class="field" id="requestNote" maxlength="300" placeholder="Anything helpful for the teacher?"></div></div>
+  <div class="section-head"><div class="eyebrow">Independent subscription</div><h2>Ready for a <span class="gradient">new adventure?</span></h2><p>Choose a learning path, transfer the listed subscription amount using the academy's official Mobile Cash details, then submit the sender number and receipt. Access stays locked until payment is checked.</p></div>
+  <div class="request-card"><div class="request-intro"><div class="request-icon">🧑‍🧑‍🧒</div><div><h3>Parent or guardian registration</h3><p>Complete the learning path, parent/guardian contact, Mobile Cash sender number, and payment receipt. The Kids subscription is independent from school-grade and A1–C2 memberships.</p></div></div>
+    <div class="form-grid"><div class="field-wrap"><label for="requestTrack">Learning path</label><select id="requestTrack" class="field" onchange="onRequestTrackChanged()"><option value="START_ZERO">Start from Zero</option><option value="PRIMARY_SUPPORT">Primary School Support</option></select></div><div class="field-wrap"><label for="requestLevel">Recommended starting level</label><select id="requestLevel" class="field"><option value="">Take the level check or choose a path</option></select></div><div class="field-wrap"><label for="guardianContact">Parent/guardian phone or contact *</label><input class="field" id="guardianContact" type="tel" autocomplete="tel" placeholder="Parent or guardian contact" required><span class="field-help">Use a parent's/guardian's contact details.</span></div><div class="field-wrap"><label for="senderPhone">Mobile Cash sender number *</label><input class="field" id="senderPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Number used to send the transfer" required><span class="field-help">Enter the phone number the transfer was sent from.</span></div><div class="field-wrap"><label for="requestReceipt">Payment receipt *</label><input class="field" id="requestReceipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><span class="field-help">JPG, PNG, WEBP, or PDF · maximum 5 MB.</span></div><div class="field-wrap"><label for="requestNote">Note (optional)</label><input class="field" id="requestNote" maxlength="300" placeholder="Anything helpful for the teacher?"></div></div>
+    <div class="kids-payment-instructions"><strong>Payment &amp; access</strong><p>Check the price and duration shown above. Use only the official Mobile Cash receiving details communicated by DOMA ACADEMY; never guess a receiving number. Upload the transfer receipt and enter the sender's number. A Kids membership is activated only after admin verification.</p></div>
     <div style="margin-top:13px"><label style="display:flex;align-items:flex-start;gap:9px;font-size:11px;color:#786d88;line-height:1.5"><input id="guardianConsent" type="checkbox" style="width:16px;height:16px;flex:none;margin-top:2px"><span>I am the parent/guardian, or I have the parent/guardian’s permission to submit these details and request contact about Mr. Fluent Kids.</span></label></div>
     <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px"><span class="small-print" id="requestPrice">Subscription price has not been set yet.</span><button class="btn btn-primary" id="requestButton" onclick="submitEnrollmentRequest()">Send registration request →</button></div><div class="request-status" id="requestStatus" aria-live="polite"></div><div class="small-print">By submitting, you ask the academy to contact the parent/guardian about this course. No child chat or public leaderboard is included.</div>
   </div>
@@ -431,21 +439,36 @@ async function submitEnrollmentRequest(){
  let lvl=levels.find(x=>String(x.id)===String(selectedValue)||x.code===selectedValue);
  if(!lvl&&recommendation&&recommendation.track&&recommendation.track.code===trackCode)lvl=recommendation.level;
  if(!lvl)lvl=levelsFor(trackCode)[0];
- const contact=$('guardianContact').value.trim(),note=$('requestNote').value.trim();
+ const contact=$('guardianContact').value.trim(),senderPhone=$('senderPhone').value.trim(),note=$('requestNote').value.trim(),file=$('requestReceipt').files&&$('requestReceipt').files[0];
  if(!$('guardianConsent').checked){setRequestStatus('A parent/guardian must confirm permission before the request is sent.','err');$('guardianConsent').focus();return;}
- if(!contact){setRequestStatus('Please enter a parent or guardian contact.','err');$('guardianContact').focus();return;}
- if(contact.length<7){setRequestStatus('Please check the parent/guardian contact details.','err');$('guardianContact').focus();return;}
+ if(!contact||contact.length<7){setRequestStatus('Please enter a valid parent or guardian contact.','err');$('guardianContact').focus();return;}
+ if(!senderPhone||senderPhone.length<5){setRequestStatus('Enter the Mobile Cash sender phone number.','err');$('senderPhone').focus();return;}
+ if(!file){setRequestStatus('Choose the Mobile Cash transfer receipt before submitting.','err');$('requestReceipt').focus();return;}
+ const allowedTypes=['image/jpeg','image/png','image/webp','application/pdf'];
+ if(!allowedTypes.includes(String(file.type||'').toLowerCase())){setRequestStatus('Receipt must be a JPG, PNG, WEBP, or PDF file.','err');$('requestReceipt').focus();return;}
+ if(file.size<1||file.size>5*1024*1024){setRequestStatus('Receipt file must be no larger than 5 MB.','err');$('requestReceipt').focus();return;}
  if(!tr||!tr.id||!lvl||!lvl.id){setRequestStatus('The course catalog did not finish loading. Refresh and try again.','err');return;}
- const btn=$('requestButton');btn.disabled=true;btn.textContent='Sending request…';
- const {data:pending,error:pendingError}=await kidsDb.from('mrfluent_kids_enrollment_requests').select('id,status,created_at').eq('user_id',currentUser.id).eq('track_id',tr.id).eq('status','pending').limit(1);
- if(pendingError){btn.disabled=false;btn.textContent='Send registration request →';setRequestStatus('Could not check existing requests. '+pendingError.message,'err');return;}
- if(pending&&pending.length){btn.disabled=false;btn.textContent='Send registration request →';setRequestStatus('A request for this path is already awaiting review. The administrator will contact the parent/guardian.','info');return;}
- const payload={user_id:currentUser.id,track_id:tr.id,requested_level_id:lvl.id,guardian_contact:contact,note:note,status:'pending'};
- const {error}=await kidsDb.from('mrfluent_kids_enrollment_requests').insert(payload);
- btn.disabled=false;btn.textContent='Send registration request →';
- if(error){setRequestStatus('The request could not be sent. Please try again or contact the academy.','err');console.error(error);return;}
- setRequestStatus('Registration request sent. The administrator will confirm the price and payment steps with the parent/guardian before any course access is activated.','ok');
- await loadStudentAccess();
+ const btn=$('requestButton');btn.disabled=true;btn.textContent='Uploading receipt…';
+ try{
+  const extension=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','application/pdf':'pdf'})[file.type.toLowerCase()];
+  const randomId=(window.crypto&&typeof window.crypto.randomUUID==='function')?window.crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(36).slice(2,12);
+  const path=currentUser.id+'/kids/'+Date.now()+'-'+randomId+'.'+extension;
+  const uploaded=await kidsDb.storage.from('payment-proofs').upload(path,file,{cacheControl:'3600',contentType:file.type,upsert:false});
+  if(uploaded.error)throw uploaded.error;
+  btn.textContent='Sending payment request…';
+  const created=await kidsDb.rpc('mrfluent_create_kids_enrollment_request',{
+   p_track_id:tr.id,p_level_id:lvl.id,p_guardian_contact:contact,p_sender_phone:senderPhone,p_proof_path:path,p_note:note||null
+  });
+  if(created.error)throw created.error;
+  if(!created.data)throw new Error('Supabase did not return a request ID. Refresh and check your latest request before resubmitting.');
+  setRequestStatus('Payment request and receipt submitted. The academy will verify the transfer before activating your Kids subscription.','ok');
+  await loadStudentAccess();
+ }catch(error){
+  console.error('Kids payment request failed:',error);
+  setRequestStatus('Could not submit the payment request. '+(error&&error.message?error.message:'Please check the connection and try again.'),'err');
+ }finally{
+  btn.disabled=false;btn.textContent='Send payment request →';
+ }
 }
 async function initKids(){
  // Render the built-in level catalog immediately; do not leave the two static path cards visible while auth/network loads.
