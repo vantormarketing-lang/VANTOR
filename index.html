@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v150', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v151', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v150', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v151', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -1883,6 +1883,7 @@ html body nav.nav .brand .mrfluent-header-live-dot{
 #mfKidsStandaloneRoot{display:none}
 body.mf-kids-route{display:block!important;min-height:100vh!important;margin:0!important;padding:0!important;background:radial-gradient(ellipse at 10% 0%,rgba(128,49,93,.34),transparent 36%),radial-gradient(ellipse at 92% 22%,rgba(103,64,160,.23),transparent 34%),linear-gradient(145deg,#100b13,#1a0c17 60%,#0d0a12)!important;background-attachment:fixed!important;color:#fff7ff!important}
 body.mf-kids-route>*:not(#mfKidsStandaloneRoot){display:none!important;visibility:hidden!important}
+body.mf-kids-route #home,body.mf-kids-route #how-it-works,body.mf-kids-route #grades,body.mf-kids-route #gradeGrid,body.mf-kids-route #gradeLoadStatus,body.mf-kids-route #dashboard,body.mf-kids-route #pricing,body.mf-kids-route #faq,body.mf-kids-route #english-course,body.mf-kids-route #mobileNav,body.mf-kids-route>footer,body.mf-kids-route>.nav{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;overflow:hidden!important}
 body.mf-kids-route #mfKidsStandaloneRoot{display:block!important;visibility:visible!important;position:relative!important;z-index:2147483000!important;width:100%!important;min-height:100vh!important;margin:0!important;padding:0!important;overflow-x:hidden!important;background:transparent!important;color:#fff7ff!important;font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif!important}
 #mfKidsStandaloneRoot *{box-sizing:border-box}
 #mfKidsStandaloneRoot a{color:inherit;text-decoration:none}
@@ -13029,6 +13030,12 @@ var query = new URLSearchParams(window.location.search);
 var route = (query.get('kids') || '').toLowerCase();
 if (!route) return;
 document.body.classList.add('mf-kids-route');
+// Explicitly hide the original academy page sections when the Kids route is active.
+// This keeps the six school-grade cards out of every screen inside Kids Course.
+document.querySelectorAll('#home, #how-it-works, #grades, #gradeGrid, #gradeLoadStatus, #dashboard, #pricing, #faq, #english-course, #mobileNav, body > footer, body > .nav').forEach(function(el){
+  el.style.setProperty('display','none','important');
+  el.setAttribute('aria-hidden','true');
+});
 var root = document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
 document.body.appendChild(root);
