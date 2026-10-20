@@ -1,8 +1,8 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v153';
+const CACHE_NAME = 'mr-fluent-offline-student-v154';
 const BRAND_VERSION = 'doma-glass-v11';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v153', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v154', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
