@@ -13443,6 +13443,7 @@ function renderA2(){
         quizAttempts=Math.max(0,Number(local.quizAttempts)||0);
       }catch(_){}
       drawProgress();
+      readPassages.forEach(function(index){var button=root.querySelector('[data-b2-read-done="'+index+'"]');if(button){button.textContent='✓ Completed';button.disabled=true;}});
       if(progressUserId&&typeof sb!=='undefined'&&sb&&sb.from){
         try{
           var response=await sb.from('mrfluent_growing_progress').select('completed_words,completed_activities,best_quiz_score,quiz_attempts').eq('user_id',progressUserId).eq('level_code','A2').maybeSingle();
@@ -13706,6 +13707,7 @@ function renderB2(){
             readPassages=Array.from(new Set(readPassages.concat(acts.filter(function(a){return /^reading-[0-2]$/.test(a);}).map(function(a){return Number(a.slice(8));}))));
             bestQuizScore=Math.max(bestQuizScore,Number(remote.data.best_quiz_score)||0);quizAttempts=Math.max(quizAttempts,Number(remote.data.quiz_attempts)||0);
           }
+          readPassages.forEach(function(index){var button=root.querySelector('[data-b2-read-done="'+index+'"]');if(button){button.textContent='✓ Completed';button.disabled=true;}});
           saveProgress();
         }catch(error){console.warn('B2 remote progress could not be loaded.',error);var status=root.querySelector('#mfkrB2SaveStatus');if(status)status.textContent='التقدّم المحلي متاح؛ ستتم محاولة المزامنة عند توفر الاتصال.';}
       }
