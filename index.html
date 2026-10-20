@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v156', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v157', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v156', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v157', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2055,6 +2055,22 @@ body.mf-kids-route #mfKidsStandaloneRoot{display:block!important;visibility:visi
 #mfKidsStandaloneRoot .mfkr-a2-story-card .mfkr-c1-story-en{margin-top:8px}
 #mfKidsStandaloneRoot .mfkr-a2-story-card .mfkr-c1-story-ar{margin-bottom:8px}
 @media(max-width:560px){#mfKidsStandaloneRoot .mfkr-b2-sequence-option{padding:11px}#mfKidsStandaloneRoot .mfkr-b2-connector-sentence{padding:12px;border-radius:14px}}
+
+
+/* C2 Confident English — final, more comprehensive Growing Learners level, same Glass UI. */
+#mfKidsStandaloneRoot .mfkr-c2-writing-area{display:block;width:100%;min-height:170px;margin-top:12px;padding:15px;border:1px solid rgba(206,164,255,.26);border-radius:17px;outline:none;resize:vertical;background:rgba(12,8,16,.27);color:#fff1ff;font:500 14px/1.8 "Segoe UI",Tahoma,sans-serif;box-shadow:inset 0 1px rgba(255,255,255,.035)}
+#mfKidsStandaloneRoot .mfkr-c2-writing-area::placeholder{color:#b7a7c2;opacity:1}
+#mfKidsStandaloneRoot .mfkr-c2-writing-area:focus{border-color:rgba(145,240,219,.6);box-shadow:0 0 0 2px rgba(145,240,219,.08),inset 0 1px rgba(255,255,255,.04)}
+#mfKidsStandaloneRoot .mfkr-c2-writing-prompts{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+#mfKidsStandaloneRoot .mfkr-c2-writing-prompts span{padding:7px 10px;border:1px solid rgba(206,164,255,.17);border-radius:11px;background:rgba(164,119,236,.075);color:#d9c9e5;font-size:10px}
+#mfKidsStandaloneRoot .mfkr-c2-writing-prompts strong{color:#b8f8e8}
+#mfKidsStandaloneRoot .mfkr-c2-writing-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:10px 0;color:#bcaec8;font:600 10px/1.7 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot #mfkrC2WordCount{color:#aef5e5;font-weight:900}
+#mfKidsStandaloneRoot #mfkrC2WritingHint{direction:ltr;text-align:right}
+#mfKidsStandaloneRoot #mfkrC2Speaking .mfkr-a2-match-prompt strong{display:block;color:#fff1ff;font-size:12px;line-height:1.7}
+#mfKidsStandaloneRoot #mfkrC2Speaking .mfkr-a2-match-prompt h3{margin-bottom:5px}
+#mfKidsStandaloneRoot .mfkr-c2-writing .mfkr-quiz-intro p{line-height:1.9}
+@media(max-width:650px){#mfKidsStandaloneRoot .mfkr-c2-writing-area{min-height:145px;padding:12px;font-size:13px}#mfKidsStandaloneRoot .mfkr-c2-writing-meta{align-items:flex-start;flex-direction:column}#mfKidsStandaloneRoot #mfkrC2WritingHint{text-align:left}}
 
 </style>
 
@@ -13167,9 +13183,9 @@ function footer(){return '<footer class="mfkr-footer"><div class="mfkr-wrap">Mr.
 function shell(kicker,title,ar,description,content){return header() + '<section class="mfkr-page"><div class="mfkr-wrap"><div class="mfkr-heading"><div class="mfkr-eyebrow"><span class="mfkr-dot"></span>' + kicker + '</div><h1>' + title + '</h1><div class="mfkr-ar" lang="ar">' + ar + '</div>' + (description ? '<p>' + description + '</p>' : '') + '</div>' + content + '</div></section>' + footer();}
 function backButtons(href,label){return '<div class="mfkr-back-row"><a class="mfkr-btn" href="' + href + '">' + label + '</a><a class="mfkr-btn" href="./?kids=hub">All paths</a><a class="mfkr-btn" href="./">DOMA Academy</a></div>';}
 function pathCard(icon,tag,title,arabic,description,group){return '<a class="mfkr-choice" href="' + url(group) + '"><div class="mfkr-card-top"><span class="mfkr-art">' + icon + '</span><span class="mfkr-tag">' + tag + '</span></div><h2>' + title + '</h2><div class="mfkr-ar">' + arabic + '</div><p class="mfkr-desc">' + description + '</p><div class="mfkr-card-foot"><span>3 learning levels</span><span>Open path ↗</span></div></a>';}
-function levelCard(code,title,description,group){var dest=code==='A1'?url('a1'):code==='A2'?url('a2'):code==='B1'?url('b1'):code==='B2'?url('b2'):code==='C1'?url('c1'):url('soon','&level='+encodeURIComponent(code)+'&group='+encodeURIComponent(group));var ready=code==='A1'||code==='A2'||code==='B1'||code==='B2'||code==='C1';return '<a class="mfkr-level" href="'+dest+'"><div class="mfkr-card-top"><span class="mfkr-code">'+code+'</span><span class="mfkr-tag">'+(ready?'READY TO LEARN':'IN THE MAKING')+'</span></div><h2>'+title+'</h2><p>'+description+'</p><div class="mfkr-card-foot"><span>'+(code==='A1'?'Letters A–Z':code==='A2'?'24 explorer words':code==='B1'?'20 first words':code==='B2'?'Reading lab':code==='C1'?'Sentence lab':'Level '+code)+'</span><span>Open ↗</span></div></a>';}
+function levelCard(code,title,description,group){var dest=code==='A1'?url('a1'):code==='A2'?url('a2'):code==='B1'?url('b1'):code==='B2'?url('b2'):code==='C1'?url('c1'):code==='C2'?url('c2'):url('soon','&level='+encodeURIComponent(code)+'&group='+encodeURIComponent(group));var ready=code==='A1'||code==='A2'||code==='B1'||code==='B2'||code==='C1'||code==='C2';return '<a class="mfkr-level" href="'+dest+'"><div class="mfkr-card-top"><span class="mfkr-code">'+code+'</span><span class="mfkr-tag">'+(ready?'READY TO LEARN':'IN THE MAKING')+'</span></div><h2>'+title+'</h2><p>'+description+'</p><div class="mfkr-card-foot"><span>'+(code==='A1'?'Letters A–Z':code==='A2'?'24 explorer words':code==='B1'?'20 first words':code==='B2'?'Reading lab':code==='C1'?'Sentence lab':code==='C2'?'Advanced skills lab':'Level '+code)+'</span><span>Open ↗</span></div></a>';}
 function renderHub(){document.title='Choose Your Learning Path | Mr. Fluent Kids';root.innerHTML=shell('YOUR KIDS ENGLISH JOURNEY','Choose your learning path.','اختار المسار المناسب للطفل.','كل اختيار هيفتح صفحة مستقلة، والمستوى الأول A1 جاهز كتجربة أولى.','<div class="mfkr-choice-grid">' + pathCard('🧸','FIRST STEPS','Little Learners','للأطفال الأصغر سنًا','Start with letters, sounds, pictures and first English words.','younger') + pathCard('🎒','NEXT STEPS','Growing Learners','للأطفال الأكبر شوية','Build confidence with vocabulary, reading, sentence practice and everyday English.','older') + '</div><div class="mfkr-note">اختار المسار المناسب، ثم افتح المستوى. كل مستوى بيظهر في صفحة مستقلة.</div>');}
-function renderLevels(group){var young=group==='younger';var arr=young?[['A1','My First ABC','الحروف الكبيرة والصغيرة، صورة، كلمة، ترجمة عربية وزرّان للصوت.'],['B1','My First Words','كلمات يومية جديدة مع الاستماع والصور والألعاب.'],['C1','My First Sentences','كوّن جملًا بسيطة وابدأ فهم القصص المصورة.']]:[['A2','Word Explorers','وسّع حصيلة الكلمات واربطها بموضوعات قريبة من الطفل.'],['B2','Reading Builders','تدرّب على القراءة والفهم واستخدام الكلمات في سياقها.'],['C2','Confident English','قوّي الجمل والمحادثات القصيرة والفهم.']];var cards=arr.map(function(item){return levelCard(item[0],item[1],item[2],group);}).join('');document.title=(young?'Little Learners':'Growing Learners')+' | Mr. Fluent Kids';root.innerHTML=shell(young?'LITTLE LEARNERS':'GROWING LEARNERS',young?'Little Learners':'Growing Learners',young?'مسار الأطفال الأصغر سنًا':'مسار الأطفال الأكبر شوية','Select a level to start your next learning adventure.','<div class="mfkr-level-grid">'+cards+'</div>'+backButtons(url('hub'),'← Back to paths')+(young?'<div class="mfkr-note">المستويات A1 وB1 وC1 متاحة الآن. افتح C1 لتكوين الجمل وقراءة قصة قصيرة والتدرّب على الفهم والنطق.</div>':'<div class="mfkr-note">المستويان A2 وB2 متاحان الآن. استكشف الكلمات في A2، أو طوّر مهارات القراءة والفهم في B2.</div>'));}
+function renderLevels(group){var young=group==='younger';var arr=young?[['A1','My First ABC','الحروف الكبيرة والصغيرة، صورة، كلمة، ترجمة عربية وزرّان للصوت.'],['B1','My First Words','كلمات يومية جديدة مع الاستماع والصور والألعاب.'],['C1','My First Sentences','كوّن جملًا بسيطة وابدأ فهم القصص المصورة.']]:[['A2','Word Explorers','وسّع حصيلة الكلمات واربطها بموضوعات قريبة من الطفل.'],['B2','Reading Builders','تدرّب على القراءة والفهم واستخدام الكلمات في سياقها.'],['C2','Confident English','قوّي الجمل والمحادثات القصيرة والفهم.']];var cards=arr.map(function(item){return levelCard(item[0],item[1],item[2],group);}).join('');document.title=(young?'Little Learners':'Growing Learners')+' | Mr. Fluent Kids';root.innerHTML=shell(young?'LITTLE LEARNERS':'GROWING LEARNERS',young?'Little Learners':'Growing Learners',young?'مسار الأطفال الأصغر سنًا':'مسار الأطفال الأكبر شوية','Select a level to start your next learning adventure.','<div class="mfkr-level-grid">'+cards+'</div>'+backButtons(url('hub'),'← Back to paths')+(young?'<div class="mfkr-note">المستويات A1 وB1 وC1 متاحة الآن. افتح C1 لتكوين الجمل وقراءة قصة قصيرة والتدرّب على الفهم والنطق.</div>':'<div class="mfkr-note">المستويات A2 وB2 وC2 متاحة الآن. استكشف الكلمات في A2، وطوّر القراءة في B2، ثم أتقن المهارات المتقدمة الشاملة في C2.</div>'));}
 
 function renderC1(){
   document.title='C1 — My First Sentences | Mr. Fluent Kids';
@@ -13581,6 +13597,243 @@ function renderA2(){
   });
 }
 
+function renderC2(){
+  document.title='C2 — Confident English | Mr. Fluent Kids';
+  var vocab=[
+    {word:'analyse',meaning:'يحلّل',pic:'🔍',topic:'thinking',example:'We analyse the evidence before deciding.',ar:'نحلّل الأدلة قبل اتخاذ القرار.'},
+    {word:'evidence',meaning:'دليل / أدلة',pic:'🧾',topic:'thinking',example:'The writer gives evidence for the main idea.',ar:'يقدّم الكاتب أدلة على الفكرة الرئيسية.'},
+    {word:'reliable',meaning:'موثوق',pic:'✅',topic:'thinking',example:'Check whether the website is reliable.',ar:'تحقّق مما إذا كان الموقع موثوقًا.'},
+    {word:'perspective',meaning:'وجهة نظر',pic:'👓',topic:'thinking',example:'Try to understand another person’s perspective.',ar:'حاول فهم وجهة نظر شخص آخر.'},
+    {word:'conclusion',meaning:'استنتاج / خاتمة',pic:'🎯',topic:'thinking',example:'The conclusion brings the main points together.',ar:'تجمع الخاتمة الأفكار الرئيسية معًا.'},
+    {word:'evaluate',meaning:'يقيّم',pic:'📊',topic:'thinking',example:'We evaluate each idea before choosing.',ar:'نقيّم كل فكرة قبل الاختيار.'},
+    {word:'contribute',meaning:'يساهم',pic:'🤝',topic:'community',example:'Every student can contribute to the project.',ar:'يمكن لكل طالب أن يساهم في المشروع.'},
+    {word:'volunteer',meaning:'يتطوّع / متطوّع',pic:'🙌',topic:'community',example:'Volunteers helped organise the event.',ar:'ساعد المتطوعون في تنظيم الفعالية.'},
+    {word:'initiative',meaning:'مبادرة',pic:'🚀',topic:'community',example:'Our class started an initiative to share books.',ar:'بدأ فصلنا مبادرة لتبادل الكتب.'},
+    {word:'cooperate',meaning:'يتعاون',pic:'🧩',topic:'community',example:'Teams cooperate to solve complex problems.',ar:'تتعاون الفرق لحل المشكلات المعقدة.'},
+    {word:'impact',meaning:'تأثير',pic:'🌊',topic:'community',example:'Small actions can have a lasting impact.',ar:'قد يكون للأفعال الصغيرة تأثير مستمر.'},
+    {word:'allocate',meaning:'يخصّص',pic:'📦',topic:'community',example:'We allocate time for research and discussion.',ar:'نخصّص وقتًا للبحث والنقاش.'},
+    {word:'sustainable',meaning:'مستدام',pic:'🌱',topic:'future',example:'A sustainable plan uses resources wisely.',ar:'تستخدم الخطة المستدامة الموارد بحكمة.'},
+    {word:'resource',meaning:'مورد',pic:'💧',topic:'future',example:'Water is a valuable natural resource.',ar:'الماء مورد طبيعي قيّم.'},
+    {word:'consequence',meaning:'نتيجة / عاقبة',pic:'🔗',topic:'future',example:'Every choice may have a consequence.',ar:'قد يكون لكل اختيار نتيجة.'},
+    {word:'prevent',meaning:'يمنع',pic:'🛡️',topic:'future',example:'Clear rules can prevent misunderstandings.',ar:'يمكن للقواعد الواضحة منع سوء الفهم.'},
+    {word:'persuade',meaning:'يقنع',pic:'💬',topic:'communication',example:'Use strong reasons to persuade your audience.',ar:'استخدم أسبابًا قوية لإقناع جمهورك.'},
+    {word:'emphasise',meaning:'يؤكّد / يشدّد على',pic:'📣',topic:'communication',example:'The speaker emphasised the importance of teamwork.',ar:'أكّد المتحدث أهمية العمل الجماعي.'},
+    {word:'summarise',meaning:'يلخّص',pic:'📝',topic:'communication',example:'Summarise the article in your own words.',ar:'لخّص المقال بكلماتك أنت.'},
+    {word:'clarify',meaning:'يوضّح',pic:'💡',topic:'communication',example:'Could you clarify your last point?',ar:'هل يمكنك توضيح نقطتك الأخيرة؟'}
+  ];
+  var topics=[['all','All words','كل الكلمات'],['thinking','Critical Thinking','التفكير النقدي'],['community','Community Projects','المجتمع والمبادرات'],['future','Solutions & Sustainability','الحلول والاستدامة'],['communication','Communication','التواصل والتعبير']];
+  var passages=[
+    {title:'The Library That Changed a Neighbourhood',arTitle:'المكتبة التي غيّرت الحيّ',icon:'📚',lines:[
+      {en:'When the old library began to lose visitors, the neighbourhood council considered closing it.',ar:'عندما بدأت المكتبة القديمة تفقد زوارها، فكّر مجلس الحي في إغلاقها.'},
+      {en:'A group of students suggested asking residents what they actually needed.',ar:'اقترحت مجموعة من الطلاب سؤال السكان عمّا يحتاجون إليه فعلًا.'},
+      {en:'Their survey showed that families wanted flexible opening hours, quiet study areas, and practical workshops.',ar:'أظهر استطلاعهم أن العائلات تريد مواعيد مرنة، وأماكن هادئة للمذاكرة، وورشًا عملية.'},
+      {en:'The students presented the evidence to the council instead of simply arguing that the library should stay open.',ar:'قدّم الطلاب الأدلة إلى المجلس بدلًا من الاكتفاء بالقول إن المكتبة يجب أن تظل مفتوحة.'},
+      {en:'After a three-month trial, attendance increased and local volunteers offered to run weekly activities.',ar:'بعد تجربة استمرت ثلاثة أشهر، زاد الحضور وعرض متطوعون محليون تنظيم أنشطة أسبوعية.'},
+      {en:'The project demonstrated that listening carefully can turn a disagreement into a practical solution.',ar:'أوضح المشروع أن الاستماع بعناية يمكن أن يحوّل الخلاف إلى حل عملي.'}
+    ]},
+    {title:'Can We Trust Everything Online?',arTitle:'هل يمكننا تصديق كل ما نراه على الإنترنت؟',icon:'🧠',lines:[
+      {en:'An attractive headline can make a story seem convincing before we have checked its details.',ar:'قد يجعل العنوان الجذاب الخبر يبدو مقنعًا قبل أن نتحقق من تفاصيله.'},
+      {en:'Responsible readers identify the original source and compare the claim with reliable reporting.',ar:'يحدّد القارئ المسؤول المصدر الأصلي ويقارن الادعاء بتقارير موثوقة.'},
+      {en:'They also check the date, because an old photograph can be shared as if it showed a recent event.',ar:'ويتحققون أيضًا من التاريخ، لأن صورة قديمة قد تُنشر كما لو أنها توثّق حدثًا حديثًا.'},
+      {en:'If strong evidence is missing, it is better to say “I am not sure” than to repeat the claim.',ar:'إذا غابت الأدلة القوية، فمن الأفضل قول «لست متأكدًا» بدلًا من تكرار الادعاء.'},
+      {en:'This habit does not mean doubting everyone; it means giving important information a fair check.',ar:'لا تعني هذه العادة الشك في الجميع، بل تعني التحقق العادل من المعلومات المهمة.'},
+      {en:'Thinking critically helps us make informed decisions and discuss differences respectfully.',ar:'يساعدنا التفكير النقدي على اتخاذ قرارات واعية ومناقشة الاختلافات باحترام.'}
+    ]},
+    {title:'A More Sustainable School',arTitle:'مدرسة أكثر استدامة',icon:'🌱',lines:[
+      {en:'The school environmental club noticed that many half-used notebooks were thrown away at the end of term.',ar:'لاحظ نادي البيئة في المدرسة أن كثيرًا من الكشاكيل المستخدمة جزئيًا تُلقى في نهاية الفصل الدراسي.'},
+      {en:'Instead of blaming students, the club studied the problem and counted how much paper could be saved.',ar:'بدلًا من لوم الطلاب، درس النادي المشكلة وحسب كمية الورق التي يمكن توفيرها.'},
+      {en:'They proposed a collection point for reusable supplies and a simple system for sharing extra materials.',ar:'اقترحوا نقطة لجمع الأدوات القابلة لإعادة الاستخدام ونظامًا بسيطًا لتبادل الأدوات الزائدة.'},
+      {en:'Teachers supported a one-month trial and asked students to record what worked well.',ar:'دعم المعلمون تجربة لمدة شهر وطلبوا من الطلاب تسجيل ما نجح منها.'},
+      {en:'The results showed less waste, lower costs, and more cooperation between classes.',ar:'أظهرت النتائج نفايات أقل وتكاليف أقل وتعاونًا أكبر بين الفصول.'},
+      {en:'The club used these results to recommend a long-term plan that could be improved each term.',ar:'استخدم النادي هذه النتائج لاقتراح خطة طويلة المدى يمكن تطويرها كل فصل دراسي.'}
+    ]}
+  ];
+  var inferenceQuestions=[
+    {q:'Why did the students conduct a survey in the library passage?',ar:'لماذا أجرى الطلاب استطلاعًا في قصة المكتبة؟',options:['To learn what residents needed','To prove the council was wrong','To count the books'],correct:0},
+    {q:'Which detail best supports the idea that the library project worked?',ar:'أي تفصيل يدعم أكثر فكرة نجاح مشروع المكتبة؟',options:['The library was old','Attendance increased after the trial','The council held a meeting'],correct:1},
+    {q:'What is the best lesson from “Can We Trust Everything Online?”',ar:'ما أفضل درس من نص «هل نصدق كل ما نراه على الإنترنت؟»؟',options:['Share news quickly','Trust every headline','Check sources and evidence before believing a claim'],correct:2},
+    {q:'Why did the school club count the paper that could be saved?',ar:'لماذا حسب نادي المدرسة كمية الورق التي يمكن توفيرها؟',options:['To understand the problem with evidence','To make the notebooks heavier','To stop every classroom activity'],correct:0},
+    {q:'What does “a one-month trial” suggest?',ar:'ماذا تعني عبارة تجربة لمدة شهر؟',options:['The plan was tested before a long-term decision','The school closed for a month','The plan could never change'],correct:0},
+    {q:'Which sentence best summarises all three passages?',ar:'أي جملة تلخّص النصوص الثلاثة؟',options:['Problems are solved by blaming people','Evidence, listening, and cooperation can improve decisions','Every idea works without planning'],correct:1}
+  ];
+  var connectorQuestions=[
+    {before:'The idea was popular,',after:'the team checked the evidence first.',ar:'كانت الفكرة شائعة، لكن الفريق تحقّق من الأدلة أولًا.',options:['so','but','because'],correct:1},
+    {before:'The students collected feedback',after:'they could improve the plan.',ar:'جمع الطلاب الملاحظات لكي يتمكنوا من تحسين الخطة.',options:['so that','although','unless'],correct:0},
+    {before:'If we reuse our supplies,',after:'we will reduce waste.',ar:'إذا أعدنا استخدام أدواتنا، فسنقلل النفايات.',options:['we will reduce waste','we reduced waste yesterday','we would reduced waste'],correct:0},
+    {before:'The report was clear',after:'it included reliable evidence.',ar:'كان التقرير واضحًا لأنه تضمّن أدلة موثوقة.',options:['although','because','unless'],correct:1},
+    {before:'The club had limited time;',after:', it prioritised the most useful actions.',ar:'كان وقت النادي محدودًا؛ لذلك رتّب أولويات أكثر الإجراءات فائدة.',options:['however','therefore','for example'],correct:1},
+    {before:'The suggestion was expensive.',after:'the council agreed to test a smaller version.',ar:'كان الاقتراح مكلفًا. ومع ذلك وافق المجلس على تجربة نسخة أصغر.',options:['Nevertheless,','For instance,','As a result of,'],correct:0}
+  ];
+  var speakingQuestions=[
+    {scenario:'A classmate disagrees with your opinion.',ar:'زميلك لا يوافق على رأيك.',prompt:'Which reply keeps the discussion respectful?',options:['You never understand anything.','That is a different view. What evidence supports it?','Let us stop talking forever.'],correct:1},
+    {scenario:'You did not understand the speaker’s last point.',ar:'لم تفهم آخر نقطة قالها المتحدث.',prompt:'What is the clearest response?',options:['Could you clarify your last point, please?','That was definitely wrong.','I will pretend I understand.'],correct:0},
+    {scenario:'Your team has three possible project ideas.',ar:'لدى فريقك ثلاث أفكار للمشروع.',prompt:'What should the team do first?',options:['Choose the first idea without discussion.','Compare the benefits, costs, and evidence for each idea.','Ignore everyone’s suggestions.'],correct:1},
+    {scenario:'You want to persuade the school to reuse supplies.',ar:'تريد إقناع المدرسة بإعادة استخدام الأدوات.',prompt:'Which approach is strongest?',options:['Give clear reasons and examples of the likely impact.','Say that everyone must agree with you.','Repeat the same sentence louder.'],correct:0},
+    {scenario:'You discover that something you shared was inaccurate.',ar:'اكتشفت أن معلومة نشرتها لم تكن دقيقة.',prompt:'What is the most responsible action?',options:['Leave it there and hope no one notices.','Correct it clearly and explain the update.','Blame the first person who shared it.'],correct:1}
+  ];
+  var finalQuestions=[
+    {q:'Which word means “موثوق”?',ar:'اختر معنى موثوق.',options:['Reliable','Crowded','Temporary'],correct:0},
+    {q:'What is the main reason students surveyed residents?',ar:'لماذا سأل الطلاب سكان الحي؟',options:['To understand their needs','To avoid reading','To close the library'],correct:0},
+    {q:'Choose the best connector: “The claim seemed surprising, ___ we checked two sources.”',ar:'اختر أداة الربط المناسبة.',options:['so','although','unless'],correct:0},
+    {q:'Which action shows critical thinking?',ar:'أي تصرف يدل على التفكير النقدي؟',options:['Checking evidence before sharing','Believing every headline','Ignoring dates and sources'],correct:0},
+    {q:'What does “allocate” mean?',ar:'ما معنى allocate؟',options:['يخصّص','يختفي','يعارض'],correct:0},
+    {q:'Which detail supports a long-term school plan?',ar:'أي تفصيل يدعم خطة طويلة المدى؟',options:['A trial shows less waste and lower costs','A student dislikes the colour','A notebook is new'],correct:0},
+    {q:'Choose the correct conditional sentence.',ar:'اختر جملة الشرط الصحيحة.',options:['If we reuse supplies, we will reduce waste.','If we will reuse supplies, we reduce yesterday.','If reuse supplies, we will reduces waste.'],correct:0},
+    {q:'What is a conclusion?',ar:'ما المقصود بالخاتمة أو الاستنتاج؟',options:['A closing part that brings the main points together','A random detail in the middle','A list of unrelated words'],correct:0},
+    {q:'Which is the most respectful disagreement?',ar:'أي رد يعبر عن اختلاف محترم؟',options:['I see your point, but the evidence suggests another view.','You are foolish.','I will not listen to you.'],correct:0},
+    {q:'What should you do when a source is unreliable?',ar:'ماذا تفعل إذا كان المصدر غير موثوق؟',options:['Find a stronger source before repeating the claim','Share it because the title is exciting','Remove every other source'],correct:0},
+    {q:'Which word means “يساهم”?',ar:'اختر معنى يساهم.',options:['Contribute','Prevent','Clarify'],correct:0},
+    {q:'What connects all three C2 readings?',ar:'ما الفكرة المشتركة بين نصوص C2؟',options:['Use evidence and cooperation to improve decisions','Never change a plan','Solve every problem alone'],correct:0}
+  ];
+  var currentTopic='all',viewedWords=[],completedActivities=[],readPassages=[],bestQuizScore=0,quizAttempts=0,writingDraft='';
+  var inferenceIndex=0,inferenceScore=0,inferenceAnswered=false,inferenceOptions=[];
+  var connectorIndex=0,connectorScore=0,connectorAnswered=false,connectorOptions=[];
+  var speakingIndex=0,speakingScore=0,speakingAnswered=false,speakingOptions=[];
+  var quizIndex=0,quizScore=0,quizAnswered=false,quizOptions=[],progressUserId=null,progressKey='mrfluent-growing-c2-progress:guest',saveTimer=null;
+  function shuffleC2(items){var arr=items.slice();for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;}return arr;}
+  function speakC2(text,rate){
+    var status=root.querySelector('#mfkrC2AudioStatus');
+    if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){if(status)status.textContent='النطق الصوتي غير مدعوم في هذا المتصفح.';return;}
+    window.speechSynthesis.cancel();var utterance=new SpeechSynthesisUtterance(text);utterance.lang='en-US';utterance.rate=rate||.82;utterance.pitch=1.02;
+    utterance.onstart=function(){if(status)status.textContent='🔊 Listening: '+text;};
+    utterance.onend=function(){if(status)status.textContent='اضغط على زر الصوت للاستماع مرة أخرى.';};
+    utterance.onerror=function(){if(status)status.textContent='تعذّر تشغيل الصوت. جرّب مرة أخرى.';};
+    window.speechSynthesis.speak(utterance);
+  }
+  function doneCount(){return ['reading','inference','connectors','speaking','writing','final-challenge'].filter(function(k){return completedActivities.indexOf(k)>=0;}).length;}
+  function drawProgress(){
+    var words=root.querySelector('#mfkrC2ProgressWords'),acts=root.querySelector('#mfkrC2ProgressActivities'),bar=root.querySelector('#mfkrC2ProgressBar'),best=root.querySelector('#mfkrC2BestScore'),attempts=root.querySelector('#mfkrC2Attempts'),status=root.querySelector('#mfkrC2SaveStatus');
+    if(words)words.textContent=viewedWords.length+' / '+vocab.length+' advanced words explored';
+    if(acts)acts.textContent=doneCount()+' / 6 activities completed';
+    if(bar)bar.style.width=Math.round(viewedWords.length/vocab.length*100)+'%';
+    if(best)best.textContent=bestQuizScore+' / 12';if(attempts)attempts.textContent=quizAttempts;
+    if(status&&!progressUserId)status.textContent='التقدّم محفوظ على هذا الجهاز. سجّل الدخول لمزامنته مع حسابك.';
+  }
+  function saveProgress(){
+    var record={viewedWords:viewedWords,completedActivities:completedActivities,readPassages:readPassages,bestQuizScore:bestQuizScore,quizAttempts:quizAttempts,writingDraft:writingDraft};
+    try{localStorage.setItem(progressKey,JSON.stringify(record));}catch(_){}
+    drawProgress();
+    if(!progressUserId||typeof sb==='undefined'||!sb||!sb.from)return;
+    if(saveTimer)clearTimeout(saveTimer);
+    var status=root.querySelector('#mfkrC2SaveStatus');if(status)status.textContent='جارٍ حفظ تقدّمك في حسابك…';
+    saveTimer=setTimeout(async function(){
+      try{
+        var session=await sb.auth.getSession(),active=session&&session.data&&session.data.session&&session.data.session.user;
+        if(!active||active.id!==progressUserId)return;
+        var payload={user_id:progressUserId,level_code:'C2',completed_words:viewedWords,completed_activities:completedActivities.concat(readPassages.map(function(n){return 'passage-'+n;})),best_quiz_score:bestQuizScore,quiz_attempts:quizAttempts,writing_draft:writingDraft,updated_at:new Date().toISOString()};
+        var response=await sb.from('mrfluent_growing_c2_progress').upsert(payload,{onConflict:'user_id,level_code'});
+        if(response.error)throw response.error;
+        if(status)status.textContent='تم حفظ تقدّمك في حسابك ✓';
+      }catch(error){console.warn('C2 progress sync failed; local progress remains saved.',error);if(status)status.textContent='التقدّم محفوظ على هذا الجهاز؛ تعذّرت المزامنة مؤقتًا.';}
+    },450);
+  }
+  function markWord(word){if(vocab.some(function(v){return v.word===word;})&&viewedWords.indexOf(word)<0){viewedWords.push(word);saveProgress();}}
+  function markActivity(key){if(completedActivities.indexOf(key)<0){completedActivities.push(key);saveProgress();}}
+  function wordCount(text){var words=String(text||'').trim().match(/\S+/g);return words?words.length:0;}
+  function updateWritingCount(){
+    var text=root.querySelector('#mfkrC2WritingDraft'),count=root.querySelector('#mfkrC2WordCount'),target=root.querySelector('#mfkrC2WritingHint');
+    if(count)count.textContent=wordCount(text?text.value:writingDraft)+' words';
+    if(target){var n=wordCount(text?text.value:writingDraft);target.textContent=n<80?'Aim for 80–120 words. Add a clear main idea, two supporting details, and a conclusion.':'Good start! Check your main idea, supporting evidence, and conclusion.';}
+  }
+  function initializeProgress(){
+    (async function(){
+      var user=null;
+      try{if(typeof sessionUser!=='undefined'&&sessionUser)user=sessionUser;if(!user&&typeof sb!=='undefined'&&sb&&sb.auth){var sess=await sb.auth.getSession();user=sess&&sess.data&&sess.data.session&&sess.data.session.user||null;}}catch(_){}
+      progressUserId=user&&user.id||null;progressKey='mrfluent-growing-c2-progress:'+(progressUserId||'guest');
+      try{
+        var local=JSON.parse(localStorage.getItem(progressKey)||'{}');
+        viewedWords=Array.isArray(local.viewedWords)?local.viewedWords.filter(function(w){return vocab.some(function(v){return v.word===w;});}):[];
+        completedActivities=Array.isArray(local.completedActivities)?local.completedActivities.filter(function(k){return ['reading','inference','connectors','speaking','writing','final-challenge'].indexOf(k)>=0;}):[];
+        readPassages=Array.isArray(local.readPassages)?local.readPassages.filter(function(n){return Number.isInteger(n)&&n>=0&&n<passages.length;}):[];
+        bestQuizScore=Math.max(0,Math.min(12,Number(local.bestQuizScore)||0));quizAttempts=Math.max(0,Number(local.quizAttempts)||0);writingDraft=typeof local.writingDraft==='string'?local.writingDraft:'';
+      }catch(_){}
+      var draftField=root.querySelector('#mfkrC2WritingDraft');if(draftField)draftField.value=writingDraft;
+      updateWritingCount();drawProgress();
+      readPassages.forEach(function(index){var button=root.querySelector('[data-c2-read-done="'+index+'"]');if(button){button.textContent='✓ Completed';button.disabled=true;}});
+      if(progressUserId&&typeof sb!=='undefined'&&sb&&sb.from){
+        try{
+          var remote=await sb.from('mrfluent_growing_c2_progress').select('completed_words,completed_activities,best_quiz_score,quiz_attempts,writing_draft').eq('user_id',progressUserId).eq('level_code','C2').maybeSingle();
+          if(remote.error)throw remote.error;
+          if(remote.data){
+            viewedWords=Array.from(new Set(viewedWords.concat(Array.isArray(remote.data.completed_words)?remote.data.completed_words:[]))).filter(function(w){return vocab.some(function(v){return v.word===w;});});
+            var remoteActs=Array.isArray(remote.data.completed_activities)?remote.data.completed_activities:[];
+            completedActivities=Array.from(new Set(completedActivities.concat(remoteActs.filter(function(k){return ['reading','inference','connectors','speaking','writing','final-challenge'].indexOf(k)>=0;}))));
+            readPassages=Array.from(new Set(readPassages.concat(remoteActs.filter(function(k){return /^passage-[0-2]$/.test(k);}).map(function(k){return Number(k.slice(8));}))));
+            bestQuizScore=Math.max(bestQuizScore,Number(remote.data.best_quiz_score)||0);quizAttempts=Math.max(quizAttempts,Number(remote.data.quiz_attempts)||0);
+            if(!writingDraft&&typeof remote.data.writing_draft==='string')writingDraft=remote.data.writing_draft;
+          }
+          var field=root.querySelector('#mfkrC2WritingDraft');if(field)field.value=writingDraft;
+          updateWritingCount();
+          readPassages.forEach(function(index){var button=root.querySelector('[data-c2-read-done="'+index+'"]');if(button){button.textContent='✓ Completed';button.disabled=true;}});
+          saveProgress();
+        }catch(error){console.warn('C2 remote progress could not be loaded.',error);var status=root.querySelector('#mfkrC2SaveStatus');if(status)status.textContent='التقدّم المحلي متاح؛ ستتم محاولة المزامنة عند توفر الاتصال.';}
+      }
+    })();
+  }
+  function renderVocab(){
+    var list=currentTopic==='all'?vocab:vocab.filter(function(v){return v.topic===currentTopic;});
+    root.querySelector('#mfkrC2WordGrid').innerHTML=list.map(function(v){var tag={thinking:'CRITICAL THINKING',community:'COMMUNITY',future:'FUTURE & SOLUTIONS',communication:'COMMUNICATION'}[v.topic];return '<article class="mfkr-word-card"><div class="mfkr-word-card-head"><span class="mfkr-word-picture" aria-hidden="true">'+v.pic+'</span><span class="mfkr-word-tag">'+tag+'</span></div><div class="mfkr-word">'+esc(v.word)+'</div><div class="mfkr-meaning" lang="ar">'+esc(v.meaning)+'</div><div class="mfkr-example-label">ADVANCED VOCABULARY IN CONTEXT</div><div class="mfkr-example" lang="en">'+esc(v.example)+'</div><div class="mfkr-example-ar" lang="ar">'+esc(v.ar)+'</div><div class="mfkr-word-actions"><button type="button" class="mfkr-sound" data-c2-speak="'+esc(v.word)+'" data-c2-track="'+esc(v.word)+'">🔊 الكلمة</button><button type="button" class="mfkr-sound" data-c2-speak="'+esc(v.example)+'" data-c2-track="'+esc(v.word)+'">♫ المثال</button></div></article>';}).join('');
+    root.querySelectorAll('[data-c2-topic]').forEach(function(btn){var active=btn.getAttribute('data-c2-topic')===currentTopic;btn.classList.toggle('is-active',active);btn.setAttribute('aria-pressed',active?'true':'false');});
+    root.querySelector('#mfkrC2VisibleCount').textContent=list.length+' words';
+  }
+  function drawInference(){
+    var host=root.querySelector('#mfkrC2Inference');
+    if(inferenceIndex>=inferenceQuestions.length){host.innerHTML='<div class="mfkr-c1-finish"><div class="mfkr-art" aria-hidden="true">🧠</div><h3>Critical thinker!</h3><div class="mfkr-ar" lang="ar">أحسنت! أنهيت نشاط الفهم والاستنتاج.</div><p class="mfkr-quiz-feedback is-right">Your score: '+inferenceScore+' / '+inferenceQuestions.length+'</p><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-inference-restart>إعادة النشاط ↻</button></div>';markActivity('inference');return;}
+    inferenceAnswered=false;var q=inferenceQuestions[inferenceIndex];inferenceOptions=shuffleC2(q.options.map(function(t,i){return {text:t,correct:i===q.correct};}));
+    host.innerHTML='<div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">INFERENCE '+(inferenceIndex+1)+' / '+inferenceQuestions.length+'</span><span class="mfkr-quiz-score">Score: '+inferenceScore+'</span></div><h3 lang="en">'+esc(q.q)+'</h3><p class="mfkr-quiz-hint" lang="ar">'+esc(q.ar)+'</p><div class="mfkr-quiz-options mfkr-c1-options">'+inferenceOptions.map(function(o,i){return '<button type="button" class="mfkr-quiz-option mfkr-c1-option" data-c2-inference="'+i+'">'+esc(o.text)+'</button>';}).join('')+'</div><p class="mfkr-quiz-feedback" id="mfkrC2InferenceFeedback" lang="ar" aria-live="polite">ارجع إلى النص وفكّر في الدليل.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-inference-next disabled>السؤال التالي ←</button></div>';
+  }
+  function drawConnectors(){
+    var host=root.querySelector('#mfkrC2Connectors');
+    if(connectorIndex>=connectorQuestions.length){host.innerHTML='<div class="mfkr-c1-finish"><div class="mfkr-art" aria-hidden="true">🔗</div><h3>Language expert!</h3><div class="mfkr-ar" lang="ar">أحسنت! أنهيت تحدّي أدوات الربط والتراكيب.</div><p class="mfkr-quiz-feedback is-right">Your score: '+connectorScore+' / '+connectorQuestions.length+'</p><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-connector-restart>إعادة التدريب ↻</button></div>';markActivity('connectors');return;}
+    connectorAnswered=false;var q=connectorQuestions[connectorIndex];
+    host.innerHTML='<div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">LANGUAGE LAB '+(connectorIndex+1)+' / '+connectorQuestions.length+'</span><span class="mfkr-quiz-score">Score: '+connectorScore+'</span></div><div class="mfkr-b2-connector-sentence" lang="en">'+esc(q.before)+' <span class="mfkr-b2-blank">_____</span> '+esc(q.after)+'</div><p class="mfkr-quiz-hint" lang="ar">'+esc(q.ar)+'</p><div class="mfkr-quiz-options mfkr-c1-options">'+q.options.map(function(o,i){return '<button type="button" class="mfkr-quiz-option mfkr-c1-option" data-c2-connector="'+i+'">'+esc(o)+'</button>';}).join('')+'</div><p class="mfkr-quiz-feedback" id="mfkrC2ConnectorFeedback" lang="ar" aria-live="polite">اختر أداة الربط أو التركيب الأنسب.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-connector-next disabled>التالي ←</button></div>';
+  }
+  function drawSpeaking(){
+    var host=root.querySelector('#mfkrC2Speaking');
+    if(speakingIndex>=speakingQuestions.length){host.innerHTML='<div class="mfkr-c1-finish"><div class="mfkr-art" aria-hidden="true">🎙️</div><h3>Confident communicator!</h3><div class="mfkr-ar" lang="ar">أحسنت! أنهيت مواقف التواصل.</div><p class="mfkr-quiz-feedback is-right">Your score: '+speakingScore+' / '+speakingQuestions.length+'</p><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-speaking-restart>إعادة التدريب ↻</button></div>';markActivity('speaking');return;}
+    speakingAnswered=false;var q=speakingQuestions[speakingIndex];speakingOptions=shuffleC2(q.options.map(function(t,i){return {text:t,correct:i===q.correct};}));
+    host.innerHTML='<div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">SPEAKING STUDIO '+(speakingIndex+1)+' / '+speakingQuestions.length+'</span><span class="mfkr-quiz-score">Score: '+speakingScore+'</span></div><div class="mfkr-a2-match-prompt"><span class="mfkr-art" aria-hidden="true">💬</span><div><h3 lang="en">'+esc(q.scenario)+'</h3><p lang="ar">'+esc(q.ar)+'</p><strong>'+esc(q.prompt)+'</strong></div></div><div class="mfkr-quiz-options mfkr-c1-options">'+speakingOptions.map(function(o,i){return '<button type="button" class="mfkr-quiz-option mfkr-c1-option" data-c2-speaking="'+i+'">'+esc(o.text)+'</button>';}).join('')+'</div><p class="mfkr-quiz-feedback" id="mfkrC2SpeakingFeedback" lang="ar" aria-live="polite">اختار الرد الأكثر وضوحًا واحترامًا.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-speaking-next disabled>الموقف التالي ←</button></div>';
+  }
+  function drawFinalQuiz(){
+    var host=root.querySelector('#mfkrC2Quiz');
+    if(quizIndex>=finalQuestions.length){quizAttempts++;bestQuizScore=Math.max(bestQuizScore,quizScore);markActivity('final-challenge');saveProgress();host.innerHTML='<div class="mfkr-c1-finish"><div class="mfkr-art" aria-hidden="true">🏆</div><h3>Confident English Champion!</h3><div class="mfkr-ar" lang="ar">أحسنت! أكملت الاختبار الشامل لمستوى C2.</div><p class="mfkr-quiz-feedback is-right">Your score: '+quizScore+' / 12 · Best: '+bestQuizScore+' / 12</p><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-quiz-restart>إعادة الاختبار ↻</button></div>';return;}
+    quizAnswered=false;var q=finalQuestions[quizIndex];quizOptions=shuffleC2(q.options.map(function(t,i){return {text:t,correct:i===q.correct};}));
+    host.innerHTML='<div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">C2 MASTER CHALLENGE</span><span class="mfkr-quiz-count">Question '+(quizIndex+1)+' / '+finalQuestions.length+'</span><span class="mfkr-quiz-score">Score: '+quizScore+'</span></div><h3 lang="en">'+esc(q.q)+'</h3><p class="mfkr-quiz-hint" lang="ar">'+esc(q.ar)+'</p><div class="mfkr-quiz-options mfkr-c1-options">'+quizOptions.map(function(o,i){return '<button type="button" class="mfkr-quiz-option mfkr-c1-option" data-c2-quiz="'+i+'">'+esc(o.text)+'</button>';}).join('')+'</div><p class="mfkr-quiz-feedback" id="mfkrC2QuizFeedback" lang="ar" aria-live="polite">راجع ما تعلّمته قبل اختيار الإجابة.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-quiz-next disabled>السؤال التالي ←</button></div>';
+  }
+  root.innerHTML=shell('GROWING LEARNERS · FINAL LEVEL C2','Confident English.','الإنجليزية بثقة.','المستوى الشامل الأخير: فكّر نقديًا، وافهم النصوص بعمق، وعبّر عن رأيك، واكتب فقرة واضحة ومدعومة بالأسباب.','<div class="mfkr-summary mfkr-a2-summary"><span>20 advanced words · 3 readings · 4 skill labs</span><div class="mfkr-progress"><span id="mfkrC2ProgressBar" style="width:0%"></span></div><span id="mfkrC2ProgressWords">0 / 20 advanced words explored</span></div><section class="mfkr-topic-panel"><div class="mfkr-topic-heading"><div><div class="mfkr-mini-eyebrow">READING LAB · معمل القراءة المتقدمة</div><h2>Read Beyond the Words</h2><div class="mfkr-c1-story-title-ar" lang="ar">اقرأ ما وراء الكلمات واستنتج الفكرة</div></div><span class="mfkr-art" aria-hidden="true">📚</span></div><div class="mfkr-a2-story-grid">'+passages.map(function(p,index){return '<article class="mfkr-a2-story-card"><span class="mfkr-c1-story-number">0'+(index+1)+'</span><div class="mfkr-topic-heading"><div><h3>'+esc(p.title)+'</h3><div class="mfkr-c1-story-title-ar" lang="ar">'+esc(p.arTitle)+'</div></div><span class="mfkr-art" aria-hidden="true">'+p.icon+'</span></div>'+p.lines.map(function(line){return '<div class="mfkr-c1-story-en" lang="en">'+esc(line.en)+'</div><div class="mfkr-c1-story-ar" lang="ar">'+esc(line.ar)+'</div>';}).join('')+'<div class="mfkr-c1-actions"><button type="button" class="mfkr-sound" data-c2-pass-listen="'+index+'">🔊 Listen</button><button type="button" class="mfkr-sound" data-c2-read-done="'+index+'">'+(readPassages.indexOf(index)>=0?'✓ Completed':'✓ أنهيت القراءة')+'</button></div></article>';}).join('')+'</div></section><section class="mfkr-topic-panel"><div class="mfkr-topic-heading"><div><div class="mfkr-mini-eyebrow">ADVANCED VOCABULARY IN CONTEXT · مفردات متقدمة</div><h2>Words for Better Ideas</h2><div class="mfkr-c1-story-title-ar" lang="ar">كلمات تساعدك على التفكير والتعبير بدقة</div></div><span class="mfkr-count" id="mfkrC2VisibleCount">20 words</span></div><div class="mfkr-topics mfkr-a2-topics" role="group" aria-label="Choose advanced vocabulary topic">'+topics.map(function(t){return '<button type="button" class="mfkr-topic'+(t[0]==='all'?' is-active':'')+'" data-c2-topic="'+t[0]+'" aria-pressed="'+(t[0]==='all'?'true':'false')+'"><span>'+t[1]+'</span>'+t[2]+'</button>';}).join('')+'</div></section><div class="mfkr-word-grid" id="mfkrC2WordGrid"></div><p class="mfkr-audio-status" id="mfkrC2AudioStatus" aria-live="polite">استمع إلى الكلمات والأمثلة، ثم حاول استخدام كل كلمة في جملة من عندك.</p><section class="mfkr-quiz-panel"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">ACTIVITY 01 · INFERENCE &amp; EVIDENCE</div><h2>Think Like a Reader <span aria-hidden="true">✦</span></h2><p lang="ar">أسئلة أعمق عن الفكرة الرئيسية، والأدلة، وهدف الكاتب، والاستنتاج.</p></div><div id="mfkrC2Inference"></div></section><section class="mfkr-quiz-panel"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">ACTIVITY 02 · LANGUAGE &amp; LOGIC</div><h2>Connector &amp; Grammar Lab <span aria-hidden="true">✦</span></h2><p lang="ar">استخدم أدوات الربط وتراكيب الشرط والنتيجة والتباين في سياق واضح.</p></div><div id="mfkrC2Connectors"></div></section><section class="mfkr-quiz-panel"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">ACTIVITY 03 · REAL-LIFE COMMUNICATION</div><h2>Speaking Studio <span aria-hidden="true">✦</span></h2><p lang="ar">اختر الرد الأفضل في مواقف النقاش، وطلب التوضيح، والإقناع، وتصحيح المعلومات.</p></div><div id="mfkrC2Speaking"></div></section><section class="mfkr-quiz-panel mfkr-c2-writing"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">ACTIVITY 04 · WRITING WORKSHOP</div><h2>Build a Strong Paragraph <span aria-hidden="true">✦</span></h2><p lang="ar">اكتب فقرة من 80 إلى 120 كلمة عن: كيف يمكن لمدرستنا أن تصبح أفضل للمجتمع؟ ابدأ بفكرة رئيسية، وأضف سببين أو مثالين، واستخدم أداة ربط، ثم اختم باستنتاج.</p></div><div class="mfkr-c2-writing-prompts"><span>Useful starters: <strong>In my view…</strong></span><span><strong>One reason is…</strong></span><span><strong>For example…</strong></span><span><strong>As a result…</strong></span><span><strong>In conclusion…</strong></span></div><textarea id="mfkrC2WritingDraft" class="mfkr-c2-writing-area" rows="7" maxlength="3000" placeholder="In my view, our school can help the community by…"></textarea><div class="mfkr-c2-writing-meta"><span id="mfkrC2WordCount">0 words</span><span id="mfkrC2WritingHint">Aim for 80–120 words. Add a clear main idea, two supporting details, and a conclusion.</span></div><div class="mfkr-c1-actions"><button type="button" class="mfkr-btn mfkr-btn-primary" data-c2-writing-save>💾 احفظ فقرتي</button><button type="button" class="mfkr-btn" data-c2-writing-clear>مسح المسودة</button></div><p class="mfkr-audio-status">قبل الحفظ، راجع: هل الفكرة واضحة؟ هل توجد أسباب أو أمثلة؟ هل استخدمت أدوات الربط؟ هل كتبت خاتمة؟</p></section><section class="mfkr-quiz-panel"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">FINAL ACTIVITY 05 · MASTER CHALLENGE</div><h2>C2 Master Challenge <span aria-hidden="true">✦</span></h2><p lang="ar">اختبار شامل من 12 سؤالًا يجمع المفردات والفهم والاستنتاج والقواعد والتواصل.</p></div><div id="mfkrC2Quiz"></div></section><section class="mfkr-topic-panel mfkr-a2-progress-panel"><div class="mfkr-topic-heading"><div><div class="mfkr-mini-eyebrow">MY PROGRESS · تقدّمي</div><h2>Your C2 Journey</h2><div class="mfkr-c1-story-title-ar" lang="ar">أنت في المستوى الأخير — واصل التقدّم!</div></div><span class="mfkr-art" aria-hidden="true">🏆</span></div><div class="mfkr-a2-progress-detail"><span id="mfkrC2ProgressActivities">0 / 6 activities completed</span><span>Best master score: <strong id="mfkrC2BestScore">0 / 12</strong></span><span>Total attempts: <strong id="mfkrC2Attempts">0</strong></span></div><p class="mfkr-audio-status" id="mfkrC2SaveStatus" aria-live="polite">جارٍ تحميل تقدّمك…</p></section>'+backButtons(url('older'),'← الرجوع إلى Growing Learners')+'<div class="mfkr-note">لأفضل نتيجة: اقرأ النصوص قبل الإجابة، واستخدم المفردات الجديدة في فقرتك، وحاول توضيح سبب اختيارك بدلًا من حفظ الإجابة فقط.</div>');
+  function bindPassageReadIndicators(){
+    readPassages.forEach(function(index){var btn=root.querySelector('[data-c2-read-done="'+index+'"]');if(btn){btn.textContent='✓ Completed';btn.disabled=true;}});
+  }
+  renderVocab();drawInference();drawConnectors();drawSpeaking();drawFinalQuiz();initializeProgress();
+  root.addEventListener('input',function(event){
+    if(event.target&&event.target.id==='mfkrC2WritingDraft'){writingDraft=event.target.value;updateWritingCount();saveProgress();}
+  });
+  root.addEventListener('click',function(event){
+    var topicButton=event.target.closest('[data-c2-topic]');if(topicButton){currentTopic=topicButton.getAttribute('data-c2-topic');renderVocab();return;}
+    var sound=event.target.closest('[data-c2-speak]');if(sound){var phrase=sound.getAttribute('data-c2-speak');markWord(sound.getAttribute('data-c2-track')||phrase);speakC2(phrase,phrase.length>20?.86:.78);return;}
+    var passageSound=event.target.closest('[data-c2-pass-listen]');if(passageSound){var pi=Number(passageSound.getAttribute('data-c2-pass-listen'));if(passages[pi])speakC2(passages[pi].lines.map(function(line){return line.en;}).join(' '),.77);return;}
+    var readDone=event.target.closest('[data-c2-read-done]');if(readDone){var ri=Number(readDone.getAttribute('data-c2-read-done'));if(Number.isInteger(ri)&&ri>=0&&ri<passages.length&&readPassages.indexOf(ri)<0)readPassages.push(ri);bindPassageReadIndicators();if(readPassages.length===passages.length)markActivity('reading');saveProgress();return;}
+    var inferencePick=event.target.closest('[data-c2-inference]');
+    if(inferencePick&&!inferenceAnswered){var ii=Number(inferencePick.getAttribute('data-c2-inference')),ic=!!inferenceOptions[ii].correct;inferenceAnswered=true;if(ic)inferenceScore++;root.querySelectorAll('[data-c2-inference]').forEach(function(btn){var k=Number(btn.getAttribute('data-c2-inference'));btn.disabled=true;if(inferenceOptions[k].correct)btn.classList.add('is-correct');else if(btn===inferencePick&&!ic)btn.classList.add('is-wrong');});var ifb=root.querySelector('#mfkrC2InferenceFeedback');ifb.textContent=ic?'ممتاز! استندت إلى دليل مناسب.':'راجع النص مرة أخرى. الإجابة الصحيحة: '+inferenceOptions.filter(function(o){return o.correct;})[0].text;ifb.classList.toggle('is-right',ic);ifb.classList.toggle('is-wrong',!ic);root.querySelector('[data-c2-inference-next]').disabled=false;var iscore=root.querySelector('#mfkrC2Inference .mfkr-quiz-score');if(iscore)iscore.textContent='Score: '+inferenceScore;return;}
+    if(event.target.closest('[data-c2-inference-next]')&&inferenceAnswered){inferenceIndex++;drawInference();return;}
+    if(event.target.closest('[data-c2-inference-restart]')){inferenceIndex=0;inferenceScore=0;inferenceAnswered=false;drawInference();return;}
+    var connectorPick=event.target.closest('[data-c2-connector]');
+    if(connectorPick&&!connectorAnswered){var ci=Number(connectorPick.getAttribute('data-c2-connector')),cc=ci===connectorQuestions[connectorIndex].correct;connectorAnswered=true;if(cc)connectorScore++;root.querySelectorAll('[data-c2-connector]').forEach(function(btn){var k=Number(btn.getAttribute('data-c2-connector'));btn.disabled=true;if(k===connectorQuestions[connectorIndex].correct)btn.classList.add('is-correct');else if(btn===connectorPick&&!cc)btn.classList.add('is-wrong');});var cfb=root.querySelector('#mfkrC2ConnectorFeedback');cfb.textContent=cc?'اختيار ممتاز؛ الجملة مترابطة وصحيحة.':'اختيار آخر أنسب هنا: '+connectorQuestions[connectorIndex].options[connectorQuestions[connectorIndex].correct];cfb.classList.toggle('is-right',cc);cfb.classList.toggle('is-wrong',!cc);root.querySelector('[data-c2-connector-next]').disabled=false;var cs=root.querySelector('#mfkrC2Connectors .mfkr-quiz-score');if(cs)cs.textContent='Score: '+connectorScore;return;}
+    if(event.target.closest('[data-c2-connector-next]')&&connectorAnswered){connectorIndex++;drawConnectors();return;}
+    if(event.target.closest('[data-c2-connector-restart]')){connectorIndex=0;connectorScore=0;connectorAnswered=false;drawConnectors();return;}
+    var speakingPick=event.target.closest('[data-c2-speaking]');
+    if(speakingPick&&!speakingAnswered){var si=Number(speakingPick.getAttribute('data-c2-speaking')),sc=!!speakingOptions[si].correct;speakingAnswered=true;if(sc)speakingScore++;root.querySelectorAll('[data-c2-speaking]').forEach(function(btn){var k=Number(btn.getAttribute('data-c2-speaking'));btn.disabled=true;if(speakingOptions[k].correct)btn.classList.add('is-correct');else if(btn===speakingPick&&!sc)btn.classList.add('is-wrong');});var sfb=root.querySelector('#mfkrC2SpeakingFeedback');sfb.textContent=sc?'رد مناسب وواضح ومحترم.':'جرّب ردًا أوضح وأكثر احترامًا: '+speakingOptions.filter(function(o){return o.correct;})[0].text;sfb.classList.toggle('is-right',sc);sfb.classList.toggle('is-wrong',!sc);root.querySelector('[data-c2-speaking-next]').disabled=false;var ss=root.querySelector('#mfkrC2Speaking .mfkr-quiz-score');if(ss)ss.textContent='Score: '+speakingScore;return;}
+    if(event.target.closest('[data-c2-speaking-next]')&&speakingAnswered){speakingIndex++;drawSpeaking();return;}
+    if(event.target.closest('[data-c2-speaking-restart]')){speakingIndex=0;speakingScore=0;speakingAnswered=false;drawSpeaking();return;}
+    if(event.target.closest('[data-c2-writing-save]')){writingDraft=root.querySelector('#mfkrC2WritingDraft').value;updateWritingCount();if(wordCount(writingDraft)>=40)markActivity('writing');saveProgress();var saveBtn=root.querySelector('[data-c2-writing-save]');saveBtn.textContent='✓ تم حفظ المسودة';setTimeout(function(){if(saveBtn&&saveBtn.isConnected)saveBtn.textContent='💾 احفظ فقرتي';},1600);return;}
+    if(event.target.closest('[data-c2-writing-clear]')){writingDraft='';var draft=root.querySelector('#mfkrC2WritingDraft');if(draft)draft.value='';updateWritingCount();saveProgress();return;}
+    var finalPick=event.target.closest('[data-c2-quiz]');
+    if(finalPick&&!quizAnswered){var qi=Number(finalPick.getAttribute('data-c2-quiz')),qc=!!quizOptions[qi].correct;quizAnswered=true;if(qc)quizScore++;root.querySelectorAll('[data-c2-quiz]').forEach(function(btn){var k=Number(btn.getAttribute('data-c2-quiz'));btn.disabled=true;if(quizOptions[k].correct)btn.classList.add('is-correct');else if(btn===finalPick&&!qc)btn.classList.add('is-wrong');});var qfb=root.querySelector('#mfkrC2QuizFeedback');qfb.textContent=qc?'إجابة ممتازة!':'الإجابة الصحيحة: '+quizOptions.filter(function(o){return o.correct;})[0].text;qfb.classList.toggle('is-right',qc);qfb.classList.toggle('is-wrong',!qc);var qscore=root.querySelector('#mfkrC2Quiz .mfkr-quiz-score');if(qscore)qscore.textContent='Score: '+quizScore;root.querySelector('[data-c2-quiz-next]').disabled=false;return;}
+    if(event.target.closest('[data-c2-quiz-next]')&&quizAnswered){quizIndex++;drawFinalQuiz();return;}
+    if(event.target.closest('[data-c2-quiz-restart]')){quizIndex=0;quizScore=0;quizAnswered=false;drawFinalQuiz();return;}
+  });
+}
+
 function renderB2(){
   document.title='B2 — Reading Builders | Mr. Fluent Kids';
   var vocab=[
@@ -13892,7 +14145,7 @@ function renderB1(){
   });
 }
 
-if(route==='hub')renderHub();else if(route==='younger'||route==='older')renderLevels(route);else if(route==='a1')renderAlphabet();else if(route==='a2')renderA2();else if(route==='b1')renderB1();else if(route==='b2')renderB2();else if(route==='c1')renderC1();else if(route==='soon')renderSoon();else{renderHub();}
+if(route==='hub')renderHub();else if(route==='younger'||route==='older')renderLevels(route);else if(route==='a1')renderAlphabet();else if(route==='a2')renderA2();else if(route==='b1')renderB1();else if(route==='b2')renderB2();else if(route==='c1')renderC1();else if(route==='c2')renderC2();else if(route==='soon')renderSoon();else{renderHub();}
 // Apply after the Kids content is rendered so its own cards remain visible.
 isolateKidsPage();
 // Catch any late-created academy nodes and keep them outside this page-only view.
