@@ -1,13 +1,23 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v149';
+const CACHE_NAME = 'mr-fluent-offline-student-v150';
 const BRAND_VERSION = 'doma-glass-v11';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v149', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v150', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
+const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
+const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
+const kidsOlderUrl = new URL('./MR_FLUENT_KIDS_OLDER.html', self.registration.scope);
+const kidsA1Url = new URL('./MR_FLUENT_KIDS_A1.html', self.registration.scope);
+const kidsComingSoonUrl = new URL('./MR_FLUENT_KIDS_COMING_SOON.html', self.registration.scope);
 const SHELL = [
   scopeUrl.href,
   indexUrl.href,
   appStartUrl.href,
+  kidsHubUrl.href,
+  kidsYoungerUrl.href,
+  kidsOlderUrl.href,
+  kidsA1Url.href,
+  kidsComingSoonUrl.href,
   versioned('./manifest.webmanifest'),
   versioned('./doma-student-app-icon.svg'),
   versioned('./mrfluent-auth-photo-v113.webp')
