@@ -13454,7 +13454,7 @@ function renderA2(){
   function renderWords(){
     var list=currentTopic==='all'?vocab:vocab.filter(function(item){return item.category===currentTopic;});
     root.querySelector('#mfkrA2WordGrid').innerHTML=list.map(function(item){
-      return '<article class="mfkr-word-card"><div class="mfkr-word-card-head"><span class="mfkr-word-picture" aria-hidden="true">'+item.picture+'</span><span class="mfkr-word-tag">'+esc(item.category==='school'?'SCHOOL':item.category==='routine'?'ROUTINE':item.category==='hobbies'?'HOBBIES':'PLACES')+'</span></div><div class="mfkr-word">'+esc(item.word)+'</div><div class="mfkr-meaning" lang="ar">'+esc(item.meaning)+'</div><div class="mfkr-example-label">USE IT IN A SENTENCE</div><div class="mfkr-example" lang="en">'+esc(item.example)+'</div><div class="mfkr-example-ar" lang="ar">'+esc(item.sentence)+'</div><div class="mfkr-word-actions"><button type="button" class="mfkr-sound" data-a2-speak="'+esc(item.word)+'">🔊 الكلمة</button><button type="button" class="mfkr-sound" data-a2-speak="'+esc(item.example)+'">♫ الجملة</button></div></article>';
+      return '<article class="mfkr-word-card"><div class="mfkr-word-card-head"><span class="mfkr-word-picture" aria-hidden="true">'+item.picture+'</span><span class="mfkr-word-tag">'+esc(item.category==='school'?'SCHOOL':item.category==='routine'?'ROUTINE':item.category==='hobbies'?'HOBBIES':'PLACES')+'</span></div><div class="mfkr-word">'+esc(item.word)+'</div><div class="mfkr-meaning" lang="ar">'+esc(item.meaning)+'</div><div class="mfkr-example-label">USE IT IN A SENTENCE</div><div class="mfkr-example" lang="en">'+esc(item.example)+'</div><div class="mfkr-example-ar" lang="ar">'+esc(item.sentence)+'</div><div class="mfkr-word-actions"><button type="button" class="mfkr-sound" data-a2-speak="'+esc(item.word)+'" data-a2-word-track="'+esc(item.word)+'">🔊 الكلمة</button><button type="button" class="mfkr-sound" data-a2-speak="'+esc(item.example)+'" data-a2-word-track="'+esc(item.word)+'">♫ الجملة</button></div></article>';
     }).join('');
     root.querySelectorAll('[data-a2-topic]').forEach(function(button){
       var active=button.getAttribute('data-a2-topic')===currentTopic;
@@ -13517,7 +13517,7 @@ function renderA2(){
     var topicButton=event.target.closest('[data-a2-topic]');
     if(topicButton){currentTopic=topicButton.getAttribute('data-a2-topic');renderWords();return;}
     var soundButton=event.target.closest('[data-a2-speak]');
-    if(soundButton){var sound=soundButton.getAttribute('data-a2-speak');markWord(sound);speakA2(sound,sound.length>18?.86:.78);return;}
+    if(soundButton){var sound=soundButton.getAttribute('data-a2-speak');var trackedWord=soundButton.getAttribute('data-a2-word-track')||sound;markWord(trackedWord);speakA2(sound,sound.length>18?.86:.78);return;}
     var storyLineButton=event.target.closest('[data-a2-story-line]');
     if(storyLineButton){var line=story[Number(storyLineButton.getAttribute('data-a2-story-line'))];if(line)speakA2(line.en,.8);return;}
     if(event.target.closest('[data-a2-story-listen]')){speakA2(story.map(function(line){return line.en;}).join(' '),.77);markActivity('story');return;}
