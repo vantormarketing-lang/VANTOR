@@ -13304,6 +13304,45 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name::after{
 }
 </style>
 
+<style id="mf-kids-journey-payment-v1">
+#mfKidsStandaloneRoot .mfkj-pay-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:16px;align-items:start;margin:18px 0}
+#mfKidsStandaloneRoot .mfkj-pay-card{min-width:0;padding:clamp(16px,3vw,24px);border:1px solid rgba(205,164,255,.25);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.028));box-shadow:0 18px 48px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(18px)}
+#mfKidsStandaloneRoot .mfkj-pay-kicker{display:flex;align-items:center;gap:8px;color:#91f0db;font-size:10px;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
+#mfKidsStandaloneRoot .mfkj-pay-card h2{margin:10px 0 7px;color:#fff7ff;font-size:clamp(21px,3.4vw,30px);line-height:1.15;letter-spacing:-.5px}
+#mfKidsStandaloneRoot .mfkj-pay-muted{color:#c0afc9;font-size:12px;line-height:1.8}
+#mfKidsStandaloneRoot .mfkj-pay-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:15px 0;padding:14px 15px;border:1px solid rgba(145,240,219,.2);border-radius:15px;background:linear-gradient(110deg,rgba(125,86,196,.18),rgba(55,149,128,.1))}
+#mfKidsStandaloneRoot .mfkj-pay-price strong{color:#e7d4ff;font-size:34px;font-weight:1000;line-height:1}
+#mfKidsStandaloneRoot .mfkj-pay-price span{color:#91f0db;font-size:11px;font-weight:850}
+#mfKidsStandaloneRoot .mfkj-pay-receiver{margin-top:12px;padding:14px 15px;border:1px solid rgba(255,157,212,.22);border-radius:15px;background:rgba(82,42,76,.18)}
+#mfKidsStandaloneRoot .mfkj-pay-receiver small{display:block;color:#c0afc9;font-size:10px;font-weight:800;letter-spacing:.1em}
+#mfKidsStandaloneRoot .mfkj-pay-receiver strong{display:block;margin-top:6px;color:#fff7ff;font-size:clamp(20px,3.5vw,28px);letter-spacing:.04em}
+#mfKidsStandaloneRoot .mfkj-pay-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+#mfKidsStandaloneRoot .mfkj-pay-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+#mfKidsStandaloneRoot .mfkj-pay-field.full{grid-column:1/-1}
+#mfKidsStandaloneRoot .mfkj-pay-field label{color:#e9dcf6;font-size:11px;font-weight:850}
+#mfKidsStandaloneRoot .mfkj-pay-field input,#mfKidsStandaloneRoot .mfkj-pay-field select{width:100%;min-width:0;min-height:45px;padding:11px 12px;border:1px solid rgba(205,164,255,.25);border-radius:12px;background:rgba(12,9,18,.55);color:#fff7ff;font:inherit;font-size:13px;outline:none}
+#mfKidsStandaloneRoot .mfkj-pay-field input:focus,#mfKidsStandaloneRoot .mfkj-pay-field select:focus{border-color:rgba(145,240,219,.78);box-shadow:0 0 0 3px rgba(145,240,219,.1)}
+#mfKidsStandaloneRoot .mfkj-pay-field input[type=file]{padding:8px;font-size:11px}
+#mfKidsStandaloneRoot .mfkj-pay-field input[type=file]::file-selector-button{margin-right:9px;padding:7px 9px;border:1px solid rgba(205,164,255,.3);border-radius:8px;background:rgba(125,86,196,.2);color:#fff7ff}
+#mfKidsStandaloneRoot .mfkj-pay-help{color:#a899b7;font-size:10px;line-height:1.6}
+#mfKidsStandaloneRoot .mfkj-pay-consent{display:flex;align-items:flex-start;gap:9px;margin-top:13px;color:#c0afc9;font-size:11px;line-height:1.7}
+#mfKidsStandaloneRoot .mfkj-pay-consent input{flex:0 0 auto;width:17px;height:17px;margin-top:2px;accent-color:#91f0db}
+#mfKidsStandaloneRoot .mfkj-pay-submit{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin-top:15px;padding:12px 16px;border:1px solid rgba(255,190,238,.45);border-radius:13px;background:linear-gradient(110deg,#8052c6,#a94d91);box-shadow:0 10px 25px rgba(145,59,161,.2);color:white;font-size:13px;font-weight:950;cursor:pointer}
+#mfKidsStandaloneRoot .mfkj-pay-submit:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+#mfKidsStandaloneRoot .mfkj-pay-status{margin-top:12px;padding:12px 13px;border:1px solid rgba(205,164,255,.2);border-radius:12px;background:rgba(255,255,255,.04);color:#d9cce6;font-size:12px;line-height:1.75;overflow-wrap:anywhere}
+#mfKidsStandaloneRoot .mfkj-pay-status.is-error{border-color:rgba(255,133,157,.38);color:#ffc0cb;background:rgba(113,28,52,.12)}
+#mfKidsStandaloneRoot .mfkj-pay-status.is-ok{border-color:rgba(145,240,219,.32);color:#b9ffed;background:rgba(35,104,88,.12)}
+#mfKidsStandaloneRoot .mfkj-pay-status.is-warn{border-color:rgba(255,209,130,.28);color:#ffe4b3;background:rgba(121,76,25,.12)}
+#mfKidsStandaloneRoot .mfkj-pay-auth-actions{display:none;gap:8px;flex-wrap:wrap;margin-top:11px}
+#mfKidsStandaloneRoot .mfkj-pay-instructions{display:grid;gap:10px;margin-top:12px}
+#mfKidsStandaloneRoot .mfkj-pay-step{display:flex;gap:10px;align-items:flex-start;padding:11px;border:1px solid rgba(205,164,255,.14);border-radius:13px;background:rgba(255,255,255,.025)}
+#mfKidsStandaloneRoot .mfkj-pay-step b{display:grid;place-items:center;flex:0 0 26px;height:26px;border-radius:9px;background:rgba(145,240,219,.1);color:#91f0db;font-size:11px}
+#mfKidsStandaloneRoot .mfkj-pay-step p{margin:0;color:#c0afc9;font-size:11px;line-height:1.7}
+#mfKidsStandaloneRoot .mfkj-pay-gate{margin:18px 0;padding:clamp(17px,3vw,27px);border:1px solid rgba(205,164,255,.25);border-radius:22px;background:linear-gradient(145deg,rgba(125,86,196,.14),rgba(255,255,255,.035));box-shadow:0 18px 48px rgba(0,0,0,.22)}
+#mfKidsStandaloneRoot .mfkj-pay-gate h2{margin:8px 0;color:#fff7ff;font-size:clamp(22px,3.7vw,31px)}
+#mfKidsStandaloneRoot .mfkj-pay-gate p{color:#c0afc9;font-size:13px;line-height:1.8}
+@media(max-width:760px){#mfKidsStandaloneRoot .mfkj-pay-layout{grid-template-columns:minmax(0,1fr)}#mfKidsStandaloneRoot .mfkj-pay-fields{grid-template-columns:minmax(0,1fr)}#mfKidsStandaloneRoot .mfkj-pay-field.full{grid-column:auto}#mfKidsStandaloneRoot .mfkj-pay-receiver strong{font-size:24px}}
+</style>
 <script id="doma-kids-direct-account">
 (function(){
   var params=new URLSearchParams(window.location.search);
@@ -14996,7 +15035,247 @@ function renderB1(){
   });
 }
 
-if(route==='hub')renderHub();else if(route==='review')renderReview();else if(route==='younger'||route==='older')renderLevels(route);else if(route==='a1')renderAlphabet();else if(route==='a2')renderA2();else if(route==='b1')renderB1();else if(route==='b2')renderB2();else if(route==='c1')renderC1();else if(route==='c2')renderC2();else if(route==='soon')renderSoon();else{renderHub();}
+
+function kidsJourneySubscribeUrl(code){return url('subscribe','&level='+encodeURIComponent(String(code||'A1').toUpperCase()));}
+function kidsJourneyGetClient(){return typeof sb!=='undefined'&&sb&&sb.from&&sb.auth?sb:null;}
+function kidsJourneyDefinition(code){return journeyLevels.find(function(item){return item.code===String(code||'').toUpperCase();})||journeyLevels[0];}
+function kidsJourneyDate(value){if(!value)return '—';var d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});}
+async function kidsJourneyLoadContext(code){
+  var client=kidsJourneyGetClient();
+  if(!client)return {error:'The academy connection is not ready. Refresh this page and try again.'};
+  var authResult=await client.auth.getUser();
+  if(authResult.error)return {error:'Could not verify your sign-in. Please sign in again and refresh.'};
+  var user=authResult.data&&authResult.data.user||null;
+  if(!user)return {user:null};
+  var trackResult=await client.from('mrfluent_kids_tracks').select('id,code,title,price_egp,duration_days,is_published').eq('code','KIDS_JOURNEY').eq('is_published',true).maybeSingle();
+  if(trackResult.error)return {user:user,error:'Could not load the Kids subscription plan: '+trackResult.error.message};
+  if(!trackResult.data)return {user:user,error:'The Kids Journey payment plan is not configured yet. Contact the academy.'};
+  var levelsResult=await client.from('mrfluent_kids_levels').select('id,track_id,code,title,sort_order,is_published').eq('track_id',trackResult.data.id).eq('is_published',true).order('sort_order',{ascending:true});
+  if(levelsResult.error)return {user:user,track:trackResult.data,error:'Could not load the Kids levels: '+levelsResult.error.message};
+  var levels=levelsResult.data||[];
+  var level=levels.find(function(item){return item.code===String(code||'A1').toUpperCase();});
+  if(!level)return {user:user,track:trackResult.data,levels:levels,error:'This Kids level is not available for subscription yet.'};
+  var now=new Date().toISOString();
+  var subsResult=await client.from('mrfluent_kids_subscriptions').select('id,track_id,level_id,status,starts_at,expires_at,price_egp').eq('user_id',user.id).eq('track_id',trackResult.data.id).eq('status','active').gt('expires_at',now).lte('starts_at',now).order('expires_at',{ascending:false}).limit(10);
+  if(subsResult.error)return {user:user,track:trackResult.data,levels:levels,level:level,error:'Could not verify your Kids access: '+subsResult.error.message};
+  var requestResult=await client.from('mrfluent_kids_enrollment_requests').select('id,status,track_id,requested_level_id,admin_note,created_at,reviewed_at').eq('user_id',user.id).eq('track_id',trackResult.data.id).order('created_at',{ascending:false}).limit(20);
+  if(requestResult.error)return {user:user,track:trackResult.data,levels:levels,level:level,subscriptions:subsResult.data||[],error:'Could not load your Kids payment request status: '+requestResult.error.message};
+  var requests=requestResult.data||[];
+  var pending=requests.find(function(r){return String(r.status).toLowerCase()==='pending';})||null;
+  var current=(subsResult.data||[])[0]||null;
+  var active=(subsResult.data||[]).find(function(s){return s.level_id===level.id;})||null;
+  var latest=requests.find(function(r){return r.requested_level_id===level.id;})||null;
+  return {user:user,track:trackResult.data,levels:levels,level:level,subscriptions:subsResult.data||[],current:current,active:active,pending:pending,latest:latest,requests:requests};
+}
+function kidsJourneyStatus(element,message,kind){
+  if(!element)return;
+  element.className='mfkj-pay-status'+(kind?' '+kind:'');
+  element.textContent=String(message||'');
+}
+function kidsJourneyAuthActions(show){
+  var host=root.querySelector('[data-mfj-pay-auth-actions]');
+  if(host)host.style.display=show?'flex':'none';
+}
+function kidsJourneyOpenAuth(mode){
+  if(typeof openAuth==='function'){openAuth(mode||'login');return;}
+  window.location.href='./?auth=signup&kids=subscribe&level='+encodeURIComponent((query.get('level')||'A1').toUpperCase());
+}
+function kidsJourneyDisablePayment(disabled){
+  var form=root.querySelector('#mfkjKidsPaymentForm');
+  if(!form)return;
+  form.querySelectorAll('input,select,button[type="submit"]').forEach(function(el){el.disabled=!!disabled;});
+}
+function kidsJourneyRenderGateMessage(code,ctx){
+  var host=root.querySelector('[data-mfj-kids-gate-status]');
+  var actions=root.querySelector('[data-mfj-kids-gate-actions]');
+  if(!host||!actions)return;
+  var def=kidsJourneyDefinition(code);
+  if(ctx.error){
+    host.className='mfkj-pay-status is-error';
+    host.textContent=ctx.error+' The learning content will remain locked until access can be verified.';
+    actions.innerHTML='<a class="mfkr-btn" href="'+url(code.toLowerCase())+'">Retry access check ↻</a><a class="mfkr-btn" href="'+kidsJourneySubscribeUrl(code)+'">Open subscription page</a>';
+    return;
+  }
+  if(!ctx.user){
+    host.className='mfkj-pay-status is-warn';
+    host.textContent='Sign in with your DOMA Academy account. This level opens after its separate Kids subscription is approved.';
+    actions.innerHTML='<button type="button" class="mfkr-btn mfkj-primary" data-mfj-kids-login>Sign in</button><button type="button" class="mfkr-btn" data-mfj-kids-signup>Create account</button>';
+    return;
+  }
+  if(ctx.active)return;
+  if(ctx.pending){
+    var pendingLevel=ctx.levels.find(function(l){return l.id===ctx.pending.requested_level_id;});
+    host.className='mfkj-pay-status is-warn';
+    host.textContent='Payment request is waiting for admin review for '+(pendingLevel?pendingLevel.code+' · '+pendingLevel.title:'another Kids level')+'. A new request cannot be submitted until this one is reviewed.';
+    actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+kidsJourneySubscribeUrl(pendingLevel?pendingLevel.code:code)+'">View payment request status</a><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a>';
+    return;
+  }
+  host.className='mfkj-pay-status';
+  if(ctx.current){
+    var currentLevel=ctx.levels.find(function(l){return l.id===ctx.current.level_id;});
+    host.textContent='Your current Kids access is '+(currentLevel?currentLevel.code+' · '+currentLevel.title:'another level')+' until '+kidsJourneyDate(ctx.current.expires_at)+'. To change to '+def.code+' or renew for another 30 days, submit its payment receipt for admin approval.';
+  }else if(ctx.latest&&String(ctx.latest.status).toLowerCase()==='rejected'){
+    host.textContent='Your previous request for this level was rejected. Check the admin note if available, then submit a new payment request.';
+  }else{
+    host.textContent='No active subscription was found for this level. Submit the Mobile Cash sender number and receipt below; the level will remain locked until an administrator approves payment.';
+  }
+  actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+kidsJourneySubscribeUrl(code)+'">Subscribe · 100 EGP / 30 days</a><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a>';
+}
+async function kidsJourneyRenderLevelGate(code,renderer){
+  var def=kidsJourneyDefinition(code);
+  document.title=def.code+' · Subscription Required | Mr. Fluent Kids';
+  root.innerHTML=shell('KIDS COURSE ACCESS','Unlock '+esc(def.title)+'.','الاشتراك يفتح المستوى المختار.','Each Kids level has its own 30-day subscription. Your A1–C2 English Course and school-grade access remain separate.','<div class="mfkj-pay-gate"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> MEMBERSHIP CHECK</div><h2>'+esc(def.code)+' · '+esc(def.title)+'</h2><div class="mfkj-pay-price"><strong>100</strong><span>EGP / 30 days</span></div><div data-mfj-kids-gate-status class="mfkj-pay-status">Checking your Kids subscription…</div><div class="mfkr-back-row" data-mfj-kids-gate-actions><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a></div></div>'+backButtons(url(def.group),'← Back to levels'));
+  var ctx;
+  try{ctx=await kidsJourneyLoadContext(def.code);}catch(e){ctx={error:e&&e.message||'Could not verify Kids access.'};}
+  if(ctx&&ctx.active){
+    renderer();
+    journeyRenderCurrent();
+    return;
+  }
+  kidsJourneyRenderGateMessage(def.code,ctx||{error:'Could not verify Kids access.'});
+  var login=root.querySelector('[data-mfj-kids-login]');
+  var signup=root.querySelector('[data-mfj-kids-signup]');
+  if(login)login.addEventListener('click',function(){kidsJourneyOpenAuth('login');});
+  if(signup)signup.addEventListener('click',function(){kidsJourneyOpenAuth('signup');});
+}
+function kidsJourneyRenderSubscription(){
+  var def=kidsJourneyDefinition(query.get('level')||'A1');
+  document.title='Kids Subscription · '+def.code+' | Mr. Fluent Kids';
+  var receiver=typeof MOBILE_CASH!=='undefined'?MOBILE_CASH:'01006525147';
+  var levelOptions=journeyLevels.map(function(item){return '<option value="'+esc(item.code)+'" '+(item.code===def.code?'selected':'')+'>'+esc(item.code+' · '+item.title)+'</option>';}).join('');
+  root.innerHTML=shell('SECURE KIDS SUBSCRIPTION','Unlock your next level.','اشترك في المستوى اللي اخترته.','Submit the Mobile Cash receipt and sender number. Access opens only after the admin verifies the payment.','<div class="mfkj-pay-layout"><section class="mfkj-pay-card"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> LEVEL MEMBERSHIP</div><h2>'+esc(def.code+' · '+def.title)+'</h2><p class="mfkj-pay-muted">One level at a time · separate from school-grade and A1–C2 adult-course subscriptions.</p><div class="mfkj-pay-price"><strong id="mfkjPayAmount">100</strong><span>EGP / <b id="mfkjPayDays">30</b> days</span></div><div class="mfkj-pay-receiver"><small>OFFICIAL MOBILE CASH NUMBER · رقم التحويل</small><strong>'+esc(receiver)+'</strong><p class="mfkj-pay-muted">Transfer the exact amount shown above, then upload the transfer receipt.</p></div><div class="mfkj-pay-instructions"><div class="mfkj-pay-step"><b>1</b><p>Transfer to the official number above using Mobile Cash.</p></div><div class="mfkj-pay-step"><b>2</b><p>Enter the sender phone number used for the transfer and the parent/guardian contact.</p></div><div class="mfkj-pay-step"><b>3</b><p>Upload a clear receipt. Admin approval is required before the selected level opens.</p></div></div></section><section class="mfkj-pay-card"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> PAYMENT DETAILS</div><h2>Send your receipt.</h2><form id="mfkjKidsPaymentForm" data-mfkj-level="'+esc(def.code)+'"><div class="mfkj-pay-fields"><div class="mfkj-pay-field full"><label for="mfkjPayLevel">Learning level · المستوى</label><select id="mfkjPayLevel" name="level">'+levelOptions+'</select></div><div class="mfkj-pay-field full"><label for="mfkjGuardianContact">Parent or guardian contact *</label><input id="mfkjGuardianContact" name="guardian" type="tel" autocomplete="tel" minlength="7" placeholder="Parent / guardian phone" required><span class="mfkj-pay-help">We use this contact if we need to check the request.</span></div><div class="mfkj-pay-field full"><label for="mfkjSenderPhone">Mobile Cash sender number *</label><input id="mfkjSenderPhone" name="sender" type="tel" autocomplete="tel" minlength="5" placeholder="Phone number used for the transfer" required></div><div class="mfkj-pay-field full"><label for="mfkjReceipt">Payment receipt *</label><input id="mfkjReceipt" name="receipt" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf" required><span class="mfkj-pay-help">JPG, PNG, WEBP or PDF · maximum 5 MB.</span></div><div class="mfkj-pay-field full"><label for="mfkjPayNote">Note (optional)</label><input id="mfkjPayNote" name="note" maxlength="300" placeholder="Any detail for the academy"></div></div><label class="mfkj-pay-consent"><input id="mfkjGuardianConsent" name="consent" type="checkbox" required><span>I am the parent/guardian, or I have permission to submit these payment details.</span></label><button class="mfkj-pay-submit" type="submit" id="mfkjSubmitPayment" disabled>Send payment request</button><div id="mfkjPaymentStatus" class="mfkj-pay-status" aria-live="polite">Checking your account and request status…</div><div class="mfkj-pay-auth-actions" data-mfj-pay-auth-actions><button class="mfkr-btn mfkj-primary" type="button" data-mfkj-auth="login">Sign in</button><button class="mfkr-btn" type="button" data-mfkj-auth="signup">Create account</button></div></form></section></div>'+backButtons(url('hub'),'← Back to Kids paths'));
+  var form=root.querySelector('#mfkjKidsPaymentForm');
+  var select=root.querySelector('#mfkjPayLevel');
+  select.addEventListener('change',function(){window.location.href=kidsJourneySubscribeUrl(select.value);});
+  form.addEventListener('submit',function(event){event.preventDefault();kidsJourneySubmitPayment(def.code);});
+  root.querySelectorAll('[data-mfkj-auth]').forEach(function(button){button.addEventListener('click',function(){kidsJourneyOpenAuth(button.getAttribute('data-mfkj-auth'));});});
+  kidsJourneyLoadPaymentState(def.code);
+}
+async function kidsJourneyLoadPaymentState(code){
+  var status=root.querySelector('#mfkjPaymentStatus');
+  if(!status)return;
+  var ctx;
+  try{ctx=await kidsJourneyLoadContext(code);}catch(e){ctx={error:e&&e.message||'Could not load payment status.'};}
+  if(!root.querySelector('#mfkjPaymentStatus'))return;
+  var form=root.querySelector('#mfkjKidsPaymentForm');
+  var submit=root.querySelector('#mfkjSubmitPayment');
+  var amount=root.querySelector('#mfkjPayAmount'),days=root.querySelector('#mfkjPayDays');
+  if(ctx.track){if(amount)amount.textContent=String(ctx.track.price_egp==null?100:ctx.track.price_egp);if(days)days.textContent=String(ctx.track.duration_days||30);}
+  if(ctx.error){
+    kidsJourneyStatus(status,ctx.error,'is-error');
+    kidsJourneyDisablePayment(true);
+    return;
+  }
+  if(!ctx.user){
+    kidsJourneyStatus(status,'Sign in or create a DOMA Academy account before submitting payment. Your receipt remains private.','is-warn');
+    kidsJourneyDisablePayment(true);
+    kidsJourneyAuthActions(true);
+    return;
+  }
+  kidsJourneyAuthActions(false);
+  if(ctx.pending){
+    var pendingLevel=ctx.levels.find(function(l){return l.id===ctx.pending.requested_level_id;});
+    kidsJourneyStatus(status,'A payment request for '+(pendingLevel?pendingLevel.code+' · '+pendingLevel.title:'this Kids path')+' is already pending admin approval. Wait for the review before submitting another request.','is-warn');
+    if(submit){submit.disabled=true;submit.textContent='Payment request pending review';}
+    return;
+  }
+  if(ctx.current){
+    var currentLevel=ctx.levels.find(function(l){return l.id===ctx.current.level_id;});
+    var suffix=currentLevel&&currentLevel.id===ctx.level.id?'Your current access expires ':'Your current access is '+(currentLevel?currentLevel.code+' · '+currentLevel.title:'another level')+' until ';
+    kidsJourneyStatus(status,suffix+kidsJourneyDate(ctx.current.expires_at)+'. Approval of this payment will renew access for 30 days and assign the selected level.','is-ok');
+  }else if(ctx.latest&&String(ctx.latest.status).toLowerCase()==='rejected'){
+    kidsJourneyStatus(status,'Your earlier request for this level was rejected. You may send a new receipt. '+(ctx.latest.admin_note||''),'is-warn');
+  }else{
+    kidsJourneyStatus(status,'Your payment details will be sent to the academy for review. The level remains locked until approval.','');
+  }
+  if(form)form.querySelectorAll('input,select').forEach(function(el){el.disabled=false;});
+  if(submit){submit.disabled=false;submit.textContent='Send payment request';}
+}
+async function kidsJourneySubmitPayment(code){
+  var form=root.querySelector('#mfkjKidsPaymentForm');
+  var status=root.querySelector('#mfkjPaymentStatus');
+  var submit=root.querySelector('#mfkjSubmitPayment');
+  if(!form||!status||!submit)return;
+  var client=kidsJourneyGetClient();
+  if(!client){kidsJourneyStatus(status,'The academy connection is not ready. Refresh and try again.','is-error');return;}
+  if(!form.querySelector('#mfkjGuardianConsent').checked){kidsJourneyStatus(status,'Please confirm the parent/guardian permission before submitting.','is-error');return;}
+  var guardian=form.querySelector('#mfkjGuardianContact').value.trim();
+  var sender=form.querySelector('#mfkjSenderPhone').value.trim();
+  var note=form.querySelector('#mfkjPayNote').value.trim();
+  var file=form.querySelector('#mfkjReceipt').files&&form.querySelector('#mfkjReceipt').files[0];
+  if(guardian.length<7){kidsJourneyStatus(status,'Enter a valid parent or guardian contact.','is-error');return;}
+  if(sender.length<5){kidsJourneyStatus(status,'Enter the sender phone number used for Mobile Cash.','is-error');return;}
+  if(!file){kidsJourneyStatus(status,'Choose the transfer receipt before submitting.','is-error');return;}
+  var allowed=['image/jpeg','image/png','image/webp','application/pdf'];
+  if(allowed.indexOf(String(file.type||'').toLowerCase())<0){kidsJourneyStatus(status,'The receipt must be a JPG, PNG, WEBP, or PDF file.','is-error');return;}
+  if(file.size<1||file.size>5*1024*1024){kidsJourneyStatus(status,'The receipt must be no larger than 5 MB.','is-error');return;}
+  submit.disabled=true;submit.textContent='Uploading receipt…';
+  var uploadedPath=null;
+  try{
+    var ctx=await kidsJourneyLoadContext(code);
+    if(ctx.error)throw new Error(ctx.error);
+    if(!ctx.user)throw new Error('Please sign in before submitting the payment.');
+    if(ctx.pending)throw new Error('There is already a Kids payment request awaiting admin approval.');
+    var extension=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','application/pdf':'pdf'})[file.type.toLowerCase()];
+    var randomId=(window.crypto&&typeof window.crypto.randomUUID==='function')?window.crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(36).slice(2,12);
+    uploadedPath=ctx.user.id+'/kids/'+Date.now()+'-'+randomId+'.'+extension;
+    var upload=await client.storage.from('payment-proofs').upload(uploadedPath,file,{cacheControl:'3600',contentType:file.type,upsert:false});
+    if(upload.error)throw upload.error;
+    submit.textContent='Submitting payment request…';
+    var created=await client.rpc('mrfluent_create_kids_enrollment_request',{
+      p_track_id:ctx.track.id,p_level_id:ctx.level.id,p_guardian_contact:guardian,
+      p_sender_phone:sender,p_proof_path:uploadedPath,p_note:note||null
+    });
+    if(created.error)throw created.error;
+    if(!created.data)throw new Error('The request ID was not returned. Refresh this page to check request status before trying again.');
+    uploadedPath=null;
+    kidsJourneyStatus(status,'Payment request submitted successfully. The admin can now open the receipt and verify the transfer. '+ctx.level.code+' access will open after approval.','is-ok');
+    await kidsJourneyLoadPaymentState(code);
+  }catch(error){
+    if(uploadedPath){
+      try{await client.storage.from('payment-proofs').remove([uploadedPath]);}catch(_){}
+    }
+    kidsJourneyStatus(status,'Could not submit the payment request. '+(error&&error.message?error.message:'Check the connection and try again.'),'is-error');
+  }finally{
+    if(root.querySelector('#mfkjSubmitPayment')&&!(root.querySelector('#mfkjSubmitPayment').textContent||'').includes('pending review')){
+      root.querySelector('#mfkjSubmitPayment').disabled=false;
+      root.querySelector('#mfkjSubmitPayment').textContent='Send payment request';
+    }
+  }
+}
+var kidsJourneyAuthBound=false;
+function kidsJourneyBindAuthRefresh(){
+  if(kidsJourneyAuthBound)return;
+  var client=kidsJourneyGetClient();
+  if(!client||!client.auth||!client.auth.onAuthStateChange)return;
+  kidsJourneyAuthBound=true;
+  client.auth.onAuthStateChange(function(event){
+    if(event!=='SIGNED_IN'&&event!=='SIGNED_OUT'&&event!=='TOKEN_REFRESHED')return;
+    if(route==='subscribe'){kidsJourneyLoadPaymentState(kidsJourneyDefinition(query.get('level')||'A1').code);return;}
+    var item=journeyLevels.find(function(x){return x.route===route;});
+    if(item)kidsJourneyRenderLevelGate(item.code,function(){kidsJourneyRenderLevel(item.code);});
+  });
+}
+function kidsJourneyRenderLevel(code){
+  if(code==='A1')renderAlphabet();
+  else if(code==='A2')renderA2();
+  else if(code==='B1')renderB1();
+  else if(code==='B2')renderB2();
+  else if(code==='C1')renderC1();
+  else if(code==='C2')renderC2();
+}
+
+if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
+else if(route==='a1'||route==='a2'||route==='b1'||route==='b2'||route==='c1'||route==='c2'){
+  var requestedKidsLevel=journeyLevels.find(function(item){return item.route===route;});
+  if(requestedKidsLevel){kidsJourneyRenderLevelGate(requestedKidsLevel.code,function(){kidsJourneyRenderLevel(requestedKidsLevel.code);});kidsJourneyBindAuthRefresh();}
+  else renderHub();
+}
+else if(route==='hub')renderHub();
+else if(route==='review')renderReview();
+else if(route==='younger'||route==='older')renderLevels(route);
+else if(route==='soon')renderSoon();
+else renderHub();
 // Apply after the Kids content is rendered so its own cards remain visible.
 isolateKidsPage();
 journeyAttachTracker();
