@@ -702,11 +702,11 @@ function openStudentLesson(id){
  const gameNeedsAnswer=l.lesson_type==='game'&&Array.isArray(payload.options)&&payload.options.length>0&&payload.correct_index!==undefined&&payload.correct_index!==null&&String(payload.correct_index)!=='';
  const isAlphabetLesson=/alphabet/i.test(String(l.title||''))||l.id==='8d4aafac-a080-4251-b91e-323ce8d4265e';
  if(isAlphabetLesson){
-  host.innerHTML='<h3 class="kid-alphabet-heading">The Alphabet</h3>'+letterCardsMarkup+'<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" onclick="completeStudentLesson(\\''+esc(l.id)+'\\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ تمّمت الحروف')+'</button>';
+  host.innerHTML='<h3 class="kid-alphabet-heading">The Alphabet</h3>'+letterCardsMarkup+'<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" onclick="completeStudentLesson(\''+esc(l.id)+'\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ تمّمت الحروف')+'</button>';
  }else{
   host.innerHTML='<h3 class="kid-bilingual-copy">'+mfKidsBilingual(l.title,extras)+'</h3><p class="kid-bilingual-copy">'+details+'</p>'+letterCardsMarkup+vocab+media+mfKidsVideoMarkup()+(game||'')+
   '<p class="small-print kid-bilingual-copy">'+mfKidsBilingual(l.objective||'Listen, look, practise and do your best.',extras)+'</p>'+
-  '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\\''+esc(l.id)+'\\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ Mark lesson complete')+'</button>';
+  '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\''+esc(l.id)+'\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ Mark lesson complete')+'</button>';
  };
  host.classList.add('show');host.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
