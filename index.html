@@ -13849,6 +13849,7 @@ async function journeyInit(){
   if(local&&local.levels)Object.keys(local.levels).forEach(function(code){journeyMergeLevel(code,local.levels[code]);});
   ['A2','B2','C2'].forEach(journeyLoadLegacyLocal);
   var journeyServerLevels=[];
+  var journeyServerLoaded=false;
   if(journeyUserId&&typeof sb!=='undefined'&&sb&&sb.from){
     try{
       var central=await sb.from('mrfluent_kids_journey_progress').select('level_code,checkpoint_keys,words_seen,stars,badges,wrong_answers,final_quiz_best,final_quiz_attempts,speaking_completed,certificate_earned,certificate_code,certified_at,updated_at').eq('user_id',journeyUserId);
@@ -13862,6 +13863,7 @@ async function journeyInit(){
         journeyRecalculate(serverLevel);
         if(journeyServerLevels.indexOf(row.level_code)<0)journeyServerLevels.push(row.level_code);
       });
+      journeyServerLoaded=true;
       journeySyncStatus='synced';
     }catch(_){journeySyncStatus='error';}
     var specs=[{code:'A2',table:'mrfluent_growing_progress'},{code:'B2',table:'mrfluent_growing_b2_progress'},{code:'C2',table:'mrfluent_growing_c2_progress'}];
@@ -13872,7 +13874,7 @@ async function journeyInit(){
   }
   journeyLevels.forEach(function(item){
     var level=journeyGetLevel(item.code);
-    if(journeyUserId&&journeyServerLevels.indexOf(item.code)<0){
+    if(journeyUserId&&journeyServerLoaded&&journeyServerLevels.indexOf(item.code)<0){
       level.certificateEarned=false;
       level.certificateCode='';
       level.certifiedAt=null;
