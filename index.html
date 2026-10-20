@@ -13246,7 +13246,7 @@ var journeyLevels=[
   {code:'C1',route:'c1',title:'My First Sentences',arabic:'جُمَلي الأولى',group:'younger',icon:'💬',desc:'Build sentences and follow stories'},
   {code:'C2',route:'c2',title:'Confident English',arabic:'ثقة في الإنجليزية',group:'older',icon:'🌟',desc:'Advanced reading and communication'}
 ];
-var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={};
+var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={},journeyWritingQueued=false;
 function journeyUnique(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(function(v){return typeof v==='string'&&v.length>0;}).map(function(v){return v.slice(0,180);}))).slice(-300);}
 function journeyGetLevel(code){
   if(!journeyData.levels)journeyData.levels={};
