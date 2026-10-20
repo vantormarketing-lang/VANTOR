@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v151', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v152', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v151', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v152', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -13030,15 +13030,21 @@ var query = new URLSearchParams(window.location.search);
 var route = (query.get('kids') || '').toLowerCase();
 if (!route) return;
 document.body.classList.add('mf-kids-route');
-// Explicitly hide the original academy page sections when the Kids route is active.
-// This keeps the six school-grade cards out of every screen inside Kids Course.
-document.querySelectorAll('#home, #how-it-works, #grades, #gradeGrid, #gradeLoadStatus, #dashboard, #pricing, #faq, #english-course, #mobileNav, body > footer, body > .nav').forEach(function(el){
-  el.style.setProperty('display','none','important');
-  el.setAttribute('aria-hidden','true');
-});
 var root = document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
 document.body.appendChild(root);
+// Isolate the Kids route from the academy DOM instead of relying on a list of section IDs.
+// The grade cards are nested/initialized by other page code, so hide every element outside
+// this route root while preserving the page's stylesheets and scripts.
+function isolateKidsPage(){
+  var keepTags = {STYLE:1, SCRIPT:1, LINK:1, META:1};
+  document.body.querySelectorAll('*').forEach(function(el){
+    if (el === root || root.contains(el) || keepTags[el.tagName]) return;
+    el.style.setProperty('display','none','important');
+    el.style.setProperty('visibility','hidden','important');
+    el.setAttribute('aria-hidden','true');
+  });
+}
 var L = [["A","a","Apple","تفاحة","🍎"],["B","b","Ball","كرة","⚽"],["C","c","Cat","قطة","🐱"],["D","d","Dog","كلب","🐶"],["E","e","Egg","بيضة","🥚"],["F","f","Fish","سمكة","🐟"],["G","g","Grapes","عنب","🍇"],["H","h","Hat","قبعة","🧢"],["I","i","Ice cream","آيس كريم","🍦"],["J","j","Juice","عصير","🧃"],["K","k","Kite","طائرة ورقية","🪁"],["L","l","Lion","أسد","🦁"],["M","m","Moon","قمر","🌙"],["N","n","Nest","عش","🪺"],["O","o","Orange","برتقالة","🍊"],["P","p","Pen","قلم","🖊️"],["Q","q","Queen","ملكة","👑"],["R","r","Rabbit","أرنب","🐰"],["S","s","Sun","شمس","☀️"],["T","t","Tiger","نمر","🐯"],["U","u","Umbrella","مظلة","☂️"],["V","v","Van","سيارة صغيرة","🚐"],["W","w","Watermelon","بطيخ","🍉"],["X","x","Xylophone","آلة إكسليفون","🎼"],["Y","y","Yo-yo","يويو","🪀"],["Z","z","Zebra","حمار وحشي","🦓"]];
 function esc(value){return String(value == null ? '' : value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function url(page, extra){return './?kids=' + encodeURIComponent(page) + (extra || '');}
@@ -13053,6 +13059,20 @@ function renderLevels(group){var young=group==='younger';var arr=young?[['A1','M
 function renderSoon(){var code=(query.get('level')||'Level').toUpperCase();var group=query.get('group')==='older'?'older':'younger';var titles={A2:'Word Explorers',B2:'Reading Builders',C2:'Confident English',B1:'My First Words',C1:'My First Sentences'};document.title=code+' coming soon | Mr. Fluent Kids';root.innerHTML=shell('YOUR NEXT ADVENTURE',esc(code)+' is on the way.','المستوى ده لسه تحت الإنشاء.','We are preparing the lessons, activities and audio for this level.','<div class="mfkr-choice-grid"><div class="mfkr-choice"><div class="mfkr-card-top"><span class="mfkr-art">🛠️</span><span class="mfkr-tag">IN DEVELOPMENT</span></div><h2>'+esc(titles[code]||'Coming soon')+'</h2><p class="mfkr-desc">Lessons and activities are being prepared. Start with A1 while the next level is in development.</p><div class="mfkr-card-foot"><span>Coming soon</span><span>✦</span></div></div><a class="mfkr-choice" href="'+url('a1')+'"><div class="mfkr-card-top"><span class="mfkr-art">🔤</span><span class="mfkr-tag">AVAILABLE NOW</span></div><h2>My First ABC</h2><div class="mfkr-ar">الحروف من A إلى Z</div><p class="mfkr-desc">Capital and small letters, picture clues, Arabic meanings and pronunciation buttons.</p><div class="mfkr-card-foot"><span>A1 · Alphabet</span><span>Start learning ↗</span></div></a></div>'+backButtons(url(group), '← Back to levels'));}
 function renderAlphabet(){document.title='A1 — My First ABC | Mr. Fluent Kids';var cards=L.map(function(item){var cap=item[0],small=item[1],word=item[2],meaning=item[3],picture=item[4];return '<article class="mfkr-letter-card" aria-label="Letter '+cap+', '+esc(word)+'"><div class="mfkr-letter-head"><div class="mfkr-letter-forms"><span>'+cap+'</span> <span>'+small+'</span></div><span class="mfkr-picture" aria-hidden="true">'+picture+'</span></div><div class="mfkr-word" lang="en">'+esc(word)+'</div><div class="mfkr-meaning" lang="ar">'+esc(meaning)+'</div><div class="mfkr-sounds"><button class="mfkr-sound" type="button" data-kids-speak="'+esc(cap)+'" data-label="letter '+cap+'"><span aria-hidden="true">🔊</span> صوت الحرف</button><button class="mfkr-sound" type="button" data-kids-speak="'+esc(word)+'" data-label="'+esc(word)+'"><span aria-hidden="true">♫</span> صوت الكلمة</button></div></article>';}).join('');root.innerHTML=shell('LITTLE LEARNERS · LEVEL A1','My First ABC.','اتعلّم الحروف من A إلى Z.','كل كارت فيه الحرف الكبير والصغير، وصورة وكلمة بالإنجليزي، ومعناها بالعربي، وزرين لسماع النطق.','<div class="mfkr-summary"><span>26 letters</span><div class="mfkr-progress"><span></span></div><span>Letter · Picture · Word · Sound</span></div><div class="mfkr-alpha-grid" id="mfkrAlphabetGrid">'+cards+'</div><div class="mfkr-audio-status" id="mfkrAudioStatus" aria-live="polite">اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.</div>'+backButtons(url('younger'),'← Back to levels'));var grid=root.querySelector('#mfkrAlphabetGrid');var status=root.querySelector('#mfkrAudioStatus');grid.addEventListener('click',function(event){var button=event.target.closest('button[data-kids-speak]');if(!button)return;var value=button.getAttribute('data-kids-speak');if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){status.textContent='ميزة النطق غير مدعومة في هذا المتصفح. جرّب متصفحًا حديثًا.';return;}window.speechSynthesis.cancel();var speech=new SpeechSynthesisUtterance(value);speech.lang='en-US';speech.rate=.78;speech.pitch=1.02;speech.onstart=function(){status.textContent='Now speaking: '+button.getAttribute('data-label');};speech.onend=function(){status.textContent='اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.';};speech.onerror=function(){status.textContent='تعذّر تشغيل الصوت. جرّب الضغط مرة أخرى.';};window.speechSynthesis.speak(speech);});}
 if(route==='hub')renderHub();else if(route==='younger'||route==='older')renderLevels(route);else if(route==='a1')renderAlphabet();else if(route==='soon')renderSoon();else{renderHub();}
+// Apply after the Kids content is rendered so its own cards remain visible.
+isolateKidsPage();
+// Catch any late-created academy nodes and keep them outside this page-only view.
+if (window.MutationObserver) {
+  var kidsPageObserver = new MutationObserver(function(records){
+    var outsideAdded = records.some(function(record){
+      return Array.prototype.some.call(record.addedNodes,function(node){
+        return node.nodeType === 1 && node !== root && !root.contains(node);
+      });
+    });
+    if (outsideAdded) isolateKidsPage();
+  });
+  kidsPageObserver.observe(document.body,{childList:true,subtree:true});
+}
 })();
 </script>
 </body>
