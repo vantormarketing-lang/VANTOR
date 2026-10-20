@@ -73,7 +73,10 @@ body.kid-show-enrol #enrol{display:block!important}
 .kid-letter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}.kid-letter-audio-actions{display:grid;grid-template-columns:1fr;gap:6px;margin-top:9px}
 .kid-letter-audio-actions .kid-audio-button{width:100%;white-space:normal}
 .kid-letter-card .kid-letter-top{justify-content:center}
-.kid-letter-card .kid-letter-symbol{font-size:30px;font-weight:950}
+.kid-letter-card .kid-letter-symbol{font-size:38px;font-weight:950}
+.kid-alphabet-heading{text-align:center;font-size:clamp(24px,5vw,34px);font-weight:950;color:#7650cf;margin:8px 0 14px}
+.kid-letter-word{direction:ltr}
+.kid-letter-translation{font-size:14px;font-weight:800;color:#4f4665;text-align:center;margin-top:3px}
 .kid-letter-card{min-width:0;padding:12px;border:1px solid #dfd2fb;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);box-shadow:0 8px 20px rgba(94,65,151,.09)}.kid-letter-top{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px}.kid-letter-symbol{font-size:clamp(38px,7vw,58px);font-weight:1000;line-height:1;color:#7650cf;text-align:center}.kid-letter-picture{width:76px;height:76px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:inset 0 0 0 1px #eee5ff}.kid-letter-word{font-size:18px;font-weight:900;text-align:center;margin-top:10px;overflow-wrap:anywhere}.kid-letter-translation{font-size:13px;text-align:center;color:#7458aa;margin-top:2px;direction:rtl}.kid-letter-sound{font-size:12px;color:#655486;text-align:center;margin-top:4px}.kid-letter-card .kid-audio-button{display:block;width:100%;margin-top:9px}.kid-letter-sentence{margin-top:14px;padding:12px;border-radius:14px;background:#f0eaff;text-align:center}.kid-letter-sentence .kid-word-ar{display:block;margin-top:3px}@media(max-width:420px){.kid-letter-grid{grid-template-columns:1fr}.kid-letter-top{grid-template-columns:minmax(0,1fr) 82px}.kid-letter-picture{width:82px;height:82px}}</style>
 </head>
 <body>
@@ -527,7 +530,7 @@ async function loadStudentLessons(levelId){
   return '<article class="unit-card"><strong class="kid-bilingual-copy">'+mfKidsBilingual(u.title)+'</strong><p class="kid-bilingual-copy">'+mfKidsBilingual(u.description||'A small step in the learning adventure.')+'</p>'+
     (lessons.map(l=>{
       const done=studentProgress.find(p=>p.lesson_id===l.id&&p.status==='completed');
-      return '<button class="lesson-link" onclick="openStudentLesson(\''+l.id+'\')"><span class="kid-bilingual-copy">'+mfKidsBilingual(l.title)+'</span><span>'+(done?'⭐ '+esc(done.stars||1)+' earned':'Open →')+'</span></button>';
+      return '<button class="lesson-link" onclick="openStudentLesson(\''+l.id+'\')"><span class="kid-bilingual-copy">'+(/alphabet/i.test(String(l.title||''))?'The Alphabet':mfKidsBilingual(l.title))+'</span><span>'+(done?'⭐ '+esc(done.stars||1)+' earned':'Open →')+'</span></button>';
     }).join('')||'<p>No lessons published in this unit yet.</p>')+'</article>';
  }).join('')+'</div>';
 }
@@ -647,8 +650,7 @@ function openStudentLesson(id){
    const letterAudio=JSON.stringify(letterName).replace(/"/g,"&quot;");
    const wordAudio=JSON.stringify(word||letterName).replace(/"/g,"&quot;");
    const arabicAudio=JSON.stringify(translation||'').replace(/"/g,"&quot;");
-   return '<article class="kid-letter-card"><div class="kid-letter-top"><div class="kid-letter-symbol">'+esc(letterName||letter)+'</div></div><div class="kid-letter-picture" role="img" aria-label="'+esc(word)+'">'+esc(emoji)+'</div><div class="kid-letter-word">'+esc(word)+'</div><div class="kid-letter-translation" dir="rtl">'+esc(translation)+'</div><div class="kid-letter-sound">🔤 '+esc(sound)+'</div><div class="kid-letter-audio-actions"><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+letterAudio+',\'en-US\')">🔊 اسمع الحرف</button><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+wordAudio+',\'en-US\')">🔊 اسمع الكلمة</button><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+arabicAudio+',\'ar-EG\')">🔊 اسمع العربي</button></div></article>';
-  }).join('')+'</div>';
+   return '<article class="kid-letter-card"><div class="kid-letter-top"><div class="kid-letter-symbol">'+esc(letterName||letter)+'</div></div><div class="kid-letter-picture" role="img" aria-label="Picture of '+esc(word)+'">'+esc(emoji)+'</div><div class="kid-letter-word" dir="ltr">'+esc(word)+'</div><div class="kid-letter-translation" dir="rtl">'+esc(translation)+'</div></article>';}).join('')+'</div>';
   if(payload.example_sentence){
    const sentence=String(payload.example_sentence),sentenceAr=String(payload.example_translation||'');
    letterCardsMarkup+='<div class="kid-letter-sentence"><b>'+esc(sentence)+'</b><span class="kid-word-ar" dir="rtl">'+esc(sentenceAr)+'</span><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(sentence).replace(/"/g,"&quot;")+',\'en-US\')">🔊 اسمع الجملة</button></div>';
@@ -673,9 +675,14 @@ function openStudentLesson(id){
  }
  const done=studentProgress.find(p=>p.lesson_id===l.id&&p.status==='completed');
  const gameNeedsAnswer=l.lesson_type==='game'&&Array.isArray(payload.options)&&payload.options.length>0&&payload.correct_index!==undefined&&payload.correct_index!==null&&String(payload.correct_index)!=='';
- host.innerHTML='<h3 class="kid-bilingual-copy">'+mfKidsBilingual(l.title,extras)+'</h3><p class="kid-bilingual-copy">'+details+'</p>'+letterCardsMarkup+vocab+media+mfKidsVideoMarkup()+(game||'')+
+ const isAlphabetLesson=/alphabet/i.test(String(l.title||''))||l.id==='8d4aafac-a080-4251-b91e-323ce8d4265e';
+ if(isAlphabetLesson){
+  host.innerHTML='<h3 class="kid-alphabet-heading">The Alphabet</h3>'+letterCardsMarkup+'<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" onclick="completeStudentLesson(\\''+esc(l.id)+'\\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ تمّمت الحروف')+'</button>';
+ }else{
+  host.innerHTML='<h3 class="kid-bilingual-copy">'+mfKidsBilingual(l.title,extras)+'</h3><p class="kid-bilingual-copy">'+details+'</p>'+letterCardsMarkup+vocab+media+mfKidsVideoMarkup()+(game||'')+
   '<p class="small-print kid-bilingual-copy">'+mfKidsBilingual(l.objective||'Listen, look, practise and do your best.',extras)+'</p>'+
-  '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\''+esc(l.id)+'\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ Mark lesson complete')+'</button>';
+  '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\\''+esc(l.id)+'\\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ Mark lesson complete')+'</button>';
+ };
  host.classList.add('show');host.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 async function completeStudentLesson(id){
