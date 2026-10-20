@@ -1,8 +1,8 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v160';
+const CACHE_NAME = 'mr-fluent-offline-student-v161';
 const BRAND_VERSION = 'doma-glass-v11';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v160', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v161', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
@@ -10,6 +10,7 @@ const kidsOlderUrl = new URL('./MR_FLUENT_KIDS_OLDER.html', self.registration.sc
 const kidsA1Url = new URL('./MR_FLUENT_KIDS_A1.html', self.registration.scope);
 const kidsA2Url = new URL('./?kids=a2', self.registration.scope);
 const kidsC2Url = new URL('./?kids=c2', self.registration.scope);
+const kidsReviewUrl = new URL('./?kids=review', self.registration.scope);
 const kidsB2Url = new URL('./?kids=b2', self.registration.scope);
 const kidsComingSoonUrl = new URL('./MR_FLUENT_KIDS_COMING_SOON.html', self.registration.scope);
 const SHELL = [
@@ -23,6 +24,7 @@ const SHELL = [
   kidsA2Url.href,
   kidsB2Url.href,
   kidsC2Url.href,
+  kidsReviewUrl.href,
   kidsComingSoonUrl.href,
   versioned('./manifest.webmanifest'),
   versioned('./doma-student-app-icon.svg'),
