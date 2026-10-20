@@ -13441,7 +13441,7 @@ function journeyAttachTracker(){
     var relevant=!!speakAttr||!!dataAttr||/mfkr-(sound|topic|quiz-option|quiz-next|c1-chip|c1-option|b2-sequence-option|btn|a2-match|word-actions|c2-writing)/i.test(classes);
     if(!relevant)return;
     var context=button.closest('.mfkr-quiz-panel,.mfkr-topic-panel,.mfkr-a2-match-prompt,.mfkr-a2-story-card,.mfkr-c1-story-line,.mfkr-c1-builder-panel,.mfkr-b2-sequence-option,.mfkr-c2-writing,.mfkr-summary')||button.parentElement;
-    var titleNode=context&&context.querySelector?context.querySelector('h2,h3,h4,[data-quiz-question]'):null;
+    var titleNode=context&&context.querySelector?(context.querySelector('[data-quiz-question]')||context.querySelector('h3,h4')||context.querySelector('h2')):null;
     var contextName=titleNode?titleNode.textContent:(context&&context.id?context.id:(context&&context.className?String(context.className):'practice'));
     var label=(speakAttr&&speakAttr.value)||button.getAttribute('aria-label')||button.textContent||button.className||'practice';
     var key=[route,String(contextName||'').replace(/\s+/g,' ').trim().slice(0,55),String(label).replace(/\s+/g,' ').trim().slice(0,90)].join('|').toLowerCase();
@@ -13450,7 +13450,7 @@ function journeyAttachTracker(){
   root.addEventListener('input',function(event){
     var field=event.target;
     if(!field||!field.matches||!field.matches('textarea.mfkr-c2-writing-area'))return;
-    if(String(field.value||'').trim().length>=30)journeyRecord('c2|writing-workshop|draft-started','');
+    if(!journeyWritingQueued&&String(field.value||'').trim().length>=30){journeyWritingQueued=true;journeyRecord('c2|writing-workshop|draft-started','');}
   });
 }
 async function journeyInit(){
