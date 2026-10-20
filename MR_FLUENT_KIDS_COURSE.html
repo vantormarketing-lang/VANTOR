@@ -603,7 +603,8 @@ function mfKidsAnswerGame(lessonId,index){
 function openStudentLesson(id){
  const l=studentLessons.find(x=>x.id===id);if(!l)return;
  const host=$('lessonView');if(!host)return;
- const payload=l.lesson_payload&&typeof l.lesson_payload==='object'?l.lesson_payload:{};
+ let payload=l.lesson_payload&&typeof l.lesson_payload==='object'?l.lesson_payload:{};
+ if(typeof l.lesson_payload==='string'){try{payload=JSON.parse(l.lesson_payload)}catch(_){payload={}}}
  const extras=payload.translations&&typeof payload.translations==='object'?payload.translations:{};
  window.mfKidsActiveTranslations=extras;
  const intro=payload.intro||payload.text||l.objective||"Your learning activity is ready.";
@@ -624,8 +625,14 @@ function openStudentLesson(id){
   vocab='<div class="kid-vocab-grid">'+entries.map(([word,translation])=>'<div class="kid-vocab-item"><div class="kid-bilingual-copy">'+mfKidsBilingual(word,extras)+'</div><small class="kid-word-ar" dir="rtl">'+esc(translation)+'</small><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(word).replace(/"/g,"&quot;")+')">🔊 اسمع</button></div>').join('')+'</div>';
  }
  let letterCardsMarkup='';
- if(Array.isArray(payload.letter_cards)&&payload.letter_cards.length){
-  letterCardsMarkup='<div class="kid-letter-grid">'+payload.letter_cards.map(card=>{
+ let letterCards=Array.isArray(payload.letter_cards)?payload.letter_cards:(Array.isArray(payload.letterCards)?payload.letterCards:(Array.isArray(payload.cards)?payload.cards:[]));
+ if(!letterCards.length && (/alphabet/i.test(String(l.title||'')) || l.id==='8d4aafac-a080-4251-b91e-323ce8d4265e')){
+  letterCards=[
+   ['A a','apple','تفاحة','/æ/','🍎'],['B b','ball','كرة','/b/','⚽'],['C c','cat','قطة','/k/','🐱'],['D d','dog','كلب','/d/','🐶'],['E e','egg','بيضة','/e/','🥚'],['F f','fish','سمكة','/f/','🐟'],['G g','goat','ماعز','/g/','🐐'],['H h','hat','قبعة','/h/','🎩'],['I i','insect','حشرة','/ɪ/','🐞'],['J j','juice','عصير','/dʒ/','🧃'],['K k','kite','طائرة ورقية','/k/','🪁'],['L l','lion','أسد','/l/','🦁'],['M m','moon','قمر','/m/','🌙'],['N n','nest','عش','/n/','🪺'],['O o','orange','برتقالة','/ɒ/','🍊'],['P p','pencil','قلم رصاص','/p/','✏️'],['Q q','queen','ملكة','/kw/','👑'],['R r','rabbit','أرنب','/r/','🐰'],['S s','sun','شمس','/s/','☀️'],['T t','tiger','نمر','/t/','🐯'],['U u','umbrella','مظلة','/ʌ/','☂️'],['V v','van','سيارة نقل صغيرة','/v/','🚐'],['W w','water','ماء','/w/','💧'],['X x','box','صندوق','/ks/','📦'],['Y y','yo-yo','يويو','/j/','🪀'],['Z z','zebra','حمار وحشي','/z/','🦓']
+  ].map(([letter,word,translation,sound,emoji])=>({letter,word,translation,sound,emoji}));
+ }
+ if(letterCards.length){
+  letterCardsMarkup='<div class="kid-letter-grid">'+letterCards.map(card=>{
    const letter=String(card.letter||'').trim(),word=String(card.word||'').trim(),translation=String(card.translation||'').trim(),sound=String(card.sound||'').trim(),emoji=String(card.emoji||'🔤');
    const say=word||letter;
    return '<article class="kid-letter-card"><div class="kid-letter-top"><div class="kid-letter-symbol">'+esc(letter)+'</div><div class="kid-letter-picture" role="img" aria-label="'+esc(word)+'">'+esc(emoji)+'</div></div><div class="kid-letter-word">'+esc(word)+'</div><div class="kid-letter-translation" dir="rtl">'+esc(translation)+'</div><div class="kid-letter-sound">🔤 '+esc(sound)+'</div><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(say).replace(/"/g,"&quot;")+')">🔊 اسمع الكلمة</button></article>';
