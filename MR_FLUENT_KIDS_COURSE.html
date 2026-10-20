@@ -368,7 +368,7 @@ function renderTrackMetadata(){
    const content='<div class="track-top"><div class="track-emoji">'+(icons[code]||'⭐')+'</div><span class="pill">'+esc(code)+'</span></div><h3>'+esc(l.title)+'</h3><p>'+esc(l.description||short[code]||'Learn step by step with activities and practice.')+'</p><div class="track-meta"><span class="pill">'+(primary?'📚 School English':'🎧 Learn through play')+'</span></div><div class="level-card-bottom"><span>'+esc(short[code]||'Lessons, words and activities')+'</span><span class="level-open-arrow">'+(comingSoon?'Coming soon · قريبًا':'Open level ↗')+'</span></div>';
    return comingSoon
     ? '<article class="track-card level-card '+(primary?'primary':'zero')+' is-coming-soon" aria-label="'+esc(l.title)+' — coming soon">'+content+'</article>'
-    : '<button type="button" class="track-card level-card '+(primary?'primary':'zero')+'" onclick="openKidLevel(\''+esc(code)+'\')" aria-label="Open '+esc(l.title)+'">'+content+'</button>';
+    : '<button type="button" class="track-card level-card '+(primary?'primary':'zero')+'" onclick="openKidLevel(&quot;'+esc(code)+'&quot;)" aria-label="Open '+esc(l.title)+'">'+content+'</button>';
   }).join('');
   if(!all.length)grid.innerHTML='<div class="kid-area">The learning levels are loading. Refresh the page in a moment.</div>';
 }
