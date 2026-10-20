@@ -13246,7 +13246,7 @@ var journeyLevels=[
   {code:'B2',route:'b2',title:'Reading Builders',arabic:'أبطال القراءة',group:'older',icon:'📚',desc:'Read, understand and connect ideas'},
   {code:'C2',route:'c2',title:'Confident English',arabic:'ثقة في الإنجليزية',group:'older',icon:'🌟',desc:'Advanced reading and communication'}
 ];
-var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={},journeyWritingQueued=false,journeyToolState={route:'',speakingFeedback:'',speakingWrongOption:-1,finalIndex:0,finalScore:0,finalAnswered:false,finalPicked:-1,finalFeedback:'',finalFinished:false};
+var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={},journeyWritingQueued=false,journeySyncStatus='local',journeyToolState={route:'',speakingFeedback:'',speakingWrongOption:-1,speakingReplay:false,speakingReplayIndex:0,finalIndex:0,finalScore:0,finalAnswered:false,finalPicked:-1,finalFeedback:'',finalFinished:false};
 var journeyCertificateName='';
 
 function journeyLevelCode(){return ({a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'})[route]||'';}
@@ -13360,7 +13360,8 @@ function journeyScheduleSync(code){
           updated_at:new Date().toISOString()
         },{onConflict:'user_id,level_code'});
         if(result&&result.error)throw result.error;
-      }catch(_){}
+        journeySyncStatus='synced';
+      }catch(_){journeySyncStatus='error';}
     }
     journeySaveLocal();
     journeyRenderCurrent();
@@ -13570,7 +13571,7 @@ function journeyRenderDashboard(){
     return '<div class="mfkj-badge-card'+(b.earned?' is-earned':'')+'"><span class="mfkj-badge-icon">'+(b.earned?b.icon:'🔒')+'</span><div><strong>'+b.title+'</strong><small lang="ar">'+b.ar+'</small><em>'+(b.earned?'UNLOCKED':b.rule)+'</em></div></div>';
   }).join('');
   var status=dash.querySelector('#mfkjSaveStatus');
-  if(status)status.textContent=journeyUserId?'✓ تقدمك محفوظ في حسابك ويتزامن بين أجهزتك.':'التقدم محفوظ على هذا الجهاز حاليًا. سجّل الدخول لمزامنته بين أجهزتك.';
+  if(status)status.textContent=journeyUserId?(journeySyncStatus==='error'?'تعذرت مزامنة آخر تحديث؛ التقدم محفوظ محليًا وسيُحاول مرة أخرى.':journeySyncStatus==='synced'?'✓ آخر تحديث محفوظ في حسابك.':'تقدمك مرتبط بحسابك؛ تتم المزامنة عند الاتصال.'):'التقدم محفوظ على هذا الجهاز حاليًا. سجّل الدخول لمزامنته بين أجهزتك.';
 }
 function journeyRenderMiniCard(){
   var code=journeyLevelCode();if(!code)return;
@@ -13593,6 +13594,7 @@ function journeyAttachTracker(){
     var button=target.closest('button');
     if(!button||!root.contains(button))return;
     if(button.hasAttribute('data-mfj-speaking-listen')){journeySpeak(journeySpeakingData(journeyLevelCode())[journeySpeakingCurrentIndex()].q);return;}
+    if(button.hasAttribute('data-mfj-speaking-replay')){journeyToolState.speakingReplay=true;journeyToolState.speakingReplayIndex=0;journeyToolState.speakingFeedback='Practise all three missions again. نجرب المواقف مرة تانية.';journeyToolState.speakingWrongOption=-1;journeyRenderCurrent();return;}
     if(button.hasAttribute('data-mfj-speaking-choice')){journeyHandleSpeakingChoice(Number(button.getAttribute('data-mfj-speaking-choice')));return;}
     if(button.hasAttribute('data-mfj-final-choice')){journeyHandleFinalChoice(Number(button.getAttribute('data-mfj-final-choice')));return;}
     if(button.hasAttribute('data-mfj-final-next')){journeyHandleFinalNext();return;}
@@ -13642,6 +13644,7 @@ async function journeyInit(){
     if(!user&&typeof sb!=='undefined'&&sb&&sb.auth){var session=await sb.auth.getSession();user=session&&session.data&&session.data.session&&session.data.session.user||null;}
   }catch(_){}
   journeyUserId=user&&user.id||null;
+  journeySyncStatus=journeyUserId?'loading':'local';
   journeyStoreKey='mrfluent-kids-journey-v1:'+(journeyUserId||'guest');
   try{journeyCertificateName=localStorage.getItem('mrfluent-kids-certificate-name:'+(journeyUserId||'guest'))||'';}catch(_){}
   journeyData={levels:{}};
@@ -13651,8 +13654,10 @@ async function journeyInit(){
   if(journeyUserId&&typeof sb!=='undefined'&&sb&&sb.from){
     try{
       var central=await sb.from('mrfluent_kids_journey_progress').select('level_code,checkpoint_keys,words_seen,stars,badges,wrong_answers,final_quiz_best,final_quiz_attempts,speaking_completed,certificate_earned,certificate_code,certified_at,updated_at').eq('user_id',journeyUserId);
-      if(!central.error&&Array.isArray(central.data))central.data.forEach(function(row){journeyMergeLevel(row.level_code,row);});
-    }catch(_){}
+      if(central.error)throw central.error;
+      if(Array.isArray(central.data))central.data.forEach(function(row){journeyMergeLevel(row.level_code,row);});
+      journeySyncStatus='synced';
+    }catch(_){journeySyncStatus='error';}
     var specs=[{code:'A2',table:'mrfluent_growing_progress'},{code:'B2',table:'mrfluent_growing_b2_progress'},{code:'C2',table:'mrfluent_growing_c2_progress'}];
     var legacyRows=await Promise.all(specs.map(async function(spec){
       try{var response=await sb.from(spec.table).select('completed_words,completed_activities,best_quiz_score,quiz_attempts').eq('user_id',journeyUserId).eq('level_code',spec.code).order('updated_at',{ascending:false}).limit(1);if(response.error||!Array.isArray(response.data)||!response.data.length)return null;return {code:spec.code,row:response.data[0]};}catch(_){return null;}
@@ -13669,6 +13674,7 @@ async function journeyInit(){
 
 function journeySpeakingCurrentIndex(){
   var code=journeyLevelCode(),level=journeyGetLevel(code),missions=journeySpeakingData(code);
+  if(journeyToolState.speakingReplay)return Math.max(0,Math.min(missions.length-1,journeyToolState.speakingReplayIndex||0));
   for(var i=0;i<missions.length;i++)if(level.checkpointKeys.indexOf('speaking:'+missions[i].id)<0)return i;
   return missions.length-1;
 }
@@ -13679,7 +13685,7 @@ function journeyRenderLevelTools(){
   if(journeyToolState.route!==route){journeyToolState={route:route,speakingFeedback:'',speakingWrongOption:-1,finalIndex:0,finalScore:0,finalAnswered:false,finalPicked:-1,finalFeedback:'',finalFinished:false};}
   var level=journeyGetLevel(code),missions=journeySpeakingData(code),mi=journeySpeakingCurrentIndex();
   var speaking=ensure('mfkjSpeaking','mfkj-panel');
-  if(level.speakingCompleted) speaking.innerHTML='<div class="mfkj-panel-head"><div><span class="mfkj-kicker">SPEAKING MISSIONS · محادثة</span><h2>Speaking Studio <i class="mfkj-pulse-dot"></i></h2><p lang="ar">أحسنت! أكملت المواقف الثلاثة لهذا المستوى.</p></div><span class="mfkj-panel-icon">💬</span></div><div class="mfkj-complete-note">✓ 3 / 3 speaking missions completed</div><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-speaking-replay>Practise again · تدريب مرة أخرى</button>';
+  if(level.speakingCompleted&&!journeyToolState.speakingReplay) speaking.innerHTML='<div class="mfkj-panel-head"><div><span class="mfkj-kicker">SPEAKING MISSIONS · محادثة</span><h2>Speaking Studio <i class="mfkj-pulse-dot"></i></h2><p lang="ar">أحسنت! أكملت المواقف الثلاثة لهذا المستوى.</p></div><span class="mfkj-panel-icon">💬</span></div><div class="mfkj-complete-note">✓ 3 / 3 speaking missions completed</div><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-speaking-replay>Practise again · تدريب مرة أخرى</button>');
   else{
     var mission=missions[mi];
     speaking.innerHTML='<div class="mfkj-panel-head"><div><span class="mfkj-kicker">SPEAKING MISSIONS · محادثة</span><h2>Speaking Studio <i class="mfkj-pulse-dot"></i></h2><p lang="ar">اسمع الموقف، واختار الرد الأنسب. لو أخطأت، هتقدر تحاول تاني.</p></div><span class="mfkj-panel-icon">💬</span></div><div class="mfkj-mission-meta"><span>MISSION '+(mi+1)+' / '+missions.length+'</span><span>'+level.speakingKeys.length+' completed</span></div><div class="mfkj-mission-question"><p lang="en">'+mission.q+'</p><p lang="ar" dir="rtl">'+mission.ar+'</p><button class="mfkr-btn mfkj-secondary" type="button" data-mfj-speaking-listen>🔊 Listen to the question</button></div><div class="mfkj-choice-list">'+mission.options.map(function(opt,index){return '<button type="button" class="mfkj-choice-option'+(journeyToolState.speakingWrongOption===index?' is-wrong':'')+'" data-mfj-speaking-choice="'+index+'"><span>'+opt.en+'</span><small lang="ar" dir="rtl">'+opt.ar+'</small></button>';}).join('')+'</div><p class="mfkj-feedback" aria-live="polite">'+(journeyToolState.speakingFeedback||'اختار الرد المناسب لإكمال المهمة.')+'</p><div class="mfkj-panel-foot"><span>⭐ Complete all 3 to unlock certificate progress</span></div>';
@@ -13707,11 +13713,16 @@ function journeyRenderLevelTools(){
 }
 function journeyHandleSpeakingChoice(index){
   var code=journeyLevelCode(),missions=journeySpeakingData(code),level=journeyGetLevel(code),mi=journeySpeakingCurrentIndex(),mission=missions[mi];
-  if(!mission||level.checkpointKeys.indexOf('speaking:'+mission.id)>=0)return;
+  if(!mission)return;
   var choice=mission.options[index];if(!choice)return;
+  var replay=!!journeyToolState.speakingReplay;
   if(index===mission.correct){
     journeyToolState.speakingFeedback='ممتاز! الرد مناسب. Completed ✓';
     journeyToolState.speakingWrongOption=-1;
+    if(replay){
+      journeyToolState.speakingReplayIndex=mi+1;
+      if(journeyToolState.speakingReplayIndex>=missions.length){journeyToolState.speakingReplay=false;journeyToolState.speakingReplayIndex=0;journeyToolState.speakingFeedback='Great practice! أنهيت التدريب مرة أخرى.';}
+    }
     journeyRecord('speaking:'+mission.id,null,code);
     journeyMaybeAwardCertificate(code);
   }else{
