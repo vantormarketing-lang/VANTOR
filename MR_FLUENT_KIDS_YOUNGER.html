@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100b13">
+<meta name="description" content="Little Learners — Mr. Fluent Kids English learning.">
+<title>Little Learners | Mr. Fluent Kids</title>
+<style>
+:root{color-scheme:dark;--bg:#100b13;--panel:rgba(255,255,255,.065);--panel2:rgba(255,255,255,.09);--line:rgba(205,164,255,.23);--text:#fff7ff;--muted:#c0afc9;--purple:#bd91ff;--pink:#ff9dd4;--mint:#91f0db;--shadow:0 24px 70px rgba(0,0,0,.28)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--text);background:radial-gradient(ellipse at 10% 0%,rgba(128,49,93,.34),transparent 36%),radial-gradient(ellipse at 92% 22%,rgba(103,64,160,.22),transparent 34%),linear-gradient(145deg,#100b13,#1a0c17 60%,#0d0a12);background-attachment:fixed}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.wrap{width:min(1120px,94%);margin:0 auto}
+.topbar{position:sticky;top:0;z-index:20;backdrop-filter:blur(20px);background:rgba(16,10,19,.82);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:950;letter-spacing:.02em}
+.brand-mark{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(205,164,255,.37);border-radius:15px;background:linear-gradient(145deg,rgba(167,109,234,.25),rgba(255,139,198,.12));box-shadow:inset 0 1px rgba(255,255,255,.1);font-size:20px;color:#e9d7ff}
+.brand small{display:block;margin-top:3px;color:#bda8cb;font-size:9px;letter-spacing:.19em}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:42px;padding:10px 15px;border:1px solid rgba(216,179,255,.25);border-radius:13px;background:rgba(255,255,255,.055);color:var(--text);font-size:12px;font-weight:850;transition:transform .18s,border-color .18s,background .18s}
+.btn:hover,.choice-card:hover,.level-card:hover{transform:translateY(-3px);border-color:rgba(255,157,212,.56);background-color:rgba(255,255,255,.09)}
+.btn.primary{background:linear-gradient(110deg,#8052c6,#b14e98);border-color:rgba(255,190,238,.48);box-shadow:0 9px 25px rgba(145,59,161,.2)}
+.page{padding:42px 0 60px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--mint);font-size:10px;font-weight:950;letter-spacing:.19em;text-transform:uppercase}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px rgba(145,240,219,.9)}
+.page-head{text-align:center;max-width:760px;margin:0 auto 28px}
+.page-head h1{margin:12px 0 10px;font-size:clamp(30px,5vw,52px);line-height:1.04;letter-spacing:-1.8px;background:linear-gradient(105deg,#fff,#d4bbff 48%,#ffb8de);color:transparent;background-clip:text;-webkit-background-clip:text}
+.page-head p{max-width:640px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.8}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.choice-card,.level-card{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;padding:22px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035));backdrop-filter:blur(20px);box-shadow:var(--shadow);transition:transform .18s,border-color .18s,background .18s}
+.choice-card:before,.level-card:before{content:"";position:absolute;pointer-events:none;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,151,255,.12),transparent 36%);opacity:.9}
+.choice-top,.level-top{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.art{display:grid;place-items:center;flex:none;width:72px;height:72px;border:1px solid rgba(223,183,255,.25);border-radius:22px;background:linear-gradient(145deg,rgba(160,111,225,.27),rgba(255,146,203,.12));font-size:36px;box-shadow:inset 0 1px rgba(255,255,255,.12)}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid rgba(216,179,255,.2);border-radius:99px;color:#e1cff9;background:rgba(255,255,255,.045);font-size:9px;font-weight:900;letter-spacing:.08em}
+.choice-card h2,.level-card h2{position:relative;margin:18px 0 7px;font-size:clamp(20px,3vw,27px);letter-spacing:-.5px}
+.ar{position:relative;font:700 12px/1.8 Tahoma,"Segoe UI",sans-serif;color:var(--pink);direction:rtl;text-align:left}
+.desc{position:relative;color:var(--muted);font-size:12px;line-height:1.8;margin:10px 0 20px}
+.card-foot{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,.09);color:var(--mint);font-size:11px;font-weight:950}
+.level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.level-card{min-height:230px;padding:19px}
+.level-code{display:grid;place-items:center;width:54px;height:54px;border:1px solid rgba(224,185,255,.35);border-radius:17px;background:linear-gradient(145deg,rgba(164,116,242,.3),rgba(255,155,205,.14));color:#fff;font-size:18px;font-weight:1000;box-shadow:inset 0 1px rgba(255,255,255,.1)}
+.level-card h2{font-size:22px;margin-top:17px}
+.level-card p{position:relative;color:var(--muted);font-size:11px;line-height:1.7;margin:0 0 18px}
+.arrow{color:var(--mint);font-weight:950}
+.back-row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:25px}
+.notice{margin:22px auto 0;max-width:780px;padding:13px 16px;border:1px solid rgba(145,240,219,.18);border-radius:15px;background:rgba(145,240,219,.045);color:#c6ece3;font-size:11px;line-height:1.8;text-align:center}
+.footer{padding:21px 0 30px;text-align:center;color:#8f7d9c;font-size:10px}
+@media(max-width:800px){.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page{padding:30px 0 48px}.level-card{min-height:205px;padding:15px}}
+@media(max-width:560px){.nav{min-height:64px}.brand-mark{width:39px;height:39px}.nav-actions .btn{min-height:37px;padding:8px 10px;font-size:10px}.choice-grid{grid-template-columns:1fr;gap:12px}.choice-card{padding:18px;border-radius:20px}.choice-card .art{width:62px;height:62px;font-size:30px}.choice-card h2{font-size:23px}.level-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.level-card{min-height:185px;padding:12px;border-radius:17px}.level-code{width:44px;height:44px;border-radius:14px;font-size:15px}.level-card h2{font-size:18px;margin:13px 0 5px}.level-card p{font-size:10px;line-height:1.6}.page-head{margin-bottom:20px}.page-head h1{font-size:32px}.page-head p{font-size:12px}.desc{font-size:11px}.brand{font-size:12px}.brand small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap nav">
+<a class="brand" href="./index.html" aria-label="Return to DOMA Academy"><span class="brand-mark">✦</span><span>Mr. Fluent Kids<small>LEARN · PLAY · GROW</small></span></a>
+<div class="nav-actions"><a class="btn" href="./index.html">← DOMA Academy</a></div>
+</div></header>
+<main class="page"><div class="wrap"><div class="page-head"><div class="eyebrow"><span class="live-dot"></span> LITTLE LEARNERS</div><h1>Little Learners</h1><p dir="rtl" lang="ar">مسار الأطفال الأصغر سنًا — اختار المستوى</p><p>Start with the alphabet and grow from there.</p></div>
+<div class="level-grid"><a class="level-card" href="./MR_FLUENT_KIDS_A1.html" aria-label="Open level A1">
+<div class="level-top"><span class="level-code">A1</span><span class="tag">READY TO LEARN</span></div>
+<h2>My First ABC</h2><p>Capital and small letters, a picture, a first word, Arabic meaning and pronunciation.</p><div class="card-foot"><span>Letters A–Z</span><span class="arrow">Open ↗</span></div>
+</a><a class="level-card" href="./MR_FLUENT_KIDS_COMING_SOON.html?level=B1&group=younger" aria-label="Open level B1">
+<div class="level-top"><span class="level-code">B1</span><span class="tag">IN THE MAKING</span></div>
+<h2>My First Words</h2><p>Everyday vocabulary and simple listening activities.</p><div class="card-foot"><span>Level B1</span><span class="arrow">Open ↗</span></div>
+</a><a class="level-card" href="./MR_FLUENT_KIDS_COMING_SOON.html?level=C1&group=younger" aria-label="Open level C1">
+<div class="level-top"><span class="level-code">C1</span><span class="tag">IN THE MAKING</span></div>
+<h2>My First Sentences</h2><p>Build confidence with short sentences and picture stories.</p><div class="card-foot"><span>Level C1</span><span class="arrow">Open ↗</span></div>
+</a></div>
+<div class="back-row"><a class="btn" href="./MR_FLUENT_KIDS_HUB.html">← All paths</a><a class="btn" href="./index.html">DOMA Academy home</a></div>
+<div class="notice" dir="rtl" lang="ar">المستوى A1 هو أول مستوى جاهز للتجربة؛ باقي المستويات هتظهر هنا بنفس التصميم لما نجهّز محتواها.</div></div></main>
+<footer class="footer"><div class="wrap">Mr. Fluent Kids · Learn a little every day.</div></footer>
+<script></script>
+</body>
+</html>
