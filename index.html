@@ -13440,6 +13440,7 @@ function journeyLoadLegacyLocal(code){
 }
 function journeyScheduleSync(code){
   if(!journeyUserId||typeof sb==='undefined'||!sb||!sb.from)return;
+  journeySyncStatus='saving';
   journeyDirty[code]=true;
   if(journeySyncTimer)clearTimeout(journeySyncTimer);
   journeySyncTimer=setTimeout(async function(){
@@ -13545,33 +13546,33 @@ function journeySpeakingData(code){
   var data={
     A1:[
       {id:'greeting',q:'Someone asks: What is your name?',ar:'شخص يسألك: ما اسمك؟',options:[{en:'My name is Sara.',ar:'اسمي سارة.'},{en:'I am a pencil.',ar:'أنا قلم.'},{en:'Good night, sun.',ar:'تصبح على خير يا شمس.'}],correct:0},
-      {id:'feeling',q:'Your friend asks: How are you?',ar:'صديقك يسألك: كيف حالك؟',options:[{en:'I am happy, thank you.',ar:'أنا سعيد، شكرًا لك.'},{en:'It is under the table.',ar:'إنه تحت الطاولة.'},{en:'Seven blue cats.',ar:'سبع قطط زرقاء.'}],correct:0},
-      {id:'favourite',q:'Someone asks about your favourite colour.',ar:'شخص يسألك عن لونك المفضل.',options:[{en:'I like blue.',ar:'أنا أحب اللون الأزرق.'},{en:'I am a school.',ar:'أنا مدرسة.'},{en:'Open the window yesterday.',ar:'افتح النافذة أمس.'}],correct:0}
+      {id:'feeling',q:'Your friend asks: How are you?',ar:'صديقك يسألك: كيف حالك؟',options:[{en:'It is under the table.',ar:'إنه تحت الطاولة.'},{en:'I am happy, thank you.',ar:'أنا سعيد، شكرًا لك.'},{en:'Seven blue cats.',ar:'سبع قطط زرقاء.'}],correct:1},
+      {id:'favourite',q:'Someone asks about your favourite colour.',ar:'شخص يسألك عن لونك المفضل.',options:[{en:'I am a school.',ar:'أنا مدرسة.'},{en:'Open the window yesterday.',ar:'افتح النافذة أمس.'},{en:'I like blue.',ar:'أنا أحب اللون الأزرق.'}],correct:2}
     ],
     B1:[
-      {id:'greeting',q:'You meet a new classmate. What can you say?',ar:'تقابل زميلًا جديدًا في الفصل. ماذا تقول؟',options:[{en:'Hello! Nice to meet you.',ar:'مرحبًا! سعيد بلقائك.'},{en:'Close the blue book.',ar:'أغلق الكتاب الأزرق.'},{en:'The apple is sleeping.',ar:'التفاحة نائمة.'}],correct:0},
-      {id:'thirsty',q:'Your friend asks: What do you drink when you are thirsty?',ar:'صديقك يسألك: ماذا تشرب عندما تعطش؟',options:[{en:'I drink water.',ar:'أشرب الماء.'},{en:'I read a banana.',ar:'أقرأ موزة.'},{en:'I sleep the milk.',ar:'أنام اللبن.'}],correct:0},
+      {id:'greeting',q:'You meet a new classmate. What can you say?',ar:'تقابل زميلًا جديدًا في الفصل. ماذا تقول؟',options:[{en:'Close the blue book.',ar:'أغلق الكتاب الأزرق.'},{en:'Hello! Nice to meet you.',ar:'مرحبًا! سعيد بلقائك.'},{en:'The apple is sleeping.',ar:'التفاحة نائمة.'}],correct:1},
+      {id:'thirsty',q:'Your friend asks: What do you drink when you are thirsty?',ar:'صديقك يسألك: ماذا تشرب عندما تعطش؟',options:[{en:'I read a banana.',ar:'أقرأ موزة.'},{en:'I sleep the milk.',ar:'أنام اللبن.'},{en:'I drink water.',ar:'أشرب الماء.'}],correct:2},
       {id:'routine',q:'Someone asks what you do every day.',ar:'شخص يسألك عمّا تفعله كل يوم.',options:[{en:'I go to school and read.',ar:'أذهب إلى المدرسة وأقرأ.'},{en:'Yesterday is a rabbit.',ar:'أمس أرنب.'},{en:'The chair drinks.',ar:'الكرسي يشرب.'}],correct:0}
     ],
     C1:[
-      {id:'ability',q:'Tell your friend what you can do.',ar:'أخبر صديقك بشيء تستطيع فعله.',options:[{en:'I can read a story.',ar:'أستطيع قراءة قصة.'},{en:'A story can red.',ar:'قصة يستطيع أحمر.'},{en:'Can the is garden.',ar:'يستطيع الـ الحديقة.'}],correct:0},
-      {id:'like',q:'Tell someone what you like.',ar:'أخبر شخصًا بشيء تحبه.',options:[{en:'I like flowers.',ar:'أنا أحب الزهور.'},{en:'Like I the flowers red.',ar:'أحب أنا الـ الزهور أحمر.'},{en:'Flowers can the happy.',ar:'الزهور تستطيع الـ سعيدة.'}],correct:0},
+      {id:'ability',q:'Tell your friend what you can do.',ar:'أخبر صديقك بشيء تستطيع فعله.',options:[{en:'A story can red.',ar:'قصة يستطيع أحمر.'},{en:'Can the is garden.',ar:'يستطيع الـ الحديقة.'},{en:'I can read a story.',ar:'أستطيع قراءة قصة.'}],correct:2},
+      {id:'like',q:'Tell someone what you like.',ar:'أخبر شخصًا بشيء تحبه.',options:[{en:'Like I the flowers red.',ar:'أحب أنا الـ الزهور أحمر.'},{en:'I like flowers.',ar:'أنا أحب الزهور.'},{en:'Flowers can the happy.',ar:'الزهور تستطيع الـ سعيدة.'}],correct:1},
       {id:'describe',q:'Describe your cat.',ar:'صِف قطتك.',options:[{en:'My cat is small.',ar:'قطتي صغيرة.'},{en:'My cat small is a.',ar:'قطتي صغيرة يكون أ.'},{en:'Small my is cat the.',ar:'صغيرة قطتي يكون القط.'}],correct:0}
     ],
     A2:[
-      {id:'borrow',q:'You need a pencil. What is a polite request?',ar:'تحتاج قلمًا. ما الطلب المهذب؟',options:[{en:'Could I borrow your pencil, please?',ar:'هل يمكنني استعارة قلمك، من فضلك؟'},{en:'Give pencil me yesterday.',ar:'أعطني قلمًا أمس.'},{en:'Your pencil can swim.',ar:'قلمك يستطيع السباحة.'}],correct:0},
-      {id:'directions',q:'You are lost. Ask for directions.',ar:'أنت لا تعرف الطريق. اطلب إرشادات.',options:[{en:'Excuse me, how can I get to the library?',ar:'عذرًا، كيف أصل إلى المكتبة؟'},{en:'The library eats a bus.',ar:'المكتبة تأكل حافلة.'},{en:'I am opposite yesterday.',ar:'أنا مقابل أمس.'}],correct:0},
+      {id:'borrow',q:'You need a pencil. What is a polite request?',ar:'تحتاج قلمًا. ما الطلب المهذب؟',options:[{en:'Give pencil me yesterday.',ar:'أعطني قلمًا أمس.'},{en:'Could I borrow your pencil, please?',ar:'هل يمكنني استعارة قلمك، من فضلك؟'},{en:'Your pencil can swim.',ar:'قلمك يستطيع السباحة.'}],correct:1},
+      {id:'directions',q:'You are lost. Ask for directions.',ar:'أنت لا تعرف الطريق. اطلب إرشادات.',options:[{en:'The library eats a bus.',ar:'المكتبة تأكل حافلة.'},{en:'I am opposite yesterday.',ar:'أنا مقابل أمس.'},{en:'Excuse me, how can I get to the library?',ar:'عذرًا، كيف أصل إلى المكتبة؟'}],correct:2},
       {id:'routine',q:'Explain one part of your daily routine.',ar:'اشرح جزءًا من روتينك اليومي.',options:[{en:'I usually prepare my bag at night.',ar:'عادة أجهز حقيبتي ليلًا.'},{en:'I usually bag my night prepare.',ar:'عادة حقيبة أنا الليل أجهز.'},{en:'My routine is a museum eat.',ar:'روتيني متحف يأكل.'}],correct:0}
     ],
     B2:[
-      {id:'suggestion',q:'Your class wants a cleaner school. Make a suggestion.',ar:'فصلك يريد مدرسة أنظف. قدّم اقتراحًا.',options:[{en:'Why do we not put recycling boxes near the gate?',ar:'لماذا لا نضع صناديق إعادة التدوير قرب البوابة؟'},{en:'The notebook is a blue because.',ar:'الكشكول أزرق لأن.'},{en:'Cleaning yesterday will be had.',ar:'التنظيف أمس سيكون كان.'}],correct:0},
-      {id:'clarify',q:'You did not understand a direction. What should you say?',ar:'لم تفهم إرشادًا. ماذا تقول؟',options:[{en:'Could you explain the last step again, please?',ar:'هل يمكنك شرح الخطوة الأخيرة مرة أخرى؟'},{en:'I will never ask any question.',ar:'لن أسأل أي سؤال أبدًا.'},{en:'The museum is eating the map.',ar:'المتحف يأكل الخريطة.'}],correct:0},
+      {id:'suggestion',q:'Your class wants a cleaner school. Make a suggestion.',ar:'فصلك يريد مدرسة أنظف. قدّم اقتراحًا.',options:[{en:'The notebook is a blue because.',ar:'الكشكول أزرق لأن.'},{en:'Cleaning yesterday will be had.',ar:'التنظيف أمس سيكون كان.'},{en:'Why do we not put recycling boxes near the gate?',ar:'لماذا لا نضع صناديق إعادة التدوير قرب البوابة؟'}],correct:2},
+      {id:'clarify',q:'You did not understand a direction. What should you say?',ar:'لم تفهم إرشادًا. ماذا تقول؟',options:[{en:'I will never ask any question.',ar:'لن أسأل أي سؤال أبدًا.'},{en:'Could you explain the last step again, please?',ar:'هل يمكنك شرح الخطوة الأخيرة مرة أخرى؟'},{en:'The museum is eating the map.',ar:'المتحف يأكل الخريطة.'}],correct:1},
       {id:'sequence',q:'Tell someone how you solve a problem.',ar:'أخبر شخصًا كيف تحل مشكلة.',options:[{en:'First I check the facts, then I choose a solution.',ar:'أتحقق من الحقائق أولًا، ثم أختار حلًا.'},{en:'Solution first facts because yesterday.',ar:'الحل أولًا الحقائق لأن أمس.'},{en:'I decide before I know anything.',ar:'أقرر قبل أن أعرف أي شيء.'}],correct:0}
     ],
     C2:[
-      {id:'disagree',q:'You disagree respectfully with a classmate.',ar:'أنت تختلف مع زميلك بطريقة محترمة.',options:[{en:'I see your point, but the evidence suggests another answer.',ar:'أتفهم وجهة نظرك، لكن الأدلة تشير إلى إجابة أخرى.'},{en:'You are wrong, so stop talking.',ar:'أنت مخطئ، لذا توقف عن الكلام.'},{en:'I will agree even if the facts are unclear.',ar:'سأوافق حتى لو كانت الحقائق غير واضحة.'}],correct:0},
+      {id:'disagree',q:'You disagree respectfully with a classmate.',ar:'أنت تختلف مع زميلك بطريقة محترمة.',options:[{en:'You are wrong, so stop talking.',ar:'أنت مخطئ، لذا توقف عن الكلام.'},{en:'I see your point, but the evidence suggests another answer.',ar:'أتفهم وجهة نظرك، لكن الأدلة تشير إلى إجابة أخرى.'},{en:'I will agree even if the facts are unclear.',ar:'سأوافق حتى لو كانت الحقائق غير واضحة.'}],correct:1},
       {id:'reliable',q:'A surprising claim appears online. What should you do?',ar:'ظهرت معلومة مفاجئة على الإنترنت. ماذا تفعل؟',options:[{en:'Check reliable sources before sharing it.',ar:'أتحقق من مصادر موثوقة قبل مشاركتها.'},{en:'Share it immediately because it sounds exciting.',ar:'أشاركها فورًا لأنها تبدو مثيرة.'},{en:'Ignore every source and guess.',ar:'أتجاهل كل المصادر وأخمن.'}],correct:0},
-      {id:'impact',q:'Suggest a practical improvement for your school.',ar:'اقترح تحسينًا عمليًا لمدرستك.',options:[{en:'We could run a book-sharing project and measure its impact.',ar:'يمكننا تنظيم مشروع لتبادل الكتب وقياس تأثيره.'},{en:'We should choose a plan without evaluating it.',ar:'يجب اختيار خطة دون تقييمها.'},{en:'No one can contribute anything useful.',ar:'لا يستطيع أحد المساهمة بشيء مفيد.'}],correct:0}
+      {id:'impact',q:'Suggest a practical improvement for your school.',ar:'اقترح تحسينًا عمليًا لمدرستك.',options:[{en:'We should choose a plan without evaluating it.',ar:'يجب اختيار خطة دون تقييمها.'},{en:'No one can contribute anything useful.',ar:'لا يستطيع أحد المساهمة بشيء مفيد.'},{en:'We could run a book-sharing project and measure its impact.',ar:'يمكننا تنظيم مشروع لتبادل الكتب وقياس تأثيره.'}],correct:2}
     ]
   };
   return data[code]||data.A1;
@@ -13675,7 +13676,7 @@ function journeyRenderDashboard(){
     return '<div class="mfkj-badge-card'+(b.earned?' is-earned':'')+'"><span class="mfkj-badge-icon">'+(b.earned?b.icon:'🔒')+'</span><div><strong>'+b.title+'</strong><small lang="ar">'+b.ar+'</small><em>'+(b.earned?'UNLOCKED':b.rule)+'</em></div></div>';
   }).join('');
   var status=dash.querySelector('#mfkjSaveStatus');
-  if(status)status.textContent=journeyUserId?(journeySyncStatus==='error'?'تعذرت مزامنة آخر تحديث؛ التقدم محفوظ محليًا وسيُحاول مرة أخرى.':journeySyncStatus==='synced'?'✓ آخر تحديث محفوظ في حسابك.':'تقدمك مرتبط بحسابك؛ تتم المزامنة عند الاتصال.'):'التقدم محفوظ على هذا الجهاز حاليًا. سجّل الدخول لمزامنته بين أجهزتك.';
+  if(status)status.textContent=journeyUserId?(journeySyncStatus==='error'?'تعذرت المزامنة؛ ما زال التقدم محفوظًا محليًا. تحقق من الاتصال ثم نفذ نشاطًا جديدًا لإعادة المحاولة.':journeySyncStatus==='synced'?'✓ آخر تحديث محفوظ في حسابك.':'تقدمك مرتبط بحسابك؛ تتم المزامنة عند الاتصال.'):'التقدم محفوظ على هذا الجهاز حاليًا. سجّل الدخول لمزامنته بين أجهزتك.';
 }
 function journeyRenderMiniCard(){
   var code=journeyLevelCode();if(!code)return;
