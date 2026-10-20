@@ -348,7 +348,7 @@ function renderTrackMetadata(){
  const all=levels.slice().sort((a,b)=>{const ta=tracks.find(t=>t.id===a.track_id)||findTrack(a.track_code),tb=tracks.find(t=>t.id===b.track_id)||findTrack(b.track_code);return (ta?.sort_order||1)-(tb?.sort_order||1)||(a.sort_order||0)-(b.sort_order||0);});
  grid.innerHTML=all.map((l,i)=>{
   const code=l.code||'K'+(i+1),track=tracks.find(t=>t.id===l.track_id)||findTrack(l.track_code),primary=String(track?.code||l.track_code)==='PRIMARY_SUPPORT';
-  return '<button type="button" class="track-card level-card '+(primary?'primary':'zero')+'" onclick="openKidLevel(\''+esc(code)+'\')" aria-label="Open '+esc(l.title)+'"><div class="track-top"><div class="track-emoji">'+(icons[code]||'⭐')+'</div><span class="pill">'+esc(code)+'</span></div><h3>'+esc(l.title)+'</h3><p>'+esc(l.description||short[code]||'Learn step by step with activities and practice.')+'</p><div class="track-meta"><span class="pill">'+(primary?'📚 School English':'🎧 Learn through play')+'</span></div><div class="level-card-bottom"><span>'+esc(short[code]||'Lessons, words and activities')+'</span><span class="level-open-arrow">Open level ↗</span></div></button>';
+  const ready=!!l.id;return '<button type="button" class="track-card level-card '+(primary?'primary':'zero')+'" '+(ready?'onclick="openKidLevel(\''+esc(code)+'\')"':'disabled aria-disabled="true"')+' aria-label="'+(ready?'Open ':'Coming soon: ')+esc(l.title)+'"><div class="track-top"><div class="track-emoji">'+(icons[code]||'⭐')+'</div><span class="pill">'+esc(code)+'</span></div><h3>'+esc(l.title)+'</h3><p>'+esc(l.description||short[code]||'Learn step by step with activities and practice.')+'</p><div class="track-meta"><span class="pill">'+(primary?'📚 School English':'🎧 Learn through play')+'</span></div><div class="level-card-bottom"><span>'+esc(short[code]||'Lessons, words and activities')+'</span><span class="level-open-arrow">'+(ready?'Open level ↗':'Coming soon')+'</span></div></button>';
  }).join('');
  if(!all.length)grid.innerHTML='<div class="kid-area">The learning levels are loading. Refresh the page in a moment.</div>';
 }
@@ -448,6 +448,8 @@ async function submitEnrollmentRequest(){
  await loadStudentAccess();
 }
 async function initKids(){
+ // Render the built-in level catalog immediately; do not leave the two static path cards visible while auth/network loads.
+ renderTrackMetadata();updateLevelOptions();
  try{
   if(!window.supabase)throw new Error('Supabase client unavailable');
   kidsDb=window.supabase.createClient(DOMA_URL,DOMA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -476,7 +478,7 @@ async function loadCatalog(){
   if(tr.error)throw tr.error;
   if(lv.error)throw lv.error;
   if(tr.data&&tr.data.length)tracks=tr.data;
-  if(lv.data&&lv.data.length){levels=lv.data.map(l=>{const t=tracks.find(x=>x.id===l.track_id);return Object.assign({},l,{track_code:t&&t.code});});}
+  if(lv.data&&lv.data.length){const published=lv.data.map(l=>{const t=tracks.find(x=>x.id===l.track_id);return Object.assign({},l,{track_code:t&&t.code});});const byCode=new Map(published.map(l=>[l.code,l]));levels=FALLBACK_LEVELS.map(l=>byCode.get(l.code)||l);published.forEach(l=>{if(!levels.some(x=>x.code===l.code))levels.push(l);});}
  }catch(error){console.warn('Using fallback Kids catalog',error);toastStatus('connectionNotice','The catalog could not be refreshed. Showing the built-in preview catalog; registration needs a connection.','show');}
  renderTrackMetadata();updateLevelOptions();
 }
