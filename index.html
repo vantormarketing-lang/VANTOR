@@ -2072,6 +2072,59 @@ body.mf-kids-route #mfKidsStandaloneRoot{display:block!important;visibility:visi
 #mfKidsStandaloneRoot .mfkr-c2-writing .mfkr-quiz-intro p{line-height:1.9}
 @media(max-width:650px){#mfKidsStandaloneRoot .mfkr-c2-writing-area{min-height:145px;padding:12px;font-size:13px}#mfKidsStandaloneRoot .mfkr-c2-writing-meta{align-items:flex-start;flex-direction:column}#mfKidsStandaloneRoot #mfkrC2WritingHint{text-align:left}}
 
+
+/* Kids Learning Journey 1.0 — translucent burgundy/purple glass, with progress and gentle rewards. */
+#mfKidsStandaloneRoot .mfkj-dashboard{position:relative;overflow:hidden;margin:0 0 23px;padding:clamp(15px,2.8vw,25px);border:1px solid rgba(205,164,255,.25);border-radius:25px;background:radial-gradient(ellipse at 100% 0%,rgba(177,78,152,.17),transparent 43%),linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.026));backdrop-filter:blur(19px);box-shadow:0 24px 55px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.05)}
+#mfKidsStandaloneRoot .mfkj-dash-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;margin-bottom:18px}
+#mfKidsStandaloneRoot .mfkj-kicker{display:block;color:#91f0db;font-size:8px;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
+#mfKidsStandaloneRoot .mfkj-dash-title h2{margin:6px 0 3px;color:#fff;font-size:clamp(21px,3vw,30px);font-weight:950;letter-spacing:-.6px;line-height:1.2}
+#mfKidsStandaloneRoot .mfkj-dash-title p{margin:6px 0 0;color:#c5b3d5;font:600 11px/1.8 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+#mfKidsStandaloneRoot .mfkj-pulse-dot{display:inline-block;width:7px;height:7px;margin:0 0 4px 5px;border-radius:50%;background:#ff9dd4;box-shadow:0 0 7px #ff9dd4,0 0 16px rgba(255,157,212,.7);animation:mfkjDotPulse 1.7s ease-in-out infinite}
+@keyframes mfkjDotPulse{0%,100%{opacity:.7;transform:scale(.88)}50%{opacity:1;transform:scale(1.14)}}
+#mfKidsStandaloneRoot .mfkj-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(65px,1fr));gap:7px;min-width:min(310px,100%)}
+#mfKidsStandaloneRoot .mfkj-summary-stat{min-width:0;padding:11px 9px;border:1px solid rgba(206,164,255,.19);border-radius:15px;background:rgba(12,8,16,.28);text-align:center}
+#mfKidsStandaloneRoot .mfkj-summary-stat strong{display:block;color:#fff;font-size:clamp(20px,2.4vw,28px);font-weight:950;line-height:1.2}
+#mfKidsStandaloneRoot .mfkj-summary-stat span{display:block;margin-top:5px;color:#bda9ca;font-size:7px;font-weight:900;letter-spacing:.04em;line-height:1.45}
+#mfKidsStandaloneRoot .mfkj-level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#mfKidsStandaloneRoot .mfkj-level-card{position:relative;display:flex;min-width:0;flex-direction:column;overflow:hidden;padding:14px;border:1px solid rgba(206,164,255,.2);border-radius:18px;background:linear-gradient(150deg,rgba(164,119,236,.10),rgba(255,255,255,.028));box-shadow:inset 0 1px rgba(255,255,255,.04);transition:transform .18s,border-color .18s,background .18s}
+#mfKidsStandaloneRoot .mfkj-level-card:before{position:absolute;content:"";width:120px;height:120px;right:-66px;top:-70px;border-radius:50%;background:rgba(164,119,236,.08);pointer-events:none}
+#mfKidsStandaloneRoot .mfkj-level-card:hover{transform:translateY(-2px);border-color:rgba(255,157,212,.45);background:linear-gradient(150deg,rgba(164,119,236,.15),rgba(255,255,255,.04))}
+#mfKidsStandaloneRoot .mfkj-level-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+#mfKidsStandaloneRoot .mfkj-level-icon{display:grid;place-items:center;flex:0 0 35px;width:35px;height:35px;border:1px solid rgba(206,164,255,.2);border-radius:12px;background:linear-gradient(145deg,rgba(164,119,236,.19),rgba(255,255,255,.05));font-size:19px}
+#mfKidsStandaloneRoot .mfkj-level-status{max-width:70%;padding:5px 6px;border:1px solid rgba(145,240,219,.16);border-radius:99px;background:rgba(145,240,219,.045);color:#aef5e5;font-size:6px;font-weight:950;letter-spacing:.07em;text-align:center}
+#mfKidsStandaloneRoot .mfkj-level-code{margin-top:10px;color:#ff9dd4;font-size:8px;font-weight:950;letter-spacing:.2em}
+#mfKidsStandaloneRoot .mfkj-level-card h3{margin:2px 0 0;color:#fff1ff;font-size:clamp(13px,1.4vw,16px);font-weight:950;line-height:1.35}
+#mfKidsStandaloneRoot .mfkj-level-card .mfkj-ar{margin-top:3px;color:#d8baff;font:700 10px/1.65 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+#mfKidsStandaloneRoot .mfkj-level-desc{min-height:33px;margin-top:7px;color:#b9a9c7;font-size:9px;line-height:1.65}
+#mfKidsStandaloneRoot .mfkj-meter{height:6px;margin-top:11px;overflow:hidden;border:1px solid rgba(206,164,255,.09);border-radius:99px;background:rgba(10,7,14,.45)}
+#mfKidsStandaloneRoot .mfkj-meter span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#8c65df,#ff9dd4,#91f0db);box-shadow:0 0 10px rgba(177,78,152,.24);transition:width .25s}
+#mfKidsStandaloneRoot .mfkj-level-meta{display:flex;justify-content:space-between;gap:6px;margin-top:8px;color:#d9c9e5;font-size:8px;font-weight:800}
+#mfKidsStandaloneRoot .mfkj-level-detail{margin-top:6px;color:#a99bb5;font-size:8px;line-height:1.6;overflow-wrap:anywhere}
+#mfKidsStandaloneRoot .mfkj-open-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:auto;padding-top:12px;color:#b9f7e9;font-size:9px;font-weight:900}
+#mfKidsStandaloneRoot .mfkj-open-row b{display:grid;place-items:center;width:24px;height:24px;border:1px solid rgba(145,240,219,.18);border-radius:8px;background:rgba(145,240,219,.06);font-size:14px}
+#mfKidsStandaloneRoot .mfkj-badge-area{margin-top:23px;padding-top:18px;border-top:1px solid rgba(206,164,255,.13)}
+#mfKidsStandaloneRoot .mfkj-badge-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:11px}
+#mfKidsStandaloneRoot .mfkj-badge-heading h3{margin-top:4px;color:#fff;font-size:17px;font-weight:950}
+#mfKidsStandaloneRoot .mfkj-title-ar{color:#d8baff;font:700 11px Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-badge-heading p{max-width:48%;color:#bda9ca;font:600 9px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+#mfKidsStandaloneRoot .mfkj-badge-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+#mfKidsStandaloneRoot .mfkj-badge-card{display:flex;align-items:center;gap:8px;min-width:0;padding:10px;border:1px solid rgba(206,164,255,.12);border-radius:14px;background:rgba(10,7,14,.22);opacity:.65}
+#mfKidsStandaloneRoot .mfkj-badge-card.is-earned{border-color:rgba(145,240,219,.23);background:linear-gradient(135deg,rgba(145,240,219,.07),rgba(164,119,236,.07));opacity:1}
+#mfKidsStandaloneRoot .mfkj-badge-icon{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border:1px solid rgba(206,164,255,.14);border-radius:10px;background:rgba(164,119,236,.08);font-size:15px}
+#mfKidsStandaloneRoot .mfkj-badge-card strong{display:block;color:#f8edff;font-size:8px;line-height:1.4;overflow-wrap:anywhere}
+#mfKidsStandaloneRoot .mfkj-badge-card small{display:block;margin-top:2px;color:#c4b1d2;font:600 8px/1.4 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-badge-card em{display:block;margin-top:4px;color:#91f0db;font-size:6px;font-style:normal;font-weight:950;letter-spacing:.08em}
+#mfKidsStandaloneRoot .mfkj-save-status{margin-top:14px;color:#a99bb5;font:600 9px/1.8 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+#mfKidsStandaloneRoot .mfkj-mini-card{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:19px 0;padding:16px;border:1px solid rgba(206,164,255,.22);border-radius:20px;background:linear-gradient(125deg,rgba(164,119,236,.10),rgba(255,255,255,.025));backdrop-filter:blur(16px)}
+#mfKidsStandaloneRoot .mfkj-mini-card h3{margin:4px 0 2px;color:#fff;font-size:17px}
+#mfKidsStandaloneRoot .mfkj-mini-card h3 span{color:#d8baff;font-size:10px}
+#mfKidsStandaloneRoot .mfkj-mini-card p{margin-bottom:8px;color:#bda9ca;font:600 10px/1.6 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+#mfKidsStandaloneRoot .mfkj-mini-card .mfkj-meter{max-width:400px;margin-top:5px}
+#mfKidsStandaloneRoot .mfkj-mini-link{flex:none;white-space:nowrap}
+@media(max-width:900px){#mfKidsStandaloneRoot .mfkj-dash-head{grid-template-columns:1fr;gap:13px}#mfKidsStandaloneRoot .mfkj-summary-grid{max-width:420px}#mfKidsStandaloneRoot .mfkj-level-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#mfKidsStandaloneRoot .mfkj-badge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){#mfKidsStandaloneRoot .mfkj-dashboard{padding:13px;border-radius:20px}#mfKidsStandaloneRoot .mfkj-summary-grid{width:100%;min-width:0;gap:6px}#mfKidsStandaloneRoot .mfkj-summary-stat{padding:9px 4px;border-radius:12px}#mfKidsStandaloneRoot .mfkj-summary-stat span{font-size:6px}#mfKidsStandaloneRoot .mfkj-level-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}#mfKidsStandaloneRoot .mfkj-level-card{padding:9px;border-radius:15px}#mfKidsStandaloneRoot .mfkj-level-icon{flex-basis:29px;width:29px;height:29px;font-size:16px;border-radius:10px}#mfKidsStandaloneRoot .mfkj-level-status{max-width:75%;padding:4px 5px;font-size:5px;letter-spacing:0}#mfKidsStandaloneRoot .mfkj-level-card h3{font-size:12px}#mfKidsStandaloneRoot .mfkj-level-card .mfkj-ar{font-size:9px}#mfKidsStandaloneRoot .mfkj-level-desc{min-height:45px;font-size:8px}#mfKidsStandaloneRoot .mfkj-level-meta{font-size:7px}#mfKidsStandaloneRoot .mfkj-level-detail{font-size:7px}#mfKidsStandaloneRoot .mfkj-open-row{font-size:8px}#mfKidsStandaloneRoot .mfkj-badge-heading{align-items:flex-start;flex-direction:column}#mfKidsStandaloneRoot .mfkj-badge-heading p{max-width:100%}#mfKidsStandaloneRoot .mfkj-badge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#mfKidsStandaloneRoot .mfkj-mini-card{align-items:flex-start;flex-direction:column;padding:13px}#mfKidsStandaloneRoot .mfkj-mini-link{width:100%}}
+@media(prefers-reduced-motion:reduce){#mfKidsStandaloneRoot .mfkj-pulse-dot{animation:none}}
+
 </style>
 
 </head>
@@ -13184,7 +13237,268 @@ function shell(kicker,title,ar,description,content){return header() + '<section 
 function backButtons(href,label){return '<div class="mfkr-back-row"><a class="mfkr-btn" href="' + href + '">' + label + '</a><a class="mfkr-btn" href="./?kids=hub">All paths</a><a class="mfkr-btn" href="./">DOMA Academy</a></div>';}
 function pathCard(icon,tag,title,arabic,description,group){return '<a class="mfkr-choice" href="' + url(group) + '"><div class="mfkr-card-top"><span class="mfkr-art">' + icon + '</span><span class="mfkr-tag">' + tag + '</span></div><h2>' + title + '</h2><div class="mfkr-ar">' + arabic + '</div><p class="mfkr-desc">' + description + '</p><div class="mfkr-card-foot"><span>3 learning levels</span><span>Open path ↗</span></div></a>';}
 function levelCard(code,title,description,group){var dest=code==='A1'?url('a1'):code==='A2'?url('a2'):code==='B1'?url('b1'):code==='B2'?url('b2'):code==='C1'?url('c1'):code==='C2'?url('c2'):url('soon','&level='+encodeURIComponent(code)+'&group='+encodeURIComponent(group));var ready=code==='A1'||code==='A2'||code==='B1'||code==='B2'||code==='C1'||code==='C2';return '<a class="mfkr-level" href="'+dest+'"><div class="mfkr-card-top"><span class="mfkr-code">'+code+'</span><span class="mfkr-tag">'+(ready?'READY TO LEARN':'IN THE MAKING')+'</span></div><h2>'+title+'</h2><p>'+description+'</p><div class="mfkr-card-foot"><span>'+(code==='A1'?'Letters A–Z':code==='A2'?'24 explorer words':code==='B1'?'20 first words':code==='B2'?'Reading lab':code==='C1'?'Sentence lab':code==='C2'?'Advanced skills lab':'Level '+code)+'</span><span>Open ↗</span></div></a>';}
-function renderHub(){document.title='Choose Your Learning Path | Mr. Fluent Kids';root.innerHTML=shell('YOUR KIDS ENGLISH JOURNEY','Choose your learning path.','اختار المسار المناسب للطفل.','كل اختيار هيفتح صفحة مستقلة، والمستوى الأول A1 جاهز كتجربة أولى.','<div class="mfkr-choice-grid">' + pathCard('🧸','FIRST STEPS','Little Learners','للأطفال الأصغر سنًا','Start with letters, sounds, pictures and first English words.','younger') + pathCard('🎒','NEXT STEPS','Growing Learners','للأطفال الأكبر شوية','Build confidence with vocabulary, reading, sentence practice and everyday English.','older') + '</div><div class="mfkr-note">اختار المسار المناسب، ثم افتح المستوى. كل مستوى بيظهر في صفحة مستقلة.</div>');}
+
+var journeyLevels=[
+  {code:'A1',route:'a1',title:'My First ABC',arabic:'الحروف والصوت',group:'younger',icon:'🔤',desc:'Letters, sounds and first words'},
+  {code:'A2',route:'a2',title:'Word Explorers',arabic:'مستكشف الكلمات',group:'older',icon:'🧭',desc:'Vocabulary in everyday contexts'},
+  {code:'B1',route:'b1',title:'My First Words',arabic:'كلماتي الأولى',group:'younger',icon:'🧸',desc:'Useful words for daily life'},
+  {code:'B2',route:'b2',title:'Reading Builders',arabic:'أبطال القراءة',group:'older',icon:'📚',desc:'Read, understand and connect ideas'},
+  {code:'C1',route:'c1',title:'My First Sentences',arabic:'جُمَلي الأولى',group:'younger',icon:'💬',desc:'Build sentences and follow stories'},
+  {code:'C2',route:'c2',title:'Confident English',arabic:'ثقة في الإنجليزية',group:'older',icon:'🌟',desc:'Advanced reading and communication'}
+];
+var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={};
+function journeyUnique(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(function(v){return typeof v==='string'&&v.length>0;}).map(function(v){return v.slice(0,180);}))).slice(-300);}
+function journeyGetLevel(code){
+  if(!journeyData.levels)journeyData.levels={};
+  if(!journeyData.levels[code])journeyData.levels[code]={checkpointKeys:[],wordsSeen:[],stars:0,badges:[],legacyStats:{words:0,activities:0,best:0,attempts:0}};
+  var level=journeyData.levels[code];
+  if(!Array.isArray(level.checkpointKeys))level.checkpointKeys=[];
+  if(!Array.isArray(level.wordsSeen))level.wordsSeen=[];
+  if(!level.legacyStats)level.legacyStats={words:0,activities:0,best:0,attempts:0};
+  journeyRecalculate(level);
+  return level;
+}
+function journeyRecalculate(level){
+  level.checkpointKeys=journeyUnique(level.checkpointKeys);
+  level.wordsSeen=journeyUnique(level.wordsSeen).slice(-100);
+  level.stars=Math.min(20,Math.floor(level.checkpointKeys.length/3));
+  var n=level.checkpointKeys.length;
+  level.badges=[];
+  if(n>=3)level.badges.push('first-steps');
+  if(n>=8)level.badges.push('practice-explorer');
+  if(n>=16)level.badges.push('steady-learner');
+  if(n>=30)level.badges.push('learning-champion');
+}
+function journeyMergeLevel(code,row){
+  if(!row)return;
+  var level=journeyGetLevel(code);
+  var keys=row.checkpoint_keys||row.checkpointKeys||[];
+  var words=row.words_seen||row.wordsSeen||[];
+  level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(Array.isArray(keys)?keys:[]));
+  level.wordsSeen=journeyUnique(level.wordsSeen.concat(Array.isArray(words)?words:[])).slice(-100);
+  journeyRecalculate(level);
+}
+function journeyLocalRead(key){
+  try{var raw=localStorage.getItem(key);return raw?JSON.parse(raw):null;}catch(_){return null;}
+}
+function journeySaveLocal(){
+  try{localStorage.setItem(journeyStoreKey,JSON.stringify({levels:journeyData.levels||{},savedAt:new Date().toISOString()}));}catch(_){}
+}
+function journeyMergeLegacy(code,row){
+  if(!row)return;
+  var words=row.completed_words||row.viewedWords||row.completedWords||[];
+  var activities=row.completed_activities||row.completedActivities||[];
+  if(!Array.isArray(words))words=[];
+  if(!Array.isArray(activities))activities=[];
+  var score=Number(row.best_quiz_score!=null?row.best_quiz_score:row.bestQuizScore)||0;
+  var attempts=Number(row.quiz_attempts!=null?row.quiz_attempts:row.quizAttempts)||0;
+  var level=journeyGetLevel(code);
+  var before=level.checkpointKeys.length;
+  words.forEach(function(word){if(typeof word==='string'&&word){level.wordsSeen=journeyUnique(level.wordsSeen.concat([word]));level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(['saved-word:'+word]));}});
+  activities.forEach(function(activity){if(typeof activity==='string'&&activity){level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(['saved-activity:'+activity]));}});
+  for(var i=0;i<Math.min(attempts,20);i++)level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(['saved-quiz-attempt:'+i]));
+  level.legacyStats={
+    words:Math.max(Number(level.legacyStats.words)||0,words.length),
+    activities:Math.max(Number(level.legacyStats.activities)||0,activities.length),
+    best:Math.max(Number(level.legacyStats.best)||0,score),
+    attempts:Math.max(Number(level.legacyStats.attempts)||0,attempts)
+  };
+  journeyRecalculate(level);
+  if(journeyUserId&&(level.checkpointKeys.length>before||words.length||activities.length||score||attempts))journeyScheduleSync(code);
+}
+function journeyLoadLegacyLocal(code){
+  var spec={A2:'mrfluent-growing-a2-progress:',B2:'mrfluent-growing-b2-progress:',C2:'mrfluent-growing-c2-progress:'}[code];
+  if(!spec)return;
+  var row=journeyLocalRead(spec+(journeyUserId||'guest'));
+  if(row)journeyMergeLegacy(code,row);
+}
+function journeyScheduleSync(code){
+  if(!journeyUserId||typeof sb==='undefined'||!sb||!sb.from)return;
+  journeyDirty[code]=true;
+  if(journeySyncTimer)clearTimeout(journeySyncTimer);
+  journeySyncTimer=setTimeout(async function(){
+    var pending=Object.keys(journeyDirty);
+    journeyDirty={};
+    for(var i=0;i<pending.length;i++){
+      var level=journeyGetLevel(pending[i]);
+      try{
+        var result=await sb.from('mrfluent_kids_journey_progress').upsert({
+          user_id:journeyUserId,
+          level_code:pending[i],
+          checkpoint_keys:level.checkpointKeys.slice(-300),
+          words_seen:level.wordsSeen.slice(-100),
+          stars:level.stars,
+          badges:level.badges,
+          updated_at:new Date().toISOString()
+        },{onConflict:'user_id,level_code'});
+        if(result&&result.error)throw result.error;
+      }catch(_){}
+    }
+    journeySaveLocal();
+    journeyRenderCurrent();
+  },650);
+}
+function journeyRecord(actionKey,wordValue){
+  if(journeyLoading){journeyPending.push([actionKey,wordValue]);return;}
+  var code=({a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'})[route];
+  if(!code)return;
+  var level=journeyGetLevel(code);
+  var key=String(actionKey||'practice').replace(/\s+/g,' ').trim().slice(0,180);
+  if(!key)return;
+  if(level.checkpointKeys.indexOf(key)<0)level.checkpointKeys.push(key);
+  if(wordValue){
+    var word=String(wordValue).replace(/\s+/g,' ').trim().slice(0,100);
+    if(word&&level.wordsSeen.indexOf(word)<0)level.wordsSeen.push(word);
+  }
+  journeyRecalculate(level);
+  journeySaveLocal();
+  journeyRenderCurrent();
+  journeyScheduleSync(code);
+}
+function journeyDashboardHtml(){
+  return '<section class="mfkj-dashboard" id="mfkjDashboard" aria-label="My Learning Journey">'+
+    '<div class="mfkj-dash-head"><div class="mfkj-dash-title"><span class="mfkj-kicker">YOUR PROGRESS · رحلتك التعليمية</span><h2>My Learning Journey <i class="mfkj-pulse-dot"></i></h2><p>خطوة صغيرة كل يوم بتقربك من هدفك.</p></div>'+
+    '<div class="mfkj-summary-grid"><div class="mfkj-summary-stat"><strong id="mfkjTotalStars">0</strong><span>STARS · نجوم</span></div><div class="mfkj-summary-stat"><strong id="mfkjTotalBadges">0</strong><span>BADGES · شارات</span></div><div class="mfkj-summary-stat"><strong id="mfkjActiveLevels">0/6</strong><span>ACTIVE LEVELS · مستويات بدأت</span></div></div></div>'+
+    '<div class="mfkj-level-grid" id="mfkjLevelGrid"></div>'+
+    '<div class="mfkj-badge-area"><div class="mfkj-badge-heading"><div><span class="mfkj-kicker">LITTLE WINS</span><h3>Your achievements <span class="mfkj-title-ar">إنجازاتك</span></h3></div><p>اجمع خطوات تدريب جديدة وافتح شارات إضافية.</p></div><div class="mfkj-badge-grid" id="mfkjBadgeGrid"></div></div>'+
+    '<p class="mfkj-save-status" id="mfkjSaveStatus">جاري تحميل التقدم…</p>'+
+  '</section>';
+}
+function journeyBadgeDefinitions(){
+  return [
+    {id:'first-steps',threshold:3,icon:'🌱',title:'First Steps',ar:'أول خطواتك'},
+    {id:'practice-explorer',threshold:8,icon:'🧭',title:'Practice Explorer',ar:'مستكشف التدريب'},
+    {id:'steady-learner',threshold:16,icon:'✨',title:'Steady Learner',ar:'متعلم مثابر'},
+    {id:'learning-champion',threshold:30,icon:'🏆',title:'Learning Champion',ar:'بطل التعلّم'}
+  ];
+}
+function journeyRenderDashboard(){
+  var dash=root.querySelector('#mfkjDashboard');
+  if(!dash)return;
+  var totalStars=0,totalActions=0,activeLevels=0;
+  journeyLevels.forEach(function(item){
+    var level=journeyGetLevel(item.code);
+    totalStars+=level.stars;
+    totalActions+=level.checkpointKeys.length;
+    if(level.checkpointKeys.length)activeLevels++;
+  });
+  var badgeDefs=journeyBadgeDefinitions();
+  var earned=badgeDefs.filter(function(b){return totalActions>=b.threshold;});
+  var starsNode=dash.querySelector('#mfkjTotalStars'),badgesNode=dash.querySelector('#mfkjTotalBadges'),activeNode=dash.querySelector('#mfkjActiveLevels');
+  if(starsNode)starsNode.textContent=totalStars;
+  if(badgesNode)badgesNode.textContent=earned.length;
+  if(activeNode)activeNode.textContent=activeLevels+'/6';
+  var grid=dash.querySelector('#mfkjLevelGrid');
+  if(grid){
+    grid.innerHTML=journeyLevels.map(function(item){
+      var level=journeyGetLevel(item.code),count=level.checkpointKeys.length;
+      var pct=Math.min(100,Math.round(count/30*100));
+      var state=count===0?'READY WHEN YOU ARE':count<10?'IN PROGRESS':count<30?'KEEP GOING':'STRONG PROGRESS';
+      var legacy=level.legacyStats||{};
+      var detail=count+' practice steps · '+level.wordsSeen.length+' items explored';
+      if(legacy.activities||legacy.best||legacy.attempts)detail+=' · '+legacy.activities+' activities';
+      if(legacy.attempts)detail+=' · best quiz '+legacy.best;
+      return '<a class="mfkj-level-card" href="'+url(item.route)+'"><div class="mfkj-level-card-top"><span class="mfkj-level-icon">'+item.icon+'</span><span class="mfkj-level-status">'+state+'</span></div><div class="mfkj-level-code">'+item.code+'</div><h3>'+item.title+'</h3><p class="mfkj-ar" lang="ar">'+item.arabic+'</p><p class="mfkj-level-desc">'+item.desc+'</p><div class="mfkj-meter" role="progressbar" aria-label="'+item.code+' activity steps" aria-valuemin="0" aria-valuemax="30" aria-valuenow="'+Math.min(30,count)+'"><span style="width:'+pct+'%"></span></div><div class="mfkj-level-meta"><span>⭐ '+level.stars+' stars</span><span>'+count+' steps</span></div><p class="mfkj-level-detail">'+detail+'</p><div class="mfkj-open-row"><span>Open level · افتح المستوى</span><b>↗</b></div></a>';
+    }).join('');
+  }
+  var badgeGrid=dash.querySelector('#mfkjBadgeGrid');
+  if(badgeGrid)badgeGrid.innerHTML=badgeDefs.map(function(b){
+    var unlocked=totalActions>=b.threshold;
+    return '<div class="mfkj-badge-card'+(unlocked?' is-earned':'')+'"><span class="mfkj-badge-icon">'+(unlocked?b.icon:'🔒')+'</span><div><strong>'+b.title+'</strong><small lang="ar">'+b.ar+'</small><em>'+(unlocked?'UNLOCKED':'UNLOCK AT '+b.threshold+' STEPS')+'</em></div></div>';
+  }).join('');
+  var saveStatus=dash.querySelector('#mfkjSaveStatus');
+  if(saveStatus)saveStatus.textContent=journeyUserId?'✓ تقدمك محفوظ في حسابك ويتزامن بين أجهزتك.':'التقدم محفوظ على هذا الجهاز حاليًا. سجّل الدخول لمزامنته مع حسابك.';
+}
+function journeyRenderMiniCard(){
+  var code=({a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'})[route];
+  if(!code)return;
+  var wrap=root.querySelector('.mfkr-page .mfkr-wrap');
+  if(!wrap)return;
+  var card=root.querySelector('#mfkjMiniCard');
+  if(!card){
+    card=document.createElement('section');
+    card.id='mfkjMiniCard';
+    card.className='mfkj-mini-card';
+    var back=wrap.querySelector('.mfkr-back-row');
+    if(back)wrap.insertBefore(card,back);else wrap.appendChild(card);
+  }
+  var level=journeyGetLevel(code),count=level.checkpointKeys.length;
+  var pct=Math.min(100,Math.round(count/30*100));
+  card.innerHTML='<div class="mfkj-mini-left"><span class="mfkj-kicker">MY LEARNING JOURNEY</span><h3>⭐ '+level.stars+' Stars <span lang="ar">· '+code+'</span></h3><p>'+count+' خطوات تدريب محفوظة · '+level.badges.length+' شارات للمستوى</p><div class="mfkj-meter"><span style="width:'+pct+'%"></span></div></div><a class="mfkr-btn mfkj-mini-link" href="'+url('hub')+'">View journey · رحلتي ↗</a>';
+}
+function journeyRenderCurrent(){
+  if(route==='hub')journeyRenderDashboard();
+  else journeyRenderMiniCard();
+}
+function journeyAttachTracker(){
+  root.addEventListener('click',function(event){
+    var button=event.target&&event.target.closest?event.target.closest('button'):null;
+    if(!button||!root.contains(button)||button.disabled||button.closest('.mfkr-top,.mfkr-back-row'))return;
+    var attrs=Array.prototype.slice.call(button.attributes||[]);
+    var speakAttr=attrs.find(function(a){return /^data-[a-z0-9-]*(speak|audio|listen|word)[a-z0-9-]*$/i.test(a.name);});
+    var dataAttr=attrs.find(function(a){return /^data-(a2|b1|b2|c1|c2|kids)-/i.test(a.name);});
+    var classes=String(button.className||'');
+    var relevant=!!speakAttr||!!dataAttr||/mfkr-(sound|topic|quiz-option|quiz-next|c1-chip|c1-option|b2-sequence-option|btn|a2-match|word-actions|c2-writing)/i.test(classes);
+    if(!relevant)return;
+    var context=button.closest('.mfkr-quiz-panel,.mfkr-topic-panel,.mfkr-a2-match-prompt,.mfkr-a2-story-card,.mfkr-c1-story-line,.mfkr-c1-builder-panel,.mfkr-b2-sequence-option,.mfkr-c2-writing,.mfkr-summary')||button.parentElement;
+    var titleNode=context&&context.querySelector?context.querySelector('h2,h3,h4,[data-quiz-question]'):null;
+    var contextName=titleNode?titleNode.textContent:(context&&context.id?context.id:(context&&context.className?String(context.className):'practice'));
+    var label=(speakAttr&&speakAttr.value)||button.getAttribute('aria-label')||button.textContent||button.className||'practice';
+    var key=[route,String(contextName||'').replace(/\s+/g,' ').trim().slice(0,55),String(label).replace(/\s+/g,' ').trim().slice(0,90)].join('|').toLowerCase();
+    journeyRecord(key,speakAttr?speakAttr.value:'');
+  });
+  root.addEventListener('input',function(event){
+    var field=event.target;
+    if(!field||!field.matches||!field.matches('textarea.mfkr-c2-writing-area'))return;
+    if(String(field.value||'').trim().length>=30)journeyRecord('c2|writing-workshop|draft-started','');
+  });
+}
+async function journeyInit(){
+  journeyLoading=true;
+  var user=null;
+  try{
+    if(typeof sessionUser!=='undefined'&&sessionUser)user=sessionUser;
+    if(!user&&typeof sb!=='undefined'&&sb&&sb.auth){
+      var session=await sb.auth.getSession();
+      user=session&&session.data&&session.data.session&&session.data.session.user||null;
+    }
+  }catch(_){}
+  journeyUserId=user&&user.id||null;
+  journeyStoreKey='mrfluent-kids-journey-v1:'+(journeyUserId||'guest');
+  journeyData={levels:{}};
+  var local=journeyLocalRead(journeyStoreKey);
+  if(local&&local.levels){
+    Object.keys(local.levels).forEach(function(code){journeyMergeLevel(code,local.levels[code]);});
+  }
+  ['A2','B2','C2'].forEach(journeyLoadLegacyLocal);
+  if(journeyUserId&&typeof sb!=='undefined'&&sb&&sb.from){
+    try{
+      var central=await sb.from('mrfluent_kids_journey_progress').select('level_code,checkpoint_keys,words_seen,stars,badges,updated_at').eq('user_id',journeyUserId);
+      if(!central.error&&Array.isArray(central.data))central.data.forEach(function(row){journeyMergeLevel(row.level_code,row);});
+    }catch(_){}
+    var specs=[
+      {code:'A2',table:'mrfluent_growing_progress'},
+      {code:'B2',table:'mrfluent_growing_b2_progress'},
+      {code:'C2',table:'mrfluent_growing_c2_progress'}
+    ];
+    var legacyRows=await Promise.all(specs.map(async function(spec){
+      try{
+        var response=await sb.from(spec.table).select('completed_words,completed_activities,best_quiz_score,quiz_attempts').eq('user_id',journeyUserId).eq('level_code',spec.code).order('updated_at',{ascending:false}).limit(1);
+        if(response.error||!Array.isArray(response.data)||!response.data.length)return null;
+        return {code:spec.code,row:response.data[0]};
+      }catch(_){return null;}
+    }));
+    legacyRows.forEach(function(entry){if(entry)journeyMergeLegacy(entry.code,entry.row);});
+  }
+  journeyLevels.forEach(function(item){journeyGetLevel(item.code);});
+  journeySaveLocal();
+  journeyLoading=false;
+  var pending=journeyPending.slice();journeyPending=[];
+  pending.forEach(function(item){journeyRecord(item[0],item[1]);});
+  journeyRenderCurrent();
+}
+
+function renderHub(){document.title='Choose Your Learning Path | Mr. Fluent Kids';root.innerHTML=shell('YOUR KIDS ENGLISH JOURNEY','Choose your learning path.','اختار المسار المناسب للطفل.','كل اختيار هيفتح صفحة مستقلة، والمستوى الأول A1 جاهز كتجربة أولى.',journeyDashboardHtml()+'<div class="mfkr-choice-grid">' + pathCard('🧸','FIRST STEPS','Little Learners','للأطفال الأصغر سنًا','Start with letters, sounds, pictures and first English words.','younger') + pathCard('🎒','NEXT STEPS','Growing Learners','للأطفال الأكبر شوية','Build confidence with vocabulary, reading, sentence practice and everyday English.','older') + '</div><div class="mfkr-note">اختار المسار المناسب، ثم افتح المستوى. كل مستوى بيظهر في صفحة مستقلة.</div>');}
 function renderLevels(group){var young=group==='younger';var arr=young?[['A1','My First ABC','الحروف الكبيرة والصغيرة، صورة، كلمة، ترجمة عربية وزرّان للصوت.'],['B1','My First Words','كلمات يومية جديدة مع الاستماع والصور والألعاب.'],['C1','My First Sentences','كوّن جملًا بسيطة وابدأ فهم القصص المصورة.']]:[['A2','Word Explorers','وسّع حصيلة الكلمات واربطها بموضوعات قريبة من الطفل.'],['B2','Reading Builders','تدرّب على القراءة والفهم واستخدام الكلمات في سياقها.'],['C2','Confident English','قوّي الجمل والمحادثات القصيرة والفهم.']];var cards=arr.map(function(item){return levelCard(item[0],item[1],item[2],group);}).join('');document.title=(young?'Little Learners':'Growing Learners')+' | Mr. Fluent Kids';root.innerHTML=shell(young?'LITTLE LEARNERS':'GROWING LEARNERS',young?'Little Learners':'Growing Learners',young?'مسار الأطفال الأصغر سنًا':'مسار الأطفال الأكبر شوية','Select a level to start your next learning adventure.','<div class="mfkr-level-grid">'+cards+'</div>'+backButtons(url('hub'),'← Back to paths')+(young?'<div class="mfkr-note">المستويات A1 وB1 وC1 متاحة الآن. افتح C1 لتكوين الجمل وقراءة قصة قصيرة والتدرّب على الفهم والنطق.</div>':'<div class="mfkr-note">المستويات A2 وB2 وC2 متاحة الآن. استكشف الكلمات في A2، وطوّر القراءة في B2، ثم أتقن المهارات المتقدمة الشاملة في C2.</div>'));}
 
 function renderC1(){
@@ -14148,6 +14462,9 @@ function renderB1(){
 if(route==='hub')renderHub();else if(route==='younger'||route==='older')renderLevels(route);else if(route==='a1')renderAlphabet();else if(route==='a2')renderA2();else if(route==='b1')renderB1();else if(route==='b2')renderB2();else if(route==='c1')renderC1();else if(route==='c2')renderC2();else if(route==='soon')renderSoon();else{renderHub();}
 // Apply after the Kids content is rendered so its own cards remain visible.
 isolateKidsPage();
+journeyAttachTracker();
+journeyRenderCurrent();
+journeyInit();
 // Catch any late-created academy nodes and keep them outside this page-only view.
 if (window.MutationObserver) {
   var kidsPageObserver = new MutationObserver(function(records){
