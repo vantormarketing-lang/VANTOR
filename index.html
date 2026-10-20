@@ -13246,44 +13246,68 @@ var journeyLevels=[
   {code:'B2',route:'b2',title:'Reading Builders',arabic:'أبطال القراءة',group:'older',icon:'📚',desc:'Read, understand and connect ideas'},
   {code:'C2',route:'c2',title:'Confident English',arabic:'ثقة في الإنجليزية',group:'older',icon:'🌟',desc:'Advanced reading and communication'}
 ];
-var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={},journeyWritingQueued=false;
+var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={},journeyWritingQueued=false,journeyToolState={route:'',speakingFeedback:'',speakingWrongOption:-1,finalIndex:0,finalScore:0,finalAnswered:false,finalPicked:-1,finalFeedback:'',finalFinished:false};
+var journeyCertificateName='';
+
+function journeyLevelCode(){return ({a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'})[route]||'';}
 function journeyUnique(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(function(v){return typeof v==='string'&&v.length>0;}).map(function(v){return v.slice(0,180);}))).slice(-300);}
 function journeyGetLevel(code){
   if(!journeyData.levels)journeyData.levels={};
-  if(!journeyData.levels[code])journeyData.levels[code]={checkpointKeys:[],wordsSeen:[],stars:0,badges:[],legacyStats:{words:0,activities:0,best:0,attempts:0}};
+  if(!journeyData.levels[code])journeyData.levels[code]={checkpointKeys:[],wordsSeen:[],wrongAnswers:[],stars:0,badges:[],speakingKeys:[],finalQuizBest:0,finalQuizAttempts:0,speakingCompleted:false,certificateEarned:false,certificateCode:'',certifiedAt:null,legacyStats:{words:0,activities:0,best:0,attempts:0}};
   var level=journeyData.levels[code];
   if(!Array.isArray(level.checkpointKeys))level.checkpointKeys=[];
   if(!Array.isArray(level.wordsSeen))level.wordsSeen=[];
+  if(!Array.isArray(level.wrongAnswers))level.wrongAnswers=[];
   if(!level.legacyStats)level.legacyStats={words:0,activities:0,best:0,attempts:0};
+  level.speakingKeys=journeyUnique(level.checkpointKeys.filter(function(k){return /^speaking:/.test(k);}));
+  level.speakingCompleted=level.speakingKeys.length>=3;
+  level.finalQuizBest=Math.max(0,Math.min(5,Number(level.finalQuizBest)||0));
+  level.finalQuizAttempts=Math.max(0,Number(level.finalQuizAttempts)||0);
   journeyRecalculate(level);
   return level;
 }
 function journeyRecalculate(level){
   level.checkpointKeys=journeyUnique(level.checkpointKeys);
   level.wordsSeen=journeyUnique(level.wordsSeen).slice(-100);
-  level.stars=Math.min(20,Math.floor(level.checkpointKeys.length/3));
-  var n=level.checkpointKeys.length;
+  level.speakingKeys=journeyUnique(level.checkpointKeys.filter(function(k){return /^speaking:/.test(k);}));
+  level.speakingCompleted=level.speakingKeys.length>=3;
+  var genuineActivities=level.checkpointKeys.filter(function(k){return /^activity:|^speaking:|^final:/.test(k);}).length;
+  level.stars=Math.min(20,Math.floor(level.wordsSeen.length/4)+Math.min(3,genuineActivities)+
+    (level.speakingCompleted?2:0)+(level.finalQuizBest>=4?2:0)+(level.certificateEarned?2:0));
   level.badges=[];
-  if(n>=3)level.badges.push('first-steps');
-  if(n>=8)level.badges.push('practice-explorer');
-  if(n>=16)level.badges.push('steady-learner');
-  if(n>=30)level.badges.push('learning-champion');
+  if(level.wordsSeen.length>=3)level.badges.push('first-steps');
+  if(level.wordsSeen.length>=8)level.badges.push('practice-explorer');
+  if(level.speakingKeys.length>=2)level.badges.push('steady-learner');
+  if(level.certificateEarned)level.badges.push('learning-champion');
 }
 function journeyMergeLevel(code,row){
-  if(!row)return;
+  if(!row||!journeyLevels.some(function(x){return x.code===code;}))return;
   var level=journeyGetLevel(code);
   var keys=row.checkpoint_keys||row.checkpointKeys||[];
   var words=row.words_seen||row.wordsSeen||[];
   level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(Array.isArray(keys)?keys:[]));
   level.wordsSeen=journeyUnique(level.wordsSeen.concat(Array.isArray(words)?words:[])).slice(-100);
+  var answers=row.wrong_answers||row.wrongAnswers;
+  if(Array.isArray(answers)){
+    answers.forEach(function(item){
+      if(!item||!item.id)return;
+      var existing=level.wrongAnswers.find(function(w){return w.id===item.id;});
+      if(existing){
+        existing.attempts=Math.max(Number(existing.attempts)||1,Number(item.attempts)||1);
+        existing.reviewed=!!(existing.reviewed&&item.reviewed);
+      }else level.wrongAnswers.push(item);
+    });
+    level.wrongAnswers=level.wrongAnswers.slice(-40);
+  }
+  level.finalQuizBest=Math.max(level.finalQuizBest,Math.min(5,Number(row.final_quiz_best!=null?row.final_quiz_best:row.finalQuizBest)||0));
+  level.finalQuizAttempts=Math.max(level.finalQuizAttempts,Number(row.final_quiz_attempts!=null?row.final_quiz_attempts:row.finalQuizAttempts)||0);
+  level.certificateEarned=level.certificateEarned||!!(row.certificate_earned!=null?row.certificate_earned:row.certificateEarned);
+  level.certificateCode=level.certificateCode||row.certificate_code||row.certificateCode||'';
+  level.certifiedAt=level.certifiedAt||row.certified_at||row.certifiedAt||null;
   journeyRecalculate(level);
 }
-function journeyLocalRead(key){
-  try{var raw=localStorage.getItem(key);return raw?JSON.parse(raw):null;}catch(_){return null;}
-}
-function journeySaveLocal(){
-  try{localStorage.setItem(journeyStoreKey,JSON.stringify({levels:journeyData.levels||{},savedAt:new Date().toISOString()}));}catch(_){}
-}
+function journeyLocalRead(key){try{var raw=localStorage.getItem(key);return raw?JSON.parse(raw):null;}catch(_){return null;}}
+function journeySaveLocal(){try{localStorage.setItem(journeyStoreKey,JSON.stringify({levels:journeyData.levels||{},savedAt:new Date().toISOString()}));}catch(_){}}
 function journeyMergeLegacy(code,row){
   if(!row)return;
   var words=row.completed_words||row.viewedWords||row.completedWords||[];
@@ -13293,10 +13317,8 @@ function journeyMergeLegacy(code,row){
   var score=Number(row.best_quiz_score!=null?row.best_quiz_score:row.bestQuizScore)||0;
   var attempts=Number(row.quiz_attempts!=null?row.quiz_attempts:row.quizAttempts)||0;
   var level=journeyGetLevel(code);
-  var before=level.checkpointKeys.length;
-  words.forEach(function(word){if(typeof word==='string'&&word){level.wordsSeen=journeyUnique(level.wordsSeen.concat([word]));level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(['saved-word:'+word]));}});
+  words.forEach(function(word){if(typeof word==='string'&&word){level.wordsSeen=journeyUnique(level.wordsSeen.concat([word]));}});
   activities.forEach(function(activity){if(typeof activity==='string'&&activity){level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(['saved-activity:'+activity]));}});
-  for(var i=0;i<Math.min(attempts,20);i++)level.checkpointKeys=journeyUnique(level.checkpointKeys.concat(['saved-quiz-attempt:'+i]));
   level.legacyStats={
     words:Math.max(Number(level.legacyStats.words)||0,words.length),
     activities:Math.max(Number(level.legacyStats.activities)||0,activities.length),
@@ -13304,7 +13326,7 @@ function journeyMergeLegacy(code,row){
     attempts:Math.max(Number(level.legacyStats.attempts)||0,attempts)
   };
   journeyRecalculate(level);
-  if(journeyUserId&&(level.checkpointKeys.length>before||words.length||activities.length||score||attempts))journeyScheduleSync(code);
+  if(journeyUserId&&(words.length||activities.length||score||attempts))journeyScheduleSync(code);
 }
 function journeyLoadLegacyLocal(code){
   var spec={A2:'mrfluent-growing-a2-progress:',B2:'mrfluent-growing-b2-progress:',C2:'mrfluent-growing-c2-progress:'}[code];
@@ -13317,8 +13339,7 @@ function journeyScheduleSync(code){
   journeyDirty[code]=true;
   if(journeySyncTimer)clearTimeout(journeySyncTimer);
   journeySyncTimer=setTimeout(async function(){
-    var pending=Object.keys(journeyDirty);
-    journeyDirty={};
+    var pending=Object.keys(journeyDirty);journeyDirty={};
     for(var i=0;i<pending.length;i++){
       var level=journeyGetLevel(pending[i]);
       try{
@@ -13329,6 +13350,13 @@ function journeyScheduleSync(code){
           words_seen:level.wordsSeen.slice(-100),
           stars:level.stars,
           badges:level.badges,
+          wrong_answers:level.wrongAnswers.slice(-40),
+          final_quiz_best:level.finalQuizBest,
+          final_quiz_attempts:level.finalQuizAttempts,
+          speaking_completed:level.speakingCompleted,
+          certificate_earned:level.certificateEarned,
+          certificate_code:level.certificateCode||null,
+          certified_at:level.certifiedAt||null,
           updated_at:new Date().toISOString()
         },{onConflict:'user_id,level_code'});
         if(result&&result.error)throw result.error;
@@ -13338,12 +13366,12 @@ function journeyScheduleSync(code){
     journeyRenderCurrent();
   },650);
 }
-function journeyRecord(actionKey,wordValue){
-  if(journeyLoading){journeyPending.push([actionKey,wordValue]);return;}
-  var code=({a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'})[route];
+function journeyRecord(actionKey,wordValue,codeOverride){
+  var code=codeOverride||journeyLevelCode();
   if(!code)return;
+  if(journeyLoading){journeyPending.push({type:'record',code:code,actionKey:actionKey,wordValue:wordValue});return;}
   var level=journeyGetLevel(code);
-  var key=String(actionKey||'practice').replace(/\s+/g,' ').trim().slice(0,180);
+  var key=String(actionKey||'').replace(/\s+/g,' ').trim().slice(0,180);
   if(!key)return;
   if(level.checkpointKeys.indexOf(key)<0)level.checkpointKeys.push(key);
   if(wordValue){
@@ -13351,9 +13379,154 @@ function journeyRecord(actionKey,wordValue){
     if(word&&level.wordsSeen.indexOf(word)<0)level.wordsSeen.push(word);
   }
   journeyRecalculate(level);
+  journeyMaybeAwardCertificate(code);
   journeySaveLocal();
   journeyRenderCurrent();
   journeyScheduleSync(code);
+}
+function journeyMaybeAwardCertificate(code){
+  var level=journeyGetLevel(code);
+  if(level.wordsSeen.length>=5&&level.speakingKeys.length>=3&&level.finalQuizBest>=4&&!level.certificateEarned){
+    level.certificateEarned=true;
+    level.certificateCode='MF-'+code+'-'+(journeyUserId?journeyUserId.slice(0,8):'LOCAL')+'-'+String(Date.now()).slice(-5);
+    level.certifiedAt=new Date().toISOString();
+    journeyRecalculate(level);
+    journeySaveLocal();
+    journeyScheduleSync(code);
+  }
+}
+function journeyAddReviewItem(item,codeOverride){
+  var code=codeOverride||journeyLevelCode();
+  if(!code||!item||!item.id)return;
+  if(journeyLoading){journeyPending.push({type:'review',code:code,item:item});return;}
+  var level=journeyGetLevel(code);
+  var old=level.wrongAnswers.find(function(w){return w.id===item.id;});
+  if(old){old.attempts=(Number(old.attempts)||1)+1;old.reviewed=false;old.createdAt=new Date().toISOString();old.selected=item.selected||old.selected;}
+  else level.wrongAnswers.push({
+    id:String(item.id).slice(0,180),level:code,question:String(item.question||'Practice question').slice(0,260),
+    arabic:String(item.arabic||'').slice(0,260),selected:String(item.selected||'').slice(0,180),
+    correct:String(item.correct||'').slice(0,180),kind:String(item.kind||'quiz').slice(0,40),
+    createdAt:new Date().toISOString(),attempts:1,reviewed:false
+  });
+  level.wrongAnswers=level.wrongAnswers.slice(-40);
+  journeySaveLocal();
+  journeyRenderCurrent();
+  journeyScheduleSync(code);
+}
+function journeySpeak(textValue){
+  if(!textValue||!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
+  try{window.speechSynthesis.cancel();var utterance=new SpeechSynthesisUtterance(String(textValue));utterance.lang='en-US';utterance.rate=.82;utterance.pitch=1.02;window.speechSynthesis.speak(utterance);}catch(_){}
+}
+function journeyCaptureWrongAnswer(button){
+  var code=journeyLevelCode();
+  if(!code||!button.classList.contains('is-wrong'))return false;
+  var panel=button.closest('#mfkrA2Quiz,#mfkrB1Quiz,#mfkrC1Quiz,#mfkrB2Quiz,#mfkrC2Quiz,#mfkrC2Inference,#mfkrC2Connectors,#mfkrC2Speaking,#mfkrA2Match,#mfkrB2Sequence');
+  if(!panel)panel=button.closest('.mfkr-quiz-panel')||button.parentElement;
+  var qNode=panel&&panel.querySelector?panel.querySelector('h3[lang="en"],h3,h4,[data-quiz-question]'):null;
+  var arNode=panel&&panel.querySelector?panel.querySelector('.mfkr-quiz-hint,.mfkr-c1-story-title-ar,.mfkr-ar'):null;
+  var correctNode=panel&&panel.querySelector?panel.querySelector('.is-correct'):null;
+  var feedbackNode=panel&&panel.querySelector?panel.querySelector('.mfkr-quiz-feedback'):null;
+  var question=qNode?String(qNode.textContent||'').replace(/\s+/g,' ').trim():'Question';
+  if(/^Question \d+/i.test(question)){var all=panel.querySelectorAll('h3');if(all.length>1)question=String(all[all.length-1].textContent||'').replace(/\s+/g,' ').trim();}
+  var correct=correctNode?String(correctNode.textContent||'').replace(/\s+/g,' ').trim():'';
+  if(!correct&&feedbackNode)correct=String(feedbackNode.textContent||'').replace(/^.*?(?:correct answer:|الإجابة الصحيحة:|المعنى الصحيح هو:|الرد المناسب:)\s*/i,'').replace(/\s+/g,' ').trim();
+  if(!correct)return false;
+  var kind=panel&&panel.id?panel.id.replace(/^mfkr/,'').slice(0,40):'quiz';
+  var itemId=code+'|'+kind+'|'+question.toLowerCase().slice(0,95);
+  journeyAddReviewItem({id:itemId,question:question,arabic:arNode?arNode.textContent:'',selected:button.textContent,correct:correct,kind:kind},code);
+  return true;
+}
+function journeySpeakingData(code){
+  var data={
+    A1:[
+      {id:'greeting',q:'Someone asks: What is your name?',ar:'شخص يسألك: ما اسمك؟',options:[{en:'My name is Sara.',ar:'اسمي سارة.'},{en:'I am a pencil.',ar:'أنا قلم.'},{en:'Good night, sun.',ar:'تصبح على خير يا شمس.'}],correct:0},
+      {id:'feeling',q:'Your friend asks: How are you?',ar:'صديقك يسألك: كيف حالك؟',options:[{en:'I am happy, thank you.',ar:'أنا سعيد، شكرًا لك.'},{en:'It is under the table.',ar:'إنه تحت الطاولة.'},{en:'Seven blue cats.',ar:'سبع قطط زرقاء.'}],correct:0},
+      {id:'favourite',q:'Someone asks about your favourite colour.',ar:'شخص يسألك عن لونك المفضل.',options:[{en:'I like blue.',ar:'أنا أحب اللون الأزرق.'},{en:'I am a school.',ar:'أنا مدرسة.'},{en:'Open the window yesterday.',ar:'افتح النافذة أمس.'}],correct:0}
+    ],
+    B1:[
+      {id:'greeting',q:'You meet a new classmate. What can you say?',ar:'تقابل زميلًا جديدًا في الفصل. ماذا تقول؟',options:[{en:'Hello! Nice to meet you.',ar:'مرحبًا! سعيد بلقائك.'},{en:'Close the blue book.',ar:'أغلق الكتاب الأزرق.'},{en:'The apple is sleeping.',ar:'التفاحة نائمة.'}],correct:0},
+      {id:'thirsty',q:'Your friend asks: What do you drink when you are thirsty?',ar:'صديقك يسألك: ماذا تشرب عندما تعطش؟',options:[{en:'I drink water.',ar:'أشرب الماء.'},{en:'I read a banana.',ar:'أقرأ موزة.'},{en:'I sleep the milk.',ar:'أنام اللبن.'}],correct:0},
+      {id:'routine',q:'Someone asks what you do every day.',ar:'شخص يسألك عمّا تفعله كل يوم.',options:[{en:'I go to school and read.',ar:'أذهب إلى المدرسة وأقرأ.'},{en:'Yesterday is a rabbit.',ar:'أمس أرنب.'},{en:'The chair drinks.',ar:'الكرسي يشرب.'}],correct:0}
+    ],
+    C1:[
+      {id:'ability',q:'Tell your friend what you can do.',ar:'أخبر صديقك بشيء تستطيع فعله.',options:[{en:'I can read a story.',ar:'أستطيع قراءة قصة.'},{en:'A story can red.',ar:'قصة يستطيع أحمر.'},{en:'Can the is garden.',ar:'يستطيع الـ الحديقة.'}],correct:0},
+      {id:'like',q:'Tell someone what you like.',ar:'أخبر شخصًا بشيء تحبه.',options:[{en:'I like flowers.',ar:'أنا أحب الزهور.'},{en:'Like I the flowers red.',ar:'أحب أنا الـ الزهور أحمر.'},{en:'Flowers can the happy.',ar:'الزهور تستطيع الـ سعيدة.'}],correct:0},
+      {id:'describe',q:'Describe your cat.',ar:'صِف قطتك.',options:[{en:'My cat is small.',ar:'قطتي صغيرة.'},{en:'My cat small is a.',ar:'قطتي صغيرة يكون أ.'},{en:'Small my is cat the.',ar:'صغيرة قطتي يكون القط.'}],correct:0}
+    ],
+    A2:[
+      {id:'borrow',q:'You need a pencil. What is a polite request?',ar:'تحتاج قلمًا. ما الطلب المهذب؟',options:[{en:'Could I borrow your pencil, please?',ar:'هل يمكنني استعارة قلمك، من فضلك؟'},{en:'Give pencil me yesterday.',ar:'أعطني قلمًا أمس.'},{en:'Your pencil can swim.',ar:'قلمك يستطيع السباحة.'}],correct:0},
+      {id:'directions',q:'You are lost. Ask for directions.',ar:'أنت لا تعرف الطريق. اطلب إرشادات.',options:[{en:'Excuse me, how can I get to the library?',ar:'عذرًا، كيف أصل إلى المكتبة؟'},{en:'The library eats a bus.',ar:'المكتبة تأكل حافلة.'},{en:'I am opposite yesterday.',ar:'أنا مقابل أمس.'}],correct:0},
+      {id:'routine',q:'Explain one part of your daily routine.',ar:'اشرح جزءًا من روتينك اليومي.',options:[{en:'I usually prepare my bag at night.',ar:'عادة أجهز حقيبتي ليلًا.'},{en:'I usually bag my night prepare.',ar:'عادة حقيبة أنا الليل أجهز.'},{en:'My routine is a museum eat.',ar:'روتيني متحف يأكل.'}],correct:0}
+    ],
+    B2:[
+      {id:'suggestion',q:'Your class wants a cleaner school. Make a suggestion.',ar:'فصلك يريد مدرسة أنظف. قدّم اقتراحًا.',options:[{en:'Why do we not put recycling boxes near the gate?',ar:'لماذا لا نضع صناديق إعادة التدوير قرب البوابة؟'},{en:'The notebook is a blue because.',ar:'الكشكول أزرق لأن.'},{en:'Cleaning yesterday will be had.',ar:'التنظيف أمس سيكون كان.'}],correct:0},
+      {id:'clarify',q:'You did not understand a direction. What should you say?',ar:'لم تفهم إرشادًا. ماذا تقول؟',options:[{en:'Could you explain the last step again, please?',ar:'هل يمكنك شرح الخطوة الأخيرة مرة أخرى؟'},{en:'I will never ask any question.',ar:'لن أسأل أي سؤال أبدًا.'},{en:'The museum is eating the map.',ar:'المتحف يأكل الخريطة.'}],correct:0},
+      {id:'sequence',q:'Tell someone how you solve a problem.',ar:'أخبر شخصًا كيف تحل مشكلة.',options:[{en:'First I check the facts, then I choose a solution.',ar:'أتحقق من الحقائق أولًا، ثم أختار حلًا.'},{en:'Solution first facts because yesterday.',ar:'الحل أولًا الحقائق لأن أمس.'},{en:'I decide before I know anything.',ar:'أقرر قبل أن أعرف أي شيء.'}],correct:0}
+    ],
+    C2:[
+      {id:'disagree',q:'You disagree respectfully with a classmate.',ar:'أنت تختلف مع زميلك بطريقة محترمة.',options:[{en:'I see your point, but the evidence suggests another answer.',ar:'أتفهم وجهة نظرك، لكن الأدلة تشير إلى إجابة أخرى.'},{en:'You are wrong, so stop talking.',ar:'أنت مخطئ، لذا توقف عن الكلام.'},{en:'I will agree even if the facts are unclear.',ar:'سأوافق حتى لو كانت الحقائق غير واضحة.'}],correct:0},
+      {id:'reliable',q:'A surprising claim appears online. What should you do?',ar:'ظهرت معلومة مفاجئة على الإنترنت. ماذا تفعل؟',options:[{en:'Check reliable sources before sharing it.',ar:'أتحقق من مصادر موثوقة قبل مشاركتها.'},{en:'Share it immediately because it sounds exciting.',ar:'أشاركها فورًا لأنها تبدو مثيرة.'},{en:'Ignore every source and guess.',ar:'أتجاهل كل المصادر وأخمن.'}],correct:0},
+      {id:'impact',q:'Suggest a practical improvement for your school.',ar:'اقترح تحسينًا عمليًا لمدرستك.',options:[{en:'We could run a book-sharing project and measure its impact.',ar:'يمكننا تنظيم مشروع لتبادل الكتب وقياس تأثيره.'},{en:'We should choose a plan without evaluating it.',ar:'يجب اختيار خطة دون تقييمها.'},{en:'No one can contribute anything useful.',ar:'لا يستطيع أحد المساهمة بشيء مفيد.'}],correct:0}
+    ]
+  };
+  return data[code]||data.A1;
+}
+function journeyFinalQuestions(code){
+  var data={
+    A1:[
+      {id:'letter-after-a',q:'Which letter comes after A?',ar:'أي حرف يأتي بعد A؟',options:['C','B','D'],correct:1},
+      {id:'b-word',q:'Which word starts with the letter B?',ar:'أي كلمة تبدأ بحرف B؟',options:['Cat','Ball','Apple'],correct:1},
+      {id:'cat-meaning',q:'Which word means قطة?',ar:'ما الكلمة الإنجليزية التي تعني قطة؟',options:['Dog','Cat','Sun'],correct:1},
+      {id:'upper-d',q:'Choose the capital form of d.',ar:'اختر الحرف الكبير المقابل لـ d.',options:['D','b','P'],correct:0},
+      {id:'sun-meaning',q:'Which word means شمس?',ar:'ما الكلمة الإنجليزية التي تعني شمس؟',options:['Moon','Fish','Sun'],correct:2}
+    ],
+    B1:[
+      {id:'family',q:'Who is your mother?',ar:'من هي أمك؟',options:['A member of my family','A school subject','A kind of food'],correct:0},
+      {id:'drink',q:'What do you drink when you are thirsty?',ar:'ماذا تشرب عندما تعطش؟',options:['Bread','Water','A book'],correct:1},
+      {id:'animal',q:'Which animal can fly?',ar:'أي حيوان يستطيع الطيران؟',options:['Bird','Fish','Rabbit'],correct:0},
+      {id:'action',q:'Choose the correct daily action.',ar:'اختر فعلًا يوميًا صحيحًا.',options:['I eat breakfast.','I breakfast eat is.','I eating is breakfast.'],correct:0},
+      {id:'sleep',q:'When do most people sleep?',ar:'متى ينام معظم الناس؟',options:['At night','Inside a sandwich','Under water every day'],correct:0}
+    ],
+    C1:[
+      {id:'word-order',q:'Choose the correct sentence.',ar:'اختر الجملة الصحيحة.',options:['I like apples.','Like I apples.','Apples I like the.'],correct:0},
+      {id:'can',q:'Choose the correct way to express ability.',ar:'اختر التعبير الصحيح عن القدرة.',options:['I can jump.','I can jumps.','I jumping can.'],correct:0},
+      {id:'describe',q:'Complete: The cat ___ small.',ar:'أكمل: القطة صغيرة.',options:['are','is','am'],correct:1},
+      {id:'story',q:'What does Mia plant in the story?',ar:'ماذا تزرع ميا في القصة؟',options:['A red flower','A toy car','A sandwich'],correct:0},
+      {id:'where',q:'Where does the flower grow?',ar:'أين تنمو الزهرة؟',options:['In the sea','In the sun','Inside a shoe'],correct:1}
+    ],
+    A2:[
+      {id:'timetable',q:'What does a timetable show?',ar:'ماذا يوضّح جدول الحصص؟',options:['Lesson times','Animal colours','A recipe for soup'],correct:0},
+      {id:'borrow',q:'Choose the polite request.',ar:'اختر الطلب المهذب.',options:['Can I borrow your pencil, please?','Give me pencil yesterday.','I borrow you are.'],correct:0},
+      {id:'routine',q:'Complete: I ___ wake up early.',ar:'أكمل: أنا أستيقظ مبكرًا عادةً.',options:['usually','museum','opposite'],correct:0},
+      {id:'place',q:'Which place lends books?',ar:'أي مكان نستعير منه الكتب؟',options:['Library','Market','Bus station'],correct:0},
+      {id:'direction',q:'What does opposite mean?',ar:'ما معنى opposite؟',options:['Behind forever','Across from','Very hungry'],correct:1}
+    ],
+    B2:[
+      {id:'detail',q:'Why should a reader check details?',ar:'لماذا يراجع القارئ التفاصيل؟',options:['To support understanding','To make a story longer only','To avoid the main idea'],correct:0},
+      {id:'sequence',q:'Which word is useful to show the first step?',ar:'أي كلمة تُستخدم لتوضيح الخطوة الأولى؟',options:['First','Yesterday maybe','Although because'],correct:0},
+      {id:'solution',q:'A solution is...',ar:'ما معنى solution؟',options:['An answer to a problem','A type of weather','A school timetable'],correct:0},
+      {id:'environment',q:'Which action helps the environment?',ar:'أي تصرف يساعد البيئة؟',options:['Reusing bags','Throwing away every bottle','Leaving lights on all day'],correct:0},
+      {id:'evidence',q:'What is evidence?',ar:'ما معنى evidence؟',options:['Information that supports an idea','A random guess','A place to buy fruit'],correct:0}
+    ],
+    C2:[
+      {id:'reliable',q:'A reliable source is one that...',ar:'المصدر الموثوق هو الذي...',options:['Can be checked and trusted','Always agrees with us','Has the loudest headline'],correct:0},
+      {id:'evidence',q:'What should support a strong conclusion?',ar:'ما الذي يدعم الاستنتاج القوي؟',options:['Relevant evidence','A guess alone','A colourful title only'],correct:0},
+      {id:'connector',q:'Choose the best connector: The plan was expensive; ___, it saved resources later.',ar:'اختر أداة الربط الأنسب: كانت الخطة مكلفة؛ ومع ذلك وفرت الموارد لاحقًا.',options:['Nevertheless','For example','Because of yesterday'],correct:0},
+      {id:'sustainable',q:'A sustainable plan uses resources...',ar:'الخطة المستدامة تستخدم الموارد...',options:['Wisely over time','Once and wastes the rest','Without any evaluation'],correct:0},
+      {id:'perspective',q:'What is a perspective?',ar:'ما معنى perspective؟',options:['A point of view','A final score','A type of notebook'],correct:0}
+    ]
+  };
+  return data[code]||data.A1;
+}
+function journeyGlobalBadges(){
+  var totalWords=0,levelsWithPractice=0,certificates=0;
+  journeyLevels.forEach(function(item){var level=journeyGetLevel(item.code);totalWords+=level.wordsSeen.length;if(level.speakingKeys.length)levelsWithPractice++;if(level.certificateEarned)certificates++;});
+  return [
+    {id:'first-steps',icon:'🌱',title:'First Steps',ar:'أول خطواتك',earned:totalWords>=3,rule:'LISTEN TO 3 ITEMS'},
+    {id:'practice-explorer',icon:'🧭',title:'Practice Explorer',ar:'مستكشف التدريب',earned:totalWords>=8,rule:'EXPLORE 8 ITEMS'},
+    {id:'steady-learner',icon:'✨',title:'Steady Learner',ar:'متعلم مثابر',earned:levelsWithPractice>=3,rule:'PRACTISE IN 3 LEVELS'},
+    {id:'learning-champion',icon:'🏆',title:'Learning Champion',ar:'بطل التعلّم',earned:certificates>=1,rule:'EARN A CERTIFICATE'}
+  ];
 }
 function journeyDashboardHtml(){
   return '<section class="mfkj-dashboard" id="mfkjDashboard" aria-label="My Learning Journey">'+
