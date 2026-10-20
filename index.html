@@ -13764,7 +13764,7 @@ function renderB2(){
     if(sequenceButton&&sequenceChosen.length<sequence.length){
       var eventId=Number(sequenceButton.getAttribute('data-b2-sequence')),expected=sequence[sequenceChosen.length];
       var fb=root.querySelector('#mfkrB2SequenceFeedback');
-      if(eventId===expected&&eventId===sequenceChosen.length){
+      if(expected&&eventId===sequenceChosen.length){
         sequenceChosen.push(eventId);sequenceOrder=sequenceOrder.filter(function(item){return item.id!==eventId;});drawSequence();
       }else if(fb){fb.textContent='مش ده الحدث التالي. اقرأ الجمل تاني وحاول ترتّب الأحداث.';fb.classList.add('is-wrong');}
       return;
