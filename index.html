@@ -13703,6 +13703,53 @@ function journeyRenderCurrent(){
   else {journeyRenderMiniCard();journeyRenderLevelTools();}
 }
 function journeyAttachTracker(){
+  // Capture steps that redraw their activity panel during the page's own click handler.
+  // Deferring the check lets the level renderer finish before we record completion/review.
+  root.addEventListener('click',function(event){
+    var button=event.target&&event.target.closest?event.target.closest('button'):null;
+    if(!button||!root.contains(button))return;
+    if(button.matches('[data-b2-sequence]')){
+      var hostBefore=button.closest('#mfkrB2Sequence');
+      var badgeBefore=hostBefore&&hostBefore.querySelector('.mfkr-quiz-badge');
+      var stepMatch=badgeBefore&&String(badgeBefore.textContent||'').match(/EVENT\s+(\d+)/i);
+      var stepNumber=stepMatch?Number(stepMatch[1]):1;
+      var selectedText=String(button.textContent||'').replace(/\s+/g,' ').trim();
+      setTimeout(function(){
+        var host=root.querySelector('#mfkrB2Sequence');
+        if(!host)return;
+        if((host.querySelector('h3')&&host.querySelector('h3').textContent.indexOf('Story in order!')>=0)){
+          journeyRecord('activity:b2-story-order-completed',null,'B2');
+          return;
+        }
+        var badge=host.querySelector('.mfkr-quiz-badge'),m=badge&&String(badge.textContent||'').match(/EVENT\s+(\d+)/i),nextStep=m?Number(m[1]):stepNumber;
+        if(nextStep>stepNumber){
+          journeyRecord('activity:b2-story-sequence-step:'+stepNumber,null,'B2');
+          return;
+        }
+        var feedback=host.querySelector('#mfkrB2SequenceFeedback');
+        if(feedback&&feedback.classList.contains('is-wrong')){
+          var expected=host.querySelector('[data-b2-sequence="'+String(stepNumber-1)+'"]');
+          journeyAddReviewItem({
+            id:'B2|story-sequence|step-'+stepNumber,
+            question:'Which event comes next in the story?',
+            arabic:'اختار الحدث الذي يأتي بعده في القصة.',
+            selected:selectedText,
+            correct:expected?String(expected.textContent||'').replace(/\s+/g,' ').trim():'Read the story and choose the next event.',
+            kind:'story-sequence'
+          },'B2');
+        }
+      },0);
+    }
+    if(button.matches('[data-b2-connector-next]')){
+      setTimeout(function(){
+        var host=root.querySelector('#mfkrB2Connectors');
+        if(host&&host.querySelector('h3')&&host.querySelector('h3').textContent.indexOf('Ideas connected!')>=0){
+          journeyRecord('activity:b2-connector-lab-completed',null,'B2');
+        }
+      },0);
+    }
+  },true);
+
   root.addEventListener('click',function(event){
     var target=event.target;
     if(!target||!target.closest)return;
@@ -13720,32 +13767,49 @@ function journeyAttachTracker(){
     if(button.hasAttribute('data-mfj-review-done')){journeyMarkReviewDone(button.getAttribute('data-mfj-review-done'));return;}
     if(button.hasAttribute('data-mfj-print-certificate')){journeyPrintCertificate();return;}
     if(button.classList.contains('is-wrong')){journeyCaptureWrongAnswer(button);return;}
-    if(button.disabled||button.closest('.mfkr-top,.mfkr-back-row'))return;
-    var correctSelector=button.classList.contains('is-correct');
-    if(correctSelector){
+
+    // These controls can become disabled after the level renderer validates the action.
+    // Process their completed state before the disabled-button guard.
+    if(button.classList.contains('is-correct')){
       var host=button.closest('#mfkrA2Quiz,#mfkrB1Quiz,#mfkrC1Quiz,#mfkrB2Quiz,#mfkrC2Quiz,#mfkrC2Inference,#mfkrC2Connectors,#mfkrC2Speaking,#mfkrA2Match,#mfkrB2Sequence');
-      var h=host&&host.querySelector?host.querySelector('h3[lang="en"],h3,h4'):null;
+      var h=host&&host.querySelector?host.querySelector('h3[lang="en"],h3,h4,[data-quiz-question]'):null;
       var q=String(h?h.textContent:(host&&host.id)||button.parentElement.textContent||'quiz').replace(/\s+/g,' ').trim().slice(0,90);
       journeyRecord('activity:correct:'+journeyLevelCode()+':'+q.toLowerCase());
       return;
     }
+    if(button.matches('[data-a2-next]')){
+      var a2Feedback=root.querySelector('#mfkrA2BuilderFeedback');
+      if(a2Feedback&&/Amazing!|أكملت كل الجمل بنجاح/.test(a2Feedback.textContent||''))journeyRecord('activity:a2-sentence-builder-completed');
+      return;
+    }
+    if(button.matches('[data-c1-check]')){
+      var c1Feedback=root.querySelector('#mfkrC1BuilderFeedback');
+      if(c1Feedback&&c1Feedback.classList.contains('is-right'))journeyRecord('activity:c1-sentence-builder-completed');
+      return;
+    }
+    if(button.matches('[data-c2-writing-save]')){
+      var draft=root.querySelector('#mfkrC2WritingDraft'),draftWords=String(draft&&draft.value||'').trim().match(/\S+/g)||[];
+      if(draftWords.length>=40)journeyRecord('activity:c2-writing-completed');
+      return;
+    }
+    if(button.matches('[data-a2-story-done],[data-b2-read-done],[data-c2-read-done]')){
+      var readingKey=button.getAttribute('data-a2-story-done')||button.getAttribute('data-b2-read-done')||button.getAttribute('data-c2-read-done')||'reading';
+      journeyRecord('activity:reading:'+journeyLevelCode()+':'+readingKey);
+      return;
+    }
+    if(button.disabled||button.closest('.mfkr-top,.mfkr-back-row'))return;
     var attrs=Array.prototype.slice.call(button.attributes||[]);
     var soundAttr=attrs.find(function(a){return /^data-(kids|a2|b1|b2|c1|c2)-speak$/i.test(a.name);});
     var trackedWord=button.getAttribute('data-a2-word-track')||button.getAttribute('data-c2-track')||button.getAttribute('data-b2-track');
     if(soundAttr||trackedWord){
       var spoken=String((soundAttr&&soundAttr.value)||trackedWord||'').replace(/\s+/g,' ').trim();
       if(spoken)journeyRecord('word:'+spoken.toLowerCase().slice(0,100),spoken);
-      return;
-    }
-    if(button.matches('[data-a2-story-done],[data-b2-read-done],[data-c2-read-done]')){
-      var readingKey=button.getAttribute('data-a2-story-done')||button.getAttribute('data-b2-read-done')||button.getAttribute('data-c2-read-done')||'reading';
-      journeyRecord('activity:reading:'+journeyLevelCode()+':'+readingKey);
     }
   });
   root.addEventListener('input',function(event){
     var field=event.target;
     if(field&&field.matches&&field.matches('textarea.mfkr-c2-writing-area')&&!journeyWritingQueued&&String(field.value||'').trim().length>=30){
-      journeyWritingQueued=true;journeyRecord('activity:c2-writing-draft-started');
+      journeyWritingQueued=true;journeyRecord('draft:c2-writing-draft-started');
     }
     if(field&&field.matches&&field.matches('[data-mfj-certificate-name]')){
       journeyCertificateName=String(field.value||'').slice(0,80);
