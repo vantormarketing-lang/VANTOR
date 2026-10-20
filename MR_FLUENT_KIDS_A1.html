@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100b13">
+<meta name="description" content="A1 — My First ABC — Mr. Fluent Kids English learning.">
+<title>A1 — My First ABC | Mr. Fluent Kids</title>
+<style>
+:root{color-scheme:dark;--bg:#100b13;--panel:rgba(255,255,255,.065);--panel2:rgba(255,255,255,.09);--line:rgba(205,164,255,.23);--text:#fff7ff;--muted:#c0afc9;--purple:#bd91ff;--pink:#ff9dd4;--mint:#91f0db;--shadow:0 24px 70px rgba(0,0,0,.28)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--text);background:radial-gradient(ellipse at 10% 0%,rgba(128,49,93,.34),transparent 36%),radial-gradient(ellipse at 92% 22%,rgba(103,64,160,.22),transparent 34%),linear-gradient(145deg,#100b13,#1a0c17 60%,#0d0a12);background-attachment:fixed}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.wrap{width:min(1120px,94%);margin:0 auto}
+.topbar{position:sticky;top:0;z-index:20;backdrop-filter:blur(20px);background:rgba(16,10,19,.82);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:950;letter-spacing:.02em}
+.brand-mark{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(205,164,255,.37);border-radius:15px;background:linear-gradient(145deg,rgba(167,109,234,.25),rgba(255,139,198,.12));box-shadow:inset 0 1px rgba(255,255,255,.1);font-size:20px;color:#e9d7ff}
+.brand small{display:block;margin-top:3px;color:#bda8cb;font-size:9px;letter-spacing:.19em}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:42px;padding:10px 15px;border:1px solid rgba(216,179,255,.25);border-radius:13px;background:rgba(255,255,255,.055);color:var(--text);font-size:12px;font-weight:850;transition:transform .18s,border-color .18s,background .18s}
+.btn:hover,.choice-card:hover,.level-card:hover{transform:translateY(-3px);border-color:rgba(255,157,212,.56);background-color:rgba(255,255,255,.09)}
+.btn.primary{background:linear-gradient(110deg,#8052c6,#b14e98);border-color:rgba(255,190,238,.48);box-shadow:0 9px 25px rgba(145,59,161,.2)}
+.page{padding:42px 0 60px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--mint);font-size:10px;font-weight:950;letter-spacing:.19em;text-transform:uppercase}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px rgba(145,240,219,.9)}
+.page-head{text-align:center;max-width:760px;margin:0 auto 28px}
+.page-head h1{margin:12px 0 10px;font-size:clamp(30px,5vw,52px);line-height:1.04;letter-spacing:-1.8px;background:linear-gradient(105deg,#fff,#d4bbff 48%,#ffb8de);color:transparent;background-clip:text;-webkit-background-clip:text}
+.page-head p{max-width:640px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.8}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.choice-card,.level-card{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;padding:22px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035));backdrop-filter:blur(20px);box-shadow:var(--shadow);transition:transform .18s,border-color .18s,background .18s}
+.choice-card:before,.level-card:before{content:"";position:absolute;pointer-events:none;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,151,255,.12),transparent 36%);opacity:.9}
+.choice-top,.level-top{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.art{display:grid;place-items:center;flex:none;width:72px;height:72px;border:1px solid rgba(223,183,255,.25);border-radius:22px;background:linear-gradient(145deg,rgba(160,111,225,.27),rgba(255,146,203,.12));font-size:36px;box-shadow:inset 0 1px rgba(255,255,255,.12)}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid rgba(216,179,255,.2);border-radius:99px;color:#e1cff9;background:rgba(255,255,255,.045);font-size:9px;font-weight:900;letter-spacing:.08em}
+.choice-card h2,.level-card h2{position:relative;margin:18px 0 7px;font-size:clamp(20px,3vw,27px);letter-spacing:-.5px}
+.ar{position:relative;font:700 12px/1.8 Tahoma,"Segoe UI",sans-serif;color:var(--pink);direction:rtl;text-align:left}
+.desc{position:relative;color:var(--muted);font-size:12px;line-height:1.8;margin:10px 0 20px}
+.card-foot{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,.09);color:var(--mint);font-size:11px;font-weight:950}
+.level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.level-card{min-height:230px;padding:19px}
+.level-code{display:grid;place-items:center;width:54px;height:54px;border:1px solid rgba(224,185,255,.35);border-radius:17px;background:linear-gradient(145deg,rgba(164,116,242,.3),rgba(255,155,205,.14));color:#fff;font-size:18px;font-weight:1000;box-shadow:inset 0 1px rgba(255,255,255,.1)}
+.level-card h2{font-size:22px;margin-top:17px}
+.level-card p{position:relative;color:var(--muted);font-size:11px;line-height:1.7;margin:0 0 18px}
+.arrow{color:var(--mint);font-weight:950}
+.back-row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:25px}
+.notice{margin:22px auto 0;max-width:780px;padding:13px 16px;border:1px solid rgba(145,240,219,.18);border-radius:15px;background:rgba(145,240,219,.045);color:#c6ece3;font-size:11px;line-height:1.8;text-align:center}
+.footer{padding:21px 0 30px;text-align:center;color:#8f7d9c;font-size:10px}
+@media(max-width:800px){.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page{padding:30px 0 48px}.level-card{min-height:205px;padding:15px}}
+@media(max-width:560px){.nav{min-height:64px}.brand-mark{width:39px;height:39px}.nav-actions .btn{min-height:37px;padding:8px 10px;font-size:10px}.choice-grid{grid-template-columns:1fr;gap:12px}.choice-card{padding:18px;border-radius:20px}.choice-card .art{width:62px;height:62px;font-size:30px}.choice-card h2{font-size:23px}.level-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.level-card{min-height:185px;padding:12px;border-radius:17px}.level-code{width:44px;height:44px;border-radius:14px;font-size:15px}.level-card h2{font-size:18px;margin:13px 0 5px}.level-card p{font-size:10px;line-height:1.6}.page-head{margin-bottom:20px}.page-head h1{font-size:32px}.page-head p{font-size:12px}.desc{font-size:11px}.brand{font-size:12px}.brand small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap nav">
+<a class="brand" href="./index.html" aria-label="Return to DOMA Academy"><span class="brand-mark">✦</span><span>Mr. Fluent Kids<small>LEARN · PLAY · GROW</small></span></a>
+<div class="nav-actions"><a class="btn" href="./index.html">← DOMA Academy</a></div>
+</div></header>
+<main class="page"><div class="wrap"><style>
+.alphabet-summary{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 auto 18px;color:#dfd0ec;font-size:11px}
+.progress-track{width:min(220px,55vw);height:7px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;border:1px solid rgba(255,255,255,.08)}.progress-track span{display:block;width:100%;height:100%;background:linear-gradient(90deg,#b18aff,#ff9bd4,#91f0db);border-radius:inherit}
+.alphabet-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.letter-card{min-width:0;position:relative;overflow:hidden;padding:13px;border:1px solid rgba(206,164,255,.23);border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.038));backdrop-filter:blur(18px);box-shadow:0 16px 36px rgba(0,0,0,.17);text-align:center}
+.letter-card:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0%,rgba(207,149,255,.12),transparent 48%)}
+.letter-card-head{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;min-height:77px}
+.letter-forms{font-size:clamp(36px,4vw,50px);font-weight:1000;letter-spacing:-2px;line-height:1;color:#e6d2ff}
+.letter-forms span:last-child{color:#ffacd9}
+.letter-art{display:grid;place-items:center;flex:none;width:62px;height:62px;border:1px solid rgba(217,178,255,.2);border-radius:18px;background:linear-gradient(145deg,rgba(164,119,236,.14),rgba(255,255,255,.07));font-size:37px}
+.letter-word{position:relative;margin-top:8px;font-size:clamp(14px,1.8vw,18px);font-weight:950;color:#fff;overflow-wrap:anywhere}
+.letter-meaning{position:relative;margin-top:3px;font:600 11px/1.6 Tahoma,"Segoe UI",sans-serif;direction:rtl;color:#d7baff}
+.sound-row{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.sound-button{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:39px;padding:7px 5px;border:1px solid rgba(216,181,255,.2);border-radius:11px;background:rgba(255,255,255,.055);color:#eadbff;font-size:10px;font-weight:850;cursor:pointer}
+.sound-button:hover,.sound-button:focus-visible{outline:none;border-color:rgba(255,157,212,.7);background:rgba(255,157,212,.1)}
+.sound-button span{font-size:13px}
+.alphabet-back{margin-top:22px}
+#audioStatus{min-height:18px;text-align:center;color:#bda9ca;font-size:10px;margin:12px 0 0}
+@media(max-width:800px){.alphabet-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}}
+@media(max-width:380px){.alphabet-grid{gap:7px}.letter-card{padding:9px;border-radius:15px}.letter-art{width:48px;height:48px;font-size:29px;border-radius:14px}.letter-forms{font-size:35px}.letter-card-head{gap:7px;min-height:58px}.sound-row{grid-template-columns:1fr}.sound-button{min-height:36px}}
+</style><div class="page-head"><div class="eyebrow"><span class="live-dot"></span> LITTLE LEARNERS · LEVEL A1</div><h1>My First <span>ABC.</span></h1><p dir="rtl" lang="ar">اتعلّم الحروف من A إلى Z. كل كارت فيه الحرف الكبير والصغير، وصورة وكلمة بالإنجليزي، ومعناها بالعربي، وزرين لسماع نطق الحرف والكلمة.</p></div>
+<div class="alphabet-summary"><span>26 letters</span><div class="progress-track" aria-label="26 letters included"><span></span></div><span>Letter · Picture · Word · Sound</span></div>
+<div id="alphabetGrid" class="alphabet-grid" aria-label="English alphabet learning cards"></div>
+<div id="audioStatus" aria-live="polite">اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.</div>
+<div class="back-row alphabet-back"><a class="btn" href="./MR_FLUENT_KIDS_YOUNGER.html">← Back to levels</a><a class="btn" href="./MR_FLUENT_KIDS_HUB.html">All paths</a><a class="btn" href="./index.html">DOMA Academy</a></div></div></main>
+<footer class="footer"><div class="wrap">Mr. Fluent Kids · Learn a little every day.</div></footer>
+<script>
+const letters=[["A","a","Apple","تفاحة","🍎"],["B","b","Ball","كرة","⚽"],["C","c","Cat","قطة","🐱"],["D","d","Dog","كلب","🐶"],["E","e","Egg","بيضة","🥚"],["F","f","Fish","سمكة","🐟"],["G","g","Grapes","عنب","🍇"],["H","h","Hat","قبعة","🧢"],["I","i","Ice cream","آيس كريم","🍦"],["J","j","Juice","عصير","🧃"],["K","k","Kite","طائرة ورقية","🪁"],["L","l","Lion","أسد","🦁"],["M","m","Moon","قمر","🌙"],["N","n","Nest","عش","🪺"],["O","o","Orange","برتقالة","🍊"],["P","p","Pen","قلم","🖊️"],["Q","q","Queen","ملكة","👑"],["R","r","Rabbit","أرنب","🐰"],["S","s","Sun","شمس","☀️"],["T","t","Tiger","نمر","🐯"],["U","u","Umbrella","مظلة","☂️"],["V","v","Van","سيارة صغيرة","🚐"],["W","w","Watermelon","بطيخ","🍉"],["X","x","Xylophone","آلة إكسليفون","🎼"],["Y","y","Yo-yo","يويو","🪀"],["Z","z","Zebra","حمار وحشي","🦓"]];
+const grid=document.getElementById('alphabetGrid');
+grid.innerHTML=letters.map(([cap,small,word,meaning,pic])=>`
+ <article class="letter-card" aria-label="Letter ${cap}, ${word}">
+  <div class="letter-card-head"><div class="letter-forms"><span>${cap}</span> <span>${small}</span></div><div class="letter-art" aria-hidden="true">${pic}</div></div>
+  <div class="letter-word" lang="en">${word}</div>
+  <div class="letter-meaning" lang="ar">${meaning}</div>
+  <div class="sound-row">
+   <button type="button" class="sound-button" data-speak="${cap}" data-label="letter ${cap}" aria-label="Hear letter ${cap}"><span aria-hidden="true">🔊</span> صوت الحرف</button>
+   <button type="button" class="sound-button" data-speak="${word}" data-label="${word}" aria-label="Hear word ${word}"><span aria-hidden="true">🎵</span> صوت الكلمة</button>
+  </div>
+ </article>`).join('');
+const status=document.getElementById('audioStatus');
+grid.addEventListener('click',event=>{
+ const button=event.target.closest('button[data-speak]');if(!button)return;
+ const value=button.dataset.speak;
+ if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){status.textContent='ميزة النطق غير مدعومة في هذا المتصفح. جرّب Chrome أو Edge أو Safari المحدث.';return}
+ window.speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(value);utterance.lang='en-US';utterance.rate=.78;utterance.pitch=1.02;
+ utterance.onstart=()=>{status.textContent='Now speaking: '+button.dataset.label};
+ utterance.onend=()=>{status.textContent='اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.'};
+ utterance.onerror=()=>{status.textContent='تعذّر تشغيل الصوت. جرّب الضغط مرة أخرى.'};
+ window.speechSynthesis.speak(utterance);
+});
+</script>
+</body>
+</html>
