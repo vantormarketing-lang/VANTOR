@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v158', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v159', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v158', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v159', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -13343,6 +13343,12 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name::after{
 #mfKidsStandaloneRoot .mfkj-pay-gate p{color:#c0afc9;font-size:13px;line-height:1.8}
 @media(max-width:760px){#mfKidsStandaloneRoot .mfkj-pay-layout{grid-template-columns:minmax(0,1fr)}#mfKidsStandaloneRoot .mfkj-pay-fields{grid-template-columns:minmax(0,1fr)}#mfKidsStandaloneRoot .mfkj-pay-field.full{grid-column:auto}#mfKidsStandaloneRoot .mfkj-pay-receiver strong{font-size:24px}}
 </style>
+<style id="mf-kids-auth-modal-visibility-v1">
+body.mf-kids-route>#modal.show{display:flex!important;visibility:visible!important;z-index:2147483600!important}
+body.mf-kids-route>#modal.show .modalbox,
+body.mf-kids-route>#modal.show .modalhead,
+body.mf-kids-route>#modal.show #modalBody{visibility:visible!important}
+</style>
 <script id="doma-kids-direct-account">
 (function(){
   var params=new URLSearchParams(window.location.search);
@@ -13375,7 +13381,8 @@ document.body.appendChild(root);
 function isolateKidsPage(){
   var keepTags = {STYLE:1, SCRIPT:1, LINK:1, META:1};
   document.body.querySelectorAll('*').forEach(function(el){
-    if (el === root || root.contains(el) || keepTags[el.tagName]) return;
+    // Keep the academy login/signup modal interactive on isolated Kids pages.
+    if (el === root || root.contains(el) || keepTags[el.tagName] || el.id === 'modal' || (el.closest && el.closest('#modal'))) return;
     el.style.setProperty('display','none','important');
     el.style.setProperty('visibility','hidden','important');
     el.setAttribute('aria-hidden','true');
@@ -15038,11 +15045,33 @@ function renderB1(){
 
 function kidsJourneySubscribeUrl(code){return url('subscribe','&level='+encodeURIComponent(String(code||'A1').toUpperCase()));}
 function kidsJourneyGetClient(){return typeof sb!=='undefined'&&sb&&sb.from&&sb.auth?sb:null;}
+var kidsJourneyClientReadyPromise=null;
+function kidsJourneyWaitForClient(){
+  var ready=kidsJourneyGetClient();
+  if(ready)return Promise.resolve(ready);
+  if(!kidsJourneyClientReadyPromise){
+    kidsJourneyClientReadyPromise=new Promise(function(resolve,reject){
+      var started=Date.now();
+      function check(){
+        var client=kidsJourneyGetClient();
+        if(client){resolve(client);return;}
+        if(Date.now()-started>=15000){
+          reject(new Error('Supabase did not initialize. Check the network/CDN connection and reload the page.'));
+          return;
+        }
+        setTimeout(check,100);
+      }
+      check();
+    });
+  }
+  return kidsJourneyClientReadyPromise;
+}
 function kidsJourneyDefinition(code){return journeyLevels.find(function(item){return item.code===String(code||'').toUpperCase();})||journeyLevels[0];}
 function kidsJourneyDate(value){if(!value)return '—';var d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});}
 async function kidsJourneyLoadContext(code){
-  var client=kidsJourneyGetClient();
-  if(!client)return {error:'The academy connection is not ready. Refresh this page and try again.'};
+  var client;
+  try{client=await kidsJourneyWaitForClient();}
+  catch(error){return {error:error&&error.message||'The academy connection could not be initialized. Refresh this page and try again.'};}
   var authResult=await client.auth.getUser();
   if(authResult.error)return {error:'Could not verify your sign-in. Please sign in again and refresh.'};
   var user=authResult.data&&authResult.data.user||null;
@@ -15196,8 +15225,9 @@ async function kidsJourneySubmitPayment(code){
   var status=root.querySelector('#mfkjPaymentStatus');
   var submit=root.querySelector('#mfkjSubmitPayment');
   if(!form||!status||!submit)return;
-  var client=kidsJourneyGetClient();
-  if(!client){kidsJourneyStatus(status,'The academy connection is not ready. Refresh and try again.','is-error');return;}
+  var client;
+  try{client=await kidsJourneyWaitForClient();}
+  catch(error){kidsJourneyStatus(status,error&&error.message||'The academy connection could not be initialized. Refresh this page and try again.','is-error');return;}
   if(!form.querySelector('#mfkjGuardianConsent').checked){kidsJourneyStatus(status,'Please confirm the parent/guardian permission before submitting.','is-error');return;}
   var guardian=form.querySelector('#mfkjGuardianContact').value.trim();
   var sender=form.querySelector('#mfkjSenderPhone').value.trim();
@@ -15244,10 +15274,12 @@ async function kidsJourneySubmitPayment(code){
   }
 }
 var kidsJourneyAuthBound=false;
-function kidsJourneyBindAuthRefresh(){
+async function kidsJourneyBindAuthRefresh(){
   if(kidsJourneyAuthBound)return;
-  var client=kidsJourneyGetClient();
-  if(!client||!client.auth||!client.auth.onAuthStateChange)return;
+  var client;
+  try{client=await kidsJourneyWaitForClient();}
+  catch(error){console.warn('Kids auth listener could not be started.',error);return;}
+  if(kidsJourneyAuthBound||!client.auth||!client.auth.onAuthStateChange)return;
   kidsJourneyAuthBound=true;
   client.auth.onAuthStateChange(function(event){
     if(event!=='SIGNED_IN'&&event!=='SIGNED_OUT'&&event!=='TOKEN_REFRESHED')return;
