@@ -13443,7 +13443,6 @@ function renderA2(){
         quizAttempts=Math.max(0,Number(local.quizAttempts)||0);
       }catch(_){}
       drawProgress();
-      readPassages.forEach(function(index){var button=root.querySelector('[data-b2-read-done="'+index+'"]');if(button){button.textContent='✓ Completed';button.disabled=true;}});
       if(progressUserId&&typeof sb!=='undefined'&&sb&&sb.from){
         try{
           var response=await sb.from('mrfluent_growing_progress').select('completed_words,completed_activities,best_quiz_score,quiz_attempts').eq('user_id',progressUserId).eq('level_code','A2').maybeSingle();
