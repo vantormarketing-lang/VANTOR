@@ -70,7 +70,11 @@ body.kid-show-enrol #enrol{display:block!important}
 }
 @media(prefers-reduced-motion:reduce){.kid-video-card,.kid-vocab-item{scroll-behavior:auto}}
 
-.kid-letter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}.kid-letter-card{min-width:0;padding:12px;border:1px solid #dfd2fb;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);box-shadow:0 8px 20px rgba(94,65,151,.09)}.kid-letter-top{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px}.kid-letter-symbol{font-size:clamp(38px,7vw,58px);font-weight:1000;line-height:1;color:#7650cf;text-align:center}.kid-letter-picture{width:76px;height:76px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:inset 0 0 0 1px #eee5ff}.kid-letter-word{font-size:18px;font-weight:900;text-align:center;margin-top:10px;overflow-wrap:anywhere}.kid-letter-translation{font-size:13px;text-align:center;color:#7458aa;margin-top:2px;direction:rtl}.kid-letter-sound{font-size:12px;color:#655486;text-align:center;margin-top:4px}.kid-letter-card .kid-audio-button{display:block;width:100%;margin-top:9px}.kid-letter-sentence{margin-top:14px;padding:12px;border-radius:14px;background:#f0eaff;text-align:center}.kid-letter-sentence .kid-word-ar{display:block;margin-top:3px}@media(max-width:420px){.kid-letter-grid{grid-template-columns:1fr}.kid-letter-top{grid-template-columns:minmax(0,1fr) 82px}.kid-letter-picture{width:82px;height:82px}}</style>
+.kid-letter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}.kid-letter-audio-actions{display:grid;grid-template-columns:1fr;gap:6px;margin-top:9px}
+.kid-letter-audio-actions .kid-audio-button{width:100%;white-space:normal}
+.kid-letter-card .kid-letter-top{justify-content:center}
+.kid-letter-card .kid-letter-symbol{font-size:30px;font-weight:950}
+.kid-letter-card{min-width:0;padding:12px;border:1px solid #dfd2fb;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);box-shadow:0 8px 20px rgba(94,65,151,.09)}.kid-letter-top{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px}.kid-letter-symbol{font-size:clamp(38px,7vw,58px);font-weight:1000;line-height:1;color:#7650cf;text-align:center}.kid-letter-picture{width:76px;height:76px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:inset 0 0 0 1px #eee5ff}.kid-letter-word{font-size:18px;font-weight:900;text-align:center;margin-top:10px;overflow-wrap:anywhere}.kid-letter-translation{font-size:13px;text-align:center;color:#7458aa;margin-top:2px;direction:rtl}.kid-letter-sound{font-size:12px;color:#655486;text-align:center;margin-top:4px}.kid-letter-card .kid-audio-button{display:block;width:100%;margin-top:9px}.kid-letter-sentence{margin-top:14px;padding:12px;border-radius:14px;background:#f0eaff;text-align:center}.kid-letter-sentence .kid-word-ar{display:block;margin-top:3px}@media(max-width:420px){.kid-letter-grid{grid-template-columns:1fr}.kid-letter-top{grid-template-columns:minmax(0,1fr) 82px}.kid-letter-picture{width:82px;height:82px}}</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap nav">
@@ -572,11 +576,12 @@ function mfKidsBilingual(value,extra){
  const arabic=words.map(word=>mfKidsWordTranslation(word,translations)).filter(word=>word&&word!=="كلمة").join(" ");
  return '<span class="kid-bilingual-pair"><span class="kid-bilingual-en" dir="ltr">'+esc(source)+'</span>'+(arabic?'<span class="kid-bilingual-ar" lang="ar" dir="rtl">'+esc(arabic)+'</span>':'')+'</span>';
 }
-function mfKidsSpeak(text){
+function mfKidsSpeak(text,language){
  if(!("speechSynthesis" in window)||!("SpeechSynthesisUtterance" in window)){toastStatus("connectionNotice","الصوت غير مدعوم في هذا المتصفح؛ جرب متصفحًا حديثًا.","show");return;}
  window.speechSynthesis.cancel();
  const utterance=new SpeechSynthesisUtterance(String(text||""));
- utterance.lang="en-US";utterance.rate=(/^K[0-2]$/.test(window.mfKidsCurrentLevelCode||"")?0.78:0.88);utterance.pitch=1.03;
+ utterance.lang=language||"en-US";
+ utterance.rate=(/^K[0-2]$/.test(window.mfKidsCurrentLevelCode||"")?0.78:0.88);utterance.pitch=1.03;
  window.speechSynthesis.speak(utterance);
 }
 const MF_KIDS_VIDEO = {
@@ -638,12 +643,15 @@ function openStudentLesson(id){
  if(letterCards.length){
   letterCardsMarkup='<div class="kid-letter-grid">'+letterCards.map(card=>{
    const letter=String(card.letter||'').trim(),word=String(card.word||'').trim(),translation=String(card.translation||'').trim(),sound=String(card.sound||'').trim(),emoji=String(card.emoji||'🔤');
-   const say=word||letter;
-   return '<article class="kid-letter-card"><div class="kid-letter-top"><div class="kid-letter-symbol">'+esc(letter)+'</div><div class="kid-letter-picture" role="img" aria-label="'+esc(word)+'">'+esc(emoji)+'</div></div><div class="kid-letter-word">'+esc(word)+'</div><div class="kid-letter-translation" dir="rtl">'+esc(translation)+'</div><div class="kid-letter-sound">🔤 '+esc(sound)+'</div><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(say).replace(/"/g,"&quot;")+')">🔊 اسمع الكلمة</button></article>';
+   const letterName=(letter.match(/[A-Za-z]/)||[''])[0].toUpperCase();
+   const letterAudio=JSON.stringify(letterName).replace(/"/g,"&quot;");
+   const wordAudio=JSON.stringify(word||letterName).replace(/"/g,"&quot;");
+   const arabicAudio=JSON.stringify(translation||'').replace(/"/g,"&quot;");
+   return '<article class="kid-letter-card"><div class="kid-letter-top"><div class="kid-letter-symbol">'+esc(letterName||letter)+'</div></div><div class="kid-letter-picture" role="img" aria-label="'+esc(word)+'">'+esc(emoji)+'</div><div class="kid-letter-word">'+esc(word)+'</div><div class="kid-letter-translation" dir="rtl">'+esc(translation)+'</div><div class="kid-letter-sound">🔤 '+esc(sound)+'</div><div class="kid-letter-audio-actions"><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+letterAudio+',\'en-US\')">🔊 اسمع الحرف</button><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+wordAudio+',\'en-US\')">🔊 اسمع الكلمة</button><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+arabicAudio+',\'ar-EG\')">🔊 اسمع العربي</button></div></article>';
   }).join('')+'</div>';
   if(payload.example_sentence){
    const sentence=String(payload.example_sentence),sentenceAr=String(payload.example_translation||'');
-   letterCardsMarkup+='<div class="kid-letter-sentence"><b>'+esc(sentence)+'</b><span class="kid-word-ar" dir="rtl">'+esc(sentenceAr)+'</span><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(sentence).replace(/"/g,"&quot;")+')">🔊 اسمع الجملة</button></div>';
+   letterCardsMarkup+='<div class="kid-letter-sentence"><b>'+esc(sentence)+'</b><span class="kid-word-ar" dir="rtl">'+esc(sentenceAr)+'</span><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(sentence).replace(/"/g,"&quot;")+',\'en-US\')">🔊 اسمع الجملة</button></div>';
   }
  }
  const img=mfKidsSafeMediaUrl(l.illustration_url),audio=mfKidsSafeMediaUrl(l.audio_url);
