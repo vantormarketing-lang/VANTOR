@@ -32,7 +32,13 @@ body.kid-show-enrol #enrol{display:block!important}
 .kid-word-en{font-weight:850;color:inherit;line-height:1.2}
 .kid-word-ar{display:block;font:600 10px/1.3 Tahoma,"Segoe UI",sans-serif;color:#7b639f;direction:rtl;unicode-bidi:plaintext;text-align:center;max-width:100%}
 .kid-word-pair .kid-word-ar:empty{display:none}
-.kid-bilingual-copy{line-height:1.85;overflow-wrap:anywhere}
+.kid-bilingual-copy{line-height:1.65;overflow-wrap:anywhere}
+.kid-bilingual-pair{display:block;max-width:100%;line-height:1.55}
+.kid-bilingual-en{display:block;direction:ltr;text-align:left;font-weight:800;overflow-wrap:anywhere}
+.kid-bilingual-ar{display:block;margin-top:3px;color:#7b639f;font:600 10px/1.5 Tahoma,"Segoe UI",sans-serif;direction:rtl;unicode-bidi:plaintext;text-align:right;overflow-wrap:anywhere}
+.lesson-link .kid-bilingual-pair{flex:1;min-width:0}
+.unit-card .kid-bilingual-pair .kid-bilingual-ar{text-align:right}
+.kid-video-top .kid-bilingual-pair .kid-bilingual-ar{text-align:right}
 .kid-bilingual-list{padding-inline-start:22px;line-height:1.85}
 .kid-step-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:8px 0}
 .kid-audio-button{border:1px solid #dcd0f5;border-radius:12px;background:#fff;color:#6947b6;font-size:11px;font-weight:900;min-height:38px;padding:7px 10px;white-space:nowrap;flex:none}
@@ -559,14 +565,12 @@ function mfKidsWordTranslation(word,extra){
  return "كلمة";
 }
 function mfKidsBilingual(value,extra){
- const source=String(value==null?"":value);
- return source.split(/([A-Za-z]+(?:['’][A-Za-z]+)?|\d+|[^A-Za-z0-9]+)/g).filter(part=>part!=="").map(part=>{
-  if(/^[A-Za-z]+(?:['’][A-Za-z]+)?$/.test(part)){
-   const translation=mfKidsWordTranslation(part,extra||window.mfKidsActiveTranslations||{});
-   return '<span class="kid-word-pair"><span class="kid-word-en">'+esc(part)+'</span><span class="kid-word-ar" lang="ar" dir="rtl">'+esc(translation)+'</span></span>';
-  }
-  return esc(part);
- }).join("");
+ const source=String(value==null?"":value).trim();
+ if(!source)return "";
+ const translations=extra||window.mfKidsActiveTranslations||{};
+ const words=source.match(/[A-Za-z]+(?:['’][A-Za-z]+)?|\d+/g)||[];
+ const arabic=words.map(word=>mfKidsWordTranslation(word,translations)).filter(word=>word&&word!=="كلمة").join(" ");
+ return '<span class="kid-bilingual-pair"><span class="kid-bilingual-en" dir="ltr">'+esc(source)+'</span>'+(arabic?'<span class="kid-bilingual-ar" lang="ar" dir="rtl">'+esc(arabic)+'</span>':'')+'</span>';
 }
 function mfKidsSpeak(text){
  if(!("speechSynthesis" in window)||!("SpeechSynthesisUtterance" in window)){toastStatus("connectionNotice","الصوت غير مدعوم في هذا المتصفح؛ جرب متصفحًا حديثًا.","show");return;}
@@ -622,7 +626,7 @@ function openStudentLesson(id){
  });
  const entries=Array.from(entryMap.entries()).filter(([k,v])=>String(k).trim()&&String(v).trim()).slice(0,9);
  if(entries.length){
-  vocab='<div class="kid-vocab-grid">'+entries.map(([word,translation])=>'<div class="kid-vocab-item"><div class="kid-bilingual-copy">'+mfKidsBilingual(word,extras)+'</div><small class="kid-word-ar" dir="rtl">'+esc(translation)+'</small><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(word).replace(/"/g,"&quot;")+')">🔊 اسمع</button></div>').join('')+'</div>';
+  vocab='<div class="kid-vocab-grid">'+entries.map(([word,translation])=>'<div class="kid-vocab-item"><div class="kid-bilingual-copy"><span class="kid-bilingual-en" dir="ltr">'+esc(word)+'</span></div><small class="kid-word-ar" dir="rtl">'+esc(translation)+'</small><button type="button" class="kid-audio-button" onclick="mfKidsSpeak('+JSON.stringify(word).replace(/"/g,"&quot;")+')">🔊 اسمع</button></div>').join('')+'</div>';
  }
  let letterCardsMarkup='';
  let letterCards=Array.isArray(payload.letter_cards)?payload.letter_cards:(Array.isArray(payload.letterCards)?payload.letterCards:(Array.isArray(payload.cards)?payload.cards:[]));
