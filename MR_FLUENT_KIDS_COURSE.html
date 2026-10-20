@@ -638,7 +638,7 @@ function openStudentLesson(id){
  }
  let letterCardsMarkup='';
  let letterCards=Array.isArray(payload.letter_cards)?payload.letter_cards:(Array.isArray(payload.letterCards)?payload.letterCards:(Array.isArray(payload.cards)?payload.cards:[]));
- if(!letterCards.length && (/alphabet/i.test(String(l.title||'')) || l.id==='8d4aafac-a080-4251-b91e-323ce8d4265e')){
+ if(letterCards.length<26 && (/alphabet/i.test(String(l.title||'')) || l.id==='8d4aafac-a080-4251-b91e-323ce8d4265e')){
   letterCards=[
    ['A a','apple','تفاحة','/æ/','🍎'],['B b','ball','كرة','/b/','⚽'],['C c','cat','قطة','/k/','🐱'],['D d','dog','كلب','/d/','🐶'],['E e','egg','بيضة','/e/','🥚'],['F f','fish','سمكة','/f/','🐟'],['G g','goat','ماعز','/g/','🐐'],['H h','hat','قبعة','/h/','🎩'],['I i','insect','حشرة','/ɪ/','🐞'],['J j','juice','عصير','/dʒ/','🧃'],['K k','kite','طائرة ورقية','/k/','🪁'],['L l','lion','أسد','/l/','🦁'],['M m','moon','قمر','/m/','🌙'],['N n','nest','عش','/n/','🪺'],['O o','orange','برتقالة','/ɒ/','🍊'],['P p','pencil','قلم رصاص','/p/','✏️'],['Q q','queen','ملكة','/kw/','👑'],['R r','rabbit','أرنب','/r/','🐰'],['S s','sun','شمس','/s/','☀️'],['T t','tiger','نمر','/t/','🐯'],['U u','umbrella','مظلة','/ʌ/','☂️'],['V v','van','سيارة نقل صغيرة','/v/','🚐'],['W w','water','ماء','/w/','💧'],['X x','box','صندوق','/ks/','📦'],['Y y','yo-yo','يويو','/j/','🪀'],['Z z','zebra','حمار وحشي','/z/','🦓']
   ].map(([letter,word,translation,sound,emoji])=>({letter,word,translation,sound,emoji}));
