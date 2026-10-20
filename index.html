@@ -13408,7 +13408,18 @@ function journeyMergeLevel(code,row){
       var existing=level.wrongAnswers.find(function(w){return w.id===item.id;});
       if(existing){
         existing.attempts=Math.max(Number(existing.attempts)||1,Number(item.attempts)||1);
-        existing.reviewed=!!(existing.reviewed&&item.reviewed);
+        var existingReviewTime=Math.max(Date.parse(existing.createdAt||'')||0,Date.parse(existing.reviewedAt||'')||0);
+        var incomingReviewTime=Math.max(Date.parse(item.createdAt||'')||0,Date.parse(item.reviewedAt||'')||0);
+        if(incomingReviewTime>existingReviewTime){
+          existing.reviewed=!!item.reviewed;
+          if(item.createdAt)existing.createdAt=item.createdAt;
+          existing.reviewedAt=item.reviewedAt||null;
+          if(item.selected)existing.selected=item.selected;
+          if(item.correct)existing.correct=item.correct;
+        }else if(incomingReviewTime===existingReviewTime&&item.reviewed){
+          existing.reviewed=true;
+          existing.reviewedAt=item.reviewedAt||existing.reviewedAt||null;
+        }
       }else level.wrongAnswers.push(item);
     });
     level.wrongAnswers=level.wrongAnswers.slice(-40);
@@ -13463,18 +13474,20 @@ function journeyScheduleSync(code){
           level_code:pending[i],
           checkpoint_keys:level.checkpointKeys.slice(-300),
           words_seen:level.wordsSeen.slice(-100),
-          stars:level.stars,
-          badges:level.badges,
           wrong_answers:level.wrongAnswers.slice(-40),
           final_quiz_best:level.finalQuizBest,
           final_quiz_attempts:level.finalQuizAttempts,
-          speaking_completed:level.speakingCompleted,
-          certificate_earned:level.certificateEarned,
-          certificate_code:level.certificateCode||null,
-          certified_at:level.certifiedAt||null,
           updated_at:new Date().toISOString()
-        },{onConflict:'user_id,level_code'});
+        },{onConflict:'user_id,level_code'}).select('level_code,speaking_completed,certificate_earned,certificate_code,certified_at').single();
         if(result&&result.error)throw result.error;
+        if(result&&result.data){
+          var savedLevel=journeyGetLevel(result.data.level_code||pending[i]);
+          savedLevel.speakingCompleted=!!result.data.speaking_completed;
+          savedLevel.certificateEarned=!!result.data.certificate_earned;
+          savedLevel.certificateCode=result.data.certificate_code||'';
+          savedLevel.certifiedAt=result.data.certified_at||null;
+          journeyRecalculate(savedLevel);
+        }
         journeySyncStatus='synced';
       }catch(_){journeySyncStatus='error';}
     }
@@ -13503,12 +13516,15 @@ function journeyRecord(actionKey,wordValue,codeOverride){
 function journeyMaybeAwardCertificate(code){
   var level=journeyGetLevel(code);
   if(level.wordsSeen.length>=5&&level.speakingKeys.length>=3&&level.finalQuizBest>=4&&!level.certificateEarned){
+    if(journeyUserId){
+      journeyScheduleSync(code);
+      return;
+    }
     level.certificateEarned=true;
-    level.certificateCode='MF-'+code+'-'+(journeyUserId?journeyUserId.slice(0,8):'LOCAL')+'-'+String(Date.now()).slice(-5);
+    level.certificateCode='MF-'+code+'-LOCAL-'+String(Date.now()).slice(-5);
     level.certifiedAt=new Date().toISOString();
     journeyRecalculate(level);
     journeySaveLocal();
-    journeyScheduleSync(code);
   }
 }
 function journeyAddReviewItem(item,codeOverride){
@@ -13517,7 +13533,7 @@ function journeyAddReviewItem(item,codeOverride){
   if(journeyLoading){journeyPending.push({type:'review',code:code,item:item});return;}
   var level=journeyGetLevel(code);
   var old=level.wrongAnswers.find(function(w){return w.id===item.id;});
-  if(old){old.attempts=(Number(old.attempts)||1)+1;old.reviewed=false;old.createdAt=new Date().toISOString();old.selected=item.selected||old.selected;}
+  if(old){old.attempts=(Number(old.attempts)||1)+1;old.reviewed=false;old.reviewedAt=null;old.createdAt=new Date().toISOString();old.selected=item.selected||old.selected;}
   else level.wrongAnswers.push({
     id:String(item.id).slice(0,180),level:code,question:String(item.question||'Practice question').slice(0,260),
     arabic:String(item.arabic||'').slice(0,260),selected:String(item.selected||'').slice(0,180),
@@ -13832,11 +13848,20 @@ async function journeyInit(){
   var local=journeyLocalRead(journeyStoreKey);
   if(local&&local.levels)Object.keys(local.levels).forEach(function(code){journeyMergeLevel(code,local.levels[code]);});
   ['A2','B2','C2'].forEach(journeyLoadLegacyLocal);
+  var journeyServerLevels=[];
   if(journeyUserId&&typeof sb!=='undefined'&&sb&&sb.from){
     try{
       var central=await sb.from('mrfluent_kids_journey_progress').select('level_code,checkpoint_keys,words_seen,stars,badges,wrong_answers,final_quiz_best,final_quiz_attempts,speaking_completed,certificate_earned,certificate_code,certified_at,updated_at').eq('user_id',journeyUserId);
       if(central.error)throw central.error;
-      if(Array.isArray(central.data))central.data.forEach(function(row){journeyMergeLevel(row.level_code,row);});
+      if(Array.isArray(central.data))central.data.forEach(function(row){
+        journeyMergeLevel(row.level_code,row);
+        var serverLevel=journeyGetLevel(row.level_code);
+        serverLevel.certificateEarned=!!row.certificate_earned;
+        serverLevel.certificateCode=row.certificate_code||'';
+        serverLevel.certifiedAt=row.certified_at||null;
+        journeyRecalculate(serverLevel);
+        if(journeyServerLevels.indexOf(row.level_code)<0)journeyServerLevels.push(row.level_code);
+      });
       journeySyncStatus='synced';
     }catch(_){journeySyncStatus='error';}
     var specs=[{code:'A2',table:'mrfluent_growing_progress'},{code:'B2',table:'mrfluent_growing_b2_progress'},{code:'C2',table:'mrfluent_growing_c2_progress'}];
@@ -13845,7 +13870,16 @@ async function journeyInit(){
     }));
     legacyRows.forEach(function(entry){if(entry)journeyMergeLegacy(entry.code,entry.row);});
   }
-  journeyLevels.forEach(function(item){var level=journeyGetLevel(item.code);journeyMaybeAwardCertificate(item.code);});
+  journeyLevels.forEach(function(item){
+    var level=journeyGetLevel(item.code);
+    if(journeyUserId&&journeyServerLevels.indexOf(item.code)<0){
+      level.certificateEarned=false;
+      level.certificateCode='';
+      level.certifiedAt=null;
+      journeyRecalculate(level);
+    }
+    journeyMaybeAwardCertificate(item.code);
+  });
   journeySaveLocal();
   journeyLoading=false;
   var pending=journeyPending.slice();journeyPending=[];
