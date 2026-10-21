@@ -13745,40 +13745,45 @@ function journeyRenderMembershipStatus(){
   }
   var subscriptions=Array.isArray(ctx.subscriptions)?ctx.subscriptions:[];
   var requests=Array.isArray(ctx.requests)?ctx.requests:[];
+  var wholeCourse=String(ctx.track&&ctx.track.code||'').toUpperCase()==='KIDS_JOURNEY';
+  var courseActive=wholeCourse?subscriptions.filter(function(sub){return String(sub.status||'').toLowerCase()==='active'&&new Date(sub.expires_at).getTime()>Date.now()&&new Date(sub.starts_at).getTime()<=Date.now();}).sort(function(a,b){return new Date(b.expires_at)-new Date(a.expires_at);})[0]:null;
+  var coursePending=wholeCourse?requests.find(function(req){return String(req.status||'').toLowerCase()==='pending';}):null;
+  var courseLatest=wholeCourse?(coursePending||requests[0]||null):null;
   host.innerHTML=journeyLevels.map(function(item){
     var remoteLevel=ctx.levels.find(function(level){return String(level.code||'').toUpperCase()===item.code;});
     var levelId=remoteLevel&&remoteLevel.id;
-    var active=levelId&&subscriptions.filter(function(sub){return String(sub.level_id)===String(levelId)&&String(sub.status||'').toLowerCase()==='active'&&new Date(sub.expires_at).getTime()>Date.now();}).sort(function(a,b){return new Date(b.expires_at)-new Date(a.expires_at);})[0];
-    var levelRequests=requests.filter(function(req){return levelId&&String(req.requested_level_id)===String(levelId);}).sort(function(a,b){return new Date(b.created_at||0)-new Date(a.created_at||0);});
-    var latest=levelRequests[0]||null;
+    var active=wholeCourse?courseActive:(levelId&&subscriptions.filter(function(sub){return String(sub.level_id)===String(levelId)&&String(sub.status||'').toLowerCase()==='active'&&new Date(sub.expires_at).getTime()>Date.now()&&new Date(sub.starts_at).getTime()<=Date.now();}).sort(function(a,b){return new Date(b.expires_at)-new Date(a.expires_at);})[0]);
+    var levelRequests=wholeCourse?requests.filter(function(req){return String(req.status||'').toLowerCase()==='pending'||String(req.requested_level_id)===String(levelId);}).sort(function(a,b){return new Date(b.created_at||0)-new Date(a.created_at||0);}):requests.filter(function(req){return levelId&&String(req.requested_level_id)===String(levelId);}).sort(function(a,b){return new Date(b.created_at||0)-new Date(a.created_at||0);});
+    var latest=wholeCourse?courseLatest:(levelRequests[0]||null);
     var action='',badge='',description='',cardClass='';
     if(active){
       var expMs=new Date(active.expires_at).getTime();
       var days=Math.ceil((expMs-Date.now())/86400000);
       var warning=days<=7;
       badge='<span class="mfkj-membership-pill is-active">● Active</span>';
-      description='<b>Access until '+esc(journeyDateLabel(active.expires_at))+'</b><small>'+(warning?'⚠ Expires in '+Math.max(0,days)+' day(s)':'Your level is unlocked')+'</small>';
+      description='<b>Course access until '+esc(journeyDateLabel(active.expires_at))+'</b><small>'+(warning?'⚠ Expires in '+Math.max(0,days)+' day(s)':'All six levels are unlocked')+'</small>';
       action='<a class="mfkj-membership-action" href="'+url(item.route)+'">Continue learning <span>↗</span></a>';
       cardClass=warning?' is-expiring':' is-unlocked';
     }else if(latest&&String(latest.status||'').toLowerCase()==='pending'){
       badge='<span class="mfkj-membership-pill is-pending">◷ Pending review</span>';
-      description='<b>Payment is being reviewed</b><small lang="ar">الاشتراك هيتفعّل بعد مراجعة الأدمن.</small>';
-      action='<a class="mfkj-membership-action" href="'+kidsJourneySubscribeUrl(item.code)+'">View request <span>↗</span></a>';
+      description='<b>Full-course payment under review</b><small lang="ar">الاشتراك هيتفعّل لكل المستويات بعد مراجعة الأدمن.</small>';
+      action='<a class="mfkj-membership-action" href="'+kidsJourneySubscribeUrl()+'">View payment status <span>↗</span></a>';
       cardClass=' is-pending-card';
     }else if(latest&&String(latest.status||'').toLowerCase()==='rejected'){
       badge='<span class="mfkj-membership-pill is-locked">Needs attention</span>';
-      description='<b>Request not approved</b><small>'+esc(String(latest.admin_note||'Review the payment details and try again.').slice(0,150))+'</small>';
-      action='<a class="mfkj-membership-action" href="'+kidsJourneySubscribeUrl(item.code)+'">Review & retry <span>↗</span></a>';
+      description='<b>Full-course request not approved</b><small>'+esc(String(latest.admin_note||'Review the payment details and try again.').slice(0,150))+'</small>';
+      action='<a class="mfkj-membership-action" href="'+kidsJourneySubscribeUrl()+'">Review & retry <span>↗</span></a>';
       cardClass=' is-locked';
     }else{
       badge='<span class="mfkj-membership-pill is-locked">Locked</span>';
-      description='<b>Not subscribed</b><small>100 EGP · 30 days · approval required</small>';
-      action='<a class="mfkj-membership-action" href="'+kidsJourneySubscribeUrl(item.code)+'">Subscribe <span>↗</span></a>';
+      description='<b>Full course not active</b><small>One subscription · 100 EGP · 30 days</small>';
+      action='<a class="mfkj-membership-action" href="'+kidsJourneySubscribeUrl()+'">Subscribe to all levels <span>↗</span></a>';
       cardClass=' is-locked';
     }
     return '<article class="mfkj-membership-item'+cardClass+'"><div class="mfkj-membership-item-top"><span class="mfkj-membership-code">'+item.code+'</span>'+badge+'</div><h4>'+esc(item.title)+'</h4><p class="mfkj-ar" lang="ar">'+esc(item.arabic)+'</p><div class="mfkj-membership-info">'+description+'</div>'+action+'</article>';
   }).join('');
 }
+
 function journeyDailyBank(code){
   var banks={
     A1:[['apple','تفاحة'],['book','كتاب'],['happy','سعيد'],['garden','حديقة'],['friend','صديق'],['school','مدرسة']],
@@ -14279,7 +14284,19 @@ function journeyPrintCertificate(){
     setTimeout(clean,1500);
   }catch(_){document.body.classList.remove('mfkj-print-certificate');}
 }
-function renderHub(){document.title='Choose Your Learning Path | Mr. Fluent Kids';root.innerHTML=shell('YOUR KIDS ENGLISH JOURNEY','Choose your learning path.','اختار المسار المناسب للطفل.','كل اختيار هيفتح صفحة مستقلة، والمستوى الأول A1 جاهز كتجربة أولى.',journeyDashboardHtml()+'<div class="mfkr-choice-grid">' + pathCard('🧸','FIRST STEPS','Little Learners','للأطفال الأصغر سنًا','Start with letters, sounds, pictures and first English words.','younger') + pathCard('🎒','NEXT STEPS','Growing Learners','للأطفال الأكبر شوية','Build confidence with vocabulary, reading, sentence practice and everyday English.','older') + '</div><div class="mfkr-note">اختار المسار المناسب، ثم افتح المستوى. كل مستوى بيظهر في صفحة مستقلة.</div>');}
+function journeyCourseCatalogHtml(){
+  var young=journeyLevels.filter(function(item){return item.group==='younger';});
+  var growing=journeyLevels.filter(function(item){return item.group==='older';});
+  function card(item,index,groupLabel){
+    return '<a class="mfkj-course-level-card" href="'+url(item.route)+'"><div class="mfkj-course-card-top"><span class="mfkj-course-icon">'+item.icon+'</span><span class="mfkj-course-index">'+String(index+1).padStart(2,'0')+'</span></div><div class="mfkj-course-code">'+esc(item.code)+'</div><h3>'+esc(item.title)+'</h3><p class="mfkj-course-ar" lang="ar">'+esc(item.arabic)+'</p><p class="mfkj-course-desc">'+esc(item.desc)+'</p><div class="mfkj-course-card-foot"><span>'+esc(groupLabel)+'</span><b>Open level ↗</b></div></a>';
+  }
+  return '<style id="mfkj-course-catalog-css">#mfKidsStandaloneRoot .mfkj-course-catalog{margin:24px 0 30px}#mfKidsStandaloneRoot .mfkj-course-group{padding:20px;border:1px solid rgba(169,95,130,.25);border-radius:22px;background:linear-gradient(145deg,rgba(50,25,39,.42),rgba(15,10,16,.54));box-shadow:0 18px 40px rgba(0,0,0,.12)}#mfKidsStandaloneRoot .mfkj-course-group-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}#mfKidsStandaloneRoot .mfkj-course-group-kicker{font-size:8px;font-weight:900;letter-spacing:.18em;color:#ca9eb9}#mfKidsStandaloneRoot .mfkj-course-group-head h2{font-size:clamp(18px,2.4vw,25px);margin:5px 0;color:#f8e7f1}#mfKidsStandaloneRoot .mfkj-course-group-head p{margin:0;color:#bca9b5;font-size:11px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-course-group-badge{flex:0 0 auto;border:1px solid rgba(194,134,167,.25);border-radius:99px;padding:8px 10px;color:#e9cadb;background:rgba(104,49,79,.15);font-size:9px;font-weight:850}#mfKidsStandaloneRoot .mfkj-course-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}#mfKidsStandaloneRoot .mfkj-course-level-card{min-width:0;display:flex;flex-direction:column;padding:16px;border:1px solid rgba(196,126,159,.2);border-radius:17px;background:linear-gradient(145deg,rgba(59,31,47,.72),rgba(17,12,19,.92));text-decoration:none;color:#f8eaf1;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}#mfKidsStandaloneRoot .mfkj-course-level-card:hover{transform:translateY(-3px);border-color:rgba(137,223,199,.38);box-shadow:0 15px 34px rgba(0,0,0,.21),0 0 24px rgba(93,205,174,.06)}#mfKidsStandaloneRoot .mfkj-course-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}#mfKidsStandaloneRoot .mfkj-course-icon{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(188,124,159,.21);border-radius:13px;background:rgba(116,54,88,.2);font-size:22px}#mfKidsStandaloneRoot .mfkj-course-index{font-size:9px;font-weight:900;letter-spacing:.14em;color:#a58c9f}#mfKidsStandaloneRoot .mfkj-course-code{margin-top:15px;color:#9debd2;font-weight:950;font-size:10px;letter-spacing:.18em}#mfKidsStandaloneRoot .mfkj-course-level-card h3{margin:5px 0 3px;font-size:clamp(13px,1.3vw,16px);color:#ffeff7;line-height:1.35}#mfKidsStandaloneRoot .mfkj-course-ar{margin:0;color:#dfb9d0;font-size:10px;line-height:1.6}#mfKidsStandaloneRoot .mfkj-course-desc{margin:10px 0 18px;min-height:36px;color:#b8a7b3;font-size:10px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-course-card-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(194,147,171,.1);font-size:8px;color:#9e8a99}#mfKidsStandaloneRoot .mfkj-course-card-foot b{color:#b9f0df;font-size:9px}#mfKidsStandaloneRoot .mfkj-course-separator{display:flex;align-items:center;gap:12px;margin:20px 3px;color:#ae94b0;font-size:8px;font-weight:900;letter-spacing:.16em}#mfKidsStandaloneRoot .mfkj-course-separator:before,#mfKidsStandaloneRoot .mfkj-course-separator:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(171,111,159,.4),transparent)}@media(max-width:760px){#mfKidsStandaloneRoot .mfkj-course-group{padding:14px}#mfKidsStandaloneRoot .mfkj-course-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#mfKidsStandaloneRoot .mfkj-course-level-card{padding:12px}}@media(max-width:480px){#mfKidsStandaloneRoot .mfkj-course-group-head{flex-direction:column}#mfKidsStandaloneRoot .mfkj-course-group-badge{align-self:flex-start}#mfKidsStandaloneRoot .mfkj-course-card-grid{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-course-desc{min-height:0}}</style><div class="mfkj-course-catalog"><section class="mfkj-course-group"><div class="mfkj-course-group-head"><div><span class="mfkj-course-group-kicker">STAGE 01 · FIRST STEPS</span><h2>Little Learners <i class="mfkj-pulse-dot"></i></h2><p lang="ar">المستويات المناسبة للأطفال الأصغر سنًا — من الحروف للكلمات ثم تكوين الجمل.</p></div><span class="mfkj-course-group-badge">3 levels · Easier → harder</span></div><div class="mfkj-course-card-grid">'+young.map(function(item,index){return card(item,index,'Little Learners');}).join('')+'</div></section><div class="mfkj-course-separator"><span>THE NEXT STAGE · المرحلة التالية</span></div><section class="mfkj-course-group"><div class="mfkj-course-group-head"><div><span class="mfkj-course-group-kicker">STAGE 02 · GROWING SKILLS</span><h2>Growing Learners <i class="mfkj-pulse-dot"></i></h2><p lang="ar">المستويات المناسبة للأطفال الأكبر سنًا — من توسيع المفردات للقراءة والمهارات المتقدمة.</p></div><span class="mfkj-course-group-badge">3 levels · Build confidence</span></div><div class="mfkj-course-card-grid">'+growing.map(function(item,index){return card(item,index,'Growing Learners');}).join('')+'</div></section></div>';
+}
+function renderHub(){
+  document.title='Choose Your Kids Level | Mr. Fluent Kids';
+  root.innerHTML=shell('YOUR KIDS ENGLISH JOURNEY','Choose a level. Keep growing.','اختار المستوى وكمّل رحلتك.','Your one active subscription unlocks every level A1–C2. Choose any level below; each opens its own learning page.',journeyDashboardHtml()+journeyCourseCatalogHtml()+'<div class="mfkr-note">One Kids subscription · all six levels · 30 days. · اشتراك واحد يفتح الكورس كله.</div>');
+}
+
 function renderLevels(group){var young=group==='younger';var arr=young?[['A1','My First ABC','الحروف الكبيرة والصغيرة، صورة، كلمة، ترجمة عربية وزرّان للصوت.'],['B1','My First Words','كلمات يومية جديدة مع الاستماع والصور والألعاب.'],['C1','My First Sentences','كوّن جملًا بسيطة وابدأ فهم القصص المصورة.']]:[['A2','Word Explorers','وسّع حصيلة الكلمات واربطها بموضوعات قريبة من الطفل.'],['B2','Reading Builders','تدرّب على القراءة والفهم واستخدام الكلمات في سياقها.'],['C2','Confident English','قوّي الجمل والمحادثات القصيرة والفهم.']];var cards=arr.map(function(item){return levelCard(item[0],item[1],item[2],group);}).join('');document.title=(young?'Little Learners':'Growing Learners')+' | Mr. Fluent Kids';root.innerHTML=shell(young?'LITTLE LEARNERS':'GROWING LEARNERS',young?'Little Learners':'Growing Learners',young?'مسار الأطفال الأصغر سنًا':'مسار الأطفال الأكبر شوية','Select a level to start your next learning adventure.','<div class="mfkr-level-grid">'+cards+'</div>'+backButtons(url('hub'),'← Back to paths')+(young?'<div class="mfkr-note">المستويات A1 وB1 وC1 متاحة الآن. افتح C1 لتكوين الجمل وقراءة قصة قصيرة والتدرّب على الفهم والنطق.</div>':'<div class="mfkr-note">المستويات A2 وB2 وC2 متاحة الآن. استكشف الكلمات في A2، وطوّر القراءة في B2، ثم أتقن المهارات المتقدمة الشاملة في C2.</div>'));}
 
 function renderC1(){
@@ -15241,7 +15258,7 @@ function renderB1(){
 }
 
 
-function kidsJourneySubscribeUrl(code){return url('subscribe','&level='+encodeURIComponent(String(code||'A1').toUpperCase()));}
+function kidsJourneySubscribeUrl(){return url('subscribe');}
 function kidsJourneyGetClient(){return typeof sb!=='undefined'&&sb&&sb.from&&sb.auth?sb:null;}
 var kidsJourneyClientReadyPromise=null;
 function kidsJourneyWaitForClient(){
@@ -15340,8 +15357,9 @@ async function kidsJourneyLoadContext(code){
   var requests=requestResult.data||[];
   var pending=requests.find(function(r){return String(r.status).toLowerCase()==='pending';})||null;
   var current=(subsResult.data||[])[0]||null;
-  var active=(subsResult.data||[]).find(function(s){return s.level_id===level.id;})||null;
-  var latest=requests.find(function(r){return r.requested_level_id===level.id;})||null;
+  var wholeCourse=String(trackResult.data.code||'').toUpperCase()==='KIDS_JOURNEY';
+  var active=(subsResult.data||[]).find(function(s){return wholeCourse||String(s.level_id)===String(level.id);})||null;
+  var latest=wholeCourse?(pending||requests[0]||null):(requests.find(function(r){return String(r.requested_level_id)===String(level.id);})||null);
   return {user:user,track:trackResult.data,levels:levels,level:level,subscriptions:subsResult.data||[],current:current,active:active,pending:pending,latest:latest,requests:requests};
 }
 function kidsJourneyStatus(element,message,kind){
@@ -15400,8 +15418,8 @@ function kidsJourneyRenderGateMessage(code,ctx){
 }
 async function kidsJourneyRenderLevelGate(code,renderer){
   var def=kidsJourneyDefinition(code);
-  document.title=def.code+' · Subscription Required | Mr. Fluent Kids';
-  root.innerHTML=shell('KIDS COURSE ACCESS','Unlock '+esc(def.title)+'.','الاشتراك يفتح المستوى المختار.','Each Kids level has its own 30-day subscription. Your A1–C2 English Course and school-grade access remain separate.','<div class="mfkj-pay-gate"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> MEMBERSHIP CHECK</div><h2>'+esc(def.code)+' · '+esc(def.title)+'</h2><div class="mfkj-pay-price"><strong>100</strong><span>EGP / 30 days</span></div><div data-mfj-kids-gate-status class="mfkj-pay-status">Checking your Kids subscription…</div><div class="mfkr-back-row" data-mfj-kids-gate-actions><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a></div></div>'+backButtons(url(def.group),'← Back to levels'));
+  document.title=def.code+' · Kids Course Access | Mr. Fluent Kids';
+  root.innerHTML=shell('KIDS COURSE ACCESS','Unlock all six Kids levels.','اشتراك واحد يفتح الكورس كله.','A single 30-day Kids course subscription covers A1–C2. School-grade access and the separate English Course remain independent.','<div class="mfkj-pay-gate"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> MEMBERSHIP CHECK</div><h2>'+esc(def.code)+' · '+esc(def.title)+'</h2><div class="mfkj-pay-price"><strong>100</strong><span>EGP / 30 days</span></div><div data-mfj-kids-gate-status class="mfkj-pay-status">Checking your Kids subscription…</div><div class="mfkr-back-row" data-mfj-kids-gate-actions><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a></div></div>'+backButtons(url(def.group),'← Back to levels'));
   var ctx;
   try{ctx=await kidsJourneyLoadContext(def.code);}catch(e){ctx={error:e&&e.message||'Could not verify Kids access.'};}
   if(ctx&&ctx.active){
@@ -15416,17 +15434,15 @@ async function kidsJourneyRenderLevelGate(code,renderer){
   if(signup)signup.addEventListener('click',function(){kidsJourneyOpenAuth('signup');});
 }
 function kidsJourneyRenderSubscription(){
-  var def=kidsJourneyDefinition(query.get('level')||'A1');
-  document.title='Kids Subscription · '+def.code+' | Mr. Fluent Kids';
+  var def=kidsJourneyDefinition('A1');
+  document.title='Full Kids Course Subscription | Mr. Fluent Kids';
   var receiver=typeof MOBILE_CASH!=='undefined'?MOBILE_CASH:'01006525147';
-  var levelOptions=journeyLevels.map(function(item){return '<option value="'+esc(item.code)+'" '+(item.code===def.code?'selected':'')+'>'+esc(item.code+' · '+item.title)+'</option>';}).join('');
-  root.innerHTML=shell('SECURE KIDS SUBSCRIPTION','Unlock your next level.','اشترك في المستوى اللي اخترته.','Submit the Mobile Cash receipt and sender number. Access opens only after the admin verifies the payment.','<div class="mfkj-pay-layout"><section class="mfkj-pay-card"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> LEVEL MEMBERSHIP</div><h2>'+esc(def.code+' · '+def.title)+'</h2><p class="mfkj-pay-muted">One level at a time · separate from school-grade and A1–C2 adult-course subscriptions.</p><div class="mfkj-pay-price"><strong id="mfkjPayAmount">100</strong><span>EGP / <b id="mfkjPayDays">30</b> days</span></div><div class="mfkj-pay-receiver"><small>OFFICIAL MOBILE CASH NUMBER · رقم التحويل</small><strong>'+esc(receiver)+'</strong><p class="mfkj-pay-muted">Transfer the exact amount shown above, then upload the transfer receipt.</p></div><div class="mfkj-pay-instructions"><div class="mfkj-pay-step"><b>1</b><p>Transfer to the official number above using Mobile Cash.</p></div><div class="mfkj-pay-step"><b>2</b><p>Enter the sender phone number used for the transfer and the parent/guardian contact.</p></div><div class="mfkj-pay-step"><b>3</b><p>Upload a clear receipt. Admin approval is required before the selected level opens.</p></div></div></section><section class="mfkj-pay-card"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> PAYMENT DETAILS</div><h2>Send your receipt.</h2><form id="mfkjKidsPaymentForm" data-mfkj-level="'+esc(def.code)+'"><div class="mfkj-pay-fields"><div class="mfkj-pay-field full"><label for="mfkjPayLevel">Learning level · المستوى</label><select id="mfkjPayLevel" name="level">'+levelOptions+'</select></div><div class="mfkj-pay-field full"><label for="mfkjGuardianContact">Parent or guardian contact *</label><input id="mfkjGuardianContact" name="guardian" type="tel" autocomplete="tel" minlength="7" placeholder="Parent / guardian phone" required><span class="mfkj-pay-help">We use this contact if we need to check the request.</span></div><div class="mfkj-pay-field full"><label for="mfkjSenderPhone">Mobile Cash sender number *</label><input id="mfkjSenderPhone" name="sender" type="tel" autocomplete="tel" minlength="5" placeholder="Phone number used for the transfer" required></div><div class="mfkj-pay-field full"><label for="mfkjReceipt">Payment receipt *</label><input id="mfkjReceipt" name="receipt" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf" required><span class="mfkj-pay-help">JPG, PNG, WEBP or PDF · maximum 5 MB.</span></div><div class="mfkj-pay-field full"><label for="mfkjPayNote">Note (optional)</label><input id="mfkjPayNote" name="note" maxlength="300" placeholder="Any detail for the academy"></div></div><label class="mfkj-pay-consent"><input id="mfkjGuardianConsent" name="consent" type="checkbox" required><span>I am the parent/guardian, or I have permission to submit these payment details.</span></label><button class="mfkj-pay-submit" type="submit" id="mfkjSubmitPayment" disabled>Send payment request</button><div id="mfkjPaymentStatus" class="mfkj-pay-status" aria-live="polite">Checking your account and request status…</div><div class="mfkj-pay-auth-actions" data-mfj-pay-auth-actions><button class="mfkr-btn mfkj-primary" type="button" data-mfkj-auth="login">Sign in</button><button class="mfkr-btn" type="button" data-mfkj-auth="signup">Create account</button></div></form></section></div>'+backButtons(url('hub'),'← Back to Kids paths'));
+  var levelChips=journeyLevels.map(function(item,i){return '<span class="mfkj-full-course-chip"><b>'+String(i+1).padStart(2,'0')+'</b><span>'+esc(item.code+' · '+item.title)+'</span></span>';}).join('');
+  root.innerHTML=shell('FULL COURSE SUBSCRIPTION','One subscription. All six levels.','اشتراك واحد يفتح الكورس كله.','Create your account or sign in, submit one payment for the complete Kids course, and all six levels A1–C2 will open after admin approval. No level selection is needed.','<style id="mfkj-full-course-payment-css">#mfKidsStandaloneRoot .mfkj-full-course-levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:15px 0}#mfKidsStandaloneRoot .mfkj-full-course-chip{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid rgba(177,108,139,.19);border-radius:10px;background:rgba(87,37,61,.12);color:#eedde6;font-size:9px;line-height:1.5}#mfKidsStandaloneRoot .mfkj-full-course-chip b{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border-radius:8px;background:rgba(146,72,110,.2);color:#f3c7dd;font-size:8px}#mfKidsStandaloneRoot .mfkj-full-course-note{padding:11px;border-left:2px solid #8e507a;background:rgba(91,52,100,.1);color:#c9b9d2;font-size:10px;line-height:1.7}@media(max-width:540px){#mfKidsStandaloneRoot .mfkj-full-course-levels{grid-template-columns:1fr}}</style><div class="mfkj-pay-layout"><section class="mfkj-pay-card"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> COMPLETE KIDS COURSE</div><h2>All levels A1–C2</h2><p class="mfkj-pay-muted">اشتراك واحد يفتح المستويات الستة كلها — بدون شراء كل مستوى لوحده.</p><div class="mfkj-pay-price"><strong id="mfkjPayAmount">100</strong><span>EGP / <b id="mfkjPayDays">30</b> days</span></div><div class="mfkj-full-course-levels">'+levelChips+'</div><div class="mfkj-full-course-note">After approval, open the course again to see all six levels. Each level still has its own separate learning page. · بعد موافقة الأدمن هتظهر كل المستويات، وكل مستوى له صفحة مستقلة.</div><div class="mfkj-pay-receiver"><small>OFFICIAL MOBILE CASH NUMBER · رقم التحويل</small><strong>'+esc(receiver)+'</strong><p class="mfkj-pay-muted">Transfer the exact full-course amount shown above, then upload the receipt.</p></div><div class="mfkj-pay-instructions"><div class="mfkj-pay-step"><b>1</b><p>Transfer the full course amount to the official number using Mobile Cash.</p></div><div class="mfkj-pay-step"><b>2</b><p>Enter the sender phone number and parent/guardian contact.</p></div><div class="mfkj-pay-step"><b>3</b><p>Upload the receipt. Admin approval unlocks all six levels together.</p></div></div></section><section class="mfkj-pay-card"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> PAYMENT DETAILS</div><h2>Subscribe to the complete course.</h2><form id="mfkjKidsPaymentForm" data-mfkj-level="A1"><div class="mfkj-pay-fields"><div class="mfkj-pay-field full"><label for="mfkjGuardianContact">Parent or guardian contact *</label><input id="mfkjGuardianContact" name="guardian" type="tel" autocomplete="tel" minlength="7" placeholder="Parent / guardian phone" required><span class="mfkj-pay-help">We use this contact if we need to check the request.</span></div><div class="mfkj-pay-field full"><label for="mfkjSenderPhone">Mobile Cash sender number *</label><input id="mfkjSenderPhone" name="sender" type="tel" autocomplete="tel" minlength="5" placeholder="Phone number used for the transfer" required></div><div class="mfkj-pay-field full"><label for="mfkjReceipt">Payment receipt *</label><input id="mfkjReceipt" name="receipt" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf" required><span class="mfkj-pay-help">JPG, PNG, WEBP or PDF · maximum 5 MB.</span></div><div class="mfkj-pay-field full"><label for="mfkjPayNote">Note (optional)</label><input id="mfkjPayNote" name="note" maxlength="250" placeholder="Any detail for the academy"></div></div><label class="mfkj-pay-consent"><input id="mfkjGuardianConsent" name="consent" type="checkbox" required><span>I am the parent/guardian, or I have permission to submit these payment details.</span></label><button class="mfkj-pay-submit" type="submit" id="mfkjSubmitPayment" disabled>Request full course access</button><div id="mfkjPaymentStatus" class="mfkj-pay-status" aria-live="polite">Checking your account and request status…</div><div class="mfkj-pay-auth-actions" data-mfj-pay-auth-actions><button class="mfkr-btn mfkj-primary" type="button" data-mfkj-auth="login">Sign in</button><button class="mfkr-btn" type="button" data-mfkj-auth="signup">Create account</button></div></form></section></div>'+backButtons(url('hub'),'← Back to course levels'));
   var form=root.querySelector('#mfkjKidsPaymentForm');
-  var select=root.querySelector('#mfkjPayLevel');
-  select.addEventListener('change',function(){window.location.href=kidsJourneySubscribeUrl(select.value);});
-  form.addEventListener('submit',function(event){event.preventDefault();kidsJourneySubmitPayment(def.code);});
+  form.addEventListener('submit',function(event){event.preventDefault();kidsJourneySubmitPayment('A1');});
   root.querySelectorAll('[data-mfkj-auth]').forEach(function(button){button.addEventListener('click',function(){kidsJourneyOpenAuth(button.getAttribute('data-mfkj-auth'));});});
-  kidsJourneyLoadPaymentState(def.code);
+  kidsJourneyLoadPaymentState('A1');
 }
 async function kidsJourneyLoadPaymentState(code){
   var status=root.querySelector('#mfkjPaymentStatus');
@@ -15453,18 +15469,16 @@ async function kidsJourneyLoadPaymentState(code){
   kidsJourneyAuthActions(false);
   if(ctx.pending){
     var pendingLevel=ctx.levels.find(function(l){return l.id===ctx.pending.requested_level_id;});
-    kidsJourneyStatus(status,'A payment request for '+(pendingLevel?pendingLevel.code+' · '+pendingLevel.title:'this Kids path')+' is already pending admin approval. Wait for the review before submitting another request.','is-warn');
+    kidsJourneyStatus(status,'Your full-course payment request for all six levels (A1–C2) is awaiting admin approval. You do not need to choose a level.','is-warn');
     if(submit){submit.disabled=true;submit.textContent='Payment request pending review';}
     return;
   }
   if(ctx.current){
-    var currentLevel=ctx.levels.find(function(l){return l.id===ctx.current.level_id;});
-    var suffix=currentLevel&&currentLevel.id===ctx.level.id?'Your current access expires ':'Your current access is '+(currentLevel?currentLevel.code+' · '+currentLevel.title:'another level')+' until ';
-    kidsJourneyStatus(status,suffix+kidsJourneyDate(ctx.current.expires_at)+'. Approval of this payment will renew access for 30 days and assign the selected level.','is-ok');
+    kidsJourneyStatus(status,'Your complete Kids course access is active until '+kidsJourneyDate(ctx.current.expires_at)+'. A successful renewal extends access to all six levels A1–C2 for '+String(ctx.track&&ctx.track.duration_days||30)+' days.','is-ok');
   }else if(ctx.latest&&String(ctx.latest.status).toLowerCase()==='rejected'){
-    kidsJourneyStatus(status,'Your earlier request for this level was rejected. You may send a new receipt. '+(ctx.latest.admin_note||''),'is-warn');
+    kidsJourneyStatus(status,'Your earlier full-course request was not approved. Review the note, then you may submit a new receipt. '+(ctx.latest.admin_note||''),'is-warn');
   }else{
-    kidsJourneyStatus(status,'Your payment details will be sent to the academy for review. The level remains locked until approval.','');
+    kidsJourneyStatus(status,'This payment is for the complete Kids course. All six levels stay locked until the academy approves the receipt.','');
   }
   if(form)form.querySelectorAll('input,select').forEach(function(el){el.disabled=false;});
   if(submit){submit.disabled=false;submit.textContent='Send payment request';}
@@ -15501,14 +15515,15 @@ async function kidsJourneySubmitPayment(code){
     var upload=await client.storage.from('payment-proofs').upload(uploadedPath,file,{cacheControl:'3600',contentType:file.type,upsert:false});
     if(upload.error)throw upload.error;
     submit.textContent='Submitting payment request…';
+    var courseNote='FULL KIDS COURSE SUBSCRIPTION (A1–C2 — all six levels).'+(note?' '+note:'');
     var created=await client.rpc('mrfluent_create_kids_enrollment_request',{
       p_track_id:ctx.track.id,p_level_id:ctx.level.id,p_guardian_contact:guardian,
-      p_sender_phone:sender,p_proof_path:uploadedPath,p_note:note||null
+      p_sender_phone:sender,p_proof_path:uploadedPath,p_note:courseNote.slice(0,300)
     });
     if(created.error)throw created.error;
     if(!created.data)throw new Error('The request ID was not returned. Refresh this page to check request status before trying again.');
     uploadedPath=null;
-    kidsJourneyStatus(status,'Payment request submitted successfully. The admin can now open the receipt and verify the transfer. '+ctx.level.code+' access will open after approval.','is-ok');
+    kidsJourneyStatus(status,'Full-course payment request submitted. The admin can verify the receipt; all six levels A1–C2 will open together after approval.','is-ok');
     await kidsJourneyLoadPaymentState(code);
   }catch(error){
     if(uploadedPath){
@@ -15567,23 +15582,20 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
     return;
   }
   if(!ctx||!ctx.user){
-    kidsJourneyRenderEntryScreen('Create your DOMA Academy account or sign in. The Kids subscription page opens next.','is-warn');
+    kidsJourneyRenderEntryScreen('Create your DOMA Academy account or sign in. The full-course subscription page opens next.','is-warn');
     if(typeof openAuth==='function')setTimeout(function(){try{openAuth('signup');}catch(error){console.warn('Kids signup form could not be opened.',error);}},100);
     return;
   }
   window.__mfKidsJourneyAccessContext=ctx;
   if(ctx.current){
     if(routeName==='entry'){
-      var activeLevel=ctx.levels.find(function(item){return String(item.id)===String(ctx.current.level_id);});
-      if(activeLevel){window.location.replace(url(activeLevel.route));return;}
       window.location.replace(url('hub'));return;
     }
     if(routeName==='hub'){window.__mfKidsJourneyAccessContext=ctx;renderHub();return;}
     if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;}
   }
   if(ctx.pending){
-    var pendingLevel=ctx.levels.find(function(item){return String(item.id)===String(ctx.pending.requested_level_id);});
-    window.location.replace(kidsJourneySubscribeUrl(pendingLevel?pendingLevel.code:'A1'));
+    window.location.replace(kidsJourneySubscribeUrl());
     return;
   }
   window.location.replace(kidsJourneySubscribeUrl('A1'));
@@ -15604,8 +15616,7 @@ async function kidsJourneyAfterAuth(){
     catch(error){ctx={error:error&&error.message||'Could not verify Kids access.'};}
     if(ctx&&ctx.active){kidsJourneyRenderLevel(item.code);journeyRenderCurrent();return;}
     if(ctx&&ctx.pending){
-      var pendingLevel=ctx.levels&&ctx.levels.find(function(l){return String(l.id)===String(ctx.pending.requested_level_id);});
-      window.location.replace(kidsJourneySubscribeUrl(pendingLevel?pendingLevel.code:item.code));
+      window.location.replace(kidsJourneySubscribeUrl());
       return;
     }
     window.location.replace(kidsJourneySubscribeUrl(item.code));
