@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v16">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v15">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v180', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v181', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v180', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v181', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2420,15 +2420,6 @@ body.mf-kids-route #mfKidsStandaloneRoot{display:block!important;visibility:visi
 </div></div></section>
 <footer class="footer"><div class="container"><div class="footgrid"><div class="footer-intro"><a class="footer-brand-wordmark" href="#home" aria-label="Mr. Fluent home"><span class="footer-brand-name">Mr. Fluent</span><small>LEARN • SPEAK • MASTER</small></a><p class="footer-description">An English learning platform built for Egyptian preparatory and secondary students.</p></div><div class="footer-link-card footer-platform"><h4>Platform</h4><a href="#grades">Grades</a><a href="./?kids=entry">Kids Course</a><a href="#english-course">Learning</a><a href="#pricing">Pricing</a></div><div class="footer-link-card footer-learning"><h4>Learning</h4><a href="#english-course">Grammar</a><a href="#english-course">Vocabulary</a><a href="#english-course">Reading</a><a href="#english-course">Writing</a></div><div class="footer-link-card footer-account"><h4>Account</h4><a href="#" onclick="openAuth('login');return false">Log In</a><a href="#" onclick="openAuth('signup');return false">Create Account</a><a href="#faq">FAQ</a></div></div><div class="copy"><span>© 2026 Mr. Fluent — English Learning Platform.</span><span>Built for learning. Designed for progress.</span></div></div></footer>
 <div class="modal" id="modal" aria-label="Mr. Fluent account access">
-<div class="doma-auth-screen-brand" aria-label="Mr. Fluent">
-  <svg viewBox="0 0 64 60" aria-hidden="true" focusable="false">
-    <defs><linearGradient id="domaAuthBookStroke" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a5f6ff"/><stop offset=".45" stop-color="#c48cff"/><stop offset="1" stop-color="#ff9fdf"/></linearGradient></defs>
-    <path d="M5 9C14 5 23 7 32 15v37C23 44 14 42 5 46Z" fill="rgba(147,83,255,.15)" stroke="url(#domaAuthBookStroke)" stroke-width="2.8" stroke-linejoin="round"/>
-    <path d="M59 9C50 5 41 7 32 15v37c9-8 18-10 27-6Z" fill="rgba(52,206,235,.12)" stroke="url(#domaAuthBookStroke)" stroke-width="2.8" stroke-linejoin="round"/>
-    <path d="M15 16c5 0 9 2 12 5M15 25c5 0 9 2 12 5M49 16c-5 0-9 2-12 5M49 25c-5 0-9 2-12 5" fill="none" stroke="url(#domaAuthBookStroke)" stroke-width="2" stroke-linecap="round"/>
-  </svg>
-  <span class="doma-auth-screen-wordmark"><span>Mr. Fluent</span><small>LEARN • SPEAK • MASTER</small></span>
-</div>
 <div class="doma-auth-screen-adham" aria-label="Adham">
   <span class="doma-auth-adham-dot doma-auth-adham-cyan"></span><span class="doma-auth-adham-name">𝓐𝓭𝓱𝓪𝓶</span><span class="doma-auth-adham-dot doma-auth-adham-pink"></span>
 </div>
@@ -2556,25 +2547,25 @@ function openAuth(type){
     body.innerHTML = `
 <div class="doma-auth-signup-form">
   <div class="doma-auth-field doma-auth-field-cyan">
-    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="#053143"/><path d="M4.5 20c.4-4.4 3.2-6.7 7.5-6.7s7.1 2.3 7.5 6.7" fill="#053143" stroke="#053143" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientName" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b97970"/><stop offset="52%" stop-color="#d0a078"/><stop offset="100%" stop-color="#76263d"/></linearGradient></defs><circle cx="12" cy="8" r="4" fill="#053143"/><path d="M4.5 20c.4-4.4 3.2-6.7 7.5-6.7s7.1 2.3 7.5 6.7" fill="#053143" stroke="#053143" stroke-width="1.3" stroke-linecap="round"/></svg></span>
     <div class="doma-auth-field-content"><label for="signupName">Full Name</label><input id="signupName" class="field" placeholder="Full name" autocomplete="name" required></div>
   </div>
   <div class="doma-auth-field doma-auth-field-blue">
-    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2" fill="none" stroke="#061f4b" stroke-width="2"/><path d="M9 5h6M10 18.5h4" stroke="#061f4b" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientPhone" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b97970"/><stop offset="52%" stop-color="#d0a078"/><stop offset="100%" stop-color="#76263d"/></linearGradient></defs><rect x="6.5" y="2.5" width="11" height="19" rx="2.2" fill="none" stroke="#061f4b" stroke-width="2"/><path d="M9 5h6M10 18.5h4" stroke="#061f4b" stroke-width="1.6" stroke-linecap="round"/></svg></span>
     <div class="doma-auth-field-content"><label for="signupPhone">Phone</label><input id="signupPhone" class="field" type="tel" inputmode="tel" placeholder="Phone" autocomplete="tel" required></div>
   </div>
   <div class="doma-auth-field doma-auth-field-mint">
-    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="10.2" width="13" height="11" rx="2" fill="#063c32"/><path d="M8.2 10V7a3.8 3.8 0 0 1 7.6 0v3" fill="none" stroke="#063c32" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="15" r="1.3" fill="#5fffc2"/><path d="M12 16v1.9" stroke="#5fffc2" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientPassword" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b97970"/><stop offset="52%" stop-color="#d0a078"/><stop offset="100%" stop-color="#76263d"/></linearGradient></defs><rect x="5.5" y="10.2" width="13" height="11" rx="2" fill="#063c32"/><path d="M8.2 10V7a3.8 3.8 0 0 1 7.6 0v3" fill="none" stroke="#063c32" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="15" r="1.3" fill="#5fffc2"/><path d="M12 16v1.9" stroke="#5fffc2" stroke-width="1.4" stroke-linecap="round"/></svg></span>
     <div class="doma-auth-field-content"><label for="signupPass">Password</label><input id="signupPass" class="field" type="password" placeholder="Password" autocomplete="new-password" minlength="6" required></div>
     <button class="doma-auth-password-toggle" type="button" aria-label="Show password" onclick="toggleSignupPassword('signupPass',this)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
   </div>
   <div class="doma-auth-field doma-auth-field-blue doma-auth-field-confirm">
-    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="10.2" width="13" height="11" rx="2" fill="#1b3b8b"/><path d="M8.2 10V7a3.8 3.8 0 0 1 7.6 0v3" fill="none" stroke="#1b3b8b" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="15" r="1.3" fill="#d7edff"/><path d="M12 16v1.9" stroke="#d7edff" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientConfirm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b97970"/><stop offset="52%" stop-color="#d0a078"/><stop offset="100%" stop-color="#76263d"/></linearGradient></defs><rect x="5.5" y="10.2" width="13" height="11" rx="2" fill="#1b3b8b"/><path d="M8.2 10V7a3.8 3.8 0 0 1 7.6 0v3" fill="none" stroke="#1b3b8b" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="15" r="1.3" fill="#d7edff"/><path d="M12 16v1.9" stroke="#d7edff" stroke-width="1.4" stroke-linecap="round"/></svg></span>
     <div class="doma-auth-field-content"><label for="signupPassConfirm">Confirm Password</label><input id="signupPassConfirm" class="field" type="password" placeholder="Confirm Password" autocomplete="new-password" minlength="6" required></div>
     <button class="doma-auth-password-toggle" type="button" aria-label="Show confirm password" onclick="toggleSignupPassword('signupPassConfirm',this)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
   </div>
   <div class="doma-auth-field doma-auth-field-gold doma-auth-field-team">
-    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h10v4.2c0 4-2 6.3-5 6.3S7 11.2 7 7.2Z" fill="#4a2d08"/><path d="M7 5H3.5v3.2c0 2.4 1.4 3.9 4.1 4.1M17 5h3.5v3.2c0 2.4-1.4 3.9-4.1 4.1M12 13.5v4M8.5 21h7M10 17.5h4" fill="none" stroke="#4a2d08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientTeam" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b97970"/><stop offset="52%" stop-color="#d0a078"/><stop offset="100%" stop-color="#76263d"/></linearGradient></defs><path d="M7 3h10v4.2c0 4-2 6.3-5 6.3S7 11.2 7 7.2Z" fill="#4a2d08"/><path d="M7 5H3.5v3.2c0 2.4 1.4 3.9 4.1 4.1M17 5h3.5v3.2c0 2.4-1.4 3.9-4.1 4.1M12 13.5v4M8.5 21h7M10 17.5h4" fill="none" stroke="#4a2d08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     <div class="doma-auth-field-content"><label for="signupTeam">Favorite team</label><select id="signupTeam" class="field" aria-label="Favorite football team (optional)"><option value="" selected>Choose your favorite team...</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select></div>
   </div>
   <button class="btn primary full doma-auth-create" type="button" onclick="domaSignup()"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="4" fill="currentColor"/><path d="M2.5 21v-2.2c0-3.7 2.7-5.6 6.5-5.6s6.5 1.9 6.5 5.6V21Z" fill="currentColor"/><path d="M19 7v7m-3.5-3.5h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Create Account</span></button>
@@ -16762,4 +16753,79 @@ html body #modal.modal.show.doma-auth-photo .doma-auth-field-confirm .doma-auth-
     width:16px!important;height:16px!important;
   }
 }
+</style>
+
+
+<style id="doma-auth-burgundy-brown-v181">
+/* Final auth-screen refinements: warm burgundy/brown CTA and matching icons only. */
+html body #modal.modal.show.doma-auth-photo{
+  border:0!important;outline:0!important;border-radius:0!important;
+  background-color:#210812!important;
+  background-image:linear-gradient(145deg,#16060b 0%,#2a0915 43%,#220710 72%,#12050a 100%)!important;
+}
+html body #modal.modal.show.doma-auth-photo .modalbox{
+  border:1px solid rgba(120,44,63,.30)!important;
+  outline:0!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(140,62,81,.08)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-create{
+  background:linear-gradient(112deg,#4c142b 0%,#74253a 35%,#925342 70%,#a46a48 100%)!important;
+  border:1px solid rgba(175,102,83,.66)!important;
+  border-radius:15px!important;
+  color:#fff0e6!important;
+  box-shadow:0 12px 26px rgba(57,10,27,.32),inset 0 1px 0 rgba(255,214,192,.14)!important;
+  text-shadow:0 1px 2px rgba(42,7,17,.22)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-create:hover{
+  filter:brightness(1.07)!important;
+  box-shadow:0 14px 29px rgba(65,13,28,.38),inset 0 1px 0 rgba(255,214,192,.16)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-create:active{transform:translateY(1px)!important}
+html body #modal.modal.show.doma-auth-photo .doma-auth-create svg{
+  width:18px!important;height:18px!important;flex:0 0 18px!important;
+  color:#ffe0c5!important;filter:drop-shadow(0 1px 2px rgba(39,7,17,.24))!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon{
+  background:linear-gradient(140deg,rgba(116,37,61,.92) 0%,rgba(139,69,61,.95) 55%,rgba(79,24,42,.96) 100%)!important;
+  border:1px solid rgba(172,96,82,.62)!important;
+  box-shadow:0 5px 13px rgba(0,0,0,.20),inset 0 1px 0 rgba(209,144,116,.12)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon svg{
+  width:17px!important;height:17px!important;overflow:visible!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-cyan .doma-auth-field-icon svg *,
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-cyan .doma-auth-field-icon svg{
+  stroke:url(#domaAuthIconGradientName)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-blue:not(.doma-auth-field-confirm) .doma-auth-field-icon svg *,
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-blue:not(.doma-auth-field-confirm) .doma-auth-field-icon svg{
+  stroke:url(#domaAuthIconGradientPhone)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-mint .doma-auth-field-icon svg *,
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-mint .doma-auth-field-icon svg{
+  stroke:url(#domaAuthIconGradientPassword)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-confirm .doma-auth-field-icon svg *,
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-confirm .doma-auth-field-icon svg{
+  stroke:url(#domaAuthIconGradientConfirm)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-field-icon svg *,
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-field-icon svg{
+  stroke:url(#domaAuthIconGradientTeam)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon svg *{
+  fill:none!important;stroke-width:1.7!important;stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-confirm{
+  background:linear-gradient(140deg,rgba(100,28,51,.72),rgba(65,17,36,.87))!important;
+  border-color:rgba(154,70,82,.56)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-password-toggle{
+  background:linear-gradient(140deg,rgba(110,34,57,.82),rgba(79,25,41,.92))!important;
+  color:#d2a078!important;border-color:rgba(168,91,78,.58)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-password-toggle svg *{
+  stroke:#d2a078!important;fill:none!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-screen-brand{display:none!important}
 </style>
