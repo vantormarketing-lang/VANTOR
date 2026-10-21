@@ -13408,7 +13408,7 @@ var journeyLevels=[
 ];
 var journeyUserId=null,journeyStoreKey='mrfluent-kids-journey-v1:guest',journeyData={levels:{}},journeyLoading=true,journeyPending=[],journeySyncTimer=null,journeyDirty={},journeyWritingQueued=false,journeySyncStatus='local',journeyToolState={route:'',speakingFeedback:'',speakingWrongOption:-1,speakingReplay:false,speakingReplayIndex:0,speakingPendingId:'',speakingPendingIndex:0,finalIndex:0,finalScore:0,finalAnswered:false,finalPicked:-1,finalFeedback:'',finalFinished:false};
 var journeyCertificateName='';
-var journeyDailyChallengeState={date:'',levelCode:'',index:0,feedback:'',done:false};
+var journeyDailyChallengeState={date:'',levelCode:'',index:0,phase:'words',feedback:'',done:false,pickedSentence:[]};
 
 function journeyLevelCode(){return ({a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'})[route]||'';}
 function journeyUnique(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(function(v){return typeof v==='string'&&v.length>0;}).map(function(v){return v.slice(0,180);}))).slice(-300);}
@@ -13432,8 +13432,9 @@ function journeyRecalculate(level){
   level.wordsSeen=journeyUnique(level.wordsSeen).slice(-100);
   level.speakingKeys=journeyUnique(level.checkpointKeys.filter(function(k){return /^speaking:/.test(k);}));
   level.speakingCompleted=level.speakingKeys.length>=3;
-  var genuineActivities=level.checkpointKeys.filter(function(k){return /^activity:|^speaking:|^final:/.test(k);}).length;
-  level.stars=Math.min(20,Math.floor(level.wordsSeen.length/4)+Math.min(3,genuineActivities)+
+  var dailyChallenges=level.checkpointKeys.filter(function(k){return /^activity:daily-challenge:\d{4}-\d{2}-\d{2}$/.test(k);}).length;
+  var genuineActivities=level.checkpointKeys.filter(function(k){return (/^activity:|^speaking:|^final:/.test(k))&&!/^activity:daily-challenge:/.test(k);}).length;
+  level.stars=Math.min(20,Math.floor(level.wordsSeen.length/4)+Math.min(3,genuineActivities)+Math.min(5,dailyChallenges)+
     (level.speakingCompleted?2:0)+(level.finalQuizBest>=4?2:0)+(level.certificateEarned?2:0));
   level.badges=[];
   if(level.wordsSeen.length>=3)level.badges.push('first-steps');
@@ -13709,13 +13710,13 @@ function journeyGlobalBadges(){
 }
 
 function journeyDashboardHtml(){
-  return '<style id="mfkj-dashboard-v2-css">#mfKidsStandaloneRoot .mfkj-dash-panel{margin-top:16px;padding:clamp(15px,3vw,22px);border:1px solid rgba(165,77,102,.34);border-radius:19px;background:linear-gradient(145deg,rgba(48,24,34,.76),rgba(14,10,14,.92));box-shadow:0 16px 42px rgba(0,0,0,.19),inset 0 1px 0 rgba(255,255,255,.035)}#mfKidsStandaloneRoot .mfkj-dash-panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}#mfKidsStandaloneRoot .mfkj-dash-panel-head h3{font-size:clamp(16px,2vw,21px);margin:5px 0 4px;color:#fff2f6}#mfKidsStandaloneRoot .mfkj-dash-panel-head p{margin:0;color:#baabb2;font-size:11px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-membership-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}#mfKidsStandaloneRoot .mfkj-membership-item{min-width:0;padding:13px;border:1px solid rgba(255,255,255,.07);border-radius:14px;background:linear-gradient(145deg,rgba(35,21,29,.92),rgba(17,12,16,.96))}#mfKidsStandaloneRoot .mfkj-membership-item.is-unlocked{border-color:rgba(98,212,177,.28)}#mfKidsStandaloneRoot .mfkj-membership-item.is-expiring{border-color:rgba(238,188,106,.48)}#mfKidsStandaloneRoot .mfkj-membership-item.is-pending-card{border-color:rgba(173,145,240,.35)}#mfKidsStandaloneRoot .mfkj-membership-item-top{display:flex;justify-content:space-between;align-items:center;gap:5px;flex-wrap:wrap}#mfKidsStandaloneRoot .mfkj-membership-code{font-size:11px;font-weight:950;letter-spacing:.11em;color:#e6bbcb}#mfKidsStandaloneRoot .mfkj-membership-pill{font-size:8px;font-weight:800;border-radius:99px;padding:5px 7px;background:rgba(255,255,255,.05);color:#d8cbd0}#mfKidsStandaloneRoot .mfkj-membership-pill.is-active{color:#9ce9ce;background:rgba(58,164,129,.12)}#mfKidsStandaloneRoot .mfkj-membership-pill.is-pending{color:#d4c3ff;background:rgba(130,105,211,.13)}#mfKidsStandaloneRoot .mfkj-membership-pill.is-locked{color:#c0b0b7}#mfKidsStandaloneRoot .mfkj-membership-item h4{font-size:12px;margin:11px 0 4px;color:#fff0f4}#mfKidsStandaloneRoot .mfkj-membership-item .mfkj-ar{font-size:10px;margin:0;color:#c9b2bc}#mfKidsStandaloneRoot .mfkj-membership-info{display:grid;gap:4px;min-height:48px;margin-top:12px;color:#d4c3cb;font-size:9px;line-height:1.55}#mfKidsStandaloneRoot .mfkj-membership-info small{font-size:9px;color:#a899a2}#mfKidsStandaloneRoot .mfkj-membership-item.is-expiring .mfkj-membership-info small{color:#edc98c}#mfKidsStandaloneRoot .mfkj-membership-action{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;margin-top:11px;border:1px solid rgba(177,95,124,.28);border-radius:10px;background:rgba(105,39,64,.16);color:#f4d7e2;font-size:9px;font-weight:850}#mfKidsStandaloneRoot .mfkj-membership-action span{color:#9ce9ce}#mfKidsStandaloneRoot .mfkj-membership-state{padding:13px;border:1px dashed rgba(184,120,146,.35);border-radius:12px;color:#c9b6c0;font-size:11px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-daily-question{padding:14px;border:1px solid rgba(126,94,189,.27);border-radius:15px;background:linear-gradient(145deg,rgba(34,25,48,.7),rgba(18,12,19,.88))}#mfKidsStandaloneRoot .mfkj-daily-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#bea9d5;font-size:8px;font-weight:850;letter-spacing:.1em}#mfKidsStandaloneRoot .mfkj-daily-word-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:15px 0 6px}#mfKidsStandaloneRoot .mfkj-daily-word-row h4{font-size:clamp(22px,4vw,30px);margin:5px 0;color:#fff4fa}#mfKidsStandaloneRoot .mfkj-daily-listen{border:1px solid rgba(124,212,192,.34);border-radius:11px;background:rgba(43,126,107,.12);color:#b3f2dc;padding:10px 12px;font-size:10px;font-weight:850}#mfKidsStandaloneRoot .mfkj-daily-question>.mfkj-ar{margin:8px 0 12px;color:#cdbac5;font-size:11px}#mfKidsStandaloneRoot .mfkj-daily-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}#mfKidsStandaloneRoot .mfkj-daily-option{min-height:43px;border:1px solid rgba(211,180,202,.14);border-radius:10px;background:rgba(255,255,255,.035);color:#f8e9f0;padding:9px 7px;font-size:11px;font-weight:800}#mfKidsStandaloneRoot .mfkj-daily-option:hover{border-color:rgba(130,232,203,.45);background:rgba(50,141,119,.1)}#mfKidsStandaloneRoot .mfkj-daily-feedback{min-height:18px;margin:10px 0;color:#adf0d8;font-size:10px}#mfKidsStandaloneRoot .mfkj-daily-complete{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid rgba(102,220,172,.35);border-radius:14px;background:linear-gradient(135deg,rgba(43,125,96,.15),rgba(23,17,24,.74))}#mfKidsStandaloneRoot .mfkj-daily-check{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:50%;background:rgba(69,177,134,.16);color:#a7f1d5;font-size:22px}#mfKidsStandaloneRoot .mfkj-daily-complete strong{color:#c4f7e4;font-size:14px}#mfKidsStandaloneRoot .mfkj-daily-complete p{margin:5px 0;color:#c8b9c4;font-size:10px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-daily-complete small{font-size:9px;color:#a69aa3}@media(max-width:820px){#mfKidsStandaloneRoot .mfkj-membership-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:540px){#mfKidsStandaloneRoot .mfkj-membership-grid{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-daily-options{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-membership-info{min-height:0}} </style>'+
+  return '<style id="mfkj-dashboard-v2-css">#mfKidsStandaloneRoot .mfkj-dash-panel{margin-top:16px;padding:clamp(15px,3vw,22px);border:1px solid rgba(165,77,102,.34);border-radius:19px;background:linear-gradient(145deg,rgba(48,24,34,.76),rgba(14,10,14,.92));box-shadow:0 16px 42px rgba(0,0,0,.19),inset 0 1px 0 rgba(255,255,255,.035)}#mfKidsStandaloneRoot .mfkj-dash-panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}#mfKidsStandaloneRoot .mfkj-dash-panel-head h3{font-size:clamp(16px,2vw,21px);margin:5px 0 4px;color:#fff2f6}#mfKidsStandaloneRoot .mfkj-dash-panel-head p{margin:0;color:#baabb2;font-size:11px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-membership-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}#mfKidsStandaloneRoot .mfkj-membership-item{min-width:0;padding:13px;border:1px solid rgba(255,255,255,.07);border-radius:14px;background:linear-gradient(145deg,rgba(35,21,29,.92),rgba(17,12,16,.96))}#mfKidsStandaloneRoot .mfkj-membership-item.is-unlocked{border-color:rgba(98,212,177,.28)}#mfKidsStandaloneRoot .mfkj-membership-item.is-expiring{border-color:rgba(238,188,106,.48)}#mfKidsStandaloneRoot .mfkj-membership-item.is-pending-card{border-color:rgba(173,145,240,.35)}#mfKidsStandaloneRoot .mfkj-membership-item-top{display:flex;justify-content:space-between;align-items:center;gap:5px;flex-wrap:wrap}#mfKidsStandaloneRoot .mfkj-membership-code{font-size:11px;font-weight:950;letter-spacing:.11em;color:#e6bbcb}#mfKidsStandaloneRoot .mfkj-membership-pill{font-size:8px;font-weight:800;border-radius:99px;padding:5px 7px;background:rgba(255,255,255,.05);color:#d8cbd0}#mfKidsStandaloneRoot .mfkj-membership-pill.is-active{color:#9ce9ce;background:rgba(58,164,129,.12)}#mfKidsStandaloneRoot .mfkj-membership-pill.is-pending{color:#d4c3ff;background:rgba(130,105,211,.13)}#mfKidsStandaloneRoot .mfkj-membership-pill.is-locked{color:#c0b0b7}#mfKidsStandaloneRoot .mfkj-membership-item h4{font-size:12px;margin:11px 0 4px;color:#fff0f4}#mfKidsStandaloneRoot .mfkj-membership-item .mfkj-ar{font-size:10px;margin:0;color:#c9b2bc}#mfKidsStandaloneRoot .mfkj-membership-info{display:grid;gap:4px;min-height:48px;margin-top:12px;color:#d4c3cb;font-size:9px;line-height:1.55}#mfKidsStandaloneRoot .mfkj-membership-info small{font-size:9px;color:#a899a2}#mfKidsStandaloneRoot .mfkj-membership-item.is-expiring .mfkj-membership-info small{color:#edc98c}#mfKidsStandaloneRoot .mfkj-membership-action{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;margin-top:11px;border:1px solid rgba(177,95,124,.28);border-radius:10px;background:rgba(105,39,64,.16);color:#f4d7e2;font-size:9px;font-weight:850}#mfKidsStandaloneRoot .mfkj-membership-action span{color:#9ce9ce}#mfKidsStandaloneRoot .mfkj-membership-state{padding:13px;border:1px dashed rgba(184,120,146,.35);border-radius:12px;color:#c9b6c0;font-size:11px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-daily-question{padding:14px;border:1px solid rgba(126,94,189,.27);border-radius:15px;background:linear-gradient(145deg,rgba(34,25,48,.7),rgba(18,12,19,.88))}#mfKidsStandaloneRoot .mfkj-daily-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#bea9d5;font-size:8px;font-weight:850;letter-spacing:.1em}#mfKidsStandaloneRoot .mfkj-daily-word-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:15px 0 6px}#mfKidsStandaloneRoot .mfkj-daily-word-row h4{font-size:clamp(22px,4vw,30px);margin:5px 0;color:#fff4fa}#mfKidsStandaloneRoot .mfkj-daily-listen{border:1px solid rgba(124,212,192,.34);border-radius:11px;background:rgba(43,126,107,.12);color:#b3f2dc;padding:10px 12px;font-size:10px;font-weight:850}#mfKidsStandaloneRoot .mfkj-daily-question>.mfkj-ar{margin:8px 0 12px;color:#cdbac5;font-size:11px}#mfKidsStandaloneRoot .mfkj-daily-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}#mfKidsStandaloneRoot .mfkj-daily-option{min-height:43px;border:1px solid rgba(211,180,202,.14);border-radius:10px;background:rgba(255,255,255,.035);color:#f8e9f0;padding:9px 7px;font-size:11px;font-weight:800}#mfKidsStandaloneRoot .mfkj-daily-option:hover{border-color:rgba(130,232,203,.45);background:rgba(50,141,119,.1)}#mfKidsStandaloneRoot .mfkj-daily-feedback{min-height:18px;margin:10px 0;color:#adf0d8;font-size:10px}#mfKidsStandaloneRoot .mfkj-daily-complete{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid rgba(102,220,172,.35);border-radius:14px;background:linear-gradient(135deg,rgba(43,125,96,.15),rgba(23,17,24,.74))}#mfKidsStandaloneRoot .mfkj-daily-check{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:50%;background:rgba(69,177,134,.16);color:#a7f1d5;font-size:22px}#mfKidsStandaloneRoot .mfkj-daily-complete strong{color:#c4f7e4;font-size:14px}#mfKidsStandaloneRoot .mfkj-daily-complete p{margin:5px 0;color:#c8b9c4;font-size:10px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-daily-complete small{font-size:9px;color:#a69aa3}#mfKidsStandaloneRoot .mfkj-daily-builder-title{font-size:18px;margin:6px 0;color:#fff1f8}#mfKidsStandaloneRoot .mfkj-daily-built{display:flex;flex-wrap:wrap;align-items:center;gap:7px;min-height:48px;margin:13px 0;padding:10px;border:1px dashed rgba(171,132,194,.34);border-radius:12px;background:rgba(7,5,9,.25)}#mfKidsStandaloneRoot .mfkj-daily-picked{padding:7px 9px;border:1px solid rgba(119,209,183,.27);border-radius:9px;background:rgba(44,130,106,.14);color:#d1f8e8;font-size:11px;font-weight:850}#mfKidsStandaloneRoot .mfkj-daily-placeholder{color:#9f91a2;font-size:10px}#mfKidsStandaloneRoot .mfkj-daily-word-token{min-height:42px}#mfKidsStandaloneRoot .mfkj-daily-word-token:disabled{opacity:.28;cursor:default}#mfKidsStandaloneRoot .mfkj-daily-builder-actions{display:flex;justify-content:flex-end;margin-top:9px}#mfKidsStandaloneRoot .mfkj-daily-clear{border:1px solid rgba(205,174,195,.18);border-radius:9px;background:rgba(255,255,255,.035);color:#ccb8c7;padding:8px 10px;font-size:9px;font-weight:800}@media(max-width:820px){#mfKidsStandaloneRoot .mfkj-membership-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:540px){#mfKidsStandaloneRoot .mfkj-membership-grid{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-daily-options{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-membership-info{min-height:0}} </style>'+
     '<section class="mfkj-dashboard" id="mfkjDashboard" aria-label="My Learning Journey">'+
     '<div class="mfkj-dash-head"><div class="mfkj-dash-title"><span class="mfkj-kicker">YOUR PROGRESS · رحلتك التعليمية</span><h2>My Learning Journey <i class="mfkj-pulse-dot"></i></h2><p>خطوة صغيرة كل يوم بتقربك من هدفك.</p><a class="mfkr-btn mfkj-review-cta" href="'+url('review')+'">🧠 My Review · مراجعة أخطائي <span id="mfkjReviewCount">0</span></a></div>'+
     '<div class="mfkj-summary-grid"><div class="mfkj-summary-stat"><strong id="mfkjTotalStars">0</strong><span>STARS · نجوم</span></div><div class="mfkj-summary-stat"><strong id="mfkjTotalBadges">0</strong><span>BADGES · شارات</span></div><div class="mfkj-summary-stat"><strong id="mfkjActiveLevels">0/6</strong><span>ACTIVE LEVELS · مستويات بدأت</span></div></div></div>'+
     '<div class="mfkj-level-grid" id="mfkjLevelGrid"></div>'+
     '<section class="mfkj-dash-panel mfkj-membership-panel" aria-label="Kids subscription status"><div class="mfkj-dash-panel-head"><div><span class="mfkj-kicker">YOUR MEMBERSHIP · اشتراكك</span><h3>Subscriptions & access</h3><p lang="ar">تابع حالة كل مستوى وموعد انتهاء الاشتراك.</p></div><span class="mfkj-panel-icon">🔐</span></div><div class="mfkj-membership-grid" id="mfkjMembershipGrid"><div class="mfkj-membership-state">Checking your subscription status…</div></div></section>'+
-    '<section class="mfkj-dash-panel mfkj-daily-panel" aria-label="Daily Kids Challenge"><div class="mfkj-dash-panel-head"><div><span class="mfkj-kicker">A LITTLE EVERY DAY · كل يوم خطوة</span><h3>Daily Challenge <i class="mfkj-pulse-dot"></i></h3><p lang="ar">ثلاث كلمات قصيرة، جرّب تختار المعنى الصحيح واسمع النطق.</p></div><span class="mfkj-panel-icon">🎯</span></div><div id="mfkjDailyChallenge"><div class="mfkj-membership-state">Preparing today’s challenge…</div></div></section>'+
+    '<section class="mfkj-dash-panel mfkj-daily-panel" aria-label="Daily Kids Challenge"><div class="mfkj-dash-panel-head"><div><span class="mfkj-kicker">A LITTLE EVERY DAY · كل يوم خطوة</span><h3>Daily Challenge <i class="mfkj-pulse-dot"></i></h3><p lang="ar">خمس كلمات قصيرة، استمع للنطق ثم رتّب جملة في النهاية.</p></div><span class="mfkj-panel-icon">🎯</span></div><div id="mfkjDailyChallenge"><div class="mfkj-membership-state">Preparing today’s challenge…</div></div></section>'+
     '<div class="mfkj-badge-area"><div class="mfkj-badge-heading"><div><span class="mfkj-kicker">LITTLE WINS</span><h3>Your achievements <span class="mfkj-title-ar">إنجازاتك</span></h3></div><p>النجوم والشارات تُفتح مع التدريب الحقيقي والإجابات الصحيحة.</p></div><div class="mfkj-badge-grid" id="mfkjBadgeGrid"></div></div>'+
     '<p class="mfkj-save-status" id="mfkjSaveStatus">جاري تحميل التقدم…</p>'+
   '</section>';
@@ -13797,12 +13798,45 @@ function journeyDailyQuestions(code,date){
   var bank=journeyDailyBank(code);
   var ordinal=Math.floor(Date.UTC(Number(date.slice(0,4)),Number(date.slice(5,7))-1,Number(date.slice(8,10)))/86400000);
   var offset=ordinal%bank.length;
-  return [bank[offset],bank[(offset+2)%bank.length],bank[(offset+4)%bank.length]].map(function(item,index){
-    var targetIndex=(offset+2*index)%bank.length; var choices=[item,bank[(targetIndex+1)%bank.length],bank[(targetIndex+3)%bank.length]];
+  return Array.from({length:5},function(_,index){
+    var targetIndex=(offset+index)%bank.length;
+    var item=bank[targetIndex];
+    var choices=[item,bank[(targetIndex+1)%bank.length],bank[(targetIndex+3)%bank.length]];
     var rotate=(ordinal+index)%choices.length;
     choices=choices.slice(rotate).concat(choices.slice(0,rotate));
     return {word:item[0],meaning:item[1],choices:choices.map(function(choice){return choice[1];}),correct:choices.findIndex(function(choice){return choice[0]===item[0];})};
   });
+}
+function journeyDailySentence(code,date){
+  var choices={
+    A1:[
+      {answer:['I','like','apples'],arabic:'أنا أحب التفاح.',scrambled:['apples','like','I']},
+      {answer:['The','cat','is','happy'],arabic:'القطة سعيدة.',scrambled:['happy','The','is','cat']}
+    ],
+    A2:[
+      {answer:['I','am','hungry'],arabic:'أنا جائع.',scrambled:['hungry','I','am']},
+      {answer:['The','weather','is','nice'],arabic:'الطقس جميل.',scrambled:['nice','is','The','weather']}
+    ],
+    B1:[
+      {answer:['I','borrow','a','book'],arabic:'أنا أستعير كتابًا.',scrambled:['book','I','a','borrow']},
+      {answer:['We','help','our','friends'],arabic:'نحن نساعد أصدقاءنا.',scrambled:['friends','We','our','help']}
+    ],
+    B2:[
+      {answer:['We','found','a','solution'],arabic:'وجدنا حلًا.',scrambled:['solution','a','We','found']},
+      {answer:['They','protect','the','environment'],arabic:'هم يحمون البيئة.',scrambled:['environment','the','They','protect']}
+    ],
+    C1:[
+      {answer:['We','need','a','clear','approach'],arabic:'نحتاج إلى أسلوب واضح.',scrambled:['approach','clear','We','a','need']},
+      {answer:['The','results','are','significant'],arabic:'النتائج مهمة.',scrambled:['significant','The','are','results']}
+    ],
+    C2:[
+      {answer:['The','evidence','is','compelling'],arabic:'الأدلة مقنعة.',scrambled:['compelling','evidence','The','is']},
+      {answer:['A','clear','plan','can','reinforce','progress'],arabic:'يمكن لخطة واضحة أن تعزّز التقدم.',scrambled:['progress','clear','A','reinforce','plan','can']}
+    ]
+  };
+  var day=Math.floor(Date.UTC(Number(date.slice(0,4)),Number(date.slice(5,7))-1,Number(date.slice(8,10)))/86400000);
+  var bank=choices[code]||choices.A1;
+  return bank[day%bank.length];
 }
 function journeyRenderDailyChallenge(){
   var host=root.querySelector('#mfkjDailyChallenge');if(!host)return;
@@ -13815,16 +13849,47 @@ function journeyRenderDailyChallenge(){
   var level=journeyGetLevel(code);
   var saved=level.checkpointKeys.indexOf(dailyKey)>=0;
   if(journeyDailyChallengeState.date!==date||journeyDailyChallengeState.levelCode!==code){
-    journeyDailyChallengeState={date:date,levelCode:code,index:0,feedback:'',done:false};
+    journeyDailyChallengeState={date:date,levelCode:code,index:0,phase:'words',feedback:'',done:false,pickedSentence:[]};
   }
   var questions=journeyDailyQuestions(code,date);
   if(saved||journeyDailyChallengeState.done){
-    host.innerHTML='<div class="mfkj-daily-complete"><span class="mfkj-daily-check">✓</span><div><strong>Challenge completed!</strong><p lang="ar">برافو! أنهيت تحدّي اليوم وكسبت نجمة تقدم. ارجع بكرة لتحدٍّ جديد.</p><small>'+journeyDateLabel(date)+' · '+code+'</small></div></div>';
+    host.innerHTML='<div class="mfkj-daily-complete"><span class="mfkj-daily-check">✓</span><div><strong>Challenge completed!</strong><p lang="ar">برافو! أنهيت كلمات اليوم ورتّبت الجملة وكسبت نجمة تقدم. ارجع بكرة لتحدٍّ جديد.</p><small>'+journeyDateLabel(date)+' · '+code+'</small></div></div>';
+    return;
+  }
+  if(journeyDailyChallengeState.phase==='sentence'||journeyDailyChallengeState.index>=questions.length){
+    var sentence=journeyDailySentence(code,date);
+    var picked=Array.isArray(journeyDailyChallengeState.pickedSentence)?journeyDailyChallengeState.pickedSentence:[];
+    var chosen=picked.map(function(i){return sentence.scrambled[i];});
+    var used=Object.create(null);picked.forEach(function(i){used[i]=true;});
+    host.innerHTML='<div class="mfkj-daily-question mfkj-daily-builder"><div class="mfkj-daily-meta"><span>FINAL STEP · SENTENCE BUILDER</span><span>'+code+' · 6 / 6</span></div><span class="mfkj-kicker">PUT THE WORDS IN ORDER</span><h4 class="mfkj-daily-builder-title">Build the sentence</h4><p class="mfkj-ar" lang="ar">'+esc(sentence.arabic)+'</p><div class="mfkj-daily-built" aria-live="polite">'+(chosen.length?chosen.map(function(word){return '<span class="mfkj-daily-picked">'+esc(word)+'</span>';}).join(' '):'<span class="mfkj-daily-placeholder">Tap the words below in the correct order…</span>')+'</div><div class="mfkj-daily-options mfkj-daily-word-bank">'+sentence.scrambled.map(function(word,i){return '<button type="button" class="mfkj-daily-option mfkj-daily-word-token" data-mfkj-daily-sentence-word="'+i+'" '+(used[i]?'disabled':'')+'>'+esc(word)+'</button>';}).join('')+'</div><div class="mfkj-daily-builder-actions"><button class="mfkj-daily-clear" type="button" data-mfkj-daily-clear>Clear order</button></div><p class="mfkj-daily-feedback" role="status">'+esc(journeyDailyChallengeState.feedback||'Arrange the English words to match the Arabic sentence.')+'</p><div class="mfkj-meter" role="progressbar" aria-label="Daily challenge progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="'+(5+chosen.length)+'"><span style="width:'+((5+chosen.length)/6*100)+'%"></span></div></div>';
+    host.querySelectorAll('[data-mfkj-daily-sentence-word]').forEach(function(button){
+      button.addEventListener('click',function(){
+        var token=Number(button.getAttribute('data-mfkj-daily-sentence-word'));
+        if(picked.indexOf(token)>=0)return;
+        journeyDailyChallengeState.pickedSentence=picked.concat([token]);
+        var currentWords=journeyDailyChallengeState.pickedSentence.map(function(i){return sentence.scrambled[i];});
+        if(currentWords.length===sentence.answer.length){
+          if(currentWords.join(' ')===sentence.answer.join(' ')){
+            journeyDailyChallengeState.done=true;
+            questions.forEach(function(question){journeyRecord('daily-word:'+date+':'+question.word,question.word,code);});
+            journeyRecord(dailyKey,null,code);
+            return;
+          }
+          journeyDailyChallengeState.feedback='الترتيب مش مضبوط. جرّب مرة تانية. · Not quite — clear the order and try again.';
+          journeyDailyChallengeState.pickedSentence=[];
+        }else{
+          journeyDailyChallengeState.feedback='';
+        }
+        journeyRenderDailyChallenge();
+      });
+    });
+    var clear=host.querySelector('[data-mfkj-daily-clear]');
+    if(clear)clear.addEventListener('click',function(){journeyDailyChallengeState.pickedSentence=[];journeyDailyChallengeState.feedback='Start again from the first word.';journeyRenderDailyChallenge();});
     return;
   }
   var index=Math.max(0,Math.min(questions.length-1,journeyDailyChallengeState.index));
   var q=questions[index];
-  host.innerHTML='<div class="mfkj-daily-question"><div class="mfkj-daily-meta"><span>QUESTION '+(index+1)+' / '+questions.length+'</span><span>'+code+' · '+esc(journeyDateLabel(date))+'</span></div><div class="mfkj-daily-word-row"><div><span class="mfkj-kicker">WHAT DOES THIS WORD MEAN?</span><h4 lang="en">'+esc(q.word)+'</h4></div><button class="mfkj-daily-listen" type="button" data-mfkj-daily-speak aria-label="Listen to '+esc(q.word)+'">🔊 Listen</button></div><p class="mfkj-ar" lang="ar">اختار المعنى العربي الصحيح للكلمة.</p><div class="mfkj-daily-options">'+q.choices.map(function(choice,i){return '<button type="button" class="mfkj-daily-option" data-mfkj-daily-answer="'+i+'">'+esc(choice)+'</button>';}).join('')+'</div><p class="mfkj-daily-feedback" role="status">'+esc(journeyDailyChallengeState.feedback||'اختار إجابة واحدة. · Choose one answer.')+'</p><div class="mfkj-meter" role="progressbar" aria-label="Daily challenge progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="'+index+'"><span style="width:'+(index/3*100)+'%"></span></div></div>';
+  host.innerHTML='<div class="mfkj-daily-question"><div class="mfkj-daily-meta"><span>WORD '+(index+1)+' / '+questions.length+'</span><span>'+code+' · '+esc(journeyDateLabel(date))+'</span></div><div class="mfkj-daily-word-row"><div><span class="mfkj-kicker">WHAT DOES THIS WORD MEAN?</span><h4 lang="en">'+esc(q.word)+'</h4></div><button class="mfkj-daily-listen" type="button" data-mfkj-daily-speak aria-label="Listen to '+esc(q.word)+'">🔊 Listen</button></div><p class="mfkj-ar" lang="ar">اختار المعنى العربي الصحيح للكلمة.</p><div class="mfkj-daily-options">'+q.choices.map(function(choice,i){return '<button type="button" class="mfkj-daily-option" data-mfkj-daily-answer="'+i+'">'+esc(choice)+'</button>';}).join('')+'</div><p class="mfkj-daily-feedback" role="status">'+esc(journeyDailyChallengeState.feedback||'اختار إجابة واحدة. · Choose one answer.')+'</p><div class="mfkj-meter" role="progressbar" aria-label="Daily challenge progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="'+index+'"><span style="width:'+(index/6*100)+'%"></span></div></div>';
   host.querySelectorAll('[data-mfkj-daily-answer]').forEach(function(button){
     button.addEventListener('click',function(){
       var picked=Number(button.getAttribute('data-mfkj-daily-answer'));
@@ -13836,10 +13901,9 @@ function journeyRenderDailyChallenge(){
       journeyDailyChallengeState.index=index+1;
       journeyDailyChallengeState.feedback='إجابة صحيحة! ✓ · Correct!';
       if(journeyDailyChallengeState.index>=questions.length){
-        journeyDailyChallengeState.done=true;
-        questions.forEach(function(question){journeyRecord('daily-word:'+date+':'+question.word,question.word,code);});
-        journeyRecord(dailyKey,null,code);
-        return;
+        journeyDailyChallengeState.phase='sentence';
+        journeyDailyChallengeState.pickedSentence=[];
+        journeyDailyChallengeState.feedback='ممتاز! دلوقتي رتّب كلمات الجملة. · Great! Build the sentence now.';
       }
       journeyRenderDailyChallenge();
     });
