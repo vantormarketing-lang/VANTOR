@@ -15616,7 +15616,12 @@ async function kidsJourneySubmitPayment(code){
     if(uploadedPath){
       try{await client.storage.from('payment-proofs').remove([uploadedPath]);}catch(_){}
     }
-    kidsJourneyStatus(status,'Could not submit the payment request. '+(error&&error.message?error.message:'Check the connection and try again.'),'is-error');
+    var submitError=String(error&&error.message||error||'');
+    if(/already awaiting review|already awaiting admin review|already.*pending/i.test(submitError)){
+      kidsJourneyReturnHomeWithNotice('Request already submitted','A payment request for the Kids course is already waiting for admin review. The duplicate request was not created, and the payment form will close now.','is-warn',3200);
+      return;
+    }
+    kidsJourneyStatus(status,'Could not submit the payment request. '+(submitError||'Check the connection and try again.'),'is-error');
   }finally{
     if(root.querySelector('#mfkjSubmitPayment')&&!(root.querySelector('#mfkjSubmitPayment').textContent||'').includes('pending review')){
       root.querySelector('#mfkjSubmitPayment').disabled=false;
