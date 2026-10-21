@@ -152,8 +152,8 @@ if (!studentCacheVersion) {
   fail('sw.js: student service-worker URL version must match the offline cache version');
 }
 const studentManifest = JSON.parse(read('manifest.webmanifest'));
-if (studentManifest.start_url !== './?doma-app=student&launch=v183') {
-  fail('manifest.webmanifest: student app must launch from the v182 student start URL on the working site root');
+if (studentManifest.start_url !== './?doma-app=student&launch=v184') {
+  fail('manifest.webmanifest: student app must launch from the v184 student start URL on the working site root');
 }
 if (studentManifest.id !== './?doma-app=student-pwa-v2') {
   fail('manifest.webmanifest: student PWA must use the clean v2 identity for a fresh desktop installation');
