@@ -2510,6 +2510,7 @@ function setAuthModalBackButton(isAuth){
   }
 }
 function closeModal(){
+  if(typeof domaClosePlayerPicker==='function')domaClosePlayerPicker();
   $('modal').classList.remove('show','doma-auth-photo','doma-auth-signup');
   setAuthModalBackButton(false);
 }
@@ -2565,8 +2566,15 @@ function openAuth(type){
     <button class="doma-auth-password-toggle" type="button" aria-label="Show confirm password" onclick="toggleSignupPassword('signupPassConfirm',this)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
   </div>
   <div class="doma-auth-field doma-auth-field-gold doma-auth-field-team">
-    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientTeam" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b97970"/><stop offset="52%" stop-color="#d0a078"/><stop offset="100%" stop-color="#76263d"/></linearGradient></defs><path d="M7 3h10v4.2c0 4-2 6.3-5 6.3S7 11.2 7 7.2Z" fill="#4a2d08"/><path d="M7 5H3.5v3.2c0 2.4 1.4 3.9 4.1 4.1M17 5h3.5v3.2c0 2.4-1.4 3.9-4.1 4.1M12 13.5v4M8.5 21h7M10 17.5h4" fill="none" stroke="#4a2d08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    <div class="doma-auth-field-content"><label for="signupTeam">Favorite team</label><select id="signupTeam" class="field" aria-label="Favorite football team (optional)"><option value="" selected>Choose your favorite team...</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select></div>
+    <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientTeam" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d5aa85"/><stop offset="52%" stop-color="#9b4f4e"/><stop offset="100%" stop-color="#4c1729"/></linearGradient></defs><circle cx="12" cy="12" r="8.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7"/><circle cx="12" cy="9" r="2.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7"/><path d="M7.6 17.2c.8-2.2 2.2-3.3 4.4-3.3s3.6 1.1 4.4 3.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+    <div class="doma-auth-field-content">
+      <label id="signupPlayerLabel" for="signupPlayerTrigger">Favorite Player</label>
+      <button id="signupPlayerTrigger" class="doma-auth-player-trigger" type="button" aria-labelledby="signupPlayerLabel signupPlayerValue" aria-haspopup="dialog" aria-expanded="false" onclick="domaOpenPlayerPicker()">
+        <span id="signupPlayerValue">Choose your favorite player...</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <input id="signupPlayer" type="hidden" value="">
+    </div>
   </div>
   <button class="btn primary full doma-auth-create" type="button" onclick="domaSignup()"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="4" fill="currentColor"/><path d="M2.5 21v-2.2c0-3.7 2.7-5.6 6.5-5.6s6.5 1.9 6.5 5.6V21Z" fill="currentColor"/><path d="M19 7v7m-3.5-3.5h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Create Account</span></button>
   <div id="authStatus" class="status full"></div>
@@ -2655,8 +2663,70 @@ function toggleSignupPassword(inputId,button){
   if(button){button.setAttribute('aria-label',reveal?'Hide password':'Show password');button.classList.toggle('is-visible',reveal)}
 }
 
+let domaPlayerPickerPreviousBodyOverflow='';
+function domaOpenPlayerPicker(){
+  if(document.getElementById('domaPlayerPickerOverlay'))return;
+  const current=String($('signupPlayer')?.value||'');
+  const messiSelected=current==='Lionel Messi'?' is-selected':'';
+  const ronaldoSelected=current==='Cristiano Ronaldo'?' is-selected':'';
+  const overlay=document.createElement('div');
+  overlay.id='domaPlayerPickerOverlay';
+  overlay.setAttribute('role','presentation');
+  overlay.innerHTML=`
+    <section class="doma-player-picker-panel" role="dialog" aria-modal="true" aria-labelledby="domaPlayerPickerTitle">
+      <button class="doma-player-picker-close" type="button" aria-label="Close player selection" onclick="domaClosePlayerPicker()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="doma-player-picker-eyebrow">YOUR FOOTBALL PICK</div>
+      <h2 id="domaPlayerPickerTitle">Choose Your Favorite Player</h2>
+      <p class="doma-player-picker-subtitle">Pick one player to personalize your account.</p>
+      <div class="doma-player-choice-grid">
+        <button class="doma-player-choice messi-choice${messiSelected}" type="button" onclick="domaSelectFavoritePlayer('Lionel Messi','Barcelona')">
+          <span class="doma-player-photo messi-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Lionel_Messi_close-up.jpg" alt="Lionel Messi" loading="eager" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('is-fallback');this.remove()"></span>
+          <span class="doma-player-choice-name">Lionel Messi</span>
+          <span class="doma-player-choice-meta">ARGENTINA</span>
+          <span class="doma-player-choice-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <button class="doma-player-choice ronaldo-choice${ronaldoSelected}" type="button" onclick="domaSelectFavoritePlayer('Cristiano Ronaldo','Real Madrid')">
+          <span class="doma-player-photo ronaldo-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Cristiano_Ronaldo_2018_%284x5_cropped%29.jpg" alt="Cristiano Ronaldo" loading="eager" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('is-fallback');this.remove()"></span>
+          <span class="doma-player-choice-name">Cristiano Ronaldo</span>
+          <span class="doma-player-choice-meta">PORTUGAL</span>
+          <span class="doma-player-choice-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+      </div>
+      <p class="doma-player-picker-credit">Portraits: <a href="https://commons.wikimedia.org/wiki/File:Lionel_Messi_close-up.jpg" target="_blank" rel="noopener noreferrer">Fanny Schertzer</a> and <a href="https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_2018_(4x5_cropped).jpg" target="_blank" rel="noopener noreferrer">Anna Nessi / soccer.ru</a> via Wikimedia Commons · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></p>
+    </section>`;
+  domaPlayerPickerPreviousBodyOverflow=document.body.style.overflow||'';
+  document.body.appendChild(overlay);
+  document.body.style.overflow='hidden';
+  $('signupPlayerTrigger')?.setAttribute('aria-expanded','true');
+  overlay.addEventListener('click',event=>{if(event.target===overlay)domaClosePlayerPicker()});
+  overlay.querySelector('.doma-player-choice')?.focus({preventScroll:true});
+}
+function domaClosePlayerPicker(){
+  const overlay=document.getElementById('domaPlayerPickerOverlay');
+  if(!overlay)return;
+  overlay.remove();
+  document.body.style.overflow=domaPlayerPickerPreviousBodyOverflow;
+  $('signupPlayerTrigger')?.setAttribute('aria-expanded','false');
+  $('signupPlayerTrigger')?.focus({preventScroll:true});
+}
+function domaSelectFavoritePlayer(player,legacyTeam){
+  if(!['Lionel Messi','Cristiano Ronaldo'].includes(player))return;
+  const hidden=$('signupPlayer'),label=$('signupPlayerValue'),trigger=$('signupPlayerTrigger');
+  if(hidden)hidden.value=player;
+  if(label)label.textContent=player;
+  if(trigger){trigger.classList.add('is-selected');trigger.setAttribute('aria-expanded','false')}
+  domaClosePlayerPicker();
+}
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&document.getElementById('domaPlayerPickerOverlay')){
+    event.preventDefault();event.stopImmediatePropagation();domaClosePlayerPicker();
+  }
+},true);
+
 async function domaSignup(){
-  const name=$('signupName')?.value.trim()||'',rawPhone=$('signupPhone')?.value.trim()||'',pass=$('signupPass')?.value||'',confirmPass=$('signupPassConfirm')?.value||'',favoriteTeam=$('signupTeam')?.value||'';
+  const name=$('signupName')?.value.trim()||'',rawPhone=$('signupPhone')?.value.trim()||'',pass=$('signupPass')?.value||'',confirmPass=$('signupPassConfirm')?.value||'',favoritePlayer=$('signupPlayer')?.value||'',favoriteTeam=favoritePlayer==='Lionel Messi'?'Barcelona':favoritePlayer==='Cristiano Ronaldo'?'Real Madrid':'';
   const normalized=normalizeEgyptianPhone(rawPhone);
   if(!name||!rawPhone||!pass||!confirmPass)return showStatus('authStatus','Complete your name, phone number and both password fields.','error');
   if(pass!==confirmPass)return showStatus('authStatus','The passwords do not match. Please check both fields.','error');
@@ -2667,7 +2737,7 @@ async function domaSignup(){
   const r=await sb.auth.signUp({
     email:aliasEmail,
     password:pass,
-    options:{data:{full_name:name,phone:normalized.local,login_method:'phone_alias',favorite_team:favoriteTeam}}
+    options:{data:{full_name:name,phone:normalized.local,login_method:'phone_alias',favorite_team:favoriteTeam,favorite_player:favoritePlayer}}
   });
   if(r.error){
     const msg=String(r.error.message||'');
@@ -16828,4 +16898,116 @@ html body #modal.modal.show.doma-auth-photo .doma-auth-password-toggle svg *{
   stroke:#d2a078!important;fill:none!important;
 }
 html body #modal.modal.show.doma-auth-photo .doma-auth-screen-brand{display:none!important}
+</style>
+
+
+
+<style id="doma-auth-favorite-player-v182">
+/* Favorite-player control and isolated chooser: auth screen only, without touching the homepage. */
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-player-trigger{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;
+  width:100%!important;min-width:0!important;min-height:31px!important;margin:0!important;padding:2px 0!important;
+  border:0!important;outline:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  color:#f4d6c7!important;text-align:left!important;cursor:pointer!important;font:inherit!important;font-size:13px!important;font-weight:650!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-player-trigger #signupPlayerValue{
+  display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  color:#f3d9d1!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-player-trigger.is-selected #signupPlayerValue{color:#fff0e5!important}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-player-trigger>svg{
+  display:block!important;flex:0 0 17px!important;width:17px!important;height:17px!important;color:#d2a078!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-player-trigger:focus-visible{
+  outline:2px solid rgba(162,87,79,.65)!important;outline-offset:4px!important;border-radius:5px!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-field-icon{
+  background:linear-gradient(140deg,#c89a73 0%,#99514d 53%,#4d172a 100%)!important;
+  border-color:rgba(179,111,91,.66)!important;
+}
+#domaPlayerPickerOverlay{
+  position:fixed!important;inset:0!important;z-index:2147483000!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;min-height:100dvh!important;
+  margin:0!important;padding:16px!important;box-sizing:border-box!important;overflow-y:auto!important;overscroll-behavior:contain!important;
+  background:rgba(13,3,8,.91)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(72%)!important;backdrop-filter:blur(20px) saturate(72%)!important;
+}
+#domaPlayerPickerOverlay .doma-player-picker-panel{
+  position:relative!important;width:min(460px,100%)!important;max-width:460px!important;max-height:calc(100dvh - 32px)!important;
+  overflow-y:auto!important;overscroll-behavior:contain!important;box-sizing:border-box!important;
+  margin:auto!important;padding:26px 20px 16px!important;border-radius:23px!important;
+  background:linear-gradient(145deg,#39101f 0%,#210811 58%,#4a1c27 100%)!important;
+  border:1px solid rgba(143,57,76,.36)!important;
+  box-shadow:0 28px 95px rgba(0,0,0,.7),inset 0 1px 0 rgba(168,87,101,.12)!important;
+  color:#fff0f4!important;text-align:center!important;
+}
+#domaPlayerPickerOverlay .doma-player-picker-close{
+  position:absolute!important;top:10px!important;right:10px!important;
+  display:grid!important;place-items:center!important;width:32px!important;height:32px!important;padding:0!important;
+  border-radius:10px!important;background:rgba(105,29,51,.6)!important;border:1px solid rgba(152,65,83,.38)!important;color:#f2d1d4!important;cursor:pointer!important;
+}
+#domaPlayerPickerOverlay .doma-player-picker-close svg{width:17px!important;height:17px!important}
+#domaPlayerPickerOverlay .doma-player-picker-eyebrow{
+  color:#d4a080!important;font-size:9px!important;letter-spacing:2.4px!important;font-weight:900!important;margin:2px 35px 8px!important;
+}
+#domaPlayerPickerOverlay #domaPlayerPickerTitle{
+  margin:0!important;color:#fff0f4!important;font-size:clamp(20px,5vw,25px)!important;font-weight:900!important;line-height:1.25!important;
+}
+#domaPlayerPickerOverlay .doma-player-picker-subtitle{margin:8px 0 18px!important;color:#d9b9c3!important;font-size:11px!important;line-height:1.6!important}
+#domaPlayerPickerOverlay .doma-player-choice-grid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;width:100%!important;
+}
+#domaPlayerPickerOverlay .doma-player-choice{
+  position:relative!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:7px!important;
+  min-width:0!important;width:100%!important;margin:0!important;padding:10px 8px 13px!important;box-sizing:border-box!important;
+  border-radius:17px!important;border:1px solid rgba(139,54,73,.42)!important;
+  background:linear-gradient(145deg,rgba(95,27,49,.62),rgba(44,10,26,.82))!important;
+  color:#fff0f4!important;cursor:pointer!important;text-align:center!important;
+  box-shadow:0 9px 23px rgba(0,0,0,.23),inset 0 1px 0 rgba(168,78,97,.08)!important;
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+}
+#domaPlayerPickerOverlay .doma-player-choice:hover,
+#domaPlayerPickerOverlay .doma-player-choice:focus-visible{
+  outline:none!important;transform:translateY(-2px)!important;border-color:rgba(190,112,96,.76)!important;
+  box-shadow:0 13px 28px rgba(0,0,0,.31),0 0 18px rgba(115,35,56,.18)!important;
+}
+#domaPlayerPickerOverlay .doma-player-choice.is-selected{
+  border-color:#b97862!important;background:linear-gradient(145deg,rgba(133,49,62,.76),rgba(63,17,33,.9))!important;
+  box-shadow:0 0 0 2px rgba(181,104,83,.18),0 13px 28px rgba(0,0,0,.28)!important;
+}
+#domaPlayerPickerOverlay .doma-player-photo{
+  display:block!important;position:relative!important;overflow:hidden!important;width:100%!important;aspect-ratio:4/4.5!important;
+  border-radius:12px!important;background:linear-gradient(145deg,#8d4a44,#391020)!important;
+  border:1px solid rgba(191,115,95,.32)!important;box-shadow:0 5px 16px rgba(0,0,0,.24)!important;
+}
+#domaPlayerPickerOverlay .doma-player-photo img{
+  display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 26%!important;
+}
+#domaPlayerPickerOverlay .messi-photo.is-fallback::before{content:"LM";display:grid;place-items:center;width:100%;height:100%;color:#f4d8c8;font-weight:900;font-size:26px}
+#domaPlayerPickerOverlay .ronaldo-photo.is-fallback::before{content:"CR7";display:grid;place-items:center;width:100%;height:100%;color:#f4d8c8;font-weight:900;font-size:26px}
+#domaPlayerPickerOverlay .doma-player-choice-name{font-size:12px!important;line-height:1.25!important;font-weight:900!important;color:#fff0f4!important;overflow-wrap:anywhere!important}
+#domaPlayerPickerOverlay .doma-player-choice-meta{font-size:8px!important;letter-spacing:1.6px!important;color:#d7a08b!important;font-weight:850!important}
+#domaPlayerPickerOverlay .doma-player-choice-mark{
+  display:none!important;position:absolute!important;top:14px!important;right:14px!important;place-items:center!important;
+  width:24px!important;height:24px!important;border-radius:50%!important;background:linear-gradient(145deg,#c99a70,#873947,#4a1429)!important;
+  border:1px solid rgba(255,214,192,.33)!important;color:#fff4eb!important;
+}
+#domaPlayerPickerOverlay .doma-player-choice.is-selected .doma-player-choice-mark{display:grid!important}
+#domaPlayerPickerOverlay .doma-player-choice-mark svg{width:14px!important;height:14px!important}
+#domaPlayerPickerOverlay .doma-player-picker-credit{
+  margin:14px 0 0!important;color:#ab818d!important;font-size:8px!important;line-height:1.7!important;
+}
+#domaPlayerPickerOverlay .doma-player-picker-credit a{color:#d7a08b!important;text-decoration:underline!important;text-underline-offset:2px!important}
+@media(max-width:380px){
+  #domaPlayerPickerOverlay{padding:10px!important}
+  #domaPlayerPickerOverlay .doma-player-picker-panel{padding:23px 12px 13px!important;border-radius:19px!important}
+  #domaPlayerPickerOverlay .doma-player-choice-grid{gap:8px!important}
+  #domaPlayerPickerOverlay .doma-player-choice{padding:8px 6px 10px!important;gap:6px!important}
+  #domaPlayerPickerOverlay .doma-player-photo{border-radius:10px!important}
+  #domaPlayerPickerOverlay .doma-player-choice-name{font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #domaPlayerPickerOverlay .doma-player-choice{transition:none!important}
+}
 </style>
