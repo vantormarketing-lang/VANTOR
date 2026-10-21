@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v161', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v169', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v161', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v169', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -15072,27 +15072,60 @@ async function kidsJourneyLoadContext(code){
   var client;
   try{client=await kidsJourneyWaitForClient();}
   catch(error){return {error:error&&error.message||'The academy connection could not be initialized. Refresh this page and try again.'};}
-  // getUser() can return AuthSessionMissingError when no user is signed in.
-  // Check the stored/refreshed session first so a logged-out visitor sees sign-in.
+  // Distinguish a logged-out visitor from a real connection/verification failure.
   var sessionResult;
   try{sessionResult=await client.auth.getSession();}
-  catch(error){return {error:'Could not read the saved sign-in session. Please sign in again.'};}
-  if(sessionResult&&sessionResult.error)return {error:'Could not read the saved sign-in session. Please sign in again.'};
+  catch(error){
+    console.warn('Kids Journey session lookup failed:',error);
+    return {error:'Could not read the saved sign-in session. Please sign in again.'};
+  }
+  if(sessionResult&&sessionResult.error){
+    var sessionErrorName=String(sessionResult.error.name||'');
+    var sessionErrorMessage=String(sessionResult.error.message||'');
+    if(/AuthSessionMissingError|Auth session missing|invalid.*(refresh|jwt|token|session)|(refresh|jwt|token|session).*(expired|invalid|missing|not found)/i.test(sessionErrorName+' '+sessionErrorMessage))return {user:null};
+    console.warn('Kids Journey session lookup returned an error:',sessionResult.error);
+    return {error:'Could not read the saved sign-in session. Please sign in again.'};
+  }
   var session=sessionResult&&sessionResult.data&&sessionResult.data.session||null;
   var user=session&&session.user||null;
   if(!session||!user)return {user:null};
-  // Validate a session on the Auth server, rather than trusting stored user data alone.
-  var authResult;
-  try{authResult=await client.auth.getUser(session.access_token);}
-  catch(error){return {error:'Could not verify your sign-in. Please sign in again and refresh.'};}
-  if(authResult&&authResult.error){
-    var authErrorName=String(authResult.error.name||'');
-    var authErrorMessage=String(authResult.error.message||'');
-    if(/AuthSessionMissingError|Auth session missing/i.test(authErrorName+' '+authErrorMessage))return {user:null};
+
+  // getClaims verifies the JWT and can refresh a near-expiry session. It avoids
+  // a redundant getUser(token) network check on this route. The database queries
+  // below still enforce the actual subscription/access rules through Supabase RLS.
+  var claimsResult;
+  try{claimsResult=await client.auth.getClaims();}
+  catch(error){
+    console.warn('Kids Journey JWT verification threw an error:',error);
     return {error:'Could not verify your sign-in. Please sign in again and refresh.'};
   }
-  user=authResult.data&&authResult.data.user||null;
-  if(!user)return {user:null};
+  if(claimsResult&&claimsResult.error){
+    var authErrorName=String(claimsResult.error.name||'');
+    var authErrorMessage=String(claimsResult.error.message||'');
+    if(/AuthSessionMissingError|Auth session missing|invalid.*(refresh|jwt|token|session)|(refresh|jwt|token|session).*(expired|invalid|missing|not found)/i.test(authErrorName+' '+authErrorMessage))return {user:null};
+    console.warn('Kids Journey JWT verification failed:',claimsResult.error);
+    return {error:'Could not verify your sign-in. Please sign in again and refresh.'};
+  }
+  var claims=claimsResult&&claimsResult.data&&claimsResult.data.claims||null;
+  if(!claims||!claims.sub||String(claims.sub)!==String(user.id)){
+    console.warn('Kids Journey: verified JWT subject did not match the stored session user.');
+    return {user:null};
+  }
+
+  // getClaims may refresh the stored session, so re-read it before querying RLS-protected data.
+  var latestSessionResult;
+  try{latestSessionResult=await client.auth.getSession();}
+  catch(error){
+    console.warn('Kids Journey refreshed session lookup failed:',error);
+    return {error:'Could not read the saved sign-in session. Please sign in again.'};
+  }
+  if(latestSessionResult&&latestSessionResult.error){
+    console.warn('Kids Journey refreshed session lookup returned an error:',latestSessionResult.error);
+    return {error:'Could not read the saved sign-in session. Please sign in again.'};
+  }
+  var latestSession=latestSessionResult&&latestSessionResult.data&&latestSessionResult.data.session||null;
+  if(!latestSession||!latestSession.user||String(latestSession.user.id)!==String(claims.sub))return {user:null};
+  user=latestSession.user;
   var trackResult=await client.from('mrfluent_kids_tracks').select('id,code,title,price_egp,duration_days,is_published').eq('code','KIDS_JOURNEY').eq('is_published',true).maybeSingle();
   if(trackResult.error)return {user:user,error:'Could not load the Kids subscription plan: '+trackResult.error.message};
   if(!trackResult.data)return {user:user,error:'The Kids Journey payment plan is not configured yet. Contact the academy.'};
