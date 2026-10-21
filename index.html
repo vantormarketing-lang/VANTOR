@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v14">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v13">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v178', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v177', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v178', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v177', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -16534,157 +16534,4 @@ html body footer.footer .footgrid > .footer-link-card > h4::after {
   #modal.doma-auth-photo{padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))!important;background-size:100% 100%!important}
   #modal.doma-auth-photo .modalbox{width:100%!important;max-height:100%!important;padding:12px!important}
 }
-
-/* DOMA signup restyle: align with the Mr. Fluent Kids glass theme. */
-html body #modal.doma-auth-photo.doma-auth-signup{
-  background-color:#100b13!important;
-  background-image:
-    radial-gradient(ellipse at 10% 0%,rgba(128,49,93,.34),transparent 36%),
-    radial-gradient(ellipse at 92% 22%,rgba(103,64,160,.23),transparent 34%),
-    linear-gradient(145deg,#100b13,#1a0c17 60%,#0d0a12)!important;
-  background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;
-  background-attachment:scroll!important;filter:none!important;
-  padding:76px 12px max(10px,env(safe-area-inset-bottom))!important;
-  align-items:center!important;justify-content:center!important;gap:0!important;
-  overflow-x:hidden!important;overflow-y:auto!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .modalbox{
-  position:relative!important;z-index:2!important;flex:0 1 auto!important;
-  width:min(520px,calc(100vw - 20px))!important;max-width:520px!important;
-  max-height:calc(100dvh - 170px)!important;min-height:0!important;
-  margin:0 auto!important;padding:clamp(16px,3vw,24px)!important;
-  overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain!important;
-  box-sizing:border-box!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035))!important;
-  border:1px solid rgba(205,164,255,.26)!important;border-radius:23px!important;
-  box-shadow:0 20px 55px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.1)!important;
-  -webkit-backdrop-filter:blur(20px) saturate(125%)!important;backdrop-filter:blur(20px) saturate(125%)!important;
-  color:#fff7ff!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .modalhead{margin-bottom:5px!important}
-html body #modal.doma-auth-photo.doma-auth-signup .modalhead h3{
-  color:#e6d2ff!important;background:linear-gradient(105deg,#fff,#d4bbff 48%,#ffb8de)!important;
-  background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;
-  text-shadow:none!important;font-size:clamp(21px,4vw,25px)!important;font-weight:950!important;
-  letter-spacing:-.4px!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .modalhead h3::before,
-html body #modal.doma-auth-photo.doma-auth-signup .modalhead h3::after{
-  display:inline-block!important;content:""!important;width:6px!important;height:6px!important;min-width:6px!important;
-  border-radius:50%!important;vertical-align:middle!important;margin:0 9px 3px!important;
-  background:#91f0db!important;box-shadow:0 0 12px rgba(145,240,219,.9)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .modalhead h3::after{
-  background:#ff9dd4!important;box-shadow:0 0 12px rgba(255,157,212,.82)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .modalhead .close.auth-back{
-  background:linear-gradient(145deg,rgba(167,109,234,.25),rgba(255,139,198,.12))!important;
-  border:1px solid rgba(205,164,255,.35)!important;color:#fff7ff!important;
-  box-shadow:0 7px 20px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup #modalText{
-  color:#c0afc9!important;text-shadow:none!important;font-size:12px!important;
-  line-height:1.8!important;margin:5px auto 15px!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-signup-form{gap:9px!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field{
-  min-height:58px!important;padding:8px 11px!important;gap:10px!important;border-radius:17px!important;
-  border:1px solid rgba(205,164,255,.23)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035))!important;
-  box-shadow:0 12px 28px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.05)!important;
-  -webkit-backdrop-filter:blur(17px)!important;backdrop-filter:blur(17px)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-cyan{border-color:rgba(145,240,219,.3)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-blue{border-color:rgba(205,164,255,.32)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-mint{border-color:rgba(255,157,212,.28)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-gold{border-color:rgba(145,240,219,.24)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field:focus-within{
-  border-color:rgba(255,157,212,.65)!important;
-  background:linear-gradient(145deg,rgba(167,109,234,.17),rgba(255,139,198,.07))!important;
-  box-shadow:0 0 0 2px rgba(255,157,212,.07),0 0 20px rgba(177,78,152,.12),inset 0 1px 0 rgba(255,255,255,.1)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon{
-  border:1px solid rgba(255,255,255,.32)!important;border-radius:13px!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-cyan .doma-auth-field-icon{background:linear-gradient(145deg,#91f0db,#65c7d6)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-blue .doma-auth-field-icon{background:linear-gradient(145deg,#d4bbff,#a68af2)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-mint .doma-auth-field-icon{background:linear-gradient(145deg,#ffb8de,#f18ec4)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-gold .doma-auth-field-icon{background:linear-gradient(145deg,#b2f4df,#91f0db)!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content label{
-  color:#fff7ff!important;font-size:13px!important;font-weight:850!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupName,
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupPhone,
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupPass,
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupPassConfirm,
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupTeam{
-  color:#fff7ff!important;font-size:13px!important;background:transparent!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content input::placeholder{
-  color:#bda8cb!important;opacity:1!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content select{color:#d7baff!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content select option{background:#1a0c17!important;color:#fff7ff!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-password-toggle{
-  color:#d7baff!important;background:rgba(255,255,255,.045)!important;border-color:rgba(216,179,255,.2)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-create{
-  min-height:54px!important;height:54px!important;border-radius:14px!important;margin-top:3px!important;
-  border:1px solid rgba(255,190,238,.48)!important;
-  background:linear-gradient(110deg,#8052c6,#b14e98)!important;color:#fff7ff!important;
-  box-shadow:0 12px 28px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.16)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-create:hover{
-  box-shadow:0 14px 30px rgba(145,59,161,.24)!important;filter:brightness(1.06)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup #authStatus{
-  color:#ffb8de!important;text-shadow:none!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-switch{
-  color:#c0afc9!important;border-top-color:rgba(255,255,255,.09)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-switch button{color:#91f0db!important}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-brand-footer{
-  padding-top:9px!important;border-top:1px solid rgba(255,255,255,.08)!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name{
-  background:linear-gradient(100deg,#fff,#d4bbff 48%,#ffb8de)!important;
-  -webkit-background-clip:text!important;background-clip:text!important;
-  -webkit-text-fill-color:transparent!important;filter:drop-shadow(0 0 8px rgba(167,109,234,.2))!important;
-}
-html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-brand small{
-  color:#c0afc9!important;background:none!important;-webkit-text-fill-color:#c0afc9!important;
-}
-@media(max-width:700px){
-  html body #modal.doma-auth-photo.doma-auth-signup{
-    padding:max(68px,calc(env(safe-area-inset-top) + 58px)) 8px max(8px,env(safe-area-inset-bottom))!important;
-  }
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-screen-brand{top:8px!important}
-  html body #modal.doma-auth-photo.doma-auth-signup .modalbox{
-    width:min(480px,calc(100vw - 16px))!important;max-height:calc(100dvh - 155px)!important;
-    padding:16px 12px 13px!important;border-radius:21px!important;
-  }
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field{
-    min-height:53px!important;padding:6px 9px!important;gap:9px!important;border-radius:15px!important;
-  }
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon{
-    width:34px!important;height:34px!important;flex-basis:34px!important;border-radius:11px!important;
-  }
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon svg{width:19px!important;height:19px!important}
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupName,
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupPhone,
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupPass,
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupPassConfirm,
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #signupTeam{min-height:27px!important;height:27px!important;font-size:12px!important}
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-create{min-height:49px!important;height:49px!important;font-size:13px!important}
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-brand-footer{margin-top:5px!important;padding-top:7px!important;padding-bottom:5px!important;gap:6px!important}
-  html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-name{font-size:21px!important}
-}
-@media(prefers-reduced-motion:reduce){
-  html body #modal.doma-auth-photo.doma-auth-signup *,
-  html body #modal.doma-auth-photo.doma-auth-signup *::before,
-  html body #modal.doma-auth-photo.doma-auth-signup *::after{transition:none!important;animation:none!important}
-}
-
 </style>
