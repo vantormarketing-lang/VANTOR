@@ -15384,38 +15384,36 @@ function kidsJourneyRenderGateMessage(code,ctx){
   var host=root.querySelector('[data-mfj-kids-gate-status]');
   var actions=root.querySelector('[data-mfj-kids-gate-actions]');
   if(!host||!actions)return;
-  var def=kidsJourneyDefinition(code);
   if(ctx.error){
     host.className='mfkj-pay-status is-error';
     host.textContent=ctx.error+' The learning content will remain locked until access can be verified.';
-    actions.innerHTML='<button type="button" class="mfkr-btn mfkj-primary" data-mfj-kids-login>Sign in</button><button type="button" class="mfkr-btn" data-mfj-kids-signup>Create account</button><a class="mfkr-btn" href="'+url(code.toLowerCase())+'">Retry access check ↻</a><a class="mfkr-btn" href="'+kidsJourneySubscribeUrl(code)+'">Open subscription page</a>';
+    actions.innerHTML='<button type="button" class="mfkr-btn mfkj-primary" data-mfj-kids-login>Sign in</button><button type="button" class="mfkr-btn" data-mfj-kids-signup>Create account</button><a class="mfkr-btn" href="'+url(code.toLowerCase())+'">Retry access check ↻</a><a class="mfkr-btn" href="'+kidsJourneySubscribeUrl()+'">Open full-course subscription</a>';
     return;
   }
   if(!ctx.user){
     host.className='mfkj-pay-status is-warn';
-    host.textContent='Sign in with your DOMA Academy account. This level opens after its separate Kids subscription is approved.';
+    host.textContent='Sign in with your DOMA Academy account. One Kids course subscription opens all six levels A1–C2 after approval.';
     actions.innerHTML='<button type="button" class="mfkr-btn mfkj-primary" data-mfj-kids-login>Sign in</button><button type="button" class="mfkr-btn" data-mfj-kids-signup>Create account</button>';
     return;
   }
   if(ctx.active)return;
   if(ctx.pending){
-    var pendingLevel=ctx.levels.find(function(l){return l.id===ctx.pending.requested_level_id;});
     host.className='mfkj-pay-status is-warn';
-    host.textContent='Payment request is waiting for admin review for '+(pendingLevel?pendingLevel.code+' · '+pendingLevel.title:'another Kids level')+'. A new request cannot be submitted until this one is reviewed.';
-    actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+kidsJourneySubscribeUrl(pendingLevel?pendingLevel.code:code)+'">View payment request status</a><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a>';
+    host.textContent='Your full-course payment request covering all six levels A1–C2 is awaiting admin review. You do not need to choose a level or submit another request.';
+    actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+kidsJourneySubscribeUrl()+'">View full-course payment status</a><a class="mfkr-btn" href="'+url('hub')+'">Back to course levels</a>';
     return;
   }
   host.className='mfkj-pay-status';
   if(ctx.current){
-    var currentLevel=ctx.levels.find(function(l){return l.id===ctx.current.level_id;});
-    host.textContent='Your current Kids access is '+(currentLevel?currentLevel.code+' · '+currentLevel.title:'another level')+' until '+kidsJourneyDate(ctx.current.expires_at)+'. To change to '+def.code+' or renew for another 30 days, submit its payment receipt for admin approval.';
+    host.textContent='Your full Kids course access is active until '+kidsJourneyDate(ctx.current.expires_at)+'. All six levels A1–C2 are included.';
   }else if(ctx.latest&&String(ctx.latest.status).toLowerCase()==='rejected'){
-    host.textContent='Your previous request for this level was rejected. Check the admin note if available, then submit a new payment request.';
+    host.textContent='Your previous full-course request was not approved. Check the admin note if available, then submit a new payment receipt.';
   }else{
-    host.textContent='No active subscription was found for this level. Submit the Mobile Cash sender number and receipt below; the level will remain locked until an administrator approves payment.';
+    host.textContent='No active full-course subscription was found. Submit one Mobile Cash receipt for all six levels A1–C2; they remain locked until an administrator approves payment.';
   }
-  actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+kidsJourneySubscribeUrl(code)+'">Subscribe · 100 EGP / 30 days</a><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a>';
+  actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+kidsJourneySubscribeUrl()+'">Subscribe to all levels · 100 EGP / 30 days</a><a class="mfkr-btn" href="'+url('hub')+'">Back to course levels</a>';
 }
+
 async function kidsJourneyRenderLevelGate(code,renderer){
   var def=kidsJourneyDefinition(code);
   document.title=def.code+' · Kids Course Access | Mr. Fluent Kids';
