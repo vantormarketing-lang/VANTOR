@@ -1,18 +1,34 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v176';
-const BRAND_VERSION = 'doma-glass-v19';
+const CACHE_NAME = 'mr-fluent-offline-student-v177';
+const BRAND_VERSION = 'doma-glass-v20';
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v176', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v177', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
 const kidsOlderUrl = new URL('./MR_FLUENT_KIDS_OLDER.html', self.registration.scope);
 const kidsA1Url = new URL('./MR_FLUENT_KIDS_A1.html', self.registration.scope);
+const kidsEntryRouteUrl = new URL('./?kids=entry', self.registration.scope);
+const kidsHubRouteUrl = new URL('./?kids=hub', self.registration.scope);
+const kidsYoungerRouteUrl = new URL('./?kids=younger', self.registration.scope);
+const kidsOlderRouteUrl = new URL('./?kids=older', self.registration.scope);
+const kidsSubscribeRouteUrl = new URL('./?kids=subscribe', self.registration.scope);
+const kidsA1RouteUrl = new URL('./?kids=a1', self.registration.scope);
 const kidsA2Url = new URL('./?kids=a2', self.registration.scope);
-const kidsC2Url = new URL('./?kids=c2', self.registration.scope);
-const kidsReviewUrl = new URL('./?kids=review', self.registration.scope);
+const kidsB1RouteUrl = new URL('./?kids=b1', self.registration.scope);
 const kidsB2Url = new URL('./?kids=b2', self.registration.scope);
+const kidsC1RouteUrl = new URL('./?kids=c1', self.registration.scope);
+const kidsC2RouteUrl = new URL('./?kids=c2', self.registration.scope);
+const kidsReviewUrl = new URL('./?kids=review', self.registration.scope);
 const kidsComingSoonUrl = new URL('./MR_FLUENT_KIDS_COMING_SOON.html', self.registration.scope);
+const englishLevelPages = [
+  new URL('./MR_FLUENT_A1_COURSE.html', self.registration.scope),
+  new URL('./MR_FLUENT_A2_COURSE.html', self.registration.scope),
+  new URL('./MR_FLUENT_B1_COURSE.html', self.registration.scope),
+  new URL('./MR_FLUENT_B2_COURSE.html', self.registration.scope),
+  new URL('./MR_FLUENT_C1_COURSE.html', self.registration.scope),
+  new URL('./MR_FLUENT_C2_COURSE.html', self.registration.scope)
+];
 const SHELL = [
   scopeUrl.href,
   indexUrl.href,
@@ -21,11 +37,20 @@ const SHELL = [
   kidsYoungerUrl.href,
   kidsOlderUrl.href,
   kidsA1Url.href,
+  kidsEntryRouteUrl.href,
+  kidsHubRouteUrl.href,
+  kidsYoungerRouteUrl.href,
+  kidsOlderRouteUrl.href,
+  kidsSubscribeRouteUrl.href,
+  kidsA1RouteUrl.href,
   kidsA2Url.href,
+  kidsB1RouteUrl.href,
   kidsB2Url.href,
-  kidsC2Url.href,
+  kidsC1RouteUrl.href,
+  kidsC2RouteUrl.href,
   kidsReviewUrl.href,
   kidsComingSoonUrl.href,
+  ...englishLevelPages.map(url => url.href),
   versioned('./manifest.webmanifest'),
   versioned('./doma-student-app-icon.svg'),
   versioned('./mrfluent-auth-photo-v113.webp')
@@ -102,6 +127,18 @@ self.addEventListener('fetch', event => {
     const cached = await caches.match(req);
 
     if (req.mode === 'navigate') {
+      // Render cached same-origin documents immediately; refresh their copies after
+      // returning the response so repeat course taps do not wait on the network.
+      if (cached && cached.ok) {
+        fetch(req, {cache:'no-store'}).then(async fresh => {
+          if (fresh && fresh.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(req, fresh.clone());
+          }
+        }).catch(() => {});
+        return cached;
+      }
+
       try {
         const fresh = await fetch(req, {cache:'no-store'});
         if (fresh && fresh.ok) {

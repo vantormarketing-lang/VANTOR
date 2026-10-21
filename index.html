@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v12">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v13">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v176', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v177', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v176', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v177', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2945,6 +2945,11 @@ async function domaSubmitSubscription(){
 
 /* Mr. Fluent: independent English Course membership (100 EGP / 30 days). */
 let mrFluentEnglishLevels=[],mrFluentEnglishSubscription=null,mrFluentEnglishPendingRequest=null,mrFluentEnglishAccessError='';
+const MR_FLUENT_ENGLISH_PENDING_MARKER_KEY='mrfluent-english-pending-request-user-v1';
+function mrfluentHasLocalEnglishPending(userId){if(!userId)return false;try{return localStorage.getItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY)===String(userId)}catch(_){return false}}
+function mrfluentSetLocalEnglishPending(userId,pending){if(!userId)return;try{if(pending)localStorage.setItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY,String(userId));else if(localStorage.getItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY)===String(userId))localStorage.removeItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY)}catch(_){}}
+function mrfluentEnglishRequestIsPending(request){const status=String(request&&request.status||'').toLowerCase().trim().replace(/[ -]+/g,'_');return ['pending','pending_review','awaiting_review','awaiting_admin_review','submitted','under_review'].includes(status)}
+function mrfluentEnglishRequestIsTerminal(request){const status=String(request&&request.status||'').toLowerCase().trim().replace(/[ -]+/g,'_');return ['rejected','declined','denied','cancelled','canceled','approved','active','completed'].includes(status)}
 
 const MR_FLUENT_ENGLISH_PRICE=100;
 let mrFluentEnglishPlacement=null;let mrFluentEnglishCompletedLessonIds=new Set();
@@ -3014,7 +3019,7 @@ function mrfluentRenderEnglishLevelCards(){
 }
 
 function mrfluentCourseActive(sub){const now=Date.now();return !!sub&&String(sub.status||'').toLowerCase()==='active'&&(!sub.starts_at||new Date(sub.starts_at).getTime()<=now)&&(!sub.expires_at||new Date(sub.expires_at).getTime()>now)}
-async function mrfluentRefreshEnglishCourse(){
+async function mrfluentRefreshEnglishCourseInternal(){
   const levelsHost=$('mrfluentEnglishLevels'),statusHost=$('mrfluentEnglishCourseStatus');
   if(!levelsHost||!statusHost||!sb)return;
   let levelsResult;
@@ -3032,9 +3037,22 @@ async function mrfluentRefreshEnglishCourse(){
         const rows=Array.isArray(sr.data)?sr.data:(sr.data?[sr.data]:[]);
         mrFluentEnglishSubscription=rows.find(mrfluentCourseActive)||null;
       }
-      const rr=await sb.from('mrfluent_english_course_requests').select('id,status,amount,created_at,admin_note').eq('student_id',sessionUser.id).eq('status','pending').order('created_at',{ascending:false}).limit(1);
-      if(!rr.error)mrFluentEnglishPendingRequest=(rr.data||[])[0]||null;
-      else console.warn('Could not check pending English Course requests:',rr.error);
+      const hadLocalPending=mrfluentHasLocalEnglishPending(sessionUser.id);
+      const rr=await sb.from('mrfluent_english_course_requests').select('id,status,amount,created_at,admin_note').eq('student_id',sessionUser.id).order('created_at',{ascending:false}).limit(20);
+      if(!rr.error){
+        const requests=rr.data||[],newest=requests[0]||null;
+        if(mrFluentEnglishSubscription){mrFluentEnglishPendingRequest=null;mrfluentSetLocalEnglishPending(sessionUser.id,false);}
+        else{
+          mrFluentEnglishPendingRequest=requests.find(mrfluentEnglishRequestIsPending)||null;
+          if(mrFluentEnglishPendingRequest)mrfluentSetLocalEnglishPending(sessionUser.id,true);
+          else if(hadLocalPending&&(!newest||!mrfluentEnglishRequestIsTerminal(newest)))mrFluentEnglishPendingRequest={id:'local-pending',status:'pending',local_only:true};
+          else{mrFluentEnglishPendingRequest=null;mrfluentSetLocalEnglishPending(sessionUser.id,false);}
+        }
+      }else{
+        console.warn('Could not check pending English Course requests:',rr.error);
+        if(hadLocalPending)mrFluentEnglishPendingRequest={id:'local-pending',status:'pending',local_only:true};
+        else mrFluentEnglishAccessError=mrFluentEnglishAccessError||rr.error.message||'Could not verify the English Course payment request.';
+      }
       const pr=await sb.rpc('mrfluent_get_my_english_placement');
       if(!pr.error){const p=Array.isArray(pr.data)?pr.data[0]:pr.data;mrFluentEnglishPlacement=p&&p.level_code?p:null;}
       else {mrFluentEnglishAccessError=mrFluentEnglishAccessError||pr.error.message||'Could not load placement result.';console.warn('Could not load placement result:',pr.error)}
@@ -3057,6 +3075,12 @@ async function mrfluentRefreshEnglishCourse(){
   mrfluentRenderEnglishLevelCards();
   if(!sessionUser||!mrFluentEnglishSubscription){$('mrfluentEnglishLevelContent').innerHTML='<div class="empty">'+(mrFluentEnglishPendingRequest?'Your course remains locked until the admin approves the receipt.':'Subscribe for 100 EGP per 30 days and wait for approval. The required placement test unlocks the assigned starting level.')+'</div>'}
 
+}
+let mrFluentEnglishRefreshInFlight=null;
+function mrfluentRefreshEnglishCourse(){
+  if(mrFluentEnglishRefreshInFlight)return mrFluentEnglishRefreshInFlight;
+  mrFluentEnglishRefreshInFlight=mrfluentRefreshEnglishCourseInternal().finally(()=>{mrFluentEnglishRefreshInFlight=null});
+  return mrFluentEnglishRefreshInFlight;
 }
 function mrfluentRouteBack(){
   const body=document.body;
@@ -3095,6 +3119,12 @@ function mrfluentCloseCourseWorkspace(){
 }
 async function mrfluentStartEnglishSubscription(){
   if(!sessionUser){openAuth('signup');return}
+  if(mrFluentEnglishSubscription){mrfluentOpenCourseWorkspace();return}
+  if(mrFluentEnglishPendingRequest||mrfluentHasLocalEnglishPending(sessionUser.id)){
+    showToast('Your English Course payment request is already pending admin approval.');
+    mrfluentRefreshEnglishCourse().catch(error=>console.warn('Background English Course status check failed.',error));
+    return;
+  }
   await mrfluentRefreshEnglishCourse();
   if(mrFluentEnglishAccessError){showToast('Could not verify course access. Refresh the page or contact the admin.');return}
   if(mrFluentEnglishSubscription){mrfluentOpenCourseWorkspace();return}
@@ -3118,6 +3148,7 @@ async function mrfluentSubmitEnglishCoursePayment(){
   if(up.error)return showStatus('mrfluentEnglishPaymentStatus','Receipt upload failed: '+up.error.message,'error');
   const r=await sb.rpc('mrfluent_create_english_course_request',{p_sender_phone:phone,p_proof_path:path});
   if(r.error){await sb.storage.from('payment-proofs').remove([path]);return showStatus('mrfluentEnglishPaymentStatus','Course request failed: '+r.error.message,'error')}
+  mrfluentSetLocalEnglishPending(sessionUser.id,true);
   showStatus('mrfluentEnglishPaymentStatus','Request submitted. English Course access will activate after admin approval.','success');
   await mrfluentRefreshEnglishCourse();showToast('English Course payment request submitted.');setTimeout(closeGradeModal,700);
 }
@@ -13489,6 +13520,10 @@ if (!route) {
           return pendingStatuses.indexOf(status) >= 0;
         });
         if (hasPending) { showPending(); return; }
+        var newestRequest=(requestResult.data||[])[0]||null;
+        var newestStatus=String(newestRequest&&newestRequest.status||'').toLowerCase().trim().replace(/[ -]+/g,'_');
+        var terminalRequestStatuses=['rejected','declined','denied','cancelled','canceled','approved','active','completed'];
+        if(markerForFallback&&terminalRequestStatuses.indexOf(newestStatus)<0){showPending();return;}
         kidsHomeClearPendingMarker();
         continueToCourse();
       } catch (error) {
@@ -13496,7 +13531,15 @@ if (!route) {
         continueToCourse();
       }
     }
-    verifyRequestBeforeNavigation();
+    // Pending uploads on this device are shown immediately. If no local marker exists,
+    // let the destination route do its authoritative check once instead of repeating reads.
+    try{
+      if(typeof sessionUser!=='undefined'&&sessionUser&&kidsHomeMarkerMatches(sessionUser.id)){
+        userIdForFallback=String(sessionUser.id);markerForFallback=true;showPending();
+        verifyRequestBeforeNavigation();return;
+      }
+    }catch(_){}
+    continueToCourse();
   });
   return;
 }
@@ -15467,6 +15510,10 @@ function renderB1(){
 
 
 function kidsJourneySubscribeUrl(){return url('subscribe');}
+var kidsJourneyPendingMarkerKey='mfkj-kids-pending-request-user-v1';
+function kidsJourneyHasPendingMarker(userId){if(!userId)return false;try{return window.localStorage.getItem(kidsJourneyPendingMarkerKey)===String(userId)}catch(_){return false}}
+function kidsJourneyClearPendingMarker(userId){if(!userId)return;try{if(window.localStorage.getItem(kidsJourneyPendingMarkerKey)===String(userId))window.localStorage.removeItem(kidsJourneyPendingMarkerKey)}catch(_){}}
+function kidsJourneyIsTerminalRequest(request){var status=String(request&&request.status||'').toLowerCase().trim().replace(/[ -]+/g,'_');return ['rejected','declined','denied','cancelled','canceled','approved','active','completed'].indexOf(status)>=0}
 function kidsJourneyGetClient(){return typeof sb!=='undefined'&&sb&&sb.from&&sb.auth?sb:null;}
 var kidsJourneyClientReadyPromise=null;
 function kidsJourneyWaitForClient(){
@@ -15552,15 +15599,18 @@ async function kidsJourneyLoadContext(code){
   var trackResult=await client.from('mrfluent_kids_tracks').select('id,code,title,price_egp,duration_days,is_published').eq('code','KIDS_JOURNEY').eq('is_published',true).maybeSingle();
   if(trackResult.error)return {user:user,error:'Could not load the Kids subscription plan: '+trackResult.error.message};
   if(!trackResult.data)return {user:user,error:'The Kids Journey payment plan is not configured yet. Contact the academy.'};
-  var levelsResult=await client.from('mrfluent_kids_levels').select('id,track_id,code,title,sort_order,is_published').eq('track_id',trackResult.data.id).eq('is_published',true).order('sort_order',{ascending:true});
+  var now=new Date().toISOString();
+  var readResults=await Promise.all([
+    client.from('mrfluent_kids_levels').select('id,track_id,code,title,sort_order,is_published').eq('track_id',trackResult.data.id).eq('is_published',true).order('sort_order',{ascending:true}),
+    client.from('mrfluent_kids_subscriptions').select('id,track_id,level_id,status,starts_at,expires_at,price_egp').eq('user_id',user.id).eq('track_id',trackResult.data.id).eq('status','active').gt('expires_at',now).lte('starts_at',now).order('expires_at',{ascending:false}).limit(10),
+    client.from('mrfluent_kids_enrollment_requests').select('id,status,track_id,requested_level_id,admin_note,created_at,reviewed_at').eq('user_id',user.id).eq('track_id',trackResult.data.id).order('created_at',{ascending:false}).limit(20)
+  ]);
+  var levelsResult=readResults[0],subsResult=readResults[1],requestResult=readResults[2];
   if(levelsResult.error)return {user:user,track:trackResult.data,error:'Could not load the Kids levels: '+levelsResult.error.message};
   var levels=levelsResult.data||[];
   var level=levels.find(function(item){return item.code===String(code||'A1').toUpperCase();});
   if(!level)return {user:user,track:trackResult.data,levels:levels,error:'This Kids level is not available for subscription yet.'};
-  var now=new Date().toISOString();
-  var subsResult=await client.from('mrfluent_kids_subscriptions').select('id,track_id,level_id,status,starts_at,expires_at,price_egp').eq('user_id',user.id).eq('track_id',trackResult.data.id).eq('status','active').gt('expires_at',now).lte('starts_at',now).order('expires_at',{ascending:false}).limit(10);
   if(subsResult.error)return {user:user,track:trackResult.data,levels:levels,level:level,error:'Could not verify your Kids access: '+subsResult.error.message};
-  var requestResult=await client.from('mrfluent_kids_enrollment_requests').select('id,status,track_id,requested_level_id,admin_note,created_at,reviewed_at').eq('user_id',user.id).eq('track_id',trackResult.data.id).order('created_at',{ascending:false}).limit(20);
   if(requestResult.error)return {user:user,track:trackResult.data,levels:levels,level:level,subscriptions:subsResult.data||[],error:'Could not load your Kids payment request status: '+requestResult.error.message};
   var requests=requestResult.data||[];
   var pending=requests.find(function(r){return String(r.status).toLowerCase()==='pending';})||null;
@@ -15671,7 +15721,13 @@ async function kidsJourneyLoadPaymentState(code){
   var submit=root.querySelector('#mfkjSubmitPayment');
   var amount=root.querySelector('#mfkjPayAmount'),days=root.querySelector('#mfkjPayDays');
   if(ctx.track){if(amount)amount.textContent=String(ctx.track.price_egp==null?100:ctx.track.price_egp);if(days)days.textContent=String(ctx.track.duration_days||30);}
+  var currentUserId=(ctx&&ctx.user&&ctx.user.id)||(typeof sessionUser!=='undefined'&&sessionUser&&sessionUser.id)||null;
+  var hasLocalPending=kidsJourneyHasPendingMarker(currentUserId);
   if(ctx.error){
+    if(hasLocalPending){
+      kidsJourneyReturnHomeWithNotice('طلبك قيد المراجعة','تم حفظ طلبك بالفعل. تعذّر تحديث الحالة على الهاتف الآن، لذلك لن نطلب منك إيصالًا جديدًا.','is-warn',0);
+      return;
+    }
     kidsJourneyStatus(status,ctx.error+' You can reopen sign-in below, then retry the payment page.','is-error');
     kidsJourneyDisablePayment(true);
     kidsJourneyAuthActions(true);
@@ -15684,13 +15740,16 @@ async function kidsJourneyLoadPaymentState(code){
     return;
   }
   kidsJourneyAuthActions(false);
-  if(ctx.pending){
-    kidsJourneyReturnHomeWithNotice('طلبك قيد المراجعة','طلبك تم إرساله بالفعل، وهو الآن في انتظار مراجعة الإدارة. من فضلك انتظر الموافقة، ومش محتاج تبعت طلب جديد.','is-warn',3200);
+  if(ctx.pending||(!ctx.current&&hasLocalPending&&!(ctx.latest&&kidsJourneyIsTerminalRequest(ctx.latest)))){
+    try{window.localStorage.setItem(kidsJourneyPendingMarkerKey,String(currentUserId));}catch(_){}
+    kidsJourneyReturnHomeWithNotice('طلبك قيد المراجعة','طلبك تم إرساله بالفعل، وهو الآن في انتظار مراجعة الإدارة. من فضلك انتظر الموافقة، ومش محتاج تبعت طلب جديد.','is-warn',0);
     return;
   }
   if(ctx.current){
+    kidsJourneyClearPendingMarker(currentUserId);
     kidsJourneyStatus(status,'Your complete Kids course access is active until '+kidsJourneyDate(ctx.current.expires_at)+'. A successful renewal extends access to all six levels A1–C2 for '+String(ctx.track&&ctx.track.duration_days||30)+' days.','is-ok');
   }else if(ctx.latest&&String(ctx.latest.status).toLowerCase()==='rejected'){
+    kidsJourneyClearPendingMarker(currentUserId);
     kidsJourneyStatus(status,'Your earlier full-course request was not approved. Review the note, then you may submit a new receipt. '+(ctx.latest.admin_note||''),'is-warn');
   }else{
     kidsJourneyStatus(status,'This payment is for the complete Kids course. All six levels stay locked until the academy approves the receipt.','');
@@ -15797,9 +15856,20 @@ function kidsJourneyRenderEntryScreen(message,kind){
 }
 async function kidsJourneyHandlePreCourseRoute(routeName){
   var ctx;
-  try{ctx=await kidsJourneyLoadContext('A1');}
-  catch(error){ctx={error:error&&error.message||'Could not verify Kids access.'};}
+  var cachedContext=window.__mfKidsJourneyAccessContext||null;
+  var cachedAt=Number(window.__mfKidsJourneyAccessContextAt||0);
+  var activeMainUser=typeof sessionUser!=='undefined'&&sessionUser?String(sessionUser.id||''):'';
+  if(cachedContext&&cachedContext.user&&activeMainUser&&String(cachedContext.user.id)===activeMainUser&&Date.now()-cachedAt<8000)ctx=cachedContext;
+  else{
+    try{ctx=await kidsJourneyLoadContext('A1');}
+    catch(error){ctx={error:error&&error.message||'Could not verify Kids access.'};}
+  }
   if(ctx&&ctx.error){
+    var markerUser=(ctx&&ctx.user&&ctx.user.id)||(typeof sessionUser!=='undefined'&&sessionUser&&sessionUser.id)||null;
+    if(kidsJourneyHasPendingMarker(markerUser)){
+      kidsJourneyReturnHomeWithNotice('طلبك قيد المراجعة','تم حفظ طلبك بالفعل. التحقق من الحالة تأخر على الهاتف، لذلك لن نفتح نموذج دفع جديدًا.','is-warn',0);
+      return;
+    }
     kidsJourneyRenderEntryScreen(ctx.error+' Your course will stay locked until the account and subscription can be verified.','is-error');
     return;
   }
@@ -15809,17 +15879,22 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
     return;
   }
   window.__mfKidsJourneyAccessContext=ctx;
+  window.__mfKidsJourneyAccessContextAt=Date.now();
   if(ctx.current){
+    kidsJourneyClearPendingMarker(ctx.user&&ctx.user.id);
     if(routeName==='entry'){
       window.location.replace(url('hub'));return;
     }
     if(routeName==='hub'){window.__mfKidsJourneyAccessContext=ctx;renderHub();return;}
     if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;}
   }
-  if(ctx.pending){
-    kidsJourneyReturnHomeWithNotice('طلبك قيد المراجعة','طلب الاشتراك اتبعت بالفعل ولسه في انتظار مراجعة الإدارة. من فضلك انتظر الموافقة، مش محتاج تبعت طلب تاني. كورس الأطفال هيفتح لك بعد الموافقة على الإيصال.','is-warn',3200);
+  if(ctx.latest&&kidsJourneyIsTerminalRequest(ctx.latest))kidsJourneyClearPendingMarker(ctx.user&&ctx.user.id);
+  if(ctx.pending||(kidsJourneyHasPendingMarker(ctx.user&&ctx.user.id)&&!(ctx.latest&&kidsJourneyIsTerminalRequest(ctx.latest)))){
+    try{if(ctx.user&&ctx.user.id)window.localStorage.setItem(kidsJourneyPendingMarkerKey,String(ctx.user.id));}catch(_){}
+    kidsJourneyReturnHomeWithNotice('طلبك قيد المراجعة','طلب الاشتراك اتبعت بالفعل ولسه في انتظار مراجعة الإدارة. من فضلك انتظر الموافقة، مش محتاج تبعت طلب تاني. كورس الأطفال هيفتح لك بعد الموافقة على الإيصال.','is-warn',0);
     return;
   }
+  if(window.mfKidsNavigateInPlace&&window.mfKidsNavigateInPlace(kidsJourneySubscribeUrl('A1')))return;
   window.location.replace(kidsJourneySubscribeUrl('A1'));
 }
 async function kidsJourneyAfterAuth(){
@@ -15846,6 +15921,39 @@ async function kidsJourneyAfterAuth(){
 }
 window.__mfKidsEntryFlow=(route==='subscribe'||route==='entry'||route==='hub'||route==='younger'||route==='older'||journeyLevels.some(function(item){return item.route===route;}));
 window.__mfKidsAfterAuth=kidsJourneyAfterAuth;
+
+function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
+  var next=String(nextRoute||'hub').toLowerCase();
+  if(pushHistory&&href){try{window.history.pushState({mfKidsRoute:true},'',href)}catch(error){console.warn('Kids route history update failed.',error)}}
+  route=next;query=new URLSearchParams(window.location.search);
+  if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
+  else if(route==='entry'||route==='hub'||route==='younger'||route==='older'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
+  else{
+    var item=journeyLevels.find(function(level){return level.route===route;});
+    if(item){kidsJourneyBindAuthRefresh();kidsJourneyRenderLevelGate(item.code,function(){kidsJourneyRenderLevel(item.code);journeyRenderCurrent();});}
+    else if(route==='review')renderReview();
+    else if(route==='soon')renderSoon();
+    else renderHub();
+  }
+  try{window.scrollTo(0,0)}catch(_){}
+}
+window.mfKidsNavigateInPlace=function(destination){
+  var target;try{target=new URL(String(destination||''),window.location.href)}catch(_){return false}
+  if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return false;
+  kidsJourneyRenderRouteInPlace(target.searchParams.get('kids'),target.href,true);return true;
+};
+document.addEventListener('click',function(event){
+  if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  var link=event.target&&event.target.closest?event.target.closest('#mfKidsStandaloneRoot a[href]'):null;
+  if(!link||link.hasAttribute('download')||(link.target&&link.target!=='_self'))return;
+  var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
+  if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
+  event.preventDefault();window.mfKidsNavigateInPlace(target.href);
+});
+window.addEventListener('popstate',function(){
+  if(!document.body.classList.contains('mf-kids-route'))return;
+  kidsJourneyRenderRouteInPlace(new URLSearchParams(window.location.search).get('kids')||'hub',window.location.href,false);
+});
 
 if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
 else if(route==='entry'||route==='hub'||route==='younger'||route==='older'){
