@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v15">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v16">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v179', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v180', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v179', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v180', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -16696,6 +16696,70 @@ html body #modal.modal.show.doma-auth-photo .modalhead .close.auth-back{
     background:linear-gradient(145deg,rgba(74,18,39,.80),rgba(34,8,21,.91))!important;
     border-color:rgba(130,46,72,.34)!important;
     -webkit-backdrop-filter:blur(18px) saturate(112%)!important;backdrop-filter:blur(18px) saturate(112%)!important;
+  }
+}
+</style>
+
+
+<style id="doma-auth-icons-burgundy-v180">
+/* Login/signup visual refinements only: remove the book brand and use compact burgundy line icons. */
+html body #modal.modal.show.doma-auth-photo > .doma-auth-screen-brand{
+  display:none!important;visibility:hidden!important;
+}
+html body #modal.modal.show.doma-auth-photo{
+  position:fixed!important;inset:0!important;
+  width:100vw!important;max-width:none!important;
+  height:100vh!important;height:100dvh!important;min-height:100dvh!important;
+  margin:0!important;padding:12px 10px!important;box-sizing:border-box!important;
+  border:0!important;outline:0!important;border-radius:0!important;
+  background-color:#210812!important;
+  background-image:linear-gradient(145deg,#16060b 0%,#2a0915 43%,#220710 72%,#12050a 100%)!important;
+  background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;
+  background-attachment:scroll!important;box-shadow:none!important;filter:none!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 32px!important;width:32px!important;height:32px!important;min-width:32px!important;
+  border-radius:10px!important;
+  background:linear-gradient(145deg,rgba(110,35,59,.76),rgba(57,13,31,.92))!important;
+  border:1px solid rgba(150,57,85,.52)!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.2),inset 0 1px 0 rgba(202,110,139,.12)!important;
+  filter:none!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon svg{
+  display:block!important;width:17px!important;height:17px!important;overflow:visible!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon svg *,
+html body #modal.modal.show.doma-auth-photo .doma-auth-password-toggle svg *{
+  fill:none!important;stroke:#e8afc1!important;stroke-width:1.7!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-password-toggle{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:30px!important;height:30px!important;min-width:30px!important;flex:0 0 30px!important;
+  border-radius:9px!important;background:rgba(85,23,45,.54)!important;
+  border:1px solid rgba(150,57,85,.46)!important;color:#e8afc1!important;
+  box-shadow:inset 0 1px 0 rgba(202,110,139,.10)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-password-toggle svg{
+  width:17px!important;height:17px!important;
+}
+/* Explicitly keep the Confirm Password card and its lock icon in the same burgundy palette. */
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-confirm{
+  background:linear-gradient(145deg,rgba(98,27,51,.68),rgba(43,9,25,.84))!important;
+  border-color:rgba(145,51,80,.48)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.20),inset 0 1px 0 rgba(160,65,94,.10)!important;
+}
+html body #modal.modal.show.doma-auth-photo .doma-auth-field-confirm .doma-auth-field-icon{
+  background:linear-gradient(145deg,rgba(116,37,62,.82),rgba(59,13,32,.96))!important;
+  border-color:rgba(159,64,93,.58)!important;
+}
+@media(max-width:600px){
+  html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon{
+    width:30px!important;height:30px!important;min-width:30px!important;flex-basis:30px!important;border-radius:9px!important;
+  }
+  html body #modal.modal.show.doma-auth-photo .doma-auth-field-icon svg{
+    width:16px!important;height:16px!important;
   }
 }
 </style>
