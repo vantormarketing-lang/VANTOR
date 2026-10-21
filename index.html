@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v18">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v19">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v184', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v185', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v184', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v185', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2677,11 +2677,11 @@ function domaOpenPlayerPicker(){
   const current=String($('signupPlayer')?.value||'');
   const messiSelected=current==='Lionel Messi'?' is-selected':'';
   const ronaldoSelected=current==='Cristiano Ronaldo'?' is-selected':'';
-  const overlay=document.createElement('div');
+  const overlay=document.createElement('dialog');
   overlay.id='domaPlayerPickerOverlay';
-  overlay.setAttribute('role','presentation');
+  overlay.setAttribute('aria-label','Choose your favorite player');
   overlay.innerHTML=`
-    <section class="doma-player-picker-panel" role="dialog" aria-modal="true" aria-labelledby="domaPlayerPickerTitle">
+    <section class="doma-player-picker-panel" aria-labelledby="domaPlayerPickerTitle">
       <button class="doma-player-picker-close" type="button" aria-label="Close player selection" onclick="domaClosePlayerPicker()">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
@@ -2711,11 +2711,15 @@ function domaOpenPlayerPicker(){
   document.body.style.overflow='hidden';
   $('signupPlayerTrigger')?.setAttribute('aria-expanded','true');
   overlay.addEventListener('click',event=>{if(event.target===overlay)domaClosePlayerPicker()});
+  overlay.addEventListener('cancel',event=>{event.preventDefault();domaClosePlayerPicker()});
+  try { if (typeof overlay.showModal === 'function') overlay.showModal(); else overlay.setAttribute('open',''); }
+  catch (_) { overlay.setAttribute('open',''); }
   overlay.querySelector('.doma-player-choice')?.focus({preventScroll:true});
 }
 function domaClosePlayerPicker(){
   const overlay=document.getElementById('domaPlayerPickerOverlay');
   if(!overlay)return;
+  try { if (overlay.open && typeof overlay.close === 'function') overlay.close(); } catch (_) {}
   overlay.remove();
   document.body.style.overflow=domaPlayerPickerPreviousBodyOverflow;
   $('signupPlayerTrigger')?.setAttribute('aria-expanded','false');
@@ -13455,17 +13459,13 @@ body.mf-kids-route>#modal.show #modalBody{visibility:visible!important}
 </style>
 <script id="doma-kids-direct-account">
 (function(){
-  var params=new URLSearchParams(window.location.search);
-  if(params.get('auth')!=='signup')return;
-  function showSignup(){
-    if(typeof window.openAuth==='function'){window.openAuth('signup');return;}
-    if(typeof openAuth==='function'){openAuth('signup');return;}
-    setTimeout(showSignup,180);
-  }
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',function(){setTimeout(showSignup,220);},{once:true});
-  }else{
-    setTimeout(showSignup,220);
+  try {
+    var currentUrl = new URL(window.location.href);
+    if (currentUrl.searchParams.get('auth') !== 'signup') return;
+    currentUrl.searchParams.delete('auth');
+    window.history.replaceState(window.history.state, '', currentUrl.pathname + currentUrl.search + currentUrl.hash);
+  } catch (error) {
+    console.warn('Could not clean an account-only URL parameter.', error);
   }
 })();
 </script>
@@ -16203,6 +16203,28 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 }
 </style>
 
+
+<script id="doma-player-picker-click-repair-v185">
+(function(){
+  'use strict';
+  document.addEventListener('click', function(event){
+    var target = event.target;
+    var trigger = target && target.closest ? target.closest('#signupPlayerTrigger') : null;
+    if (!trigger) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    try {
+      if (typeof window.domaOpenPlayerPicker === 'function') window.domaOpenPlayerPicker();
+      else if (typeof domaOpenPlayerPicker === 'function') domaOpenPlayerPicker();
+      else if (typeof window.showToast === 'function') window.showToast('Player selection is loading. Please close and reopen Create Account.');
+    } catch (error) {
+      console.error('Favorite Player picker failed to open:', error);
+      if (typeof window.showToast === 'function') window.showToast('Could not open player selection. Please reopen Create Account.');
+    }
+  }, true);
+})();
+</script>
 </body>
 </html>
 
@@ -16941,10 +16963,13 @@ html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-fie
   position:fixed!important;inset:0!important;z-index:2147483647!important;
   display:flex!important;align-items:center!important;justify-content:center!important;
   width:100vw!important;height:100vh!important;height:100dvh!important;min-height:100dvh!important;
+  max-width:none!important;max-height:none!important;border:0!important;outline:0!important;
   margin:0!important;padding:16px!important;box-sizing:border-box!important;overflow-y:auto!important;overscroll-behavior:contain!important;
-  background:rgba(13,3,8,.91)!important;
+  background:rgba(13,3,8,.94)!important;color:#fff0f4!important;
   -webkit-backdrop-filter:blur(20px) saturate(72%)!important;backdrop-filter:blur(20px) saturate(72%)!important;
 }
+#domaPlayerPickerOverlay::backdrop{background:transparent!important}
+#domaPlayerPickerOverlay:not([open]){display:none!important}
 #domaPlayerPickerOverlay .doma-player-picker-panel{
   position:relative!important;width:min(460px,100%)!important;max-width:460px!important;max-height:calc(100dvh - 32px)!important;
   overflow-y:auto!important;overscroll-behavior:contain!important;box-sizing:border-box!important;
