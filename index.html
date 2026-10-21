@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v16">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v17">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v182', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v183', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v182', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v183', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2569,7 +2569,7 @@ function openAuth(type){
     <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientTeam" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d5aa85"/><stop offset="52%" stop-color="#9b4f4e"/><stop offset="100%" stop-color="#4c1729"/></linearGradient></defs><circle cx="12" cy="12" r="8.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7"/><circle cx="12" cy="9" r="2.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7"/><path d="M7.6 17.2c.8-2.2 2.2-3.3 4.4-3.3s3.6 1.1 4.4 3.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7" stroke-linecap="round"/></svg></span>
     <div class="doma-auth-field-content">
       <label id="signupPlayerLabel" for="signupPlayerTrigger">Favorite Player</label>
-      <button id="signupPlayerTrigger" class="doma-auth-player-trigger" type="button" aria-labelledby="signupPlayerLabel signupPlayerValue" aria-haspopup="dialog" aria-expanded="false" onclick="domaOpenPlayerPicker()">
+      <button id="signupPlayerTrigger" class="doma-auth-player-trigger" type="button" aria-labelledby="signupPlayerLabel signupPlayerValue" aria-haspopup="dialog" aria-expanded="false" >
         <span id="signupPlayerValue">Choose your favorite player...</span>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
@@ -2581,6 +2581,14 @@ function openAuth(type){
   <div class="doma-auth-switch full" style="color:#888;font-size:11px"><span>Already have an account?</span><button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth('login')">Log in</button></div>
 </div>`;
 
+    const playerTrigger = $('signupPlayerTrigger');
+    if (playerTrigger) {
+      playerTrigger.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        window.domaOpenPlayerPicker();
+      });
+    }
     $('modal').querySelector('.doma-auth-brand-footer')?.remove();
     $('modal').insertAdjacentHTML('beforeend', '<div id="domaAuthFloatingFooter" class="doma-auth-brand-footer"><a class="doma-auth-footer-brand" href="#home" onclick="closeModal()"><span class="doma-auth-footer-name">Mr. Fluent</span><small>LEARN • SPEAK • MASTER</small></a><div class="doma-auth-footer-contact"><a class="doma-auth-footer-phone" href="https://wa.me/201095439588" target="_blank" rel="noopener noreferrer" aria-label="Chat with Mr. Fluent on WhatsApp">01095439588</a><a class="doma-auth-whatsapp" href="https://wa.me/201095439588" target="_blank" rel="noopener noreferrer" aria-label="Chat with Mr. Fluent on WhatsApp"><svg viewBox="0 0 32 32" width="21" height="21" aria-hidden="true" focusable="false"><path d="M16 3.5a12.2 12.2 0 0 0-10.4 18.6L4 28l6.2-1.7A12.2 12.2 0 1 0 16 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11.1 9.5c-.3-.6-.6-.7-.9-.7h-.8c-.3 0-.7.2-1 .5-.4.4-1.4 1.4-1.4 3.4s1.4 4 1.7 4.3c.2.3 2.9 4.6 7.1 6.4 3.5 1.4 4.3 1.2 5.1 1.1.8-.1 2.5-1 2.8-2.1.4-1 .4-1.9.3-2.1-.1-.2-.5-.3-1.1-.6-.6-.3-2.5-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.6-.2.3-.5.3-1 .1-.6-.3-2.1-.8-3.8-2.4-1.4-1.2-2.3-2.7-2.6-3.2-.3-.5 0-.7.2-1 .2-.2.5-.6.7-.8.2-.3.3-.5.4-.8.1-.3 0-.6-.1-.8z" fill="currentColor"/></svg></a></div></div>');
   }
@@ -2711,6 +2719,8 @@ function domaClosePlayerPicker(){
   $('signupPlayerTrigger')?.setAttribute('aria-expanded','false');
   $('signupPlayerTrigger')?.focus({preventScroll:true});
 }
+window.domaOpenPlayerPicker = domaOpenPlayerPicker;
+window.domaClosePlayerPicker = domaClosePlayerPicker;
 function domaSelectFavoritePlayer(player,legacyTeam){
   if(!['Lionel Messi','Cristiano Ronaldo'].includes(player))return;
   const hidden=$('signupPlayer'),label=$('signupPlayerValue'),trigger=$('signupPlayerTrigger');
