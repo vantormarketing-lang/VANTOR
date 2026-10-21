@@ -15446,6 +15446,18 @@ function kidsJourneyStatus(element,message,kind){
   element.className='mfkj-pay-status'+(kind?' '+kind:'');
   element.textContent=String(message||'');
 }
+function kidsJourneyReturnHomeWithNotice(title,message,kind,delay){
+  var wait=Math.max(0,Number(delay)||0);
+  root.innerHTML=shell('MR. FLUENT KIDS',title||'Payment request status','حالة طلب الاشتراك','Your Kids course access is linked to your account.','<div class="mfkj-pay-gate"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> REQUEST STATUS</div><h2 data-mfkj-notice-title></h2><div data-mfkj-home-notice class="mfkj-pay-status" aria-live="polite"></div><p class="mfkj-pay-muted" style="margin-top:12px">You will return to the DOMA Academy homepage shortly.</p><div class="mfkr-back-row"><button type="button" class="mfkj-pay-submit" data-mfkj-return-home>Return to homepage</button></div></div>');
+  var titleNode=root.querySelector('[data-mfkj-notice-title]');
+  var statusNode=root.querySelector('[data-mfkj-home-notice]');
+  if(titleNode)titleNode.textContent=String(title||'Payment request status');
+  kidsJourneyStatus(statusNode,message,kind||'');
+  function goHome(){window.location.replace(window.location.pathname||'/');}
+  var back=root.querySelector('[data-mfkj-return-home]');
+  if(back)back.addEventListener('click',goHome);
+  if(wait)setTimeout(goHome,wait);
+}
 function kidsJourneyAuthActions(show){
   var host=root.querySelector('[data-mfj-pay-auth-actions]');
   if(host)host.style.display=show?'flex':'none';
@@ -15545,9 +15557,7 @@ async function kidsJourneyLoadPaymentState(code){
   }
   kidsJourneyAuthActions(false);
   if(ctx.pending){
-    var pendingLevel=ctx.levels.find(function(l){return l.id===ctx.pending.requested_level_id;});
-    kidsJourneyStatus(status,'Your full-course payment request for all six levels (A1–C2) is awaiting admin approval. You do not need to choose a level.','is-warn');
-    if(submit){submit.disabled=true;submit.textContent='Payment request pending review';}
+    kidsJourneyReturnHomeWithNotice('Request already submitted','You have already submitted a payment request for the complete Kids course. It is still awaiting admin review, so you do not need to submit it again.','is-warn',3200);
     return;
   }
   if(ctx.current){
@@ -15600,8 +15610,8 @@ async function kidsJourneySubmitPayment(code){
     if(created.error)throw created.error;
     if(!created.data)throw new Error('The request ID was not returned. Refresh this page to check request status before trying again.');
     uploadedPath=null;
-    kidsJourneyStatus(status,'Full-course payment request submitted. The admin can verify the receipt; all six levels A1–C2 will open together after approval.','is-ok');
-    await kidsJourneyLoadPaymentState(code);
+    kidsJourneyReturnHomeWithNotice('Request sent successfully','Your payment request has been sent successfully. The payment page is now closed. All six Kids levels A1–C2 will open automatically when the academy approves your request.','is-ok',3200);
+    return;
   }catch(error){
     if(uploadedPath){
       try{await client.storage.from('payment-proofs').remove([uploadedPath]);}catch(_){}
@@ -15672,7 +15682,7 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
     if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;}
   }
   if(ctx.pending){
-    window.location.replace(kidsJourneySubscribeUrl());
+    kidsJourneyReturnHomeWithNotice('Request already submitted','You have already sent a payment request for the Kids course. It is still waiting for admin approval. The payment form will not open again while this request is pending.','is-warn',3200);
     return;
   }
   window.location.replace(kidsJourneySubscribeUrl('A1'));
