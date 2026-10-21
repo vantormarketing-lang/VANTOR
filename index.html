@@ -13370,7 +13370,136 @@ body.mf-kids-route>#modal.show #modalBody{visibility:visible!important}
 'use strict';
 var query = new URLSearchParams(window.location.search);
 var route = (query.get('kids') || '').toLowerCase();
-if (!route) return;
+if (!route) {
+  var kidsHomePendingCheckBusy = false;
+  var kidsHomePendingMarkerKey = 'mfkj-kids-pending-request-user-v1';
+
+  function kidsHomeMarkerMatches(userId) {
+    if (!userId) return false;
+    try { return window.localStorage.getItem(kidsHomePendingMarkerKey) === String(userId); }
+    catch (_) { return false; }
+  }
+  function kidsHomeClearPendingMarker() {
+    try { window.localStorage.removeItem(kidsHomePendingMarkerKey); } catch (_) {}
+  }
+  function kidsHomeRememberPendingMarker(userId) {
+    if (!userId) return;
+    try { window.localStorage.setItem(kidsHomePendingMarkerKey, String(userId)); } catch (_) {}
+  }
+  function kidsHomeShowPendingOverlay() {
+    var existing = document.getElementById('mfkj-home-pending-overlay');
+    if (existing) return;
+    var style = document.getElementById('mfkj-home-pending-overlay-css');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'mfkj-home-pending-overlay-css';
+      style.textContent = [
+        '#mfkj-home-pending-overlay{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,3,8,.78);backdrop-filter:blur(11px);-webkit-backdrop-filter:blur(11px);animation:mfkjPendingFadeIn .18s ease-out}',
+        '#mfkj-home-pending-overlay .mfkj-home-pending-card{width:min(100%,520px);padding:clamp(24px,5vw,38px);text-align:center;color:#fff5f8;border:1px solid rgba(205,110,145,.48);border-radius:26px;background:linear-gradient(145deg,rgba(48,17,31,.99),rgba(13,9,15,.99));box-shadow:0 28px 80px rgba(0,0,0,.56),inset 0 1px 0 rgba(255,255,255,.06)}',
+        '#mfkj-home-pending-overlay .mfkj-home-pending-icon{width:66px;height:66px;display:grid;place-items:center;margin:0 auto 17px;border-radius:50%;border:1px solid rgba(222,141,167,.46);background:rgba(135,47,76,.27);color:#f4b5ca;font-size:30px;box-shadow:0 0 28px rgba(153,49,87,.22)}',
+        '#mfkj-home-pending-overlay .mfkj-home-pending-kicker{display:block;margin-bottom:8px;color:#dba4ba;font-size:10px;font-weight:900;letter-spacing:2px}',
+        '#mfkj-home-pending-overlay h2{margin:0 0 12px;font-size:clamp(22px,4vw,30px);line-height:1.35;color:#fff5f8}',
+        '#mfkj-home-pending-overlay p{margin:0 auto 24px;max-width:410px;color:#d9c8d0;font-size:14px;line-height:1.95}',
+        '#mfkj-home-pending-overlay .mfkj-home-pending-close{min-height:46px;min-width:150px;padding:11px 24px;border:1px solid #a54867;border-radius:12px;background:linear-gradient(135deg,#8f2d4a,#642039);color:#fff;font-size:13px;font-weight:900;box-shadow:0 8px 24px rgba(101,20,51,.28)}',
+        '#mfkj-home-pending-overlay .mfkj-home-pending-close:focus-visible{outline:2px solid #f4b5ca;outline-offset:4px}',
+        '@keyframes mfkjPendingFadeIn{from{opacity:0}to{opacity:1}}',
+        '@media(prefers-reduced-motion:reduce){#mfkj-home-pending-overlay{animation:none}}'
+      ].join('');
+      document.head.appendChild(style);
+    }
+    var previousFocus = document.activeElement;
+    var overlay = document.createElement('div');
+    overlay.id = 'mfkj-home-pending-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-labelledby', 'mfkj-home-pending-title');
+    overlay.setAttribute('dir', 'rtl');
+    overlay.innerHTML = '<div class="mfkj-home-pending-card"><div class="mfkj-home-pending-icon" aria-hidden="true">◷</div><span class="mfkj-home-pending-kicker">MR. FLUENT KIDS</span><h2 id="mfkj-home-pending-title">طلبك قيد المراجعة</h2><p>طلب الاشتراك اتبعت بالفعل ولسه في انتظار مراجعة الإدارة. من فضلك انتظر الموافقة، مش محتاج تبعت طلب تاني. كورس الأطفال هيفتح لك بعد الموافقة على الإيصال.</p><button type="button" class="mfkj-home-pending-close" data-mfkj-home-pending-close>حسنًا، فهمت</button></div>';
+    document.body.appendChild(overlay);
+    function dismiss() {
+      if (!overlay.parentNode) return;
+      overlay.remove();
+      kidsHomePendingCheckBusy = false;
+      document.removeEventListener('keydown', onKey);
+      if (previousFocus && typeof previousFocus.focus === 'function') {
+        try { previousFocus.focus({preventScroll:true}); } catch (_) {}
+      }
+    }
+    function onKey(event) { if (event.key === 'Escape') dismiss(); }
+    overlay.querySelector('[data-mfkj-home-pending-close]').addEventListener('click', dismiss);
+    overlay.addEventListener('click', function(event) { if (event.target === overlay) dismiss(); });
+    document.addEventListener('keydown', onKey);
+    try { overlay.querySelector('[data-mfkj-home-pending-close]').focus({preventScroll:true}); } catch (_) {}
+  }
+
+  document.addEventListener('click', function(event) {
+    var link = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+    if (!link) return;
+    var target;
+    try { target = new URL(link.href, window.location.href); } catch (_) { return; }
+    if (target.origin !== window.location.origin || String(target.searchParams.get('kids') || '').toLowerCase() !== 'entry') return;
+    event.preventDefault();
+    if (kidsHomePendingCheckBusy) return;
+    kidsHomePendingCheckBusy = true;
+    var destination = target.href;
+    var userIdForFallback = null;
+    var markerForFallback = false;
+    var navigated = false;
+    function continueToCourse() {
+      if (navigated) return;
+      navigated = true;
+      window.location.assign(destination);
+    }
+    function showPending() {
+      kidsHomeRememberPendingMarker(userIdForFallback);
+      kidsHomeShowPendingOverlay();
+    }
+    async function verifyRequestBeforeNavigation() {
+      try {
+        var client = (typeof sb !== 'undefined' && sb && sb.auth && sb.from) ? sb : null;
+        if (!client) { continueToCourse(); return; }
+        var sessionResult = await client.auth.getSession();
+        var user = sessionResult && sessionResult.data && sessionResult.data.session && sessionResult.data.session.user;
+        if (!user) { continueToCourse(); return; }
+        userIdForFallback = String(user.id || '');
+        markerForFallback = kidsHomeMarkerMatches(userIdForFallback);
+        var trackResult = await client.from('mrfluent_kids_tracks').select('id').eq('code', 'KIDS_JOURNEY').eq('is_published', true).maybeSingle();
+        if (trackResult.error || !trackResult.data) {
+          if (markerForFallback) { showPending(); return; }
+          continueToCourse(); return;
+        }
+        var now = new Date().toISOString();
+        var activeResult = await client.from('mrfluent_kids_subscriptions').select('id').eq('user_id', user.id).eq('track_id', trackResult.data.id).eq('status', 'active').gt('expires_at', now).lte('starts_at', now).limit(1);
+        if (activeResult.error) {
+          if (markerForFallback) { showPending(); return; }
+          continueToCourse(); return;
+        }
+        if (Array.isArray(activeResult.data) && activeResult.data.length) {
+          kidsHomeClearPendingMarker();
+          continueToCourse(); return;
+        }
+        var requestResult = await client.from('mrfluent_kids_enrollment_requests').select('id,status').eq('user_id', user.id).eq('track_id', trackResult.data.id).order('created_at', {ascending:false}).limit(20);
+        if (requestResult.error) {
+          if (markerForFallback) { showPending(); return; }
+          continueToCourse(); return;
+        }
+        var pendingStatuses = ['pending', 'pending_review', 'awaiting_review', 'awaiting_admin_review', 'submitted', 'under_review'];
+        var hasPending = (requestResult.data || []).some(function(request) {
+          var status = String(request && request.status || '').toLowerCase().trim().replace(/[ -]+/g, '_');
+          return pendingStatuses.indexOf(status) >= 0;
+        });
+        if (hasPending) { showPending(); return; }
+        kidsHomeClearPendingMarker();
+        continueToCourse();
+      } catch (error) {
+        if (markerForFallback) { showPending(); return; }
+        continueToCourse();
+      }
+    }
+    verifyRequestBeforeNavigation();
+  });
+  return;
+}
 document.body.classList.add('mf-kids-route');
 var root = document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
@@ -13768,7 +13897,7 @@ function journeyRenderMembershipStatus(){
     }else if(latest&&String(latest.status||'').toLowerCase()==='pending'){
       badge='<span class="mfkj-membership-pill is-pending">◷ Pending review</span>';
       description='<b>Full-course payment under review</b><small lang="ar">الاشتراك هيتفعّل لكل المستويات بعد مراجعة الأدمن.</small>';
-      action='<a class="mfkj-membership-action" href="'+kidsJourneySubscribeUrl()+'">View payment status <span>↗</span></a>';
+      action='<a class="mfkj-membership-action" href="'+url('entry')+'">طلبك قيد المراجعة · عرض الحالة <span>↗</span></a>';
       cardClass=' is-pending-card';
     }else if(latest&&String(latest.status||'').toLowerCase()==='rejected'){
       badge='<span class="mfkj-membership-pill is-locked">Needs attention</span>';
@@ -15491,7 +15620,7 @@ function kidsJourneyRenderGateMessage(code,ctx){
   if(ctx.pending){
     host.className='mfkj-pay-status is-warn';
     host.textContent='Your full-course payment request covering all six levels A1–C2 is awaiting admin review. You do not need to choose a level or submit another request.';
-    actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+kidsJourneySubscribeUrl()+'">View full-course payment status</a><a class="mfkr-btn" href="'+url('hub')+'">Back to course levels</a>';
+    actions.innerHTML='<a class="mfkr-btn mfkj-primary" href="'+url('entry')+'">طلبك قيد المراجعة · عرض الحالة</a><a class="mfkr-btn" href="'+url('hub')+'">العودة لمستويات الكورس</a>';
     return;
   }
   host.className='mfkj-pay-status';
@@ -15610,6 +15739,7 @@ async function kidsJourneySubmitPayment(code){
     if(created.error)throw created.error;
     if(!created.data)throw new Error('The request ID was not returned. Refresh this page to check request status before trying again.');
     uploadedPath=null;
+    try{window.localStorage.setItem('mfkj-kids-pending-request-user-v1',String(ctx.user.id));}catch(_){}
     kidsJourneyReturnHomeWithNotice('تم إرسال طلب الاشتراك بنجاح','تم استلام طلبك بنجاح، وصفحة الاشتراك اتقفلت. هتقدر تدخل كورس الأطفال مباشرة بعد موافقة الإدارة على الإيصال.','is-ok',3200);
     return;
   }catch(error){
@@ -15687,7 +15817,7 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
     if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;}
   }
   if(ctx.pending){
-    kidsJourneyReturnHomeWithNotice('Request already submitted','You have already sent a payment request for the Kids course. It is still waiting for admin approval. The payment form will not open again while this request is pending.','is-warn',3200);
+    kidsJourneyReturnHomeWithNotice('طلبك قيد المراجعة','طلب الاشتراك اتبعت بالفعل ولسه في انتظار مراجعة الإدارة. من فضلك انتظر الموافقة، مش محتاج تبعت طلب تاني. كورس الأطفال هيفتح لك بعد الموافقة على الإيصال.','is-warn',3200);
     return;
   }
   window.location.replace(kidsJourneySubscribeUrl('A1'));
