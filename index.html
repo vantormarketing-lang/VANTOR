@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v19">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v20">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v185', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v186', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v185', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v186', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2673,7 +2673,14 @@ function toggleSignupPassword(inputId,button){
 
 let domaPlayerPickerPreviousBodyOverflow='';
 function domaOpenPlayerPicker(){
-  if(document.getElementById('domaPlayerPickerOverlay'))return;
+  const existing=document.getElementById('domaPlayerPickerOverlay');
+  if(existing){
+    try{
+      if(typeof existing.showModal==='function'&&!existing.open)existing.showModal();
+      else if(!existing.hasAttribute('open'))existing.setAttribute('open','');
+    }catch(_){existing.setAttribute('open','');}
+    return;
+  }
   const current=String($('signupPlayer')?.value||'');
   const messiSelected=current==='Lionel Messi'?' is-selected':'';
   const ronaldoSelected=current==='Cristiano Ronaldo'?' is-selected':'';
@@ -13462,10 +13469,21 @@ body.mf-kids-route>#modal.show #modalBody{visibility:visible!important}
   try {
     var currentUrl = new URL(window.location.href);
     if (currentUrl.searchParams.get('auth') !== 'signup') return;
+
+    // Old account links sometimes carried the Kids route with them. Removing only
+    // "auth" left ?kids=subscribe active, which could immediately reopen signup.
     currentUrl.searchParams.delete('auth');
+    ['kids','level','english-course','english-level'].forEach(function(key){
+      currentUrl.searchParams.delete(key);
+    });
     window.history.replaceState(window.history.state, '', currentUrl.pathname + currentUrl.search + currentUrl.hash);
+
+    // If a cached build already opened the modal, make this legacy URL resolve to Home.
+    var accountModal=document.getElementById('modal');
+    if(accountModal)accountModal.classList.remove('show','doma-auth-photo','doma-auth-signup');
+    if(document.body)document.body.style.overflow='';
   } catch (error) {
-    console.warn('Could not clean an account-only URL parameter.', error);
+    console.warn('Could not clean a legacy account URL.', error);
   }
 })();
 </script>
@@ -16204,7 +16222,7 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 </style>
 
 
-<script id="doma-player-picker-click-repair-v185">
+<script id="doma-player-picker-click-repair-v186">
 (function(){
   'use strict';
   document.addEventListener('click', function(event){
