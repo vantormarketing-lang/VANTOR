@@ -1104,7 +1104,7 @@ const state={started:false,startPromise:null};
 
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>$('toast').classList.remove('show'),3000)}
 function openModal(title,body){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modal').classList.add('open')}
-function closeModal(){$('modal').classList.remove('open')}
+function closeModal(){const modal=$('modal');modal.classList.remove('open','mf-kids-receipt-modal')}
 function gradeName(id){return grades.find(g=>g.id===id)?.name||'—'}
 function gradeOptions(selected=''){return '<option value="">Select grade</option>'+grades.map(g=>`<option value="${g.id}" ${g.id===selected?'selected':''}>${esc(g.name)}</option>`).join('')}
 function unitOptions(gradeId='',selected=''){const list=units.filter(u=>!gradeId||u.grade_id===gradeId);return '<option value="">No unit</option>'+list.map(u=>`<option value="${u.id}" ${u.id===selected?'selected':''}>${esc(gradeName(u.grade_id))} — ${esc(u.unit_number+' · '+u.title)}</option>`).join('')}
@@ -2367,16 +2367,43 @@ async function mfRejectEnglishCourseRequest(id){
   async function viewReceipt(id){
     const r=requests.find(x=>x.id===id);
     if(!r||!r.proof_path){if(typeof toast==='function')toast('No Kids payment receipt is attached to this request.');return;}
-    const viewer=window.open('about:blank','_blank');
-    if(viewer){try{viewer.opener=null;}catch(_){}}
-    const signed=await db.storage.from('payment-proofs').createSignedUrl(r.proof_path,300);
-    if(signed.error){if(viewer&&!viewer.closed)viewer.close();if(typeof toast==='function')toast('Could not open Kids receipt: '+signed.error.message);return;}
-    const url=signed.data&&signed.data.signedUrl;
-    if(!url){if(viewer&&!viewer.closed)viewer.close();if(typeof toast==='function')toast('Supabase did not create a receipt link.');return;}
-    if(viewer&&!viewer.closed){viewer.location.href=url;return;}
-    const button=document.querySelector('[data-mf-kids-receipt="'+CSS.escape(id)+'"]');
-    if(button){const link=document.createElement('a');link.className='btn secondary small';link.href=url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Open receipt ↗';button.replaceWith(link);}
-    if(typeof toast==='function')toast('The receipt link is ready. Click Open receipt in the request row.');
+    if(!r.user_id||!String(r.proof_path).startsWith(String(r.user_id)+'/kids/')){
+      if(typeof toast==='function')toast('This receipt is linked to an unexpected storage path. Ask the student to resubmit the receipt.');
+      return;
+    }
+    try{
+      const signed=await db.storage.from('payment-proofs').createSignedUrl(r.proof_path,300);
+      if(signed.error)throw signed.error;
+      const signedUrl=signed.data&&signed.data.signedUrl;
+      if(!signedUrl)throw new Error('Supabase did not return a secure receipt link.');
+      const parsedUrl=new URL(signedUrl,window.location.href);
+      const storageOrigin=new URL(SB_URL,window.location.href).origin;
+      if(parsedUrl.origin!==storageOrigin)throw new Error('The receipt link points outside the academy storage host. The file was not opened.');
+      const ext=String(r.proof_path).split('.').pop().toLowerCase();
+      if(!['jpg','jpeg','png','webp','pdf'].includes(ext))throw new Error('This receipt has an unsupported file type: '+ext);
+      if(!document.getElementById('mfKidsReceiptModalStyle')){
+        const style=document.createElement('style');
+        style.id='mfKidsReceiptModalStyle';
+        style.textContent='#modal.mf-kids-receipt-modal .modal-card{width:min(1000px,94vw);max-width:1000px;max-height:92vh;overflow:auto}#modal.mf-kids-receipt-modal #modalBody{min-width:0}#modal.mf-kids-receipt-modal .mf-kids-receipt-preview{display:flex;align-items:center;justify-content:center;min-height:180px;max-height:72vh;overflow:auto;border:1px solid rgba(180,130,155,.2);border-radius:12px;background:#100b10;padding:8px}#modal.mf-kids-receipt-modal .mf-kids-receipt-image{display:block;max-width:100%;max-height:68vh;object-fit:contain;margin:auto}#modal.mf-kids-receipt-modal .mf-kids-receipt-pdf{display:block;width:100%;height:68vh;border:0;background:#1a151a;border-radius:8px}#modal.mf-kids-receipt-modal .mf-kids-receipt-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:12px}#modal.mf-kids-receipt-modal .mf-kids-receipt-status{margin:8px 0;color:#c8b5c1;font-size:12px;line-height:1.6}';
+        document.head.appendChild(style);
+      }
+      const safeUrl=escK(parsedUrl.href);
+      const preview=ext==='pdf'
+        ?'<iframe class="mf-kids-receipt-pdf" src="'+safeUrl+'#toolbar=1&navpanes=0" title="Kids course payment receipt PDF"></iframe>'
+        :'<div class="mf-kids-receipt-preview"><img id="mfKidsReceiptImage" class="mf-kids-receipt-image" src="'+safeUrl+'" alt="Kids course payment receipt" loading="eager"></div>';
+      openModal('Kids course payment receipt','<div class="mf-kids-receipt-status" id="mfKidsReceiptPreviewStatus">Secure receipt preview · This link expires in 5 minutes.</div>'+preview+'<div class="mf-kids-receipt-actions"><a class="btn secondary" href="'+safeUrl+'" target="_blank" rel="noopener noreferrer">Open original file ↗</a><button type="button" class="btn" id="mfKidsReceiptClose">Close</button></div>');
+      $('modal').classList.add('mf-kids-receipt-modal');
+      const closeButton=$('mfKidsReceiptClose');
+      if(closeButton)closeButton.addEventListener('click',closeModal);
+      const image=$('mfKidsReceiptImage'),status=$('mfKidsReceiptPreviewStatus');
+      if(image){
+        image.addEventListener('load',function(){if(status)status.textContent='Receipt loaded from the private academy storage.';});
+        image.addEventListener('error',function(){if(status)status.textContent='The stored file could not be displayed as an image. Use “Open original file” to inspect it; if it shows the wrong screen, the uploaded file itself may be incorrect.';});
+      }
+    }catch(error){
+      console.error('Kids receipt preview failed:',error);
+      if(typeof toast==='function')toast('Could not open the Kids receipt: '+(error&&error.message?error.message:String(error)));
+    }
   }
   async function approve(id){const r=requests.find(x=>x.id===id);if(!r||normK(r.status)!=='pending')return;if(!r.proof_path||!String(r.sender_phone||'').trim()){if(typeof toast==='function')toast('A sender number and uploaded receipt are required before approval.');return;}if(!contentReady[r.requested_level_id]){if(typeof toast==='function')toast('Publish at least one unit and lesson for this Kids level first.');return;}const p=profile(r.user_id),t=track(r.track_id),l=level(r.requested_level_id),days=Number(t.duration_days)||30;if(!confirm('Approve Kids access for '+(p.full_name||'this student')+' to '+(l.title||l.code||'the selected level')+' for '+days+' days? This does not change school-grade or A1–C2 English Course memberships.'))return;try{const fresh=await db.from('mrfluent_kids_enrollment_requests').select('id,status,user_id,track_id,requested_level_id').eq('id',id).maybeSingle();if(fresh.error)throw fresh.error;if(!fresh.data||normK(fresh.data.status)!=='pending')throw new Error('This request has already been reviewed. Refresh and check its status.');const result=await db.rpc('mrfluent_kids_approve_enrollment_request',{p_request_id:id,p_admin_note:'Approved by admin in Kids Course Subscriptions.'});if(result.error)throw result.error;const data=Array.isArray(result.data)?result.data[0]:result.data;if(!data||data.ok===false)throw new Error(data?.message||'The database did not confirm Kids course approval.');const verification=await db.from('mrfluent_kids_enrollment_requests').select('id,status,reviewed_at').eq('id',id).maybeSingle();if(verification.error)throw new Error('Approval ran, but request status could not be verified: '+verification.error.message);if(!verification.data||normK(verification.data.status)!=='approved')throw new Error('Supabase did not confirm this request as approved. Do not retry until refreshed.');const sub=await db.from('mrfluent_kids_subscriptions').select('id,status,expires_at').eq('user_id',fresh.data.user_id).eq('track_id',fresh.data.track_id).eq('status','active').gt('expires_at',new Date().toISOString()).order('expires_at',{ascending:false}).limit(1);if(sub.error)throw new Error('Request is approved, but membership verification failed: '+sub.error.message);if(!sub.data||!sub.data.length)throw new Error('Request is approved but no active Kids membership was found. Inspect the request before retrying.');if(typeof toast==='function')toast('Kids course approved; access until '+dateK(sub.data[0].expires_at)+'.');await load();}catch(e){console.error('Kids course approval failed:',e);if(typeof toast==='function')toast('Approval not fully verified: '+(e?.message||String(e)));await load();}}
   async function reject(id){const r=requests.find(x=>x.id===id);if(!r||normK(r.status)!=='pending')return;const note=prompt('Optional reason for rejecting this Kids course request:','Please contact the academy if you need help.');if(note===null)return;try{const auth=await db.auth.getUser();if(auth.error)throw auth.error;const uid=auth.data?.user?.id;if(!uid)throw new Error('Your staff session has expired. Sign in again.');const now=new Date().toISOString();const result=await db.from('mrfluent_kids_enrollment_requests').update({status:'rejected',admin_note:String(note||'').trim().slice(0,500)||'Rejected by admin.',reviewed_by:uid,reviewed_at:now,updated_at:now}).eq('id',id).eq('status','pending').select('id,status').maybeSingle();if(result.error)throw result.error;if(!result.data||normK(result.data.status)!=='rejected')throw new Error('Rejection was not confirmed in Supabase; refresh and check the request.');if(typeof toast==='function')toast('Kids course request rejected and saved.');await load();}catch(e){console.error('Kids course rejection failed:',e);if(typeof toast==='function')toast('Rejection not confirmed: '+(e?.message||String(e)));await load();}}
