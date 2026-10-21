@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v13">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v14">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v177', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v178', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v177', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v178', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -16533,5 +16533,87 @@ html body footer.footer .footgrid > .footer-link-card > h4::after {
 @media(max-width:600px){
   #modal.doma-auth-photo{padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))!important;background-size:100% 100%!important}
   #modal.doma-auth-photo .modalbox{width:100%!important;max-height:100%!important;padding:12px!important}
+}
+</style>
+
+
+<style id="doma-auth-burgundy-glass-v178">
+/* Auth-only burgundy glass theme. This modal class is set for login/signup, not the homepage. */
+#modal.doma-auth-photo{
+  background-color:#12070c!important;
+  background-image:
+    radial-gradient(ellipse at 14% 10%,rgba(119,27,58,.48) 0%,transparent 38%),
+    radial-gradient(ellipse at 88% 22%,rgba(92,28,57,.34) 0%,transparent 37%),
+    radial-gradient(ellipse at 52% 96%,rgba(77,20,43,.38) 0%,transparent 43%),
+    linear-gradient(140deg,#10070b 0%,#260b16 42%,#1a0811 73%,#0c070b 100%)!important;
+  background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;
+  background-attachment:scroll!important;
+}
+#modal.doma-auth-photo .modalbox{
+  background:linear-gradient(145deg,rgba(92,27,49,.43),rgba(35,10,22,.60))!important;
+  border:1px solid rgba(227,157,179,.23)!important;
+  border-radius:24px!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,226,236,.10),0 0 28px rgba(113,35,64,.12)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(130%)!important;
+  backdrop-filter:blur(22px) saturate(130%)!important;
+}
+#modal.doma-auth-photo .modalhead h3,
+#modal.doma-auth-photo #modalText,
+#modal.doma-auth-photo .modalbox>p{
+  color:#fff3f7!important;text-shadow:0 2px 10px rgba(0,0,0,.32)!important;
+}
+/* Create Account field cards */
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field{
+  background:linear-gradient(145deg,rgba(104,31,55,.43),rgba(40,12,25,.56))!important;
+  border:1px solid rgba(220,143,169,.27)!important;
+  box-shadow:0 9px 24px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,232,240,.09)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(125%)!important;
+  backdrop-filter:blur(16px) saturate(125%)!important;
+}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field:focus-within{
+  background:linear-gradient(145deg,rgba(127,39,69,.53),rgba(53,16,34,.66))!important;
+  border-color:rgba(244,172,197,.58)!important;
+  box-shadow:0 0 0 2px rgba(232,143,174,.08),0 0 22px rgba(117,31,64,.18),inset 0 1px 0 rgba(255,232,240,.12)!important;
+}
+/* Log in field cards */
+#modal.doma-auth-photo .formgrid .field,
+#modal.doma-auth-photo .formgrid input,
+#modal.doma-auth-photo .formgrid select{
+  color:#fff5f8!important;
+  background:linear-gradient(145deg,rgba(104,31,55,.43),rgba(40,12,25,.56))!important;
+  border:1px solid rgba(220,143,169,.28)!important;
+  border-radius:14px!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,232,240,.07)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(125%)!important;
+  backdrop-filter:blur(16px) saturate(125%)!important;
+}
+#modal.doma-auth-photo .formgrid .field:focus,
+#modal.doma-auth-photo .formgrid input:focus,
+#modal.doma-auth-photo .formgrid select:focus{
+  outline:none!important;border-color:rgba(244,172,197,.62)!important;
+  background:linear-gradient(145deg,rgba(127,39,69,.52),rgba(53,16,34,.66))!important;
+  box-shadow:0 0 0 3px rgba(232,143,174,.09),0 0 20px rgba(117,31,64,.18)!important;
+}
+#modal.doma-auth-photo .formgrid input::placeholder,
+#modal.doma-auth-photo .doma-auth-field-content input::placeholder{
+  color:rgba(255,231,239,.72)!important;opacity:1!important;
+}
+#modal.doma-auth-photo .formgrid select option{color:#fff5f8!important;background:#241019!important}
+#modal.doma-auth-photo #authStatus{color:#ffd0df!important;text-shadow:none!important}
+#modal.doma-auth-photo .doma-auth-note,
+#modal.doma-auth-photo .doma-auth-switch{color:#f0dce3!important;text-shadow:none!important}
+#modal.doma-auth-photo .close,
+#modal.doma-auth-photo .modalhead .close.auth-back{
+  color:#fff4f8!important;
+  background:linear-gradient(145deg,rgba(121,37,66,.46),rgba(53,14,32,.54))!important;
+  border:1px solid rgba(230,153,178,.34)!important;
+  box-shadow:0 7px 20px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,230,238,.10)!important;
+}
+@media(max-width:600px){
+  #modal.doma-auth-photo .modalbox{
+    background:linear-gradient(145deg,rgba(92,27,49,.48),rgba(35,10,22,.64))!important;
+    -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+    backdrop-filter:blur(18px) saturate(125%)!important;
+  }
 }
 </style>
