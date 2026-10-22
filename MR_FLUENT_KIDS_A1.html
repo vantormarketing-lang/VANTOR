@@ -117,6 +117,51 @@ button{font:inherit}
 @media(max-width:680px){.picture-quiz-section{margin-top:24px;padding:15px;border-radius:21px}.picture-quiz-head{gap:8px;flex-wrap:wrap}.picture-quiz-title{font-size:23px}.picture-quiz-subtitle{font-size:11px}.picture-quiz-pill{font-size:9px;padding:7px 9px}.picture-quiz-stage{grid-template-columns:minmax(0,1fr);gap:11px}.picture-quiz-art-wrap{min-height:210px;padding:13px}.picture-quiz-art{min-height:160px;max-width:250px}.picture-quiz-art svg{max-height:175px}.picture-quiz-challenge{padding:14px}.picture-quiz-challenge h3{font-size:17px}.picture-quiz-option{min-height:48px;font-size:13px}.picture-quiz-controls{align-items:stretch}.picture-quiz-controls .btn{flex:1}.picture-quiz-helper{width:100%;text-align:center}}
 @media(prefers-reduced-motion:reduce){.picture-quiz-track span,.picture-quiz-option{transition:none!important}}
 
+
+/* Listen & Choose: listen-first picture selection. Choice labels stay hidden until answered. */
+.listen-quiz-section{position:relative;isolation:isolate;overflow:hidden;margin:24px auto 0;padding:clamp(16px,3vw,28px);max-width:1000px;border:1px solid rgba(145,240,219,.24);border-radius:27px;background:linear-gradient(145deg,rgba(20,93,83,.12),rgba(255,255,255,.025));box-shadow:0 24px 65px rgba(0,0,0,.23);backdrop-filter:blur(20px)}
+.listen-quiz-section:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse at 10% 0%,rgba(145,240,219,.1),transparent 36%),radial-gradient(ellipse at 100% 90%,rgba(189,145,255,.09),transparent 36%);pointer-events:none}
+.listen-quiz-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:17px}
+.listen-quiz-title{margin:9px 0 6px;font-size:clamp(21px,3.5vw,30px);letter-spacing:-.7px;color:#f1fff9}
+.listen-quiz-subtitle{margin:0;color:var(--muted);font:700 12px/1.8 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+.listen-quiz-pill{display:inline-flex;align-items:center;gap:7px;flex:none;padding:8px 11px;border:1px solid rgba(145,240,219,.24);border-radius:99px;background:rgba(145,240,219,.055);color:#ccfff0;font-size:10px;font-weight:900;white-space:nowrap}
+.listen-quiz-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;color:#c1ddd3;font-size:10px;font-weight:850}
+.listen-quiz-track{height:7px;overflow:hidden;margin-bottom:18px;border-radius:99px;background:rgba(255,255,255,.08)}
+.listen-quiz-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#91f0db,#9b77ec,#ff9dce);transition:width .25s ease}
+.listen-quiz-prompt{display:flex;align-items:center;justify-content:center;gap:13px;flex-wrap:wrap;margin:0 auto 18px;padding:17px;border:1px solid rgba(145,240,219,.19);border-radius:20px;background:linear-gradient(120deg,rgba(35,124,105,.13),rgba(133,93,178,.1));text-align:center}
+.listen-quiz-prompt-copy{min-width:140px}
+.listen-quiz-prompt-copy strong{display:block;margin:0 0 4px;color:#f0fff9;font-size:16px}
+.listen-quiz-prompt-copy span{display:block;color:#b8d8cd;font:700 11px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl}
+.listen-quiz-play{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:11px 17px;border:1px solid rgba(145,240,219,.48);border-radius:14px;background:linear-gradient(130deg,rgba(36,143,117,.32),rgba(83,80,153,.28));color:#eafff7;font-size:12px;font-weight:950;box-shadow:0 8px 20px rgba(2,30,23,.18);cursor:pointer}
+.listen-quiz-play:hover{border-color:rgba(177,255,232,.78);filter:brightness(1.08)}
+.listen-quiz-play:focus-visible{outline:2px solid #baffec;outline-offset:3px}
+.listen-quiz-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.listen-quiz-option{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:170px;padding:12px;border:1px solid rgba(205,164,255,.19);border-radius:19px;background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));color:#fff6ff;cursor:pointer;transition:transform .16s,border-color .16s,background .16s,box-shadow .16s}
+.listen-quiz-option:hover:not(:disabled){transform:translateY(-2px);border-color:rgba(145,240,219,.5);background:linear-gradient(145deg,rgba(145,240,219,.09),rgba(189,145,255,.07))}
+.listen-quiz-option:focus-visible{outline:2px solid #baffec;outline-offset:3px}
+.listen-quiz-option:disabled{cursor:default;opacity:.91}
+.listen-quiz-picture{display:grid;place-items:center;width:100%;min-height:112px;max-width:190px;border:1px solid rgba(221,193,255,.2);border-radius:14px;background:linear-gradient(145deg,#fff8f1,#f1e7ff 55%,#e7f9f4);overflow:hidden}
+.listen-quiz-picture svg{display:block;width:100%;max-width:168px;height:auto;max-height:120px;filter:drop-shadow(0 4px 4px rgba(57,36,72,.1))}
+.listen-quiz-letter{position:absolute;top:9px;left:9px;display:grid;place-items:center;width:26px;height:26px;border:1px solid rgba(205,164,255,.2);border-radius:8px;background:rgba(24,13,32,.76);color:#e6d6ff;font-size:10px;font-weight:950}
+.listen-quiz-option.is-correct{border-color:rgba(145,240,219,.75);background:linear-gradient(145deg,rgba(29,135,105,.23),rgba(145,240,219,.08));box-shadow:0 0 0 2px rgba(145,240,219,.07)}
+.listen-quiz-option.is-correct .listen-quiz-letter{border-color:rgba(145,240,219,.55);background:rgba(54,173,142,.24);color:#adffeb}
+.listen-quiz-option.is-wrong{border-color:rgba(255,145,173,.58);background:rgba(160,52,89,.2)}
+.listen-quiz-reveal{display:none;width:100%;color:#caffed;font-size:12px;font-weight:900;line-height:1.6}
+.listen-quiz-option.is-correct .listen-quiz-reveal{display:block}
+.listen-quiz-feedback{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-height:47px;margin-top:14px;padding:12px 14px;border:1px solid rgba(145,240,219,.16);border-radius:14px;background:rgba(255,255,255,.03);color:#d7ede4;font:700 11px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl}
+.listen-quiz-feedback strong{color:#b7ffeb}
+.listen-quiz-next{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:43px;padding:10px 16px;border:1px solid rgba(145,240,219,.35);border-radius:13px;background:linear-gradient(120deg,rgba(35,124,105,.23),rgba(103,72,138,.25));color:#eafff7;font-size:12px;font-weight:900;cursor:pointer}
+.listen-quiz-next:disabled{opacity:.4;cursor:not-allowed}
+.listen-quiz-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px}
+.listen-quiz-helper{color:#9ebdb2;font:600 10px/1.6 Tahoma,"Segoe UI",sans-serif;direction:rtl}
+.listen-quiz-results{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;padding:28px 18px;text-align:center;border:1px solid rgba(145,240,219,.17);border-radius:21px;background:radial-gradient(ellipse at 50% 0%,rgba(145,240,219,.12),transparent 60%),rgba(255,255,255,.025)}
+.listen-quiz-results-icon{display:grid;place-items:center;width:74px;height:74px;margin-bottom:14px;border:1px solid rgba(145,240,219,.27);border-radius:25px;background:linear-gradient(145deg,rgba(43,173,137,.22),rgba(135,99,178,.15));font-size:35px}
+.listen-quiz-results h3{margin:6px 0;color:#f1fff9;font-size:27px}
+.listen-quiz-results p{max-width:460px;margin:5px 0 16px;color:#bed6cc;font:700 12px/1.8 Tahoma,"Segoe UI",sans-serif;direction:rtl}
+@media(max-width:680px){.listen-quiz-section{margin-top:19px;padding:14px;border-radius:21px}.listen-quiz-head{gap:8px;flex-wrap:wrap}.listen-quiz-title{font-size:23px}.listen-quiz-subtitle{font-size:11px}.listen-quiz-pill{font-size:9px;padding:7px 9px}.listen-quiz-prompt{gap:10px;padding:13px}.listen-quiz-prompt-copy{min-width:100px}.listen-quiz-prompt-copy strong{font-size:14px}.listen-quiz-options{gap:7px}.listen-quiz-option{min-height:130px;padding:8px;border-radius:15px}.listen-quiz-picture{min-height:80px;border-radius:11px}.listen-quiz-picture svg{max-height:86px}.listen-quiz-letter{top:6px;left:6px;width:22px;height:22px;font-size:9px}.listen-quiz-reveal{font-size:10px}.listen-quiz-controls{align-items:stretch}.listen-quiz-next{width:100%}.listen-quiz-helper{width:100%;text-align:center}}
+@media(max-width:360px){.listen-quiz-options{gap:5px}.listen-quiz-option{padding:5px;min-height:112px}.listen-quiz-picture{min-height:68px}.listen-quiz-picture svg{max-height:72px}}
+@media(prefers-reduced-motion:reduce){.listen-quiz-track span,.listen-quiz-option{transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -146,6 +191,29 @@ button{font:inherit}
     <span id="pictureQuizHelper" class="picture-quiz-helper">كل مرة تجاوب صح، هتشوف الترجمة وتقدر تسمع النطق.</span>
     <button id="pictureQuizNext" class="btn primary" type="button" disabled>Next question →</button>
   </div>
+</section>
+
+<section id="listenQuiz" class="listen-quiz-section" aria-labelledby="listenQuizTitle">
+ <div class="listen-quiz-head">
+  <div>
+   <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> LISTEN &amp; CHOOSE</div>
+   <h2 id="listenQuizTitle" class="listen-quiz-title">Listen. Look. Choose!</h2>
+   <p class="listen-quiz-subtitle" lang="ar" dir="rtl">اسمع الكلمة بالإنجليزي، وبعد كده اختار الصورة الصح من غير ما تشوف اسمها مكتوب.</p>
+  </div>
+  <div class="listen-quiz-pill"><span aria-hidden="true">🎧</span><span>10 listening questions</span></div>
+ </div>
+ <div class="listen-quiz-meta"><span id="listenQuizCounter">Question 1 of 10</span><span id="listenQuizScore">⭐ 0 correct</span></div>
+ <div class="listen-quiz-track" role="progressbar" aria-label="Listening quiz progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="listenQuizProgress"></span></div>
+ <div class="listen-quiz-prompt">
+  <div class="listen-quiz-prompt-copy"><strong>What can you hear?</strong><span lang="ar" dir="rtl">اضغط على زر الصوت واسمع كويس.</span></div>
+  <button id="listenQuizPlay" class="listen-quiz-play" type="button"><span aria-hidden="true">🔊</span><span>Play the word</span></button>
+ </div>
+ <div id="listenQuizStage" class="listen-quiz-options" aria-label="Choose the picture you hear"></div>
+ <div id="listenQuizFeedback" class="listen-quiz-feedback" role="status" aria-live="polite">اسمع الكلمة، وبعدين اختار واحدة من الصور التلاتة.</div>
+ <div class="listen-quiz-controls">
+  <span id="listenQuizHelper" class="listen-quiz-helper">تقدر تعيد تشغيل الكلمة قبل ما تختار.</span>
+  <button id="listenQuizNext" class="listen-quiz-next" type="button" disabled>Next question →</button>
+ </div>
 </section>
 
 <div class="back-row alphabet-back"><a class="btn" href="./MR_FLUENT_KIDS_YOUNGER.html">← Back to levels</a><a class="btn" href="./MR_FLUENT_KIDS_HUB.html">All paths</a><a class="btn" href="./index.html">DOMA Academy</a></div></div></main>
@@ -288,6 +356,129 @@ pictureQuizNext.addEventListener('click',()=>{
  pictureQuizRenderQuestion();
 });
 pictureQuizStart();
+
+
+/* Listen & Choose: the prompt is spoken; picture names remain visually hidden until correct. */
+let listenQuizDeck=[];
+let listenQuizIndex=0;
+let listenQuizCorrect=0;
+let listenQuizResolved=false;
+let listenQuizSpeakingTimer=null;
+const listenQuizStage=document.getElementById('listenQuizStage');
+const listenQuizCounter=document.getElementById('listenQuizCounter');
+const listenQuizScore=document.getElementById('listenQuizScore');
+const listenQuizProgress=document.getElementById('listenQuizProgress');
+const listenQuizProgressBar=listenQuizProgress&&listenQuizProgress.parentElement;
+const listenQuizFeedback=document.getElementById('listenQuizFeedback');
+const listenQuizNext=document.getElementById('listenQuizNext');
+const listenQuizPlay=document.getElementById('listenQuizPlay');
+const listenQuizHelper=document.getElementById('listenQuizHelper');
+function listenQuizSpeak(word){
+ if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){
+  listenQuizFeedback.textContent='متصفحك مش بيدعم تشغيل النطق التلقائي. تقدر تكمّل بس جرّب Chrome أو Edge محدث عشان تسمع الكلمات.';
+  return;
+ }
+ try{
+  window.speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(word);
+  utterance.lang='en-US';utterance.rate=.76;utterance.pitch=1.02;
+  utterance.onerror=()=>{listenQuizFeedback.textContent='الصوت وقف قبل ما يكتمل. اضغط Play the word وجرب تاني.';};
+  window.speechSynthesis.speak(utterance);
+ }catch(_){
+  listenQuizFeedback.textContent='تعذّر تشغيل النطق. اضغط Play the word وجرب تاني.';
+ }
+}
+function listenQuizShuffle(items){
+ const out=items.slice();
+ for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}
+ return out;
+}
+function listenQuizRenderQuestion(){
+ listenQuizResolved=false;
+ listenQuizNext.disabled=true;
+ listenQuizNext.hidden=false;
+ listenQuizNext.textContent=listenQuizIndex===listenQuizDeck.length-1?'See my score →':'Next question →';
+ listenQuizPlay.disabled=false;
+ const current=listenQuizDeck[listenQuizIndex];
+ const choices=listenQuizShuffle([current,...listenQuizShuffle(pictureQuizItems.filter(item=>item.id!==current.id)).slice(0,2)]);
+ listenQuizCounter.textContent='Question '+(listenQuizIndex+1)+' of '+listenQuizDeck.length;
+ listenQuizScore.textContent='⭐ '+listenQuizCorrect+' correct';
+ listenQuizProgress.style.width=(listenQuizIndex/listenQuizDeck.length*100)+'%';
+ if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(listenQuizIndex));
+ listenQuizFeedback.textContent='اسمع الكلمة، وبعدين اختار واحدة من الصور التلاتة.';
+ listenQuizHelper.textContent='تقدر تعيد تشغيل الكلمة قبل ما تختار.';
+ listenQuizStage.innerHTML=choices.map((item,index)=>`
+  <button class="listen-quiz-option" type="button" data-listen-answer="${item.id}" aria-label="Picture option ${String.fromCharCode(65+index)}: ${item.word}">
+   <span class="listen-quiz-letter">${String.fromCharCode(65+index)}</span>
+   <span class="listen-quiz-picture" role="img" aria-label="Picture choice ${index+1}">${item.art}</span>
+   <span class="listen-quiz-reveal">${item.word}<br><span lang="ar" dir="rtl">${item.meaning}</span></span>
+  </button>`).join('');
+}
+function listenQuizShowResults(){
+ listenQuizCounter.textContent='Activity complete';
+ listenQuizScore.textContent='⭐ '+listenQuizCorrect+' / '+listenQuizDeck.length;
+ listenQuizProgress.style.width='100%';
+ if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(listenQuizDeck.length));
+ const ratio=listenQuizCorrect/listenQuizDeck.length;
+ const title=ratio>=.8?'Super listening!':ratio>=.5?'Nice listening!':'Keep listening!';
+ const icon=ratio>=.8?'🏆':ratio>=.5?'🎧':'🌱';
+ const message=ratio>=.8?'ممتاز! ودنك بدأت تميّز الكلمات الإنجليزية من صوتها.':ratio>=.5?'شاطر! اسمع الكلمات تاني عشان تميّزها أسرع.':'بداية كويسة! اسمع الكلمات بهدوء وجرّب مرة تانية.';
+ listenQuizStage.innerHTML=`<div class="listen-quiz-results"><div class="listen-quiz-results-icon" aria-hidden="true">${icon}</div><div class="eyebrow">LISTENING PRACTICE COMPLETE</div><h3>${title}</h3><h3>${listenQuizCorrect} / ${listenQuizDeck.length}</h3><p lang="ar" dir="rtl">${message}</p><button id="listenQuizRestart" class="btn primary" type="button">↻ Play again</button></div>`;
+ listenQuizFeedback.textContent='خلصت نشاط الاستماع! أعد اللعب لو حابب تتدرّب على كلمات أكتر.';
+ listenQuizHelper.textContent='كل محاولة بتغيّر ترتيب الكلمات والصور.';
+ listenQuizPlay.hidden=true;
+ listenQuizNext.hidden=true;
+ document.getElementById('listenQuizRestart').addEventListener('click',listenQuizStart);
+}
+function listenQuizStart(){
+ if('speechSynthesis' in window)window.speechSynthesis.cancel();
+ listenQuizDeck=listenQuizShuffle(pictureQuizItems).slice(0,10);
+ listenQuizIndex=0;
+ listenQuizCorrect=0;
+ listenQuizPlay.hidden=false;
+ listenQuizNext.hidden=false;
+ listenQuizRenderQuestion();
+}
+listenQuizPlay.addEventListener('click',()=>{
+ const current=listenQuizDeck[listenQuizIndex];
+ listenQuizSpeak(current.word);
+ listenQuizFeedback.textContent='استمع كويس للصوت، وبعدها اختار الصورة اللي سمعت اسمها.';
+ listenQuizHelper.textContent='تقدر تضغط على زر الصوت أكتر من مرة.';
+});
+listenQuizStage.addEventListener('click',event=>{
+ const button=event.target.closest('button[data-listen-answer]');
+ if(!button||listenQuizResolved||button.disabled)return;
+ const current=listenQuizDeck[listenQuizIndex];
+ if(button.dataset.listenAnswer!==current.id){
+  button.classList.add('is-wrong');
+  button.disabled=true;
+  listenQuizFeedback.textContent='مش دي الكلمة اللي سمعتها. اسمعها تاني وجرب صورة تانية.';
+  listenQuizHelper.textContent='ولا يهمك، تقدر تختار من الصور المتبقية.';
+  return;
+ }
+ listenQuizResolved=true;
+ listenQuizCorrect++;
+ listenQuizStage.querySelectorAll('button[data-listen-answer]').forEach(option=>{
+  option.disabled=true;
+  if(option.dataset.listenAnswer===current.id)option.classList.add('is-correct');
+ });
+ listenQuizCounter.textContent='Question '+(listenQuizIndex+1)+' of '+listenQuizDeck.length;
+ listenQuizScore.textContent='⭐ '+listenQuizCorrect+' correct';
+ listenQuizProgress.style.width=((listenQuizIndex+1)/listenQuizDeck.length*100)+'%';
+ if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(listenQuizIndex+1));
+ listenQuizFeedback.innerHTML=`<strong>Correct! ${current.word} = ${current.meaning}</strong><button id="listenQuizHearAgain" class="picture-quiz-hear" type="button">🔊 Hear again</button>`;
+ document.getElementById('listenQuizHearAgain').addEventListener('click',()=>listenQuizSpeak(current.word));
+ listenQuizHelper.textContent='إجابة صح! اضغط Next عشان تسمع كلمة جديدة.';
+ listenQuizPlay.disabled=true;
+ listenQuizNext.disabled=false;
+});
+listenQuizNext.addEventListener('click',()=>{
+ if(!listenQuizResolved)return;
+ listenQuizIndex++;
+ if(listenQuizIndex>=listenQuizDeck.length){listenQuizShowResults();return;}
+ listenQuizRenderQuestion();
+});
+listenQuizStart();
 
 </script>
 </body>
