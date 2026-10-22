@@ -2598,12 +2598,16 @@ function openAuth(type){
   <div class="doma-auth-switch full" style="color:#888;font-size:11px"><span>Already have an account?</span><button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth('login')">Log in</button></div>
 </div>`;
 
-    const playerTrigger = $('signupPlayerTrigger');
-    if (playerTrigger) {
-      playerTrigger.addEventListener('click', function(event) {
+    const playerField = $('modal').querySelector('.doma-auth-field-team');
+    if (playerField) {
+      playerField.addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
-        window.domaOpenPlayerPicker();
+        if (typeof window.domaOpenPlayerPicker === 'function') {
+          window.domaOpenPlayerPicker();
+        } else {
+          console.error('Favorite player picker is not initialized.');
+        }
       });
     }
     $('modal').querySelector('.doma-auth-brand-footer')?.remove();
@@ -2687,83 +2691,6 @@ function toggleSignupPassword(inputId,button){
   const reveal=input.type==='password';input.type=reveal?'text':'password';
   if(button){button.setAttribute('aria-label',reveal?'Hide password':'Show password');button.classList.toggle('is-visible',reveal)}
 }
-
-let domaPlayerPickerPreviousBodyOverflow='';
-function domaOpenPlayerPicker(){
-  const existing=document.getElementById('domaPlayerPickerOverlay');
-  if(existing){
-    try{
-      if(typeof existing.showModal==='function'&&!existing.open)existing.showModal();
-      else if(!existing.hasAttribute('open'))existing.setAttribute('open','');
-    }catch(_){existing.setAttribute('open','');}
-    return;
-  }
-  const current=String($('signupPlayer')?.value||'');
-  const messiSelected=current==='Lionel Messi'?' is-selected':'';
-  const ronaldoSelected=current==='Cristiano Ronaldo'?' is-selected':'';
-  const overlay=document.createElement('dialog');
-  overlay.id='domaPlayerPickerOverlay';
-  overlay.setAttribute('aria-label','Choose your favorite player');
-  overlay.innerHTML=`
-    <section class="doma-player-picker-panel" aria-labelledby="domaPlayerPickerTitle">
-      <button class="doma-player-picker-close" type="button" aria-label="Close player selection" onclick="domaClosePlayerPicker()">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
-      <div class="doma-player-picker-eyebrow">YOUR FOOTBALL PICK</div>
-      <h2 id="domaPlayerPickerTitle">Choose Your Favorite Player</h2>
-      <p class="doma-player-picker-subtitle">Pick one player to personalize your account.</p>
-      <div class="doma-player-choice-grid">
-        <button class="doma-player-choice messi-choice${messiSelected}" type="button" onclick="domaSelectFavoritePlayer('Lionel Messi','Barcelona')">
-          <span class="doma-player-photo messi-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Lionel_Messi_close-up.jpg" alt="Lionel Messi" loading="eager" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('is-fallback');this.remove()"></span>
-          <span class="doma-player-choice-name">Lionel Messi</span>
-          <span class="doma-player-choice-meta">ARGENTINA</span>
-          <span class="doma-player-choice-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
-        <button class="doma-player-choice ronaldo-choice${ronaldoSelected}" type="button" onclick="domaSelectFavoritePlayer('Cristiano Ronaldo','Real Madrid')">
-          <span class="doma-player-photo ronaldo-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Cristiano_Ronaldo_2018_%284x5_cropped%29.jpg" alt="Cristiano Ronaldo" loading="eager" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('is-fallback');this.remove()"></span>
-          <span class="doma-player-choice-name">Cristiano Ronaldo</span>
-          <span class="doma-player-choice-meta">PORTUGAL</span>
-          <span class="doma-player-choice-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
-      </div>
-      <p class="doma-player-picker-credit">Portraits: <a href="https://commons.wikimedia.org/wiki/File:Lionel_Messi_close-up.jpg" target="_blank" rel="noopener noreferrer">Fanny Schertzer</a> and <a href="https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_2018_(4x5_cropped).jpg" target="_blank" rel="noopener noreferrer">Anna Nessi / soccer.ru</a> via Wikimedia Commons · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></p>
-    </section>`;
-  domaPlayerPickerPreviousBodyOverflow=document.body.style.overflow||'';
-  document.body.appendChild(overlay);
-  overlay.style.setProperty('z-index','2147483647','important');
-  overlay.style.setProperty('pointer-events','auto','important');
-  document.body.style.overflow='hidden';
-  $('signupPlayerTrigger')?.setAttribute('aria-expanded','true');
-  overlay.addEventListener('click',event=>{if(event.target===overlay)domaClosePlayerPicker()});
-  overlay.addEventListener('cancel',event=>{event.preventDefault();domaClosePlayerPicker()});
-  try { if (typeof overlay.showModal === 'function') overlay.showModal(); else overlay.setAttribute('open',''); }
-  catch (_) { overlay.setAttribute('open',''); }
-  overlay.querySelector('.doma-player-choice')?.focus({preventScroll:true});
-}
-function domaClosePlayerPicker(){
-  const overlay=document.getElementById('domaPlayerPickerOverlay');
-  if(!overlay)return;
-  try { if (overlay.open && typeof overlay.close === 'function') overlay.close(); } catch (_) {}
-  overlay.remove();
-  document.body.style.overflow=domaPlayerPickerPreviousBodyOverflow;
-  $('signupPlayerTrigger')?.setAttribute('aria-expanded','false');
-  $('signupPlayerTrigger')?.focus({preventScroll:true});
-}
-window.domaOpenPlayerPicker = domaOpenPlayerPicker;
-window.domaClosePlayerPicker = domaClosePlayerPicker;
-function domaSelectFavoritePlayer(player,legacyTeam){
-  if(!['Lionel Messi','Cristiano Ronaldo'].includes(player))return;
-  const hidden=$('signupPlayer'),label=$('signupPlayerValue'),trigger=$('signupPlayerTrigger');
-  if(hidden)hidden.value=player;
-  if(label)label.textContent=player;
-  if(trigger){trigger.classList.add('is-selected');trigger.setAttribute('aria-expanded','false')}
-  domaClosePlayerPicker();
-}
-document.addEventListener('keydown',event=>{
-  if(event.key==='Escape'&&document.getElementById('domaPlayerPickerOverlay')){
-    event.preventDefault();event.stopImmediatePropagation();domaClosePlayerPicker();
-  }
-},true);
 
 async function domaSignup(){
   const name=$('signupName')?.value.trim()||'',rawPhone=$('signupPhone')?.value.trim()||'',pass=$('signupPass')?.value||'',confirmPass=$('signupPassConfirm')?.value||'',favoritePlayer=$('signupPlayer')?.value||'',favoriteTeam=favoritePlayer==='Lionel Messi'?'Barcelona':favoritePlayer==='Cristiano Ronaldo'?'Real Madrid':'';
@@ -16239,27 +16166,7 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 </style>
 
 
-<script id="doma-player-picker-click-repair-v186">
-(function(){
-  'use strict';
-  document.addEventListener('click', function(event){
-    var target = event.target;
-    var trigger = target && target.closest ? target.closest('#signupPlayerTrigger, #modal.doma-auth-signup .doma-auth-field-team') : null;
-    if (!trigger) return;
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    try {
-      if (typeof window.domaOpenPlayerPicker === 'function') window.domaOpenPlayerPicker();
-      else if (typeof domaOpenPlayerPicker === 'function') domaOpenPlayerPicker();
-      else if (typeof window.showToast === 'function') window.showToast('Player selection is loading. Please close and reopen Create Account.');
-    } catch (error) {
-      console.error('Favorite Player picker failed to open:', error);
-      if (typeof window.showToast === 'function') window.showToast('Could not open player selection. Please reopen Create Account.');
-    }
-  }, true);
-})();
-</script>
+
 
 <script id="doma-player-picker-native-dialog-fix-v189">
 (function(){
