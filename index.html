@@ -2586,30 +2586,31 @@ function openAuth(type){
     <span class="doma-auth-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="domaAuthIconGradientTeam" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d5aa85"/><stop offset="52%" stop-color="#9b4f4e"/><stop offset="100%" stop-color="#4c1729"/></linearGradient></defs><circle cx="12" cy="12" r="8.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7"/><circle cx="12" cy="9" r="2.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7"/><path d="M7.6 17.2c.8-2.2 2.2-3.3 4.4-3.3s3.6 1.1 4.4 3.3" fill="none" stroke="url(#domaAuthIconGradientTeam)" stroke-width="1.7" stroke-linecap="round"/></svg></span>
     <div class="doma-auth-field-content">
       <label id="signupPlayerLabel" for="signupPlayerTrigger">Favorite Player</label>
-      <button id="signupPlayerTrigger" class="doma-auth-player-trigger" type="button" aria-labelledby="signupPlayerLabel signupPlayerValue" aria-haspopup="dialog" aria-expanded="false" >
+      <button id="signupPlayerTrigger" class="doma-auth-player-trigger" type="button" aria-labelledby="signupPlayerLabel signupPlayerValue" aria-haspopup="listbox" aria-expanded="false" onclick="return window.domaToggleFavoritePlayers(this)">
         <span id="signupPlayerValue">Choose your favorite player...</span>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <input id="signupPlayer" type="hidden" value="">
     </div>
   </div>
+  <div id="signupPlayerChoices" role="listbox" aria-label="Choose your favorite player" style="display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;margin:9px 0 3px;padding:10px;box-sizing:border-box;border:1px solid rgba(232,201,155,.32);border-radius:16px;background:linear-gradient(145deg,rgba(49,16,29,.97),rgba(20,9,14,.98));">
+    <button type="button" role="option" aria-label="Choose Lionel Messi" class="doma-inline-player-choice" style="display:flex;min-width:0;flex-direction:column;gap:8px;align-items:stretch;padding:8px;border:1px solid rgba(232,201,155,.28);border-radius:12px;background:rgba(255,255,255,.035);color:#fff0e5;cursor:pointer;font:inherit;" onclick="window.domaSelectFavoritePlayer('Lionel Messi');return false;">
+      <span style="display:grid;place-items:center;height:112px;overflow:hidden;border-radius:9px;background:linear-gradient(145deg,#4b2230,#1a0d12);color:#f5dcc9;font-size:22px;font-weight:900;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Lionel_Messi_close-up.jpg/500px-Lionel_Messi_close-up.jpg" alt="Lionel Messi" loading="eager" referrerpolicy="no-referrer" style="display:block;width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='LM';"></span>
+      <span style="font-size:12px;font-weight:900;line-height:1.3;">Lionel Messi</span>
+      <span style="font-size:8px;font-weight:800;letter-spacing:1.4px;color:#d7a08b;">ARGENTINA</span>
+    </button>
+    <button type="button" role="option" aria-label="Choose Cristiano Ronaldo" class="doma-inline-player-choice" style="display:flex;min-width:0;flex-direction:column;gap:8px;align-items:stretch;padding:8px;border:1px solid rgba(232,201,155,.28);border-radius:12px;background:rgba(255,255,255,.035);color:#fff0e5;cursor:pointer;font:inherit;" onclick="window.domaSelectFavoritePlayer('Cristiano Ronaldo');return false;">
+      <span style="display:grid;place-items:center;height:112px;overflow:hidden;border-radius:9px;background:linear-gradient(145deg,#4b2230,#1a0d12);color:#f5dcc9;font-size:22px;font-weight:900;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Cristiano_Ronaldo_2018_%28cropped%29.jpg/613px-Cristiano_Ronaldo_2018_%28cropped%29.jpg" alt="Cristiano Ronaldo" loading="eager" referrerpolicy="no-referrer" style="display:block;width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='CR7';"></span>
+      <span style="font-size:12px;font-weight:900;line-height:1.3;">Cristiano Ronaldo</span>
+      <span style="font-size:8px;font-weight:800;letter-spacing:1.4px;color:#d7a08b;">PORTUGAL</span>
+    </button>
+    <p style="grid-column:1/-1;margin:1px 0 0;color:#a98e96;font-size:8px;line-height:1.5;">Portraits: <a href="https://commons.wikimedia.org/wiki/File:Lionel_Messi_close-up.jpg" target="_blank" rel="noopener noreferrer" style="color:#d7a08b;">Fanny Schertzer</a> and <a href="https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_2018_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" style="color:#d7a08b;">Anna Nessi</a> · CC BY-SA 3.0</p>
+  </div>
   <button class="btn primary full doma-auth-create" type="button" onclick="domaSignup()"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="4" fill="currentColor"/><path d="M2.5 21v-2.2c0-3.7 2.7-5.6 6.5-5.6s6.5 1.9 6.5 5.6V21Z" fill="currentColor"/><path d="M19 7v7m-3.5-3.5h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Create Account</span></button>
   <div id="authStatus" class="status full"></div>
   <div class="doma-auth-switch full" style="color:#888;font-size:11px"><span>Already have an account?</span><button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth('login')">Log in</button></div>
 </div>`;
 
-    const playerField = $('modal').querySelector('.doma-auth-field-team');
-    if (playerField) {
-      playerField.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (typeof window.domaOpenPlayerPicker === 'function') {
-          window.domaOpenPlayerPicker();
-        } else {
-          console.error('Favorite player picker is not initialized.');
-        }
-      });
-    }
     $('modal').querySelector('.doma-auth-brand-footer')?.remove();
     $('modal').insertAdjacentHTML('beforeend', '<div id="domaAuthFloatingFooter" class="doma-auth-brand-footer"><a class="doma-auth-footer-brand" href="#home" onclick="closeModal()"><span class="doma-auth-footer-name">Mr. Fluent</span><small>LEARN • SPEAK • MASTER</small></a><div class="doma-auth-footer-contact"><a class="doma-auth-footer-phone" href="https://wa.me/201095439588" target="_blank" rel="noopener noreferrer" aria-label="Chat with Mr. Fluent on WhatsApp">01095439588</a><a class="doma-auth-whatsapp" href="https://wa.me/201095439588" target="_blank" rel="noopener noreferrer" aria-label="Chat with Mr. Fluent on WhatsApp"><svg viewBox="0 0 32 32" width="21" height="21" aria-hidden="true" focusable="false"><path d="M16 3.5a12.2 12.2 0 0 0-10.4 18.6L4 28l6.2-1.7A12.2 12.2 0 1 0 16 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11.1 9.5c-.3-.6-.6-.7-.9-.7h-.8c-.3 0-.7.2-1 .5-.4.4-1.4 1.4-1.4 3.4s1.4 4 1.7 4.3c.2.3 2.9 4.6 7.1 6.4 3.5 1.4 4.3 1.2 5.1 1.1.8-.1 2.5-1 2.8-2.1.4-1 .4-1.9.3-2.1-.1-.2-.5-.3-1.1-.6-.6-.3-2.5-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.6-.2.3-.5.3-1 .1-.6-.3-2.1-.8-3.8-2.4-1.4-1.2-2.3-2.7-2.6-3.2-.3-.5 0-.7.2-1 .2-.2.5-.6.7-.8.2-.3.3-.5.4-.8.1-.3 0-.6-.1-.8z" fill="currentColor"/></svg></a></div></div>');
   }
@@ -2691,6 +2692,40 @@ function toggleSignupPassword(inputId,button){
   const reveal=input.type==='password';input.type=reveal?'text':'password';
   if(button){button.setAttribute('aria-label',reveal?'Hide password':'Show password');button.classList.toggle('is-visible',reveal)}
 }
+
+window.domaToggleFavoritePlayers = function(trigger){
+  const choices = document.getElementById('signupPlayerChoices');
+  if(!choices) return false;
+  const opening = choices.style.display === 'none' || !choices.style.display;
+  choices.style.display = opening ? 'grid' : 'none';
+  if(trigger) trigger.setAttribute('aria-expanded', String(opening));
+  if(opening){
+    const firstChoice = choices.querySelector('button[role="option"]');
+    if(firstChoice) try{ firstChoice.focus({preventScroll:true}); }catch(_){ firstChoice.focus(); }
+  }
+  return false;
+};
+window.domaClosePlayerPicker = function(){
+  const choices = document.getElementById('signupPlayerChoices');
+  if(choices) choices.style.display = 'none';
+  const trigger = document.getElementById('signupPlayerTrigger');
+  if(trigger) trigger.setAttribute('aria-expanded','false');
+};
+window.domaSelectFavoritePlayer = function(player){
+  if(!['Lionel Messi','Cristiano Ronaldo'].includes(player)) return false;
+  const hidden = document.getElementById('signupPlayer');
+  const label = document.getElementById('signupPlayerValue');
+  const trigger = document.getElementById('signupPlayerTrigger');
+  if(hidden) hidden.value = player;
+  if(label) label.textContent = player;
+  if(trigger){ trigger.classList.add('is-selected'); trigger.setAttribute('aria-expanded','false'); }
+  const choices = document.getElementById('signupPlayerChoices');
+  if(choices){
+    choices.style.display = 'none';
+    choices.querySelectorAll('[role="option"]').forEach(option=>option.setAttribute('aria-selected', String(option.getAttribute('aria-label') === 'Choose ' + player)));
+  }
+  return false;
+};
 
 async function domaSignup(){
   const name=$('signupName')?.value.trim()||'',rawPhone=$('signupPhone')?.value.trim()||'',pass=$('signupPass')?.value||'',confirmPass=$('signupPassConfirm')?.value||'',favoritePlayer=$('signupPlayer')?.value||'',favoriteTeam=favoritePlayer==='Lionel Messi'?'Barcelona':favoritePlayer==='Cristiano Ronaldo'?'Real Madrid':'';
@@ -16168,123 +16203,7 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 
 
 
-<script id="doma-player-picker-native-dialog-fix-v189">
-(function(){
-  'use strict';
-  var previousOverflow = '';
-  function get(id){ return document.getElementById(id); }
-  function closePicker(){
-    var overlay=get('domaPlayerPickerOverlay');
-    if(overlay) overlay.remove();
-    document.body.style.overflow=previousOverflow;
-    var trigger=get('signupPlayerTrigger');
-    if(trigger){
-      trigger.setAttribute('aria-expanded','false');
-      try{trigger.focus({preventScroll:true});}catch(_){trigger.focus();}
-    }
-  }
-  function openPicker(){
-    var trigger=get('signupPlayerTrigger');
-    var current=String((get('signupPlayer')||{}).value||'');
-    var existing=get('domaPlayerPickerOverlay');
-    if(existing){
-      if(existing.tagName==='DIV'){
-        var first=existing.querySelector('.doma-player-choice');
-        if(first)try{first.focus({preventScroll:true});}catch(_){first.focus();}
-        return;
-      }
-      try{if(existing.open&&typeof existing.close==='function')existing.close();}catch(_){}
-      existing.remove();
-    }
-    previousOverflow=document.body.style.overflow||'';
-    var messiSelected=current==='Lionel Messi'?' is-selected':'';
-    var ronaldoSelected=current==='Cristiano Ronaldo'?' is-selected':'';
-    var overlay=document.createElement('div');
-    overlay.id='domaPlayerPickerOverlay';
-    overlay.setAttribute('open','');
-    overlay.setAttribute('role','dialog');
-    overlay.setAttribute('aria-modal','true');
-    overlay.setAttribute('aria-label','Choose your favorite player');
-    overlay.innerHTML=`
-      <section class="doma-player-picker-panel" aria-labelledby="domaPlayerPickerTitle">
-        <button class="doma-player-picker-close" type="button" aria-label="Close player selection">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-        <div class="doma-player-picker-eyebrow">YOUR FOOTBALL PICK</div>
-        <h2 id="domaPlayerPickerTitle">Choose Your Favorite Player</h2>
-        <p class="doma-player-picker-subtitle">Pick one player to personalize your account.</p>
-        <div class="doma-player-choice-grid">
-          <button class="doma-player-choice messi-choice${messiSelected}" type="button" data-player="Lionel Messi">
-            <span class="doma-player-photo messi-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Lionel_Messi_close-up.jpg" alt="Lionel Messi" loading="eager" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('is-fallback');this.remove()"></span>
-            <span class="doma-player-choice-name">Lionel Messi</span><span class="doma-player-choice-meta">ARGENTINA</span>
-            <span class="doma-player-choice-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
-          <button class="doma-player-choice ronaldo-choice${ronaldoSelected}" type="button" data-player="Cristiano Ronaldo">
-            <span class="doma-player-photo ronaldo-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Cristiano_Ronaldo_2018_%284x5_cropped%29.jpg" alt="Cristiano Ronaldo" loading="eager" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('is-fallback');this.remove()"></span>
-            <span class="doma-player-choice-name">Cristiano Ronaldo</span><span class="doma-player-choice-meta">PORTUGAL</span>
-            <span class="doma-player-choice-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
-        </div>
-        <p class="doma-player-picker-credit">Portraits: <a href="https://commons.wikimedia.org/wiki/File:Lionel_Messi_close-up.jpg" target="_blank" rel="noopener noreferrer">Fanny Schertzer</a> and <a href="https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_2018_(4x5_cropped).jpg" target="_blank" rel="noopener noreferrer">Anna Nessi / soccer.ru</a> via Wikimedia Commons · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></p>
-      </section>`;
-    overlay.style.setProperty('position','fixed','important');
-    overlay.style.setProperty('inset','0','important');
-    overlay.style.setProperty('z-index','2147483647','important');
-    overlay.style.setProperty('display','flex','important');
-    overlay.style.setProperty('align-items','center','important');
-    overlay.style.setProperty('justify-content','center','important');
-    overlay.style.setProperty('width','100vw','important');
-    overlay.style.setProperty('height','100vh','important');
-    overlay.style.setProperty('height','100dvh','important');
-    overlay.style.setProperty('margin','0','important');
-    overlay.style.setProperty('padding','16px','important');
-    overlay.style.setProperty('box-sizing','border-box','important');
-    overlay.style.setProperty('overflow-y','auto','important');
-    overlay.style.setProperty('background','rgba(13,3,8,.97)','important');
-    overlay.style.setProperty('backdrop-filter','none','important');
-    overlay.style.setProperty('-webkit-backdrop-filter','none','important');
-    overlay.style.setProperty('pointer-events','auto','important');
-    overlay.style.setProperty('overscroll-behavior','contain','important');
-    overlay.style.setProperty('isolation','isolate','important');
-    document.body.appendChild(overlay);
-    document.body.style.overflow='hidden';
-    if(trigger)trigger.setAttribute('aria-expanded','true');
-    overlay.addEventListener('click',function(event){
-      if(event.target===overlay || (event.target.closest&&event.target.closest('.doma-player-picker-close'))){
-        event.preventDefault();closePicker();return;
-      }
-      var choice=event.target.closest&&event.target.closest('.doma-player-choice[data-player]');
-      if(choice){
-        event.preventDefault();
-        if(typeof window.domaSelectFavoritePlayer==='function')window.domaSelectFavoritePlayer(choice.getAttribute('data-player'));
-      }
-    });
-    try{
-      var first=overlay.querySelector('.doma-player-choice');
-      if(first)first.focus({preventScroll:true});
-      else overlay.setAttribute('tabindex','-1');
-    }catch(_){}
-  }
-  window.domaOpenPlayerPicker=openPicker;
-  window.domaClosePlayerPicker=closePicker;
-  window.domaSelectFavoritePlayer=function(player){
-    if(player!=='Lionel Messi'&&player!=='Cristiano Ronaldo')return;
-    var hidden=get('signupPlayer'),label=get('signupPlayerValue'),trigger=get('signupPlayerTrigger');
-    if(hidden)hidden.value=player;
-    if(label)label.textContent=player;
-    if(trigger){trigger.classList.add('is-selected');trigger.setAttribute('aria-expanded','false');}
-    closePicker();
-  };
-  document.addEventListener('keydown',function(event){
-    if(event.key==='Escape'&&get('domaPlayerPickerOverlay')){
-      event.preventDefault();event.stopImmediatePropagation();closePicker();
-    }
-  },true);
-  window.addEventListener('pageshow',function(){
-    if(!get('domaPlayerPickerOverlay'))document.body.style.overflow=previousOverflow;
-  });
-})();
-</script>
+
 
 </body>
 </html>
