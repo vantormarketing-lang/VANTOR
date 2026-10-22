@@ -282,7 +282,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 .doma-student-top-profile img{width:52px;height:52px;min-width:52px;border-radius:50%;object-fit:cover;object-position:center 28%;border:2px solid #6a3041;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 @media(max-width:700px){.doma-student-top-profile img{width:46px;height:46px;min-width:46px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v21">
+<link rel="manifest" href="./manifest.webmanifest?v=doma-glass-v22">
 <meta name="theme-color" content="#160817">
 <meta name="application-name" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
 <meta name="apple-mobile-web-app-title" content="𝑴𝒓. 𝑭𝒍𝒖𝒆𝒏𝒕">
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v187', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v188', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v187', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v188', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -17082,5 +17082,123 @@ html body #modal.modal.show.doma-auth-photo .doma-auth-field-team .doma-auth-fie
 }
 @media(prefers-reduced-motion:reduce){
   #domaPlayerPickerOverlay .doma-player-choice{transition:none!important}
+}
+</style>
+
+
+<style id="doma-burgundy-champagne-icons-v188">
+/* Refined burgundy + champagne palette for account controls and learning icons. */
+:root{--doma-wine:#5c1b30;--doma-wine-mid:#81374a;--doma-cocoa:#50332d;--doma-champagne:#e8c99b;--doma-soft-ivory:#f1e8e3;--doma-muted-ivory:#bdb0ad}
+
+/* Sign-up form icons: small, clean glyphs over a burgundy-to-cocoa glass tile. */
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon{
+  flex:0 0 35px!important;width:35px!important;height:35px!important;
+  border-radius:11px!important;
+  background:linear-gradient(145deg,#5c1b30 0%,#813b48 52%,#9b6a4a 100%)!important;
+  border:1px solid rgba(232,201,155,.4)!important;
+  box-shadow:0 5px 13px rgba(18,5,10,.25),inset 0 1px 0 rgba(255,238,211,.17)!important;
+}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon svg{width:18px!important;height:18px!important}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon svg [fill]:not([fill="none"]){fill:#f1dfc2!important}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon svg [stroke]:not([stroke="none"]){stroke:#f1dfc2!important}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon svg stop{stop-color:#e8c99b!important}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-cyan,
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-blue,
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-mint,
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-gold{border-color:rgba(216,166,129,.28)!important}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-field-team::after{
+  border-color:#e8c99b!important;
+}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-password-toggle{
+  color:#e8c99b!important;border-color:rgba(216,166,129,.25)!important;
+  background:rgba(92,27,48,.22)!important;
+}
+/* Create Account action uses deep wine, muted burgundy, and warm brown. */
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-create{
+  background:linear-gradient(112deg,#51172a 0%,#7a2d40 46%,#8a573f 100%)!important;
+  border:1px solid rgba(232,201,155,.48)!important;color:#fff5e9!important;
+  box-shadow:0 10px 25px rgba(48,10,23,.3),inset 0 1px 0 rgba(255,235,207,.15)!important;
+}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-create svg,
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-create svg *{
+  color:#f0d4a8!important;stroke:#f0d4a8!important;
+}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-create:hover{
+  background:linear-gradient(112deg,#612036 0%,#8a3748 46%,#9a6546 100%)!important;
+  box-shadow:0 12px 28px rgba(48,10,23,.37)!important;
+}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-switch,
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-brand-footer{
+  border-color:rgba(216,166,129,.18)!important;
+}
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-switch button,
+#modal.doma-auth-photo.doma-auth-signup .doma-auth-footer-contact a{
+  color:#e8c99b!important;
+}
+
+/* Public account buttons and the account avatar share the same quiet palette. */
+#navLogin{
+  background:linear-gradient(145deg,rgba(92,27,48,.42),rgba(53,32,30,.48))!important;
+  border-color:rgba(216,166,129,.28)!important;color:#f0e5df!important;
+}
+#navAction{
+  background:linear-gradient(112deg,#51172a 0%,#7a2d40 52%,#8a573f 100%)!important;
+  border-color:rgba(232,201,155,.4)!important;color:#fff5e9!important;
+  box-shadow:0 7px 20px rgba(43,10,20,.22),inset 0 1px 0 rgba(255,235,207,.14)!important;
+}
+#navAction .nav-action-icon{color:#f0d4a8!important}
+#navLogin:hover,#navAction:hover{filter:brightness(1.07)!important}
+#drawer .profile-avatar{
+  background:linear-gradient(145deg,#5c1b30,#8a493f 67%,#b58a5b)!important;
+  border-color:rgba(232,201,155,.44)!important;
+  box-shadow:0 6px 18px rgba(22,5,12,.26)!important;
+}
+#drawer .profile-avatar-copy strong{color:#f1e8e3!important}
+#drawer .profile-avatar-copy span{color:#bdb0ad!important}
+#drawer .side-link svg{color:#e8c99b!important}
+
+/* Learning drawer icons (lesson numbers, tool tiles and phonics/phoneme-related icons). */
+#drawer .drawer-body .lesson-num,
+#drawer .drawer-body .unit-index,
+#drawer .drawer-body .tool-icon,
+#drawer .drawer-body .why-icon,
+#drawer .drawer-body .continue-icon,
+#drawer .drawer-body .icon-box,
+#drawer .drawer-body .student-gami-badge .ico{
+  display:inline-grid!important;place-items:center!important;
+  background:linear-gradient(145deg,rgba(92,27,48,.92),rgba(83,51,43,.9) 66%,rgba(157,112,72,.82))!important;
+  border:1px solid rgba(232,201,155,.3)!important;
+  color:#efd6b4!important;
+  box-shadow:inset 0 1px 0 rgba(255,240,214,.1),0 3px 9px rgba(15,4,9,.19)!important;
+}
+#drawer .drawer-body .lesson-btn{
+  color:#f1e8e3!important;
+  background:linear-gradient(125deg,rgba(74,23,39,.74),rgba(43,26,26,.77))!important;
+  border-color:rgba(216,166,129,.2)!important;
+}
+#drawer .drawer-body .lesson-btn strong{color:#f1e8e3!important;font-weight:750!important}
+#drawer .drawer-body .lesson-btn small{color:#bdb0ad!important;font-weight:450!important}
+#drawer .drawer-body .lesson-btn:hover,
+#drawer .drawer-body .lesson-btn.active{
+  color:#fff5e9!important;
+  background:linear-gradient(110deg,rgba(92,27,48,.88),rgba(109,67,49,.72))!important;
+  border-color:rgba(232,201,155,.4)!important;
+  box-shadow:inset 3px 0 #c49a66,0 4px 14px rgba(22,5,12,.18)!important;
+}
+/* Main grade tile icons follow the same burgundy/champagne system without recoloring the cards. */
+#gradeGrid .mf-pastel-grade-icon,
+#gradeGrid>.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-icon{
+  background:linear-gradient(145deg,#5c1b30 0%,#85394a 56%,#b58a5b 100%)!important;
+  color:#f4e4cc!important;border:1px solid rgba(232,201,155,.35)!important;
+  box-shadow:inset 0 1px 0 rgba(255,240,214,.15),0 4px 12px rgba(49,11,24,.18)!important;
+}
+#gradeGrid .mf-pastel-grade-icon svg{stroke:currentColor!important}
+@media(max-width:700px){
+  #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon{width:33px!important;height:33px!important;flex-basis:33px!important;border-radius:10px!important}
+  #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-icon svg{width:17px!important;height:17px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #modal.doma-auth-photo.doma-auth-signup .doma-auth-create,
+  #navAction,#navLogin{transition:none!important}
 }
 </style>
