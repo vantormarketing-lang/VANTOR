@@ -91,25 +91,25 @@ for (const level of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
 
 
 const kidsA1 = read('MR_FLUENT_KIDS_A1.html');
-for (const required of ['id="pictureQuiz"', 'function pictureQuizRenderQuestion()', 'function pictureQuizShowResults()', 'pictureQuizSpeak(current.word)', 'aria-live="polite"']) {
-  if (!kidsA1.includes(required)) fail(`MR_FLUENT_KIDS_A1.html: missing picture-quiz feature or accessibility safeguard: ${required}`);
+for (const required of ['id="pictureQuiz"', 'function pictureQuizRenderQuestion()', 'pictureQuizIndex%pictureQuizDeck.length', 'pictureQuizSpeak(current.word)', 'Unlimited', 'items.concat(letters.filter']) {
+  if (!kidsA1.includes(required)) fail('MR_FLUENT_KIDS_A1.html: missing infinite Look & Choose loop or broad A1 word pool: ' + required);
 }
-ok('MR_FLUENT_KIDS_A1.html: picture-word activity and accessibility hooks are present');
-
-for (const required of ['id="listenQuiz"', 'function listenQuizRenderQuestion()', 'function listenQuizShowResults()', 'listenQuizSpeak(current.word)', 'data-listen-answer']) {
-  if (!kidsA1.includes(required)) fail(`MR_FLUENT_KIDS_A1.html: missing listen-and-choose feature or interaction: ${required}`);
+ok('MR_FLUENT_KIDS_A1.html: Look & Choose has an unlimited loop with an expanded picture-word pool');
+for (const required of ['id="listenQuiz"', 'function listenQuizRenderQuestion()', 'listenQuizIndex%listenQuizDeck.length', 'listenQuizSpeak(current.word)', 'data-listen-answer', 'Unlimited']) {
+  if (!kidsA1.includes(required)) fail('MR_FLUENT_KIDS_A1.html: missing endless Listen & Choose loop: ' + required);
 }
-ok('MR_FLUENT_KIDS_A1.html: listen-and-choose activity has audio, choices, and results');
-
-
+ok('MR_FLUENT_KIDS_A1.html: Listen & Choose loops endlessly with audio and picture choices');
 const kidsIndex = read('index.html');
 const a1RenderStart = kidsIndex.indexOf('function renderAlphabet(){');
 const a1RenderEnd = kidsIndex.indexOf('function renderA2()', a1RenderStart);
 const a1Render = a1RenderStart >= 0 && a1RenderEnd > a1RenderStart ? kidsIndex.slice(a1RenderStart, a1RenderEnd) : '';
-for (const required of ['id="mfkrA1LookQuiz"', 'id="mfkrA1ListenQuiz"', 'function mfkrA1DrawLook()', 'function mfkrA1DrawListen()', 'data-a1-listen-answer']) {
-  if (!a1Render.includes(required)) fail(`index.html: active A1 route is missing picture or listening activity: ${required}`);
+for (const required of ['id="mfkrA1LookQuiz"', 'id="mfkrA1ListenQuiz"', 'function mfkrA1DrawLook()', 'function mfkrA1DrawListen()', ' · Unlimited', 'data-a1-listen-answer']) {
+  if (!a1Render.includes(required)) fail('index.html: active Kids A1 route is missing an endless activity: ' + required);
 }
-ok('index.html: active Kids A1 route includes Look & Choose and Listen & Choose games');
+for (const forbidden of ['slice(0,10)', 'if(mfkrLookIndex>=mfkrLookDeck.length)', 'if(mfkrListenIndex>=mfkrListenDeck.length)']) {
+  if (a1Render.includes(forbidden)) fail('index.html: finite question limit remains in active A1 route: ' + forbidden);
+}
+ok('index.html: active Kids A1 route has endless Look & Choose and Listen & Choose activities');
 const student = read('index.html');
 if (/storage\.from\(\s*['"]homework-submissions['"]\s*\)\s*\.getPublicUrl\s*\(/.test(student)) {
   fail('index.html: homework attachments must not be exposed with getPublicUrl()');
@@ -174,8 +174,8 @@ if (!studentCacheVersion) {
   fail('sw.js: student service-worker URL version must match the offline cache version');
 }
 const studentManifest = JSON.parse(read('manifest.webmanifest'));
-if (studentManifest.start_url !== './?doma-app=student&launch=v196') {
-  fail('manifest.webmanifest: student app must launch from the v196 student start URL on the working site root');
+if (studentManifest.start_url !== './?doma-app=student&launch=v197') {
+  fail('manifest.webmanifest: student app must launch from the v197 student start URL on the working site root');
 }
 if (studentManifest.id !== './?doma-app=student-pwa-v2') {
   fail('manifest.webmanifest: student PWA must use the clean v2 identity for a fresh desktop installation');

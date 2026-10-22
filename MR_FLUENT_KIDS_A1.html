@@ -162,6 +162,7 @@ button{font:inherit}
 @media(max-width:360px){.listen-quiz-options{gap:5px}.listen-quiz-option{padding:5px;min-height:112px}.listen-quiz-picture{min-height:68px}.listen-quiz-picture svg{max-height:72px}}
 @media(prefers-reduced-motion:reduce){.listen-quiz-track span,.listen-quiz-option{transition:none!important}}
 
+.picture-quiz-emoji{display:grid;place-items:center;width:100%;height:100%;min-height:130px;font-size:clamp(62px,10vw,105px);line-height:1;filter:drop-shadow(0 7px 5px rgba(57,36,72,.15))}.listen-quiz-picture .picture-quiz-emoji{display:grid;place-items:center;width:100%;height:100%;min-height:85px;font-size:clamp(40px,6vw,69px);line-height:1}@media(max-width:680px){.picture-quiz-emoji{min-height:105px;font-size:clamp(58px,18vw,86px)}.listen-quiz-picture .picture-quiz-emoji{min-height:70px;font-size:clamp(36px,10vw,54px)}}
 </style>
 </head>
 <body>
@@ -181,10 +182,10 @@ button{font:inherit}
       <h2 id="pictureQuizTitle" class="picture-quiz-title">What's in the picture?</h2>
       <p class="picture-quiz-subtitle" lang="ar" dir="rtl">بُصّ على الصورة واختار اسمها الصحيح بالإنجليزي. كل سؤال فيه صورة و3 اختيارات.</p>
     </div>
-    <div class="picture-quiz-pill"><span aria-hidden="true">🖼️</span><span>10 fun questions</span></div>
+    <div class="picture-quiz-pill"><span aria-hidden="true">🖼️</span><span>Unlimited questions</span></div>
   </div>
-  <div class="picture-quiz-progress-meta"><span id="pictureQuizCounter">Question 1 of 10</span><span id="pictureQuizScore">⭐ 0 correct</span></div>
-  <div class="picture-quiz-track" role="progressbar" aria-label="Picture quiz progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="pictureQuizProgress"></span></div>
+  <div class="picture-quiz-progress-meta"><span id="pictureQuizCounter">Question 1 · Unlimited</span><span id="pictureQuizScore">⭐ 0 correct</span></div>
+  <div class="picture-quiz-track" role="progressbar" aria-label="Picture quiz cycle progress" aria-valuemin="0" aria-valuemax="32" aria-valuenow="0"><span id="pictureQuizProgress"></span></div>
   <div id="pictureQuizStage" class="picture-quiz-stage"></div>
   <div id="pictureQuizFeedback" class="picture-quiz-feedback" role="status" aria-live="polite">اختار اسم الصورة الصحيح عشان نكمّل!</div>
   <div class="picture-quiz-controls">
@@ -200,10 +201,10 @@ button{font:inherit}
    <h2 id="listenQuizTitle" class="listen-quiz-title">Listen. Look. Choose!</h2>
    <p class="listen-quiz-subtitle" lang="ar" dir="rtl">اسمع الكلمة بالإنجليزي، وبعد كده اختار الصورة الصح من غير ما تشوف اسمها مكتوب.</p>
   </div>
-  <div class="listen-quiz-pill"><span aria-hidden="true">🎧</span><span>10 listening questions</span></div>
+  <div class="listen-quiz-pill"><span aria-hidden="true">🎧</span><span>Unlimited listening</span></div>
  </div>
- <div class="listen-quiz-meta"><span id="listenQuizCounter">Question 1 of 10</span><span id="listenQuizScore">⭐ 0 correct</span></div>
- <div class="listen-quiz-track" role="progressbar" aria-label="Listening quiz progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="listenQuizProgress"></span></div>
+ <div class="listen-quiz-meta"><span id="listenQuizCounter">Question 1 · Unlimited</span><span id="listenQuizScore">⭐ 0 correct</span></div>
+ <div class="listen-quiz-track" role="progressbar" aria-label="Listening quiz cycle progress" aria-valuemin="0" aria-valuemax="32" aria-valuenow="0"><span id="listenQuizProgress"></span></div>
  <div class="listen-quiz-prompt">
   <div class="listen-quiz-prompt-copy"><strong>What can you hear?</strong><span lang="ar" dir="rtl">اضغط على زر الصوت واسمع كويس.</span></div>
   <button id="listenQuizPlay" class="listen-quiz-play" type="button"><span aria-hidden="true">🔊</span><span>Play the word</span></button>
@@ -245,8 +246,7 @@ grid.addEventListener('click',event=>{
 });
 
 /* A1 Picture Quiz: randomized word recognition with local vector art and optional pronunciation. */
-const pictureQuizItems=[{"id":"apple","word":"Apple","meaning":"تفاحة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M109 48c-22-23-58-6-61 26-4 33 18 66 45 69 10 1 15-5 22-5s13 6 24 4c26-5 46-38 42-67-4-29-36-49-61-28-5 4-7 4-11 1z\" fill=\"#e84f68\" stroke=\"#a92b4a\" stroke-width=\"4\"/><path d=\"M111 48c1-14 3-21 10-27\" fill=\"none\" stroke=\"#79502e\" stroke-width=\"8\" stroke-linecap=\"round\"/><path d=\"M119 29c20-19 37-12 41 1-14 13-28 13-41-1z\" fill=\"#5cc58b\" stroke=\"#23895b\" stroke-width=\"3\"/><path d=\"M79 62c-8 8-11 18-10 27\" fill=\"none\" stroke=\"#ffb2bd\" stroke-width=\"7\" stroke-linecap=\"round\"/></svg>"},{"id":"ball","word":"Ball","meaning":"كرة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"110\" cy=\"80\" r=\"59\" fill=\"#f7fbff\" stroke=\"#6c83a7\" stroke-width=\"5\"/><path d=\"m110 47 20 14-8 24h-25l-8-24z\" fill=\"#33445d\"/><path d=\"m110 47-6-24M130 61l23-5M122 85l16 21M97 85l-15 22M89 61 66 55M153 56l10-22M138 106l10 25M82 107l-19 15\" stroke=\"#6c83a7\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M59 80c0 12 3 22 9 31M164 82c0 32-24 57-54 57\" fill=\"none\" stroke=\"#d0d9e6\" stroke-width=\"5\"/></svg>"},{"id":"cat","word":"Cat","meaning":"قطة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M56 66 49 27l40 23M164 66l7-39-40 23\" fill=\"#f3a568\" stroke=\"#a95a39\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"m62 57-3-20 21 17M158 57l3-20-21 17\" fill=\"#f4a6be\"/><path d=\"M52 84c0-34 26-53 58-53s58 19 58 53c0 36-25 55-58 55S52 120 52 84z\" fill=\"#f3a568\" stroke=\"#a95a39\" stroke-width=\"4\"/><ellipse cx=\"86\" cy=\"83\" rx=\"6\" ry=\"9\" fill=\"#30243c\"/><ellipse cx=\"134\" cy=\"83\" rx=\"6\" ry=\"9\" fill=\"#30243c\"/><path d=\"m101 98 9 7 9-7-9-7z\" fill=\"#d66c8b\"/><path d=\"M110 105c-3 8-10 8-14 3M110 105c3 8 10 8 14 3\" fill=\"none\" stroke=\"#754536\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M80 102 50 98M80 111 49 118M140 102l30-4M140 111l31 7\" stroke=\"#754536\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>"},{"id":"dog","word":"Dog","meaning":"كلب","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M67 52C45 38 34 57 39 84c3 20 16 29 31 18M153 52c22-14 33 5 28 32-3 20-16 29-31 18\" fill=\"#a86d42\" stroke=\"#74462e\" stroke-width=\"4\"/><path d=\"M57 77c0-30 22-48 53-48s53 18 53 48c0 39-24 58-53 58S57 116 57 77z\" fill=\"#d9a46d\" stroke=\"#94613b\" stroke-width=\"4\"/><ellipse cx=\"86\" cy=\"78\" rx=\"6\" ry=\"8\" fill=\"#34263b\"/><ellipse cx=\"134\" cy=\"78\" rx=\"6\" ry=\"8\" fill=\"#34263b\"/><ellipse cx=\"110\" cy=\"101\" rx=\"31\" ry=\"23\" fill=\"#f5dfc1\"/><path d=\"m101 93 9-6 9 6-3 8h-12z\" fill=\"#3e3441\"/><path d=\"M110 101v9M110 110c-5 7-12 6-15 1M110 110c5 7 12 6 15 1\" stroke=\"#795239\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/></svg>"},{"id":"fish","word":"Fish","meaning":"سمكة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M47 81 18 49l1 63z\" fill=\"#ffb75b\" stroke=\"#bf7732\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M43 80c19-34 61-49 100-30 18 8 28 19 38 31-10 13-20 24-38 32-39 19-81 4-100-29z\" fill=\"#51c9ce\" stroke=\"#247c98\" stroke-width=\"4\"/><path d=\"M97 51 113 28l18 26M97 109l16 23 18-26\" fill=\"#ffd16c\" stroke=\"#bf8535\" stroke-width=\"4\" stroke-linejoin=\"round\"/><circle cx=\"149\" cy=\"72\" r=\"7\" fill=\"#172c45\"/><circle cx=\"151\" cy=\"70\" r=\"2\" fill=\"#fff\"/><path d=\"M62 82c18-1 21 13 20 20\" fill=\"none\" stroke=\"#b1f4ef\" stroke-width=\"5\" stroke-linecap=\"round\"/></svg>"},{"id":"book","word":"Book","meaning":"كتاب","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M25 41c31-9 57-4 85 13v83c-28-17-54-22-85-12z\" fill=\"#fff7e8\" stroke=\"#8b4564\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M195 41c-31-9-57-4-85 13v83c28-17 54-22 85-12z\" fill=\"#fffdf5\" stroke=\"#8b4564\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M25 41c31-9 57-4 85 13v83c-28-17-54-22-85-12z\" fill=\"#cd6b8f\" opacity=\".27\"/><path d=\"M195 41c-31-9-57-4-85 13v83c28-17 54-22 85-12z\" fill=\"#6dcac2\" opacity=\".3\"/><path d=\"M47 61c19-3 34 0 48 8M47 79c19-3 34 0 48 8M47 97c19-3 34 0 48 8M173 61c-19-3-34 0-48 8M173 79c-19-3-34 0-48 8M173 97c-19-3-34 0-48 8\" stroke=\"#7c6b87\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M110 54v83\" stroke=\"#8b4564\" stroke-width=\"4\"/></svg>"},{"id":"sun","word":"Sun","meaning":"شمس","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><g stroke=\"#eca63c\" stroke-width=\"8\" stroke-linecap=\"round\"><path d=\"M110 14v16M110 130v16M42 80h17M161 80h17M62 32l12 12M146 116l12 12M158 32l-12 12M74 116l-12 12\"/></g><circle cx=\"110\" cy=\"80\" r=\"46\" fill=\"#ffd45e\" stroke=\"#eba93d\" stroke-width=\"5\"/><circle cx=\"94\" cy=\"72\" r=\"4\" fill=\"#6c4c4a\"/><circle cx=\"127\" cy=\"72\" r=\"4\" fill=\"#6c4c4a\"/><path d=\"M91 91q19 20 38 0\" fill=\"none\" stroke=\"#a75d45\" stroke-width=\"4\" stroke-linecap=\"round\"/></svg>"},{"id":"car","word":"Car","meaning":"سيارة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M39 87 51 57c4-10 12-15 23-15h61c10 0 18 5 23 14l18 31 9 7v32H31V97z\" fill=\"#5a9de8\" stroke=\"#3566b3\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"m65 58-8 28h50V49H77c-5 0-9 3-12 9zM117 49v37h49l-16-27c-3-6-7-10-14-10z\" fill=\"#d9f4ff\" stroke=\"#3566b3\" stroke-width=\"4\" stroke-linejoin=\"round\"/><circle cx=\"66\" cy=\"124\" r=\"18\" fill=\"#303244\" stroke=\"#111724\" stroke-width=\"4\"/><circle cx=\"66\" cy=\"124\" r=\"7\" fill=\"#d4dce8\"/><circle cx=\"158\" cy=\"124\" r=\"18\" fill=\"#303244\" stroke=\"#111724\" stroke-width=\"4\"/><circle cx=\"158\" cy=\"124\" r=\"7\" fill=\"#d4dce8\"/><path d=\"M36 98h20M171 98h13\" stroke=\"#ffe49b\" stroke-width=\"6\" stroke-linecap=\"round\"/></svg>"},{"id":"banana","word":"Banana","meaning":"موزة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M49 34c28 49 73 77 128 57-17 39-57 52-94 33C49 109 28 73 31 43z\" fill=\"#ffd65c\" stroke=\"#ce9a2c\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M47 35c10 6 18 8 26 7M174 90l8 2-9 13-8-3\" fill=\"#91633d\" stroke=\"#80502c\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M56 56c28 39 58 55 92 48\" fill=\"none\" stroke=\"#fff0a4\" stroke-width=\"7\" stroke-linecap=\"round\"/></svg>"},{"id":"house","word":"House","meaning":"بيت","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"m29 73 81-54 81 54v10H29z\" fill=\"#b75c75\" stroke=\"#753b60\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M46 74h128v70H46z\" fill=\"#ffe4c9\" stroke=\"#a76c6d\" stroke-width=\"5\"/><path d=\"M62 87h29v25H62zM130 87h29v25h-29z\" fill=\"#8fdbe1\" stroke=\"#5c899d\" stroke-width=\"4\"/><path d=\"M94 107h31v37H94z\" fill=\"#9164b6\" stroke=\"#684477\" stroke-width=\"4\"/><circle cx=\"117\" cy=\"126\" r=\"2.5\" fill=\"#ffe9a8\"/></svg>"},{"id":"chair","word":"Chair","meaning":"كرسي","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M66 28h89c5 0 8 4 8 9v68H66z\" fill=\"#64c6b7\" stroke=\"#287f78\" stroke-width=\"5\"/><path d=\"M48 95h124v22H48z\" fill=\"#e5a35a\" stroke=\"#a9683a\" stroke-width=\"5\"/><path d=\"M59 117v29M161 117v29\" stroke=\"#a9683a\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M85 42h50M85 58h50M85 74h50\" stroke=\"#b8f3e3\" stroke-width=\"4\" stroke-linecap=\"round\"/></svg>"},{"id":"duck","word":"Duck","meaning":"بطة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><ellipse cx=\"106\" cy=\"99\" rx=\"57\" ry=\"36\" fill=\"#ffd85d\" stroke=\"#cb9630\" stroke-width=\"4\"/><circle cx=\"132\" cy=\"55\" r=\"29\" fill=\"#ffe47b\" stroke=\"#cb9630\" stroke-width=\"4\"/><path d=\"M158 57 194 69 158 80z\" fill=\"#f28b40\" stroke=\"#b9622e\" stroke-width=\"4\" stroke-linejoin=\"round\"/><circle cx=\"140\" cy=\"48\" r=\"5\" fill=\"#372c43\"/><circle cx=\"142\" cy=\"46\" r=\"2\" fill=\"#fff\"/><path d=\"M76 94c19 17 45 18 63 2-1 22-25 33-45 25\" fill=\"#f2bd3f\" stroke=\"#cb9630\" stroke-width=\"3\"/><path d=\"M90 132v12M116 132v12\" stroke=\"#f28b40\" stroke-width=\"6\" stroke-linecap=\"round\"/></svg>"}];
-const pictureQuizLength=10;
+const pictureQuizItems=(function(){var items=[{"id":"apple","word":"Apple","meaning":"تفاحة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M109 48c-22-23-58-6-61 26-4 33 18 66 45 69 10 1 15-5 22-5s13 6 24 4c26-5 46-38 42-67-4-29-36-49-61-28-5 4-7 4-11 1z\" fill=\"#e84f68\" stroke=\"#a92b4a\" stroke-width=\"4\"/><path d=\"M111 48c1-14 3-21 10-27\" fill=\"none\" stroke=\"#79502e\" stroke-width=\"8\" stroke-linecap=\"round\"/><path d=\"M119 29c20-19 37-12 41 1-14 13-28 13-41-1z\" fill=\"#5cc58b\" stroke=\"#23895b\" stroke-width=\"3\"/><path d=\"M79 62c-8 8-11 18-10 27\" fill=\"none\" stroke=\"#ffb2bd\" stroke-width=\"7\" stroke-linecap=\"round\"/></svg>"},{"id":"ball","word":"Ball","meaning":"كرة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"110\" cy=\"80\" r=\"59\" fill=\"#f7fbff\" stroke=\"#6c83a7\" stroke-width=\"5\"/><path d=\"m110 47 20 14-8 24h-25l-8-24z\" fill=\"#33445d\"/><path d=\"m110 47-6-24M130 61l23-5M122 85l16 21M97 85l-15 22M89 61 66 55M153 56l10-22M138 106l10 25M82 107l-19 15\" stroke=\"#6c83a7\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M59 80c0 12 3 22 9 31M164 82c0 32-24 57-54 57\" fill=\"none\" stroke=\"#d0d9e6\" stroke-width=\"5\"/></svg>"},{"id":"cat","word":"Cat","meaning":"قطة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M56 66 49 27l40 23M164 66l7-39-40 23\" fill=\"#f3a568\" stroke=\"#a95a39\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"m62 57-3-20 21 17M158 57l3-20-21 17\" fill=\"#f4a6be\"/><path d=\"M52 84c0-34 26-53 58-53s58 19 58 53c0 36-25 55-58 55S52 120 52 84z\" fill=\"#f3a568\" stroke=\"#a95a39\" stroke-width=\"4\"/><ellipse cx=\"86\" cy=\"83\" rx=\"6\" ry=\"9\" fill=\"#30243c\"/><ellipse cx=\"134\" cy=\"83\" rx=\"6\" ry=\"9\" fill=\"#30243c\"/><path d=\"m101 98 9 7 9-7-9-7z\" fill=\"#d66c8b\"/><path d=\"M110 105c-3 8-10 8-14 3M110 105c3 8 10 8 14 3\" fill=\"none\" stroke=\"#754536\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M80 102 50 98M80 111 49 118M140 102l30-4M140 111l31 7\" stroke=\"#754536\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>"},{"id":"dog","word":"Dog","meaning":"كلب","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M67 52C45 38 34 57 39 84c3 20 16 29 31 18M153 52c22-14 33 5 28 32-3 20-16 29-31 18\" fill=\"#a86d42\" stroke=\"#74462e\" stroke-width=\"4\"/><path d=\"M57 77c0-30 22-48 53-48s53 18 53 48c0 39-24 58-53 58S57 116 57 77z\" fill=\"#d9a46d\" stroke=\"#94613b\" stroke-width=\"4\"/><ellipse cx=\"86\" cy=\"78\" rx=\"6\" ry=\"8\" fill=\"#34263b\"/><ellipse cx=\"134\" cy=\"78\" rx=\"6\" ry=\"8\" fill=\"#34263b\"/><ellipse cx=\"110\" cy=\"101\" rx=\"31\" ry=\"23\" fill=\"#f5dfc1\"/><path d=\"m101 93 9-6 9 6-3 8h-12z\" fill=\"#3e3441\"/><path d=\"M110 101v9M110 110c-5 7-12 6-15 1M110 110c5 7 12 6 15 1\" stroke=\"#795239\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/></svg>"},{"id":"fish","word":"Fish","meaning":"سمكة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M47 81 18 49l1 63z\" fill=\"#ffb75b\" stroke=\"#bf7732\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M43 80c19-34 61-49 100-30 18 8 28 19 38 31-10 13-20 24-38 32-39 19-81 4-100-29z\" fill=\"#51c9ce\" stroke=\"#247c98\" stroke-width=\"4\"/><path d=\"M97 51 113 28l18 26M97 109l16 23 18-26\" fill=\"#ffd16c\" stroke=\"#bf8535\" stroke-width=\"4\" stroke-linejoin=\"round\"/><circle cx=\"149\" cy=\"72\" r=\"7\" fill=\"#172c45\"/><circle cx=\"151\" cy=\"70\" r=\"2\" fill=\"#fff\"/><path d=\"M62 82c18-1 21 13 20 20\" fill=\"none\" stroke=\"#b1f4ef\" stroke-width=\"5\" stroke-linecap=\"round\"/></svg>"},{"id":"book","word":"Book","meaning":"كتاب","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M25 41c31-9 57-4 85 13v83c-28-17-54-22-85-12z\" fill=\"#fff7e8\" stroke=\"#8b4564\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M195 41c-31-9-57-4-85 13v83c28-17 54-22 85-12z\" fill=\"#fffdf5\" stroke=\"#8b4564\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M25 41c31-9 57-4 85 13v83c-28-17-54-22-85-12z\" fill=\"#cd6b8f\" opacity=\".27\"/><path d=\"M195 41c-31-9-57-4-85 13v83c28-17 54-22 85-12z\" fill=\"#6dcac2\" opacity=\".3\"/><path d=\"M47 61c19-3 34 0 48 8M47 79c19-3 34 0 48 8M47 97c19-3 34 0 48 8M173 61c-19-3-34 0-48 8M173 79c-19-3-34 0-48 8M173 97c-19-3-34 0-48 8\" stroke=\"#7c6b87\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M110 54v83\" stroke=\"#8b4564\" stroke-width=\"4\"/></svg>"},{"id":"sun","word":"Sun","meaning":"شمس","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><g stroke=\"#eca63c\" stroke-width=\"8\" stroke-linecap=\"round\"><path d=\"M110 14v16M110 130v16M42 80h17M161 80h17M62 32l12 12M146 116l12 12M158 32l-12 12M74 116l-12 12\"/></g><circle cx=\"110\" cy=\"80\" r=\"46\" fill=\"#ffd45e\" stroke=\"#eba93d\" stroke-width=\"5\"/><circle cx=\"94\" cy=\"72\" r=\"4\" fill=\"#6c4c4a\"/><circle cx=\"127\" cy=\"72\" r=\"4\" fill=\"#6c4c4a\"/><path d=\"M91 91q19 20 38 0\" fill=\"none\" stroke=\"#a75d45\" stroke-width=\"4\" stroke-linecap=\"round\"/></svg>"},{"id":"car","word":"Car","meaning":"سيارة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M39 87 51 57c4-10 12-15 23-15h61c10 0 18 5 23 14l18 31 9 7v32H31V97z\" fill=\"#5a9de8\" stroke=\"#3566b3\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"m65 58-8 28h50V49H77c-5 0-9 3-12 9zM117 49v37h49l-16-27c-3-6-7-10-14-10z\" fill=\"#d9f4ff\" stroke=\"#3566b3\" stroke-width=\"4\" stroke-linejoin=\"round\"/><circle cx=\"66\" cy=\"124\" r=\"18\" fill=\"#303244\" stroke=\"#111724\" stroke-width=\"4\"/><circle cx=\"66\" cy=\"124\" r=\"7\" fill=\"#d4dce8\"/><circle cx=\"158\" cy=\"124\" r=\"18\" fill=\"#303244\" stroke=\"#111724\" stroke-width=\"4\"/><circle cx=\"158\" cy=\"124\" r=\"7\" fill=\"#d4dce8\"/><path d=\"M36 98h20M171 98h13\" stroke=\"#ffe49b\" stroke-width=\"6\" stroke-linecap=\"round\"/></svg>"},{"id":"banana","word":"Banana","meaning":"موزة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M49 34c28 49 73 77 128 57-17 39-57 52-94 33C49 109 28 73 31 43z\" fill=\"#ffd65c\" stroke=\"#ce9a2c\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M47 35c10 6 18 8 26 7M174 90l8 2-9 13-8-3\" fill=\"#91633d\" stroke=\"#80502c\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M56 56c28 39 58 55 92 48\" fill=\"none\" stroke=\"#fff0a4\" stroke-width=\"7\" stroke-linecap=\"round\"/></svg>"},{"id":"house","word":"House","meaning":"بيت","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"m29 73 81-54 81 54v10H29z\" fill=\"#b75c75\" stroke=\"#753b60\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M46 74h128v70H46z\" fill=\"#ffe4c9\" stroke=\"#a76c6d\" stroke-width=\"5\"/><path d=\"M62 87h29v25H62zM130 87h29v25h-29z\" fill=\"#8fdbe1\" stroke=\"#5c899d\" stroke-width=\"4\"/><path d=\"M94 107h31v37H94z\" fill=\"#9164b6\" stroke=\"#684477\" stroke-width=\"4\"/><circle cx=\"117\" cy=\"126\" r=\"2.5\" fill=\"#ffe9a8\"/></svg>"},{"id":"chair","word":"Chair","meaning":"كرسي","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M66 28h89c5 0 8 4 8 9v68H66z\" fill=\"#64c6b7\" stroke=\"#287f78\" stroke-width=\"5\"/><path d=\"M48 95h124v22H48z\" fill=\"#e5a35a\" stroke=\"#a9683a\" stroke-width=\"5\"/><path d=\"M59 117v29M161 117v29\" stroke=\"#a9683a\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M85 42h50M85 58h50M85 74h50\" stroke=\"#b8f3e3\" stroke-width=\"4\" stroke-linecap=\"round\"/></svg>"},{"id":"duck","word":"Duck","meaning":"بطة","art":"<svg viewBox=\"0 0 220 160\" aria-hidden=\"true\" focusable=\"false\"><ellipse cx=\"106\" cy=\"99\" rx=\"57\" ry=\"36\" fill=\"#ffd85d\" stroke=\"#cb9630\" stroke-width=\"4\"/><circle cx=\"132\" cy=\"55\" r=\"29\" fill=\"#ffe47b\" stroke=\"#cb9630\" stroke-width=\"4\"/><path d=\"M158 57 194 69 158 80z\" fill=\"#f28b40\" stroke=\"#b9622e\" stroke-width=\"4\" stroke-linejoin=\"round\"/><circle cx=\"140\" cy=\"48\" r=\"5\" fill=\"#372c43\"/><circle cx=\"142\" cy=\"46\" r=\"2\" fill=\"#fff\"/><path d=\"M76 94c19 17 45 18 63 2-1 22-25 33-45 25\" fill=\"#f2bd3f\" stroke=\"#cb9630\" stroke-width=\"3\"/><path d=\"M90 132v12M116 132v12\" stroke=\"#f28b40\" stroke-width=\"6\" stroke-linecap=\"round\"/></svg>"}];return items.concat(letters.filter(function(item){return !items.some(function(existing){return existing.word===item[2];});}).map(function(item){return {id:String(item[2]).toLowerCase().replace(/[^a-z0-9]+/g,'-'),word:item[2],meaning:item[3],art:'<span class="picture-quiz-emoji" aria-hidden="true">'+item[4]+'</span>'};}));})();
 let pictureQuizDeck=[];
 let pictureQuizIndex=0;
 let pictureQuizCorrect=0;
@@ -275,54 +275,15 @@ function pictureQuizSpeak(word){
  window.speechSynthesis.speak(utterance);
 }
 function pictureQuizRenderQuestion(){
- pictureQuizResolved=false;
- pictureQuizNext.disabled=true;
- pictureQuizNext.hidden=false;
- pictureQuizNext.textContent=pictureQuizIndex===pictureQuizDeck.length-1?'See my score →':'Next question →';
- const current=pictureQuizDeck[pictureQuizIndex];
- const choices=pictureQuizShuffle([current,...pictureQuizShuffle(pictureQuizItems.filter(item=>item.id!==current.id)).slice(0,2)]);
- pictureQuizCounter.textContent='Question '+(pictureQuizIndex+1)+' of '+pictureQuizDeck.length;
- pictureQuizScore.textContent='⭐ '+pictureQuizCorrect+' correct';
- pictureQuizProgress.style.width=(pictureQuizIndex/pictureQuizDeck.length*100)+'%';
- if(pictureQuizProgressBar)pictureQuizProgressBar.setAttribute('aria-valuenow',String(pictureQuizIndex));
- pictureQuizFeedback.textContent='اختار اسم الصورة الصحيح عشان نكمّل!';
- pictureQuizHelper.textContent='خُد وقتك واقرأ الاختيارات بهدوء.';
- pictureQuizStage.innerHTML=`
-  <div class="picture-quiz-art-wrap">
-   <div class="picture-quiz-art" role="img" aria-label="A colorful picture to identify">${current.art}</div>
-   <span class="picture-quiz-art-caption">Look carefully 👀</span>
-  </div>
-  <div class="picture-quiz-challenge">
-   <div class="picture-quiz-prompt">QUESTION ${pictureQuizIndex+1}</div>
-   <h3>What is it?</h3>
-   <p lang="ar" dir="rtl">اختار الكلمة اللي بتوصف الصورة.</p>
-   <div class="picture-quiz-options">
-    ${choices.map((item,index)=>`<button class="picture-quiz-option" type="button" data-answer="${item.id}" aria-label="Choose ${item.word}"><span class="picture-quiz-option-letter">${String.fromCharCode(65+index)}</span><span class="picture-quiz-option-text">${item.word}</span><span class="picture-quiz-option-arrow" aria-hidden="true">›</span></button>`).join('')}
-   </div>
-  </div>`;
+ pictureQuizResolved=false;pictureQuizNext.disabled=true;pictureQuizNext.hidden=false;pictureQuizNext.textContent='Next question →';
+ if(pictureQuizIndex>0&&pictureQuizIndex%pictureQuizDeck.length===0){var previousId=pictureQuizDeck[pictureQuizDeck.length-1].id;pictureQuizDeck=pictureQuizShuffle(pictureQuizItems);if(pictureQuizDeck.length>1&&pictureQuizDeck[0].id===previousId){var swap=pictureQuizDeck[0];pictureQuizDeck[0]=pictureQuizDeck[1];pictureQuizDeck[1]=swap;}}
+ var cyclePosition=pictureQuizIndex%pictureQuizDeck.length,current=pictureQuizDeck[cyclePosition];
+ var choices=pictureQuizShuffle([current,...pictureQuizShuffle(pictureQuizItems.filter(function(item){return item.id!==current.id;})).slice(0,2)]);
+ pictureQuizCounter.textContent='Question '+(pictureQuizIndex+1)+' · Unlimited';pictureQuizScore.textContent='⭐ '+pictureQuizCorrect+' correct';pictureQuizProgress.style.width=(cyclePosition/pictureQuizDeck.length*100)+'%';if(pictureQuizProgressBar)pictureQuizProgressBar.setAttribute('aria-valuenow',String(cyclePosition));
+ pictureQuizFeedback.textContent='اختار اسم الصورة الصحيح عشان نكمّل!';pictureQuizHelper.textContent='خُد وقتك واقرأ الاختيارات بهدوء.';
+ pictureQuizStage.innerHTML='<div class="picture-quiz-art-wrap"><div class="picture-quiz-art" role="img" aria-label="A colorful picture to identify">'+current.art+'</div><span class="picture-quiz-art-caption">Look carefully 👀</span></div><div class="picture-quiz-challenge"><div class="picture-quiz-prompt">QUESTION '+(pictureQuizIndex+1)+'</div><h3>What is it?</h3><p lang="ar" dir="rtl">اختار الكلمة اللي بتوصف الصورة.</p><div class="picture-quiz-options">'+choices.map(function(item,i){return '<button class="picture-quiz-option" type="button" data-answer="'+item.id+'" aria-label="Choose '+item.word+'"><span class="picture-quiz-option-letter">'+String.fromCharCode(65+i)+'</span><span class="picture-quiz-option-text">'+item.word+'</span><span class="picture-quiz-option-arrow" aria-hidden="true">›</span></button>';}).join('')+'</div></div>';
 }
-function pictureQuizShowResults(){
- pictureQuizCounter.textContent='Activity complete';
- pictureQuizScore.textContent='⭐ '+pictureQuizCorrect+' / '+pictureQuizDeck.length;
- pictureQuizProgress.style.width='100%';
- if(pictureQuizProgressBar)pictureQuizProgressBar.setAttribute('aria-valuenow',String(pictureQuizDeck.length));
- const percent=pictureQuizCorrect/pictureQuizDeck.length;
- const title=percent>=.8?'Amazing work!':percent>=.5?'Great job!':'Keep practising!';
- const icon=percent>=.8?'🏆':percent>=.5?'⭐':'🌱';
- const message=percent>=.8?'ممتاز! إنت بتتعرف على الكلمات والصور بشكل رائع.':percent>=.5?'شاطر! كمّل تدريب وهتلاقي الكلمات بقت أسهل.':'بداية حلوة! جرّب مرة تانية عشان تتدرّب على الكلمات الجديدة.';
- pictureQuizStage.innerHTML=`<div class="picture-quiz-results"><div class="picture-quiz-results-icon" aria-hidden="true">${icon}</div><div class="eyebrow">PICTURE QUIZ COMPLETE</div><h3>${title}</h3><h3>${pictureQuizCorrect} / ${pictureQuizDeck.length}</h3><p lang="ar" dir="rtl">${message}</p><button id="pictureQuizRestart" class="btn primary" type="button">↻ Play again</button></div>`;
- pictureQuizFeedback.textContent='خلصت النشاط! تقدر تعيد التجربة وتختبر كلمات مختلفة.';
- pictureQuizHelper.textContent='كل محاولة جديدة بتغيّر ترتيب الأسئلة والاختيارات.';
- pictureQuizNext.hidden=true;
- document.getElementById('pictureQuizRestart').addEventListener('click',pictureQuizStart);
-}
-function pictureQuizStart(){
- pictureQuizDeck=pictureQuizShuffle(pictureQuizItems).slice(0,pictureQuizLength);
- pictureQuizIndex=0;
- pictureQuizCorrect=0;
- pictureQuizNext.hidden=false;
- pictureQuizRenderQuestion();
-}
+function pictureQuizStart(){pictureQuizDeck=pictureQuizShuffle(pictureQuizItems);pictureQuizIndex=0;pictureQuizCorrect=0;pictureQuizNext.hidden=false;pictureQuizRenderQuestion();}
 pictureQuizStage.addEventListener('click',event=>{
  const button=event.target.closest('button[data-answer]');
  if(!button||pictureQuizResolved||button.disabled)return;
@@ -340,21 +301,16 @@ pictureQuizStage.addEventListener('click',event=>{
   option.disabled=true;
   if(option.dataset.answer===current.id)option.classList.add('is-correct');
  });
- pictureQuizCounter.textContent='Question '+(pictureQuizIndex+1)+' of '+pictureQuizDeck.length;
+ pictureQuizCounter.textContent='Question '+(pictureQuizIndex+1)+' · Unlimited';
  pictureQuizScore.textContent='⭐ '+pictureQuizCorrect+' correct';
- pictureQuizProgress.style.width=((pictureQuizIndex+1)/pictureQuizDeck.length*100)+'%';
- if(pictureQuizProgressBar)pictureQuizProgressBar.setAttribute('aria-valuenow',String(pictureQuizIndex+1));
+ pictureQuizProgress.style.width=((pictureQuizIndex%pictureQuizDeck.length+1)/pictureQuizDeck.length*100)+'%';
+ if(pictureQuizProgressBar)pictureQuizProgressBar.setAttribute('aria-valuenow',String(pictureQuizIndex%pictureQuizDeck.length+1));
  pictureQuizFeedback.innerHTML=`<strong>Correct! ${current.word} = ${current.meaning}</strong><button id="pictureQuizHear" class="picture-quiz-hear" type="button">🔊 Hear the word</button>`;
  document.getElementById('pictureQuizHear').addEventListener('click',()=>pictureQuizSpeak(current.word));
  pictureQuizHelper.textContent='إجابة صح! اضغط Next عشان تشوف الصورة اللي بعدها.';
  pictureQuizNext.disabled=false;
 });
-pictureQuizNext.addEventListener('click',()=>{
- if(!pictureQuizResolved)return;
- pictureQuizIndex++;
- if(pictureQuizIndex>=pictureQuizDeck.length){pictureQuizShowResults();return;}
- pictureQuizRenderQuestion();
-});
+pictureQuizNext.addEventListener('click',()=>{if(!pictureQuizResolved)return;pictureQuizIndex++;pictureQuizRenderQuestion();});
 pictureQuizStart();
 
 
@@ -394,51 +350,15 @@ function listenQuizShuffle(items){
  return out;
 }
 function listenQuizRenderQuestion(){
- listenQuizResolved=false;
- listenQuizNext.disabled=true;
- listenQuizNext.hidden=false;
- listenQuizNext.textContent=listenQuizIndex===listenQuizDeck.length-1?'See my score →':'Next question →';
- listenQuizPlay.disabled=false;
- const current=listenQuizDeck[listenQuizIndex];
- const choices=listenQuizShuffle([current,...listenQuizShuffle(pictureQuizItems.filter(item=>item.id!==current.id)).slice(0,2)]);
- listenQuizCounter.textContent='Question '+(listenQuizIndex+1)+' of '+listenQuizDeck.length;
- listenQuizScore.textContent='⭐ '+listenQuizCorrect+' correct';
- listenQuizProgress.style.width=(listenQuizIndex/listenQuizDeck.length*100)+'%';
- if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(listenQuizIndex));
- listenQuizFeedback.textContent='اسمع الكلمة، وبعدين اختار واحدة من الصور التلاتة.';
- listenQuizHelper.textContent='تقدر تعيد تشغيل الكلمة قبل ما تختار.';
- listenQuizStage.innerHTML=choices.map((item,index)=>`
-  <button class="listen-quiz-option" type="button" data-listen-answer="${item.id}" aria-label="Picture option ${String.fromCharCode(65+index)}: ${item.word}">
-   <span class="listen-quiz-letter">${String.fromCharCode(65+index)}</span>
-   <span class="listen-quiz-picture" role="img" aria-label="Picture choice ${index+1}">${item.art}</span>
-   <span class="listen-quiz-reveal">${item.word}<br><span lang="ar" dir="rtl">${item.meaning}</span></span>
-  </button>`).join('');
+ listenQuizResolved=false;listenQuizNext.disabled=true;listenQuizNext.hidden=false;listenQuizNext.textContent='Next question →';listenQuizPlay.disabled=false;
+ if(listenQuizIndex>0&&listenQuizIndex%listenQuizDeck.length===0){var previousId=listenQuizDeck[listenQuizDeck.length-1].id;listenQuizDeck=listenQuizShuffle(pictureQuizItems);if(listenQuizDeck.length>1&&listenQuizDeck[0].id===previousId){var swap=listenQuizDeck[0];listenQuizDeck[0]=listenQuizDeck[1];listenQuizDeck[1]=swap;}}
+ var cyclePosition=listenQuizIndex%listenQuizDeck.length,current=listenQuizDeck[cyclePosition];
+ var choices=listenQuizShuffle([current,...listenQuizShuffle(pictureQuizItems.filter(function(item){return item.id!==current.id;})).slice(0,2)]);
+ listenQuizCounter.textContent='Question '+(listenQuizIndex+1)+' · Unlimited';listenQuizScore.textContent='⭐ '+listenQuizCorrect+' correct';listenQuizProgress.style.width=(cyclePosition/listenQuizDeck.length*100)+'%';if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(cyclePosition));
+ listenQuizFeedback.textContent='اسمع الكلمة، وبعدين اختار واحدة من الصور التلاتة.';listenQuizHelper.textContent='تقدر تعيد تشغيل الكلمة قبل ما تختار.';
+ listenQuizStage.innerHTML=choices.map(function(item,i){return '<button class="listen-quiz-option" type="button" data-listen-answer="'+item.id+'" aria-label="Picture option '+String.fromCharCode(65+i)+'"><span class="listen-quiz-letter">'+String.fromCharCode(65+i)+'</span><span class="listen-quiz-picture" role="img" aria-label="Picture choice '+(i+1)+'">'+item.art+'</span><span class="listen-quiz-reveal">'+item.word+'<br><span lang="ar" dir="rtl">'+item.meaning+'</span></span></button>';}).join('');
 }
-function listenQuizShowResults(){
- listenQuizCounter.textContent='Activity complete';
- listenQuizScore.textContent='⭐ '+listenQuizCorrect+' / '+listenQuizDeck.length;
- listenQuizProgress.style.width='100%';
- if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(listenQuizDeck.length));
- const ratio=listenQuizCorrect/listenQuizDeck.length;
- const title=ratio>=.8?'Super listening!':ratio>=.5?'Nice listening!':'Keep listening!';
- const icon=ratio>=.8?'🏆':ratio>=.5?'🎧':'🌱';
- const message=ratio>=.8?'ممتاز! ودنك بدأت تميّز الكلمات الإنجليزية من صوتها.':ratio>=.5?'شاطر! اسمع الكلمات تاني عشان تميّزها أسرع.':'بداية كويسة! اسمع الكلمات بهدوء وجرّب مرة تانية.';
- listenQuizStage.innerHTML=`<div class="listen-quiz-results"><div class="listen-quiz-results-icon" aria-hidden="true">${icon}</div><div class="eyebrow">LISTENING PRACTICE COMPLETE</div><h3>${title}</h3><h3>${listenQuizCorrect} / ${listenQuizDeck.length}</h3><p lang="ar" dir="rtl">${message}</p><button id="listenQuizRestart" class="btn primary" type="button">↻ Play again</button></div>`;
- listenQuizFeedback.textContent='خلصت نشاط الاستماع! أعد اللعب لو حابب تتدرّب على كلمات أكتر.';
- listenQuizHelper.textContent='كل محاولة بتغيّر ترتيب الكلمات والصور.';
- listenQuizPlay.hidden=true;
- listenQuizNext.hidden=true;
- document.getElementById('listenQuizRestart').addEventListener('click',listenQuizStart);
-}
-function listenQuizStart(){
- if('speechSynthesis' in window)window.speechSynthesis.cancel();
- listenQuizDeck=listenQuizShuffle(pictureQuizItems).slice(0,10);
- listenQuizIndex=0;
- listenQuizCorrect=0;
- listenQuizPlay.hidden=false;
- listenQuizNext.hidden=false;
- listenQuizRenderQuestion();
-}
+function listenQuizStart(){if('speechSynthesis'in window)window.speechSynthesis.cancel();listenQuizDeck=listenQuizShuffle(pictureQuizItems);listenQuizIndex=0;listenQuizCorrect=0;listenQuizPlay.hidden=false;listenQuizNext.hidden=false;listenQuizRenderQuestion();}
 listenQuizPlay.addEventListener('click',()=>{
  const current=listenQuizDeck[listenQuizIndex];
  listenQuizSpeak(current.word);
@@ -462,22 +382,17 @@ listenQuizStage.addEventListener('click',event=>{
   option.disabled=true;
   if(option.dataset.listenAnswer===current.id)option.classList.add('is-correct');
  });
- listenQuizCounter.textContent='Question '+(listenQuizIndex+1)+' of '+listenQuizDeck.length;
+ listenQuizCounter.textContent='Question '+(listenQuizIndex+1)+' · Unlimited';
  listenQuizScore.textContent='⭐ '+listenQuizCorrect+' correct';
- listenQuizProgress.style.width=((listenQuizIndex+1)/listenQuizDeck.length*100)+'%';
- if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(listenQuizIndex+1));
+ listenQuizProgress.style.width=((listenQuizIndex%listenQuizDeck.length+1)/listenQuizDeck.length*100)+'%';
+ if(listenQuizProgressBar)listenQuizProgressBar.setAttribute('aria-valuenow',String(listenQuizIndex%listenQuizDeck.length+1));
  listenQuizFeedback.innerHTML=`<strong>Correct! ${current.word} = ${current.meaning}</strong><button id="listenQuizHearAgain" class="picture-quiz-hear" type="button">🔊 Hear again</button>`;
  document.getElementById('listenQuizHearAgain').addEventListener('click',()=>listenQuizSpeak(current.word));
  listenQuizHelper.textContent='إجابة صح! اضغط Next عشان تسمع كلمة جديدة.';
  listenQuizPlay.disabled=true;
  listenQuizNext.disabled=false;
 });
-listenQuizNext.addEventListener('click',()=>{
- if(!listenQuizResolved)return;
- listenQuizIndex++;
- if(listenQuizIndex>=listenQuizDeck.length){listenQuizShowResults();return;}
- listenQuizRenderQuestion();
-});
+listenQuizNext.addEventListener('click',()=>{if(!listenQuizResolved)return;listenQuizIndex++;listenQuizRenderQuestion();});
 listenQuizStart();
 
 </script>
