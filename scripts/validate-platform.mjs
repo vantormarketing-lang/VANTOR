@@ -101,6 +101,15 @@ for (const required of ['id="listenQuiz"', 'function listenQuizRenderQuestion()'
 }
 ok('MR_FLUENT_KIDS_A1.html: listen-and-choose activity has audio, choices, and results');
 
+
+const kidsIndex = read('index.html');
+const a1RenderStart = kidsIndex.indexOf('function renderAlphabet(){');
+const a1RenderEnd = kidsIndex.indexOf('function renderA2()', a1RenderStart);
+const a1Render = a1RenderStart >= 0 && a1RenderEnd > a1RenderStart ? kidsIndex.slice(a1RenderStart, a1RenderEnd) : '';
+for (const required of ['id="mfkrA1LookQuiz"', 'id="mfkrA1ListenQuiz"', 'function mfkrA1DrawLook()', 'function mfkrA1DrawListen()', 'data-a1-listen-answer']) {
+  if (!a1Render.includes(required)) fail(`index.html: active A1 route is missing picture or listening activity: ${required}`);
+}
+ok('index.html: active Kids A1 route includes Look & Choose and Listen & Choose games');
 const student = read('index.html');
 if (/storage\.from\(\s*['"]homework-submissions['"]\s*\)\s*\.getPublicUrl\s*\(/.test(student)) {
   fail('index.html: homework attachments must not be exposed with getPublicUrl()');
@@ -165,8 +174,8 @@ if (!studentCacheVersion) {
   fail('sw.js: student service-worker URL version must match the offline cache version');
 }
 const studentManifest = JSON.parse(read('manifest.webmanifest'));
-if (studentManifest.start_url !== './?doma-app=student&launch=v195') {
-  fail('manifest.webmanifest: student app must launch from the v195 student start URL on the working site root');
+if (studentManifest.start_url !== './?doma-app=student&launch=v196') {
+  fail('manifest.webmanifest: student app must launch from the v196 student start URL on the working site root');
 }
 if (studentManifest.id !== './?doma-app=student-pwa-v2') {
   fail('manifest.webmanifest: student PWA must use the clean v2 identity for a fresh desktop installation');
