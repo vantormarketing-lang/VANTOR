@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v191', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v192', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v191', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v192', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2595,16 +2595,16 @@ function openAuth(type){
   </div>
   <div id="signupPlayerChoices" role="listbox" aria-label="Choose your favorite player" style="display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;margin:9px 0 3px;padding:10px;box-sizing:border-box;border:1px solid rgba(232,201,155,.32);border-radius:16px;background:linear-gradient(145deg,rgba(49,16,29,.97),rgba(20,9,14,.98));">
     <button type="button" role="option" aria-label="Choose Lionel Messi" class="doma-inline-player-choice" style="display:flex;min-width:0;flex-direction:column;gap:8px;align-items:stretch;padding:8px;border:1px solid rgba(232,201,155,.28);border-radius:12px;background:rgba(255,255,255,.035);color:#fff0e5;cursor:pointer;font:inherit;" onclick="window.domaSelectFavoritePlayer('Lionel Messi');return false;">
-      <span style="display:grid;place-items:center;height:112px;overflow:hidden;border-radius:9px;background:linear-gradient(145deg,#4b2230,#1a0d12);color:#f5dcc9;font-size:22px;font-weight:900;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Lionel_Messi_close-up.jpg/500px-Lionel_Messi_close-up.jpg" alt="Lionel Messi" loading="eager" referrerpolicy="no-referrer" style="display:block;width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='LM';"></span>
+      <span style="display:grid;place-items:center;height:170px;overflow:hidden;border-radius:9px;background:linear-gradient(145deg,#4b2230,#1a0d12);color:#f5dcc9;font-size:22px;font-weight:900;"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Lionel_Messi_Argentina_v_Egypt_7_July_2026-130_%28cropped%29.jpg/960px-Lionel_Messi_Argentina_v_Egypt_7_July_2026-130_%28cropped%29.jpg" alt="Lionel Messi" loading="eager" referrerpolicy="no-referrer" style="display:block;width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='LM';"></span>
       <span style="font-size:12px;font-weight:900;line-height:1.3;">Lionel Messi</span>
       <span style="font-size:8px;font-weight:800;letter-spacing:1.4px;color:#d7a08b;">ARGENTINA</span>
     </button>
     <button type="button" role="option" aria-label="Choose Cristiano Ronaldo" class="doma-inline-player-choice" style="display:flex;min-width:0;flex-direction:column;gap:8px;align-items:stretch;padding:8px;border:1px solid rgba(232,201,155,.28);border-radius:12px;background:rgba(255,255,255,.035);color:#fff0e5;cursor:pointer;font:inherit;" onclick="window.domaSelectFavoritePlayer('Cristiano Ronaldo');return false;">
-      <span style="display:grid;place-items:center;height:112px;overflow:hidden;border-radius:9px;background:linear-gradient(145deg,#4b2230,#1a0d12);color:#f5dcc9;font-size:22px;font-weight:900;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Cristiano_Ronaldo_2018_%28cropped%29.jpg/613px-Cristiano_Ronaldo_2018_%28cropped%29.jpg" alt="Cristiano Ronaldo" loading="eager" referrerpolicy="no-referrer" style="display:block;width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='CR7';"></span>
+      <span style="display:grid;place-items:center;height:170px;overflow:hidden;border-radius:9px;background:linear-gradient(145deg,#4b2230,#1a0d12);color:#f5dcc9;font-size:22px;font-weight:900;"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-154_%28cropped_3%29.jpg/960px-Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-154_%28cropped_3%29.jpg" alt="Cristiano Ronaldo" loading="eager" referrerpolicy="no-referrer" style="display:block;width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='CR7';"></span>
       <span style="font-size:12px;font-weight:900;line-height:1.3;">Cristiano Ronaldo</span>
       <span style="font-size:8px;font-weight:800;letter-spacing:1.4px;color:#d7a08b;">PORTUGAL</span>
     </button>
-    <p style="grid-column:1/-1;margin:1px 0 0;color:#a98e96;font-size:8px;line-height:1.5;">Portraits: <a href="https://commons.wikimedia.org/wiki/File:Lionel_Messi_close-up.jpg" target="_blank" rel="noopener noreferrer" style="color:#d7a08b;">Fanny Schertzer</a> and <a href="https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_2018_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" style="color:#d7a08b;">Anna Nessi</a> · CC BY-SA 3.0</p>
+    <p style="grid-column:1/-1;margin:1px 0 0;color:#a98e96;font-size:8px;line-height:1.5;">Photos: <a href="https://commons.wikimedia.org/wiki/File:Lionel_Messi_Argentina_v_Egypt_7_July_2026-130_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" style="color:#d7a08b;">Bryan Berlin / WikiPortraits (Messi)</a> and <a href="https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-154_%28cropped_3%29.jpg" target="_blank" rel="noopener noreferrer" style="color:#d7a08b;">(Ronaldo)</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer" style="color:#d7a08b;">CC BY-SA 4.0</a></p>
   </div>
   <button class="btn primary full doma-auth-create" type="button" onclick="domaSignup()"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="4" fill="currentColor"/><path d="M2.5 21v-2.2c0-3.7 2.7-5.6 6.5-5.6s6.5 1.9 6.5 5.6V21Z" fill="currentColor"/><path d="M19 7v7m-3.5-3.5h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Create Account</span></button>
   <div id="authStatus" class="status full"></div>
