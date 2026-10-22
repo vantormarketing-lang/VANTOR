@@ -1467,7 +1467,7 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content #sign
 #modal.doma-auth-signup .doma-auth-field-content input::placeholder{color:#9b89de!important;opacity:1!important;font-size:14px!important;font-weight:500!important}
 #modal.doma-auth-signup .doma-auth-field-content select{color:#9786db!important;cursor:pointer!important}
 #modal.doma-auth-signup .doma-auth-field-content select option{background:#20112e!important;color:#fff!important}
-#modal.doma-auth-signup .doma-auth-field-team::after{content:""!important;position:absolute!important;right:27px!important;top:35px!important;width:9px!important;height:9px!important;border-right:2px solid #c09bff!important;border-bottom:2px solid #c09bff!important;transform:rotate(45deg)!important;pointer-events:none!important}
+#modal.doma-auth-signup .doma-auth-field-team::after{content:none!important;display:none!important}
 #modal.doma-auth-signup .doma-auth-create{display:flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;width:100%!important;min-height:64px!important;height:64px!important;margin:10px 0 0!important;padding:13px 18px!important;border-radius:999px!important;border:1px solid rgba(246,119,255,.87)!important;background:linear-gradient(105deg,#d3139b 0%,#8917a7 38%,#4d22ce 72%,#855af4 100%)!important;color:#fff!important;font-size:17px!important;font-weight:800!important;letter-spacing:.1px!important;box-shadow:0 9px 25px rgba(96,27,162,.27),inset 0 1px 0 rgba(255,255,255,.22)!important;transition:filter .18s ease,transform .18s ease,box-shadow .18s ease!important}
 #modal.doma-auth-signup .doma-auth-create svg{display:block!important;width:26px!important;height:26px!important;flex:0 0 26px!important;color:#e4c7ff!important}
 #modal.doma-auth-signup .doma-auth-create:hover{filter:brightness(1.08)!important;transform:translateY(-1px)!important;box-shadow:0 12px 28px rgba(96,27,162,.38)!important}
@@ -1683,8 +1683,7 @@ html body #modal.doma-auth-photo.doma-auth-signup .doma-auth-switch{justify-cont
 }
 #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content input::placeholder{color:#a9bedf!important;opacity:1!important;font-size:13px!important;font-weight:500!important}
 #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-team::after{
-  content:""!important;position:absolute!important;right:20px!important;top:24px!important;width:7px!important;height:7px!important;
-  border-right:1.7px solid #98cfff!important;border-bottom:1.7px solid #98cfff!important;transform:rotate(45deg)!important;pointer-events:none!important;
+  content:none!important;display:none!important;
 }
 #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content select{color:#c5daf8!important;cursor:pointer!important;padding-right:22px!important}
 #modal.doma-auth-photo.doma-auth-signup .doma-auth-field-content select option{background:#111d3e!important;color:#fff!important}
@@ -16245,7 +16244,7 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
   'use strict';
   document.addEventListener('click', function(event){
     var target = event.target;
-    var trigger = target && target.closest ? target.closest('#signupPlayerTrigger') : null;
+    var trigger = target && target.closest ? target.closest('#signupPlayerTrigger, #modal.doma-auth-signup .doma-auth-field-team') : null;
     if (!trigger) return;
     event.preventDefault();
     event.stopPropagation();
