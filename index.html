@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v197', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v199', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v197', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v199', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -17363,5 +17363,33 @@ html body #modal.modal.show.doma-auth-photo.doma-auth-signup .doma-auth-field-co
   html body #modal.modal.show.doma-auth-photo.doma-auth-signup .doma-auth-field{
     transition:none!important;
   }
+}
+</style>
+
+<style id="doma-glass-get-start-v199">
+/* Match the homepage Get Started button to the academy's burgundy/mauve glass cards. */
+html body .nav-actions #navAction.nav-action-nature{
+  color:#fff2fa!important;
+  background:linear-gradient(135deg,rgba(67,19,40,.96) 0%,rgba(111,43,77,.95) 52%,rgba(112,65,126,.94) 100%)!important;
+  border:1px solid rgba(205,151,202,.54)!important;
+  box-shadow:0 7px 20px rgba(25,5,20,.28),inset 0 1px 0 rgba(255,231,250,.12)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(135%)!important;
+  backdrop-filter:blur(16px) saturate(135%)!important;
+}
+html body .nav-actions #navAction.nav-action-nature:hover{
+  color:#fff7ff!important;
+  background:linear-gradient(135deg,rgba(95,29,56,.97) 0%,rgba(133,58,92,.96) 52%,rgba(143,98,159,.96) 100%)!important;
+  border-color:rgba(226,184,222,.72)!important;
+  box-shadow:0 9px 24px rgba(48,10,33,.32),0 0 17px rgba(154,108,172,.14),inset 0 1px 0 rgba(255,240,255,.16)!important;
+  transform:translateY(-1px);
+}
+html body .nav-actions #navAction.nav-action-nature .nav-action-icon{
+  color:#f3d9f1!important;
+}
+html body .nav-actions #navAction.nav-action-nature .nav-action-icon path{
+  stroke:currentColor!important;
+}
+@media(prefers-reduced-motion:reduce){
+  html body .nav-actions #navAction.nav-action-nature{transition:none!important}
 }
 </style>
