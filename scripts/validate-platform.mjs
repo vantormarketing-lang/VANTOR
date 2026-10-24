@@ -111,6 +111,15 @@ for (const forbidden of ['slice(0,10)', 'if(mfkrLookIndex>=mfkrLookDeck.length)'
 }
 ok('index.html: active Kids A1 route has endless Look & Choose and Listen & Choose activities');
 const student = read('index.html');
+
+if (!student.includes('class="mf-kids-entry-price"') ||
+    !student.includes('<strong>100 <small>EGP</small></strong>') ||
+    !student.includes('aria-label="Kids course price: 100 Egyptian pounds per 30 days"')) {
+  fail('index.html: homepage Kids course card must display its 100 EGP / 30 days price');
+} else {
+  ok('index.html: homepage Kids course card displays 100 EGP / 30 days');
+}
+
 if (/storage\.from\(\s*['"]homework-submissions['"]\s*\)\s*\.getPublicUrl\s*\(/.test(student)) {
   fail('index.html: homework attachments must not be exposed with getPublicUrl()');
 }
@@ -174,8 +183,8 @@ if (!studentCacheVersion) {
   fail('sw.js: student service-worker URL version must match the offline cache version');
 }
 const studentManifest = JSON.parse(read('manifest.webmanifest'));
-if (studentManifest.start_url !== './?doma-app=student&launch=v200') {
-  fail('manifest.webmanifest: student app must launch from the v200 student start URL on the working site root');
+if (studentManifest.start_url !== './?doma-app=student&launch=v201') {
+  fail('manifest.webmanifest: student app must launch from the v201 student start URL on the working site root');
 }
 if (studentManifest.id !== './?doma-app=student-pwa-v2') {
   fail('manifest.webmanifest: student PWA must use the clean v2 identity for a fresh desktop installation');

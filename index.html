@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v200', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v201', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v200', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v201', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2390,6 +2390,7 @@ body.mf-kids-route #mfKidsStandaloneRoot{display:block!important;visibility:visi
         <h3>Mr. Fluent Kids</h3>
         <p dir="rtl" lang="ar">إنجليزي للأطفال بطريقة ممتعة.</p>
         <div class="mf-kids-entry-tags"><span>A–Z</span><span>🔊 Audio</span><span>AR + EN</span></div>
+        <div class="mf-kids-entry-price" aria-label="Kids course price: 100 Egyptian pounds per 30 days"><strong>100 <small>EGP</small></strong><span>per 30 days</span></div>
         <span class="mf-kids-entry-cta">Open <b aria-hidden="true">↗</b></span>
       </div>
     </a>
@@ -17391,5 +17392,37 @@ html body .nav-actions #navAction.nav-action-nature .nav-action-icon path{
 }
 @media(prefers-reduced-motion:reduce){
   html body .nav-actions #navAction.nav-action-nature{transition:none!important}
+}
+</style>
+
+<style id="mf-kids-home-price-v1">
+/* Show Kids course price like its neighbouring course card, without affecting other prices. */
+html body section#english-course .mf-kids-entry-price{
+  display:flex;align-items:baseline;justify-content:flex-start;gap:6px;flex-wrap:wrap;
+  min-width:0;margin:10px 0 0;color:#c6b5d5;line-height:1.15;
+}
+html body section#english-course .mf-kids-entry-price strong{
+  color:#fff!important;font-size:20px!important;font-weight:950!important;line-height:1.1!important;
+  white-space:nowrap!important;text-shadow:0 0 12px rgba(174,126,255,.14)!important;
+}
+html body section#english-course .mf-kids-entry-price strong small{
+  color:#c7b9f6!important;font-size:10px!important;font-weight:850!important;
+}
+html body section#english-course .mf-kids-entry-price span{
+  color:#c7b9f6!important;font-size:9px!important;font-weight:650!important;white-space:nowrap!important;
+}
+@media(max-width:700px){
+  html body section#english-course .mf-kids-entry-price{
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+    gap:1px!important;margin:3px 0 3px!important;text-align:center!important;
+  }
+  html body section#english-course .mf-kids-entry-price strong{font-size:15px!important;line-height:1.1!important}
+  html body section#english-course .mf-kids-entry-price strong small{font-size:8px!important}
+  html body section#english-course .mf-kids-entry-price span{font-size:8px!important;line-height:1.2!important}
+}
+@media(max-width:360px){
+  html body section#english-course .mf-kids-entry-price{margin:2px 0!important}
+  html body section#english-course .mf-kids-entry-price strong{font-size:14px!important}
+  html body section#english-course .mf-kids-entry-price span{display:none!important}
 }
 </style>
