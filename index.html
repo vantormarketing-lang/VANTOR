@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v202', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v203', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v202', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v203', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -17427,58 +17427,60 @@ html body section#english-course .mf-kids-entry-price span{
 }
 </style>
 
-<style id="doma-cta-theme-6-v202">
-/* Selected CTA design #6: burgundy-to-mauve glass, applied only to homepage Get Started and Log In. */
-html body .nav-actions #navAction.nav-action-nature{
-  color:#fff4fa!important;
-  background:linear-gradient(132deg,rgba(61,15,35,.97) 0%,rgba(111,39,75,.96) 49%,rgba(111,67,128,.94) 100%)!important;
-  border:1px solid rgba(213,164,208,.62)!important;
+
+<style id="doma-cta-theme-7-v203">
+/* Matched dark-glass header buttons: cocoa-brown Get Started and emerald-green Log In. */
+html body .nav-actions #navAction.nav-action-nature,
+html body .nav-actions #navLogin.login{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
   border-radius:11px!important;
-  box-shadow:0 7px 20px rgba(25,5,20,.28),inset 0 1px 0 rgba(255,231,250,.15)!important;
-  -webkit-backdrop-filter:blur(17px) saturate(138%)!important;
-  backdrop-filter:blur(17px) saturate(138%)!important;
+  -webkit-backdrop-filter:blur(17px) saturate(138%)!important;backdrop-filter:blur(17px) saturate(138%)!important;
+  box-shadow:0 7px 19px rgba(6,5,5,.27),inset 0 1px 0 rgba(255,255,255,.13)!important;
   transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important;
+}
+html body .nav-actions #navAction.nav-action-nature{
+  color:#fff4e6!important;
+  background:linear-gradient(132deg,rgba(43,27,19,.98) 0%,rgba(87,54,33,.97) 53%,rgba(126,83,49,.94) 100%)!important;
+  border:1px solid rgba(220,180,130,.63)!important;
 }
 html body .nav-actions #navLogin.login{
-  color:#f6e8f3!important;
-  background:linear-gradient(135deg,rgba(58,17,39,.74) 0%,rgba(76,32,68,.66) 55%,rgba(63,39,78,.67) 100%)!important;
-  border:1px solid rgba(194,143,191,.44)!important;
-  border-radius:11px!important;
-  box-shadow:0 6px 17px rgba(20,5,19,.22),inset 0 1px 0 rgba(255,231,250,.10)!important;
-  -webkit-backdrop-filter:blur(17px) saturate(132%)!important;
-  backdrop-filter:blur(17px) saturate(132%)!important;
-  transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important;
+  color:#edfff5!important;
+  background:linear-gradient(132deg,rgba(12,39,30,.98) 0%,rgba(19,76,54,.97) 53%,rgba(34,105,73,.94) 100%)!important;
+  border:1px solid rgba(125,226,174,.6)!important;
+}
+html body .nav-actions #navAction.nav-action-nature .nav-action-icon{
+  color:#f0c58c!important;filter:drop-shadow(0 0 3px rgba(225,177,112,.18))!important;
+}
+html body .nav-actions #navAction.nav-action-nature .nav-action-icon path{stroke:currentColor!important}
+html body .nav-actions #navLogin.login::before{
+  content:"↪";display:inline-block;flex:none;color:#9cecc1!important;font-size:13px;line-height:1;font-weight:900;
+  text-shadow:0 0 7px rgba(118,235,174,.16);
 }
 html body .nav-actions #navAction.nav-action-nature:hover{
-  color:#fff9ff!important;
-  background:linear-gradient(132deg,rgba(86,25,51,.98) 0%,rgba(135,54,91,.97) 49%,rgba(143,93,158,.96) 100%)!important;
-  border-color:rgba(232,193,226,.78)!important;
-  box-shadow:0 9px 25px rgba(48,10,33,.33),0 0 16px rgba(154,108,172,.14),inset 0 1px 0 rgba(255,240,255,.18)!important;
+  color:#fff8ed!important;
+  background:linear-gradient(132deg,rgba(64,39,25,.99) 0%,rgba(112,70,42,.98) 53%,rgba(151,103,60,.96) 100%)!important;
+  border-color:rgba(238,202,153,.82)!important;
+  box-shadow:0 9px 24px rgba(42,23,12,.34),0 0 12px rgba(203,150,91,.11),inset 0 1px 0 rgba(255,246,226,.19)!important;
   transform:translateY(-1px)!important;
 }
 html body .nav-actions #navLogin.login:hover{
-  color:#fff8ff!important;
-  background:linear-gradient(135deg,rgba(94,27,57,.88) 0%,rgba(102,45,91,.84) 56%,rgba(105,70,130,.83) 100%)!important;
-  border-color:rgba(218,168,215,.7)!important;
-  box-shadow:0 8px 22px rgba(34,7,29,.28),0 0 13px rgba(154,108,172,.10),inset 0 1px 0 rgba(255,240,255,.15)!important;
+  color:#f6fff9!important;
+  background:linear-gradient(132deg,rgba(17,58,42,.99) 0%,rgba(28,98,66,.98) 53%,rgba(45,132,88,.96) 100%)!important;
+  border-color:rgba(158,246,198,.82)!important;
+  box-shadow:0 9px 24px rgba(7,39,25,.32),0 0 12px rgba(99,222,159,.11),inset 0 1px 0 rgba(235,255,245,.18)!important;
   transform:translateY(-1px)!important;
 }
 html body .nav-actions #navAction.nav-action-nature:focus-visible,
-html body .nav-actions #navLogin.login:focus-visible{
-  outline:2px solid #e3b8e5!important;
-  outline-offset:3px!important;
-}
-html body .nav-actions #navAction.nav-action-nature .nav-action-icon{color:#f3d9f1!important}
-html body .nav-actions #navAction.nav-action-nature .nav-action-icon path{stroke:currentColor!important}
+html body .nav-actions #navLogin.login:focus-visible{outline:2px solid #c8f7df!important;outline-offset:3px!important}
 @media(max-width:700px){
-  html body .nav-actions #navAction.nav-action-nature,
-  html body .nav-actions #navLogin.login{
-    border-radius:8px!important;
-    box-shadow:0 4px 12px rgba(25,5,20,.24),inset 0 1px 0 rgba(255,231,250,.10)!important;
+  html body .nav-actions #navAction.nav-action-nature,html body .nav-actions #navLogin.login{
+    gap:3px!important;border-radius:8px!important;box-shadow:0 4px 12px rgba(7,5,5,.26),inset 0 1px 0 rgba(255,255,255,.11)!important;
   }
+  html body .nav-actions #navLogin.login::before{font-size:10px!important}
+  html body .nav-actions #navAction.nav-action-nature .nav-action-icon{width:11px!important;height:11px!important}
 }
 @media(prefers-reduced-motion:reduce){
-  html body .nav-actions #navAction.nav-action-nature,
-  html body .nav-actions #navLogin.login{transition:none!important}
+ html body .nav-actions #navAction.nav-action-nature,html body .nav-actions #navLogin.login{transition:none!important}
 }
 </style>
+
