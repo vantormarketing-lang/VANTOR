@@ -989,12 +989,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head"><div><h2>Exams & Quizzes</h2><p>Create assessments and manage questions. Correct answers are never sent to students directly.</p></div><button class="btn" id="newQuiz">+ New Quiz</button></div>
         <div class="toolbar"><select id="quizGrade"><option value="">All Grades</option></select><input id="quizSearch" placeholder="Search quizzes…"><button class="btn secondary" id="quizRefresh">Refresh</button></div>
         <div id="quizzesTable" class="table-wrap"></div>
+        <div id="quizzesPagination" class="qbank-footer" aria-label="Quiz pagination"></div>
       </section>
 
       <section id="section-homework" class="section">
         <div class="head"><div><h2>Homework</h2><p>Create assignments and review student submissions.</p></div><button class="btn" id="newHomework">+ New Homework</button></div>
         <div class="toolbar"><select id="hwGrade"><option value="">All Grades</option></select><input id="hwSearch" placeholder="Search homework…"><button class="btn secondary" id="hwRefresh">Refresh</button></div>
         <div id="homeworkTable" class="table-wrap"></div>
+        <div id="homeworkPagination" class="qbank-footer" aria-label="Homework pagination"></div>
       </section>
 
       
@@ -1103,6 +1105,10 @@ let units=[];
 let current='dashboard';
 let lessonsPage=0;
 const LESSONS_PAGE_SIZE=100;
+let domaQuizListPage=0;
+const DOMA_QUIZ_PAGE_SIZE=100;
+let domaHomeworkListPage=0;
+const DOMA_HOMEWORK_PAGE_SIZE=100;
 const state={started:false,startPromise:null};
 
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>$('toast').classList.remove('show'),3000)}
@@ -1278,8 +1284,70 @@ async function editLesson(id){const r=await db.from('lessons').select('*').eq('i
 async function toggleLessonPublish(id,v){const r=await db.from('lessons').update({is_published:v,updated_at:new Date().toISOString()}).eq('id',id).select('id,is_published');if(r.error)return toast('Lesson update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===v))return toast('Lesson update was not confirmed. Check UPDATE RLS/permissions.');await loadLessons();await loadDashboard()}
 async function deleteLesson(id){await deletePersisted('lessons',id,'Lesson',async()=>{await loadLessons();await loadDashboard()})}
 
-async function loadQuizzes(){let q=db.from('quizzes').select('id,grade_id,title,description,duration_minutes,is_free,is_published,created_at').order('created_at',{ascending:false}).range(0,1999);const g=$('quizGrade').value;if(g)q=q.eq('grade_id',g);const r=await q;if(r.error)return $('quizzesTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('quizSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.description||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('quizzesTable').innerHTML=rows.length?'<table><thead><tr><th>Quiz</th><th>Grade</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')} • ${x.duration_minutes||20} min</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="manageQuestions('${x.id}')">Questions</button><button class="btn secondary small" onclick="editQuiz('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleQuizPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteQuiz('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No quizzes found.</div>'}
+async function loadQuizzes(){
+  const gradeId=$('quizGrade').value;
+  const term=$('quizSearch').value.trim()
+    .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .slice(0,80)
+    .toLowerCase();
+
+  let q=db.from('quizzes')
+    .select('id,grade_id,title,description,duration_minutes,is_free,is_published,created_at',{count:'exact'})
+    .order('created_at',{ascending:false});
+  if(gradeId)q=q.eq('grade_id',gradeId);
+  if(term){
+    const matchingGradeIds=grades.filter(g=>String(g.name||'').toLowerCase().includes(term))
+      .map(g=>String(g.id)).filter(id=>/^[0-9a-f-]{36}$/i.test(id));
+    const filters=['title.ilike.%'+term+'%','description.ilike.%'+term+'%'];
+    if(matchingGradeIds.length)filters.push('grade_id.in.('+matchingGradeIds.join(',')+')');
+    q=q.or(filters.join(','));
+  }
+
+  const from=domaQuizListPage*DOMA_QUIZ_PAGE_SIZE;
+  const r=await q.range(from,from+DOMA_QUIZ_PAGE_SIZE-1);
+  if(r.error){
+    $('quizzesTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+    $('quizzesPagination').innerHTML='';
+    return;
+  }
+  const rows=r.data||[];
+  const total=Number(r.count||0);
+  const lastPage=Math.max(0,Math.ceil(total/DOMA_QUIZ_PAGE_SIZE)-1);
+  if(domaQuizListPage>lastPage){domaQuizListPage=lastPage;return loadQuizzes();}
+$('quizzesTable').innerHTML=rows.length?'<table><thead><tr><th>Quiz</th><th>Grade</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')} • ${x.duration_minutes||20} min</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="manageQuestions('${x.id}')">Questions</button><button class="btn secondary small" onclick="editQuiz('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleQuizPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteQuiz('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No quizzes found.</div>'}
 function quizForm(title,x=null){openModal(title,`<form id="quizForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="qGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="qDur" type="number" min="1" value="${Number(x?.duration_minutes||20)}"></div><div class="form-row full"><label>Title</label><input id="qTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="qDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="qFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free quiz</option></select></div><div class="form-row"><label>Publishing</label><select id="qPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Quiz</button></form>`);$('quizForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('qGrade').value,title:$('qTitle').value.trim(),description:$('qDesc').value.trim(),duration_minutes:Number($('qDur').value||20),is_free:$('qFree').value==='true',is_published:$('qPub').value==='true'};const r=x?await db.from('quizzes').update(p).eq('id',x.id).select('id'):await db.from('quizzes').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Quiz save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Quiz saved.');await loadQuizzes()}}
+$('newQuiz').onclick=()=>quizForm('New Quiz');
+async function editQuiz(id){const r=await db.from('quizzes').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);quizForm('Edit Quiz',r.data)}
+async function toggleQuizPublish(id,v){const r=await db.from('quizzes').update({is_published:v}).eq('id',id).select('id,is_published');if(r.error)return toast('Quiz update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===v))return toast('Quiz update was not confirmed. Check UPDATE RLS/permissions.');await loadQuizzes()}
+async function deleteQuiz(id){await deletePersisted('quizzes',id,'Quiz',loadQuizzes)}
+async function manageQuestions(quizId){const q=await db.from('quizzes').select('id,title').eq('id',quizId).single();if(q.error)return toast(q.error.message);const r=await db.from('quiz_questions').select('id,question,options,correct_answer,points,sort_order').eq('quiz_id',quizId).order('sort_order',{ascending:true});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Questions — '+q.data.title,`<div class="info-box" style="margin-bottom:12px">Students receive only question, options and points through the secure quiz RPC. The correct answer stays server-side.</div><div id="questionList">${rows.length?rows.map(x=>questionRow(quizId,x)).join(''):'<div class="empty">No questions yet.</div>'}</div><button class="btn" style="margin-top:12px" onclick="editQuestion('${quizId}','')">+ Add Question</button>`)}
+function questionRow(quizId,x){let opts=Array.isArray(x.options)?x.options:[];if(typeof x.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}return `<div class="card" style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;gap:10px"><div><b>${esc(x.question)}</b><div class="muted" style="font-size:10px;margin-top:4px">Points: ${x.points} • Options: ${esc(opts.join(' | '))}</div></div><div class="actions"><button class="btn secondary small" onclick="editQuestion('${quizId}','${x.id}')">Edit</button><button class="btn danger small" onclick="deleteQuestion('${quizId}','${x.id}')">Delete</button></div></div></div>`}
+async function editQuestion(quizId,id){let x=null;if(id){const r=await db.from('quiz_questions').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);x=r.data}let opts=Array.isArray(x?.options)?x.options:[];if(typeof x?.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}openModal(id?'Edit Question':'New Question',`<form id="questionForm"><div class="form-row"><label>Question</label><textarea id="qqQuestion" required>${esc(x?.question||'')}</textarea></div><div class="form-row"><label>Options (one per line)</label><textarea id="qqOptions" required>${esc(opts.join('\n'))}</textarea></div><div class="form-row"><label>Correct answer (exactly one option)</label><input id="qqCorrect" value="${esc(x?.correct_answer||'')}" required></div><div class="form-grid"><div class="form-row"><label>Points</label><input id="qqPoints" type="number" min="1" value="${Number(x?.points||1)}"></div><div class="form-row"><label>Sort order</label><input id="qqSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div></div><button class="btn">Save Question</button></form>`);$('questionForm').onsubmit=async e=>{e.preventDefault();const options=$('qqOptions').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);const correct=$('qqCorrect').value.trim();if(!options.length||!options.includes(correct))return toast('Correct answer must exactly match one option.');const p={quiz_id:quizId,question:$('qqQuestion').value.trim(),options,correct_answer:correct,points:Number($('qqPoints').value||1),sort_order:Number($('qqSort').value||0)};const r=id?await db.from('quiz_questions').update(p).eq('id',id).select('id'):await db.from('quiz_questions').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Question save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();await manageQuestions(quizId)}}
+async function deleteQuestion(quizId,id){
+  if(!(await domaConfirm('Delete this question permanently?',{title:'Delete question',confirmText:'Delete question'})))return;
+  const r=await db.from('quiz_questions').delete().eq('id',id).select('id');
+  if(r.error)return toast('Delete failed: '+r.error.message);
+  const returned=Array.isArray(r.data)&&r.data.some(row=>row.id===id);
+  if(!returned)return toast('Nothing was deleted. Check DELETE RLS/permissions.');
+  const verify=await db.from('quiz_questions').select('id').eq('id',id).maybeSingle();
+  if(verify.error)return toast('Delete verification failed: '+verify.error.message);
+  if(verify.data)return toast('Delete did not persist. The question still exists.');
+  toast('Question deleted permanently.');
+  await manageQuestions(quizId);
+  const pagination=$('quizzesPagination');
+  const pageCount=Math.max(1,Math.ceil(total/DOMA_QUIZ_PAGE_SIZE));
+  const shownStart=total?from+1:0;
+  const shownEnd=Math.min(from+rows.length,total);
+  pagination.innerHTML='<span class="qbank-count">Showing '+shownStart+'&ndash;'+shownEnd+' of '+total+' quizzes</span>'+
+    '<div class="actions"><button type="button" class="btn secondary small" id="quizPagePrev" '+(domaQuizListPage<=0?'disabled':'')+'>Previous</button>'+
+    '<span class="pill">Page '+(domaQuizListPage+1)+' of '+pageCount+'</span>'+
+    '<button type="button" class="btn secondary small" id="quizPageNext" '+(domaQuizListPage>=pageCount-1?'disabled':'')+'>Next</button></div>';
+  $('quizPagePrev').onclick=()=>{if(domaQuizListPage>0){domaQuizListPage--;loadQuizzes();}};
+  $('quizPageNext').onclick=()=>{if(domaQuizListPage<pageCount-1){domaQuizListPage++;loadQuizzes();}};
+
+}function quizForm(title,x=null){openModal(title,`<form id="quizForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="qGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="qDur" type="number" min="1" value="${Number(x?.duration_minutes||20)}"></div><div class="form-row full"><label>Title</label><input id="qTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="qDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="qFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free quiz</option></select></div><div class="form-row"><label>Publishing</label><select id="qPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Quiz</button></form>`);$('quizForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('qGrade').value,title:$('qTitle').value.trim(),description:$('qDesc').value.trim(),duration_minutes:Number($('qDur').value||20),is_free:$('qFree').value==='true',is_published:$('qPub').value==='true'};const r=x?await db.from('quizzes').update(p).eq('id',x.id).select('id'):await db.from('quizzes').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Quiz save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Quiz saved.');await loadQuizzes()}}
 $('newQuiz').onclick=()=>quizForm('New Quiz');
 async function editQuiz(id){const r=await db.from('quizzes').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);quizForm('Edit Quiz',r.data)}
 async function toggleQuizPublish(id,v){const r=await db.from('quizzes').update({is_published:v}).eq('id',id).select('id,is_published');if(r.error)return toast('Quiz update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===v))return toast('Quiz update was not confirmed. Check UPDATE RLS/permissions.');await loadQuizzes()}
@@ -1300,8 +1368,92 @@ async function deleteQuestion(quizId,id){
   await manageQuestions(quizId);
 }
 
-async function loadHomework(){let q=db.from('homework').select('id,grade_id,title,description,due_at,is_free,is_published,created_at').order('created_at',{ascending:false}).range(0,1999);const g=$('hwGrade').value;if(g)q=q.eq('grade_id',g);const r=await q;if(r.error)return $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];const term=$('hwSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.description||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${fmt(x.due_at)}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework('${x.id}')">Edit</button><button class="btn danger small" onclick="deleteHomework('${x.id}')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions('${x.id}')">Submissions</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No homework found.</div>'}
+async function loadHomework(){
+  const gradeId=$('hwGrade').value;
+  const term=$('hwSearch').value.trim()
+    .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .slice(0,80)
+    .toLowerCase();
+  let q=db.from('homework')
+    .select('id,grade_id,title,description,due_at,attachment_url,is_free,is_published,created_at',{count:'exact'})
+    .order('created_at',{ascending:false});
+  if(gradeId)q=q.eq('grade_id',gradeId);
+  if(term){
+    const matchingGradeIds=grades.filter(g=>String(g.name||'').toLowerCase().includes(term))
+      .map(g=>String(g.id)).filter(id=>/^[0-9a-f-]{36}$/i.test(id));
+    const filters=['title.ilike.%'+term+'%','description.ilike.%'+term+'%'];
+    if(matchingGradeIds.length)filters.push('grade_id.in.('+matchingGradeIds.join(',')+')');
+    q=q.or(filters.join(','));
+  }
+  const from=domaHomeworkListPage*DOMA_HOMEWORK_PAGE_SIZE;
+  const r=await q.range(from,from+DOMA_HOMEWORK_PAGE_SIZE-1);
+  if(r.error){
+    $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+    $('homeworkPagination').innerHTML='';
+    return;
+  }
+  const rows=r.data||[];
+  const total=Number(r.count||0);
+  const lastPage=Math.max(0,Math.ceil(total/DOMA_HOMEWORK_PAGE_SIZE)-1);
+  if(domaHomeworkListPage>lastPage){domaHomeworkListPage=lastPage;return loadHomework();}
+$('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${fmt(x.due_at)}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework('${x.id}')">Edit</button><button class="btn danger small" onclick="deleteHomework('${x.id}')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions('${x.id}')">Submissions</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No homework found.</div>'}
 function homeworkForm(title,x=null){const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);$('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true'};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Homework save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Homework saved.');await loadHomework()}}
+$('newHomework').onclick=()=>homeworkForm('New Homework');
+async function editHomework(id){const r=await db.from('homework').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);homeworkForm('Edit Homework',r.data)}
+async function deleteHomework(id){await deletePersisted('homework',id,'Homework',loadHomework)}
+async function viewHomeworkSubmissions(id){const h=await db.from('homework').select('title').eq('id',id).single();if(h.error)return toast(h.error.message);const r=await db.from('homework_submissions').select('id,student_id,answer_text,status,grade,feedback,submitted_at,profiles(full_name,email)').eq('homework_id',id).order('submitted_at',{ascending:false});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Submissions — '+h.data.title,rows.length?'<table><thead><tr><th>Student</th><th>Answer</th><th>Status</th><th>Grade</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}<div class="muted">${esc(x.profiles?.email||'')}</div></td><td style="white-space:pre-wrap">${linkifyAnswer(x.answer_text||'')}</td><td>${esc(x.status)}</td><td>${x.grade??'—'}</td><td><button class="btn secondary small" onclick="reviewSubmission('${x.id}','${id}')">Review</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No submissions yet.</div>')}
+async function reviewSubmission(subId,hwId){const r=await db.from('homework_submissions').select('*').eq('id',subId).single();if(r.error)return toast(r.error.message);const x=r.data;openModal('Review Homework',`<form id="reviewForm"><div class="info-box" style="white-space:pre-wrap;margin-bottom:12px">${linkifyAnswer(x.answer_text||'')}</div><div class="form-grid"><div class="form-row"><label>Status</label><select id="rsStatus"><option ${x.status==='submitted'?'selected':''}>submitted</option><option ${x.status==='reviewed'?'selected':''}>reviewed</option><option ${x.status==='returned'?'selected':''}>returned</option></select></div><div class="form-row"><label>Grade</label><input id="rsGrade" type="number" min="0" value="${x.grade??''}"></div><div class="form-row full"><label>Feedback</label><textarea id="rsFeedback">${esc(x.feedback||'')}</textarea></div></div><button class="btn">Save Review</button></form>`);$('reviewForm').onsubmit=async e=>{e.preventDefault();const p={status:$('rsStatus').value,grade:$('rsGrade').value===''?null:Number($('rsGrade').value),feedback:$('rsFeedback').value.trim()};const u=await db.from('homework_submissions').update(p).eq('id',subId).select('id');if(u.error)return toast('Review failed: '+u.error.message);if(!Array.isArray(u.data)||!u.data.some(x=>x.id===subId))return toast('Review update was not confirmed. Check UPDATE RLS/permissions.');closeModal();toast('Submission reviewed.');await viewHomeworkSubmissions(hwId)}}
+
+// Shared phone normalizer for the Students table (outside the later admin enhancement IIFE).
+function normEGPhone(v){let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0020'))d=d.slice(2);if(d.startsWith('0'))d='20'+d.slice(1);if(!d.startsWith('20'))d='20'+d;return d}
+
+async function loadStudents(){
+  const host=$('studentsTable');
+  if(!host)return;
+  host.innerHTML='<div class="empty">Loading students…</div>';
+  const r=await db.rpc('doma_admin_list_students');
+  if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+  let all=r.data||[];
+  $('stStudents').textContent=String(all.length);
+
+  // The admin-list RPC on older deployments may omit profiles.phone. Enrich its
+  // returned rows from profiles without changing the existing RPC or auth flow.
+  const ids=all.map(x=>x.id).filter(Boolean);
+  const profileById=new Map();
+  if(ids.length){
+    const batches=[];
+    for(let i=0;i<ids.length;i+=200)batches.push(ids.slice(i,i+200));
+    const profileResults=await Promise.all(batches.map(batch=>db.from('profiles').select('id,full_name,phone,favorite_team').in('id',batch)));
+    profileResults.forEach(pr=>{if(!pr.error)(pr.data||[]).forEach(p=>profileById.set(String(p.id),p));});
+  }
+  all=all.map(x=>{const p=profileById.get(String(x.id))||{};return {...x,full_name:x.full_name||p.full_name||'',phone:x.phone||p.phone||'',favorite_team:x.favorite_team||p.favorite_team||''};});
+
+  const term=($('studentSearch')?.value||'').trim().toLowerCase();
+  const rows=term?all.filter(x=>(x.full_name||'').toLowerCase().includes(term)||(x.phone||'').toLowerCase().includes(term)||(x.email||'').toLowerCase().includes(term)||(x.favorite_team||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term)):all;
+  const rowHtml=rows.map(x=>{
+    const rawPhone=String(x.phone||'').trim();
+    const waNumber=rawPhone?normEGPhone(rawPhone):'';
+    const canWhatsApp=!!rawPhone&&/^20\d{10}$/.test(waNumber);
+    const phoneCell=rawPhone?(canWhatsApp?'<a class="student-phone-link" href="https://wa.me/'+waNumber+'" target="_blank" rel="noopener noreferrer" title="Open WhatsApp chat">'+esc(rawPhone)+'</a>':'<span>'+esc(rawPhone)+'</span>'):'<span class="muted">Phone not saved</span>';
+    const teamLabel=x.favorite_team==='Barcelona'?'Barcelona':(x.favorite_team==='Real Madrid'?'Real Madrid':(x.favorite_team||''));
+    const teamCell=teamLabel?'<span class="pill '+(teamLabel==='Barcelona'?'ok':'warn')+'">'+esc(teamLabel)+'</span>':'<span class="muted">Not selected</span>';
+    return '<tr><td><b>'+esc(x.full_name||'Student')+'</b></td><td>'+phoneCell+(canWhatsApp?'<div class="muted student-phone-hint">Click number to open WhatsApp</div>':'')+'</td><td>'+teamCell+'</td><td>'+esc(gradeName(x.grade_id))+'</td><td>'+fmtDate(x.created_at)+'</td><td><div class="actions"><button type="button" class="btn secondary small js-student-details" data-student-id="'+esc(x.id)+'">Details</button><button type="button" class="btn danger small js-delete-student" data-student-id="'+esc(x.id)+'" data-student-label="'+esc(x.full_name||rawPhone||'Student')+'">Delete permanently</button></div></td></tr>';
+  }).join('');
+  host.innerHTML=rows.length?'<table><thead><tr><th>Student name</th><th>Phone / WhatsApp</th><th>Favorite team</th><th>Grade</th><th>Joined</th><th>Actions</th></tr></thead><tbody>'+rowHtml+'</tbody></table>':'<div class="empty">No students found.</div>';
+  const pagination=$('homeworkPagination');
+  const pageCount=Math.max(1,Math.ceil(total/DOMA_HOMEWORK_PAGE_SIZE));
+  const shownStart=total?from+1:0;
+  const shownEnd=Math.min(from+rows.length,total);
+  pagination.innerHTML='<span class="qbank-count">Showing '+shownStart+'&ndash;'+shownEnd+' of '+total+' assignments</span>'+
+    '<div class="actions"><button type="button" class="btn secondary small" id="homeworkPagePrev" '+(domaHomeworkListPage<=0?'disabled':'')+'>Previous</button>'+
+    '<span class="pill">Page '+(domaHomeworkListPage+1)+' of '+pageCount+'</span>'+
+    '<button type="button" class="btn secondary small" id="homeworkPageNext" '+(domaHomeworkListPage>=pageCount-1?'disabled':'')+'>Next</button></div>';
+  $('homeworkPagePrev').onclick=()=>{if(domaHomeworkListPage>0){domaHomeworkListPage--;loadHomework();}};
+  $('homeworkPageNext').onclick=()=>{if(domaHomeworkListPage<pageCount-1){domaHomeworkListPage++;loadHomework();}};
+
+}function homeworkForm(title,x=null){const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);$('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true'};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Homework save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Homework saved.');await loadHomework()}}
 $('newHomework').onclick=()=>homeworkForm('New Homework');
 async function editHomework(id){const r=await db.from('homework').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);homeworkForm('Edit Homework',r.data)}
 async function deleteHomework(id){await deletePersisted('homework',id,'Homework',loadHomework)}
@@ -1417,7 +1569,7 @@ async function deleteReview(id){await deletePersisted('reviews',id,'Review',load
 
 function loadSection(n){({dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,homework:loadHomework,students:loadStudents,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews}[n]||(()=>{}))()}
 
-$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=()=>{lessonsPage=0;loadLessons()};$('lessonSearch').oninput=()=>{lessonsPage=0;clearTimeout(window.__lessonSearchTimer);window.__lessonSearchTimer=setTimeout(loadLessons,250)};$('lessonGrade').onchange=()=>{lessonsPage=0;loadLessons()};$('lessonType').onchange=()=>{lessonsPage=0;loadLessons()};$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=async()=>{await loadSales();await loadDashboard()};$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
+$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=()=>{lessonsPage=0;loadLessons()};$('lessonSearch').oninput=()=>{lessonsPage=0;clearTimeout(window.__lessonSearchTimer);window.__lessonSearchTimer=setTimeout(loadLessons,250)};$('lessonGrade').onchange=()=>{lessonsPage=0;loadLessons()};$('lessonType').onchange=()=>{lessonsPage=0;loadLessons()};$('quizRefresh').onclick=()=>{domaQuizListPage=0;loadQuizzes()};$('quizSearch').oninput=()=>{domaQuizListPage=0;clearTimeout(window.__quizSearchTimer);window.__quizSearchTimer=setTimeout(loadQuizzes,250)};$('quizGrade').onchange=()=>{domaQuizListPage=0;loadQuizzes()};$('hwRefresh').onclick=()=>{domaHomeworkListPage=0;window.loadHomework?.()||loadHomework()};$('hwSearch').oninput=()=>{domaHomeworkListPage=0;clearTimeout(window.__homeworkSearchTimer);window.__homeworkSearchTimer=setTimeout(()=>{if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()},250)};$('hwGrade').onchange=()=>{domaHomeworkListPage=0;if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()};$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=async()=>{await loadSales();await loadDashboard()};$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
 
 async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Supabase connected':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
 
@@ -1567,18 +1719,54 @@ $('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('
     if(typeof db==='undefined')return;
     const [l,h]=await Promise.all([
       db.from('lessons').select('id,video_url',{count:'exact'}).eq('is_published',true),
-      db.from('homework').select('*').eq('is_published',true)
+      db.from('homework').select('id,attachment_url',{count:'exact'}).eq('is_published',true)
     ]);
     const ls=l.data||[],hs=h.data||[];
     const el=id=>document.getElementById(id); if(el('upPublishedLessons'))el('upPublishedLessons').textContent=l.count??ls.length; if(el('upVideoLessons'))el('upVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length; if(el('upPublishedHomework'))el('upPublishedHomework').textContent=h.count??hs.length; if(el('upHomeworkFiles'))el('upHomeworkFiles').textContent=hs.filter(x=>String(x.attachment_url||'').trim()).length;
   }
   async function loadHomeworkUpgraded(){
-    let q=db.from('homework').select('*').order('created_at',{ascending:false});
-    const g=$('hwGrade').value;if(g)q=q.eq('grade_id',g);const r=await q;if(r.error)return $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
-    let rows=r.data||[];const term=$('hwSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.description||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));
-    $('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Resource</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td>${fmt(x.due_at)}</td><td>${x.attachment_url?`<a class="admin-video-link" href="${esc(x.attachment_url)}" target="_blank" rel="noopener">Open file ↗</a>`:'<span class="mini-status">No file</span>'}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework('${x.id}')">Edit</button><button class="btn danger small" onclick="deleteHomework('${x.id}')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions('${x.id}')">Submissions</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No homework found.</div>';
-  }
-  function homeworkFormUpgraded(title,x=null){
+    const gradeId=$('hwGrade').value;
+    const term=$('hwSearch').value.trim()
+      .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g,' ')
+      .replace(/\s+/g,' ')
+      .trim()
+      .slice(0,80)
+      .toLowerCase();
+    let q=db.from('homework')
+      .select('id,grade_id,title,description,due_at,attachment_url,is_free,is_published,created_at',{count:'exact'})
+      .order('created_at',{ascending:false});
+    if(gradeId)q=q.eq('grade_id',gradeId);
+    if(term){
+      const matchingGradeIds=grades.filter(g=>String(g.name||'').toLowerCase().includes(term))
+        .map(g=>String(g.id)).filter(id=>/^[0-9a-f-]{36}$/i.test(id));
+      const filters=['title.ilike.%'+term+'%','description.ilike.%'+term+'%'];
+      if(matchingGradeIds.length)filters.push('grade_id.in.('+matchingGradeIds.join(',')+')');
+      q=q.or(filters.join(','));
+    }
+    const from=domaHomeworkListPage*DOMA_HOMEWORK_PAGE_SIZE;
+    const r=await q.range(from,from+DOMA_HOMEWORK_PAGE_SIZE-1);
+    if(r.error){
+      $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+      $('homeworkPagination').innerHTML='';
+      return;
+    }
+    const rows=r.data||[];
+    const total=Number(r.count||0);
+    const lastPage=Math.max(0,Math.ceil(total/DOMA_HOMEWORK_PAGE_SIZE)-1);
+    if(domaHomeworkListPage>lastPage){domaHomeworkListPage=lastPage;return loadHomeworkUpgraded();}
+    $('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Resource</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.title)+'</b><div class="muted">'+esc(x.description||'')+'</div></td><td>'+esc(gradeName(x.grade_id))+'</td><td><span class="pill '+(x.is_free?'free':'warn')+'">'+(x.is_free?'Free':'Subscription')+'</span></td><td>'+fmt(x.due_at)+'</td><td>'+(x.attachment_url?'<a class="admin-video-link" href="'+esc(x.attachment_url)+'" target="_blank" rel="noopener noreferrer">Open file ↗</a>':'<span class="mini-status">No file</span>')+'</td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Draft')+'</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework(\''+x.id+'\')">Edit</button><button class="btn danger small" onclick="deleteHomework(\''+x.id+'\')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions(\''+x.id+'\')">Submissions</button></div></td></tr>').join('')+'</tbody></table>':'<div class="empty">No homework found.</div>';
+
+    const pagination=$('homeworkPagination');
+    const pageCount=Math.max(1,Math.ceil(total/DOMA_HOMEWORK_PAGE_SIZE));
+    const shownStart=total?from+1:0;
+    const shownEnd=Math.min(from+rows.length,total);
+    pagination.innerHTML='<span class="qbank-count">Showing '+shownStart+'&ndash;'+shownEnd+' of '+total+' assignments</span>'+
+      '<div class="actions"><button type="button" class="btn secondary small" id="homeworkPagePrev" '+(domaHomeworkListPage<=0?'disabled':'')+'>Previous</button>'+
+      '<span class="pill">Page '+(domaHomeworkListPage+1)+' of '+pageCount+'</span>'+
+      '<button type="button" class="btn secondary small" id="homeworkPageNext" '+(domaHomeworkListPage>=pageCount-1?'disabled':'')+'>Next</button></div>';
+    $('homeworkPagePrev').onclick=()=>{if(domaHomeworkListPage>0){domaHomeworkListPage--;loadHomeworkUpgraded();}};
+    $('homeworkPageNext').onclick=()=>{if(domaHomeworkListPage<pageCount-1){domaHomeworkListPage++;loadHomeworkUpgraded();}};
+  }  function homeworkFormUpgraded(title,x=null){
     const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';
     openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Attachment / Resource URL</label><input id="hAttachment" value="${esc(x?.attachment_url||'')}" placeholder="https://… PDF / worksheet / image / resource"></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);
     $('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true',attachment_url:$('hAttachment').value.trim()||null};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error){toast('Save failed: '+r.error.message);return}if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Homework save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Homework saved.');await loadHomeworkUpgraded();await loadDashboard();refreshHealth()};
