@@ -57,6 +57,29 @@ for (const path of ['sw.js', 'admin-sw.js']) {
   catch (error) { fail(`${path}: ${error.message}`); }
 }
 
+const studentWorkerPolicy = read('sw.js');
+if (!/function normalizeShellUrl\s*\(/.test(studentWorkerPolicy) ||
+    !/SHELL_CACHE_URLS\s*=\s*\[\.\.\.new Set\(SHELL\.map\(normalizeShellUrl\)\)\]/.test(studentWorkerPolicy)) {
+  fail('sw.js: duplicate student root/index/query routes must share normalized shell cache keys');
+}
+if (!/url\.origin\s*!==\s*self\.location\.origin/.test(studentWorkerPolicy)) {
+  fail('sw.js: cross-origin requests must bypass the student service worker cache');
+}
+if (!/function isCacheableStaticAssetUrl\s*\(/.test(studentWorkerPolicy) ||
+    !/[Cc]acheableStaticAssetUrl/.test(studentWorkerPolicy)) {
+  fail('sw.js: runtime caching must use a static-asset allowlist');
+}
+if (/\bcaches\.match\s*\(\s*req\s*\)/.test(studentWorkerPolicy)) {
+  fail('sw.js: global cache lookup can return stale or cross-user dynamic responses');
+}
+if (!/req\.mode\s*===\s*['"]navigate['"][\s\S]*?fetch\(req,\s*\{\s*cache:\s*['"]no-store['"]\s*\}\)/.test(studentWorkerPolicy)) {
+  fail('sw.js: app shell navigations must be network-first so deployed changes appear promptly');
+}
+if (!/hasSensitiveQuery\s*\(/.test(studentWorkerPolicy)) {
+  fail('sw.js: auth tokens and sensitive query parameters must be excluded from cache writes');
+}
+ok('sw.js: only safe same-origin static assets are cached; navigations refresh online and dynamic data is network-only');
+
 for (const path of ['manifest.webmanifest', 'admin-manifest.webmanifest']) {
   const source = read(path);
   if (!source) continue;
@@ -203,6 +226,63 @@ if (adminVersion && !admin.includes('admin-sw.js?doma-admin=' + adminVersion.rep
 if (!admin.includes('const fallback=window.loadSection;') || !admin.includes('fallback!==route')) {
   fail('admin.html: core Admin section loaders must fall back to the original section dispatcher');
 }
+
+const responseHeaders = read('_headers');
+for (const required of [
+  'X-Content-Type-Options: nosniff',
+  'Referrer-Policy: strict-origin-when-cross-origin',
+  'X-Frame-Options: DENY',
+  'Permissions-Policy: camera=(), microphone=(self), geolocation=()'
+]) {
+  if (!responseHeaders.includes(required)) fail('_headers: missing baseline browser security header: ' + required);
+}
+ok('_headers: baseline browser security headers are present');
+
+const kidsForeignKeyIndexes = read('database/ADD_MISSING_KIDS_FOREIGN_KEY_INDEXES.sql');
+const requiredKidsIndexNames = [
+  'doma_fkidx_kids_enroll_req_level',
+  'doma_fkidx_kids_enroll_req_reviewed',
+  'doma_fkidx_kids_enroll_req_track',
+  'doma_fkidx_kids_enroll_level_track',
+  'doma_fkidx_kids_place_recommended',
+  'doma_fkidx_kids_place_track',
+  'doma_fkidx_kids_place_user',
+  'doma_fkidx_kids_progress_lesson',
+  'doma_fkidx_kids_subs_level_track',
+  'doma_fkidx_kids_subs_created_by',
+  'doma_fkidx_kids_subs_level',
+  'doma_fkidx_kids_subs_track'
+];
+for (const indexName of requiredKidsIndexNames) {
+  if (!kidsForeignKeyIndexes.includes('CREATE INDEX IF NOT EXISTS ' + indexName)) {
+    fail('Kids foreign-key index script is missing idempotent index: ' + indexName);
+  }
+}
+if ((kidsForeignKeyIndexes.match(/CREATE INDEX IF NOT EXISTS/g) || []).length !== 12) {
+  fail('Kids foreign-key index script must contain exactly 12 non-destructive index additions');
+}
+if (/\b(?:DROP\s+INDEX|DROP\s+TABLE|DELETE\s+FROM|ALTER\s+POLICY)\b/i.test(kidsForeignKeyIndexes)) {
+  fail('Kids foreign-key index script must not drop data or alter access policies');
+}
+ok('Kids foreign-key index script includes 12 idempotent, non-destructive index additions');
+
+const lessonLoaderStart = admin.indexOf('async function loadLessons(){');
+const lessonLoaderEnd = admin.indexOf('function lessonForm(title,x=null){', lessonLoaderStart);
+const lessonLoader = lessonLoaderStart >= 0 && lessonLoaderEnd > lessonLoaderStart
+  ? admin.slice(lessonLoaderStart, lessonLoaderEnd)
+  : '';
+if (!/const LESSONS_PAGE_SIZE\s*=\s*100/.test(admin) ||
+    !/lessonsPage\s*\*\s*LESSONS_PAGE_SIZE/.test(lessonLoader) ||
+    !/\.range\(from,\s*from\s*\+\s*LESSONS_PAGE_SIZE\s*-\s*1\)/.test(lessonLoader) ||
+    !/count:\s*['"]exact['"]/.test(lessonLoader) ||
+    !/id="lessonsPagination"/.test(admin)) {
+  fail('admin.html: Lessons table must use server-side pagination with a count and page controls');
+}
+if (/\.range\(0,\s*1999\)/.test(lessonLoader) ||
+    /select\([^)]*\b(?:description|content)\b[^)]*\)/s.test(lessonLoader)) {
+  fail('admin.html: Lessons list must not fetch 2000 rows or full lesson content for table display');
+}
+ok('admin.html: Lessons list uses 100-row server-side pagination and avoids loading full lesson bodies');
 
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
