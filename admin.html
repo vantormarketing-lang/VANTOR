@@ -982,6 +982,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="head"><div><h2>Lessons</h2><p>Manage English lessons, media, publishing and free/paid access.</p></div><button class="btn" id="newLesson">+ New Lesson</button></div>
         <div class="toolbar"><select id="lessonGrade"><option value="">All Grades</option></select><select id="lessonType"><option value="">All Types</option><option>lesson</option><option>grammar</option><option>vocabulary</option><option>reading</option><option>writing</option><option>listening</option></select><input id="lessonSearch" placeholder="Search lessons…"><button class="btn secondary" id="lessonRefresh">Refresh</button></div>
         <div id="lessonsTable" class="table-wrap"></div>
+        <div id="lessonsPagination" class="qbank-footer" aria-label="Lessons pagination"></div>
       </section>
 
       <section id="section-quizzes" class="section">
@@ -1100,6 +1101,8 @@ const fmtDate=v=>v?new Date(v).toLocaleDateString(): '—';
 let grades=[];
 let units=[];
 let current='dashboard';
+let lessonsPage=0;
+const LESSONS_PAGE_SIZE=100;
 const state={started:false,startPromise:null};
 
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>$('toast').classList.remove('show'),3000)}
@@ -1210,7 +1213,63 @@ async function checkLessonVideoIntegrity(){
 }
 
 async function loadLessons(){
-  let q=db.from('lessons').select('id,grade_id,unit_id,title,lesson_type,description,content,video_url,duration_minutes,sort_order,is_free,is_published,created_at').order('sort_order',{ascending:true}).order('created_at',{ascending:false}).range(0,1999);const g=$('lessonGrade').value,t=$('lessonType').value;if(g)q=q.eq('grade_id',g);if(t)q=q.eq('lesson_type',t);const r=await q;if(r.error)return $('lessonsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';let rows=r.data||[];if(rows.length>=2000)toast('Showing the first 2000 lessons — use the grade filter or search to narrow down.');const term=$('lessonSearch').value.trim().toLowerCase();if(term)rows=rows.filter(x=>(x.title||'').toLowerCase().includes(term)||(x.lesson_type||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term));$('lessonsTable').innerHTML=rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Video</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${esc(units.find(u=>u.id===x.unit_id)?.title||'—')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.lesson_type)}</td><td>${x.video_url?'<div class="actions"><span class="pill ok">Video ready</span><button class="btn secondary small" onclick="previewLessonVideo('+JSON.stringify(x.video_url)+','+JSON.stringify(x.title)+')">Watch</button><a class="admin-video-link" href="'+esc(x.video_url)+'" target="_blank" rel="noopener noreferrer">Open ↗</a></div>':'<span class="pill warn">No video</span>'}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit / Video</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons found.</div>';
+  const gradeId=$('lessonGrade').value;
+  const type=$('lessonType').value;
+  const term=$('lessonSearch').value.trim()
+    .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .slice(0,80)
+    .toLowerCase();
+
+  let q=db.from('lessons')
+    .select('id,grade_id,unit_id,title,lesson_type,video_url,duration_minutes,sort_order,is_free,is_published,created_at',{count:'exact'})
+    .order('sort_order',{ascending:true})
+    .order('created_at',{ascending:false});
+
+  if(gradeId)q=q.eq('grade_id',gradeId);
+  if(type)q=q.eq('lesson_type',type);
+  if(term){
+    const matchingGradeIds=grades
+      .filter(g=>String(g.name||'').toLowerCase().includes(term))
+      .map(g=>String(g.id))
+      .filter(id=>/^[0-9a-f-]{36}$/i.test(id));
+    const filters=['title.ilike.%'+term+'%','lesson_type.ilike.%'+term+'%'];
+    if(matchingGradeIds.length)filters.push('grade_id.in.('+matchingGradeIds.join(',')+')');
+    q=q.or(filters.join(','));
+  }
+
+  const from=lessonsPage*LESSONS_PAGE_SIZE;
+  const r=await q.range(from,from+LESSONS_PAGE_SIZE-1);
+  if(r.error){
+    $('lessonsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+    $('lessonsPagination').innerHTML='';
+    return;
+  }
+
+  const rows=r.data||[];
+  const total=Number(r.count||0);
+  const lastPage=Math.max(0,Math.ceil(total/LESSONS_PAGE_SIZE)-1);
+  if(lessonsPage>lastPage){
+    lessonsPage=lastPage;
+    return loadLessons();
+  }
+
+$('lessonsTable').innerHTML=rows.length?'<table><thead><tr><th>Lesson</th><th>Grade</th><th>Type</th><th>Video</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${x.duration_minutes||0} min • Unit: ${esc(units.find(u=>u.id===x.unit_id)?.title||'—')}</div></td><td>${esc(gradeName(x.grade_id))}</td><td>${esc(x.lesson_type)}</td><td>${x.video_url?'<div class="actions"><span class="pill ok">Video ready</span><button class="btn secondary small" onclick="previewLessonVideo('+JSON.stringify(x.video_url)+','+JSON.stringify(x.title)+')">Watch</button><a class="admin-video-link" href="'+esc(x.video_url)+'" target="_blank" rel="noopener noreferrer">Open ↗</a></div>':'<span class="pill warn">No video</span>'}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="editLesson('${x.id}')">Edit / Video</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleLessonPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteLesson('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No lessons found.</div>';
+  const pagination=$('lessonsPagination');
+  const pageCount=Math.max(1,Math.ceil(total/LESSONS_PAGE_SIZE));
+  const shownStart=total?from+1:0;
+  const shownEnd=Math.min(from+rows.length,total);
+  pagination.innerHTML=
+    '<span class="qbank-count">Showing '+shownStart+'&ndash;'+shownEnd+' of '+total+' lessons</span>'+
+    '<div class="actions">'+
+    '<button type="button" class="btn secondary small" id="lessonPagePrev" '+(lessonsPage<=0?'disabled':'')+'>Previous</button>'+
+    '<span class="pill">Page '+(lessonsPage+1)+' of '+pageCount+'</span>'+
+    '<button type="button" class="btn secondary small" id="lessonPageNext" '+(lessonsPage>=pageCount-1?'disabled':'')+'>Next</button>'+
+    '</div>';
+  $('lessonPagePrev').onclick=()=>{if(lessonsPage>0){lessonsPage--;loadLessons()}};
+  $('lessonPageNext').onclick=()=>{if(lessonsPage<pageCount-1){lessonsPage++;loadLessons()}};
+
 }
 function lessonForm(title,x=null){const selectedGrade=x?.grade_id||'';openModal(title,`<form id="lessonForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="lGrade" required>${gradeOptions(selectedGrade)}</select></div><div class="form-row"><label>Unit</label><select id="lUnit">${unitOptions(selectedGrade,x?.unit_id||'')}</select></div><div class="form-row"><label>Title</label><input id="lTitle" value="${esc(x?.title||'')}" required></div><div class="form-row"><label>Type</label><select id="lType">${['lesson','grammar','vocabulary','reading','writing','listening'].map(v=>`<option ${v===(x?.lesson_type||'lesson')?'selected':''}>${v}</option>`).join('')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="lDuration" type="number" min="0" value="${Number(x?.duration_minutes||0)}"></div><div class="form-row"><label>Sort order</label><input id="lSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div><div class="form-row"><label>Access</label><select id="lFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free lesson</option></select></div><div class="form-row"><label>Publishing</label><select id="lPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div><div class="form-row full"><label>Description</label><textarea id="lDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Lesson content</label><textarea id="lContent" style="min-height:170px">${esc(x?.content||'')}</textarea></div><div class="form-row full"><label>Real lesson video file</label><input id="lVideoFile" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime"><small class="muted">Upload the actual video file. MP4 is recommended. Maximum 500 MB.</small>${x?.video_url?'<div class="pill ok" style="margin-top:7px">A video is already attached to this lesson.</div>':''}</div><div class="form-row full"><label>Existing video URL (optional fallback)</label><input id="lVideo" value="${esc(x?.video_url||'')}" placeholder="Leave as-is when using the uploaded video"></div></div><button class="btn" id="lessonSaveBtn">Save Lesson</button></form>`);$('lGrade').onchange=()=>{$('lUnit').innerHTML=unitOptions($('lGrade').value,'')};$('lessonForm').onsubmit=async e=>{e.preventDefault();const btn=$('lessonSaveBtn');if(btn)btn.disabled=true;try{const p={grade_id:$('lGrade').value,unit_id:$('lUnit').value||null,title:$('lTitle').value.trim(),lesson_type:$('lType').value,duration_minutes:Number($('lDuration').value||0),sort_order:Number($('lSort').value||0),is_free:$('lFree').value==='true',is_published:$('lPub').value==='true',description:$('lDesc').value.trim(),content:$('lContent').value.trim(),video_url:$('lVideo').value.trim(),updated_at:new Date().toISOString()};const r=x?await db.from('lessons').update(p).eq('id',x.id).select('id'):await db.from('lessons').insert(p).select('id');if(r.error)throw new Error('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(row=>row.id))throw new Error('Lesson save was not confirmed. Check INSERT/UPDATE RLS/permissions.');const lessonId=x?.id||r.data[0].id;const file=$('lVideoFile')?.files?.[0];if(file){toast('Lesson saved. Uploading video…');const videoUrl=await uploadLessonVideo(file,$('lGrade').value,lessonId);const vr=await db.from('lessons').update({video_url:videoUrl,updated_at:new Date().toISOString()}).eq('id',lessonId).select('id,video_url');if(vr.error)throw new Error('Video uploaded but lesson update failed: '+vr.error.message);if(!Array.isArray(vr.data)||!vr.data.some(row=>row.id===lessonId&&row.video_url===videoUrl))throw new Error('Video URL was not saved to the lesson.');}closeModal();toast(file?'Lesson and real video saved successfully.':'Lesson saved.');await loadLessons();await loadDashboard()}catch(err){if(window.__domaPendingVideoPath){const __p=window.__domaPendingVideoPath;window.__domaPendingVideoPath=null;db.storage.from(LESSON_VIDEO_BUCKET).remove([__p]).catch(()=>{});toast('Lesson save failed — the uploaded video file was removed.');}toast(err?.message||String(err))}finally{if(btn)btn.disabled=false}}}
 $('checkLessonVideoIntegrity')?.addEventListener('click',checkLessonVideoIntegrity);
@@ -1358,7 +1417,7 @@ async function deleteReview(id){await deletePersisted('reviews',id,'Review',load
 
 function loadSection(n){({dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,homework:loadHomework,students:loadStudents,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews}[n]||(()=>{}))()}
 
-$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=loadLessons;$('lessonSearch').oninput=loadLessons;$('lessonGrade').onchange=loadLessons;$('lessonType').onchange=loadLessons;$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=async()=>{await loadSales();await loadDashboard()};$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
+$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=loadUnits;$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=()=>{lessonsPage=0;loadLessons()};$('lessonSearch').oninput=()=>{lessonsPage=0;clearTimeout(window.__lessonSearchTimer);window.__lessonSearchTimer=setTimeout(loadLessons,250)};$('lessonGrade').onchange=()=>{lessonsPage=0;loadLessons()};$('lessonType').onchange=()=>{lessonsPage=0;loadLessons()};$('quizRefresh').onclick=loadQuizzes;$('quizSearch').oninput=loadQuizzes;$('quizGrade').onchange=loadQuizzes;$('hwRefresh').onclick=loadHomework;$('hwSearch').oninput=loadHomework;$('hwGrade').onchange=loadHomework;$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=loadStudents;$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=async()=>{await loadSales();await loadDashboard()};$('salesSearch').oninput=loadSales;$('reviewsRefresh').onclick=loadReviews;
 
 async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Supabase connected':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
 
