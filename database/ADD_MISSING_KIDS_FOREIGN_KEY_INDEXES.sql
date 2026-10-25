@@ -1,6 +1,6 @@
 -- Non-destructive index additions for foreign keys flagged by Supabase advisors.
--- Reviewed on 2026-10-25 for project VANTOR (dtptxhkcogpoleftguas).
--- Run through the normal database change workflow, then rerun Supabase advisors.
+-- Reviewed and applied on 2026-10-25 to VANTOR (dtptxhkcogpoleftguas).
+-- Supabase advisors were rerun; the unindexed-foreign-keys finding cleared.
 -- All statements are additive index definitions; no data or policy updates are included.
 
 CREATE INDEX IF NOT EXISTS doma_fkidx_kids_enroll_req_level
