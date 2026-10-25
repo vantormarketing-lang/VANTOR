@@ -955,10 +955,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         
 
         <div class="grid" style="margin-top:14px">
-          <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p></div>
-          <div class="card"><b>Assessment</b><p class="muted">Create quizzes, keep answers private, review attempts and homework.</p></div>
-          <div class="card"><b>Students</b><p class="muted">See student profiles, grade, progress and certificates.</p></div>
-          <div class="card"><b>Sales</b><p class="muted">Verify Mobile Cash receipts and approve or reject access requests.</p></div>
+          <div class="card"><b>Content</b><p class="muted">Manage grades, units, lessons, videos and free/paid access.</p><button type="button" class="btn secondary small" data-quick-section="lessons">Open Lessons</button></div>
+          <div class="card"><b>Assessment</b><p class="muted">Create quizzes, keep answers private, review attempts and homework.</p><div class="actions"><button type="button" class="btn secondary small" data-quick-section="quizzes">Open Quizzes</button><button type="button" class="btn secondary small" data-quick-section="homework">Open Homework</button></div></div>
+          <div class="card"><b>Students</b><p class="muted">See student profiles, grade, progress and certificates.</p><button type="button" class="btn secondary small" data-quick-section="students">Open Students</button></div>
+          <div class="card"><b>Sales</b><p class="muted">Verify Mobile Cash receipts and approve or reject access requests.</p><div class="actions"><button type="button" class="btn secondary small" data-quick-section="sales">Grade Requests</button><button type="button" class="btn secondary small" data-quick-section="course-sales">English Course</button><button type="button" class="btn secondary small" data-quick-section="kids-course-sales">Kids Course</button></div></div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="head" style="margin-bottom:12px">
+            <div><h3>Recent Subscription Requests</h3><p>Latest requests at a glance; open the relevant sales page to review a receipt or change its status.</p></div>
+            <button type="button" class="btn secondary small" data-quick-section="sales">Review Requests</button>
+          </div>
+          <div id="dashboardRecentRequests" aria-live="polite"><div class="empty">Loading recent requests…</div></div>
         </div>
       </section>
 
@@ -1121,6 +1128,13 @@ function unitOptions(gradeId='',selected=''){const list=units.filter(u=>!gradeId
 function show(name){current=name;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='section-'+name));document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===name));$('pageTitle').textContent=document.querySelector('.nav-btn[data-section="'+name+'"]')?.textContent.trim()||'Dashboard';$('sidebar').classList.remove('open');const router=window.__domaRouteSection;if(typeof router==='function')return router(name);return loadSection(name)}
 $('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};$('closeModal').onclick=closeModal;$('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');$('openSite').onclick=()=>window.open('index.html','_blank');$('domaSidebarHomeButton').onclick=()=>show('dashboard');
 document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.onclick=()=>show(b.dataset.section));
+document.addEventListener('click',event=>{
+  const action=event.target.closest('[data-quick-section]');
+  if(!action)return;
+  const section=String(action.dataset.quickSection||'');
+  const nav=document.querySelector('.nav-btn[data-section="'+section+'"]');
+  if(nav)nav.click();
+});
 
 async function authUser(){return (await db.auth.getUser()).data.user}
 async function getStaffProfile(){
@@ -1171,9 +1185,30 @@ async function loadDashboard(){
   $('stActive').textContent=subsRq.error?'ERROR':String(subs.filter(x=>String(x.status||'').toLowerCase()==='active'&&new Date(x.expires_at)>new Date()).length);
   let note=document.getElementById('adminDataAccessWarning');
   if(!note){note=document.createElement('div');note.id='adminDataAccessWarning';note.className='info-box';note.style.marginTop='14px';host?.appendChild(note)}
+  const recentHost=document.getElementById('dashboardRecentRequests');
+  if(recentHost){
+    if(requestsRq.error){
+      recentHost.innerHTML='<div class="empty">Recent requests are unavailable. Check the staff session and refresh.</div>';
+    }else{
+      const latest=requests.slice().sort((a,b)=>{
+        const at=Date.parse(a.created_at||'')||0;
+        const bt=Date.parse(b.created_at||'')||0;
+        return bt-at;
+      }).slice(0,5);
+      recentHost.innerHTML=latest.length?latest.map(request=>{
+        const status=String(request.status||'pending').toLowerCase();
+        const statusClass=status==='approved'?'ok':status==='rejected'?'bad':'warn';
+        const student=String(request.student_name||request.student_email||'Student');
+        const detail=[request.plan||'Subscription',request.created_at?fmtDate(request.created_at):'Date unavailable'].join(' · ');
+        return '<div class="doma-pro6-admin-row" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">'+
+          '<div><b>'+esc(student)+'</b><div class="muted" style="font-size:10px;margin-top:4px">'+esc(detail)+'</div></div>'+
+          '<span class="pill '+statusClass+'">'+esc(status)+'</span></div>';
+      }).join(''):'<div class="empty">No subscription requests yet.</div>';
+    }
+  }
   if(failed.length){
     note.style.display='block';
-    note.innerHTML='<b>Admin data access needs attention.</b><br>'+failed.map(x=>esc(x[0]+': '+(x[1]?.error?.message||'RPC error'))).join('<br>')+'<br><span class="muted">Run DOMA_ADMIN_DATA_CONSISTENCY_FIX_FINAL.sql in Supabase, then refresh the Admin.</span>';
+    note.innerHTML='<b>Admin data access needs attention.</b><br>'+failed.map(x=>esc(x[0]+': '+(x[1]?.error?.message||'RPC error'))).join('<br>')+'<br><span class="muted">Check your staff session and the matching Supabase RPC/RLS definitions, then refresh.</span>';
   }else note.style.display='none';
 }
 async function loadGradesTable(){
