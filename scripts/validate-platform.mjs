@@ -57,6 +57,29 @@ for (const path of ['sw.js', 'admin-sw.js']) {
   catch (error) { fail(`${path}: ${error.message}`); }
 }
 
+const studentWorkerPolicy = read('sw.js');
+if (!/function normalizeShellUrl\s*\(/.test(studentWorkerPolicy) ||
+    !/SHELL_CACHE_URLS\s*=\s*\[\.\.\.new Set\(SHELL\.map\(normalizeShellUrl\)\)\]/.test(studentWorkerPolicy)) {
+  fail('sw.js: duplicate student root/index/query routes must share normalized shell cache keys');
+}
+if (!/url\.origin\s*!==\s*self\.location\.origin/.test(studentWorkerPolicy)) {
+  fail('sw.js: cross-origin requests must bypass the student service worker cache');
+}
+if (!/function isCacheableStaticAssetUrl\s*\(/.test(studentWorkerPolicy) ||
+    !/cacheableStaticAssetUrl/.test(studentWorkerPolicy)) {
+  fail('sw.js: runtime caching must use a static-asset allowlist');
+}
+if (/\bcaches\.match\s*\(\s*req\s*\)/.test(studentWorkerPolicy)) {
+  fail('sw.js: global cache lookup can return stale or cross-user dynamic responses');
+}
+if (!/req\.mode\s*===\s*['"]navigate['"][\s\S]*?fetch\(req,\s*\{\s*cache:\s*['"]no-store['"]\s*\}\)/.test(studentWorkerPolicy)) {
+  fail('sw.js: app shell navigations must be network-first so deployed changes appear promptly');
+}
+if (!/hasSensitiveQuery\s*\(/.test(studentWorkerPolicy)) {
+  fail('sw.js: auth tokens and sensitive query parameters must be excluded from cache writes');
+}
+ok('sw.js: only safe same-origin static assets are cached; navigations refresh online and dynamic data is network-only');
+
 for (const path of ['manifest.webmanifest', 'admin-manifest.webmanifest']) {
   const source = read(path);
   if (!source) continue;
