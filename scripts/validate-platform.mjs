@@ -284,6 +284,63 @@ if (/\.range\(0,\s*1999\)/.test(lessonLoader) ||
 }
 ok('admin.html: Lessons list uses 100-row server-side pagination and avoids loading full lesson bodies');
 
+
+const quizLoaderStart = admin.indexOf('async function loadQuizzes(){');
+const quizLoaderEnd = admin.indexOf('function quizForm(title,x=null){', quizLoaderStart);
+const quizLoader = quizLoaderStart >= 0 && quizLoaderEnd > quizLoaderStart
+  ? admin.slice(quizLoaderStart, quizLoaderEnd)
+  : '';
+if (!/const DOMA_QUIZ_PAGE_SIZE\s*=\s*100/.test(admin) ||
+    !/domaQuizListPage\s*\*\s*DOMA_QUIZ_PAGE_SIZE/.test(quizLoader) ||
+    !/\.range\(from,from\+DOMA_QUIZ_PAGE_SIZE-1\)/.test(quizLoader) ||
+    !/count:\s*['"]exact['"]/.test(quizLoader) ||
+    !/id="quizzesPagination"/.test(admin)) {
+  fail('admin.html: Quizzes list must use server-side pagination with count and page controls');
+}
+if (/\.range\(0,\s*1999\)/.test(quizLoader)) {
+  fail('admin.html: Quizzes list must not request up to 2000 rows at once');
+}
+ok('admin.html: Quizzes list uses 100-row server-side pagination');
+
+const homeworkLoaderStart = admin.indexOf('async function loadHomework(){');
+const homeworkLoaderEnd = admin.indexOf('function homeworkForm(title,x=null){', homeworkLoaderStart);
+const homeworkLoader = homeworkLoaderStart >= 0 && homeworkLoaderEnd > homeworkLoaderStart
+  ? admin.slice(homeworkLoaderStart, homeworkLoaderEnd)
+  : '';
+const homeworkUpgradeStart = admin.indexOf('async function loadHomeworkUpgraded(){');
+const homeworkUpgradeEnd = admin.indexOf('function homeworkFormUpgraded(title,x=null){', homeworkUpgradeStart);
+const homeworkUpgrade = homeworkUpgradeStart >= 0 && homeworkUpgradeEnd > homeworkUpgradeStart
+  ? admin.slice(homeworkUpgradeStart, homeworkUpgradeEnd)
+  : '';
+if (!/const DOMA_HOMEWORK_PAGE_SIZE\s*=\s*100/.test(admin) ||
+    !/domaHomeworkListPage\s*\*\s*DOMA_HOMEWORK_PAGE_SIZE/.test(homeworkLoader) ||
+    !/\.range\(from,from\+DOMA_HOMEWORK_PAGE_SIZE-1\)/.test(homeworkLoader) ||
+    !/count:\s*['"]exact['"]/.test(homeworkLoader) ||
+    !/id="homeworkPagination"/.test(admin)) {
+  fail('admin.html: Homework list must use server-side pagination with count and page controls');
+}
+if (!/domaHomeworkListPage\s*\*\s*DOMA_HOMEWORK_PAGE_SIZE/.test(homeworkUpgrade) ||
+    !/\.range\(from,from\+DOMA_HOMEWORK_PAGE_SIZE-1\)/.test(homeworkUpgrade) ||
+    !/count:\s*['"]exact['"]/.test(homeworkUpgrade)) {
+  fail('admin.html: Enhanced Homework loader must preserve server-side pagination');
+}
+if (/\.range\(0,\s*1999\)/.test(homeworkLoader) ||
+    /db\.from\(['"]homework['"]\)\.select\(['"]\*['"]\)/.test(homeworkUpgrade)) {
+  fail('admin.html: Homework list must not fetch 2000 rows or every database column');
+}
+ok('admin.html: both Homework entry paths use 100-row server-side pagination');
+
+const adminHealthStart = admin.indexOf('async function refreshHealth(){');
+const adminHealthEnd = admin.indexOf('function loadHomeworkUpgraded(){', adminHealthStart);
+const adminHealthSource = adminHealthStart >= 0 && adminHealthEnd > adminHealthStart
+  ? admin.slice(adminHealthStart, adminHealthEnd)
+  : '';
+if (/db\.from\(['"]homework['"]\)\.select\(['"]\*['"]\)/.test(adminHealthSource)) {
+  fail('admin.html: content-health counter must not fetch every homework column');
+}
+ok('admin.html: content-health homework query uses a minimal field selection');
+
+
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
   for (const message of errors) console.error('FAIL', message);
