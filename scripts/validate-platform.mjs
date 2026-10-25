@@ -341,6 +341,39 @@ if (/db\.from\(['"]homework['"]\)\.select\(['"]\*['"]\)/.test(adminHealthSource)
 ok('admin.html: content-health homework query uses a minimal field selection');
 
 
+
+const dashboardStart = admin.indexOf('<section id="section-dashboard"');
+const dashboardEnd = admin.indexOf('<section id="section-grades"', dashboardStart);
+const dashboardMarkup = dashboardStart >= 0 && dashboardEnd > dashboardStart
+  ? admin.slice(dashboardStart, dashboardEnd)
+  : '';
+if (!dashboardMarkup.includes('id="dashboardRecentRequests"')) {
+  fail('admin.html: dashboard must expose the recent subscription requests panel');
+}
+for (const section of ['lessons','quizzes','homework','students','sales','course-sales','kids-course-sales']) {
+  if (!dashboardMarkup.includes('data-quick-section="' + section + '"')) {
+    fail('admin.html: dashboard quick action is missing for section ' + section);
+  }
+}
+if (!admin.includes("event.target.closest('[data-quick-section]')")) {
+  fail('admin.html: dashboard quick-action buttons must use the section navigation handler');
+}
+if (admin.includes('Run DOMA_ADMIN_DATA_CONSISTENCY_FIX_FINAL.sql in Supabase')) {
+  fail('admin.html: dashboard should not prescribe a database patch for every RPC error');
+}
+const dashboardLoaderStart = admin.indexOf('async function loadDashboard(){');
+const dashboardLoaderEnd = admin.indexOf('async function loadGradesTable(){', dashboardLoaderStart);
+const dashboardLoader = dashboardLoaderStart >= 0 && dashboardLoaderEnd > dashboardLoaderStart
+  ? admin.slice(dashboardLoaderStart, dashboardLoaderEnd)
+  : '';
+if (!dashboardLoader.includes("requests.slice().sort") ||
+    !dashboardLoader.includes("slice(0,5)") ||
+    !dashboardLoader.includes("esc(student)") ||
+    !dashboardLoader.includes("esc(detail)")) {
+  fail('admin.html: recent subscription requests must be limited to five and escape student-supplied text');
+}
+ok('admin.html: dashboard provides safe quick actions and a sanitized latest-five request summary');
+
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
   for (const message of errors) console.error('FAIL', message);
