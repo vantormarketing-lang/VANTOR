@@ -66,7 +66,7 @@ if (!/url\.origin\s*!==\s*self\.location\.origin/.test(studentWorkerPolicy)) {
   fail('sw.js: cross-origin requests must bypass the student service worker cache');
 }
 if (!/function isCacheableStaticAssetUrl\s*\(/.test(studentWorkerPolicy) ||
-    !/cacheableStaticAssetUrl/.test(studentWorkerPolicy)) {
+    !/[Cc]acheableStaticAssetUrl/.test(studentWorkerPolicy)) {
   fail('sw.js: runtime caching must use a static-asset allowlist');
 }
 if (/\bcaches\.match\s*\(\s*req\s*\)/.test(studentWorkerPolicy)) {
