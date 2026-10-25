@@ -1,7 +1,7 @@
 -- Non-destructive index additions for foreign keys flagged by Supabase advisors.
 -- Reviewed on 2026-10-25 for project VANTOR (dtptxhkcogpoleftguas).
 -- Run through the normal database change workflow, then rerun Supabase advisors.
--- This file intentionally contains no DROP, ALTER POLICY, or data-changing statements.
+-- All statements are additive index definitions; no data or policy updates are included.
 
 CREATE INDEX IF NOT EXISTS doma_fkidx_kids_enroll_req_level
   ON public.mrfluent_kids_enrollment_requests (requested_level_id);
