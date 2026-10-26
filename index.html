@@ -14694,6 +14694,65 @@ function renderC1(){
 }
 
 function renderSoon(){var code=(query.get('level')||'Level').toUpperCase();var group=query.get('group')==='older'?'older':'younger';var titles={A2:'Word Explorers',B2:'Reading Builders',C2:'Confident English',B1:'My First Words',C1:'My First Sentences'};document.title=code+' coming soon | Mr. Fluent Kids';root.innerHTML=shell('YOUR NEXT ADVENTURE',esc(code)+' is on the way.','المستوى ده لسه تحت الإنشاء.','We are preparing the lessons, activities and audio for this level.','<div class="mfkr-choice-grid"><div class="mfkr-choice"><div class="mfkr-card-top"><span class="mfkr-art">🛠️</span><span class="mfkr-tag">IN DEVELOPMENT</span></div><h2>'+esc(titles[code]||'Coming soon')+'</h2><p class="mfkr-desc">Lessons and activities are being prepared. Start with A1 while the next level is in development.</p><div class="mfkr-card-foot"><span>Coming soon</span><span>✦</span></div></div><a class="mfkr-choice" href="'+url('a1')+'"><div class="mfkr-card-top"><span class="mfkr-art">🔤</span><span class="mfkr-tag">AVAILABLE NOW</span></div><h2>My First ABC</h2><div class="mfkr-ar">الحروف من A إلى Z</div><p class="mfkr-desc">Capital and small letters, picture clues, Arabic meanings and pronunciation buttons.</p><div class="mfkr-card-foot"><span>A1 · Alphabet</span><span>Start learning ↗</span></div></a></div>'+backButtons(url(group), '← Back to levels'));}
+
+function mfkjA1OpenLessonMenu(){
+ var overlay=root.querySelector('#mfkjA1LessonMenu');if(!overlay)return;
+ overlay.hidden=false;document.body.style.overflow='hidden';
+ var trigger=root.querySelector('[data-mfkj-a1-menu-trigger]');if(trigger)trigger.setAttribute('aria-expanded','true');
+ var close=root.querySelector('[data-mfkj-a1-menu-close]');if(close)close.focus({preventScroll:true});
+}
+function mfkjA1CloseLessonMenu(){
+ var overlay=root.querySelector('#mfkjA1LessonMenu');if(overlay)overlay.hidden=true;
+ document.body.style.overflow='';
+ var trigger=root.querySelector('[data-mfkj-a1-menu-trigger]');if(trigger)trigger.setAttribute('aria-expanded','false');
+}
+function mfkjA1SelectLessonPanel(key){
+ root.querySelectorAll('[data-mfkj-a1-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-mfkj-a1-panel')!==key;});
+ mfkjA1CloseLessonMenu();
+ var selected=root.querySelector('[data-mfkj-a1-panel="'+key+'"]');if(selected)selected.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function mfkjA1InstallLessonMenu(){
+ var summary=root.querySelector('.mfkr-summary'),grid=root.querySelector('#mfkrAlphabetGrid'),status=root.querySelector('#mfkrAudioStatus');
+ if(summary&&grid&&status&&!summary.closest('[data-mfkj-a1-panel]')){
+  var abc=document.createElement('section');abc.className='mfkj-a1-panel';abc.setAttribute('data-mfkj-a1-panel','abc');
+  summary.parentNode.insertBefore(abc,summary);abc.appendChild(summary);abc.appendChild(grid);abc.appendChild(status);
+ }
+ [
+  {selector:'.mfkr-topic-panel',key:'trace'},
+  {selector:'.mfkr-quiz-panel:not(.mfkr-a1-activity-panel)',key:'sound'},
+  {selector:'#mfkrA1LookQuiz',key:'look'},
+  {selector:'#mfkrA1ListenQuiz',key:'listen'}
+ ].forEach(function(item){var panel=root.querySelector(item.selector);if(panel){panel.classList.add('mfkj-a1-panel');panel.setAttribute('data-mfkj-a1-panel',item.key);}});
+ root.querySelectorAll('[data-mfkj-a1-panel]').forEach(function(panel){panel.hidden=true;});
+ var back=root.querySelector('.mfkr-back-row');if(back)back.classList.add('mfkj-a1-back-hidden');
+ var nav=root.querySelector('.mfkr-nav');
+ if(nav&&!nav.querySelector('[data-mfkj-a1-menu-trigger]')){
+  var trigger=document.createElement('button');trigger.type='button';trigger.className='mfkj-a1-menu-trigger';
+  trigger.setAttribute('data-mfkj-a1-menu-trigger','');trigger.setAttribute('aria-controls','mfkjA1LessonMenu');trigger.setAttribute('aria-expanded','false');
+  trigger.innerHTML='<span class="mfkj-a1-trigger-icon" aria-hidden="true">☰</span><span class="mfkj-a1-trigger-copy"><strong>القائمة</strong><small>الدروس والأنشطة</small></span>';
+  trigger.addEventListener('click',mfkjA1OpenLessonMenu);nav.insertBefore(trigger,nav.lastElementChild||null);
+ }
+ var old=root.querySelector('#mfkjA1LessonMenu');if(old)old.remove();
+ var overlay=document.createElement('div');overlay.id='mfkjA1LessonMenu';overlay.className='mfkj-a1-overlay';overlay.hidden=true;
+ overlay.innerHTML='<section class="mfkj-a1-dialog" role="dialog" aria-modal="true" aria-labelledby="mfkjA1MenuTitle">'+
+ '<header class="mfkj-a1-dialog-head"><div><span class="mfkj-a1-kicker">MR. FLUENT KIDS · LEVEL A1</span><h2 id="mfkjA1MenuTitle">قائمة المستوى</h2><p dir="rtl" lang="ar">اختار الدرس أو النشاط اللي عايز تفتحه. كل مرة هتشوف حاجة واحدة بس.</p></div><button type="button" class="mfkj-a1-close" data-mfkj-a1-menu-close aria-label="إغلاق القائمة">×</button></header>'+
+ '<div class="mfkj-a1-menu-note" dir="rtl" lang="ar">اختار من القائمة عشان تبدأ التعلّم</div><div class="mfkj-a1-menu-list">'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="abc"><span class="mfkj-a1-number">01</span><span class="mfkj-a1-item-copy"><strong>ABC · الحروف والأصوات</strong><small>كل الحروف من A إلى Z مع الصور والمعاني والنطق</small></span><span class="mfkj-a1-action">افتح ↗</span></button>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="trace"><span class="mfkj-a1-number">02</span><span class="mfkj-a1-item-copy"><strong>Trace the Letter · تتبّع الحرف</strong><small>تدرّب على رسم الحرف بإصبعك أو بالماوس</small></span><span class="mfkj-a1-action">ابدأ ↗</span></button>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="sound"><span class="mfkj-a1-number">03</span><span class="mfkj-a1-item-copy"><strong>Sound Detective · اكتشف الصوت</strong><small>اختار الحرف اللي بتبدأ بيه الكلمة</small></span><span class="mfkj-a1-action">جرّب ↗</span></button>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="look"><span class="mfkj-a1-number">04</span><span class="mfkj-a1-item-copy"><strong>Look &amp; Choose · لعبة الصور</strong><small>شوف الصورة واختار اسمها الصحيح</small></span><span class="mfkj-a1-action">العب ↗</span></button>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="listen"><span class="mfkj-a1-number">05</span><span class="mfkj-a1-item-copy"><strong>Listen &amp; Choose · تدريب الاستماع</strong><small>اسمع الكلمة واختار الصورة اللي سمعت اسمها</small></span><span class="mfkj-a1-action">استمع ↗</span></button>'+
+ '</div><footer class="mfkj-a1-dialog-foot"><a class="mfkr-btn" href="./?kids=younger">← الرجوع للمستويات</a><button type="button" class="mfkj-a1-foot-close" data-mfkj-a1-menu-close>إغلاق القائمة</button></footer></section>';
+ overlay.addEventListener('click',function(event){if(event.target===overlay)mfkjA1CloseLessonMenu();});
+ overlay.querySelectorAll('[data-mfkj-a1-menu-close]').forEach(function(button){button.addEventListener('click',mfkjA1CloseLessonMenu);});
+ overlay.querySelectorAll('[data-mfkj-a1-target]').forEach(function(button){button.addEventListener('click',function(){mfkjA1SelectLessonPanel(button.getAttribute('data-mfkj-a1-target'));});});
+ root.appendChild(overlay);
+ if(window.__mfkjA1MenuKeyHandler)document.removeEventListener('keydown',window.__mfkjA1MenuKeyHandler);
+ window.__mfkjA1MenuKeyHandler=function(event){var menu=root.querySelector('#mfkjA1LessonMenu');if(event.key==='Escape'&&menu&&!menu.hidden)mfkjA1CloseLessonMenu();};
+ document.addEventListener('keydown',window.__mfkjA1MenuKeyHandler);
+ mfkjA1OpenLessonMenu();
+}
+
 function renderAlphabet(){document.title='A1 — My First ABC | Mr. Fluent Kids';var cards=L.map(function(item){var cap=item[0],small=item[1],word=item[2],meaning=item[3],picture=item[4];return '<article class="mfkr-letter-card" aria-label="Letter '+cap+', '+esc(word)+'"><div class="mfkr-letter-head"><div class="mfkr-letter-forms"><span>'+cap+'</span> <span>'+small+'</span></div><span class="mfkr-picture" aria-hidden="true">'+picture+'</span></div><div class="mfkr-word" lang="en">'+esc(word)+'</div><div class="mfkr-meaning" lang="ar">'+esc(meaning)+'</div><div class="mfkr-sounds"><button class="mfkr-sound" type="button" data-kids-speak="'+esc(cap)+'" data-label="letter '+cap+'"><span aria-hidden="true">🔊</span> صوت الحرف</button><button class="mfkr-sound" type="button" data-kids-speak="'+esc(word)+'" data-label="'+esc(word)+'"><span aria-hidden="true">♫</span> صوت الكلمة</button></div></article>';}).join('');root.innerHTML=shell('LITTLE LEARNERS · LEVEL A1','My First ABC.','اتعلّم الحروف من A إلى Z.','كل كارت فيه الحرف الكبير والصغير، وصورة وكلمة بالإنجليزي، ومعناها بالعربي، وزرين لسماع النطق.','<div class="mfkr-summary"><span>26 letters</span><div class="mfkr-progress"><span></span></div><span>Letter · Picture · Word · Sound</span></div><div class="mfkr-alpha-grid" id="mfkrAlphabetGrid">'+cards+'</div><div class="mfkr-audio-status" id="mfkrAudioStatus" aria-live="polite">اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.</div><section class="mfkr-topic-panel"><div class="mfkr-topic-heading"><div><div class="mfkr-mini-eyebrow">LETTER PRACTICE · تدريب الحروف</div><h2>Trace the Letter</h2><div class="mfkr-c1-story-title-ar" lang="ar">تتبّع شكل الحرف بإصبعك على الشاشة أو بالماوس.</div></div><span class="mfkr-art" aria-hidden="true">✍️</span></div><div style="display:flex;justify-content:center;align-items:center;padding:10px 0"><canvas id="mfkrLetterTraceCanvas" width="600" height="280" aria-label="Trace the displayed English letter" style="display:block;width:100%;max-width:430px;height:auto;aspect-ratio:15/7;touch-action:none;border:1px solid rgba(206,164,255,.2);border-radius:18px;background:rgba(12,8,18,.35)"></canvas></div><div class="mfkr-c1-actions"><button type="button" class="mfkr-btn" data-a1-trace-prev>← الحرف السابق</button><strong id="mfkrA1TraceLetter" style="color:#ff9dd4;font-size:20px">A</strong><button type="button" class="mfkr-btn" data-a1-trace-next>الحرف التالي →</button><button type="button" class="mfkr-btn" data-a1-trace-clear>أعد المحاولة</button></div><p class="mfkr-quiz-feedback" id="mfkrA1TraceFeedback" lang="ar" aria-live="polite">اتبع الخط المنقّط ببطء، ثم جرّب الحرف التالي.</p></section><section class="mfkr-quiz-panel"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">SOUND DETECTIVE · اكتشف الصوت الأول</div><h2>Which Letter Starts the Word?</h2><p lang="ar">اقرأ الكلمة واختر الحرف الذي تبدأ به. أجب عن 5 أسئلة لتكمل تدريب الأصوات.</p></div><div id="mfkrA1SoundChallenge"></div></section><section class="mfkr-quiz-panel mfkr-a1-activity-panel" id="mfkrA1LookQuiz"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">LOOK &amp; CHOOSE · اختار اسم الصورة</div><h2>What is in the picture?</h2><p lang="ar">شوف الصورة واختار اسمها الصحيح من 3 اختيارات. العب براحتك، الأسئلة مبتخلصش.</p></div><div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">PICTURE WORDS</span><span id="mfkrA1LookCount" class="mfkr-quiz-count">Question 1 · Unlimited</span><span id="mfkrA1LookScore" class="mfkr-quiz-score">Score: 0</span></div><div id="mfkrA1LookStage"></div><p class="mfkr-quiz-feedback" id="mfkrA1LookFeedback" lang="ar" aria-live="polite">اختار الكلمة اللي بتوصف الصورة.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-a1-look-next disabled>السؤال التالي ←</button></div></section><section class="mfkr-quiz-panel mfkr-a1-activity-panel" id="mfkrA1ListenQuiz"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">LISTEN &amp; CHOOSE · اسمع واختار</div><h2>Listen. Look. Choose!</h2><p lang="ar">اسمع اسم الكلمة بالإنجليزي، وبعدين اختار الصورة الصحيحة. أسماء الصور مش ظاهرة قبل إجابتك، والأسئلة مستمرة من غير حد.</p></div><div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">LISTENING GAME</span><span id="mfkrA1ListenCount" class="mfkr-quiz-count">Question 1 · Unlimited</span><span id="mfkrA1ListenScore" class="mfkr-quiz-score">Score: 0</span></div><div class="mfkr-a1-listen-prompt"><div><strong>What can you hear?</strong><small lang="ar" dir="rtl">اضغط على زر الصوت واسمع كويس.</small></div><button type="button" class="mfkr-btn mfkr-btn-primary" id="mfkrA1ListenPlay">🔊 Play the word</button></div><div id="mfkrA1ListenStage" class="mfkr-a1-picture-options mfkr-a1-image-options" aria-label="Choose the picture you hear"></div><p class="mfkr-quiz-feedback" id="mfkrA1ListenFeedback" lang="ar" aria-live="polite">اسمع الكلمة، وبعدها اختار صورة من التلاتة.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-a1-listen-next disabled>السؤال التالي ←</button></div></section>'+backButtons(url('younger'),'← Back to levels'));var grid=root.querySelector('#mfkrAlphabetGrid');var status=root.querySelector('#mfkrAudioStatus');grid.addEventListener('click',function(event){var button=event.target.closest('button[data-kids-speak]');if(!button)return;var value=button.getAttribute('data-kids-speak');if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){status.textContent='ميزة النطق غير مدعومة في هذا المتصفح. جرّب متصفحًا حديثًا.';return;}window.speechSynthesis.cancel();var speech=new SpeechSynthesisUtterance(value);mfkrSelectEnglishVoice(speech);speech.lang='en-US';speech.rate=.78;speech.pitch=1.02;speech.onstart=function(){status.textContent='Now speaking: '+button.getAttribute('data-label');};speech.onend=function(){status.textContent='اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.';};speech.onerror=function(){status.textContent='تعذّر تشغيل الصوت. جرّب الضغط مرة أخرى.';};window.speechSynthesis.speak(speech);});
 var traceIndex=0,traceLetters=L.map(function(item){return item[0];}),traceCanvas=root.querySelector('#mfkrLetterTraceCanvas'),traceLabel=root.querySelector('#mfkrA1TraceLetter'),traceFeedback=root.querySelector('#mfkrA1TraceFeedback'),traceDrawing=false,traceDistance=0,traceLastPoint=null;
 function drawTraceLetter(){if(!traceCanvas)return;var ctx=traceCanvas.getContext('2d');if(!ctx)return;ctx.clearRect(0,0,traceCanvas.width,traceCanvas.height);ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 182px Arial, sans-serif';ctx.lineWidth=4;ctx.strokeStyle='rgba(255,157,212,.95)';ctx.setLineDash([10,10]);ctx.strokeText(traceLetters[traceIndex],300,130);ctx.setLineDash([]);ctx.fillStyle='rgba(210,192,229,.86)';ctx.font='600 22px Arial, sans-serif';ctx.fillText('Trace the letter '+traceLetters[traceIndex],300,240);if(traceLabel)traceLabel.textContent=traceLetters[traceIndex];if(traceFeedback)traceFeedback.textContent='اتبع الخط المنقّط ببطء، ثم جرّب الحرف التالي.';}
@@ -14735,6 +14794,7 @@ var mfkrLookNext=root.querySelector('[data-a1-look-next]');if(mfkrLookNext)mfkrL
 var mfkrListenNext=root.querySelector('[data-a1-listen-next]');if(mfkrListenNext)mfkrListenNext.addEventListener('click',function(){if(!mfkrListenAnswered)return;mfkrListenIndex++;mfkrA1DrawListen();});
 if(mfkrListenPlay)mfkrListenPlay.addEventListener('click',function(){var current=mfkrListenDeck[mfkrListenIndex];if(!current)return;mfkrA1Audio(current[2]);mfkrListenFeedback.textContent='اسمع الكلمة كويس، وبعدها اختار الصورة الصح.';});
 mfkrA1StartLook();mfkrA1StartListen();
+mfkjA1InstallLessonMenu();
 
 }
 
@@ -16290,6 +16350,63 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 @media(prefers-reduced-motion:reduce){#mfKidsStandaloneRoot .mfkr-a1-image-option{transition:none!important}}
 </style>
 <script src="./mf-kids-learning-experiences.js?v=20261026.2"></script>
+
+<style id="mfkj-a1-centered-glass-menu-v1">
+#mfKidsStandaloneRoot .mfkj-a1-panel[hidden],#mfKidsStandaloneRoot #mfkjA1LessonMenu[hidden]{display:none!important}
+#mfKidsStandaloneRoot .mfkj-a1-back-hidden{display:none!important}
+#mfKidsStandaloneRoot .mfkr-nav .mfkj-a1-menu-trigger{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;flex:none;padding:5px 10px;border:1px solid rgba(205,164,255,.28);border-radius:14px;background:linear-gradient(135deg,rgba(94,48,69,.82),rgba(61,42,85,.9));box-shadow:0 8px 22px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.08);color:#fff5fb;cursor:pointer;transition:transform .16s,border-color .16s}
+#mfKidsStandaloneRoot .mfkr-nav .mfkj-a1-menu-trigger:hover{transform:translateY(-1px);border-color:rgba(255,157,212,.62)}
+#mfKidsStandaloneRoot .mfkj-a1-trigger-icon{display:grid;place-items:center;width:29px;height:29px;border:1px solid rgba(205,164,255,.25);border-radius:10px;background:linear-gradient(145deg,rgba(173,104,154,.24),rgba(112,79,171,.24));font-size:21px;color:#f4d8ff;line-height:1}
+#mfKidsStandaloneRoot .mfkj-a1-trigger-copy{display:grid;gap:1px;text-align:left}
+#mfKidsStandaloneRoot .mfkj-a1-trigger-copy strong{font-size:11px;line-height:1.25}
+#mfKidsStandaloneRoot .mfkj-a1-trigger-copy small{font:600 9px/1.3 Tahoma,"Segoe UI",sans-serif;color:#ccb8db;direction:rtl}
+#mfKidsStandaloneRoot .mfkj-a1-overlay{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:16px;background:rgba(6,4,9,.78);backdrop-filter:blur(14px) saturate(.76);-webkit-backdrop-filter:blur(14px) saturate(.76);animation:mfkjA1MenuFade .16s ease-out}
+#mfKidsStandaloneRoot .mfkj-a1-dialog{width:min(570px,100%);max-height:min(85vh,780px);max-height:min(85dvh,780px);display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(205,164,255,.29);border-radius:25px;background:linear-gradient(150deg,rgba(38,19,32,.99),rgba(28,20,42,.99) 72%,rgba(16,20,27,.99));box-shadow:0 30px 95px rgba(0,0,0,.56),inset 0 1px rgba(255,255,255,.08);color:#fff7ff;animation:mfkjA1MenuRise .2s ease-out}
+#mfKidsStandaloneRoot .mfkj-a1-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:20px 20px 15px;border-bottom:1px solid rgba(233,189,210,.12)}
+#mfKidsStandaloneRoot .mfkj-a1-kicker{display:block;margin-bottom:6px;color:#c8a4e9;font-size:9px;font-weight:1000;letter-spacing:1.8px}
+#mfKidsStandaloneRoot .mfkj-a1-dialog-head h2{margin:0;font-size:24px;line-height:1.2;color:#fff3fb}
+#mfKidsStandaloneRoot .mfkj-a1-dialog-head p{margin:7px 0 0;color:#cfbac8;font:600 12px/1.7 Tahoma,"Segoe UI",sans-serif;text-align:right}
+#mfKidsStandaloneRoot .mfkj-a1-close{display:grid;place-items:center;width:39px;height:39px;flex:none;border:1px solid rgba(234,183,210,.2);border-radius:13px;background:rgba(255,255,255,.055);color:#fae2ed;font-size:27px;line-height:1;cursor:pointer}
+#mfKidsStandaloneRoot .mfkj-a1-menu-note{padding:10px 20px;border-bottom:1px solid rgba(233,189,210,.1);color:#d9c0d0;font:700 10px/1.5 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-a1-menu-list{display:grid;gap:8px;overflow:auto;overscroll-behavior:contain;padding:14px 15px;scrollbar-width:thin;scrollbar-color:#795568 transparent}
+#mfKidsStandaloneRoot .mfkj-a1-menu-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;min-height:65px;padding:11px;border:1px solid rgba(220,176,204,.14);border-radius:15px;background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(174,132,210,.035));color:#f9eaf1;text-align:left;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+#mfKidsStandaloneRoot .mfkj-a1-menu-item:hover,#mfKidsStandaloneRoot .mfkj-a1-menu-item:focus-visible{transform:translateY(-1px);border-color:rgba(183,146,235,.53);background:linear-gradient(135deg,rgba(124,74,111,.31),rgba(97,77,142,.29))}
+#mfKidsStandaloneRoot .mfkj-a1-number{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,rgba(119,59,85,.55),rgba(84,57,117,.65));border:1px solid rgba(224,175,204,.2);color:#f7dced;font-size:11px;font-weight:1000}
+#mfKidsStandaloneRoot .mfkj-a1-item-copy{display:block;min-width:0}
+#mfKidsStandaloneRoot .mfkj-a1-item-copy strong{display:block;color:#fff5f8;font-size:12px;line-height:1.45}
+#mfKidsStandaloneRoot .mfkj-a1-item-copy small{display:block;margin-top:3px;color:#c5adbd;font:600 10px/1.55 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+#mfKidsStandaloneRoot .mfkj-a1-action{color:#d9bfd4;font:800 9px/1.4 Tahoma,"Segoe UI",sans-serif;white-space:nowrap}
+#mfKidsStandaloneRoot .mfkj-a1-dialog-foot{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:12px 15px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(233,189,210,.12)}
+#mfKidsStandaloneRoot .mfkj-a1-dialog-foot a,#mfKidsStandaloneRoot .mfkj-a1-foot-close{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 11px;border-radius:12px;font-size:10px;font-weight:900}
+#mfKidsStandaloneRoot .mfkj-a1-dialog-foot a{border:1px solid rgba(221,177,202,.18);background:rgba(255,255,255,.04);color:#e7d4df}
+#mfKidsStandaloneRoot .mfkj-a1-foot-close{border:1px solid rgba(239,182,211,.18);background:linear-gradient(135deg,#7a3f5c,#5b3d80);color:#fff4f9;cursor:pointer}
+#mfKidsStandaloneRoot .mfkj-a1-panel{min-width:0;scroll-margin-top:90px}
+@keyframes mfkjA1MenuFade{from{opacity:0}to{opacity:1}}
+@keyframes mfkjA1MenuRise{from{opacity:.5;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:560px){
+ #mfKidsStandaloneRoot .mfkr-nav{gap:6px}
+ #mfKidsStandaloneRoot .mfkr-nav .mfkj-a1-menu-trigger{gap:5px;min-height:37px;padding:4px 6px}
+ #mfKidsStandaloneRoot .mfkj-a1-trigger-icon{width:26px;height:26px;font-size:19px}
+ #mfKidsStandaloneRoot .mfkj-a1-trigger-copy strong{font-size:9px}
+ #mfKidsStandaloneRoot .mfkj-a1-trigger-copy small{font-size:8px}
+ #mfKidsStandaloneRoot .mfkj-a1-overlay{padding:10px}
+ #mfKidsStandaloneRoot .mfkj-a1-dialog{max-height:88vh;max-height:88dvh;border-radius:21px}
+ #mfKidsStandaloneRoot .mfkj-a1-dialog-head{padding:16px 14px 12px}
+ #mfKidsStandaloneRoot .mfkj-a1-dialog-head h2{font-size:21px}
+ #mfKidsStandaloneRoot .mfkj-a1-dialog-head p{font-size:11px}
+ #mfKidsStandaloneRoot .mfkj-a1-menu-note{padding:9px 15px}
+ #mfKidsStandaloneRoot .mfkj-a1-menu-list{padding:10px}
+ #mfKidsStandaloneRoot .mfkj-a1-menu-item{grid-template-columns:32px minmax(0,1fr) auto;gap:8px;padding:9px;min-height:59px}
+ #mfKidsStandaloneRoot .mfkj-a1-number{width:31px;height:31px;border-radius:10px}
+ #mfKidsStandaloneRoot .mfkj-a1-item-copy strong{font-size:11px}
+ #mfKidsStandaloneRoot .mfkj-a1-item-copy small{font-size:9px}
+ #mfKidsStandaloneRoot .mfkj-a1-action{font-size:8px}
+ #mfKidsStandaloneRoot .mfkj-a1-dialog-foot{padding:10px;gap:7px}
+ #mfKidsStandaloneRoot .mfkj-a1-dialog-foot a,#mfKidsStandaloneRoot .mfkj-a1-foot-close{font-size:9px;padding:8px}
+}
+@media(prefers-reduced-motion:reduce){#mfKidsStandaloneRoot .mfkj-a1-overlay,#mfKidsStandaloneRoot .mfkj-a1-dialog,#mfKidsStandaloneRoot .mfkj-a1-menu-trigger{animation:none;transition:none}}
+</style>
+
 </body>
 </html>
 
