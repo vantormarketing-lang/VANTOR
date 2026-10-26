@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v203';
-const BRAND_VERSION = 'doma-glass-v40';
-// Kids A1 Glass lesson-menu release: refresh installed clients without breaking the pinned installer version.
+const CACHE_NAME = 'mr-fluent-offline-student-v204';
+const BRAND_VERSION = 'doma-glass-v41';
+// Kids A1 side-navigation release: refresh installed clients and show one lesson panel at a time.
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v203', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v204', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
