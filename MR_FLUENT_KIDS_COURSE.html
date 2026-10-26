@@ -77,7 +77,119 @@ body.kid-show-enrol #enrol{display:block!important}
 .kid-alphabet-heading{text-align:center;font-size:clamp(24px,5vw,34px);font-weight:950;color:#7650cf;margin:8px 0 14px}
 .kid-letter-word{direction:ltr}
 .kid-letter-translation{font-size:14px;font-weight:800;color:#4f4665;text-align:center;margin-top:3px}
-.kid-letter-card{min-width:0;padding:12px;border:1px solid #dfd2fb;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);box-shadow:0 8px 20px rgba(94,65,151,.09)}.kid-letter-top{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px}.kid-letter-symbol{font-size:clamp(38px,7vw,58px);font-weight:1000;line-height:1;color:#7650cf;text-align:center}.kid-letter-picture{width:76px;height:76px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:inset 0 0 0 1px #eee5ff}.kid-letter-word{font-size:18px;font-weight:900;text-align:center;margin-top:10px;overflow-wrap:anywhere}.kid-letter-translation{font-size:13px;text-align:center;color:#7458aa;margin-top:2px;direction:rtl}.kid-letter-sound{font-size:12px;color:#655486;text-align:center;margin-top:4px}.kid-letter-card .kid-audio-button{display:block;width:100%;margin-top:9px}.kid-letter-sentence{margin-top:14px;padding:12px;border-radius:14px;background:#f0eaff;text-align:center}.kid-letter-sentence .kid-word-ar{display:block;margin-top:3px}@media(max-width:420px){.kid-letter-grid{grid-template-columns:1fr}.kid-letter-top{grid-template-columns:minmax(0,1fr) 82px}.kid-letter-picture{width:82px;height:82px}}</style>
+.kid-letter-card{min-width:0;padding:12px;border:1px solid #dfd2fb;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);box-shadow:0 8px 20px rgba(94,65,151,.09)}.kid-letter-top{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px}.kid-letter-symbol{font-size:clamp(38px,7vw,58px);font-weight:1000;line-height:1;color:#7650cf;text-align:center}.kid-letter-picture{width:76px;height:76px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:inset 0 0 0 1px #eee5ff}.kid-letter-word{font-size:18px;font-weight:900;text-align:center;margin-top:10px;overflow-wrap:anywhere}.kid-letter-translation{font-size:13px;text-align:center;color:#7458aa;margin-top:2px;direction:rtl}.kid-letter-sound{font-size:12px;color:#655486;text-align:center;margin-top:4px}.kid-letter-card .kid-audio-button{display:block;width:100%;margin-top:9px}.kid-letter-sentence{margin-top:14px;padding:12px;border-radius:14px;background:#f0eaff;text-align:center}.kid-letter-sentence .kid-word-ar{display:block;margin-top:3px}@media(max-width:420px){.kid-letter-grid{grid-template-columns:1fr}.kid-letter-top{grid-template-columns:minmax(0,1fr) 82px}.kid-letter-picture{width:82px;height:82px}}
+/* Focused single-lesson navigation: DOMA glass coffee menu */
+.kid-course-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:15px;align-items:center;margin-bottom:18px}
+.kid-course-header>.btn-soft{justify-self:start;align-self:start}
+.kid-course-heading{min-width:0}
+.kid-course-heading h2{margin:5px 0;font-size:clamp(24px,4vw,36px)}
+.kid-course-heading p{margin:0;color:var(--muted);font-size:13px}
+.kid-menu-trigger{display:flex;align-items:center;gap:10px;min-height:56px;padding:9px 15px;border:1px solid rgba(194,148,178,.4);border-radius:17px;background:linear-gradient(135deg,rgba(68,33,49,.96),rgba(49,33,68,.96));box-shadow:0 12px 27px rgba(39,17,34,.22),inset 0 1px 0 rgba(255,255,255,.12);color:#fff4f7;text-align:left;transition:transform .18s,border-color .18s,box-shadow .18s}
+.kid-menu-trigger:hover{transform:translateY(-2px);border-color:rgba(202,157,255,.74);box-shadow:0 15px 32px rgba(39,17,34,.28),0 0 0 3px rgba(150,100,205,.09)}
+.kid-menu-trigger[hidden]{display:none!important}
+.kid-menu-trigger-icon{display:grid;place-items:center;width:37px;height:37px;flex:none;border:1px solid rgba(237,183,207,.22);border-radius:12px;background:linear-gradient(145deg,#783c5a,#44315e);font-size:24px;color:#f8d8e8}
+.kid-menu-trigger-copy{display:grid;gap:2px}
+.kid-menu-trigger-copy strong{font-size:12px;line-height:1.25}
+.kid-menu-trigger-copy small{font:600 10px/1.35 Tahoma,"Segoe UI",sans-serif;color:#d5b9c8;direction:rtl;text-align:left}
+.kid-course-main{min-width:0}
+.kid-course-main #kidLevelContent{min-width:0}
+.kid-course-start-card{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;padding:22px;border:1px solid rgba(146,102,150,.18);border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(248,242,255,.96));box-shadow:0 14px 34px rgba(58,34,76,.07)}
+.kid-course-start-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:18px;background:linear-gradient(145deg,#f5e4ef,#e8e0ff);font-size:30px}
+.kid-course-start-copy h3{margin:0 0 5px;font-size:18px;color:#4a2c52}
+.kid-course-start-copy p{margin:0;color:#786b85;font-size:12px}
+.kid-course-start-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:43px;margin-top:13px;padding:10px 14px;border:1px solid rgba(161,113,186,.2);border-radius:13px;background:linear-gradient(135deg,#623649,#49335f);color:#fff;font-size:12px;font-weight:900;box-shadow:0 8px 17px rgba(72,39,71,.14)}
+.kid-course-start-stat{grid-column:1/-1;display:flex;align-items:center;gap:9px;padding-top:12px;border-top:1px solid #eee3f4;color:#776681;font-size:11px}
+.kid-course-start-stat strong{color:#5a3c70;font-size:15px}
+.kid-menu-overlay[hidden]{display:none!important}
+.kid-menu-overlay{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:16px;background:rgba(11,7,13,.76);backdrop-filter:blur(13px) saturate(.8);-webkit-backdrop-filter:blur(13px) saturate(.8);animation:kidMenuFadeIn .16s ease-out}
+.kid-menu-dialog{width:min(660px,100%);max-height:min(86vh,820px);max-height:min(86dvh,820px);display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(211,163,190,.32);border-radius:26px;background:linear-gradient(150deg,rgba(44,22,34,.985),rgba(31,22,47,.985) 72%,rgba(25,30,39,.985));box-shadow:0 30px 95px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.09);color:#fff4f7;animation:kidMenuRise .2s ease-out}
+.kid-menu-dialog-header{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:20px 21px 14px;border-bottom:1px solid rgba(233,189,210,.13)}
+.kid-menu-eyebrow{display:block;margin-bottom:6px;font-size:9px;font-weight:1000;letter-spacing:2px;color:#c8a4e9}
+.kid-menu-dialog-header h3{margin:0;font-size:24px;line-height:1.2;letter-spacing:-.4px;color:#fff3f8}
+.kid-menu-dialog-header p{margin:7px 0 0;color:#cfbac8;font:600 12px/1.6 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+.kid-menu-close{display:grid;place-items:center;width:39px;height:39px;flex:none;border:1px solid rgba(234,183,210,.2);border-radius:13px;background:rgba(255,255,255,.055);color:#fae2ed;font-size:27px;line-height:1}
+.kid-menu-close:hover{background:rgba(255,255,255,.12)}
+.kid-menu-summary{padding:10px 21px;border-bottom:1px solid rgba(233,189,210,.1);color:#d9c0d0;font-size:10px;font-weight:800}
+.kid-menu-scroll{flex:1;min-height:80px;overflow:auto;overscroll-behavior:contain;padding:13px 15px 14px;scrollbar-width:thin;scrollbar-color:#795568 transparent}
+.kid-menu-unit{overflow:hidden;margin-bottom:11px;border:1px solid rgba(220,174,203,.15);border-radius:17px;background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(174,132,210,.035))}
+.kid-menu-unit-head{display:flex;align-items:center;gap:10px;padding:12px 12px 10px;border-bottom:1px solid rgba(226,186,210,.1)}
+.kid-menu-unit-number{display:grid;place-items:center;width:34px;height:34px;flex:none;border:1px solid rgba(224,175,204,.2);border-radius:12px;background:linear-gradient(145deg,rgba(119,59,85,.62),rgba(84,57,117,.7));color:#f7dced;font-size:13px;font-weight:1000}
+.kid-menu-unit-copy{flex:1;min-width:0}
+.kid-menu-unit-copy strong{display:block;color:#fff0f6;font-size:13px;line-height:1.4}
+.kid-menu-unit-copy small{display:block;margin-top:2px;color:#bfa8b8;font-size:10px;line-height:1.5}
+.kid-menu-count{flex:none;color:#c5a0c9;font-size:10px;font-weight:900}
+.kid-menu-item-list{display:grid;gap:6px;padding:9px}
+.kid-menu-item{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;min-height:55px;padding:9px 10px;border:1px solid rgba(220,176,204,.12);border-radius:13px;background:rgba(255,255,255,.035);color:#f9eaf1;text-align:left;transition:background .15s,border-color .15s,transform .15s}
+.kid-menu-item:hover,.kid-menu-item:focus-visible{transform:translateY(-1px);border-color:rgba(183,146,235,.5);background:linear-gradient(135deg,rgba(124,74,111,.3),rgba(97,77,142,.27))}
+.kid-menu-item-number{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:rgba(170,129,213,.15);color:#dec5ff;font-size:11px;font-weight:1000}
+.kid-menu-item-copy{display:block;min-width:0}
+.kid-menu-item-copy strong{display:block;color:#fff5f8;font-size:12px;line-height:1.5}
+.kid-menu-item-copy small{display:block;margin-top:2px;color:#c5adbd;font:600 10px/1.5 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+.kid-menu-item-status{max-width:83px;color:#d9bfd4;font-size:9px;font-weight:900;white-space:nowrap}
+.kid-menu-item-status.done{color:#a5f1d7}
+.kid-menu-empty{display:grid;justify-items:center;gap:8px;padding:26px 14px;text-align:center;border:1px dashed rgba(223,177,207,.22);border-radius:17px;background:rgba(255,255,255,.025)}
+.kid-menu-empty>span{font-size:30px}
+.kid-menu-empty strong{font-size:14px;color:#fcecf4}
+.kid-menu-empty p{max-width:390px;margin:0;color:#c5adbd;font:600 11px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl}
+.kid-menu-empty-note{padding:10px;color:#c5adbd;font-size:11px}
+.kid-menu-tools-wrap{padding:12px 15px 13px;border-top:1px solid rgba(233,189,210,.12);background:rgba(0,0,0,.08)}
+.kid-menu-tools-heading{margin:0 2px 8px;font-size:10px;font-weight:1000;letter-spacing:.3px;color:#c8a6db}
+.kid-menu-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kid-menu-tools button{display:grid;justify-items:start;gap:4px;min-width:0;padding:10px;border:1px solid rgba(214,170,206,.15);border-radius:13px;background:rgba(255,255,255,.04);color:#f8eaf2;text-align:left}
+.kid-menu-tools button>span{font-size:20px}
+.kid-menu-tools button strong{font-size:10px;line-height:1.35}
+.kid-menu-tools button small{font:600 9px/1.4 Tahoma,"Segoe UI",sans-serif;color:#c9b0c1;direction:rtl;text-align:left}
+.kid-menu-tools button:hover{border-color:rgba(183,146,235,.45);background:rgba(139,101,174,.14)}
+.kid-menu-footer{display:flex;justify-content:space-between;gap:10px;padding:12px 15px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(233,189,210,.12)}
+.kid-menu-footer button{min-height:40px;padding:9px 13px;border-radius:12px;font-size:11px;font-weight:900}
+.kid-menu-footer-secondary{border:1px solid rgba(221,177,202,.18);background:rgba(255,255,255,.04);color:#e7d4df}
+.kid-menu-footer-primary{border:1px solid rgba(239,182,211,.18);background:linear-gradient(135deg,#7a3f5c,#5b3d80);color:#fff4f9}
+.kid-selected-lesson-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:13px;padding-bottom:12px;border-bottom:1px solid #e9def9}
+.kid-selected-lesson-actions button{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:8px 12px;border:1px solid rgba(121,75,126,.2);border-radius:12px;background:linear-gradient(135deg,#422538,#44345f);color:#fff4f8;font-size:11px;font-weight:900}
+.kid-selected-lesson-actions span{color:#8b7197;font-size:10px;font-weight:900}
+@keyframes kidMenuFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes kidMenuRise{from{opacity:.5;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:560px){
+ .kid-course-header{grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-bottom:13px}
+ .kid-course-header>.btn-soft{grid-column:1;grid-row:1;margin:0!important;justify-self:start;padding:9px 11px}
+ .kid-course-heading{grid-column:1/-1;grid-row:2}
+ .kid-menu-trigger{grid-column:2;grid-row:1;min-height:44px;padding:6px 8px;gap:7px;border-radius:14px}
+ .kid-menu-trigger-icon{width:31px;height:31px;border-radius:10px;font-size:21px}
+ .kid-menu-trigger-copy strong{font-size:10px}
+ .kid-menu-trigger-copy small{font-size:8px}
+ .kid-course-heading h2{font-size:24px}
+ .kid-course-start-card{grid-template-columns:1fr;gap:9px;padding:15px;border-radius:18px}
+ .kid-course-start-icon{width:45px;height:45px;border-radius:14px;font-size:24px}
+ .kid-course-start-copy h3{font-size:16px}
+ .kid-course-start-stat{grid-column:1}
+ .kid-menu-overlay{padding:10px}
+ .kid-menu-dialog{width:100%;max-height:88vh;max-height:88dvh;border-radius:22px}
+ .kid-menu-dialog-header{padding:16px 14px 12px}
+ .kid-menu-dialog-header h3{font-size:21px}
+ .kid-menu-dialog-header p{font-size:11px}
+ .kid-menu-summary{padding:9px 15px}
+ .kid-menu-scroll{padding:10px}
+ .kid-menu-unit-head{padding:10px;gap:8px}
+ .kid-menu-item-list{padding:7px}
+ .kid-menu-item{grid-template-columns:29px minmax(0,1fr) auto;gap:7px;padding:8px;min-height:51px}
+ .kid-menu-item-number{width:28px;height:28px;border-radius:9px}
+ .kid-menu-item-copy strong{font-size:11px}
+ .kid-menu-item-copy small{font-size:9px}
+ .kid-menu-item-status{font-size:8px;max-width:65px}
+ .kid-menu-tools-wrap{padding:10px}
+ .kid-menu-tools{gap:6px}
+ .kid-menu-tools button{padding:8px 7px;gap:4px}
+ .kid-menu-tools button>span{font-size:18px}
+ .kid-menu-tools button strong{font-size:9px}
+ .kid-menu-tools button small{font-size:8px}
+ .kid-menu-footer{padding:10px;gap:7px}
+ .kid-menu-footer button{padding:8px 10px;font-size:10px}
+ .kid-selected-lesson-actions{gap:7px}
+ .kid-selected-lesson-actions button{min-height:40px}
+}
+@media(prefers-reduced-motion:reduce){.kid-menu-overlay,.kid-menu-dialog,.kid-menu-trigger{animation:none;transition:none}}
+
+</style>
 <style id="kids-payment-proof-form">
 .kids-payment-instructions{margin-top:14px;padding:14px 16px;border:1px solid rgba(149,105,215,.23);border-radius:15px;background:linear-gradient(135deg,rgba(113,73,162,.11),rgba(255,154,207,.06));color:#6f647e;font-size:12px;line-height:1.7}
 .kids-payment-instructions strong{display:block;margin-bottom:4px;color:#8050a8;font-size:13px}
@@ -134,12 +246,31 @@ body.kid-show-enrol #enrol{display:block!important}
   <div id="levelExplorer" class="kid-area" hidden><h3 id="explorerTitle">Choose a starting level</h3><p>Select a suggested level yourself, or take the quick level check below. Your final course access is still controlled by the separate Kids subscription.</p><div class="level-chips" id="levelButtons"></div><div class="small-print" id="priceNote">The Kids subscription price will be set by the platform administrator.</div><button class="btn btn-primary" style="margin-top:12px" onclick="document.getElementById('placement').scrollIntoView({behavior:'smooth'})">Take the level check ↓</button></div>
 </div></section>
 
-<section id="kidLevelWorkspace" class="kid-level-workspace" hidden><div class="wrap">
- <div class="kid-level-top"><button class="btn btn-soft" type="button" onclick="closeKidLevel()">← All levels</button><div><span class="eyebrow"><span class="dot"></span> Mr. Fluent Kids</span><h2 id="kidWorkspaceTitle">Your learning level</h2><p id="kidWorkspaceDescription">Choose lessons and activities from the menu.</p></div></div>
- <div class="kid-student-layout"><aside class="kid-student-sidebar"><div class="kid-sidebar-brand"><span>🦊</span><div><strong>MR. FLUENT KIDS</strong><small>STUDENT SPACE</small></div></div><div class="kid-sidebar-caption">LEARNING</div><nav><button class="active" type="button" onclick="kidSidebarView('lessons',this)">📚 <span>Course & Lessons</span></button><button type="button" onclick="kidSidebarView('vocab',this)">🧠 <span>Vocabulary Lab</span></button><button type="button" onclick="kidSidebarView('games',this)">🎮 <span>Games & Practice</span></button><button type="button" onclick="kidSidebarView('progress',this)">⭐ <span>My Progress</span></button></nav><div class="kid-sidebar-caption">MY COURSE</div><nav><button type="button" onclick="closeKidLevel()">🗂️ <span>All 9 levels</span></button><button type="button" onclick="goKidSubscription()">💳 <span>Subscription</span></button></nav><div class="kid-sidebar-foot">✨ Learn · Play · Grow</div></aside>
- <div class="kid-level-main"><div id="kidLevelNotice" class="kid-level-notice" hidden></div><div id="kidLevelContent"></div></div></div>
- </div></section>
 
+<section id="kidLevelWorkspace" class="kid-level-workspace" hidden><div class="wrap">
+ <div class="kid-level-top kid-course-header">
+  <button class="btn btn-soft" type="button" onclick="closeKidLevel()">← All levels</button>
+  <div class="kid-course-heading"><span class="eyebrow"><span class="dot"></span> Mr. Fluent Kids</span><h2 id="kidWorkspaceTitle">Your learning level</h2><p id="kidWorkspaceDescription">اختار درس من القائمة وابدأ التعلّم خطوة بخطوة.</p></div>
+  <button id="kidMenuTrigger" class="kid-menu-trigger" type="button" onclick="openKidCourseMenu()" aria-controls="kidCourseMenuOverlay" aria-expanded="false" hidden><span class="kid-menu-trigger-icon" aria-hidden="true">☰</span><span class="kid-menu-trigger-copy"><strong>Learning menu</strong><small>قائمة الدروس والأنشطة</small></span></button>
+ </div>
+ <div class="kid-course-main"><div id="kidLevelNotice" class="kid-level-notice" hidden></div><div id="kidLevelContent"></div></div>
+ <div id="kidCourseMenuOverlay" class="kid-menu-overlay" hidden onclick="closeKidCourseMenu()">
+  <section class="kid-menu-dialog" role="dialog" aria-modal="true" aria-labelledby="kidMenuTitle" onclick="event.stopPropagation()">
+   <div class="kid-menu-dialog-header">
+    <div><span class="kid-menu-eyebrow">MR. FLUENT KIDS · STUDENT SPACE</span><h3 id="kidMenuTitle">قائمة المستوى</h3><p>اختار الدرس اللي عايز تفتحه — كل درس هيفتح لوحده.</p></div>
+    <button id="kidMenuClose" class="kid-menu-close" type="button" aria-label="Close menu" onclick="closeKidCourseMenu()">×</button>
+   </div>
+   <div id="kidMenuSummary" class="kid-menu-summary">دروس المستوى والأنشطة</div>
+   <div id="kidMenuSections" class="kid-menu-scroll"><div class="kid-menu-empty"><span>📚</span><strong>جاري تحميل المحتوى</strong><p>هنعرض هنا الوحدات والدروس المنشورة للمستوى.</p></div></div>
+   <div class="kid-menu-tools-wrap"><div class="kid-menu-tools-heading">Quick tools · أدوات إضافية</div><div class="kid-menu-tools">
+    <button type="button" onclick="selectKidMenuTool('vocab')"><span>🧠</span><strong>Vocabulary Lab</strong><small>معمل المفردات</small></button>
+    <button type="button" onclick="selectKidMenuTool('games')"><span>🎮</span><strong>Games & Practice</strong><small>الألعاب والتدريب</small></button>
+    <button type="button" onclick="selectKidMenuTool('progress')"><span>⭐</span><strong>My Progress</strong><small>تقدّمي</small></button>
+   </div></div>
+   <div class="kid-menu-footer"><button type="button" class="kid-menu-footer-secondary" onclick="closeKidCourseMenu();closeKidLevel()">← كل المستويات</button><button type="button" class="kid-menu-footer-primary" onclick="goKidSubscription()">💳 الاشتراك</button></div>
+  </section>
+ </div>
+</div></section>
 <section id="placement" style="background:linear-gradient(180deg,#f7f2ff99,#fffaf500)"><div class="wrap">
   <div class="section-head"><div class="eyebrow">Little level check</div><h2>Let's find your <span class="gradient">best starting point.</span></h2><p>A short, friendly check — not a school exam. You can also start at level zero without taking it.</p></div>
   <div class="quiz-shell"><div class="quiz-intro"><div style="font-size:37px">🧭</div><h3 id="quizTitle" style="margin:4px 0">Pick a path to begin</h3><p id="quizDescription">Choose one of the two paths above. We’ll show a few questions and recommend a starting level.</p><p dir="rtl" lang="ar" style="font-size:12px;color:#887c9d">اختبار بسيط يساعدنا نقترح نقطة بداية مناسبة، ومش امتحان مدرسي.</p></div><div id="quizHost" class="quiz-host"></div><div class="quiz-footer"><span class="quiz-progress" id="quizProgress">No answers yet</span><button id="quizSubmit" class="btn btn-primary" onclick="submitPlacement()" disabled>Show my level ✨</button></div><div id="placementResult" class="result-box" aria-live="polite"></div></div>
@@ -232,6 +363,9 @@ function openKidLevel(code){
  const workspace=$('kidLevelWorkspace'),studentAccess=$('studentAccess'),content=$('kidLevelContent'),notice=$('kidLevelNotice');
  if(!workspace||!content)return;
  const sidebarPanel=content.querySelector('[data-kid-sidebar-panel]');if(sidebarPanel)sidebarPanel.hidden=true;
+ closeKidCourseMenu();
+ const menuTrigger=$('kidMenuTrigger');
+ if(menuTrigger)menuTrigger.hidden=!(currentSubscription&&String(currentSubscription.level_id)===String(level.id));
  document.querySelectorAll('.kid-student-sidebar nav button').forEach((b,i)=>b.classList.toggle('active',i===0));
  $('kidWorkspaceTitle').textContent=(level.code||'')+' · '+level.title;
  $('kidWorkspaceDescription').textContent=level.description||'Lessons, vocabulary, listening and practice for this level.';
@@ -254,6 +388,8 @@ function openKidLevel(code){
 }
 function closeKidLevel(){
  const workspace=$('kidLevelWorkspace'),studentAccess=$('studentAccess');
+ closeKidCourseMenu();
+ const menuTrigger=$('kidMenuTrigger');if(menuTrigger)menuTrigger.hidden=true;
  document.body.classList.remove('kid-level-open');
  if(workspace)workspace.hidden=true;
  if(studentAccess&&kidLevelOriginalParent){
@@ -284,6 +420,11 @@ function kidSidebarView(view,button){
   if(panel)panel.hidden=true;
   if(access)access.hidden=false;
   if(gate)gate.hidden=false;
+  const unitHost=$('unitHost');if(unitHost)unitHost.hidden=false;
+  const viewHost=$('lessonView');if(viewHost){viewHost.classList.remove('show');viewHost.innerHTML='';}
+  const intro=$('kidActiveCourseIntro');if(intro)intro.hidden=false;
+  const note=$('kidActiveCourseNote');if(note)note.hidden=false;
+  openKidCourseMenu();
   return;
  }
  if(access)access.hidden=true;
@@ -323,7 +464,7 @@ function kidSidebarView(view,button){
  }else{
   html='<h3>⭐ My Progress</h3><p><strong>'+esc(code+' · '+(l.title||'Your level'))+'</strong></p><p>خطة التعلّم: '+esc(d.goal)+'</p><div class="kid-content-grid"><div class="kid-content-tile"><strong>Learning goal</strong><p>'+esc(d.goal)+'</p></div><div class="kid-content-tile"><strong>Lesson roadmap</strong><p>تعلّم الكلمات، استمع وكرّر، طبّق في نشاط، ثم راجع إجاباتك.</p></div></div><h4>What you will practise</h4><ul class="kid-content-list">'+topics+'</ul><div class="kid-practice-card"><h4>Progress tip · نصيحة للتقدم</h4><p>راجع الكلمات بعد كل درس، وانتقل للدرس التالي بعد فهم المعنى وطريقة النطق.</p></div>';
  }
- panel.innerHTML=html+'<button class="btn btn-primary" type="button" onclick="kidSidebarView(\'lessons\',document.querySelector(\'.kid-student-sidebar nav button\'))">Open course lessons →</button>';
+ panel.innerHTML=html+'<button class="btn btn-primary" type="button" onclick="kidSidebarView(\'lessons\',null)">قائمة الدروس ←</button>';
 }
 
 
@@ -532,33 +673,80 @@ async function loadStudentAccess(){
  const track=tracks.find(t=>t.id===currentSubscription.track_id),level=levels.find(l=>l.id===currentSubscription.level_id);
  window.mfKidsCurrentLevelCode=level&&level.code?level.code:'K0';
  window.mfKidsCurrentLevelTitle=level&&level.title?level.title:'Little Ears';
- host.innerHTML='<div class="request-intro"><div class="request-icon">🎉</div><div><h3>Kids access is active</h3><p>' + esc(track?track.title:'Mr. Fluent Kids')+' · '+esc(level?level.code+' — '+level.title:'Assigned level')+'</p><span class="pill">Expires '+esc(new Date(currentSubscription.expires_at).toLocaleDateString())+'</span></div></div><p>Course lessons are loaded from the protected Kids tables for this assigned level. If this area is empty, the lesson content has not been published yet.</p><div id="unitHost"></div><div id="lessonView" class="lesson-view"></div>';
+ host.innerHTML='<div id="kidActiveCourseIntro" class="request-intro"><div class="request-icon">🎉</div><div><h3>Kids access is active</h3><p>' + esc(track?track.title:'Mr. Fluent Kids')+' · '+esc(level?level.code+' — '+level.title:'Assigned level')+'</p><span class="pill">Expires '+esc(new Date(currentSubscription.expires_at).toLocaleDateString())+'</span></div></div><p id="kidActiveCourseNote">Course lessons are loaded from the protected Kids tables for this assigned level. Open the learning menu to choose one lesson at a time.</p><div id="unitHost"></div><div id="lessonView" class="lesson-view"></div>';
  await loadStudentLessons(currentSubscription.level_id);
 }
 async function loadStudentLessons(levelId){
  const host=$('unitHost');if(!host||!kidsDb)return;
+ host.hidden=false;
  const u=await kidsDb.from('mrfluent_kids_units').select('id,title,description,sort_order').eq('level_id',levelId).eq('is_published',true).order('sort_order');
- if(u.error){host.innerHTML='<p>Could not load units. The database is enforcing the subscription access rules.</p>';return;}
+ if(u.error){host.innerHTML='<p>Could not load units. The database is enforcing the subscription access rules.</p>';renderKidCourseMenu();return;}
  studentUnits=u.data||[];
- if(!studentUnits.length){host.innerHTML='<div class="notice show">Your access is active, but lesson units have not been published yet. The sample game above is available while the curriculum is being prepared.</div>';return;}
+ if(!studentUnits.length){
+  studentLessons=[];studentProgress=[];
+  host.innerHTML='<div class="kid-course-start-card"><div class="kid-course-start-icon">📚</div><div class="kid-course-start-copy"><h3>المحتوى بيتجهز</h3><p>اشتراكك نشط، لكن الدروس المنشورة للمستوى ده لسه مش متاحة.</p></div></div>';
+  renderKidCourseMenu();return;
+ }
  const ids=studentUnits.map(x=>x.id);
  const ls=await kidsDb.from('mrfluent_kids_lessons').select('id,unit_id,title,objective,lesson_type,lesson_payload,illustration_url,audio_url,sort_order').in('unit_id',ids).eq('is_published',true).order('sort_order');
- if(ls.error){host.innerHTML='<p>Could not load protected lessons. Refresh and try again.</p>';return;}
+ if(ls.error){host.innerHTML='<p>Could not load protected lessons. Refresh and try again.</p>';renderKidCourseMenu();return;}
  studentLessons=ls.data||[];
  studentProgress=[];
  if(studentLessons.length){
   const pg=await kidsDb.from('mrfluent_kids_progress').select('lesson_id,status,stars,best_score').eq('user_id',currentUser.id).in('lesson_id',studentLessons.map(l=>l.id));
   if(!pg.error)studentProgress=pg.data||[];
  }
- host.innerHTML='<div class="student-unit-grid">'+studentUnits.map(u=>{
-  const lessons=studentLessons.filter(l=>l.unit_id===u.id);
-  return '<article class="unit-card"><strong class="kid-bilingual-copy">'+mfKidsBilingual(u.title)+'</strong><p class="kid-bilingual-copy">'+mfKidsBilingual(u.description||'A small step in the learning adventure.')+'</p>'+
-    (lessons.map(l=>{
-      const done=studentProgress.find(p=>p.lesson_id===l.id&&p.status==='completed');
-      return '<button class="lesson-link" onclick="openStudentLesson(\''+l.id+'\')"><span class="kid-bilingual-copy">'+(/alphabet/i.test(String(l.title||''))?'The Alphabet':mfKidsBilingual(l.title))+'</span><span>'+(done?'⭐ '+esc(done.stars||1)+' earned':'Open →')+'</span></button>';
-    }).join('')||'<p>No lessons published in this unit yet.</p>')+'</article>';
- }).join('')+'</div>';
+ host.hidden=false;
+ host.innerHTML='<div class="kid-course-start-card"><div class="kid-course-start-icon">📚</div><div class="kid-course-start-copy"><h3>اختار درس وابدأ</h3><p>كل درس هيفتح لوحده، وهتقدر ترجع للقائمة من زر التلات شرط فوق في أي وقت.</p><button type="button" class="kid-course-start-button" onclick="openKidCourseMenu()">☰ فتح قائمة الدروس</button></div><div class="kid-course-start-stat"><span><strong>'+studentLessons.length+'</strong> درس متاح</span><span>·</span><span><strong>'+studentLessons.filter(l=>studentProgress.some(p=>p.lesson_id===l.id&&p.status==='completed')).length+'</strong> مكتمل ⭐</span></div></div>';
+ const intro=$('kidActiveCourseIntro');if(intro)intro.hidden=false;
+ const note=$('kidActiveCourseNote');if(note)note.hidden=false;
+ const view=$('lessonView');if(view){view.classList.remove('show');view.innerHTML='';}
+ renderKidCourseMenu();
 }
+function renderKidCourseMenu(){
+ const host=$('kidMenuSections');if(!host)return;
+ const summary=$('kidMenuSummary');
+ const completed=studentLessons.filter(l=>studentProgress.some(p=>p.lesson_id===l.id&&p.status==='completed')).length;
+ if(summary)summary.textContent=studentLessons.length?('التقدم: '+completed+' من '+studentLessons.length+' درس مكتمل ⭐'):'محتوى المستوى';
+ if(!studentUnits.length||!studentLessons.length){
+  host.innerHTML='<div class="kid-menu-empty"><span>📚</span><strong>الدروس لسه بتتجهز</strong><p>مفيش دروس منشورة في المستوى ده حاليًا. هتظهر هنا تلقائيًا أول ما تتنشر.</p></div>';
+  return;
+ }
+ host.innerHTML=studentUnits.map((unit,unitIndex)=>{
+  const lessons=studentLessons.filter(l=>l.unit_id===unit.id);
+  const lessonItems=lessons.map((lesson,lessonIndex)=>{
+   const progress=studentProgress.find(p=>p.lesson_id===lesson.id&&p.status==='completed');
+   const title=/alphabet/i.test(String(lesson.title||''))?'The Alphabet':lesson.title;
+   const note=lesson.objective||lesson.lesson_type||'Lesson and practice';
+   return '<button type="button" class="kid-menu-item" onclick="selectKidMenuLesson(\''+esc(lesson.id)+'\')"><span class="kid-menu-item-number">'+(lessonIndex+1)+'</span><span class="kid-menu-item-copy"><strong>'+mfKidsBilingual(title)+'</strong><small>'+mfKidsBilingual(note)+'</small></span><span class="kid-menu-item-status '+(progress?'done':'')+'">'+(progress?'⭐ مكتمل':'فتح الدرس ↗')+'</span></button>';
+  }).join('');
+  return '<section class="kid-menu-unit"><div class="kid-menu-unit-head"><span class="kid-menu-unit-number">'+(unitIndex+1)+'</span><div class="kid-menu-unit-copy"><strong>'+mfKidsBilingual(unit.title)+'</strong><small>'+mfKidsBilingual(unit.description||'وحدة تعليمية صغيرة خطوة بخطوة')+'</small></div><span class="kid-menu-count">'+lessons.length+' درس</span></div><div class="kid-menu-item-list">'+(lessonItems||'<p class="kid-menu-empty-note">لا توجد دروس منشورة داخل الوحدة حتى الآن.</p>')+'</div></section>';
+ }).join('');
+}
+function openKidCourseMenu(){
+ const overlay=$('kidCourseMenuOverlay');if(!overlay)return;
+ if($('kidMenuTrigger'))$('kidMenuTrigger').setAttribute('aria-expanded','true');
+ renderKidCourseMenu();
+ overlay.hidden=false;
+ document.body.style.overflow='hidden';
+ const close=$('kidMenuClose');if(close)close.focus({preventScroll:true});
+}
+function closeKidCourseMenu(){
+ const overlay=$('kidCourseMenuOverlay');if(overlay)overlay.hidden=true;
+ if($('kidMenuTrigger'))$('kidMenuTrigger').setAttribute('aria-expanded','false');
+ document.body.style.overflow='';
+}
+function selectKidMenuLesson(id){
+ closeKidCourseMenu();
+ const access=$('studentAccess');if(access)access.hidden=false;
+ const content=$('kidLevelContent');if(content){const panel=content.querySelector('[data-kid-sidebar-panel]');if(panel)panel.hidden=true;const gate=content.querySelector('[data-kid-access-gate]');if(gate)gate.hidden=true;}
+ openStudentLesson(id);
+}
+function selectKidMenuTool(view){
+ closeKidCourseMenu();
+ kidSidebarView(view,null);
+}
+
 function mfKidsSafeMediaUrl(value){
  if(value==null||!String(value).trim())return '';
  try{const u=new URL(String(value).trim(),location.href);return (u.protocol==='https:'||u.protocol==='http:')?u.href:'';}catch(_){return '';}
@@ -640,6 +828,12 @@ function mfKidsAnswerGame(lessonId,index){
 function openStudentLesson(id){
  const l=studentLessons.find(x=>x.id===id);if(!l)return;
  const host=$('lessonView');if(!host)return;
+ closeKidCourseMenu();
+ const access=$('studentAccess');if(access)access.hidden=false;
+ const panel=$('kidLevelContent')&&$('kidLevelContent').querySelector('[data-kid-sidebar-panel]');if(panel)panel.hidden=true;
+ const unitHost=$('unitHost');if(unitHost)unitHost.hidden=true;
+ const courseIntro=$('kidActiveCourseIntro');if(courseIntro)courseIntro.hidden=true;
+ const courseNote=$('kidActiveCourseNote');if(courseNote)courseNote.hidden=true;
  let payload=l.lesson_payload&&typeof l.lesson_payload==='object'?l.lesson_payload:{};
  if(typeof l.lesson_payload==='string'){try{payload=JSON.parse(l.lesson_payload)}catch(_){payload={}}}
  const extras=payload.translations&&typeof payload.translations==='object'?payload.translations:{};
@@ -701,10 +895,11 @@ function openStudentLesson(id){
  const done=studentProgress.find(p=>p.lesson_id===l.id&&p.status==='completed');
  const gameNeedsAnswer=l.lesson_type==='game'&&Array.isArray(payload.options)&&payload.options.length>0&&payload.correct_index!==undefined&&payload.correct_index!==null&&String(payload.correct_index)!=='';
  const isAlphabetLesson=/alphabet/i.test(String(l.title||''))||l.id==='8d4aafac-a080-4251-b91e-323ce8d4265e';
+ const lessonMenuButton='<div class="kid-selected-lesson-actions"><button type="button" onclick="openKidCourseMenu()">☰ قائمة الدروس</button><span>الدرس المفتوح فقط · One lesson at a time</span></div>';
  if(isAlphabetLesson){
-  host.innerHTML='<h3 class="kid-alphabet-heading">The Alphabet</h3>'+letterCardsMarkup+'<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" onclick="completeStudentLesson(\''+esc(l.id)+'\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ تمّمت الحروف')+'</button>';
+  host.innerHTML=lessonMenuButton+'<h3 class="kid-alphabet-heading">The Alphabet</h3>'+letterCardsMarkup+'<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" onclick="completeStudentLesson(\''+esc(l.id)+'\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ تمّمت الحروف')+'</button>';
  }else{
-  host.innerHTML='<h3 class="kid-bilingual-copy">'+mfKidsBilingual(l.title,extras)+'</h3><p class="kid-bilingual-copy">'+details+'</p>'+letterCardsMarkup+vocab+media+mfKidsVideoMarkup()+(game||'')+
+  host.innerHTML=lessonMenuButton+'<h3 class="kid-bilingual-copy">'+mfKidsBilingual(l.title,extras)+'</h3><p class="kid-bilingual-copy">'+details+'</p>'+letterCardsMarkup+vocab+media+mfKidsVideoMarkup()+(game||'')+
   '<p class="small-print kid-bilingual-copy">'+mfKidsBilingual(l.objective||'Listen, look, practise and do your best.',extras)+'</p>'+
   '<button id="kid-complete-'+esc(l.id)+'" class="btn btn-mint" '+(gameNeedsAnswer&&!done?'disabled ':'')+'onclick="completeStudentLesson(\''+esc(l.id)+'\')">'+(done?'⭐ مراجعة الدرس المكتمل':'⭐ Mark lesson complete')+'</button>';
  };
@@ -716,7 +911,7 @@ async function completeStudentLesson(id){
  if(error){setRequestStatus('The lesson was opened, but progress could not be saved. Please retry.','err');console.warn(error);return;}
  setRequestStatus('Lesson completed — one star saved! ⭐','ok');
  await loadStudentLessons(currentSubscription.level_id);
- const view=$('lessonView');if(view)view.classList.remove('show');
+ openStudentLesson(id);
 }
 function speakSample(){
  if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){const f=$('gameFeedback');f.textContent='Speech is not available in this browser. Read the letter and try the picture game!';return;}
@@ -728,6 +923,7 @@ function checkSample(answer,button){
  else{button.classList.add('incorrect');$('gameFeedback').textContent='Nice try! Listen again: S says sss, like sun. Try another picture.';}
 }
 function resetSample(){document.querySelectorAll('.game-option').forEach(b=>b.classList.remove('correct','incorrect'));$('gameFeedback').textContent='Choose one picture to play.';}
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closeKidCourseMenu();});
 document.addEventListener('DOMContentLoaded',initKids);
 </script>
 </body>
