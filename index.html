@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v204', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v205', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v204', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v205', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -14785,6 +14785,112 @@ function mfkjA1SyncWorkspace(){
  root.querySelectorAll('[data-mfkj-a1-panel]').forEach(function(panel){var show=panel.getAttribute('data-mfkj-a1-panel')===active;panel.hidden=!show;if(show)found=true;});
  if(!found){window.__mfkjA1ActivePanel='abc';root.querySelectorAll('[data-mfkj-a1-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-mfkj-a1-panel')!=='abc';});}
 }
+function mfkjInstallCourseLevelMenu(code){
+ if(!root||code==='A1')return;
+ var wrap=root.querySelector('.mfkr-page .mfkr-wrap');if(!wrap)return;
+ var direct=function(selector){return Array.from(wrap.children).filter(function(node){return node.matches(selector);});};
+ var first=function(selector,index){return direct(selector)[index||0]||null;};
+ var idPanel=function(id,selector){var el=wrap.querySelector('#'+id);if(!el)return null;var panel=el.closest(selector||'.mfkr-quiz-panel');return panel&&panel.parentElement===wrap?panel:null;};
+ var topicPanels=direct('.mfkr-topic-panel');
+ var one=function(list){return list.filter(Boolean);};
+ var commonNote=first('.mfkr-note');
+ var groups=[];
+ if(code==='A2'){
+  groups=[
+   {key:'vocab',label:'Explore by topic · اكتشف الكلمات',nodes:one([first('.mfkr-summary.mfkr-a2-summary'),topicPanels[0],first('#mfkrA2WordGrid'),first('#mfkrA2AudioStatus')])},
+   {key:'story',label:'Reading Corner · ركن القراءة',nodes:one([first('.mfkr-a2-story')])},
+   {key:'builder',label:'Sentence Builder · تكوين الجمل',nodes:one([first('.mfkr-a2-builder')])},
+   {key:'matching',label:'Listen & Match · الاستماع والمطابقة',nodes:one([first('.mfkr-a2-matching')])},
+   {key:'challenge',label:'Word Challenge · تحدّي الكلمات',nodes:one([first('.mfkr-a2-challenge')])},
+   {key:'grammar',label:'Grammar in Everyday Life · القواعد',nodes:one([first('.mfkr-a2-grammar-panel')])},
+   {key:'writing',label:'My School-Day Paragraph · الكتابة',nodes:one([first('.mfkr-a2-writing-panel')])},
+   {key:'progress',label:'Your learning journey · تقدّمي',nodes:one([first('.mfkr-a2-progress-panel'),commonNote])}
+  ];
+ }else if(code==='B1'){
+  groups=[
+   {key:'words',label:'My First Words · الكلمات الأولى',nodes:one([first('.mfkr-summary'),topicPanels[0],first('#mfkrB1WordGrid'),first('#mfkrB1AudioStatus'),commonNote])},
+   {key:'challenge',label:'Word Challenge · تحدّي الكلمات',nodes:one([first('.mfkr-quiz-panel')])}
+  ];
+ }else if(code==='B2'){
+  groups=[
+   {key:'reading',label:'Read, Listen & Understand · القراءة',nodes:one([first('.mfkr-summary.mfkr-a2-summary'),topicPanels.filter(function(n){return !n.classList.contains('mfkr-b2-summary-panel')&&!n.classList.contains('mfkr-a2-progress-panel');})[0]])},
+   {key:'vocab',label:'Words that build meaning · المفردات',nodes:one([topicPanels.filter(function(n){return !n.classList.contains('mfkr-b2-summary-panel')&&!n.classList.contains('mfkr-a2-progress-panel');})[1],first('#mfkrB2WordGrid'),first('#mfkrB2AudioStatus')])},
+   {key:'sequence',label:'Story Sequence · ترتيب القصة',nodes:one([idPanel('mfkrB2Sequence')])},
+   {key:'connectors',label:'Connector Lab · ربط الأفكار',nodes:one([idPanel('mfkrB2Connectors')])},
+   {key:'challenge',label:'Reading Challenge · تحدّي القراءة',nodes:one([idPanel('mfkrB2Quiz')])},
+   {key:'summary',label:'Reading Detective · كتابة الملخص',nodes:one([first('.mfkr-b2-summary-panel')])},
+   {key:'progress',label:'Your reading journey · تقدّمي',nodes:one([first('.mfkr-a2-progress-panel'),commonNote])}
+  ];
+ }else if(code==='C1'){
+  var storyShelf=topicPanels.find(function(n){return !n.classList.contains('mfkr-c1-story-panel')&&!n.classList.contains('mfkr-a2-progress-panel');});
+  groups=[
+   {key:'story',label:'Mia and the Flower · القصة الأولى',nodes:one([first('.mfkr-summary'),first('.mfkr-c1-story-panel')])},
+   {key:'stories',label:'Five More Little Stories · رف القصص',nodes:one([storyShelf])},
+   {key:'builder',label:'Sentence Builder · تكوين الجمل',nodes:one([first('.mfkr-c1-builder-panel')])},
+   {key:'words',label:'Words make sentences · كلمات الجمل',nodes:one([first('.mfkr-c1-vocab-heading'),first('#mfkrC1WordGrid'),first('#mfkrC1AudioStatus'),commonNote])},
+   {key:'grammar',label:'Grammar Garden · حديقة القواعد',nodes:one([idPanel('mfkrC1Grammar')])},
+   {key:'challenge',label:'Story Challenge · تحدّي القصة',nodes:one([idPanel('mfkrC1Quiz')])}
+  ];
+ }else if(code==='C2'){
+  var mainTopics=topicPanels.filter(function(n){return !n.classList.contains('mfkr-a2-progress-panel');});
+  groups=[
+   {key:'reading',label:'Read Beyond the Words · القراءة المتقدمة',nodes:one([first('.mfkr-summary.mfkr-a2-summary'),mainTopics[0]])},
+   {key:'vocab',label:'Words for Better Ideas · المفردات المتقدمة',nodes:one([mainTopics[1],first('#mfkrC2WordGrid'),first('#mfkrC2AudioStatus')])},
+   {key:'inference',label:'Think Like a Reader · الفهم والاستنتاج',nodes:one([idPanel('mfkrC2Inference')])},
+   {key:'connectors',label:'Connector & Grammar Lab · القواعد والربط',nodes:one([idPanel('mfkrC2Connectors')])},
+   {key:'speaking-practice',label:'Speaking Studio · مواقف التواصل',nodes:one([idPanel('mfkrC2Speaking')])},
+   {key:'writing',label:'Build a Strong Paragraph · ورشة الكتابة',nodes:one([first('.mfkr-c2-writing')])},
+   {key:'progress',label:'Your C2 Journey · تقدّمي',nodes:one([first('.mfkr-a2-progress-panel'),commonNote])}
+  ];
+ }else return;
+ groups=groups.map(function(group){group.nodes=group.nodes.filter(function(node,index,all){return node&&node.parentElement===wrap&&all.indexOf(node)===index;});return group;}).filter(function(group){return group.nodes.length;});
+ if(!groups.length)return;
+ var used=new Set();
+ groups.forEach(function(group){
+  group.nodes=group.nodes.filter(function(node){if(used.has(node))return false;used.add(node);return true;});
+  var panel=document.createElement('section');panel.className='mfkj-a1-panel';panel.setAttribute('data-mfkj-a1-panel',group.key);
+  panel.hidden=true;panel.setAttribute('aria-label',group.label);
+  group.nodes.forEach(function(node){panel.appendChild(node);});
+  var back=wrap.querySelector('.mfkr-back-row');wrap.insertBefore(panel,back||null);
+ });
+ root.classList.add('mfkj-a1-workspace');
+ window.__mfkjA1ActivePanel=groups[0].key;
+ root.querySelectorAll('[data-mfkj-a1-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-mfkj-a1-panel')!==window.__mfkjA1ActivePanel;});
+ var levelTitles={A2:'Word Explorers',B1:'My First Words',B2:'Reading Builders',C1:'My First Sentences',C2:'Confident English'};
+ var trigger=document.createElement('button');trigger.type='button';trigger.id='mfkjA1MenuTrigger';trigger.className='mfkj-a1-menu-trigger';
+ trigger.setAttribute('aria-label','فتح قائمة الدروس والأنشطة');trigger.setAttribute('aria-controls','mfkjA1LessonMenu');trigger.setAttribute('aria-expanded','false');
+ trigger.innerHTML='<span aria-hidden="true">☰</span><span>القائمة</span>';trigger.addEventListener('click',mfkjA1OpenLessonMenu);root.appendChild(trigger);
+ var groupButtons=groups.map(function(group){return '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="'+group.key+'"><span aria-hidden="true">'+({'vocab':'🔤','words':'🧸','reading':'📚','story':'🌷','stories':'📖','builder':'🧩','matching':'🎧','challenge':'🏆','grammar':'✏️','writing':'📝','progress':'⭐','sequence':'🔢','connectors':'🔗','summary':'🧠','inference':'🔎','speaking-practice':'💬'}[group.key]||'✦')+'</span><span>'+group.label+'</span></button>';}).join('');
+ var overlay=document.createElement('div');overlay.id='mfkjA1LessonMenu';overlay.className='mfkj-a1-overlay';overlay.hidden=true;overlay.setAttribute('aria-hidden','true');
+ overlay.innerHTML='<aside class="mfkj-a1-dialog" role="dialog" aria-modal="true" aria-label="قائمة دروس وأنشطة المستوى">'+
+ '<header class="mfkj-a1-dialog-head"><div><span class="mfkj-a1-kicker">MR. FLUENT KIDS · LEVEL '+code+'</span><h2>'+levelTitles[code]+'</h2></div><button type="button" class="mfkj-a1-close" data-mfkj-a1-menu-close>إغلاق القائمة</button></header>'+
+ '<nav class="mfkj-a1-menu-list" aria-label="دروس وأنشطة المستوى"><div class="mfkj-a1-menu-group">دروس وأنشطة المستوى</div>'+groupButtons+
+ '<div class="mfkj-a1-menu-group">Learning Lab · مساحة التعلّم</div>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=overview"><span aria-hidden="true">🌱</span><span>Learning Lab · البداية</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=missions"><span aria-hidden="true">🏡</span><span>Home Missions · مهمات البيت</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=maker"><span aria-hidden="true">🧩</span><span>Maker Projects · مشروعات عملية</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=review"><span aria-hidden="true">🧠</span><span>Smart Review · مراجعة ذكية</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=writing"><span aria-hidden="true">✍️</span><span>Writing Studio · تدريب الكتابة</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=portfolio"><span aria-hidden="true">📒</span><span>Achievement Portfolio · ملف الإنجاز</span></a>'+
+ '<div class="mfkj-a1-menu-group">أدوات المستوى</div>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="speaking"><span aria-hidden="true">💬</span><span>Speaking Studio</span></button>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="final"><span aria-hidden="true">🏆</span><span>Final Challenge</span></button>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="certificate"><span aria-hidden="true">🎓</span><span>Level Certificate</span></button>'+
+ '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="review"><span aria-hidden="true">🧠</span><span>My Review · مراجعة أخطائي</span></button>'+
+ '<div class="mfkj-a1-menu-group">التنقّل</div>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=hub"><span aria-hidden="true">↩</span><span>الرجوع للمستويات</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./"><span aria-hidden="true">✦</span><span>DOMA Academy</span></a></nav></aside>';
+ overlay.addEventListener('click',function(event){
+  if(event.target===overlay){mfkjA1CloseLessonMenu();return;}
+  if(event.target.closest('[data-mfkj-a1-menu-close]')){mfkjA1CloseLessonMenu();return;}
+  var item=event.target.closest('[data-mfkj-a1-target]');if(item)mfkjA1SelectLessonPanel(item.getAttribute('data-mfkj-a1-target'));
+ });
+ root.appendChild(overlay);
+ if(window.__mfkjA1MenuKeyHandler)document.removeEventListener('keydown',window.__mfkjA1MenuKeyHandler);
+ window.__mfkjA1MenuKeyHandler=function(event){var menu=root.querySelector('#mfkjA1LessonMenu');if(event.key==='Escape'&&menu&&!menu.hidden)mfkjA1CloseLessonMenu();};
+ document.addEventListener('keydown',window.__mfkjA1MenuKeyHandler);
+}
+
 function renderAlphabet(){document.title='A1 — My First ABC | Mr. Fluent Kids';var cards=L.map(function(item){var cap=item[0],small=item[1],word=item[2],meaning=item[3],picture=item[4];return '<article class="mfkr-letter-card" aria-label="Letter '+cap+', '+esc(word)+'"><div class="mfkr-letter-head"><div class="mfkr-letter-forms"><span>'+cap+'</span> <span>'+small+'</span></div><span class="mfkr-picture" aria-hidden="true">'+picture+'</span></div><div class="mfkr-word" lang="en">'+esc(word)+'</div><div class="mfkr-meaning" lang="ar">'+esc(meaning)+'</div><div class="mfkr-sounds"><button class="mfkr-sound" type="button" data-kids-speak="'+esc(cap)+'" data-label="letter '+cap+'"><span aria-hidden="true">🔊</span> صوت الحرف</button><button class="mfkr-sound" type="button" data-kids-speak="'+esc(word)+'" data-label="'+esc(word)+'"><span aria-hidden="true">♫</span> صوت الكلمة</button></div></article>';}).join('');root.innerHTML=shell('LITTLE LEARNERS · LEVEL A1','My First ABC.','اتعلّم الحروف من A إلى Z.','كل كارت فيه الحرف الكبير والصغير، وصورة وكلمة بالإنجليزي، ومعناها بالعربي، وزرين لسماع النطق.','<div class="mfkr-summary"><span>26 letters</span><div class="mfkr-progress"><span></span></div><span>Letter · Picture · Word · Sound</span></div><div class="mfkr-alpha-grid" id="mfkrAlphabetGrid">'+cards+'</div><div class="mfkr-audio-status" id="mfkrAudioStatus" aria-live="polite">اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.</div><section class="mfkr-topic-panel"><div class="mfkr-topic-heading"><div><div class="mfkr-mini-eyebrow">LETTER PRACTICE · تدريب الحروف</div><h2>Trace the Letter</h2><div class="mfkr-c1-story-title-ar" lang="ar">تتبّع شكل الحرف بإصبعك على الشاشة أو بالماوس.</div></div><span class="mfkr-art" aria-hidden="true">✍️</span></div><div style="display:flex;justify-content:center;align-items:center;padding:10px 0"><canvas id="mfkrLetterTraceCanvas" width="600" height="280" aria-label="Trace the displayed English letter" style="display:block;width:100%;max-width:430px;height:auto;aspect-ratio:15/7;touch-action:none;border:1px solid rgba(206,164,255,.2);border-radius:18px;background:rgba(12,8,18,.35)"></canvas></div><div class="mfkr-c1-actions"><button type="button" class="mfkr-btn" data-a1-trace-prev>← الحرف السابق</button><strong id="mfkrA1TraceLetter" style="color:#ff9dd4;font-size:20px">A</strong><button type="button" class="mfkr-btn" data-a1-trace-next>الحرف التالي →</button><button type="button" class="mfkr-btn" data-a1-trace-clear>أعد المحاولة</button></div><p class="mfkr-quiz-feedback" id="mfkrA1TraceFeedback" lang="ar" aria-live="polite">اتبع الخط المنقّط ببطء، ثم جرّب الحرف التالي.</p></section><section class="mfkr-quiz-panel"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">SOUND DETECTIVE · اكتشف الصوت الأول</div><h2>Which Letter Starts the Word?</h2><p lang="ar">اقرأ الكلمة واختر الحرف الذي تبدأ به. أجب عن 5 أسئلة لتكمل تدريب الأصوات.</p></div><div id="mfkrA1SoundChallenge"></div></section><section class="mfkr-quiz-panel mfkr-a1-activity-panel" id="mfkrA1LookQuiz"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">LOOK &amp; CHOOSE · اختار اسم الصورة</div><h2>What is in the picture?</h2><p lang="ar">شوف الصورة واختار اسمها الصحيح من 3 اختيارات. العب براحتك، الأسئلة مبتخلصش.</p></div><div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">PICTURE WORDS</span><span id="mfkrA1LookCount" class="mfkr-quiz-count">Question 1 · Unlimited</span><span id="mfkrA1LookScore" class="mfkr-quiz-score">Score: 0</span></div><div id="mfkrA1LookStage"></div><p class="mfkr-quiz-feedback" id="mfkrA1LookFeedback" lang="ar" aria-live="polite">اختار الكلمة اللي بتوصف الصورة.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-a1-look-next disabled>السؤال التالي ←</button></div></section><section class="mfkr-quiz-panel mfkr-a1-activity-panel" id="mfkrA1ListenQuiz"><div class="mfkr-quiz-intro"><div class="mfkr-mini-eyebrow">LISTEN &amp; CHOOSE · اسمع واختار</div><h2>Listen. Look. Choose!</h2><p lang="ar">اسمع اسم الكلمة بالإنجليزي، وبعدين اختار الصورة الصحيحة. أسماء الصور مش ظاهرة قبل إجابتك، والأسئلة مستمرة من غير حد.</p></div><div class="mfkr-quiz-topline"><span class="mfkr-quiz-badge">LISTENING GAME</span><span id="mfkrA1ListenCount" class="mfkr-quiz-count">Question 1 · Unlimited</span><span id="mfkrA1ListenScore" class="mfkr-quiz-score">Score: 0</span></div><div class="mfkr-a1-listen-prompt"><div><strong>What can you hear?</strong><small lang="ar" dir="rtl">اضغط على زر الصوت واسمع كويس.</small></div><button type="button" class="mfkr-btn mfkr-btn-primary" id="mfkrA1ListenPlay">🔊 Play the word</button></div><div id="mfkrA1ListenStage" class="mfkr-a1-picture-options mfkr-a1-image-options" aria-label="Choose the picture you hear"></div><p class="mfkr-quiz-feedback" id="mfkrA1ListenFeedback" lang="ar" aria-live="polite">اسمع الكلمة، وبعدها اختار صورة من التلاتة.</p><div class="mfkr-quiz-next-row"><button type="button" class="mfkr-btn mfkr-btn-primary" data-a1-listen-next disabled>السؤال التالي ←</button></div></section>'+backButtons(url('younger'),'← Back to levels'));var grid=root.querySelector('#mfkrAlphabetGrid');var status=root.querySelector('#mfkrAudioStatus');grid.addEventListener('click',function(event){var button=event.target.closest('button[data-kids-speak]');if(!button)return;var value=button.getAttribute('data-kids-speak');if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){status.textContent='ميزة النطق غير مدعومة في هذا المتصفح. جرّب متصفحًا حديثًا.';return;}window.speechSynthesis.cancel();var speech=new SpeechSynthesisUtterance(value);mfkrSelectEnglishVoice(speech);speech.lang='en-US';speech.rate=.78;speech.pitch=1.02;speech.onstart=function(){status.textContent='Now speaking: '+button.getAttribute('data-label');};speech.onend=function(){status.textContent='اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.';};speech.onerror=function(){status.textContent='تعذّر تشغيل الصوت. جرّب الضغط مرة أخرى.';};window.speechSynthesis.speak(speech);});
 var traceIndex=0,traceLetters=L.map(function(item){return item[0];}),traceCanvas=root.querySelector('#mfkrLetterTraceCanvas'),traceLabel=root.querySelector('#mfkrA1TraceLetter'),traceFeedback=root.querySelector('#mfkrA1TraceFeedback'),traceDrawing=false,traceDistance=0,traceLastPoint=null;
 function drawTraceLetter(){if(!traceCanvas)return;var ctx=traceCanvas.getContext('2d');if(!ctx)return;ctx.clearRect(0,0,traceCanvas.width,traceCanvas.height);ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 182px Arial, sans-serif';ctx.lineWidth=4;ctx.strokeStyle='rgba(255,157,212,.95)';ctx.setLineDash([10,10]);ctx.strokeText(traceLetters[traceIndex],300,130);ctx.setLineDash([]);ctx.fillStyle='rgba(210,192,229,.86)';ctx.font='600 22px Arial, sans-serif';ctx.fillText('Trace the letter '+traceLetters[traceIndex],300,240);if(traceLabel)traceLabel.textContent=traceLetters[traceIndex];if(traceFeedback)traceFeedback.textContent='اتبع الخط المنقّط ببطء، ثم جرّب الحرف التالي.';}
@@ -15889,6 +15995,8 @@ async function kidsJourneyRenderLevelGate(code,renderer){
     renderer();
     journeyRenderCurrent();
     if(def.code==='A1')mfkjA1SyncWorkspace();
+    else mfkjInstallCourseLevelMenu(def.code);
+    mfkjA1SyncWorkspace();
     return;
   }
   kidsJourneyRenderGateMessage(def.code,ctx||{error:'Could not verify Kids access.'});
@@ -16389,6 +16497,7 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 #mfKidsStandaloneRoot.mfkj-a1-workspace .mfkr-heading,
 #mfKidsStandaloneRoot.mfkj-a1-workspace .mfkr-footer,
 #mfKidsStandaloneRoot.mfkj-a1-workspace .mfkr-back-row,
+#mfKidsStandaloneRoot.mfkj-a1-workspace .mfkr-page .mfkr-wrap > :not(.mfkj-a1-panel):not(.mfkr-heading):not(.mfkr-back-row),
 #mfKidsStandaloneRoot.mfkj-a1-workspace #mfkjMiniCard,
 #mfKidsStandaloneRoot.mfkj-a1-workspace #mfkjLabHomeCard,
 #mfKidsStandaloneRoot.mfkj-a1-workspace .mfkr-nav .mfkj-lab-entry{display:none!important}
