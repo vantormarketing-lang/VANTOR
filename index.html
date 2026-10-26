@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v205', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v206', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v205', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v206', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -14785,6 +14785,125 @@ function mfkjA1SyncWorkspace(){
  root.querySelectorAll('[data-mfkj-a1-panel]').forEach(function(panel){var show=panel.getAttribute('data-mfkj-a1-panel')===active;panel.hidden=!show;if(show)found=true;});
  if(!found){window.__mfkjA1ActivePanel='abc';root.querySelectorAll('[data-mfkj-a1-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-mfkj-a1-panel')!=='abc';});}
 }
+
+function mfkjCreateCourseExtraActivities(code,wrap){
+ var gridIds={A2:'mfkrA2WordGrid',B1:'mfkrB1WordGrid',C1:'mfkrC1WordGrid',B2:'mfkrB2WordGrid',C2:'mfkrC2WordGrid'};
+ var grid=root.querySelector('#'+gridIds[code]);if(!grid)return[];
+ var bank=Array.from(grid.querySelectorAll('.mfkr-word-card')).map(function(card,index){
+  var pick=function(selector){var node=card.querySelector(selector);return node?String(node.textContent||'').replace(/\s+/g,' ').trim():'';};
+  return{idx:index,word:pick('.mfkr-word'),meaning:pick('.mfkr-meaning'),picture:pick('.mfkr-word-picture')||'🔤',example:pick('.mfkr-example')||pick('.mfkr-c1-story-en'),exampleAr:pick('.mfkr-example-ar')||pick('.mfkr-c1-story-ar')};
+ }).filter(function(item){return item.word&&item.meaning;});
+ if(bank.length<4)return[];
+ var limitWords={B1:1,C1:5,A2:7,B2:9,C2:12};
+ function shuffle(items){var result=items.slice();for(var i=result.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),tmp=result[i];result[i]=result[j];result[j]=tmp;}return result;}
+ function escapePattern(text){return String(text).split('').map(function(ch){return '\\.^$*+?()[]{}|'.indexOf(ch)>=0?'\\'+ch:ch;}).join('');}
+ function blankTarget(item){
+  var example=item.example||item.word;
+  var re=new RegExp('(^|[^A-Za-z])'+escapePattern(item.word)+'(?=$|[^A-Za-z])','i');
+  var result=example.replace(re,'$1_____');
+  return result===example?example:result;
+ }
+ function panel(suffix,key,title,subtitle){
+  var node=document.createElement('section');node.id='mfkjExtra'+code+suffix;
+  node.className='mfkr-topic-panel mfkj-course-practice-panel';node.setAttribute('data-mfkj-course-practice',key);
+  node.innerHTML='<div class="mfkj-x-head"><span class="mfkj-x-icon" aria-hidden="true">'+({trace:'✍️',visual:'🖼️',listen:'🎧',detective:'🔎'}[key]||'✦')+'</span><div><div class="mfkr-mini-eyebrow">LEVEL PRACTICE · '+code+'</div><h2>'+title+'</h2><p lang="ar" dir="rtl">'+subtitle+'</p></div></div>';
+  var back=wrap.querySelector('.mfkr-back-row');wrap.insertBefore(node,back||null);return node;
+ }
+ function choicesFor(target){return shuffle([target].concat(shuffle(bank.filter(function(item){return item.idx!==target.idx;})).slice(0,3)));}
+ function choiceLabel(kind,item){
+  if(kind==='visual'){
+   if(code==='B1'||code==='A2'||code==='B2')return '<strong>'+esc(item.word)+'</strong>';
+   if(code==='C1')return '<strong>'+esc(item.example||item.word)+'</strong><small lang="ar" dir="rtl">'+esc(item.exampleAr||item.meaning)+'</small>';
+   return '<strong lang="ar" dir="rtl">'+esc(item.meaning)+'</strong>';
+  }
+  if(kind==='listen'){
+   if(code==='B1')return '<span class="mfkj-x-picture">'+esc(item.picture)+'</span><small lang="ar" dir="rtl">'+esc(item.meaning)+'</small>';
+   if(code==='C1')return '<strong lang="ar" dir="rtl">'+esc(item.exampleAr||item.meaning)+'</strong>';
+   if(code==='A2')return '<strong>'+esc(item.word)+'</strong><small lang="ar" dir="rtl">'+esc(item.meaning)+'</small>';
+   return '<strong lang="ar" dir="rtl">'+esc(item.meaning)+'</strong>';
+  }
+  if(kind==='detective'){
+   if(code==='B1'||code==='B2')return '<strong lang="ar" dir="rtl">'+esc(item.meaning)+'</strong>';
+   if(code==='C1')return '<strong>'+esc(item.example||item.word)+'</strong><small lang="ar" dir="rtl">'+esc(item.exampleAr||item.meaning)+'</small>';
+   return '<strong>'+esc(item.word)+'</strong><small lang="ar" dir="rtl">'+esc(item.meaning)+'</small>';
+  }
+  return '<strong>'+esc(item.word)+'</strong>';
+ }
+ function promptFor(kind,target){
+  if(kind==='visual'){
+   if(code==='B1')return '<div class="mfkj-x-picture-prompt"><span>'+esc(target.picture)+'</span><p>What is in the picture? · ما الكلمة التي تناسب الصورة؟</p></div>';
+   if(code==='C1')return '<div class="mfkj-x-picture-prompt"><span>'+esc(target.picture)+'</span><p>اختار الجملة الإنجليزية المناسبة للصورة.</p></div>';
+   if(code==='C2')return '<div class="mfkj-x-question"><span>CONTEXT CLUE · افهم من السياق</span><p lang="en">'+esc(blankTarget(target))+'</p><p lang="ar" dir="rtl">اختار المعنى العربي للكلمة الناقصة.</p></div>';
+   return '<div class="mfkj-x-question"><span>COMPLETE THE SENTENCE · أكمل الجملة</span><p lang="en">'+esc(blankTarget(target))+'</p><p lang="ar" dir="rtl">اختر الكلمة التي تكمل الجملة من السياق.</p></div>';
+  }
+  if(kind==='listen'){
+   var instruction=code==='B1'?'اسمع الكلمة واختار الصورة المناسبة.':code==='C1'?'اسمع الجملة واختار معناها.':code==='A2'?'اسمع المثال واختار الكلمة المستهدفة.':code==='B2'?'اسمع المثال ثم اختار المعنى المناسب في السياق.':'اسمع الجملة المتقدمة واختار أقرب معنى.';
+   return '<div class="mfkj-x-question"><span>LISTEN · اسمع واختار</span><p lang="ar" dir="rtl">'+instruction+'</p><button type="button" class="mfkr-btn mfkr-btn-primary mfkj-x-play" data-mfkj-x-play>🔊 اسمع السؤال</button></div>';
+  }
+  if(code==='B1')return '<div class="mfkj-x-question"><span>WORD DETECTIVE · محقق الكلمات</span><p>What does <strong>'+esc(target.word)+'</strong> mean?</p><p lang="ar" dir="rtl">اختار المعنى العربي الصحيح.</p></div>';
+  if(code==='C1')return '<div class="mfkj-x-question"><span>SENTENCE DETECTIVE · محقق الجمل</span><p lang="ar" dir="rtl">'+esc(target.exampleAr||target.meaning)+'</p><p>اختار الجملة الإنجليزية المطابقة للمعنى.</p></div>';
+  if(code==='A2')return '<div class="mfkj-x-question"><span>WORD IN CONTEXT · الكلمة في سياقها</span><p lang="en">'+esc(blankTarget(target))+'</p><p lang="ar" dir="rtl">اختار الكلمة التي تكمل الجملة.</p></div>';
+  if(code==='B2')return '<div class="mfkj-x-question"><span>READING DETECTIVE · محقق القراءة</span><p lang="en">'+esc(target.example||target.word)+'</p><p lang="ar" dir="rtl">استنتج معنى الكلمة من المثال.</p></div>';
+  return '<div class="mfkj-x-question"><span>ADVANCED WORD CLUE · دليل متقدم</span><p lang="en">'+esc(blankTarget(target))+'</p><p lang="ar" dir="rtl">استخدم سياق الجملة لاختيار الكلمة الأدق.</p></div>';
+ }
+ function audioText(target){return code==='B1'?target.word:(target.example||target.word);}
+ function speak(textValue,statusNode){
+  if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){if(statusNode)statusNode.textContent='ميزة الصوت غير مدعومة في هذا المتصفح.';return;}
+  try{window.speechSynthesis.cancel();var utterance=new SpeechSynthesisUtterance(textValue);if(typeof mfkrSelectEnglishVoice==='function')mfkrSelectEnglishVoice(utterance);utterance.lang='en-US';utterance.rate=code==='B1'?.76:code==='C1'?.82:code==='A2'?.84:code==='B2'?.88:.9;window.speechSynthesis.speak(utterance);}catch(_){if(statusNode)statusNode.textContent='تعذّر تشغيل الصوت. جرّب مرة أخرى.';}
+ }
+ function createQuiz(kind,title,subtitle){
+  var node=panel(kind[0].toUpperCase()+kind.slice(1),kind,title,subtitle);
+  node.innerHTML+='<div class="mfkj-x-game" data-mfkj-x-stage></div><div class="mfkj-x-game-foot"><span data-mfkj-x-score>Question 1 · Score 0</span><div><button type="button" class="mfkr-btn" data-mfkj-x-next disabled>السؤال التالي ←</button><button type="button" class="mfkr-btn" data-mfkj-x-reset>إعادة النتيجة ↻</button></div></div><p class="mfkj-x-feedback" data-mfkj-x-feedback lang="ar" dir="rtl" aria-live="polite">اختار إجابتك، وبعدها كمّل لجولة جديدة.</p>';
+  var state={target:null,options:[],answered:false,selected:-1,question:0,score:0};
+  function render(){
+   var stage=node.querySelector('[data-mfkj-x-stage]'),score=node.querySelector('[data-mfkj-x-score]'),next=node.querySelector('[data-mfkj-x-next]'),feedback=node.querySelector('[data-mfkj-x-feedback]');
+   if(!state.target){state.target=bank[Math.floor(Math.random()*bank.length)];state.options=choicesFor(state.target);}
+   stage.innerHTML=promptFor(kind,state.target)+'<div class="mfkj-x-options">'+state.options.map(function(item){var correct=item.idx===state.target.idx,selected=item.idx===state.selected;return '<button type="button" class="mfkj-x-option'+(state.answered&&correct?' is-correct':'')+(state.answered&&selected&&!correct?' is-wrong':'')+'" data-mfkj-x-option="'+item.idx+'" '+(state.answered?'disabled':'')+'>'+choiceLabel(kind,item)+'</button>';}).join('')+'</div>';
+   score.textContent='Question '+(state.question+1)+' · Score '+state.score;
+   next.disabled=!state.answered;feedback.textContent=state.answered?(state.selected===state.target.idx?'ممتاز! إجابة صحيحة ✨':'قريب! الإجابة الصحيحة: '+state.target.word+' · '+state.target.meaning):'اختار إجابة، والأسئلة مستمرة من غير حدّ.';
+  }
+  node.addEventListener('click',function(event){
+   var option=event.target.closest('[data-mfkj-x-option]');
+   if(option){if(state.answered)return;state.selected=Number(option.getAttribute('data-mfkj-x-option'));state.answered=true;if(state.selected===state.target.idx)state.score++;render();return;}
+   if(event.target.closest('[data-mfkj-x-play]')){speak(audioText(state.target),node.querySelector('[data-mfkj-x-feedback]'));return;}
+   if(event.target.closest('[data-mfkj-x-next]')){if(!state.answered)return;state.question++;state.target=null;state.selected=-1;state.answered=false;render();return;}
+   if(event.target.closest('[data-mfkj-x-reset]')){state.question=0;state.score=0;state.target=null;state.selected=-1;state.answered=false;render();}
+  });
+  render();return{key:kind+'-extra',label:({visual:'Look & Choose · اختار الإجابة المناسبة',listen:'Listen & Choose · اسمع واختار',detective:'Detective Challenge · تحدّي التفكير'}[kind]),node:node};
+ }
+ var traceNode=panel('Trace','trace','Trace & Write · تتبّع واكتب','تدرّب على كتابة الكلمة أو الجملة بخط يدك. كل مستوى يستخدم كلمات وجمل تناسب تقدّمك.');
+ traceNode.innerHTML+='<div class="mfkj-x-trace-wrap"><canvas class="mfkj-x-canvas" width="900" height="270" aria-label="Trace the English word or sentence"></canvas><p class="mfkj-x-trace-ar" lang="ar" dir="rtl" data-mfkj-x-trace-ar></p><div class="mfkj-x-trace-actions"><span data-mfkj-x-trace-count>Practice 1</span><button type="button" class="mfkr-btn" data-mfkj-x-trace-clear>امسح الكتابة</button><button type="button" class="mfkr-btn mfkr-btn-primary" data-mfkj-x-trace-next>نص جديد ↻</button></div></div>';
+ var traceState={index:0,target:null,drawing:false,last:null};
+ var canvas=traceNode.querySelector('canvas'),ctx=canvas.getContext('2d');
+ function traceValue(item){if(code==='B1')return item.word;var max=limitWords[code]||7;return String(item.example||item.word).split(/\s+/).slice(0,max).join(' ');}
+ function drawTraceGuide(){
+  if(!ctx)return;ctx.clearRect(0,0,canvas.width,canvas.height);
+  var target=traceValue(traceState.target),fontSize=({B1:104,C1:65,A2:56,B2:48,C2:42})[code]||54;
+  ctx.font='900 '+fontSize+'px Arial, sans-serif';var words=target.split(/\s+/),lines=[],line='';
+  words.forEach(function(word){var candidate=line?line+' '+word:word;if(ctx.measureText(candidate).width>810&&line){lines.push(line);line=word;}else line=candidate;});if(line)lines.push(line);
+  while(lines.length>3&&fontSize>31){fontSize-=3;ctx.font='900 '+fontSize+'px Arial, sans-serif';lines=[];line='';words.forEach(function(word){var candidate=line?line+' '+word:word;if(ctx.measureText(candidate).width>810&&line){lines.push(line);line=word;}else line=candidate;});if(line)lines.push(line);}
+  var lineHeight=Math.min(72,fontSize+14),startY=(canvas.height-(lines.length-1)*lineHeight)/2-2;
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=2.5;ctx.strokeStyle='rgba(237,174,216,.92)';ctx.setLineDash([7,8]);
+  lines.forEach(function(text,index){ctx.strokeText(text,canvas.width/2,startY+index*lineHeight,820);});
+  ctx.setLineDash([]);ctx.fillStyle='rgba(180,153,185,.86)';ctx.font='600 17px Arial, sans-serif';ctx.fillText('Trace slowly · تتبّع ببطء',canvas.width/2,canvas.height-18);
+  var hint=traceNode.querySelector('[data-mfkj-x-trace-ar]');if(hint)hint.textContent=traceState.target.meaning||'';
+  traceNode.querySelector('[data-mfkj-x-trace-count]').textContent='Practice '+(traceState.index+1)+' · '+(code==='B1'?'Word':code==='C1'?'Short sentence':code==='A2'?'Sentence':'Context sentence');
+ }
+ function selectTraceTarget(){traceState.target=bank[Math.floor(Math.random()*bank.length)];drawTraceGuide();}
+ function point(event){var rect=canvas.getBoundingClientRect();return{x:(event.clientX-rect.left)*canvas.width/rect.width,y:(event.clientY-rect.top)*canvas.height/rect.height};}
+ canvas.addEventListener('pointerdown',function(event){if(!ctx)return;traceState.drawing=true;traceState.last=point(event);if(canvas.setPointerCapture)canvas.setPointerCapture(event.pointerId);ctx.beginPath();ctx.moveTo(traceState.last.x,traceState.last.y);event.preventDefault();});
+ canvas.addEventListener('pointermove',function(event){if(!traceState.drawing||!ctx)return;var p=point(event);ctx.strokeStyle='rgba(145,240,219,.95)';ctx.lineWidth=6;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(traceState.last.x,traceState.last.y);ctx.lineTo(p.x,p.y);ctx.stroke();traceState.last=p;event.preventDefault();});
+ ['pointerup','pointercancel','lostpointercapture'].forEach(function(name){canvas.addEventListener(name,function(){traceState.drawing=false;traceState.last=null;});});
+ traceNode.addEventListener('click',function(event){if(event.target.closest('[data-mfkj-x-trace-clear]')){drawTraceGuide();return;}if(event.target.closest('[data-mfkj-x-trace-next]')){traceState.index++;selectTraceTarget();}});
+ selectTraceTarget();
+ var extras=[
+  createQuiz('visual','Look & Choose · شوف واختار',({B1:'شوف الصورة واختار الكلمة المناسبة.',C1:'طابق الصورة مع جملة بسيطة.',A2:'اقرأ الجملة واختار الكلمة الناقصة.',B2:'استخدم سياق الجملة لتحديد الكلمة.',C2:'استنتج معنى الكلمة من سياق الجملة.'})[code]||'اختار الإجابة المناسبة.'),
+  createQuiz('listen','Listen & Choose · اسمع واختار',({B1:'اسمع الكلمة ثم اختار الصورة.',C1:'اسمع الجملة ثم اختار معناها.',A2:'اسمع المثال وحدد الكلمة المستهدفة.',B2:'استمع للمثال واختر معنى المفردة.',C2:'استمع للسياق واختر المعنى الأدق.'})[code]||'استمع ثم اختر.'),
+  createQuiz('detective','Word Detective · محقق الكلمات',({B1:'اكتشف معنى الكلمة اليومية.',C1:'طابق المعنى العربي مع الجملة الإنجليزية.',A2:'اكتشف الكلمة من مكانها في الجملة.',B2:'استخدم المثال لاستنتاج معنى الكلمة.',C2:'استخدم دليل السياق لاختيار الكلمة الأدق.'})[code]||'استخدم الأدلة للإجابة.')
+ ];
+ extras.unshift({key:'trace-extra',label:'Trace & Write · تتبّع واكتب',node:traceNode});
+ return extras;
+}
 function mfkjInstallCourseLevelMenu(code){
  if(!root||code==='A1')return;
  var wrap=root.querySelector('.mfkr-page .mfkr-wrap');if(!wrap)return;
@@ -14792,6 +14911,7 @@ function mfkjInstallCourseLevelMenu(code){
  var first=function(selector,index){return direct(selector)[index||0]||null;};
  var idPanel=function(id,selector){var el=wrap.querySelector('#'+id);if(!el)return null;var panel=el.closest(selector||'.mfkr-quiz-panel');return panel&&panel.parentElement===wrap?panel:null;};
  var topicPanels=direct('.mfkr-topic-panel');
+ var extras=mfkjCreateCourseExtraActivities(code,wrap);
  var one=function(list){return list.filter(Boolean);};
  var commonNote=first('.mfkr-note');
  var groups=[];
@@ -14843,6 +14963,7 @@ function mfkjInstallCourseLevelMenu(code){
    {key:'progress',label:'Your C2 Journey · تقدّمي',nodes:one([first('.mfkr-a2-progress-panel'),commonNote])}
   ];
  }else return;
+ extras.forEach(function(extra){groups.push({key:extra.key,label:extra.label,nodes:[extra.node]});});
  groups=groups.map(function(group){group.nodes=group.nodes.filter(function(node,index,all){return node&&node.parentElement===wrap&&all.indexOf(node)===index;});return group;}).filter(function(group){return group.nodes.length;});
  if(!groups.length)return;
  var used=new Set();
@@ -14860,7 +14981,7 @@ function mfkjInstallCourseLevelMenu(code){
  var trigger=document.createElement('button');trigger.type='button';trigger.id='mfkjA1MenuTrigger';trigger.className='mfkj-a1-menu-trigger';
  trigger.setAttribute('aria-label','فتح قائمة الدروس والأنشطة');trigger.setAttribute('aria-controls','mfkjA1LessonMenu');trigger.setAttribute('aria-expanded','false');
  trigger.innerHTML='<span aria-hidden="true">☰</span><span>القائمة</span>';trigger.addEventListener('click',mfkjA1OpenLessonMenu);root.appendChild(trigger);
- var groupButtons=groups.map(function(group){return '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="'+group.key+'"><span aria-hidden="true">'+({'vocab':'🔤','words':'🧸','reading':'📚','story':'🌷','stories':'📖','builder':'🧩','matching':'🎧','challenge':'🏆','grammar':'✏️','writing':'📝','progress':'⭐','sequence':'🔢','connectors':'🔗','summary':'🧠','inference':'🔎','speaking-practice':'💬'}[group.key]||'✦')+'</span><span>'+group.label+'</span></button>';}).join('');
+ var groupButtons=groups.map(function(group){return '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="'+group.key+'"><span aria-hidden="true">'+({'vocab':'🔤','words':'🧸','reading':'📚','story':'🌷','stories':'📖','builder':'🧩','matching':'🎧','challenge':'🏆','grammar':'✏️','writing':'📝','progress':'⭐','sequence':'🔢','connectors':'🔗','summary':'🧠','inference':'🔎','speaking-practice':'💬','trace-extra':'✍️','visual-extra':'🖼️','listen-extra':'🎧','detective-extra':'🔍'}[group.key]||'✦')+'</span><span>'+group.label+'</span></button>';}).join('');
  var overlay=document.createElement('div');overlay.id='mfkjA1LessonMenu';overlay.className='mfkj-a1-overlay';overlay.hidden=true;overlay.setAttribute('aria-hidden','true');
  overlay.innerHTML='<aside class="mfkj-a1-dialog" role="dialog" aria-modal="true" aria-label="قائمة دروس وأنشطة المستوى">'+
  '<header class="mfkj-a1-dialog-head"><div><span class="mfkj-a1-kicker">MR. FLUENT KIDS · LEVEL '+code+'</span><h2>'+levelTitles[code]+'</h2></div><button type="button" class="mfkj-a1-close" data-mfkj-a1-menu-close>إغلاق القائمة</button></header>'+
@@ -16489,6 +16610,51 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
  #mfKidsStandaloneRoot .mfkr-a1-listen-prompt strong{font-size:14px}
 }
 @media(prefers-reduced-motion:reduce){#mfKidsStandaloneRoot .mfkr-a1-image-option{transition:none!important}}
+</style>
+<style id="mfkj-shared-course-practice-v1">
+#mfKidsStandaloneRoot .mfkj-course-practice-panel{margin:0!important}
+#mfKidsStandaloneRoot .mfkj-x-head{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:0 0 13px;border-bottom:1px solid rgba(220,176,204,.14)}
+#mfKidsStandaloneRoot .mfkj-x-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid rgba(218,170,205,.18);border-radius:14px;background:linear-gradient(145deg,rgba(125,60,91,.27),rgba(97,72,137,.24));font-size:23px}
+#mfKidsStandaloneRoot .mfkj-x-head h2{margin:0;color:#fff2fb;font-size:clamp(19px,3vw,25px);line-height:1.3}
+#mfKidsStandaloneRoot .mfkj-x-head p{margin:4px 0 0;color:#cdb7c9;font:600 11px/1.8 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-x-game{margin-top:13px;padding:clamp(12px,2.7vw,20px);border:1px solid rgba(208,160,197,.14);border-radius:18px;background:linear-gradient(145deg,rgba(45,25,43,.58),rgba(23,18,31,.65))}
+#mfKidsStandaloneRoot .mfkj-x-question{display:grid;gap:8px;justify-items:start;margin:0 0 14px}
+#mfKidsStandaloneRoot .mfkj-x-question>span{color:#cda7ca;font-size:8px;font-weight:950;letter-spacing:1.2px}
+#mfKidsStandaloneRoot .mfkj-x-question p{margin:0;color:#fff2fa;font-size:clamp(14px,2.3vw,18px);font-weight:850;line-height:1.75;overflow-wrap:anywhere}
+#mfKidsStandaloneRoot .mfkj-x-question p[lang="ar"]{color:#d7bfd3;font:700 11px/1.8 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-x-picture-prompt{display:grid;justify-items:center;gap:7px;width:100%;margin-bottom:14px;padding:15px;border:1px solid rgba(218,170,205,.13);border-radius:16px;background:rgba(13,9,17,.32);text-align:center}
+#mfKidsStandaloneRoot .mfkj-x-picture-prompt>span{font-size:clamp(54px,9vw,86px);line-height:1.2}
+#mfKidsStandaloneRoot .mfkj-x-picture-prompt p{margin:0;color:#e5cadd;font:700 11px/1.8 Tahoma,"Segoe UI",sans-serif;direction:rtl}
+#mfKidsStandaloneRoot .mfkj-x-play{min-height:42px}
+#mfKidsStandaloneRoot .mfkj-x-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#mfKidsStandaloneRoot .mfkj-x-option{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:70px;padding:12px 9px;border:1px solid rgba(208,160,197,.16);border-radius:14px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(151,104,166,.045));color:#fff2fa;font:750 12px/1.6 Tahoma,"Segoe UI",sans-serif;text-align:center;cursor:pointer;overflow-wrap:anywhere;transition:background .15s,border-color .15s}
+#mfKidsStandaloneRoot .mfkj-x-option small{color:#d7bdd2;font:600 10px/1.7 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-x-option .mfkj-x-picture{font-size:34px;line-height:1.2}
+#mfKidsStandaloneRoot .mfkj-x-option:hover:not(:disabled){border-color:rgba(218,170,205,.48);background:rgba(143,83,128,.15)}
+#mfKidsStandaloneRoot .mfkj-x-option.is-correct{border-color:rgba(145,240,219,.57);background:rgba(65,148,124,.14);color:#bff9e9}
+#mfKidsStandaloneRoot .mfkj-x-option.is-wrong{border-color:rgba(255,130,160,.55);background:rgba(154,48,82,.17)}
+#mfKidsStandaloneRoot .mfkj-x-option:disabled{cursor:default}
+#mfKidsStandaloneRoot .mfkj-x-game-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px}
+#mfKidsStandaloneRoot .mfkj-x-game-foot>span{color:#d7bfd3;font:750 10px/1.6 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-x-game-foot>div{display:flex;gap:7px;flex-wrap:wrap}
+#mfKidsStandaloneRoot .mfkj-x-game-foot .mfkr-btn{min-height:38px}
+#mfKidsStandaloneRoot .mfkj-x-game-foot .mfkr-btn:disabled{opacity:.45;cursor:default}
+#mfKidsStandaloneRoot .mfkj-x-feedback{min-height:25px;margin:10px 0 0;color:#d3c0d2;font:650 11px/1.8 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-x-trace-wrap{margin-top:10px}
+#mfKidsStandaloneRoot .mfkj-x-canvas{display:block;width:100%;height:auto;aspect-ratio:900/270;border:1px solid rgba(208,160,197,.14);border-radius:16px;background:rgba(11,7,15,.42);touch-action:none;cursor:crosshair}
+#mfKidsStandaloneRoot .mfkj-x-trace-ar{min-height:20px;margin:9px 2px;color:#d4bbd3;font:700 11px/1.8 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-x-trace-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#mfKidsStandaloneRoot .mfkj-x-trace-actions>span{margin-inline-end:auto;color:#cda7ca;font:800 10px/1.7 Tahoma,"Segoe UI",sans-serif}
+#mfKidsStandaloneRoot .mfkj-x-trace-actions .mfkr-btn{min-height:38px}
+@media(max-width:560px){
+ #mfKidsStandaloneRoot .mfkj-x-options{gap:7px}
+ #mfKidsStandaloneRoot .mfkj-x-option{min-height:62px;padding:10px 6px;font-size:11px}
+ #mfKidsStandaloneRoot .mfkj-x-game-foot{align-items:stretch}
+ #mfKidsStandaloneRoot .mfkj-x-game-foot>div{width:100%}
+ #mfKidsStandaloneRoot .mfkj-x-game-foot .mfkr-btn{flex:1}
+ #mfKidsStandaloneRoot .mfkj-x-trace-actions{align-items:stretch}
+ #mfKidsStandaloneRoot .mfkj-x-trace-actions .mfkr-btn{flex:1}
+}
 </style>
 <script src="./mf-kids-learning-experiences.js?v=20261026.2"></script>
 
