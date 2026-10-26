@@ -60,7 +60,9 @@ async function access(){
 db=getClient();if(!db)return{error:'اتصال الكورس مش جاهز. حدّث الصفحة وحاول مرة أخرى.'};
 var a;try{a=await db.auth.getUser();}catch(_){return{error:'تعذر التحقق من تسجيل الدخول. سجّل الدخول من جديد.'};}
 if(a&&a.error)return{error:'تعذر التحقق من الحساب. سجّل الدخول من جديد.'};user=a&&a.data&&a.data.user;if(!user)return{user:null};
-var s;try{s=await db.from('mrfluent_kids_subscriptions').select('id,status,expires_at').eq('user_id',user.id).eq('status','active').gt('expires_at',new Date().toISOString()).order('expires_at',{ascending:false}).limit(1);}catch(_){return{error:'تعذر التحقق من اشتراك الأطفال.'};}
+var tr;try{tr=await db.from('mrfluent_kids_tracks').select('id').eq('code','KIDS_JOURNEY').eq('is_published',true).maybeSingle();}catch(_){return{error:'تعذر قراءة مسار كورس الأطفال.'};}
+if(!tr||tr.error||!tr.data)return{error:'مسار Kids Journey غير متاح حاليًا؛ تظل الأدوات مقفولة حتى يمكن التحقق من الاشتراك.'};
+var now=new Date().toISOString(),s;try{s=await db.from('mrfluent_kids_subscriptions').select('id,status,expires_at,starts_at,track_id').eq('user_id',user.id).eq('track_id',tr.data.id).eq('status','active').gt('expires_at',now).lte('starts_at',now).order('expires_at',{ascending:false}).limit(1);}catch(_){return{error:'تعذر التحقق من اشتراك الأطفال.'};}
 if(!s||s.error)return{error:'لم نتمكن من التحقق من الاشتراك بأمان. سيظل المحتوى مقفولًا حتى يكتمل التحقق.'};return{user:user,active:Array.isArray(s.data)&&s.data.length>0};
 }
 async function loadRows(){var r=await db.from(T).select('*').eq('user_id',user.id).order('updated_at',{ascending:false}).limit(500);if(r.error)throw r.error;rows=Array.isArray(r.data)?r.data:[];}
