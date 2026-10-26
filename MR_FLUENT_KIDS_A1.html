@@ -51,6 +51,77 @@ button{font:inherit}
 @media(max-width:800px){.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page{padding:30px 0 48px}.level-card{min-height:205px;padding:15px}}
 @media(max-width:560px){.nav{min-height:64px}.brand-mark{width:39px;height:39px}.nav-actions .btn{min-height:37px;padding:8px 10px;font-size:10px}.choice-grid{grid-template-columns:1fr;gap:12px}.choice-card{padding:18px;border-radius:20px}.choice-card .art{width:62px;height:62px;font-size:30px}.choice-card h2{font-size:23px}.level-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.level-card{min-height:185px;padding:12px;border-radius:17px}.level-code{width:44px;height:44px;border-radius:14px;font-size:15px}.level-card h2{font-size:18px;margin:13px 0 5px}.level-card p{font-size:10px;line-height:1.6}.page-head{margin-bottom:20px}.page-head h1{font-size:32px}.page-head p{font-size:12px}.desc{font-size:11px}.brand{font-size:12px}.brand small{font-size:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+/* A1 focused lesson menu: glass coffee palette, centered modal, one visible activity */
+.nav-actions{gap:8px}
+.kid-menu-trigger{display:inline-flex;align-items:center;gap:8px;min-height:43px;padding:6px 11px;border:1px solid rgba(205,164,255,.29);border-radius:14px;background:linear-gradient(135deg,rgba(94,48,69,.78),rgba(61,42,85,.82));box-shadow:0 8px 22px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.08);color:#fff5fb;cursor:pointer;transition:transform .16s,border-color .16s}
+.kid-menu-trigger:hover{transform:translateY(-1px);border-color:rgba(255,157,212,.62)}
+.kid-menu-trigger-icon{display:grid;place-items:center;width:30px;height:30px;border:1px solid rgba(205,164,255,.25);border-radius:10px;background:linear-gradient(145deg,rgba(173,104,154,.24),rgba(112,79,171,.24));font-size:21px;color:#f4d8ff;line-height:1}
+.kid-menu-trigger-copy{display:grid;gap:1px;text-align:left}
+.kid-menu-trigger-copy strong{font-size:11px;line-height:1.25}
+.kid-menu-trigger-copy small{font:600 9px/1.3 Tahoma,"Segoe UI",sans-serif;color:#ccb8db;direction:rtl}
+.kid-lesson-welcome{display:grid;justify-items:center;gap:12px;max-width:690px;margin:24px auto 0;padding:clamp(20px,4vw,34px);border:1px solid rgba(205,164,255,.23);border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));box-shadow:0 24px 62px rgba(0,0,0,.24);text-align:center;backdrop-filter:blur(20px)}
+.kid-welcome-icon{display:grid;place-items:center;width:65px;height:65px;border:1px solid rgba(205,164,255,.31);border-radius:21px;background:linear-gradient(145deg,rgba(164,116,242,.26),rgba(255,155,205,.14));color:#f0d8ff;font-size:34px;box-shadow:inset 0 1px rgba(255,255,255,.1)}
+.kid-welcome-copy h2{margin:3px 0 6px;font-size:clamp(20px,3.6vw,28px);color:#fff4ff}
+.kid-welcome-copy p{max-width:500px;margin:0;color:#c0afc9;font:600 12px/1.9 Tahoma,"Segoe UI",sans-serif;direction:rtl}
+.kid-welcome-open{min-height:46px;padding:11px 19px;border:1px solid rgba(255,190,238,.37);border-radius:14px;background:linear-gradient(115deg,#75416c,#6846a0);color:#fff5fc;font-size:12px;font-weight:950;box-shadow:0 9px 25px rgba(145,59,161,.2);cursor:pointer}
+.kid-welcome-open:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.kid-welcome-footer{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.kid-welcome-footer span{padding:7px 9px;border:1px solid rgba(216,179,255,.15);border-radius:99px;background:rgba(255,255,255,.035);color:#d8c5ea;font-size:9px;font-weight:800}
+.kid-welcome-links{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.kid-lesson-panel[hidden],#kidLessonWelcome[hidden],#kidCourseMenuOverlay[hidden],#kidLevelBackLinks[hidden]{display:none!important}
+.kid-lesson-panel{margin:23px auto 0}
+.kid-lesson-return{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(205,164,255,.14)}
+.kid-lesson-return button{display:inline-flex;align-items:center;gap:8px;min-height:39px;padding:8px 12px;border:1px solid rgba(205,164,255,.25);border-radius:12px;background:linear-gradient(135deg,rgba(94,48,69,.75),rgba(61,42,85,.8));color:#fff5fb;font-size:11px;font-weight:900;cursor:pointer}
+.kid-lesson-return span{color:#bba5ce;font-size:10px;font-weight:850}
+#pictureQuiz.kid-lesson-panel,#listenQuiz.kid-lesson-panel{max-width:1000px}
+.kid-menu-overlay[hidden]{display:none!important}
+.kid-menu-overlay{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:16px;background:rgba(6,4,9,.78);backdrop-filter:blur(14px) saturate(.75);-webkit-backdrop-filter:blur(14px) saturate(.75);animation:kidMenuFade .16s ease-out}
+.kid-menu-dialog{width:min(570px,100%);max-height:min(84vh,760px);max-height:min(84dvh,760px);display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(205,164,255,.28);border-radius:25px;background:linear-gradient(150deg,rgba(38,19,32,.99),rgba(28,20,42,.99) 72%,rgba(16,20,27,.99));box-shadow:0 30px 95px rgba(0,0,0,.54),inset 0 1px rgba(255,255,255,.08);color:#fff7ff;animation:kidMenuRise .2s ease-out}
+.kid-menu-dialog-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:20px 20px 15px;border-bottom:1px solid rgba(233,189,210,.12)}
+.kid-menu-dialog-header h2{margin:0;font-size:24px;line-height:1.2;color:#fff3fb}
+.kid-menu-dialog-header p{margin:7px 0 0;color:#cfbac8;font:600 12px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+.kid-menu-eyebrow{display:block;margin-bottom:6px;color:#c8a4e9;font-size:9px;font-weight:1000;letter-spacing:1.8px}
+.kid-menu-close{display:grid;place-items:center;width:39px;height:39px;flex:none;border:1px solid rgba(234,183,210,.2);border-radius:13px;background:rgba(255,255,255,.055);color:#fae2ed;font-size:27px;line-height:1;cursor:pointer}
+.kid-menu-summary{padding:11px 20px;border-bottom:1px solid rgba(233,189,210,.1);color:#d9c0d0;font-size:10px;font-weight:800}
+.kid-menu-scroll{display:grid;gap:8px;overflow:auto;overscroll-behavior:contain;padding:14px 15px;scrollbar-width:thin;scrollbar-color:#795568 transparent}
+.kid-menu-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;min-height:65px;padding:11px;border:1px solid rgba(220,176,204,.14);border-radius:15px;background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(174,132,210,.035));color:#f9eaf1;text-align:left;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.kid-menu-item:hover,.kid-menu-item:focus-visible{transform:translateY(-1px);border-color:rgba(183,146,235,.53);background:linear-gradient(135deg,rgba(124,74,111,.31),rgba(97,77,142,.29))}
+.kid-menu-item-number{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,rgba(119,59,85,.55),rgba(84,57,117,.65));border:1px solid rgba(224,175,204,.2);color:#f7dced;font-size:11px;font-weight:1000}
+.kid-menu-item-copy{display:block;min-width:0}
+.kid-menu-item-copy strong{display:block;color:#fff5f8;font-size:12px;line-height:1.45}
+.kid-menu-item-copy small{display:block;margin-top:3px;color:#c5adbd;font:600 10px/1.55 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:left}
+.kid-menu-item-status{color:#d9bfd4;font-size:9px;font-weight:900;white-space:nowrap}
+.kid-menu-footer{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:12px 15px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(233,189,210,.12)}
+.kid-menu-footer a,.kid-menu-footer button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 11px;border-radius:12px;font-size:10px;font-weight:900}
+.kid-menu-footer-secondary{border:1px solid rgba(221,177,202,.18);background:rgba(255,255,255,.04);color:#e7d4df}
+.kid-menu-footer-primary{border:1px solid rgba(239,182,211,.18);background:linear-gradient(135deg,#7a3f5c,#5b3d80);color:#fff4f9;cursor:pointer}
+@keyframes kidMenuFade{from{opacity:0}to{opacity:1}}
+@keyframes kidMenuRise{from{opacity:.5;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:560px){
+ .nav-actions{gap:5px}
+ .kid-menu-trigger{gap:6px;min-height:38px;padding:4px 6px}
+ .kid-menu-trigger-icon{width:27px;height:27px;font-size:19px}
+ .kid-menu-trigger-copy strong{font-size:9px}
+ .kid-menu-trigger-copy small{font-size:8px}
+ .kid-welcome-links .btn{font-size:10px;padding:8px 10px}
+ .kid-menu-overlay{padding:10px}
+ .kid-menu-dialog{width:100%;max-height:88vh;max-height:88dvh;border-radius:21px}
+ .kid-menu-dialog-header{padding:16px 14px 12px}
+ .kid-menu-dialog-header h2{font-size:21px}
+ .kid-menu-dialog-header p{font-size:11px}
+ .kid-menu-summary{padding:9px 15px}
+ .kid-menu-scroll{padding:10px}
+ .kid-menu-item{grid-template-columns:32px minmax(0,1fr) auto;gap:8px;padding:9px;min-height:59px}
+ .kid-menu-item-number{width:31px;height:31px;border-radius:10px}
+ .kid-menu-item-copy strong{font-size:11px}
+ .kid-menu-item-copy small{font-size:9px}
+ .kid-menu-item-status{font-size:8px}
+ .kid-menu-footer{padding:10px;gap:7px}
+ .kid-menu-footer a,.kid-menu-footer button{font-size:9px;padding:8px}
+}
+@media(prefers-reduced-motion:reduce){.kid-menu-overlay,.kid-menu-dialog,.kid-menu-trigger{animation:none;transition:none}}
+
 </style>
 <style>
 .alphabet-summary{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 auto 18px;color:#dfd0ec;font-size:11px}
@@ -168,14 +239,25 @@ button{font:inherit}
 <body>
 <header class="topbar"><div class="wrap nav">
 <a class="brand" href="./index.html" aria-label="Return to DOMA Academy"><span class="brand-mark">✦</span><span>Mr. Fluent Kids<small>LEARN · PLAY · GROW</small></span></a>
-<div class="nav-actions"><a class="btn" href="./index.html">← DOMA Academy</a></div>
+<div class="nav-actions"><button id="kidMenuTrigger" class="kid-menu-trigger" type="button" onclick="openKidCourseMenu()" aria-controls="kidCourseMenuOverlay" aria-expanded="false"><span class="kid-menu-trigger-icon" aria-hidden="true">☰</span><span class="kid-menu-trigger-copy"><strong>القائمة</strong><small>الدروس والأنشطة</small></span></button><a class="btn" href="./index.html">← DOMA Academy</a></div>
 </div></header>
 <main class="page"><div class="wrap"><div class="page-head"><div class="eyebrow"><span class="live-dot"></span> LITTLE LEARNERS · LEVEL A1</div><h1>My First <span>ABC.</span></h1><p dir="rtl" lang="ar">اتعلّم الحروف من A إلى Z. كل كارت فيه الحرف الكبير والصغير، وصورة وكلمة بالإنجليزي، ومعناها بالعربي، وزرين لسماع نطق الحرف والكلمة.</p></div>
+<section id="kidLessonWelcome" class="kid-lesson-welcome">
+ <div class="kid-welcome-icon" aria-hidden="true">✦</div>
+ <div class="kid-welcome-copy"><span class="kid-menu-eyebrow">A1 · MY FIRST ABC</span><h2>مستعد تبدأ التعلّم؟</h2><p>اختار من قائمة المستوى: الحروف والأصوات، لعبة الصور، أو تدريب الاستماع. كل نشاط هيفتح لوحده.</p></div>
+ <button class="kid-welcome-open" type="button" onclick="openKidCourseMenu()">☰ افتح قائمة المستوى</button>
+ <div class="kid-welcome-footer"><span>🔤 26 حرفًا</span><span>🖼️ لعبة الصور</span><span>🎧 تدريب الاستماع</span></div>
+ <div class="kid-welcome-links"><a class="btn" href="./MR_FLUENT_KIDS_YOUNGER.html">← الرجوع للمستويات</a><a class="btn" href="./MR_FLUENT_KIDS_HUB.html">كل المسارات</a></div>
+</section>
+<section id="kidLessonAbc" class="kid-lesson-panel" data-kid-lesson-panel="abc" hidden>
+ <div class="kid-lesson-return"><button type="button" onclick="openKidCourseMenu()">☰ قائمة المستوى</button><span>ABC · الحروف والأصوات</span></div>
 <div class="alphabet-summary"><span>26 letters</span><div class="progress-track" aria-label="26 letters included"><span></span></div><span>Letter · Picture · Word · Sound</span></div>
 <div id="alphabetGrid" class="alphabet-grid" aria-label="English alphabet learning cards"></div>
 <div id="audioStatus" aria-live="polite">اضغط على علامة الصوت لسماع نطق الحرف أو الكلمة.</div>
+</section>
 
-<section id="pictureQuiz" class="picture-quiz-section" aria-labelledby="pictureQuizTitle">
+<section id="pictureQuiz" class="picture-quiz-section kid-lesson-panel" data-kid-lesson-panel="picture" hidden aria-labelledby="pictureQuizTitle">
+  <div class="kid-lesson-return"><button type="button" onclick="openKidCourseMenu()">☰ قائمة المستوى</button><span>Picture Word Game · لعبة الصور</span></div>
   <div class="picture-quiz-head">
     <div>
       <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> LOOK &amp; CHOOSE</div>
@@ -194,7 +276,8 @@ button{font:inherit}
   </div>
 </section>
 
-<section id="listenQuiz" class="listen-quiz-section" aria-labelledby="listenQuizTitle">
+<section id="listenQuiz" class="listen-quiz-section kid-lesson-panel" data-kid-lesson-panel="listening" hidden aria-labelledby="listenQuizTitle">
+ <div class="kid-lesson-return"><button type="button" onclick="openKidCourseMenu()">☰ قائمة المستوى</button><span>Listening Lab · تدريب الاستماع</span></div>
  <div class="listen-quiz-head">
   <div>
    <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> LISTEN &amp; CHOOSE</div>
@@ -217,9 +300,46 @@ button{font:inherit}
  </div>
 </section>
 
-<div class="back-row alphabet-back"><a class="btn" href="./MR_FLUENT_KIDS_YOUNGER.html">← Back to levels</a><a class="btn" href="./MR_FLUENT_KIDS_HUB.html">All paths</a><a class="btn" href="./index.html">DOMA Academy</a></div></div></main>
+<div id="kidLevelBackLinks" class="back-row alphabet-back" hidden><a class="btn" href="./MR_FLUENT_KIDS_YOUNGER.html">← Back to levels</a><a class="btn" href="./MR_FLUENT_KIDS_HUB.html">All paths</a><a class="btn" href="./index.html">DOMA Academy</a></div></div></main>
+<div id="kidCourseMenuOverlay" class="kid-menu-overlay" hidden onclick="closeKidCourseMenu()">
+ <section class="kid-menu-dialog" role="dialog" aria-modal="true" aria-labelledby="kidMenuTitle" onclick="event.stopPropagation()">
+  <div class="kid-menu-dialog-header">
+   <div><span class="kid-menu-eyebrow">MR. FLUENT KIDS · LEVEL A1</span><h2 id="kidMenuTitle">قائمة المستوى</h2><p>اختار النشاط اللي عايز تبدأ بيه. هتفتح حاجة واحدة في كل مرة.</p></div>
+   <button id="kidMenuClose" class="kid-menu-close" type="button" aria-label="إغلاق القائمة" onclick="closeKidCourseMenu()">×</button>
+  </div>
+  <div class="kid-menu-summary">3 أنشطة تعليمية · اختر نشاطًا للبدء</div>
+  <div class="kid-menu-scroll">
+   <button type="button" class="kid-menu-item" onclick="selectKidLesson('abc')"><span class="kid-menu-item-number">01</span><span class="kid-menu-item-copy"><strong>ABC · Letters &amp; Sounds</strong><small>الحروف الكبيرة والصغيرة، الصور، الكلمات والنطق</small></span><span class="kid-menu-item-status">ابدأ ↗</span></button>
+   <button type="button" class="kid-menu-item" onclick="selectKidLesson('picture')"><span class="kid-menu-item-number">02</span><span class="kid-menu-item-copy"><strong>Picture Word Game</strong><small>شوف الصورة واختار اسمها الصحيح بالإنجليزي</small></span><span class="kid-menu-item-status">العب ↗</span></button>
+   <button type="button" class="kid-menu-item" onclick="selectKidLesson('listening')"><span class="kid-menu-item-number">03</span><span class="kid-menu-item-copy"><strong>Listening Lab</strong><small>اسمع الكلمة واختار الصورة المناسبة</small></span><span class="kid-menu-item-status">استمع ↗</span></button>
+  </div>
+  <div class="kid-menu-footer"><a class="kid-menu-footer-secondary" href="./MR_FLUENT_KIDS_YOUNGER.html">← الرجوع للمستويات</a><button type="button" class="kid-menu-footer-primary" onclick="closeKidCourseMenu()">إغلاق القائمة</button></div>
+ </section>
+</div>
 <footer class="footer"><div class="wrap">Mr. Fluent Kids · Learn a little every day.</div></footer>
 <script>
+function openKidCourseMenu(){
+ const overlay=document.getElementById('kidCourseMenuOverlay');if(!overlay)return;
+ overlay.hidden=false;
+ document.body.style.overflow='hidden';
+ const trigger=document.getElementById('kidMenuTrigger');if(trigger)trigger.setAttribute('aria-expanded','true');
+ const close=document.getElementById('kidMenuClose');if(close)close.focus({preventScroll:true});
+}
+function closeKidCourseMenu(){
+ const overlay=document.getElementById('kidCourseMenuOverlay');if(overlay)overlay.hidden=true;
+ document.body.style.overflow='';
+ const trigger=document.getElementById('kidMenuTrigger');if(trigger)trigger.setAttribute('aria-expanded','false');
+}
+function selectKidLesson(lesson){
+ const welcome=document.getElementById('kidLessonWelcome');
+ if(welcome)welcome.hidden=true;
+ document.querySelectorAll('[data-kid-lesson-panel]').forEach(panel=>{panel.hidden=panel.dataset.kidLessonPanel!==lesson;});
+ closeKidCourseMenu();
+ const oldLinks=document.getElementById('kidLevelBackLinks');if(oldLinks)oldLinks.hidden=false;
+ const target=document.querySelector('[data-kid-lesson-panel="'+lesson+'"]');
+ if(target){target.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closeKidCourseMenu();});
 const letters=[["A","a","Apple","تفاحة","🍎"],["B","b","Ball","كرة","⚽"],["C","c","Cat","قطة","🐱"],["D","d","Dog","كلب","🐶"],["E","e","Egg","بيضة","🥚"],["F","f","Fish","سمكة","🐟"],["G","g","Grapes","عنب","🍇"],["H","h","Hat","قبعة","🧢"],["I","i","Ice cream","آيس كريم","🍦"],["J","j","Juice","عصير","🧃"],["K","k","Kite","طائرة ورقية","🪁"],["L","l","Lion","أسد","🦁"],["M","m","Moon","قمر","🌙"],["N","n","Nest","عش","🪺"],["O","o","Orange","برتقالة","🍊"],["P","p","Pen","قلم","🖊️"],["Q","q","Queen","ملكة","👑"],["R","r","Rabbit","أرنب","🐰"],["S","s","Sun","شمس","☀️"],["T","t","Tiger","نمر","🐯"],["U","u","Umbrella","مظلة","☂️"],["V","v","Van","سيارة صغيرة","🚐"],["W","w","Watermelon","بطيخ","🍉"],["X","x","Xylophone","آلة إكسليفون","🎼"],["Y","y","Yo-yo","يويو","🪀"],["Z","z","Zebra","حمار وحشي","🦓"]];
 const grid=document.getElementById('alphabetGrid');
 grid.innerHTML=letters.map(([cap,small,word,meaning,pic])=>`
@@ -394,6 +514,7 @@ listenQuizStage.addEventListener('click',event=>{
 });
 listenQuizNext.addEventListener('click',()=>{if(!listenQuizResolved)return;listenQuizIndex++;listenQuizRenderQuestion();});
 listenQuizStart();
+openKidCourseMenu();
 
 </script>
 </body>
