@@ -14201,9 +14201,9 @@ function journeyRenderMiniCard(){
 function journeyRenderCurrent(){
  if(route==='hub')journeyRenderDashboard();
  else if(route==='review')journeyRenderReview();
- else if(route==='map')renderCourseMap();
- else if(route==='parents')journeyRenderParentOverview();
- else if(route==='lab')renderLearningLab();
+ else if(route==='map'){if(window.__mfKidsToolsAuthorized)renderCourseMap();}
+ else if(route==='parents'){if(window.__mfKidsToolsAuthorized)journeyRenderParentOverview();}
+ else if(route==='lab'){if(window.__mfKidsToolsAuthorized)renderLearningLab();}
  else {journeyRenderMiniCard();journeyRenderLevelTools();}
 }
 function journeyAttachTracker(){
@@ -16338,6 +16338,7 @@ function kidsJourneyRenderEntryScreen(message,kind){
   if(retry)retry.addEventListener('click',function(){kidsJourneyHandlePreCourseRoute(route);});
 }
 async function kidsJourneyHandlePreCourseRoute(routeName){
+  if(routeName==='map'||routeName==='parents'||routeName==='lab')window.__mfKidsToolsAuthorized=false;
   var ctx;
   var cachedContext=window.__mfKidsJourneyAccessContext||null;
   var cachedAt=Number(window.__mfKidsJourneyAccessContextAt||0);
@@ -16364,6 +16365,7 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
   window.__mfKidsJourneyAccessContext=ctx;
   window.__mfKidsJourneyAccessContextAt=Date.now();
   if(ctx.current){
+    if(routeName==='map'||routeName==='parents'||routeName==='lab')window.__mfKidsToolsAuthorized=true;
     kidsJourneyClearPendingMarker(ctx.user&&ctx.user.id);
     if(routeName==='entry'){
       window.location.replace(url('hub'));return;
