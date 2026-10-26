@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v205';
-const BRAND_VERSION = 'doma-glass-v42';
-// Kids course sidebar release: refresh installed clients and show one lesson panel at a time.
+const CACHE_NAME = 'mr-fluent-offline-student-v206';
+const BRAND_VERSION = 'doma-glass-v43';
+// Progressive Kids course activities release: refresh installed clients and keep lesson navigation consistent.
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v205', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v206', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
