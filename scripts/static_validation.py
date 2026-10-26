@@ -99,8 +99,29 @@ def validate_page(page: Path) -> bool:
     return True
 
 
+def validate_external_script(script: Path) -> bool:
+    if not script.is_file() or script.stat().st_size == 0:
+        print(f"FAIL: {script.name} is missing or empty")
+        return False
+    result = subprocess.run(
+        ["node", "--check", str(script)],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode:
+        print(f"FAIL: {script.name} has a JavaScript syntax error")
+        print(result.stderr.strip())
+        return False
+    print(f"PASS: {script.name} syntax-checked")
+    return True
+
+
 def main() -> int:
     failures = [page.name for page in PAGES if not validate_page(ROOT / page)]
+    if not validate_external_script(ROOT / "mf-kids-learning-experiences.js"):
+        failures.append("mf-kids-learning-experiences.js")
     if failures:
         print("Static validation failed: " + ", ".join(failures))
         return 1
