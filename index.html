@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v206', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v207', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v206', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v207', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -13708,6 +13708,9 @@ function journeyMergeLevel(code,row){
           existing.reviewedAt=item.reviewedAt||null;
           if(item.selected)existing.selected=item.selected;
           if(item.correct)existing.correct=item.correct;
+          if(item.nextReviewAt!==undefined)existing.nextReviewAt=item.nextReviewAt||null;
+          if(item.reviewIntervalDays!==undefined)existing.reviewIntervalDays=Number(item.reviewIntervalDays)||0;
+          if(item.reviewRepetitions!==undefined)existing.reviewRepetitions=Number(item.reviewRepetitions)||0;
         }else if(incomingReviewTime===existingReviewTime&&item.reviewed){
           existing.reviewed=true;
           existing.reviewedAt=item.reviewedAt||existing.reviewedAt||null;
@@ -13820,22 +13823,11 @@ function journeyMaybeAwardCertificate(code){
   }
 }
 function journeyAddReviewItem(item,codeOverride){
-  var code=codeOverride||journeyLevelCode();
-  if(!code||!item||!item.id)return;
-  if(journeyLoading){journeyPending.push({type:'review',code:code,item:item});return;}
-  var level=journeyGetLevel(code);
-  var old=level.wrongAnswers.find(function(w){return w.id===item.id;});
-  if(old){old.attempts=(Number(old.attempts)||1)+1;old.reviewed=false;old.reviewedAt=null;old.createdAt=new Date().toISOString();old.selected=item.selected||old.selected;}
-  else level.wrongAnswers.push({
-    id:String(item.id).slice(0,180),level:code,question:String(item.question||'Practice question').slice(0,260),
-    arabic:String(item.arabic||'').slice(0,260),selected:String(item.selected||'').slice(0,180),
-    correct:String(item.correct||'').slice(0,180),kind:String(item.kind||'quiz').slice(0,40),
-    createdAt:new Date().toISOString(),attempts:1,reviewed:false
-  });
-  level.wrongAnswers=level.wrongAnswers.slice(-40);
-  journeySaveLocal();
-  journeyRenderCurrent();
-  journeyScheduleSync(code);
+ var code=codeOverride||journeyLevelCode();if(!code||!item||!item.id)return;if(journeyLoading){journeyPending.push({type:'review',code:code,item:item});return;}
+ var l=journeyGetLevel(code),old=l.wrongAnswers.find(function(w){return w.id===item.id;});
+ if(old){old.attempts=(Number(old.attempts)||1)+1;old.reviewed=false;old.reviewedAt=null;old.nextReviewAt=null;old.reviewIntervalDays=0;old.reviewRepetitions=0;old.createdAt=new Date().toISOString();old.selected=item.selected||old.selected;}
+ else l.wrongAnswers.push({id:String(item.id).slice(0,180),level:code,question:String(item.question||'Practice question').slice(0,260),arabic:String(item.arabic||'').slice(0,260),selected:String(item.selected||'').slice(0,180),correct:String(item.correct||'').slice(0,180),kind:String(item.kind||'quiz').slice(0,40),createdAt:new Date().toISOString(),attempts:1,reviewed:false,reviewRepetitions:0,reviewIntervalDays:0,nextReviewAt:null});
+ l.wrongAnswers=l.wrongAnswers.slice(-40);journeySaveLocal();journeyRenderCurrent();journeyScheduleSync(code);
 }
 function journeySpeak(textValue){
   if(!textValue||!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
@@ -14169,7 +14161,7 @@ function journeyRenderDashboard(){
   journeyLevels.forEach(function(item){
     var level=journeyGetLevel(item.code);
     totalStars+=level.stars;totalWords+=level.wordsSeen.length;
-    pendingReviews+=level.wrongAnswers.filter(function(w){return !w.reviewed;}).length;
+    pendingReviews+=journeyReviewPendingCount(level);
     if(level.wordsSeen.length||level.speakingKeys.length||level.finalQuizAttempts)activeLevels++;
     if(level.certificateEarned)certs++;
   });
@@ -14187,7 +14179,7 @@ function journeyRenderDashboard(){
     var pct=Math.round(wordPart+speakPart+quizPart);
     var state=level.certificateEarned?'CERTIFICATE EARNED':pct===0?'READY WHEN YOU ARE':pct<55?'IN PROGRESS':pct<100?'KEEP GOING':'CHALLENGE PASSED';
     var detail=level.wordsSeen.length+'/5 items · speaking '+level.speakingKeys.length+'/3 · best quiz '+level.finalQuizBest+'/5';
-    if(level.wrongAnswers.some(function(w){return !w.reviewed;}))detail+=' · review pending';
+    if(journeyReviewPendingCount(level))detail+=' · review pending';
     return '<a class="mfkj-level-card" href="'+url(item.route)+'"><div class="mfkj-level-card-top"><span class="mfkj-level-icon">'+item.icon+'</span><span class="mfkj-level-status">'+state+'</span></div><div class="mfkj-level-code">'+item.code+'</div><h3>'+item.title+'</h3><p class="mfkj-ar" lang="ar">'+item.arabic+'</p><p class="mfkj-level-desc">'+item.desc+'</p><div class="mfkj-meter" role="progressbar" aria-label="'+item.code+' completion progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div><div class="mfkj-level-meta"><span>⭐ '+level.stars+' stars</span><span>'+pct+'%</span></div><p class="mfkj-level-detail">'+detail+'</p><div class="mfkj-open-row"><span>Open level · افتح المستوى</span><b>↗</b></div></a>';
   }).join('');
   var badgeGrid=dash.querySelector('#mfkjBadgeGrid');
@@ -14207,9 +14199,12 @@ function journeyRenderMiniCard(){
   card.innerHTML='<div class="mfkj-mini-left"><span class="mfkj-kicker">MY LEARNING JOURNEY</span><h3>⭐ '+level.stars+' Stars <span lang="ar">· '+code+'</span></h3><p>'+level.wordsSeen.length+'/5 items · speaking '+level.speakingKeys.length+'/3 · best quiz '+level.finalQuizBest+'/5</p><div class="mfkj-meter"><span style="width:'+pct+'%"></span></div></div><div class="mfkj-mini-actions"><a class="mfkr-btn mfkj-mini-link" href="'+url('hub')+'">View journey · رحلتي ↗</a><a class="mfkr-btn mfkj-mini-link" href="'+url('review')+'">My Review · مراجعة الأخطاء</a></div>';
 }
 function journeyRenderCurrent(){
-  if(route==='hub')journeyRenderDashboard();
-  else if(route==='review')journeyRenderReview();
-  else {journeyRenderMiniCard();journeyRenderLevelTools();}
+ if(route==='hub')journeyRenderDashboard();
+ else if(route==='review')journeyRenderReview();
+ else if(route==='map')renderCourseMap();
+ else if(route==='parents')journeyRenderParentOverview();
+ else if(route==='lab')renderLearningLab();
+ else {journeyRenderMiniCard();journeyRenderLevelTools();}
 }
 function journeyAttachTracker(){
   // Capture steps that redraw their activity panel during the page's own click handler.
@@ -14497,22 +14492,16 @@ function journeyHandleFinalNext(){
   journeyRenderCurrent();
 }
 function journeyMarkReviewDone(id){
-  if(!id)return;
-  journeyLevels.forEach(function(item){
-    var level=journeyGetLevel(item.code),found=level.wrongAnswers.find(function(w){return w.id===id;});
-    if(found){found.reviewed=true;found.reviewedAt=new Date().toISOString();journeySaveLocal();journeyScheduleSync(item.code);}
-  });
-  journeyRenderCurrent();
+ if(!id)return;
+ journeyLevels.forEach(function(item){var l=journeyGetLevel(item.code),w=l.wrongAnswers.find(function(x){return x.id===id;});if(w){var n=Math.min(30,(Number(w.reviewRepetitions)||0)+1),a=[1,3,7,14,30],days=a[Math.min(n-1,a.length-1)],now=new Date();w.reviewed=true;w.reviewedAt=now.toISOString();w.reviewRepetitions=n;w.reviewIntervalDays=days;w.nextReviewAt=new Date(now.getTime()+days*86400000).toISOString();journeySaveLocal();journeyScheduleSync(item.code);}});
+ journeyRenderCurrent();
 }
 function journeyRenderReview(){
-  var host=root.querySelector('#mfkjReviewRoot');if(!host)return;
-  var items=[],reviewed=0;
-  journeyLevels.forEach(function(def){var level=journeyGetLevel(def.code);level.wrongAnswers.forEach(function(w){var copy=Object.assign({level:def.code,levelTitle:def.title},w);if(w.reviewed)reviewed++;else items.push(copy);});});
-  items.sort(function(a,b){return String(b.createdAt||'').localeCompare(String(a.createdAt||''));});
-  var cards=items.map(function(item){
-    return '<article class="mfkj-review-card"><div class="mfkj-review-top"><span class="mfkj-level-code">'+item.level+' · '+esc(item.kind||'practice')+'</span><span class="mfkj-review-attempts">Tried '+(Number(item.attempts)||1)+' time(s)</span></div><h3>'+esc(item.question||'Practice question')+'</h3>'+(item.arabic?'<p class="mfkj-review-ar" lang="ar" dir="rtl">'+esc(item.arabic)+'</p>':'')+'<div class="mfkj-review-answer"><span>YOUR ANSWER · إجابتك</span><p>'+esc(item.selected||'—')+'</p></div><div class="mfkj-review-correct"><span>CORRECT ANSWER · الإجابة الصحيحة</span><p>'+esc(item.correct||'—')+'</p></div><div class="mfkj-review-actions"><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-review-speak="'+esc(item.correct||'')+'">🔊 Listen · اسمع</button><button type="button" class="mfkr-btn mfkj-primary" data-mfj-review-done="'+esc(item.id)+'">I reviewed it ✓ · راجعتها</button></div></article>';
-  }).join('');
-  host.innerHTML='<div class="mfkj-review-header"><span class="mfkj-kicker">PERSONAL PRACTICE · مراجعة شخصية</span><h2>My Review <i class="mfkj-pulse-dot"></i></h2><p lang="ar" dir="rtl">الأسئلة اللي أخطأت فيها محفوظة هنا. اسمع الإجابة الصحيحة، افهمها، وبعدها علّمها كمراجَعة.</p><div class="mfkj-review-summary"><span>Pending · للمراجعة: <b>'+items.length+'</b></span><span>Reviewed · تمت مراجعتها: <b>'+reviewed+'</b></span></div></div>'+(cards||'<div class="mfkj-empty"><span>🌱</span><h3>No pending mistakes</h3><p lang="ar" dir="rtl">ممتاز! مفيش أخطاء معلّقة للمراجعة حاليًا. كمّل تدريبك في أي مستوى.</p><a class="mfkr-btn mfkj-primary" href="'+url('hub')+'">Back to learning journey · العودة للرحلة</a></div>')+backButtons(url('hub'),'← Back to journey');
+ var host=root.querySelector('#mfkjReviewRoot');if(!host)return;var items=[],reviewed=0;
+ journeyLevels.forEach(function(def){var l=journeyGetLevel(def.code);l.wrongAnswers.forEach(function(w){var x=Object.assign({level:def.code,levelTitle:def.title},w);if(journeyReviewIsDue(w)){x.isScheduledDue=!!w.reviewed;items.push(x);}else reviewed++;});});
+ items.sort(function(a,b){return (Date.parse(a.nextReviewAt||'')||0)-(Date.parse(b.nextReviewAt||'')||0)||String(a.createdAt||'').localeCompare(String(b.createdAt||''));});
+ var cards=items.map(function(x){var days=journeyReviewNextInterval(x);return '<article class="mfkj-review-card"><div class="mfkj-review-top"><span class="mfkj-level-code">'+x.level+' · '+esc(x.kind||'practice')+'</span><span class="mfkj-review-attempts">Tried '+(Number(x.attempts)||1)+' time(s)</span></div>'+(x.isScheduledDue?'<p class="mfkj-review-ar" lang="ar" dir="rtl">⏰ موعد المراجعة وصل.</p>':'')+'<h3>'+esc(x.question||'Practice question')+'</h3>'+(x.arabic?'<p class="mfkj-review-ar" lang="ar" dir="rtl">'+esc(x.arabic)+'</p>':'')+'<div class="mfkj-review-answer"><span>YOUR ANSWER · إجابتك</span><p>'+esc(x.selected||'—')+'</p></div><div class="mfkj-review-correct"><span>CORRECT ANSWER · الإجابة الصحيحة</span><p>'+esc(x.correct||'—')+'</p></div><div class="mfkj-review-actions"><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-review-speak="'+esc(x.correct||'')+'">🔊 Listen · اسمع</button><button type="button" class="mfkr-btn mfkj-primary" data-mfj-review-done="'+esc(x.id)+'">راجعتها ✓ · تذكير بعد '+days+' يوم</button></div></article>';}).join('');
+ host.innerHTML='<div class="mfkj-review-header"><span class="mfkj-kicker">PERSONAL PRACTICE · مراجعة شخصية</span><h2>My Review <i class="mfkj-pulse-dot"></i></h2><p lang="ar" dir="rtl">الأسئلة الخاطئة محفوظة هنا. بعد المراجعة ستعود في موعد مناسب: يوم، ثم 3 و7 و14 و30 يومًا.</p><div class="mfkj-review-summary"><span>Due now · مستحقة الآن: <b>'+items.length+'</b></span><span>Scheduled/reviewed · مؤجلة للموعد التالي: <b>'+reviewed+'</b></span></div></div>'+(cards||'<div class="mfkj-empty"><span>🌱</span><h3>No pending mistakes</h3><p lang="ar" dir="rtl">لا توجد أخطاء مستحقة للمراجعة حاليًا.</p><a class="mfkr-btn mfkj-primary" href="'+url('hub')+'">العودة للرحلة التعليمية</a></div>')+backButtons(url('hub'),'← Back to journey');
 }
 function renderReview(){
   document.title='My Review | Mr. Fluent Kids';
@@ -14536,10 +14525,73 @@ function journeyCourseCatalogHtml(){
   }
   return '<style id="mfkj-course-catalog-css">#mfKidsStandaloneRoot .mfkj-course-catalog{margin:24px 0 30px}#mfKidsStandaloneRoot .mfkj-course-group{padding:20px;border:1px solid rgba(169,95,130,.25);border-radius:22px;background:linear-gradient(145deg,rgba(50,25,39,.42),rgba(15,10,16,.54));box-shadow:0 18px 40px rgba(0,0,0,.12)}#mfKidsStandaloneRoot .mfkj-course-group-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}#mfKidsStandaloneRoot .mfkj-course-group-kicker{font-size:8px;font-weight:900;letter-spacing:.18em;color:#ca9eb9}#mfKidsStandaloneRoot .mfkj-course-group-head h2{font-size:clamp(18px,2.4vw,25px);margin:5px 0;color:#f8e7f1}#mfKidsStandaloneRoot .mfkj-course-group-head p{margin:0;color:#bca9b5;font-size:11px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-course-group-badge{flex:0 0 auto;border:1px solid rgba(194,134,167,.25);border-radius:99px;padding:8px 10px;color:#e9cadb;background:rgba(104,49,79,.15);font-size:9px;font-weight:850}#mfKidsStandaloneRoot .mfkj-course-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}#mfKidsStandaloneRoot .mfkj-course-level-card{min-width:0;display:flex;flex-direction:column;padding:16px;border:1px solid rgba(196,126,159,.2);border-radius:17px;background:linear-gradient(145deg,rgba(59,31,47,.72),rgba(17,12,19,.92));text-decoration:none;color:#f8eaf1;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}#mfKidsStandaloneRoot .mfkj-course-level-card:hover{transform:translateY(-3px);border-color:rgba(137,223,199,.38);box-shadow:0 15px 34px rgba(0,0,0,.21),0 0 24px rgba(93,205,174,.06)}#mfKidsStandaloneRoot .mfkj-course-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}#mfKidsStandaloneRoot .mfkj-course-icon{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(188,124,159,.21);border-radius:13px;background:rgba(116,54,88,.2);font-size:22px}#mfKidsStandaloneRoot .mfkj-course-index{font-size:9px;font-weight:900;letter-spacing:.14em;color:#a58c9f}#mfKidsStandaloneRoot .mfkj-course-code{margin-top:15px;color:#9debd2;font-weight:950;font-size:10px;letter-spacing:.18em}#mfKidsStandaloneRoot .mfkj-course-level-card h3{margin:5px 0 3px;font-size:clamp(13px,1.3vw,16px);color:#ffeff7;line-height:1.35}#mfKidsStandaloneRoot .mfkj-course-ar{margin:0;color:#dfb9d0;font-size:10px;line-height:1.6}#mfKidsStandaloneRoot .mfkj-course-desc{margin:10px 0 18px;min-height:36px;color:#b8a7b3;font-size:10px;line-height:1.7}#mfKidsStandaloneRoot .mfkj-course-card-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(194,147,171,.1);font-size:8px;color:#9e8a99}#mfKidsStandaloneRoot .mfkj-course-card-foot b{color:#b9f0df;font-size:9px}#mfKidsStandaloneRoot .mfkj-course-separator{display:flex;align-items:center;gap:12px;margin:20px 3px;color:#ae94b0;font-size:8px;font-weight:900;letter-spacing:.16em}#mfKidsStandaloneRoot .mfkj-course-separator:before,#mfKidsStandaloneRoot .mfkj-course-separator:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(171,111,159,.4),transparent)}@media(max-width:760px){#mfKidsStandaloneRoot .mfkj-course-group{padding:14px}#mfKidsStandaloneRoot .mfkj-course-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#mfKidsStandaloneRoot .mfkj-course-level-card{padding:12px}}@media(max-width:480px){#mfKidsStandaloneRoot .mfkj-course-group-head{flex-direction:column}#mfKidsStandaloneRoot .mfkj-course-group-badge{align-self:flex-start}#mfKidsStandaloneRoot .mfkj-course-card-grid{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-course-desc{min-height:0}}</style><div class="mfkj-course-catalog"><section class="mfkj-course-group"><div class="mfkj-course-group-head"><div><span class="mfkj-course-group-kicker">STAGE 01 · FIRST STEPS</span><h2>Little Learners <i class="mfkj-pulse-dot"></i></h2><p lang="ar">المستويات المناسبة للأطفال الأصغر سنًا — من الحروف للكلمات ثم تكوين الجمل.</p></div><span class="mfkj-course-group-badge">3 levels · Easier → harder</span></div><div class="mfkj-course-card-grid">'+young.map(function(item,index){return card(item,index,'Little Learners');}).join('')+'</div></section><div class="mfkj-course-separator"><span>THE NEXT STAGE · المرحلة التالية</span></div><section class="mfkj-course-group"><div class="mfkj-course-group-head"><div><span class="mfkj-course-group-kicker">STAGE 02 · GROWING SKILLS</span><h2>Growing Learners <i class="mfkj-pulse-dot"></i></h2><p lang="ar">المستويات المناسبة للأطفال الأكبر سنًا — من توسيع المفردات للقراءة والمهارات المتقدمة.</p></div><span class="mfkj-course-group-badge">3 levels · Build confidence</span></div><div class="mfkj-course-card-grid">'+growing.map(function(item,index){return card(item,index,'Growing Learners');}).join('')+'</div></section></div>';
 }
+
+function mfkjToolsCss(){return '<style id="mfkj-learning-tools-css">'+
+'#mfKidsStandaloneRoot .mfkj-t-wrap{margin:18px 0 24px;color:#f8eaf1}'+
+'#mfKidsStandaloneRoot .mfkj-t-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}'+
+'#mfKidsStandaloneRoot .mfkj-t-card{min-width:0;padding:15px;border:1px solid rgba(196,126,159,.2);border-radius:17px;background:linear-gradient(145deg,rgba(59,31,47,.72),rgba(17,12,19,.92))}'+
+'#mfKidsStandaloneRoot .mfkj-t-card h2,#mfKidsStandaloneRoot .mfkj-t-card h3{margin:5px 0 8px;color:#ffeff7;font-size:15px;line-height:1.45}'+
+'#mfKidsStandaloneRoot .mfkj-t-card p,#mfKidsStandaloneRoot .mfkj-t-card li{color:#c6b3c1;font-size:11px;line-height:1.8}'+
+'#mfKidsStandaloneRoot .mfkj-t-card ul{padding-inline-start:18px}'+
+'#mfKidsStandaloneRoot .mfkj-t-kicker{font-size:9px;font-weight:900;letter-spacing:.1em;color:#9debd2}'+
+'#mfKidsStandaloneRoot .mfkj-t-pill{display:inline-flex;margin:3px;padding:5px 8px;border:1px solid rgba(145,240,219,.16);border-radius:99px;background:rgba(145,240,219,.055);color:#d5f9ef;font-size:9px;font-weight:800}'+
+'#mfKidsStandaloneRoot .mfkj-t-link{display:inline-flex;align-items:center;justify-content:center;margin-top:8px;padding:9px 11px;border:1px solid rgba(145,240,219,.22);border-radius:11px;background:rgba(145,240,219,.07);color:#c7f7e9;text-decoration:none;font-size:10px;font-weight:900}'+
+'#mfKidsStandaloneRoot .mfkj-t-nav{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0}'+
+'#mfKidsStandaloneRoot .mfkj-t-nav a{padding:9px 11px;border:1px solid rgba(196,126,159,.18);border-radius:11px;background:rgba(255,255,255,.025);color:#e9d5e2;text-decoration:none;font-size:10px;font-weight:800}'+
+'#mfKidsStandaloneRoot .mfkj-t-nav a.is-active{border-color:rgba(145,240,219,.35);background:rgba(145,240,219,.09);color:#c7f7e9}'+
+'#mfKidsStandaloneRoot .mfkj-t-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}'+
+'#mfKidsStandaloneRoot .mfkj-t-stat{padding:12px 8px;border:1px solid rgba(196,126,159,.16);border-radius:13px;background:rgba(255,255,255,.025);text-align:center}'+
+'#mfKidsStandaloneRoot .mfkj-t-stat b{display:block;color:#9debd2;font-size:20px}#mfKidsStandaloneRoot .mfkj-t-stat span{display:block;color:#bca9b5;font-size:9px;margin-top:4px}'+
+'#mfKidsStandaloneRoot .mfkj-t-meter{height:6px;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.07);margin:9px 0}#mfKidsStandaloneRoot .mfkj-t-meter span{display:block;height:100%;background:linear-gradient(90deg,#9debd2,#bd91ef)}'+
+'#mfKidsStandaloneRoot .mfkj-t-note{padding:12px 14px;border:1px solid rgba(196,126,159,.16);border-radius:13px;background:rgba(255,255,255,.025);color:#c6b3c1;font-size:11px;line-height:1.8}'+
+'#mfKidsStandaloneRoot .mfkj-t-select,#mfKidsStandaloneRoot .mfkj-t-area{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid rgba(196,126,159,.22);border-radius:12px;background:rgba(10,7,13,.55);color:#fff7ff;font:inherit;font-size:12px}'+
+'#mfKidsStandaloneRoot .mfkj-t-area{min-height:170px;margin-top:10px;resize:vertical;line-height:1.8}'+
+'#mfKidsStandaloneRoot .mfkj-t-status{min-height:22px;color:#9debd2;font-size:10px;line-height:1.7;margin-top:8px}'+
+'@media(max-width:620px){#mfKidsStandaloneRoot .mfkj-t-grid{grid-template-columns:minmax(0,1fr)}#mfKidsStandaloneRoot .mfkj-t-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#mfKidsStandaloneRoot .mfkj-t-card{padding:13px}}'+
+'</style>';}
+function mfkjCurriculumData(){return [
+{code:'A1',route:'a1',group:'Little Learners',title:'My First ABC',focus:'الحروف والأصوات الأولى',skills:['تمييز الحروف','أصوات الحروف','كلمات مصوّرة','الاستماع'],current:['26 بطاقة حروف كبيرة وصغيرة مع كلمات وصور ومعانٍ عربية وصوت.','تتبّع الحروف وSound Detective والاختيار البصري والاستماع.','Speaking Studio وFinal Challenge وMy Review والشهادة.'],next:'تمييز الأصوات المتقاربة داخل كلمات قصيرة؛ لن نكرر لعبة اختيار الصورة.'},
+{code:'B1',route:'b1',group:'Little Learners',title:'My First Words',focus:'مفردات الحياة اليومية',skills:['مفردات مصوّرة','المعنى','الاستماع','تواصل بسيط'],current:['بنك كلمات يومية بالصور والمعاني وتحدّي الكلمات.','Trace & Write وLook & Choose وListen & Choose وWord Detective.','Speaking Studio وFinal Challenge وMy Review والشهادة.'],next:'مواقف سؤال وجواب يومية وتنويع الموضوعات بدل تكرار اختيار المعنى.'},
+{code:'C1',route:'c1',group:'Little Learners',title:'My First Sentences',focus:'تكوين الجمل والقصص',skills:['ترتيب الكلمات','قراءة القصص','قواعد بسيطة','فهم المقروء'],current:['12 كلمة أساسية بأمثلة وترجمة عربية.','قصة Mia and the Flower وخمس قصص قصيرة إضافية.','8 مهام تكوين جمل و8 أسئلة قواعد و6 أسئلة فهم.'],next:'إعادة سرد قصة باستخدام first / next / finally دون تكرار أسئلة الفهم.'},
+{code:'A2',route:'a2',group:'Growing Learners',title:'Word Explorers',focus:'المفردات في السياق',skills:['مفردات موضوعية','قراءة','جمل','قواعد وكتابة'],current:['Explore by Topic وReading Corner وSentence Builder.','Listen & Match وWord Challenge وGrammar in Everyday Life.','My School-Day Paragraph والأنشطة المشتركة الأربعة.'],next:'مواقف تواصل وظيفي مثل الوقت والاتجاهات والطلب بأدب بدل لعبة مفردات شبيهة.'},
+{code:'B2',route:'b2',group:'Growing Learners',title:'Reading Builders',focus:'القراءة وربط الأفكار',skills:['فهم النص','ترتيب الأحداث','أدوات الربط','تلخيص'],current:['Read, Listen & Understand وWords that Build Meaning.','Story Sequence وConnector Lab وReading Challenge وReading Detective/summary.','الأنشطة المشتركة الأربعة.'],next:'السبب والنتيجة وهدف الكاتب والاستدلال بدليل من النص، مع إبقاء ترتيب القصة والتلخيص.'},
+{code:'C2',route:'c2',group:'Growing Learners',title:'Confident English',focus:'الفهم والتعبير المتقدم',skills:['الاستنتاج','قراءة متقدمة','محادثة','فقرة مكتوبة'],current:['Read Beyond the Words وWords for Better Ideas.','Think Like a Reader وConnector & Grammar Lab وSpeaking Studio.','Build a Strong Paragraph والأنشطة المشتركة ومراجعة الأخطاء.'],next:'قائمة مراجعة لتحرير الكتابة: وضوح الفكرة والدليل والربط وعلامات الترقيم.'}
+];}
+function journeyCourseQuickLinksHtml(){return mfkjToolsCss()+'<div class="mfkj-t-wrap mfkj-t-grid"><article class="mfkj-t-card"><span class="mfkj-t-kicker">CURRICULUM</span><h3>خريطة المنهج · Curriculum Map</h3><p>المحتوى الموجود والفجوة التالية لكل مستوى.</p><a class="mfkj-t-link" href="'+url('map')+'">افتح الخريطة ↗</a></article><article class="mfkj-t-card"><span class="mfkj-t-kicker">FAMILY PROGRESS</span><h3>متابعة ولي الأمر</h3><p>ملخص التقدم والأنشطة والمراجعات المستحقة.</p><a class="mfkj-t-link" href="'+url('parents')+'">عرض التقدم ↗</a></article><article class="mfkj-t-card"><span class="mfkj-t-kicker">PRACTICE</span><h3>Learning Lab · مساحة التعلّم</h3><p>مهمات منزلية ومشروعات وكتابة مستقلة.</p><a class="mfkj-t-link" href="./?kids=lab&amp;kidsTab=overview">افتح مساحة التعلّم ↗</a></article></div>';}
+function renderCourseMap(){document.title='Kids Curriculum Map | Mr. Fluent Kids';var cards=mfkjCurriculumData().map(function(x,i){return '<article class="mfkj-t-card"><span class="mfkj-t-kicker">'+esc(x.group)+' · '+String(i+1).padStart(2,'0')+'</span><h2>'+esc(x.code)+' · '+esc(x.title)+'</h2><p>'+esc(x.focus)+'</p><div>'+x.skills.map(function(k){return '<span class="mfkj-t-pill">'+esc(k)+'</span>';}).join('')+'</div><p class="mfkj-t-kicker">الموجود بالفعل</p><ul>'+x.current.map(function(k){return '<li>'+esc(k)+'</li>';}).join('')+'</ul><div class="mfkj-t-note"><b>النقطة التالية المقترحة:</b> '+esc(x.next)+'</div><a class="mfkj-t-link" href="'+url(x.route)+'">افتح المستوى ↗</a></article>';}).join('');root.innerHTML=shell('THE SIX-LEVEL ROADMAP','Curriculum Map.','خريطة منهج Mr. Fluent Kids','المحتوى الموجود أولًا، ثم النواقص فقط. الترتيب: A1 ثم B1 ثم C1 وبعدها A2 ثم B2 ثم C2.',mfkjToolsCss()+'<div class="mfkj-t-wrap"><div class="mfkj-t-note">«الموجود بالفعل» مأخوذ من صفحات المستويات. «النقطة التالية» فجوة تطوير وليست نشاطًا أُضيف بالفعل.</div><div class="mfkj-t-grid">'+cards+'</div><div class="mfkj-t-nav"><a href="./?kids=lab&amp;kidsTab=overview">Learning Lab</a><a href="'+url('parents')+'">متابعة ولي الأمر</a><a href="'+url('hub')+'">العودة للمستويات</a></div></div>');}
+function journeyReviewIsDue(item){if(!item)return false;if(!item.reviewed)return true;var due=Date.parse(item.nextReviewAt||item.next_review_at||'');return !isNaN(due)&&due<=Date.now();}
+function journeyReviewPendingCount(level){return level&&Array.isArray(level.wrongAnswers)?level.wrongAnswers.filter(journeyReviewIsDue).length:0;}
+function journeyReviewNextInterval(item){var a=[1,3,7,14,30],r=Math.max(0,Number(item&&item.reviewRepetitions)||0);return a[Math.min(r,a.length-1)];}
+function renderParentOverview(){document.title='Family Progress | Mr. Fluent Kids';root.innerHTML=shell('FAMILY PROGRESS','Parent Overview.','متابعة ولي الأمر','ملخص داعم للتقدّم المسجّل في الحساب الحالي، دون مقارنة بأطفال آخرين.',mfkjToolsCss()+'<div id="mfkjParentSummary" class="mfkj-t-wrap"></div><div class="mfkj-t-nav"><a href="'+url('map')+'">خريطة المنهج</a><a href="'+url('review')+'">المراجعة الذكية</a><a href="'+url('hub')+'">العودة للمستويات</a></div>');journeyRenderParentOverview();}
+function journeyRenderParentOverview(){var host=root.querySelector('#mfkjParentSummary');if(!host)return;var stars=0,active=0,dueTotal=0,certs=0,lab=0;
+var cards=journeyLevels.map(function(x){var l=journeyGetLevel(x.code),due=journeyReviewPendingCount(l),pct=Math.round(Math.min(1,l.wordsSeen.length/5)*35+Math.min(1,l.speakingKeys.length/3)*30+Math.min(1,l.finalQuizBest/4)*35),steps=l.checkpointKeys.filter(function(k){return /^activity:/.test(k);}).length;stars+=l.stars;dueTotal+=due;lab+=l.checkpointKeys.filter(function(k){return /^activity:lab:/.test(k);}).length;if(l.wordsSeen.length||l.speakingKeys.length||l.finalQuizAttempts||steps)active++;if(l.certificateEarned)certs++;var state=l.certificateEarned?'أنجز الشهادة':pct===0&&!steps?'لسه ما بدأش':pct>=80?'تقدّم جيد':pct>=45?'في مرحلة التقدّم':'بداية التعلّم',advice=due?'الأولوية لمراجعة الأخطاء المستحقة.':l.speakingKeys.length<3?'خصّص وقتًا لمواقف المحادثة.':l.finalQuizBest<4?'أعد التدريب قبل التحدي النهائي.':'شجّعه على شرح ما تعلّمه.';return '<article class="mfkj-t-card"><span class="mfkj-t-kicker">'+esc(x.code)+' · '+esc(x.group)+'</span><h3>'+esc(x.title)+'</h3><p>'+state+' · '+pct+'%</p><div class="mfkj-t-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div><p>نجوم '+l.stars+' · كلمات '+l.wordsSeen.length+' · أنشطة '+steps+' · محادثة '+l.speakingKeys.length+'/3 · أفضل تحدٍّ '+l.finalQuizBest+'/5</p><p>'+(due?'🧠 مراجعات مستحقة '+due+' · ':'')+esc(advice)+'</p><a class="mfkj-t-link" href="'+url(x.route)+'">متابعة المستوى ↗</a></article>';}).join('');
+var next=journeyLevels.find(function(x){var l=journeyGetLevel(x.code);return !l.certificateEarned&&(l.wordsSeen.length<5||l.speakingKeys.length<3||l.finalQuizBest<4);})||journeyLevels[0],advice=dueTotal?'ابدأ بمراجعة الأخطاء المستحقة.':!active?'ابدأ بجلسة قصيرة في A1 واطلب من الطفل شرح ما تعلّمه.':'اختاروا خطوة واحدة كل مرة وركّزوا على الفهم لا عدد النجوم.';
+host.innerHTML='<div class="mfkj-t-stats"><div class="mfkj-t-stat"><b>'+stars+'</b><span>نجوم</span></div><div class="mfkj-t-stat"><b>'+active+'/6</b><span>مستويات بدأ فيها التعلّم</span></div><div class="mfkj-t-stat"><b>'+dueTotal+'</b><span>مراجعات مستحقة</span></div><div class="mfkj-t-stat"><b>'+certs+'</b><span>شهادات</span></div></div><div class="mfkj-t-note"><b>أفضل خطوة تالية:</b> '+esc(advice)+' <a class="mfkj-t-link" href="'+url(dueTotal?'review':next.route)+'">'+(dueTotal?'ابدأ المراجعة':'تابع '+esc(next.code))+' ↗</a></div><div class="mfkj-t-grid">'+cards+'</div><div class="mfkj-t-note">الملخص يعرض بيانات الحساب الحالي أو التقدم المحلي على الجهاز. للمزامنة بين الأجهزة يلزم تسجيل الدخول بحساب الطفل نفسه؛ رقم ولي الأمر وحده لا يفتح بيانات الطفل.</div><div class="mfkj-t-nav"><a href="'+url('map')+'">خريطة المنهج</a><a href="./?kids=lab&amp;kidsTab=missions">مهمات منزلية</a><a href="./?kids=lab&amp;kidsTab=portfolio">ملف الإنجاز · '+lab+'</a></div>';}
+function mfkjLabKey(){return 'mrfluent-kids-writing-lab-v1:'+(journeyUserId||(typeof sessionUser!=='undefined'&&sessionUser&&sessionUser.id)||'guest');}
+function mfkjLabRead(){try{return JSON.parse(localStorage.getItem(mfkjLabKey())||'{}')||{};}catch(_){return {};}}
+function renderLearningLab(){
+var valid=['overview','missions','maker','review','writing','portfolio'],tab=String(query.get('kidsTab')||'overview').toLowerCase();if(valid.indexOf(tab)<0)tab='overview';document.title='Learning Lab | Mr. Fluent Kids';
+var tabs=[['overview','البداية'],['missions','مهمات البيت'],['maker','مشروعات عملية'],['review','مراجعة ذكية'],['writing','تدريب الكتابة'],['portfolio','ملف الإنجاز']],nav=tabs.map(function(t){return '<a class="'+(tab===t[0]?'is-active':'')+'" href="'+(t[0]==='review'?url('review'):'./?kids=lab&amp;kidsTab='+t[0])+'">'+t[1]+'</a>';}).join('');
+var missions=[{c:'A1',id:'a1home',t:'Letter Hunt · رحلة الحروف',d:'اختار 3 أشياء في البيت، انطق أول صوت في كل كلمة وحدد الحرف.'},{c:'B1',id:'b1home',t:'Everyday Words · كلمات من البيت',d:'اختار 5 أشياء وقل اسمها بالإنجليزية ثم جملة قصيرة.'},{c:'C1',id:'c1home',t:'Three-Sentence Story · حكاية قصيرة',d:'اختار صورة ووصفها بثلاث جمل: من؟ أين؟ ماذا يحدث؟'},{c:'A2',id:'a2home',t:'Polite English · كلام مهذّب',d:'تدرّب على طلب شيء بأدب أو السؤال عن الوقت مع تبادل الأدوار.'},{c:'B2',id:'b2home',t:'Cause & Effect · السبب والنتيجة',d:'اذكر ما حدث في قصة ولماذا، واستشهد بتفصيل من النص.'},{c:'C2',id:'c2home',t:'Opinion & Evidence · رأي ودليل',d:'عبّر عن رأيك في قصة مع سببين ودليل من النص.'}];
+var projects=[{c:'A1',id:'a1book',t:'My ABC Mini-Book · كتاب حروفي',d:'4 صفحات تضم حرفًا كبيرًا وصغيرًا ورسمة وكلمة ومعنى عربي.'},{c:'B1',id:'b1cards',t:'Five Word Cards · خمس بطاقات',d:'5 بطاقات: صورة من الأمام، والكلمة والمعنى وجملة من الخلف.'},{c:'C1',id:'c1strip',t:'Picture Story Strip · شريط قصة',d:'رتّب 3 صور واستخدم first / next / finally.'},{c:'A2',id:'a2dialog',t:'Everyday Dialogue · حوار يومي',d:'اكتب حوارًا قصيرًا للسؤال عن الوقت أو الاتجاهات.'},{c:'B2',id:'b2evidence',t:'Reading Evidence Board · لوحة الأدلة',d:'اكتب الفكرة الرئيسية ودليلين وعلاقة سبب ونتيجة.'},{c:'C2',id:'c2revision',t:'Mini Review & Revision · مراجعة وتحرير',d:'راجع نصًا من حيث وضوح الفكرة والدليل والربط والترقيم.'}];
+var prompts={A1:{t:'My favourite thing',ar:'ارسم شيئًا تحبه واكتب اسمه والحرف الأول.',ex:'This is my… It is…'},B1:{t:'A friendly message',ar:'اكتب رسالة قصيرة لصديق عن نشاط تحبه.',ex:'Hi! I like… Would you like to…?'},C1:{t:'A picture in three lines',ar:'اكتب ثلاث جمل تصف صورة واحدة.',ex:'I can see… The… is… I feel…'},A2:{t:'Ask for information',ar:'اكتب رسالة قصيرة تسأل فيها عن موعد أو اتجاه.',ex:'Excuse me, what time…? How can I get to…?'},B2:{t:'Explain an event',ar:'اكتب عن حدث واذكر السبب ودليلًا من النص.',ex:'This happened because… One detail is…'},C2:{t:'Recommendation with evidence',ar:'اكتب توصية لقصة ثم راجع وضوح الرأي والدليل والربط.',ex:'I recommend… because… One detail that supports my view…'}};
+var d=mfkjLabRead(),content='';
+if(tab==='overview')content='<div class="mfkj-t-note">مهمات تطبيقية خارج شاشة الأسئلة، ومشروعات وكتابة مستقلة. المراجعة تستخدم بنك الأخطاء الحالي بلا تكرار.</div><div class="mfkj-t-grid"><article class="mfkj-t-card"><h3>Curriculum Map</h3><p>المحتوى الحالي والفجوات التالية.</p><a class="mfkj-t-link" href="'+url('map')+'">افتح الخريطة</a></article><article class="mfkj-t-card"><h3>Parent Overview</h3><p>ملخص التقدم المسجّل.</p><a class="mfkj-t-link" href="'+url('parents')+'">عرض التقدم</a></article><article class="mfkj-t-card"><h3>Home Missions</h3><p>مهمات قصيرة من الحياة اليومية.</p><a class="mfkj-t-link" href="./?kids=lab&amp;kidsTab=missions">اختار مهمة</a></article><article class="mfkj-t-card"><h3>Maker Projects</h3><p>مشروعات لها ناتج يستطيع الطفل شرحه.</p><a class="mfkj-t-link" href="./?kids=lab&amp;kidsTab=maker">ابدأ مشروعًا</a></article><article class="mfkj-t-card"><h3>Writing Studio</h3><p>مهمات كتابة مستقلة حسب المستوى.</p><a class="mfkj-t-link" href="./?kids=lab&amp;kidsTab=writing">ابدأ الكتابة</a></article><article class="mfkj-t-card"><h3>Smart Review</h3><p>نفس بنك الأخطاء الموجود بالفعل.</p><a class="mfkj-t-link" href="'+url('review')+'">راجع الآن</a></article></div>';
+else if(tab==='missions'||tab==='maker'){var arr=tab==='missions'?missions:projects;content='<div class="mfkj-t-note">أنشطة تطبيقية خارج شاشة الأسئلة؛ سجّل الإنجاز بعد تنفيذ المهمة. التسجيل لا يقيّم جودة العمل تلقائيًا.</div><div class="mfkj-t-grid">'+arr.map(function(x){var kind=tab==='missions'?'mission':'project',key='activity:lab:'+x.c+':'+kind+':'+x.id,done=journeyGetLevel(x.c).checkpointKeys.indexOf(key)>=0;return '<article class="mfkj-t-card"><span class="mfkj-t-kicker">'+x.c+' · '+kind.toUpperCase()+'</span><h3>'+esc(x.t)+'</h3><p>'+esc(x.d)+'</p><button class="mfkr-btn mfkj-primary" type="button" data-mfkj-lab-done="'+x.c+'|'+kind+'|'+x.id+'" '+(done?'disabled':'')+'>'+(done?'✓ مسجّلة':'تم التنفيذ · سجّل الإنجاز')+'</button></article>';}).join('')+'</div>';}
+else if(tab==='review')content='<div class="mfkj-t-card"><span class="mfkj-t-kicker">SPACED REVIEW</span><h3>نستخدم My Review الحالي</h3><p>بعد تعليم السؤال كمراجَع يعود في موعد لاحق: يوم، ثم 3 و7 و14 و30 يومًا. الأسئلة المستحقة تظهر في صفحة My Review نفسها.</p><a class="mfkj-t-link" href="'+url('review')+'">افتح بنك المراجعة</a></div>';
+else if(tab==='writing'){var code=String(d.selectedCode||'A1').toUpperCase();if(!prompts[code])code='A1';var draft=d[code]||{};content='<div class="mfkj-t-card"><span class="mfkj-t-kicker">WRITING STUDIO</span><h3>اكتب على قدّ مستواك</h3><label for="mfkjLabLevel" class="mfkj-t-kicker">المستوى</label><select id="mfkjLabLevel" class="mfkj-t-select">'+journeyLevels.map(function(x){return '<option value="'+x.code+'" '+(x.code===code?'selected':'')+'>'+x.code+' · '+esc(x.title)+'</option>';}).join('')+'</select><h3 id="mfkjLabPromptTitle">'+esc(prompts[code].t)+'</h3><p id="mfkjLabPrompt" lang="ar" dir="rtl">'+esc(prompts[code].ar)+'</p><p id="mfkjLabExample" lang="en">'+esc(prompts[code].ex)+'</p><textarea id="mfkjLabDraft" class="mfkj-t-area" maxlength="6000" placeholder="اكتب هنا…">'+esc(draft.text||'')+'</textarea><button type="button" class="mfkr-btn mfkj-primary" data-mfkj-lab-save>حفظ المسودة وتسجيل النشاط</button><p id="mfkjLabStatus" class="mfkj-t-status" aria-live="polite">'+(draft.saved?'✓ محفوظة على هذا الجهاز.':'تُحفظ المسودة محليًا على هذا الجهاز أثناء الكتابة.')+'</p><p class="mfkj-t-note">نص المسودة على الجهاز الحالي؛ إنجاز النشاط يتزامن مع الحساب عند تسجيل الدخول والاتصال.</p></div>';}
+else{var written=Object.keys(d).filter(function(k){return prompts[k]&&d[k]&&String(d[k].text||'').trim();}),badges=journeyGlobalBadges();content='<div class="mfkj-t-stats"><div class="mfkj-t-stat"><b>'+journeyLevels.reduce(function(a,x){return a+journeyGetLevel(x.code).stars;},0)+'</b><span>نجوم</span></div><div class="mfkj-t-stat"><b>'+journeyLevels.reduce(function(a,x){return a+journeyGetLevel(x.code).checkpointKeys.filter(function(k){return /^activity:lab:/.test(k);}).length;},0)+'</b><span>مهمات ومشروعات</span></div><div class="mfkj-t-stat"><b>'+badges.filter(function(x){return x.earned;}).length+'</b><span>شارات</span></div><div class="mfkj-t-stat"><b>'+written.length+'</b><span>مسودات محلية</span></div></div><div class="mfkj-t-grid">'+journeyLevels.map(function(x){var l=journeyGetLevel(x.code),a=l.checkpointKeys.filter(function(k){return /^activity:lab:/.test(k);}).length;return '<article class="mfkj-t-card"><h3>'+esc(x.code)+' · '+esc(x.title)+'</h3><p>نجوم '+l.stars+' · مهام ومشروعات '+a+' · كلمات '+l.wordsSeen.length+'</p><a class="mfkj-t-link" href="'+url(x.route)+'">افتح المستوى</a></article>';}).join('')+'</div><article class="mfkj-t-card"><h3>مسودات الكتابة على هذا الجهاز</h3>'+(written.length?written.map(function(k){return '<p><strong>'+k+' · '+esc(prompts[k].t)+'</strong><br>'+esc(String(d[k].text||'').slice(0,140))+'</p>';}).join(''):'<p>لا توجد مسودات محفوظة حتى الآن.</p>')+'</article>';}
+root.innerHTML=shell('LEARN · APPLY · CREATE','Learning Lab.','مساحة التعلّم','مهمات تطبيقية ومشروعات وكتابة مستقلة حسب المستوى.',mfkjToolsCss()+'<div class="mfkj-t-wrap"><div class="mfkj-t-nav">'+nav+'</div><div id="mfkjLabContent">'+content+'</div><div class="mfkj-t-nav"><a href="'+url('map')+'">خريطة المنهج</a><a href="'+url('parents')+'">متابعة ولي الأمر</a><a href="'+url('hub')+'">العودة للمستويات</a></div></div>');
+var host=root.querySelector('#mfkjLabContent');if(!host)return;
+host.addEventListener('click',function(e){var b=e.target.closest('[data-mfkj-lab-done]');if(b){var p=b.getAttribute('data-mfkj-lab-done').split('|');if(p.length===3)journeyRecord('activity:lab:'+p[0]+':'+p[1]+':'+p[2],null,p[0]);return;}if(e.target.closest('[data-mfkj-lab-save]')){var sel=host.querySelector('#mfkjLabLevel'),area=host.querySelector('#mfkjLabDraft'),c=String(sel&&sel.value||'A1'),v=String(area&&area.value||'').trim(),status=host.querySelector('#mfkjLabStatus');if(v.length<3){if(status)status.textContent='اكتب بضعة كلمات قبل الحفظ.';return;}var saved=mfkjLabRead();saved[c]={text:v.slice(0,6000),prompt:prompts[c].ar,updatedAt:new Date().toISOString(),saved:true};saved.selectedCode=c;try{localStorage.setItem(mfkjLabKey(),JSON.stringify(saved));}catch(_){}journeyRecord('activity:lab:'+c+':writing',null,c);}});
+host.addEventListener('input',function(e){if(!e.target||e.target.id!=='mfkjLabDraft')return;var sel=host.querySelector('#mfkjLabLevel'),c=String(sel&&sel.value||'A1'),saved=mfkjLabRead();saved[c]={text:e.target.value.slice(0,6000),prompt:prompts[c].ar,updatedAt:new Date().toISOString(),saved:false};saved.selectedCode=c;try{localStorage.setItem(mfkjLabKey(),JSON.stringify(saved));}catch(_){}});
+host.addEventListener('change',function(e){if(!e.target||e.target.id!=='mfkjLabLevel')return;var c=String(e.target.value||'A1'),saved=mfkjLabRead(),v=saved[c]||{},p=prompts[c],area=host.querySelector('#mfkjLabDraft');if(area)area.value=v.text||'';var t=host.querySelector('#mfkjLabPromptTitle'),ar=host.querySelector('#mfkjLabPrompt'),ex=host.querySelector('#mfkjLabExample'),st=host.querySelector('#mfkjLabStatus');if(t)t.textContent=p.t;if(ar)ar.textContent=p.ar;if(ex)ex.textContent=p.ex;if(st)st.textContent=v.saved?'✓ محفوظة على هذا الجهاز.':'تُحفظ المسودة محليًا أثناء الكتابة.';saved.selectedCode=c;try{localStorage.setItem(mfkjLabKey(),JSON.stringify(saved));}catch(_){}});
+}
+
 function renderHub(){
   document.title='Mr. Fluent Kids · All Six Levels';
   // Keep this landing page focused on the two age-based level groups only.
-  root.innerHTML=header()+'<section class="mfkr-page"><div class="mfkr-wrap">'+journeyCourseCatalogHtml()+'</div></section>'+footer();
+  root.innerHTML=header()+'<section class="mfkr-page"><div class="mfkr-wrap">'+journeyCourseCatalogHtml()+journeyCourseQuickLinksHtml()+'</div></section>'+footer();
 }
 
 function renderLevels(group){var young=group==='younger';var arr=young?[['A1','My First ABC','الحروف الكبيرة والصغيرة، صورة، كلمة، ترجمة عربية وزرّان للصوت.'],['B1','My First Words','كلمات يومية جديدة مع الاستماع والصور والألعاب.'],['C1','My First Sentences','كوّن جملًا بسيطة وابدأ فهم القصص المصورة.']]:[['A2','Word Explorers','وسّع حصيلة الكلمات واربطها بموضوعات قريبة من الطفل.'],['B2','Reading Builders','تدرّب على القراءة والفهم واستخدام الكلمات في سياقها.'],['C2','Confident English','قوّي الجمل والمحادثات القصيرة والفهم.']];var cards=arr.map(function(item){return levelCard(item[0],item[1],item[2],group);}).join('');document.title=(young?'Little Learners':'Growing Learners')+' | Mr. Fluent Kids';root.innerHTML=shell(young?'LITTLE LEARNERS':'GROWING LEARNERS',young?'Little Learners':'Growing Learners',young?'مسار الأطفال الأصغر سنًا':'مسار الأطفال الأكبر شوية','Select a level to start your next learning adventure.','<div class="mfkr-level-grid">'+cards+'</div>'+backButtons(url('hub'),'← Back to paths')+(young?'<div class="mfkr-note">المستويات A1 وB1 وC1 متاحة الآن. افتح C1 لتكوين الجمل وقراءة قصة قصيرة والتدرّب على الفهم والنطق.</div>':'<div class="mfkr-note">المستويات A2 وB2 وC2 متاحة الآن. استكشف الكلمات في A2، وطوّر القراءة في B2، ثم أتقن المهارات المتقدمة الشاملة في C2.</div>'));}
@@ -14751,7 +14803,7 @@ function mfkjA1InstallLessonMenu(){
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=overview"><span aria-hidden="true">🌱</span><span>Learning Lab · البداية</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=missions"><span aria-hidden="true">🏡</span><span>Home Missions · مهمات البيت</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=maker"><span aria-hidden="true">🧩</span><span>Maker Projects · مشروعات عملية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=review"><span aria-hidden="true">🧠</span><span>Smart Review · مراجعة ذكية</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=review"><span aria-hidden="true">🧠</span><span>Smart Review · مراجعة ذكية</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=writing"><span aria-hidden="true">✍️</span><span>Writing Studio · تدريب الكتابة</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=portfolio"><span aria-hidden="true">📒</span><span>Achievement Portfolio · ملف الإنجاز</span></a>'+
  '<div class="mfkj-a1-menu-group">أدوات المستوى</div>'+
@@ -14759,6 +14811,9 @@ function mfkjA1InstallLessonMenu(){
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="final"><span aria-hidden="true">🏆</span><span>Final Challenge</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="certificate"><span aria-hidden="true">🎓</span><span>Level Certificate</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="review"><span aria-hidden="true">🧠</span><span>My Review · مراجعة أخطائي</span></button>'+
+ '<div class="mfkj-a1-menu-group">الخريطة والمتابعة</div>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=map"><span aria-hidden="true">🗺️</span><span>Curriculum Map · خريطة المنهج</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=parents"><span aria-hidden="true">👪</span><span>Parent Overview · متابعة ولي الأمر</span></a>'+
  '<div class="mfkj-a1-menu-group">التنقّل</div>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=hub"><span aria-hidden="true">↩</span><span>الرجوع للمستويات</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./"><span aria-hidden="true">✦</span><span>DOMA Academy</span></a>'+
@@ -14864,7 +14919,7 @@ function mfkjCreateCourseExtraActivities(code,wrap){
   }
   node.addEventListener('click',function(event){
    var option=event.target.closest('[data-mfkj-x-option]');
-   if(option){if(state.answered)return;state.selected=Number(option.getAttribute('data-mfkj-x-option'));state.answered=true;if(state.selected===state.target.idx)state.score++;render();return;}
+   if(option){if(state.answered)return;state.selected=Number(option.getAttribute('data-mfkj-x-option'));state.answered=true;var chosen=String(option.textContent||'').replace(/\s+/g,' ').trim();if(state.selected===state.target.idx){state.score++;if(typeof journeyRecord==='function')journeyRecord('activity:'+code+':'+kind+':'+String(state.target.word).toLowerCase(),state.target.word,code);}else if(typeof journeyAddReviewItem==='function'){journeyAddReviewItem({id:code+'|extra|'+kind+'|'+String(state.target.word).toLowerCase(),question:title+' · '+String(state.target.example||state.target.word||title).slice(0,220),arabic:state.target.meaning||'',selected:chosen,correct:String(state.target.word||'')+' · '+String(state.target.meaning||''),kind:kind+' practice'},code);}render();return;}
    if(event.target.closest('[data-mfkj-x-play]')){speak(audioText(state.target),node.querySelector('[data-mfkj-x-feedback]'));return;}
    if(event.target.closest('[data-mfkj-x-next]')){if(!state.answered)return;state.question++;state.target=null;state.selected=-1;state.answered=false;render();return;}
    if(event.target.closest('[data-mfkj-x-reset]')){state.question=0;state.score=0;state.target=null;state.selected=-1;state.answered=false;render();}
@@ -14873,7 +14928,7 @@ function mfkjCreateCourseExtraActivities(code,wrap){
  }
  var traceNode=panel('Trace','trace','Trace & Write · تتبّع واكتب','تدرّب على كتابة الكلمة أو الجملة بخط يدك. كل مستوى يستخدم كلمات وجمل تناسب تقدّمك.');
  traceNode.innerHTML+='<div class="mfkj-x-trace-wrap"><canvas class="mfkj-x-canvas" width="900" height="270" aria-label="Trace the English word or sentence"></canvas><p class="mfkj-x-trace-ar" lang="ar" dir="rtl" data-mfkj-x-trace-ar></p><div class="mfkj-x-trace-actions"><span data-mfkj-x-trace-count>Practice 1</span><button type="button" class="mfkr-btn" data-mfkj-x-trace-clear>امسح الكتابة</button><button type="button" class="mfkr-btn mfkr-btn-primary" data-mfkj-x-trace-next>نص جديد ↻</button></div></div>';
- var traceState={index:0,target:null,drawing:false,last:null};
+ var traceState={index:0,target:null,drawing:false,last:null,drawn:false};
  var canvas=traceNode.querySelector('canvas'),ctx=canvas.getContext('2d');
  function traceValue(item){if(code==='B1')return item.word;var max=limitWords[code]||7;return String(item.example||item.word).split(/\s+/).slice(0,max).join(' ');}
  function drawTraceGuide(){
@@ -14891,10 +14946,10 @@ function mfkjCreateCourseExtraActivities(code,wrap){
  }
  function selectTraceTarget(){traceState.target=bank[Math.floor(Math.random()*bank.length)];drawTraceGuide();}
  function point(event){var rect=canvas.getBoundingClientRect();return{x:(event.clientX-rect.left)*canvas.width/rect.width,y:(event.clientY-rect.top)*canvas.height/rect.height};}
- canvas.addEventListener('pointerdown',function(event){if(!ctx)return;traceState.drawing=true;traceState.last=point(event);if(canvas.setPointerCapture)canvas.setPointerCapture(event.pointerId);ctx.beginPath();ctx.moveTo(traceState.last.x,traceState.last.y);event.preventDefault();});
+ canvas.addEventListener('pointerdown',function(event){if(!ctx)return;traceState.drawing=true;traceState.drawn=true;traceState.last=point(event);if(canvas.setPointerCapture)canvas.setPointerCapture(event.pointerId);ctx.beginPath();ctx.moveTo(traceState.last.x,traceState.last.y);event.preventDefault();});
  canvas.addEventListener('pointermove',function(event){if(!traceState.drawing||!ctx)return;var p=point(event);ctx.strokeStyle='rgba(145,240,219,.95)';ctx.lineWidth=6;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(traceState.last.x,traceState.last.y);ctx.lineTo(p.x,p.y);ctx.stroke();traceState.last=p;event.preventDefault();});
  ['pointerup','pointercancel','lostpointercapture'].forEach(function(name){canvas.addEventListener(name,function(){traceState.drawing=false;traceState.last=null;});});
- traceNode.addEventListener('click',function(event){if(event.target.closest('[data-mfkj-x-trace-clear]')){drawTraceGuide();return;}if(event.target.closest('[data-mfkj-x-trace-next]')){traceState.index++;selectTraceTarget();}});
+ traceNode.addEventListener('click',function(event){if(event.target.closest('[data-mfkj-x-trace-clear]')){drawTraceGuide();return;}if(event.target.closest('[data-mfkj-x-trace-next]')){if(traceState.drawn&&traceState.target&&typeof journeyRecord==='function'){var tv=traceValue(traceState.target);journeyRecord('activity:'+code+':trace:'+String(tv).toLowerCase(),tv,code);}traceState.index++;traceState.drawn=false;selectTraceTarget();}});
  selectTraceTarget();
  var extras=[
   createQuiz('visual','Look & Choose · شوف واختار',({B1:'شوف الصورة واختار الكلمة المناسبة.',C1:'طابق الصورة مع جملة بسيطة.',A2:'اقرأ الجملة واختار الكلمة الناقصة.',B2:'استخدم سياق الجملة لتحديد الكلمة.',C2:'استنتج معنى الكلمة من سياق الجملة.'})[code]||'اختار الإجابة المناسبة.'),
@@ -14990,7 +15045,7 @@ function mfkjInstallCourseLevelMenu(code){
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=overview"><span aria-hidden="true">🌱</span><span>Learning Lab · البداية</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=missions"><span aria-hidden="true">🏡</span><span>Home Missions · مهمات البيت</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=maker"><span aria-hidden="true">🧩</span><span>Maker Projects · مشروعات عملية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=review"><span aria-hidden="true">🧠</span><span>Smart Review · مراجعة ذكية</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=review"><span aria-hidden="true">🧠</span><span>Smart Review · مراجعة ذكية</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=writing"><span aria-hidden="true">✍️</span><span>Writing Studio · تدريب الكتابة</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=portfolio"><span aria-hidden="true">📒</span><span>Achievement Portfolio · ملف الإنجاز</span></a>'+
  '<div class="mfkj-a1-menu-group">أدوات المستوى</div>'+
@@ -14998,6 +15053,9 @@ function mfkjInstallCourseLevelMenu(code){
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="final"><span aria-hidden="true">🏆</span><span>Final Challenge</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="certificate"><span aria-hidden="true">🎓</span><span>Level Certificate</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="review"><span aria-hidden="true">🧠</span><span>My Review · مراجعة أخطائي</span></button>'+
+ '<div class="mfkj-a1-menu-group">الخريطة والمتابعة</div>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=map"><span aria-hidden="true">🗺️</span><span>Curriculum Map · خريطة المنهج</span></a>'+
+ '<a class="mfkj-a1-menu-item" href="./?kids=parents"><span aria-hidden="true">👪</span><span>Parent Overview · متابعة ولي الأمر</span></a>'+
  '<div class="mfkj-a1-menu-group">التنقّل</div>'+
  '<a class="mfkj-a1-menu-item" href="./?kids=hub"><span aria-hidden="true">↩</span><span>الرجوع للمستويات</span></a>'+
  '<a class="mfkj-a1-menu-item" href="./"><span aria-hidden="true">✦</span><span>DOMA Academy</span></a></nav></aside>';
@@ -16311,7 +16369,7 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
       window.location.replace(url('hub'));return;
     }
     if(routeName==='hub'){window.__mfKidsJourneyAccessContext=ctx;renderHub();return;}
-    if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;}
+    if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;} if(routeName==='map'){renderCourseMap();return;} if(routeName==='parents'){renderParentOverview();return;} if(routeName==='lab'){renderLearningLab();return;}
   }
   if(ctx.latest&&kidsJourneyIsTerminalRequest(ctx.latest))kidsJourneyClearPendingMarker(ctx.user&&ctx.user.id);
   if(ctx.pending||(kidsJourneyHasPendingMarker(ctx.user&&ctx.user.id)&&!(ctx.latest&&kidsJourneyIsTerminalRequest(ctx.latest)))){
@@ -16327,7 +16385,7 @@ async function kidsJourneyAfterAuth(){
     await kidsJourneyLoadPaymentState(kidsJourneyDefinition(query.get('level')||'A1').code);
     return;
   }
-  if(route==='entry'||route==='hub'||route==='younger'||route==='older'){
+  if(route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'){
     await kidsJourneyHandlePreCourseRoute(route);
     return;
   }
@@ -16344,7 +16402,7 @@ async function kidsJourneyAfterAuth(){
     window.location.replace(kidsJourneySubscribeUrl(item.code));
   }
 }
-window.__mfKidsEntryFlow=(route==='subscribe'||route==='entry'||route==='hub'||route==='younger'||route==='older'||journeyLevels.some(function(item){return item.route===route;}));
+window.__mfKidsEntryFlow=(route==='subscribe'||route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||journeyLevels.some(function(item){return item.route===route;}));
 window.__mfKidsAfterAuth=kidsJourneyAfterAuth;
 
 function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
@@ -16352,7 +16410,7 @@ function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
   if(pushHistory&&href){try{window.history.pushState({mfKidsRoute:true},'',href)}catch(error){console.warn('Kids route history update failed.',error)}}
   route=next;query=new URLSearchParams(window.location.search);
   if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
-  else if(route==='entry'||route==='hub'||route==='younger'||route==='older'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
+  else if(route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
   else{
     var item=journeyLevels.find(function(level){return level.route===route;});
     if(item){kidsJourneyBindAuthRefresh();kidsJourneyRenderLevelGate(item.code,function(){kidsJourneyRenderLevel(item.code);journeyRenderCurrent();});}
@@ -16381,7 +16439,7 @@ window.addEventListener('popstate',function(){
 });
 
 if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
-else if(route==='entry'||route==='hub'||route==='younger'||route==='older'){
+else if(route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'){
   kidsJourneyBindAuthRefresh();
   kidsJourneyHandlePreCourseRoute(route);
 }
