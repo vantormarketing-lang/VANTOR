@@ -27,7 +27,7 @@
 }
 </script>
 
-<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onload="window.__domaSupabaseLoaded=true;window.dispatchEvent(new Event('doma:supabase-ready'))"></script>
 <style>
 :root{--bg:#080808;--bg2:#0d090b;--card:#120b0e;--card2:#171014;--line:#2d181f;--burg:#762337;--burg2:#9d304a;--burg3:#c05269;--text:#f5f2f3;--muted:#9b9396;--green:#5fc99a;--gold:#d7ad61;--shadow:0 22px 60px rgba(0,0,0,.35)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}button{cursor:pointer}.container{width:min(1180px,92%);margin:auto}
@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v208', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v209', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v208', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v209', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2835,7 +2835,7 @@ function gradeRequestWithTimeout(request,label,ms=9000){
     new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label+' timed out')),ms)})
   ]).finally(()=>clearTimeout(timer));
 }
-async function loadGrades(){
+async function loadGrades(skipStudentRefresh=false){
   const status=$('gradeLoadStatus'),grid=$('gradeGrid');
   revealGradeGrid();
   if(status)status.textContent='Loading grades…';
@@ -2844,7 +2844,7 @@ async function loadGrades(){
     if(!sb)throw new Error('The learning service has not connected yet.');
     const result=await gradeRequestWithTimeout(
       sb.from('grades').select('id,name,stage,sort_order,is_active').order('sort_order',{ascending:true}),
-      'Grade list request'
+      'Grade list request',3500
     );
     if(result.error)throw result.error;
     const rows=(result.data||[]).filter(x=>x&&x.is_active!==false);
@@ -2866,17 +2866,7 @@ async function loadGrades(){
   if($('publicStage'))$('publicStage').value='all';
   gradePrices={};
   for(const g of grades){if(DEFAULT_PRICES[g.name])gradePrices[g.id]={...DEFAULT_PRICES[g.name]}}
-  if(sb){
-    try{
-      const result=await gradeRequestWithTimeout(
-        sb.from('grade_prices').select('grade_id,monthly_amount,annual_amount'),
-        'Grade pricing request',5000
-      );
-      if(!result.error)(result.data||[]).forEach(x=>{
-        gradePrices[x.grade_id]={monthly:100,annual:100};
-      });
-    }catch(error){console.warn('Grade pricing unavailable; using the configured default prices.',error)}
-  }
+  // The configured grade price is fixed at 100 EGP; don't block first render on a redundant pricing request.
   try{
     renderGrades();
     revealGradeGrid();
@@ -2888,7 +2878,7 @@ async function loadGrades(){
     if(status)status.textContent='6 grades · safe display';
   }
   updatePricingRange();
-  try{await refreshStudentState()}catch(error){console.warn('Student account refresh failed; grade cards remain available.',error)}
+  if(!skipStudentRefresh){try{await refreshStudentState()}catch(error){console.warn('Student account refresh failed; grade cards remain available.',error)}}
 }
 function updatePricingRange(){const values=Object.values(gradePrices);if(!values.length)return;const m=values.map(x=>x.monthly),a=values.map(x=>x.annual);document.querySelectorAll('[data-pricing-range]').forEach(el=>el.textContent=Math.min(...m)+'–'+Math.max(...m));document.querySelectorAll('[data-pricing-range-annual]').forEach(el=>el.textContent=Math.min(...a)+'–'+Math.max(...a))}
 function domaPastelGradeCardMarkup(g,monthly){
@@ -3929,22 +3919,65 @@ async function mrfluentHandleEnglishCourseRoute(){
   await mrfluentOpenEnglishLevel(level.id);
 }
 
+let domaBootInProgress=false,domaBootFinishedWithoutSupabase=false,domaBootRetryRequested=false;
+function waitForDomaSupabase(timeoutMs){
+  if(window.supabase)return Promise.resolve(true);
+  return new Promise(resolve=>{
+    let settled=false;
+    const done=()=>{
+      if(settled)return;
+      settled=true;
+      window.removeEventListener('doma:supabase-ready',done);
+      resolve(!!window.supabase);
+    };
+    window.addEventListener('doma:supabase-ready',done,{once:true});
+    setTimeout(done,timeoutMs);
+  });
+}
+window.addEventListener('doma:supabase-ready',function(){
+  if(!window.supabase)return;
+  if(domaBootInProgress&&!sb)domaBootRetryRequested=true;
+  else if(domaBootFinishedWithoutSupabase){
+    domaBootFinishedWithoutSupabase=false;
+    boot().catch(error=>console.warn('Late Supabase startup retry failed.',error));
+  }
+});
 async function boot(){
+  if(domaBootInProgress)return;
+  domaBootInProgress=true;
+  let supabaseWasMissing=false;
   try{
-    if(typeof window.supabase==='undefined')throw new Error('Supabase library did not load. Check your internet connection or CDN access.');
+    if(typeof window.supabase==='undefined')await waitForDomaSupabase(1800);
+    if(typeof window.supabase==='undefined'){
+      supabaseWasMissing=true;
+      throw new Error('Supabase library did not load before the startup deadline.');
+    }
     sb=window.supabase.createClient(DOMA_URL,DOMA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   }catch(error){
-    console.error('Student service initialization failed.',error);
+    console.warn('Student service initialization failed; showing the local course shell.',error);
     sb=null;sessionUser=null;
-    await loadGrades();
+    await loadGrades(true);
     const status=$('gradeLoadStatus');if(status)status.textContent='6 grades · connection unavailable';
+    domaBootInProgress=false;
+    if(supabaseWasMissing&&(window.supabase||domaBootRetryRequested)){
+      domaBootRetryRequested=false;
+      return boot();
+    }
+    if(supabaseWasMissing)domaBootFinishedWithoutSupabase=true;
     return;
   }
+
+  domaBootFinishedWithoutSupabase=false;
+  // Start loading the grade list immediately while the local auth session is checked.
+  // The cards can render without waiting for account-specific requests.
+  const gradesPromise=loadGrades(true).catch(error=>{
+    console.warn('Grade list startup failed; keeping the local grade fallback.',error);
+  });
   try{
-    const auth=await gradeRequestWithTimeout(sb.auth.getSession(),'Session check',8000);
+    const auth=await gradeRequestWithTimeout(sb.auth.getSession(),'Session check',2500);
     sessionUser=auth.data?.session?.user||null;
   }catch(error){
-    console.warn('Session check failed; continuing to load the public grade list.',error);
+    console.warn('Session check timed out; continuing with the public course view.',error);
     sessionUser=null;
   }
   updateNav();
@@ -3955,15 +3988,20 @@ async function boot(){
       else{closeDrawer();renderDashboardLoggedOut()}
     });
   }catch(error){console.warn('Auth state listener could not be started.',error)}
-  await loadGrades();
+
+  await gradesPromise;
   if(sessionUser&&sb){
     try{sb.rpc('doma_log_activity',{p_activity_type:'login',p_entity_id:null,p_metadata:{source:'student_web'}}).catch(()=>{})}
     catch(error){console.warn('Login activity could not be recorded.',error)}
   }
-  try{await mrfluentHandleEnglishCourseRoute()}catch(error){console.warn('Course deep-link handling failed; grade list remains available.',error)}
+  // Account and course-route checks run after the grade UI is rendered, without blocking app startup.
+  domaBootInProgress=false;
+  domaBootRetryRequested=false;
+  refreshStudentState().catch(error=>console.warn('Student account refresh failed; grade cards remain available.',error));
+  Promise.resolve().then(()=>mrfluentHandleEnglishCourseRoute()).catch(error=>console.warn('Course deep-link handling failed; grade list remains available.',error));
 }
 window.domaOpenGrade=domaOpenGrade;window.openDomaV2Reports=openDomaV2Reports;window.openAttemptReview=openAttemptReview;window.openDomaV2Notifications=openDomaV2Notifications;window.domaStartSubscription=domaStartSubscription;window.domaSubmitSubscription=domaSubmitSubscription;window.openAuth=openAuth;window.openModal=openModal;window.closeModal=closeModal;window.closeGradeModal=closeGradeModal;window.filterGrades=filterGrades;window.showGradeInfo=showGradeInfo;window.studentView=studentView;window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.domaLogout=domaLogout;window.toggleMobileMenu=toggleMobileMenu;window.closeMobileMenu=closeMobileMenu;window.openSearch=openSearch;window.applyModalSearch=applyModalSearch;window.selectLesson=selectLesson;window.changeLesson=changeLesson;window.completeCurrentLesson=completeCurrentLesson;window.startQuiz=startQuiz;window.submitQuiz=submitQuiz;window.openHomework=openHomework;window.submitHomework=submitHomework;window.markNotificationRead=markNotificationRead;window.saveProfile=saveProfile;window.openReviewForm=openReviewForm;window.submitReview=submitReview;window.printCertificate=printCertificate;
-document.addEventListener('DOMContentLoaded',boot);</script>
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();</script>
 
 
 
@@ -16716,7 +16754,7 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
  #mfKidsStandaloneRoot .mfkj-x-trace-actions .mfkr-btn{flex:1}
 }
 </style>
-<script src="./mf-kids-learning-experiences.js?v=20261026.2"></script>
+<script async src="./mf-kids-learning-experiences.js?v=20261027.1"></script>
 
 <style id="mfkj-a1-centered-glass-menu-v1">
 #mfKidsStandaloneRoot.mfkj-a1-workspace .mfkr-top,
