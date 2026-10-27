@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v213', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v214', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v213', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v214', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2555,11 +2555,12 @@ function openAuth(type){
   setAuthModalBackButton(true);
   $('modal').classList.add('doma-auth-photo');
   $('modal').classList.toggle('doma-auth-signup',type==='signup');
+  $('modal').classList.toggle('doma-auth-login',type==='login');
   const title=$('modalTitle'),text=$('modalText'),body=$('modalBody');
   if(type==='login'){
-    title.textContent='Log in to Mr. Fluent';
-    text.textContent='Use your student account to open your dashboard and active grade.';
-    body.innerHTML='<div class="formgrid"><input id="loginPhone" class="field" type="text" inputmode="text" autocapitalize="off" placeholder="Mobile number (or existing email)" autocomplete="username" required><input id="loginPass" class="field" type="password" placeholder="Password" autocomplete="current-password" required><div class="full doma-auth-note" style="margin-top:-4px">Use the same mobile number you registered with. Existing accounts can still use their email.</div><div class="full" style="text-align:right;margin-top:-4px"><button type="button" style="background:none;border:0;color:#d98b9d;cursor:pointer;font-size:10px" onclick="domaForgotPassword()">Forgot password?</button></div><button class="btn primary full" onclick="domaLogin()">Log In</button><div id="authStatus" class="status full"></div><div class="doma-auth-switch full" style="color:#888;font-size:11px">New student? <button style="background:none;border:0;color:#d98b9d;cursor:pointer" onclick="openAuth(&quot;signup&quot;)">Create an account</button></div></div>';
+    title.textContent='';
+    text.textContent='';
+    body.innerHTML="<div class=\"doma-v115-signup\" aria-label=\"Log in to your Mr. Fluent account\">\n  <div class=\"doma-v115-brand\"><svg class=\"doma-v115-crown\" viewBox=\"0 0 36 28\" aria-hidden=\"true\"><path d=\"M4 21 2 7l9 7 7-12 7 12 9-7-2 14Z\" fill=\"#f0a24a\" stroke=\"#ffd27f\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M5 24h26\" stroke=\"#f4ba65\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><circle cx=\"2.5\" cy=\"5.5\" r=\"2\" fill=\"#ffd27f\"/><circle cx=\"18\" cy=\"2.5\" r=\"2\" fill=\"#ffd27f\"/><circle cx=\"33.5\" cy=\"5.5\" r=\"2\" fill=\"#ffd27f\"/></svg><div class=\"doma-v115-wordmark\">Mr. Fluent</div></div>\n  <div class=\"doma-v115-heading\"><p>Start your English journey today</p></div>\n  <div class=\"doma-v115-fields\">\n    <label class=\"doma-v115-field\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M7.2 3.5 10 7.2 8 9.3c1.3 2.8 3.1 4.6 5.9 5.9l2.1-2 3.7 2.8-.8 3c-.2.8-1 1.3-1.8 1.2C9.8 19.2 4.8 14.2 3.8 6.9c-.1-.8.4-1.6 1.2-1.8Z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><input id=\"loginPhone\" class=\"field\" type=\"text\" inputmode=\"text\" autocapitalize=\"off\" placeholder=\"Mobile Number or Email\" aria-label=\"Mobile Number or Email\" autocomplete=\"username\" required></label>\n    <label class=\"doma-v115-field doma-v115-password\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"4.5\" y=\"10\" width=\"15\" height=\"11\" rx=\"2.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"/><path d=\"M7.5 10V7a4.5 4.5 0 0 1 9 0v3\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"15\" r=\"1.2\" fill=\"currentColor\"/><path d=\"M12 16.4v1.4\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg><input id=\"loginPass\" class=\"field\" type=\"password\" placeholder=\"Password\" aria-label=\"Password\" autocomplete=\"current-password\" required><button class=\"doma-v115-eye\" type=\"button\" aria-label=\"Show password\" onclick=\"toggleSignupPassword('loginPass',this)\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M2.7 12s3.2-5.6 9.3-5.6 9.3 5.6 9.3 5.6-3.2 5.6-9.3 5.6S2.7 12 2.7 12Z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"/><circle cx=\"12\" cy=\"12\" r=\"2.6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"/></svg></button></label>\n  </div>\n  <div class=\"doma-v118-forgot\"><button type=\"button\" onclick=\"domaForgotPassword()\">Forgot password?</button></div>\n  <button class=\"doma-v115-create\" type=\"button\" onclick=\"domaLogin()\"><span>Log In</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4.5 12h14m-6-6 6 6-6 6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button>\n  <div id=\"authStatus\" class=\"status full\"></div><div class=\"doma-v115-switch\"><span>New student?</span><button type=\"button\" onclick=\"openAuth('signup')\">Create Account</button></div>\n  <div class=\"doma-v115-footer\">\n    <a class=\"doma-v117-contact-number\" href=\"https://wa.me/201095439588\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Chat with Mr. Fluent on WhatsApp\"><span class=\"doma-v117-dot\" aria-hidden=\"true\"></span><span class=\"doma-v117-number\">01095439588</span><span class=\"doma-v117-dot\" aria-hidden=\"true\"></span></a>\n    <a class=\"doma-v117-whatsapp\" href=\"https://wa.me/201095439588\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Open Mr. Fluent WhatsApp chat\"><svg viewBox=\"0 0 32 32\" width=\"21\" height=\"21\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M16 3.5a12.2 12.2 0 0 0-10.4 18.6L4 28l6.2-1.7A12.2 12.2 0 1 0 16 3.5Z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M11.1 9.5c-.3-.6-.6-.7-.9-.7h-.8c-.3 0-.7.2-1 .5-.4.4-1.4 1.4-1.4 3.4s1.4 4 1.7 4.3c.2.3 2.9 4.6 7.1 6.4 3.5 1.4 4.3 1.2 5.1 1.1.8-.1 2.5-1 2.8-2.1.4-1 .4-1.9.3-2.1-.1-.2-.5-.3-1.1-.6-.6-.3-2.5-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.6-.2.3-.5.3-1 .1-.6-.3-2.1-.8-3.8-2.4-1.4-1.2-2.3-2.7-2.6-3.2-.3-.5 0-.7.2-1 .2-.2.5-.6.7-.8.2-.3.3-.5.4-.8.1-.3 0-.6-.1-.8z\" fill=\"currentColor\"/></svg></a>\n  </div>\n</div>";
     $('modal').querySelector('.doma-auth-brand-footer')?.remove();
   }else{
     title.textContent='';
@@ -18147,3 +18148,137 @@ html body #modal.modal.show.doma-auth-photo.doma-auth-signup .doma-v117-whatsapp
 }
 </style>
 
+
+<style id="doma-auth-login-match-v118">
+html body #modal.modal.show.doma-auth-photo.doma-auth-login{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;min-height:100dvh!important;margin:0!important;padding:7px!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:#030306!important;isolation:isolate!important;z-index:99999!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login::before,html body #modal.modal.show.doma-auth-photo.doma-auth-login::after{display:none!important;content:none!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .modalbox{position:relative!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;width:min(392px,calc(100vw - 14px))!important;max-width:392px!important;height:min(700px,calc(100dvh - 14px))!important;max-height:calc(100dvh - 14px)!important;min-height:0!important;margin:0 auto!important;padding:26px 28px 16px!important;box-sizing:border-box!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain!important;scrollbar-width:none!important;border:1px solid rgba(184,57,121,.8)!important;border-radius:18px!important;background:url("./mrfluent-football-stadium-v211.webp?v=211") center center/cover no-repeat!important;box-shadow:0 0 0 1px rgba(87,28,65,.24),0 18px 45px rgba(0,0,0,.55)!important;color:#fff!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .modalhead{position:absolute!important;top:9px!important;left:10px!important;right:auto!important;z-index:10!important;display:block!important;width:28px!important;min-height:0!important;height:28px!important;margin:0!important;padding:0!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .modalhead h3,html body #modal.modal.show.doma-auth-photo.doma-auth-login #modalText{display:none!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .modalhead .close.auth-back{position:static!important;display:grid!important;place-items:center!important;transform:none!important;width:28px!important;min-width:28px!important;height:28px!important;padding:0!important;margin:0!important;border:0!important;border-radius:50%!important;background:rgba(7,8,15,.2)!important;color:#fff!important;box-shadow:none!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login #modalBody{display:flex!important;flex:1 1 auto!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;min-height:0!important;margin:0!important;padding:0!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-signup{width:100%!important;min-height:100%!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;box-sizing:border-box!important;color:#fff!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-brand{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;flex:none!important;margin:0 auto 9px!important;text-align:center!important;width:100%!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-crown{display:block!important;width:30px!important;height:24px!important;margin:0 auto 1px!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-wordmark{margin:-1px 0 0!important;color:#fff!important;font-family:"Segoe Script","Brush Script MT",cursive!important;font-size:40px!important;font-style:italic!important;font-weight:600!important;line-height:1.12!important;letter-spacing:-1.9px!important;text-align:center!important;text-shadow:0 2px 8px rgba(0,0,0,.6)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-brandline{margin:4px auto 0!important;color:rgba(255,255,255,.85)!important;font-family:Inter,Arial,sans-serif!important;font-size:8px!important;font-weight:750!important;letter-spacing:1.5px!important;line-height:1.3!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;margin:0 auto 13px!important;width:100%!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading h2{margin:0!important;padding:0!important;color:#fff!important;font-size:21px!important;line-height:1.25!important;font-weight:800!important;text-shadow:0 2px 7px rgba(0,0,0,.6)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p{margin:4px 0 0!important;padding:0!important;color:rgba(255,255,255,.94)!important;font-size:11px!important;line-height:1.35!important;font-weight:500!important;text-shadow:0 2px 6px rgba(0,0,0,.8)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-fields{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px!important;width:100%!important;margin:0!important;padding:0!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-field{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important;min-width:0!important;height:42px!important;min-height:42px!important;box-sizing:border-box!important;margin:0!important;padding:0 11px!important;border:1px solid rgba(255,255,255,.42)!important;border-radius:15px!important;background:rgba(8,8,15,.45)!important;color:#fff!important;box-shadow:0 5px 13px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.08)!important;-webkit-backdrop-filter:blur(2px)!important;backdrop-filter:blur(2px)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-field>svg{flex:0 0 20px!important;width:20px!important;height:20px!important;color:rgba(255,255,255,.96)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-field input.field{flex:1 1 auto!important;width:100%!important;min-width:0!important;height:100%!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;outline:none!important;background:transparent!important;box-shadow:none!important;color:#fff!important;font:500 12px/1.35 Inter,Arial,Helvetica,sans-serif!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-field input.field::placeholder{color:rgba(255,255,255,.85)!important;opacity:1!important;font-size:12px!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-wrap{width:100%!important;min-width:0!important;margin:7px 0 0!important;position:relative!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-trigger{cursor:pointer!important;text-align:left!important;font:500 12px/1.35 Inter,Arial,sans-serif!important;color:rgba(255,255,255,.85)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-trigger>span{display:block!important;flex:1 1 auto!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-trigger.is-selected>span{color:#fff!important;font-weight:700!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-trigger .doma-v115-chevron{flex:0 0 15px!important;width:15px!important;height:15px!important;opacity:.85!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-choices{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;width:100%!important;margin:7px 0 0!important;padding:8px!important;box-sizing:border-box!important;border:1px solid rgba(236,174,229,.43)!important;border-radius:13px!important;background:rgba(12,8,17,.9)!important;box-shadow:0 8px 20px rgba(0,0,0,.24)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-choices>button{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:stretch!important;gap:4px!important;padding:5px!important;border:1px solid rgba(255,255,255,.22)!important;border-radius:9px!important;background:rgba(255,255,255,.05)!important;color:#fff!important;cursor:pointer!important;font:inherit!important;text-align:center!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-picture{position:relative!important;display:block!important;width:100%!important;height:82px!important;overflow:hidden!important;border-radius:6px!important;background:linear-gradient(140deg,#3b1832,#141424)!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-picture img{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 28%!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-initials{position:absolute!important;inset:0!important;display:grid!important;place-items:center!important;color:#fff!important;font-weight:900!important;font-size:19px!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-name{font-size:10px!important;font-weight:800!important;line-height:1.2!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-sub{font-size:7px!important;font-weight:750!important;letter-spacing:1.2px!important;color:#e6a7d9!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-credit{grid-column:1/-1!important;margin:0!important;color:rgba(255,255,255,.6)!important;font-size:7px!important;line-height:1.35!important;text-align:center!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-credit a{color:#e4a7ed!important;text-decoration:none!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-password{margin-top:8px!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-terms{display:flex!important;align-items:center!important;gap:8px!important;width:100%!important;margin:9px 0 10px!important;color:rgba(255,255,255,.92)!important;font:500 10px/1.4 Inter,Arial,sans-serif!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-terms input{appearance:none!important;-webkit-appearance:none!important;display:block!important;flex:0 0 16px!important;width:16px!important;height:16px!important;margin:0!important;padding:0!important;border:1px solid rgba(200,102,232,.9)!important;border-radius:4px!important;background:rgba(26,14,35,.55)!important;cursor:pointer!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-terms input:checked{background:linear-gradient(135deg,#ba45d5,#7925cb)!important;border-color:#e1a2fa!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-terms input:checked::after{content:"✓";display:block!important;text-align:center!important;color:#fff!important;font-size:12px!important;font-weight:900!important;line-height:14px!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-terms a{color:#d87cff!important;text-decoration:none!important;font-weight:750!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-terms-details[hidden]{display:none!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-create{display:flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;width:100%!important;height:46px!important;min-height:46px!important;margin:0!important;padding:0 18px!important;box-sizing:border-box!important;border:0!important;border-radius:999px!important;background:linear-gradient(105deg,#b832c9 0%,#7620bd 44%,#db653f 100%)!important;color:#fff!important;font:800 13px/1 Inter,Arial,sans-serif!important;box-shadow:0 7px 18px rgba(35,9,39,.32),inset 0 1px 0 rgba(255,255,255,.22)!important;cursor:pointer!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login #authStatus{min-height:0!important;margin:0!important;padding:0!important;color:#fff!important;font-size:10px!important;line-height:1.35!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login #authStatus:empty{display:none!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-switch{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;width:100%!important;margin:12px 0 0!important;color:rgba(255,255,255,.9)!important;font:500 10px/1.4 Inter,Arial,sans-serif!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-switch button{border:0!important;background:transparent!important;color:#d87cff!important;font:800 11px/1.4 Inter,Arial,sans-serif!important;cursor:pointer!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-footer{margin:auto auto 0!important;padding:17px 0 1px!important;text-align:center!important;color:rgba(255,255,255,.62)!important;font:italic 10px/1.4 Inter,Arial,sans-serif!important}
+@media(max-width:600px){html body #modal.modal.show.doma-auth-photo.doma-auth-login{padding:7px!important}html body #modal.modal.show.doma-auth-photo.doma-auth-login .modalbox{width:min(392px,calc(100vw - 14px))!important;max-width:392px!important;height:min(700px,calc(100dvh - 14px))!important;max-height:calc(100dvh - 14px)!important;border-radius:18px!important;padding:max(24px,calc(env(safe-area-inset-top) + 12px)) 24px max(13px,env(safe-area-inset-bottom))!important}}
+@media(max-height:680px){html body #modal.modal.show.doma-auth-photo.doma-auth-login .modalbox{height:calc(100dvh - 12px)!important;max-height:calc(100dvh - 12px)!important;padding-top:max(22px,env(safe-area-inset-top))!important;padding-bottom:max(9px,env(safe-area-inset-bottom))!important}html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-brand{margin-bottom:6px!important}html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-wordmark{font-size:35px!important}html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-player-picture{height:65px!important}}
+</style>
+<style id="doma-login-tagline-whatsapp-v118">
+/* Minimal signup heading: keep only the journey line, bookended by soft glow dots. */
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-brandline,
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading h2{
+  display:none!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;margin:7px auto 15px!important;padding:0!important;text-align:center!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p{
+  display:block!important;margin:0!important;padding:0!important;color:rgba(255,255,255,.95)!important;
+  font-family:Inter,Arial,sans-serif!important;font-size:10px!important;font-weight:600!important;
+  line-height:1.5!important;letter-spacing:.16px!important;text-align:center!important;
+  text-shadow:0 1px 7px rgba(0,0,0,.92)!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p::before,
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p::after{
+  content:""!important;display:inline-block!important;width:4px!important;height:4px!important;
+  margin:0 8px 2px!important;border-radius:50%!important;vertical-align:middle!important;
+  background:#dcabff!important;box-shadow:0 0 4px #e0a9ff,0 0 9px rgba(203,104,255,.92),0 0 15px rgba(203,104,255,.45)!important;
+  animation:doma-v117-soft-dot 1.8s ease-in-out infinite!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p::after{animation-delay:.35s!important}
+@keyframes doma-v117-soft-dot{
+  0%,100%{opacity:.72;transform:scale(.88)}
+  50%{opacity:1;transform:scale(1.18)}
+}
+/* Replace Small Steps + Big Dreams with the WhatsApp contact block. */
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-footer{
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-end!important;
+  gap:7px!important;width:100%!important;margin:auto auto 0!important;padding:16px 0 1px!important;
+  box-sizing:border-box!important;text-align:center!important;background:transparent!important;border:0!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-contact-number{
+  display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;
+  gap:8px!important;min-height:18px!important;padding:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;color:#f4eaff!important;text-decoration:none!important;cursor:pointer!important;
+  font-family:Inter,Arial,sans-serif!important;font-size:12px!important;font-weight:800!important;
+  letter-spacing:.8px!important;line-height:1.4!important;text-shadow:0 1px 8px rgba(0,0,0,.95),0 0 9px rgba(197,116,255,.28)!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-number{white-space:nowrap!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-dot{
+  display:inline-block!important;flex:0 0 4px!important;width:4px!important;height:4px!important;
+  border-radius:50%!important;background:#72ffc0!important;
+  box-shadow:0 0 4px #72ffc0,0 0 9px rgba(48,255,163,.85),0 0 14px rgba(48,255,163,.48)!important;
+  animation:doma-v117-soft-dot 1.7s ease-in-out infinite!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-dot:last-child{animation-delay:.4s!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-whatsapp{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 31px!important;width:31px!important;height:31px!important;min-width:31px!important;min-height:31px!important;
+  margin:0!important;padding:0!important;border:1px solid rgba(177,255,206,.72)!important;border-radius:50%!important;
+  background:linear-gradient(145deg,#25d366 0%,#087b4c 100%)!important;color:#fff!important;text-decoration:none!important;
+  box-shadow:0 0 10px rgba(37,211,102,.33),inset 0 1px 0 rgba(255,255,255,.25)!important;
+  cursor:pointer!important;transition:transform .16s ease,box-shadow .16s ease!important;
+}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-whatsapp svg{display:block!important;width:19px!important;height:19px!important;color:#fff!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-contact-number:hover{color:#fff!important;text-decoration:none!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-whatsapp:hover{transform:translateY(-1px)!important;box-shadow:0 0 15px rgba(37,211,102,.5)!important}
+@media(max-height:680px){
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading{margin-top:5px!important;margin-bottom:10px!important}
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p{font-size:9px!important}
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-footer{padding-top:10px!important;gap:5px!important}
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-whatsapp{width:27px!important;height:27px!important;min-width:27px!important;min-height:27px!important;flex-basis:27px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p::before,
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-heading p::after,
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-dot{animation:none!important}
+  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v117-whatsapp{transition:none!important}
+}
+</style>
+<style id="doma-auth-login-extras-v118">
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-fields{gap:8px!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-password{margin-top:0!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot{display:flex!important;align-items:center!important;justify-content:flex-end!important;width:100%!important;margin:8px 0 12px!important;padding:0!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot button{display:inline!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;color:#ead0ff!important;font:600 10px/1.4 Inter,Arial,sans-serif!important;text-shadow:0 1px 5px rgba(0,0,0,.85)!important;text-decoration:none!important;cursor:pointer!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot button:hover{text-decoration:underline!important;color:#fff!important}
+html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-switch{margin-top:14px!important}
+@media(max-height:680px){html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot{margin:5px 0 8px!important}html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v115-switch{margin-top:9px!important}}
+</style>
