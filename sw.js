@@ -233,7 +233,7 @@ self.addEventListener('fetch', event => {
       try {
         const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 5000);
         const contentType = fresh?.headers?.get('content-type') || '';
-        if (fresh && fresh.ok && /text\\/html/i.test(contentType)) {
+        if (fresh && fresh.ok && /text\/html/i.test(contentType)) {
           const cache = await cachePromise;
           await cache.put(normalizeShellUrl(url.href), fresh.clone()).catch(() => {});
         }
@@ -250,7 +250,7 @@ self.addEventListener('fetch', event => {
       try {
         const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 4500);
         const contentType = fresh?.headers?.get('content-type') || '';
-        if (fresh && fresh.ok && /text\\/html/i.test(contentType)) {
+        if (fresh && fresh.ok && /text\/html/i.test(contentType)) {
           const cache = await cachePromise;
           await cache.put(normalizeShellUrl(url.href), fresh.clone()).catch(() => {});
           return fresh;
