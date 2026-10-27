@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v207';
-const BRAND_VERSION = 'doma-glass-v44';
+const CACHE_NAME = 'mr-fluent-offline-student-v208';
+const BRAND_VERSION = 'doma-glass-v45';
 // Kids curriculum tools release: refresh the app shell and keep learning routes consistent.
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v207', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v208', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
@@ -146,6 +146,16 @@ async function navigationFallback(requestedUrl) {
   return Response.error();
 }
 
+async function fetchWithTimeout(input, init = {}, timeoutMs = 4500) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(input, {...init, signal:controller.signal});
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
@@ -157,7 +167,7 @@ self.addEventListener('install', event => {
       try {
         const parsed = new URL(url);
         if (parsed.origin !== self.location.origin) return;
-        const response = await fetch(url, {cache:'no-store'});
+        const response = await fetchWithTimeout(url, {cache:'no-store'}, 4500);
         if (!response || !response.ok) return;
 
         if (SHELL_DOCUMENT_PATHS.has(parsed.pathname) &&
@@ -208,51 +218,96 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(req.url);
 
-  // This worker must never intercept cross-origin requests such as Supabase
-  // Auth, REST, Storage, Edge Functions, or third-party CDNs.
+  // Never intercept cross-origin requests such as Supabase Auth/REST/Storage
+  // or third-party CDNs. App data and authentication remain network-only.
   if (url.origin !== self.location.origin) return;
 
-  // Network-first for known static documents prevents installed PWAs from
-  // opening stale HTML after a deploy. Cache only successful document responses.
+  // Serve a cached app document immediately. Refresh it in the background so
+  // a slow connection never holds the installed app on a blank launch screen.
   if (req.mode === 'navigate' && isShellDocument(url) && !hasSensitiveQuery(url)) {
+    const cachePromise = caches.open(CACHE_NAME);
+    const cachedPromise = cachePromise.then(cache => cache.match(normalizeShellUrl(url.href)));
+
+    const refreshPromise = cachedPromise.then(async cached => {
+      if (!cached || !cached.ok) return;
+      try {
+        const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 5000);
+        const contentType = fresh?.headers?.get('content-type') || '';
+        if (fresh && fresh.ok && /text\\/html/i.test(contentType)) {
+          const cache = await cachePromise;
+          await cache.put(normalizeShellUrl(url.href), fresh.clone()).catch(() => {});
+        }
+      } catch (_) {}
+    }).catch(() => {});
+    event.waitUntil(refreshPromise);
+
     event.respondWith((async () => {
       try {
-        const fresh = await fetch(req, {cache:'no-store'});
+        const cached = await cachedPromise;
+        if (cached && cached.ok) return cached;
+      } catch (_) {}
+
+      try {
+        const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 4500);
         const contentType = fresh?.headers?.get('content-type') || '';
-        if (fresh && fresh.ok && /text\/html/i.test(contentType)) {
-          const cache = await caches.open(CACHE_NAME);
-          await cache.put(normalizeShellUrl(url.href), fresh.clone());
+        if (fresh && fresh.ok && /text\\/html/i.test(contentType)) {
+          const cache = await cachePromise;
+          await cache.put(normalizeShellUrl(url.href), fresh.clone()).catch(() => {});
           return fresh;
         }
-        return await navigationFallback(url.href);
-      } catch (_) {
-        return await navigationFallback(url.href);
-      }
+      } catch (_) {}
+
+      return await navigationFallback(url.href);
     })());
     return;
   }
 
-  // Dynamic same-origin requests and URLs with sensitive query parameters are
-  // network-only. No stale profile, subscription, quiz, or request data is cached.
+  // Dynamic same-origin URLs remain network-only; no profile, subscription,
+  // quiz, payment, or request data is saved into the app shell cache.
   if (!isCacheableStaticAssetUrl(url)) {
     event.respondWith(fetch(req, {cache:'no-store'}));
     return;
   }
 
-  // Network-first for static assets: users get current assets when online and a
-  // cache fallback only when the network is unavailable.
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
+  // Same-origin static assets use stale-while-revalidate: cached scripts and
+  // images load immediately, while a bounded background request refreshes them.
+  const cachePromise = caches.open(CACHE_NAME);
+  const cachedPromise = cachePromise.then(cache => cache.match(req));
+
+  const refreshPromise = cachedPromise.then(async cached => {
+    if (!cached) return;
     try {
-      const fresh = await fetch(req, {cache:'no-cache'});
+      const fresh = await fetchWithTimeout(req.clone(), {cache:'no-cache'}, 4500);
       if (fresh && fresh.ok && fresh.type !== 'opaque') {
+        const cache = await cachePromise;
+        await cache.put(req, fresh.clone()).catch(() => {});
+      }
+    } catch (_) {}
+  }).catch(() => {});
+  event.waitUntil(refreshPromise);
+
+  event.respondWith((async () => {
+    try {
+      const cached = await cachedPromise;
+      if (cached) return cached;
+    } catch (_) {}
+
+    try {
+      const fresh = await fetchWithTimeout(req.clone(), {cache:'no-cache'}, 4500);
+      if (fresh && fresh.ok && fresh.type !== 'opaque') {
+        const cache = await cachePromise;
         await cache.put(req, fresh.clone()).catch(() => {});
         return fresh;
       }
-      const cached = await cache.match(req);
-      return cached || fresh || Response.error();
+      const cache = await cachePromise;
+      return (await cache.match(req)) || fresh || Response.error();
     } catch (_) {
-      return (await cache.match(req)) || Response.error();
+      try {
+        const cache = await cachePromise;
+        return (await cache.match(req)) || Response.error();
+      } catch (_) {
+        return Response.error();
+      }
     }
   })());
 });
