@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v216', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v217', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v216', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v217', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -2707,7 +2707,7 @@ async function domaSignup(){
   await ensureProfile(user,name,normalized.local);
   closeModal();
   if(window.__mfKidsEntryFlow&&typeof window.__mfKidsAfterAuth==='function'){showToast('Account created successfully.');await window.__mfKidsAfterAuth(user);return;}
-  await refreshStudentState();showToast('Account created successfully.');openDrawer('overview');
+  await refreshStudentState();showToast('Account created successfully. You can open My Account whenever you are ready.');
 }
 
 async function domaLogout(){if(sb)await sb.auth.signOut();sessionUser=null;currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaSelectedGradeId=null;window.currentLessons=[];window.domaStudentProfile=null;closeDrawer();updateNav();renderDashboardLoggedOut();showToast('You have been logged out.')}
