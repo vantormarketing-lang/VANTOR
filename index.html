@@ -13250,36 +13250,49 @@ loadingStyle.id = 'doma-kids-route-loading-v1';
 loadingStyle.textContent = 'body.mf-kids-route-loading>*{visibility:hidden!important}';
 document.head.appendChild(loadingStyle);
 
-function loadKidsRuntime() {
-  var runtimeScript = document.createElement('script');
-  runtimeScript.src = './doma-mrfluent-kids-runtime.js?v=20261103.1';
-  runtimeScript.onload = function() {
-    document.body.classList.remove('mf-kids-route-loading');
-    if (loadingStyle.parentNode) loadingStyle.parentNode.removeChild(loadingStyle);
+var kidsCssReady = false;
+var kidsRuntimeReady = false;
 
-    // Preserve the former order: the learning-experiences extension runs after the core Kids runtime.
-    var experiencesScript = document.createElement('script');
-    experiencesScript.async = true;
-    experiencesScript.src = './mf-kids-learning-experiences.js?v=20261027.1';
-    document.body.appendChild(experiencesScript);
-  };
-  runtimeScript.onerror = function() {
-    document.body.classList.remove('mf-kids-route-loading');
-    var fallback = document.createElement('main');
-    fallback.id = 'mfKidsStandaloneRoot';
-    fallback.style.cssText = 'display:block;max-width:680px;margin:10vh auto;padding:24px;color:#fff;background:#211421;border:1px solid rgba(255,255,255,.15);border-radius:20px;font:600 15px/1.8 system-ui;text-align:center';
-    fallback.textContent = 'تعذر تحميل محتوى كورس الأطفال. تأكد من الاتصال بالإنترنت ثم أعد تحميل الصفحة.';
-    document.body.appendChild(fallback);
-    console.error('Mr. Fluent Kids runtime failed to load.');
-  };
-  document.body.appendChild(runtimeScript);
+function finishKidsLoad() {
+  if (!kidsCssReady || !kidsRuntimeReady) return;
+  document.body.classList.remove('mf-kids-route-loading');
+  if (loadingStyle.parentNode) loadingStyle.parentNode.removeChild(loadingStyle);
+
+  // Preserve the former order: the learning-experiences extension runs after the core Kids runtime.
+  var experiencesScript = document.createElement('script');
+  experiencesScript.async = true;
+  experiencesScript.src = './mf-kids-learning-experiences.js?v=20261027.1';
+  document.body.appendChild(experiencesScript);
 }
+
+var runtimeScript = document.createElement('script');
+runtimeScript.src = './doma-mrfluent-kids-runtime.js?v=20261103.1';
+runtimeScript.onload = function() {
+  kidsRuntimeReady = true;
+  finishKidsLoad();
+};
+runtimeScript.onerror = function() {
+  document.body.classList.remove('mf-kids-route-loading');
+  var fallback = document.createElement('main');
+  fallback.id = 'mfKidsStandaloneRoot';
+  fallback.style.cssText = 'display:block;max-width:680px;margin:10vh auto;padding:24px;color:#fff;background:#211421;border:1px solid rgba(255,255,255,.15);border-radius:20px;font:600 15px/1.8 system-ui;text-align:center';
+  fallback.textContent = 'تعذر تحميل محتوى كورس الأطفال. تأكد من الاتصال بالإنترنت ثم أعد تحميل الصفحة.';
+  document.body.appendChild(fallback);
+  console.error('Mr. Fluent Kids runtime failed to load.');
+};
+document.body.appendChild(runtimeScript);
 
 var kidsStylesheet = document.createElement('link');
 kidsStylesheet.rel = 'stylesheet';
 kidsStylesheet.href = './doma-mrfluent-kids-runtime.css?v=20261103.1';
-kidsStylesheet.onload = loadKidsRuntime;
-kidsStylesheet.onerror = loadKidsRuntime;
+kidsStylesheet.onload = function() {
+  kidsCssReady = true;
+  finishKidsLoad();
+};
+kidsStylesheet.onerror = function() {
+  kidsCssReady = true;
+  finishKidsLoad();
+};
 document.head.appendChild(kidsStylesheet);
 
 })();

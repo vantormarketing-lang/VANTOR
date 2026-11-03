@@ -129,8 +129,8 @@ if (!kidsIndex.includes('id="doma-kids-route-loader-v1"') ||
     !kidsIndex.includes('doma-mrfluent-kids-runtime.js?v=20261103.1') ||
     !kidsIndex.includes('doma-mrfluent-kids-runtime.css?v=20261103.1') ||
     !kidsIndex.includes('mf-kids-learning-experiences.js?v=20261027.1') ||
-    kidsIndex.includes('id="doma-mrfluent-kids-runtime-v1"') ||
-    kidsIndex.includes('id="doma-mrfluent-kids-runtime-v1"')) {
+    kidsIndex.includes('<script id="doma-mrfluent-kids-runtime-v1"') ||
+    kidsIndex.includes('<style id="doma-mrfluent-kids-runtime-v1"')) {
   fail('index.html: Kids runtime, stylesheet, and learning extensions must be loaded through the route-only loader');
 }
 if (!kidsRuntime.includes('document.body.classList.add') ||
