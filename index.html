@@ -2168,6 +2168,7 @@ function setAuthModalBackButton(isAuth){
   }
 }
 function closeModal(){
+  if(document.body)document.body.classList.remove('mf-kids-auth-modal-open');
   if(typeof domaClosePlayerPicker==='function')domaClosePlayerPicker();
   $('modal').classList.remove('show','doma-auth-photo','doma-auth-signup');
   setAuthModalBackButton(false);
@@ -2192,6 +2193,7 @@ function openSearch(){
 function applyModalSearch(){const q=$('modalPublicSearch')?.value.trim()||'';$('publicSearch').value=q;closeModal();filterGrades();$('grades').scrollIntoView({behavior:'smooth'})}
 
 function openAuth(type){
+  if(document.body&&document.body.classList.contains('mf-kids-route'))document.body.classList.add('mf-kids-auth-modal-open');
   setAuthModalBackButton(true);
   $('modal').classList.add('doma-auth-photo');
   $('modal').classList.toggle('doma-auth-signup',type==='signup');
@@ -13072,6 +13074,7 @@ body.mf-kids-route>#modal.show{display:flex!important;visibility:visible!importa
 body.mf-kids-route>#modal.show .modalbox,
 body.mf-kids-route>#modal.show .modalhead,
 body.mf-kids-route>#modal.show #modalBody{visibility:visible!important}
+body.mf-kids-route.mf-kids-auth-modal-open #mfKidsStandaloneRoot{visibility:hidden!important;pointer-events:none!important}
 </style>
 <script id="doma-kids-direct-account">
 (function(){

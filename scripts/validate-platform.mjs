@@ -151,6 +151,14 @@ for (const forbidden of ['slice(0,10)', 'if(mfkrLookIndex>=mfkrLookDeck.length)'
 ok('doma-mrfluent-kids-runtime.js: active Kids A1 route has endless Look & Choose and Listen & Choose activities');
 const student = read('index.html');
 
+if (!student.includes('body.mf-kids-route.mf-kids-auth-modal-open #mfKidsStandaloneRoot') ||
+    !student.includes("document.body.classList.add('mf-kids-auth-modal-open')") ||
+    !student.includes("document.body.classList.remove('mf-kids-auth-modal-open')")) {
+  fail('index.html: Kids signup/login modal must hide the entry screen until the modal closes');
+} else {
+  ok('index.html: Kids auth modal isolates the background entry screen and restores it on close');
+}
+
 if (!student.includes('class="mf-kids-entry-price"') ||
     !student.includes('<strong>100 <small>EGP</small></strong>') ||
     !student.includes('aria-label="Kids course price: 100 Egyptian pounds per 30 days"')) {
