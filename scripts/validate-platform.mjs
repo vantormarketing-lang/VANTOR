@@ -123,16 +123,32 @@ for (const required of ['id="listenQuiz"', 'function listenQuizRenderQuestion()'
 }
 ok('MR_FLUENT_KIDS_A1.html: Listen & Choose loops endlessly with audio and picture choices');
 const kidsIndex = read('index.html');
-const a1RenderStart = kidsIndex.indexOf('function renderAlphabet(){');
-const a1RenderEnd = kidsIndex.indexOf('function renderA2()', a1RenderStart);
-const a1Render = a1RenderStart >= 0 && a1RenderEnd > a1RenderStart ? kidsIndex.slice(a1RenderStart, a1RenderEnd) : '';
+const kidsRuntime = read('doma-mrfluent-kids-runtime.js');
+const kidsRuntimeCss = read('doma-mrfluent-kids-runtime.css');
+if (!kidsIndex.includes('id="doma-kids-route-loader-v1"') ||
+    !kidsIndex.includes('doma-mrfluent-kids-runtime.js?v=20261103.1') ||
+    !kidsIndex.includes('doma-mrfluent-kids-runtime.css?v=20261103.1') ||
+    !kidsIndex.includes('mf-kids-learning-experiences.js?v=20261027.1') ||
+    kidsIndex.includes('<script id="doma-mrfluent-kids-runtime-v1"') ||
+    kidsIndex.includes('<style id="doma-mrfluent-kids-runtime-v1"')) {
+  fail('index.html: Kids runtime, stylesheet, and learning extensions must be loaded through the route-only loader');
+}
+if (!kidsRuntime.includes('document.body.classList.add') ||
+    !kidsRuntimeCss.includes('#mfKidsStandaloneRoot')) {
+  fail('Kids runtime assets are missing their route root or scoped stylesheet');
+}
+ok('index.html: Kids runtime, CSS, and learning extensions are separated from homepage loading');
+
+const a1RenderStart = kidsRuntime.indexOf('function renderAlphabet(){');
+const a1RenderEnd = kidsRuntime.indexOf('function renderA2()', a1RenderStart);
+const a1Render = a1RenderStart >= 0 && a1RenderEnd > a1RenderStart ? kidsRuntime.slice(a1RenderStart, a1RenderEnd) : '';
 for (const required of ['id="mfkrA1LookQuiz"', 'id="mfkrA1ListenQuiz"', 'function mfkrA1DrawLook()', 'function mfkrA1DrawListen()', ' · Unlimited', 'data-a1-listen-answer']) {
-  if (!a1Render.includes(required)) fail('index.html: active Kids A1 route is missing an endless activity: ' + required);
+  if (!a1Render.includes(required)) fail('doma-mrfluent-kids-runtime.js: active Kids A1 route is missing an endless activity: ' + required);
 }
 for (const forbidden of ['slice(0,10)', 'if(mfkrLookIndex>=mfkrLookDeck.length)', 'if(mfkrListenIndex>=mfkrListenDeck.length)']) {
-  if (a1Render.includes(forbidden)) fail('index.html: finite question limit remains in active A1 route: ' + forbidden);
+  if (a1Render.includes(forbidden)) fail('doma-mrfluent-kids-runtime.js: finite question limit remains in active A1 route: ' + forbidden);
 }
-ok('index.html: active Kids A1 route has endless Look & Choose and Listen & Choose activities');
+ok('doma-mrfluent-kids-runtime.js: active Kids A1 route has endless Look & Choose and Listen & Choose activities');
 const student = read('index.html');
 
 if (!student.includes('class="mf-kids-entry-price"') ||

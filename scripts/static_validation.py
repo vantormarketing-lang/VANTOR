@@ -120,8 +120,9 @@ def validate_external_script(script: Path) -> bool:
 
 def main() -> int:
     failures = [page.name for page in PAGES if not validate_page(ROOT / page)]
-    if not validate_external_script(ROOT / "mf-kids-learning-experiences.js"):
-        failures.append("mf-kids-learning-experiences.js")
+    for script_name in ("doma-mrfluent-kids-runtime.js", "mf-kids-learning-experiences.js"):
+        if not validate_external_script(ROOT / script_name):
+            failures.append(script_name)
     if failures:
         print("Static validation failed: " + ", ".join(failures))
         return 1
