@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v219', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v220', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v219', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v220', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -15332,5 +15332,75 @@ html body:not(.mf-course-route):not(.mf-kids-route) section#english-course .mf-k
 }
 html body:not(.mf-course-route):not(.mf-kids-route) section#english-course .mf-kids-entry-cta b{
  background:linear-gradient(135deg,#91dfff,#8a87ff)!important;color:#07142d!important;
+}
+</style>
+
+
+<style id="doma-space-explorer-grade-and-steps-fix-v1">
+/* Explicit final overrides for the six dynamic grade cards and the four How It Works cards.
+   These selectors intentionally match the existing high-specificity card rules. */
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card,
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-card.grade-selectable{
+  color:#edf4ff!important;
+  background:linear-gradient(145deg,rgba(37,57,117,.96) 0%,rgba(18,31,73,.97) 54%,rgba(10,19,47,.99) 100%)!important;
+  background-color:#101d45!important;
+  border:1px solid rgba(133,165,255,.62)!important;
+  box-shadow:inset 0 1px 0 rgba(229,240,255,.15),0 10px 25px rgba(0,0,0,.28),0 0 18px rgba(94,130,255,.12)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card::before{
+  background:linear-gradient(118deg,rgba(198,222,255,.12) 0%,rgba(111,145,255,.035) 48%,rgba(173,163,255,.10) 100%)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(1),
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(2),
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(3),
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(4),
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(5),
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(6){
+  background:linear-gradient(145deg,rgba(37,57,117,.96) 0%,rgba(18,31,73,.97) 54%,rgba(10,19,47,.99) 100%)!important;
+  border-color:rgba(133,165,255,.62)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-title{color:#f3f7ff!important}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-subtitle{color:#c5d5f3!important}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-price,
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-price{color:#91eaff!important}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-icon{
+  color:#f5f7ff!important;background:linear-gradient(135deg,#67cfff,#777cff 58%,#a08cff)!important;
+  border:1px solid rgba(207,228,255,.58)!important;box-shadow:0 0 18px rgba(105,160,255,.24),inset 0 1px 0 rgba(255,255,255,.35)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-button,
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid>.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-button{
+  color:#07142d!important;background:linear-gradient(110deg,#8deeff 0%,#76bfff 52%,#a997ff 100%)!important;
+  border:1px solid rgba(213,237,255,.82)!important;box-shadow:0 5px 16px rgba(72,147,255,.25),inset 0 1px 0 rgba(255,255,255,.55)!important;text-shadow:none!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-card:hover{
+  border-color:rgba(142,226,255,.92)!important;box-shadow:inset 0 1px 0 rgba(230,245,255,.2),0 0 0 1px rgba(126,181,255,.3),0 14px 30px rgba(0,0,0,.32),0 0 24px rgba(88,162,255,.2)!important;
+}
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(1),
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(2),
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(3),
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(4){
+  --step-rgb:116,174,255!important;
+  color:#edf4ff!important;
+  background:linear-gradient(145deg,rgba(33,52,111,.94) 0%,rgba(16,28,68,.97) 58%,rgba(9,18,45,.99) 100%)!important;
+  background-color:rgba(10,20,49,.98)!important;
+  border:1px solid rgba(128,163,255,.58)!important;
+  box-shadow:inset 0 1px 0 rgba(225,239,255,.12),0 10px 25px rgba(0,0,0,.27),0 0 18px rgba(94,130,255,.1)!important;
+}
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(2){--step-rgb:112,207,255!important}
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(3){--step-rgb:151,151,255!important}
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(4){--step-rgb:165,154,255!important}
+html body section.how-it-works#how-it-works .how-grid>.how-card:nth-child(n)::before{
+  background:linear-gradient(118deg,rgba(211,229,255,.13) 0%,rgba(152,184,255,.035) 48%,rgba(193,178,255,.09) 100%)!important;
+}
+html body section.how-it-works#how-it-works .how-grid>.how-card .step-no{
+  color:rgba(var(--step-rgb),1)!important;background:rgba(7,17,43,.9)!important;border-color:rgba(var(--step-rgb),.68)!important;
+  box-shadow:0 0 14px rgba(var(--step-rgb),.18)!important;
+}
+html body section.how-it-works#how-it-works .how-grid>.how-card b{color:#f1f6ff!important}
+html body section.how-it-works#how-it-works .how-grid>.how-card .how-arabic{color:rgba(var(--step-rgb),1)!important}
+html body section.how-it-works#how-it-works .how-grid>.how-card p{color:#c2d1ed!important}
+html body section.how-it-works#how-it-works .how-grid>.how-card:hover{
+  border-color:rgba(139,223,255,.88)!important;
+  box-shadow:inset 0 1px 0 rgba(229,242,255,.18),0 0 20px rgba(99,169,255,.17),0 12px 27px rgba(0,0,0,.25)!important;
 }
 </style>
