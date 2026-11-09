@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v220', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v221', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v220', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v221', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -15402,5 +15402,297 @@ html body section.how-it-works#how-it-works .how-grid>.how-card p{color:#c2d1ed!
 html body section.how-it-works#how-it-works .how-grid>.how-card:hover{
   border-color:rgba(139,223,255,.88)!important;
   box-shadow:inset 0 1px 0 rgba(229,242,255,.18),0 0 20px rgba(99,169,255,.17),0 12px 27px rgba(0,0,0,.25)!important;
+}
+</style>
+
+
+<style id="doma-glassmorphism-reference-purple-gold-v1">
+/* DOMA ACADEMY — Reference-matched purple/gold frosted glass for the public site shell.
+   Scope is deliberately limited to index.html's outer site; standalone course routes are excluded. */
+html body:not(.mf-course-route):not(.mf-kids-route){
+  --doma-glass-ink:#fff4e8;
+  --doma-glass-muted:#e0cfe5;
+  --doma-glass-gold:#f4c987;
+  --doma-glass-border:rgba(221,188,235,.34);
+  color:var(--doma-glass-ink)!important;
+  background-color:#3c2547!important;
+  background-image:
+    radial-gradient(circle at 50% 50%,rgba(255,235,190,.98) 0%,rgba(225,164,77,.96) 18%,rgba(156,83,47,.88) 48%,rgba(85,47,72,.24) 70%,transparent 78%),
+    radial-gradient(circle at 48% 48%,rgba(255,229,184,.96) 0%,rgba(216,150,65,.94) 19%,rgba(145,78,49,.82) 50%,rgba(70,39,68,.2) 71%,transparent 78%),
+    radial-gradient(circle at 50% 50%,rgba(255,229,183,.96) 0%,rgba(220,151,62,.95) 20%,rgba(142,76,48,.82) 49%,rgba(69,38,69,.2) 72%,transparent 79%),
+    radial-gradient(circle at 50% 50%,rgba(255,237,199,.9) 0%,rgba(218,150,75,.88) 24%,rgba(127,72,67,.3) 58%,transparent 78%),
+    radial-gradient(ellipse at 48% 4%,rgba(156,104,177,.42),transparent 46%),
+    linear-gradient(135deg,#4b2d58 0%,#3f274c 48%,#2d1b3b 100%)!important;
+  background-size:250px 250px,220px 220px,250px 250px,175px 175px,100% 100%,100% 100%!important;
+  background-position:17% -118px,calc(100% + 88px) 145px,25% calc(100% + 105px),48% -95px,center,center!important;
+  background-repeat:no-repeat!important;
+  background-attachment:fixed!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav{
+  color:#fff3e7!important;
+  background:linear-gradient(115deg,rgba(137,91,153,.72),rgba(74,47,91,.78) 55%,rgba(49,31,67,.86))!important;
+  border-bottom:1px solid rgba(224,190,236,.35)!important;
+  border-radius:0 0 22px 22px!important;
+  box-shadow:0 14px 34px rgba(22,10,31,.28),inset 0 1px 0 rgba(255,255,255,.22),0 0 28px rgba(227,164,112,.1)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;
+  backdrop-filter:blur(24px) saturate(145%)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav .links a,
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav .brand,
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav .brand small{color:#fff0e4!important}
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav .links a:hover{color:#ffd99e!important;text-shadow:0 0 15px rgba(255,207,145,.5)!important}
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav .iconbtn,
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav .menu{
+  color:#fff1e7!important;background:rgba(93,59,111,.42)!important;border:1px solid rgba(224,190,236,.36)!important;
+  border-radius:13px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 18px rgba(22,10,31,.2)!important;
+  -webkit-backdrop-filter:blur(16px)!important;backdrop-filter:blur(16px)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav .mark,
+html body:not(.mf-course-route):not(.mf-kids-route) nav.nav #mrFluentPrimaryLogo{
+  border:1px solid rgba(239,201,150,.62)!important;
+  background:linear-gradient(145deg,rgba(157,104,171,.78),rgba(64,38,83,.9))!important;
+  box-shadow:0 8px 24px rgba(19,8,28,.28),inset 0 1px 0 rgba(255,255,255,.28),0 0 18px rgba(235,176,113,.16)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home{
+  color:#fff4e9!important;background:transparent!important;background-image:none!important;border:0!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home::before,
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home::after{content:none!important;display:none!important}
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home .hero-copy{
+  position:relative!important;isolation:isolate!important;max-width:920px!important;
+  padding:clamp(26px,5vw,58px)!important;border:1px solid var(--doma-glass-border)!important;border-radius:34px!important;
+  background-color:rgba(93,57,111,.48)!important;
+  background-image:
+    radial-gradient(ellipse 180px 105px at 42% 0%,rgba(255,191,151,.3),transparent 100%),
+    radial-gradient(ellipse 125px 140px at 100% 48%,rgba(255,204,153,.3),transparent 100%),
+    radial-gradient(ellipse 185px 95px at 24% 100%,rgba(255,177,142,.23),transparent 100%),
+    linear-gradient(135deg,rgba(164,119,181,.46),rgba(85,54,105,.57) 54%,rgba(55,34,76,.67))!important;
+  box-shadow:0 26px 62px rgba(19,8,29,.38),inset 0 1px 0 rgba(255,255,255,.27),inset 0 -1px 0 rgba(255,255,255,.09),0 0 34px rgba(237,174,116,.13)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(145%)!important;backdrop-filter:blur(26px) saturate(145%)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home .eyebrow,
+html body:not(.mf-course-route):not(.mf-kids-route) section#how-it-works .head .eyebrow,
+html body:not(.mf-course-route):not(.mf-kids-route) section#pricing .head .eyebrow,
+html body:not(.mf-course-route):not(.mf-kids-route) section#english-course .mf-course-section-kicker{
+  color:#f2c98d!important;-webkit-text-fill-color:#f2c98d!important;letter-spacing:2.5px!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home h1,
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home h1 span{
+  color:#fff1e4!important;-webkit-text-fill-color:#fff1e4!important;text-shadow:0 3px 24px rgba(38,16,44,.28)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home p,
+html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home .hero-highlights{color:#ead9e9!important}
+html body:not(.mf-course-route):not(.mf-kids-route) section#how-it-works,
+html body:not(.mf-course-route):not(.mf-kids-route) section#grades,
+html body:not(.mf-course-route):not(.mf-kids-route) section#english-course,
+html body:not(.mf-course-route):not(.mf-kids-route) section#pricing,
+html body:not(.mf-course-route):not(.mf-kids-route) section#faq,
+html body:not(.mf-course-route):not(.mf-kids-route) section#dashboard,
+html body:not(.mf-course-route):not(.mf-kids-route) footer.footer{
+  color:#fff0e5!important;background:transparent!important;background-image:none!important;border-color:transparent!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) .home-welcome,
+html body:not(.mf-course-route):not(.mf-kids-route) .home-upgrade,
+html body:not(.mf-course-route):not(.mf-kids-route) #home-upgrade{
+  color:#fff0e5!important;background:transparent!important;background-image:none!important;border-color:transparent!important;
+}
+/* The shared reference panel: translucent violet glass, warm reflected light, rounded edge and deep soft shadow. */
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  section#how-it-works .how-card,
+  #gradeGrid>.grade,
+  #gradeGrid>.mf-pastel-grade-card,
+  #gradeGrid .mf-pastel-grade-card.grade-selectable,
+  section#english-course .mf-english-course-hero,
+  section#english-course .mf-kids-entry-card,
+  section#english-course .mf-course-art,
+  section#english-course .mf-kids-entry-art,
+  section#english-course .mf-english-course-price,
+  section#english-course .mf-course-status,
+  section#pricing .card.plan,
+  section#faq .faq details,
+  section#dashboard .dash-pro-card,
+  section#dashboard .quick-card,
+  section#dashboard .progress-mini,
+  section#dashboard .notice,
+  .home-welcome .home-status,
+  .home-upgrade .upgrade-card,
+  .home-upgrade .upgrade-metric,
+  .home-upgrade .home-shortcut,
+  .student-home-card,
+  .student-achievement,
+  .doma-v2-card,
+  .doma-v2-sub,
+  .workspace-card,
+  .student-command-card,
+  .student-plus5-card,
+  .student-gami-card,
+  .notification,
+  .cert,
+  .hw-card-pro,
+  .lesson-group,
+  .quiz-box,
+  .profile-grid>.card,
+  footer.footer .footer-intro,
+  footer.footer .footer-link-card,
+  .cta,
+  #gradeGrid>.empty
+){
+  position:relative!important;isolation:isolate!important;
+  color:#fff1e7!important;
+  background-color:rgba(89,55,108,.48)!important;
+  background-image:
+    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.29),transparent 100%),
+    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
+    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
+    linear-gradient(135deg,rgba(164,118,181,.48),rgba(89,56,108,.55) 54%,rgba(55,34,76,.66))!important;
+  border:1px solid rgba(220,188,233,.34)!important;border-radius:27px!important;
+  box-shadow:0 23px 54px rgba(18,7,27,.34),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(255,255,255,.08),0 0 29px rgba(235,170,112,.12)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;backdrop-filter:blur(24px) saturate(145%)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  section#how-it-works .how-card,
+  #gradeGrid>.grade,
+  #gradeGrid>.mf-pastel-grade-card,
+  #gradeGrid .mf-pastel-grade-card.grade-selectable,
+  section#pricing .card.plan,
+  section#faq .faq details,
+  section#dashboard .quick-card,
+  section#dashboard .progress-mini,
+  .home-upgrade .upgrade-metric,
+  .home-upgrade .home-shortcut,
+  .student-home-card,
+  .student-achievement,
+  .doma-v2-card,
+  .doma-v2-sub,
+  footer.footer .footer-link-card
+){padding:clamp(14px,2.2vw,25px)!important}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  section#how-it-works .how-card b,
+  #gradeGrid .grade h3,#gradeGrid .grade h4,#gradeGrid .grade b,
+  #gradeGrid .mf-pastel-grade-title,
+  section#pricing .card.plan h3,
+  section#dashboard .dash-pro-head h3,
+  footer.footer h4,footer.footer .footer-brand-name
+){color:#fff4e8!important;-webkit-text-fill-color:#fff4e8!important}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  section#how-it-works .how-card p,section#how-it-works .how-card small,
+  #gradeGrid .grade p,#gradeGrid .grade small,
+  #gradeGrid .mf-pastel-grade-subtitle,
+  section#dashboard .dash-pro-head p,section#dashboard .quick-card span,
+  section#pricing .card.plan li,section#faq .faq p,
+  footer.footer a,footer.footer p,footer.footer .copy,
+  .student-home-card p,.student-home-card span
+){color:#ead9e8!important;-webkit-text-fill-color:#ead9e8!important}
+html body:not(.mf-course-route):not(.mf-kids-route) section#grades .section-head h2,
+html body:not(.mf-course-route):not(.mf-kids-route) section#faq .faq-section-title,
+html body:not(.mf-course-route):not(.mf-kids-route) section#english-course .mf-course-section-heading-copy h2{
+  color:#fff0e4!important;-webkit-text-fill-color:#fff0e4!important;text-shadow:0 3px 24px rgba(29,11,39,.26)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) section#english-course .mf-course-section-heading-copy h2 span{
+  color:#efc98f!important;-webkit-text-fill-color:#efc98f!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  #grades .pill,#dashboard .pill,#pricing .pill,
+  section#english-course .mf-course-status .pill,
+  .hero-highlights .hero-highlight
+){
+  color:#ffe3b4!important;background:rgba(226,176,112,.12)!important;border:1px solid rgba(237,196,144,.34)!important;
+  border-radius:999px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.1)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) section#how-it-works .step-no,
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-price,
+html body:not(.mf-course-route):not(.mf-kids-route) section#pricing .card.plan .money,
+html body:not(.mf-course-route):not(.mf-kids-route) section#dashboard .quick-card b,
+html body:not(.mf-course-route):not(.mf-kids-route) section#dashboard .progress-mini b{
+  color:#ffd99b!important;-webkit-text-fill-color:#ffd99b!important;text-shadow:0 0 18px rgba(255,196,122,.28)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .grade .grade-cover,
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeGrid .mf-pastel-grade-icon{
+  border:1px solid rgba(232,194,158,.48)!important;border-radius:19px!important;
+  background:linear-gradient(145deg,rgba(179,126,177,.42),rgba(84,55,105,.56))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 12px 24px rgba(22,9,31,.2),0 0 18px rgba(236,176,122,.13)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) footer.footer a:hover{color:#ffdfa9!important}
+html body:not(.mf-course-route):not(.mf-kids-route) section#faq .faq summary{color:#fff0e3!important}
+html body:not(.mf-course-route):not(.mf-kids-route) section#faq .faq details[open]{border-color:rgba(244,198,145,.62)!important}
+html body:not(.mf-course-route):not(.mf-kids-route) section#english-course .mf-course-status{
+  color:#fff1e7!important;background-color:rgba(85,52,103,.54)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) .home-welcome .home-status-text{color:#ead8e7!important}
+html body:not(.mf-course-route):not(.mf-kids-route) #home-upgrade .upgrade-card h3,
+html body:not(.mf-course-route):not(.mf-kids-route) .home-upgrade .upgrade-card h3{color:#fff1e7!important}
+html body:not(.mf-course-route):not(.mf-kids-route) #home-upgrade .upgrade-card p,
+html body:not(.mf-course-route):not(.mf-kids-route) .home-upgrade .upgrade-card p{color:#e2cfe3!important}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  #gradeGrid .mf-pastel-grade-button,
+  #grades .btn.primary,
+  #pricing .btn.primary,
+  nav.nav .nav-actions .btn.primary,
+  header.hero#home .actions .btn.primary,
+  section#english-course .mf-english-course-price .btn,
+  #home-upgrade .btn.primary
+){
+  color:#422744!important;-webkit-text-fill-color:#422744!important;
+  background:linear-gradient(135deg,#ffe4b4 0%,#e7b66d 54%,#c98243 100%)!important;
+  border:1px solid rgba(255,233,196,.86)!important;border-radius:15px!important;
+  box-shadow:0 10px 25px rgba(35,15,37,.28),inset 0 1px 0 rgba(255,255,255,.58),0 0 19px rgba(246,189,117,.19)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  nav.nav .nav-actions .btn.secondary,
+  header.hero#home .actions .btn.secondary,
+  section#english-course .btn.secondary,
+  section#dashboard .btn.secondary,
+  .btn.ghost
+){
+  color:#fff0e6!important;background:linear-gradient(135deg,rgba(154,111,172,.43),rgba(75,48,94,.65))!important;
+  border:1px solid rgba(220,188,235,.4)!important;border-radius:15px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 20px rgba(20,9,29,.22)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(input,select,textarea){
+  color:#fff1e7!important;background:rgba(62,39,79,.62)!important;border:1px solid rgba(220,188,235,.34)!important;
+  border-radius:14px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.1)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) input::placeholder,
+html body:not(.mf-course-route):not(.mf-kids-route) textarea::placeholder{color:rgba(241,221,240,.6)!important}
+html body:not(.mf-course-route):not(.mf-kids-route) #modal .modalbox,
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeModal .modalbox{
+  color:#fff1e7!important;background-color:rgba(88,54,106,.63)!important;
+  background-image:
+    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.3),transparent 100%),
+    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
+    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
+    linear-gradient(135deg,rgba(164,118,181,.55),rgba(89,56,108,.64) 54%,rgba(55,34,76,.75))!important;
+  border:1px solid rgba(220,188,233,.43)!important;border-radius:28px!important;
+  box-shadow:0 28px 75px rgba(13,5,24,.52),inset 0 1px 0 rgba(255,255,255,.29),0 0 34px rgba(235,170,112,.16)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;backdrop-filter:blur(28px) saturate(150%)!important;
+}
+html body:not(.mf-course-route):not(.mf-kids-route) #modal .modalbox :is(h3,p,label),
+html body:not(.mf-course-route):not(.mf-kids-route) #gradeModal .modalbox :is(h3,p,label){color:#fff0e5!important}
+html body:not(.mf-course-route):not(.mf-kids-route) footer.footer .footer-link-card a:hover{color:#ffdfa9!important}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  #dashboard .empty,#gradeGrid .empty
+){color:#f1deeb!important;background:rgba(109,73,126,.34)!important;border:1px dashed rgba(221,188,235,.4)!important;border-radius:20px!important}
+html body:not(.mf-course-route):not(.mf-kids-route) :is(
+  section#how-it-works .how-card,
+  #gradeGrid .grade,
+  section#pricing .card.plan,
+  section#faq .faq details,
+  section#english-course .mf-kids-entry-card,
+  footer.footer .footer-link-card
+):hover{
+  border-color:rgba(255,218,170,.66)!important;
+  box-shadow:0 27px 62px rgba(18,7,27,.4),inset 0 1px 0 rgba(255,255,255,.31),0 0 31px rgba(238,173,114,.2)!important;
+}
+@media(max-width:700px){
+  html body:not(.mf-course-route):not(.mf-kids-route) header.hero#home .hero-copy{padding:22px 18px!important;border-radius:24px!important}
+  html body:not(.mf-course-route):not(.mf-kids-route) :is(
+    section#how-it-works .how-card,#gradeGrid>.grade,#gradeGrid>.mf-pastel-grade-card,
+    section#pricing .card.plan,section#faq .faq details,section#english-course .mf-kids-entry-card,
+    section#dashboard .dash-pro-card,section#dashboard .quick-card,footer.footer .footer-link-card
+  ){border-radius:20px!important}
+  html body:not(.mf-course-route):not(.mf-kids-route) nav.nav{border-radius:0 0 17px 17px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body:not(.mf-course-route):not(.mf-kids-route) *{transition:none!important;scroll-behavior:auto!important}
 }
 </style>
