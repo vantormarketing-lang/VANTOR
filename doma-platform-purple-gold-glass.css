@@ -1,0 +1,337 @@
+/* DOMA Academy — unified Purple & Champagne Gold Glassmorphism.
+   Visual-only shared layer for the public learning site, course workspaces,
+   grade/payment request flows, Kids pages, and Admin interface. */
+:root{
+  color-scheme:dark;
+  --dpg-bg:#170f22;
+  --dpg-bg-2:#241632;
+  --dpg-glass:rgba(89,55,108,.62);
+  --dpg-glass-strong:rgba(66,42,86,.82);
+  --dpg-glass-soft:rgba(111,76,132,.32);
+  --dpg-edge:rgba(225,193,233,.38);
+  --dpg-edge-gold:rgba(255,218,174,.5);
+  --dpg-text:#fff4e8;
+  --dpg-muted:#e4d5e8;
+  --dpg-muted-2:#c9b6d3;
+  --dpg-gold:#ffe5bd;
+  --dpg-gold-2:#e8b974;
+  --dpg-gold-3:#c98248;
+  --dpg-purple:#b894e9;
+  --dpg-shadow:0 24px 68px rgba(13,5,24,.38);
+}
+html{background:var(--dpg-bg)!important;scroll-behavior:smooth}
+html body{
+  color:var(--dpg-text)!important;
+  background:
+    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
+    linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
+  background-attachment:fixed!important;
+}
+html body :is(h1,h2,h3,h4,h5){color:var(--dpg-text)!important}
+html body :is(p,.muted,.small,.small-print,.field-help,.desc,.page-head p,.a1-hero-copy p,.a1-hero-card p,.mf-course-footnote,.mf-course-status,.footer){
+  color:var(--dpg-muted)!important;
+}
+html body a{color:var(--dpg-gold)!important}
+html body a:hover{color:#fff!important}
+html body ::selection{background:rgba(232,185,116,.42);color:#fff!important}
+
+/* Shared glass navigation and page headers. */
+html body :is(.topbar,nav.nav,.nav.topbar,.course-top-controls,.student-sidebar,#mobileCourseMenu,.kid-menu-dialog,.sidebar){
+  color:var(--dpg-text)!important;
+  background:linear-gradient(135deg,rgba(112,77,133,.78),rgba(49,31,68,.9))!important;
+  border-color:var(--dpg-edge-gold)!important;
+  box-shadow:0 14px 38px rgba(12,5,23,.22),inset 0 1px 0 rgba(255,255,255,.14)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+}
+html body :is(.topbar,.nav.topbar){border-bottom:1px solid rgba(255,218,174,.22)!important}
+html body .course-top-controls{
+  background:linear-gradient(135deg,rgba(53,35,70,.88),rgba(30,20,45,.94))!important;
+  border:0!important;
+}
+html body :is(.hero,.a1-hero){
+  color:var(--dpg-text)!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,207,157,.16),transparent 45%),
+    radial-gradient(ellipse at 90% 100%,rgba(170,128,202,.2),transparent 48%),
+    linear-gradient(135deg,rgba(80,52,102,.62),rgba(37,24,54,.78))!important;
+  border:1px solid var(--dpg-edge-gold)!important;
+  border-radius:28px!important;
+  box-shadow:var(--dpg-shadow),inset 0 1px 0 rgba(255,255,255,.16)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(135%)!important;
+  backdrop-filter:blur(20px) saturate(135%)!important;
+}
+html body :is(.hero,.a1-hero) :is(h1,h2,h3){color:var(--dpg-text)!important}
+html body :is(.a1-hero-card,.hero-card,.mascot-stage,.kid-course-start-card){
+  color:var(--dpg-text)!important;
+  background:linear-gradient(145deg,rgba(164,118,181,.36),rgba(55,35,76,.76))!important;
+  border:1px solid var(--dpg-edge-gold)!important;
+  border-radius:22px!important;
+  box-shadow:0 18px 42px rgba(12,5,23,.28),inset 0 1px 0 rgba(255,255,255,.16)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+}
+html body :is(.brand-mark,.kid-welcome-icon,.kid-menu-trigger-icon,.a1-level,.level-code){
+  color:var(--dpg-gold)!important;
+  border:1px solid var(--dpg-edge-gold)!important;
+  background:linear-gradient(145deg,rgba(255,219,174,.18),rgba(116,78,143,.42))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 7px 18px rgba(16,7,28,.2)!important;
+}
+html body :is(.eyebrow,.a1-eyebrow,.mf-course-kicker,.kids-levels-heading .eyebrow,.page-head .eyebrow){
+  color:var(--dpg-gold)!important;
+}
+html body :is(.pill,.tag,.a1-level,.stage,.mf-course-kicker,.level-chip,.picture-quiz-pill,.listen-quiz-pill){
+  color:#ffe6c4!important;
+  border:1px solid rgba(255,218,174,.38)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.14),rgba(150,106,176,.23))!important;
+}
+html body :is(.live-dot,.dot,.mf-grade-live-dot){background:var(--dpg-gold-2)!important;box-shadow:0 0 9px rgba(232,185,116,.76)!important}
+
+/* Reusable translucent cards across homepage, both courses, learning tools,
+   request summaries, lessons, quizzes, and standalone Kids pages. */
+html body :is(
+  .card,.feature,.tool,.plan,.dash,.stat,.notification,.workspace-card,
+  .upgrade-card,.home-shortcut,.quick-card,.student-home-card,.student-gami-card,
+  .student-plus5-card,.doma-v2-card,.doma-v2-sub,.how-card,
+  .mf-english-course-hero,.mf-kids-entry-card,.mf-course-level,.mf-course-unit,
+  .mf-course-content,.mf-placement-panel,.mf-placement-question,.mf-placement-option,
+  .doma-subscription-center,.doma-subscription-card,.doma-progress-sync,
+  .stat,.unit,.lesson,.lab-card,.video-card,.quiz-mini,.recording-panel,
+  .mf-play-dialogue,.sentence-bank,.achievement,.mf-video-note,
+  .track-card,.quiz-shell,.request-card,.demo-lesson,.demo-game,
+  .kid-content-tile,.kid-practice-card,.kid-request-summary,.kid-request-facts>div,
+  .kid-letter-card,.kid-lesson-welcome,.kid-lesson-panel,
+  .picture-quiz-section,.listen-quiz-section,.letter-card,
+  .choice-card,.level-card,.notice,.kid-menu-unit,.kid-menu-item,
+  .prep-unit,.prep-lesson,.curriculum-detail,.assessment-box,
+  .grammar-map .mini-card,.doma-battle-card,.pro5-card,.hw-stat,
+  .workspace-card,.student-sidebar,.student-content
+){
+  color:var(--dpg-text)!important;
+  border:1px solid rgba(225,193,233,.30)!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;
+  box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+  backdrop-filter:blur(18px) saturate(135%)!important;
+}
+html body :is(
+  .card,.feature,.tool,.plan,.dash,.stat,.notification,.workspace-card,
+  .upgrade-card,.home-shortcut,.quick-card,.student-home-card,.student-gami-card,
+  .doma-v2-card,.doma-v2-sub,.how-card,.mf-course-level,.mf-course-unit,
+  .mf-course-content,.doma-subscription-card,.doma-progress-sync,
+  .unit,.lesson,.lab-card,.video-card,.quiz-mini,.recording-panel,
+  .track-card,.quiz-shell,.request-card,.demo-lesson,.demo-game,
+  .kid-content-tile,.kid-practice-card,.kid-request-summary,.kid-letter-card,
+  .kid-lesson-welcome,.kid-lesson-panel,.picture-quiz-section,.listen-quiz-section,
+  .letter-card,.choice-card,.level-card,.notice,.kid-menu-unit,.kid-menu-item,
+  .prep-unit,.prep-lesson,.curriculum-detail,.assessment-box,.doma-battle-card
+):hover{
+  border-color:rgba(255,218,174,.58)!important;
+  box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+html body :is(.stat strong,.mf-course-price-row strong,.kid-request-facts strong,.grade-meta strong,.level-code){
+  color:var(--dpg-gold)!important;
+}
+html body :is(.unit h2,.lesson h3,.tool h3,.box h3,.choice-card h2,.level-card h2,.track-card h3,.request-card h3){
+  color:var(--dpg-text)!important;
+}
+html body :is(.small,.muted,.desc,.choice-card p,.level-card p,.notice,.field-help,.kid-bilingual-ar,.kid-word-ar,.small-print){
+  color:var(--dpg-muted-2)!important;
+}
+
+/* Main homepage: grade picker, how-it-works, course cards, pricing and FAQ. */
+html body :is(section#how-it-works,section#grades,section#pricing,section#faq,.mf-english-course-section,.home-upgrade,footer.footer){
+  background:transparent!important;
+  border-color:rgba(255,218,174,.16)!important;
+}
+html body #gradeGrid .grade{
+  display:flex!important;flex-direction:column!important;overflow:hidden!important;
+  border:1px solid rgba(255,218,174,.38)!important;border-radius:22px!important;
+  background:linear-gradient(145deg,rgba(118,80,139,.55),rgba(43,29,62,.82))!important;
+  box-shadow:0 18px 38px rgba(12,5,23,.28),inset 0 1px 0 rgba(255,255,255,.15)!important;
+}
+html body #gradeGrid .grade-cover{
+  background:
+    radial-gradient(circle at 88% 10%,rgba(255,218,174,.18),transparent 42%),
+    linear-gradient(135deg,rgba(111,75,133,.82),rgba(47,30,66,.94))!important;
+  border-bottom:1px solid rgba(255,218,174,.18)!important;
+}
+html body #gradeGrid .grade-body{background:transparent!important;color:var(--dpg-text)!important}
+html body #gradeGrid :is(.grade h3,.grade h4,.mf-pastel-grade-title,.grade-body p,.mf-pastel-grade-subtitle){color:var(--dpg-text)!important}
+html body #gradeGrid :is(.grade-meta,.mf-pastel-grade-price){color:var(--dpg-gold)!important}
+html body :is(.mf-english-course-hero,.mf-kids-entry-card){
+  border-color:rgba(255,218,174,.52)!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,210,162,.16),transparent 50%),
+    linear-gradient(135deg,rgba(111,73,134,.67),rgba(43,29,64,.91))!important;
+}
+html body .mf-course-art{background:linear-gradient(145deg,rgba(255,218,174,.10),rgba(109,71,135,.28))!important}
+html body :is(.mf-course-kicker,.mf-course-levels,.mf-course-tagline,.mf-course-arabic){color:#f2dfed!important}
+html body :is(.mf-course-price-row strong,.mf-english-course-price strong){color:var(--dpg-gold)!important}
+html body :is(.mf-course-level .btn,.mf-english-course-price .btn){border-color:var(--dpg-edge-gold)!important}
+
+/* Grade access, placement, Kids enrolment and payment request dialogs. */
+html body #gradeModal.modal{
+  background:rgba(19,10,30,.78)!important;
+  -webkit-backdrop-filter:blur(15px)!important;backdrop-filter:blur(15px)!important;
+}
+html body #gradeModal .modalbox{
+  color:var(--dpg-text)!important;
+  border:1px solid rgba(255,218,174,.48)!important;border-radius:25px!important;
+  background:
+    radial-gradient(ellipse at 35% 0%,rgba(255,202,157,.20),transparent 55%),
+    linear-gradient(145deg,rgba(111,74,132,.88),rgba(42,28,61,.97))!important;
+  box-shadow:0 28px 76px rgba(7,3,15,.54),inset 0 1px 0 rgba(255,255,255,.19)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(145%)!important;backdrop-filter:blur(26px) saturate(145%)!important;
+}
+html body #gradeModal :is(.modalhead,#gradeModalTitle){color:var(--dpg-gold)!important}
+html body #gradeModal .close{
+  color:var(--dpg-gold)!important;border:1px solid var(--dpg-edge-gold)!important;
+  background:rgba(255,218,174,.11)!important;border-radius:11px!important;
+}
+html body :is(.doma-subscription-center,.doma-subscription-card,.doma-progress-sync){
+  border-color:rgba(255,218,174,.32)!important;
+}
+html body :is(.doma-subscription-card .doma-sub-plan,.doma-subscription-card h4,.doma-progress-sync h4){color:var(--dpg-gold)!important}
+html body :is(.doma-subscription-card .doma-sub-status,.doma-subscription-center p,.doma-progress-sync p){color:var(--dpg-muted)!important}
+
+/* Kids course path selection, child enrolment and activity pages. */
+html body :is(.choice-card,.level-card,.track-card,.request-card,.quiz-shell,.demo-lesson,.demo-game,.kid-content-tile,.kid-practice-card,.kid-request-summary,.kid-lesson-welcome,.kid-lesson-panel,.kid-menu-dialog,.kid-menu-unit,.kid-menu-item,.picture-quiz-section,.listen-quiz-section,.letter-card,.kid-letter-card){
+  border-color:rgba(255,218,174,.34)!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,207,159,.10),transparent 52%),
+    linear-gradient(145deg,rgba(112,76,135,.46),rgba(44,29,62,.78))!important;
+}
+html body :is(.kid-menu-overlay,.kid-course-menu-overlay,#kidCourseMenuOverlay){
+  background:rgba(16,8,25,.78)!important;
+  -webkit-backdrop-filter:blur(14px)!important;backdrop-filter:blur(14px)!important;
+}
+html body :is(.kid-menu-dialog,.kid-menu-dialog-header,.kid-menu-summary,.kid-menu-scroll){
+  border-color:rgba(255,218,174,.32)!important;
+}
+html body :is(.kid-menu-item:hover,.kid-menu-item:focus-visible,.kid-menu-item.active,.kid-menu-item[aria-current="page"]){
+  border-color:rgba(255,218,174,.74)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.17),rgba(146,102,174,.40))!important;
+}
+html body :is(.picture-quiz-track,.listen-quiz-track,.progress-track,.progressbar){
+  background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,218,174,.22)!important;
+}
+html body :is(.picture-quiz-track span,.listen-quiz-track span,.progress-track span,.progressbar span){
+  background:linear-gradient(90deg,#c98248,#e8b974,#ffe5bd)!important;
+  box-shadow:0 0 12px rgba(232,185,116,.20)!important;
+}
+html body :is(.picture-quiz-option,.listen-quiz-option,.sound-button,.kid-audio-button,.picture-quiz-hear,.listen-quiz-play,.listen-quiz-next){
+  color:var(--dpg-text)!important;
+  border:1px solid rgba(255,218,174,.34)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(88,56,111,.46))!important;
+}
+html body :is(.picture-quiz-option.is-correct,.listen-quiz-option.is-correct,.sound-button:focus-visible,.kid-audio-button:focus-visible){
+  border-color:rgba(255,218,174,.86)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.24),rgba(84,129,104,.30))!important;
+}
+html body :is(.kid-menu-eyebrow,.kid-menu-unit-number,.kid-menu-item-status.done,.picture-quiz-option-letter,.listen-quiz-letter){color:var(--dpg-gold)!important}
+
+/* CEFR A1–C2 hubs and learning-tool workspaces. */
+html body .a1-hero-card :is(.a1-logo,.a1-hero-card h2,.a1-hero-card span){color:var(--dpg-gold)!important}
+html body :is(.student-layout>.student-sidebar,.student-layout>.student-content,.student-sidebar,.student-content){
+  border-color:rgba(255,218,174,.28)!important;
+}
+html body .student-sidebar nav button{
+  color:var(--dpg-muted)!important;border:1px solid transparent!important;
+  background:transparent!important;border-radius:13px!important;
+}
+html body .student-sidebar nav button.active,
+html body .student-sidebar nav button:hover{
+  color:var(--dpg-gold)!important;border-color:rgba(255,218,174,.46)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.14),rgba(127,84,151,.34))!important;
+}
+html body :is(.mobile-menu-toggle,.course-back-arrow,.mobile-menu-close,.kid-menu-trigger){
+  color:var(--dpg-gold)!important;border:1px solid rgba(255,218,174,.5)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.15),rgba(106,70,133,.62))!important;
+  box-shadow:0 9px 22px rgba(10,4,19,.24),inset 0 1px 0 rgba(255,255,255,.15)!important;
+}
+
+/* Inputs, selectors and file-upload controls across all public request flows. */
+html body :is(input:not([type="checkbox"]):not([type="radio"]),textarea,select,.field,.field-wrap input,.field-wrap select){
+  color:var(--dpg-text)!important;
+  border:1px solid rgba(225,193,233,.42)!important;border-radius:13px!important;
+  background:linear-gradient(135deg,rgba(54,35,73,.64),rgba(37,25,53,.82))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+  outline:none!important;
+}
+html body :is(input,textarea,select,.field):focus{
+  border-color:rgba(255,218,174,.82)!important;
+  box-shadow:0 0 0 3px rgba(232,185,116,.13),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body :is(input,textarea,.field)::placeholder{color:rgba(241,221,240,.70)!important;opacity:1!important}
+html body select option{color:#fff4e8!important;background:#2d1d3a!important}
+html body input[type="file"]::file-selector-button{
+  color:#4b2d46!important;border:1px solid rgba(255,237,207,.82)!important;border-radius:9px!important;
+  background:linear-gradient(135deg,#ffe5bd,#e8b974)!important;padding:7px 11px!important;font-weight:850!important;
+}
+
+/* Shared button language: champagne primary, translucent secondary. */
+html body :is(.btn,.btn-primary,.btn-soft,.btn-mint,.btn.primary,.btn.secondary,.primary,.secondary,.ghost,.mobile-menu-toggle,.mobile-menu-close,.course-back-arrow,.kid-menu-trigger,.sound-button,.kid-audio-button,.picture-quiz-option,.listen-quiz-option,.picture-quiz-hear,.listen-quiz-play,.listen-quiz-next,.nav-btn){
+  border-radius:13px!important;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+}
+html body :is(.btn-primary,.btn.primary,.primary,.grade-open-button,.mf-course-price-row .btn,.mf-english-course-price .btn,.kid-course-start-button,.kid-menu-footer-primary){
+  color:#4b2d46!important;-webkit-text-fill-color:#4b2d46!important;
+  border:1px solid rgba(255,237,207,.92)!important;
+  background:linear-gradient(135deg,#ffe5bd 0%,#e8b974 55%,#c98248 100%)!important;
+  box-shadow:0 10px 24px rgba(35,15,37,.29),inset 0 1px 0 rgba(255,255,255,.62),0 0 20px rgba(244,190,128,.14)!important;
+}
+html body :is(.btn-soft,.btn.secondary,.secondary,.ghost,.btn:not(.btn-primary):not(.primary):not(.danger),.kid-menu-footer-secondary){
+  color:var(--dpg-gold)!important;
+  border:1px solid rgba(255,218,174,.42)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(82,53,104,.48))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 20px rgba(12,5,23,.16)!important;
+}
+html body :is(.btn:hover,.btn-primary:hover,.btn-soft:hover,.btn.primary:hover,.btn.secondary:hover,.primary:hover,.secondary:hover,.ghost:hover,.grade-open-button:hover){
+  transform:translateY(-1px)!important;border-color:rgba(255,237,207,.88)!important;
+}
+html body :is(.btn.danger,.danger,.btn-danger){color:#fff!important;border-color:rgba(255,145,157,.45)!important;background:linear-gradient(135deg,#a84b5a,#713044)!important}
+
+/* Notifications, empty states and progress feedback. */
+html body :is(.empty,.notice,.status,.field-help,.mf-course-status,.home-status,.doma-sub-status){
+  border-color:rgba(225,193,233,.28)!important;
+}
+html body :is(.good,.ok,.doma-status-ok,.status-ok){color:#baf3d0!important}
+html body :is(.warn,.doma-status-warn,.status-warn){color:#ffe0ad!important}
+html body :is(.bad,.error,.doma-status-error,.status-error){color:#ffc0c8!important}
+
+/* Admin pages use the same glass depth and champagne actions without changing data layout. */
+html body :is(.login-card,#loginForm,.content .card,.content .section,.content .info-box,
+  .content .doma-final-admin-card,.content .doma-pro6-admin-card,.content .pro7-admin-kpi,
+  .content .admin-upgrade-card,.content .student-pro-stat,.content .empty,.table-wrap,
+  #sidebar.sidebar,.sidebar .side-logo,.content .toolbar,.content .form-row){
+  color:var(--dpg-text)!important;
+  border-color:rgba(255,218,174,.32)!important;
+  background:linear-gradient(145deg,rgba(111,74,132,.46),rgba(38,26,54,.80))!important;
+  box-shadow:0 15px 36px rgba(9,4,18,.22),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(140%)!important;
+  backdrop-filter:blur(18px) saturate(140%)!important;
+}
+html body .content{background:transparent!important}
+html body .content table{color:var(--dpg-text)!important;border-color:rgba(255,218,174,.24)!important}
+html body .content :is(th,td){border-color:rgba(255,218,174,.18)!important;color:var(--dpg-muted)!important}
+html body .content th{color:var(--dpg-gold)!important;background:rgba(255,218,174,.08)!important}
+html body .sidebar .nav-btn.active,html body .sidebar .nav-btn:hover{
+  color:var(--dpg-gold)!important;border-color:rgba(255,218,174,.42)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.13),rgba(112,76,134,.45))!important;
+}
+html body .login-card :is(.logo,h1),html body .content :is(.section h2,.section h3,.card h3){color:var(--dpg-gold)!important}
+
+/* Compact screens: preserve readable spacing and prevent horizontal overflow. */
+html,body{max-width:100%;overflow-x:hidden}
+@media(max-width:700px){
+  html body :is(.choice-card,.level-card,.track-card,.request-card,.quiz-shell,.kid-content-tile,.kid-practice-card,.kid-lesson-welcome,.kid-lesson-panel,.picture-quiz-section,.listen-quiz-section){border-radius:19px!important}
+  html body :is(.modalbox,#gradeModal .modalbox){max-width:calc(100vw - 18px)!important}
+  html body :is(.form-grid,.formgrid,.doma-subscription-grid){grid-template-columns:minmax(0,1fr)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body *{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
