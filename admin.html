@@ -2061,317 +2061,7 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div>
-<style id="doma-purple-gold-admin-glass-v1">
-/* DOMA Admin — match the public homepage Purple & Gold Glassmorphism identity.
-   Visual-only overrides: authentication, permissions, data, and admin actions are unchanged. */
-:root{
-  --bg:#3c2547!important;
-  --panel:rgba(89,55,108,.48)!important;
-  --panel2:rgba(89,55,108,.60)!important;
-  --line:rgba(220,188,233,.34)!important;
-  --text:#fff1e7!important;
-  --muted:#ead9e8!important;
-  --accent:#e7b66d!important;
-  --accent2:#c98248!important;
-  --shadow:0 24px 60px rgba(18,7,27,.36)!important;
-}
-html,body{
-  min-height:100%!important;
-  color:#fff1e7!important;
-  background-color:#3c2547!important;
-  background-image:
-    radial-gradient(circle 180px at 14% 0%,rgba(255,218,164,.82),rgba(255,190,132,.42) 28%,rgba(145,82,79,.12) 64%,transparent 78%),
-    radial-gradient(circle 170px at 97% 34%,rgba(255,211,162,.76),rgba(219,154,102,.35) 30%,rgba(103,57,87,.1) 66%,transparent 79%),
-    radial-gradient(circle 185px at 24% 100%,rgba(255,211,166,.72),rgba(215,147,95,.32) 31%,rgba(98,58,88,.1) 66%,transparent 80%),
-    radial-gradient(ellipse at 50% 3%,rgba(163,116,181,.42),transparent 48%),
-    linear-gradient(135deg,#4b2d58 0%,#3f274c 48%,#2d1b3b 100%)!important;
-  background-size:100% 100%!important;
-  background-attachment:fixed!important;
-  color-scheme:dark!important;
-}
-body{position:relative!important;isolation:isolate!important}
-#app,.app,.main,.content{background:transparent!important;background-color:transparent!important}
-.muted,.head p,.small,.qbank-count,.pro7-admin-meta,.pro7-admin-msg small{color:#ead9e8!important}
 
-/* Frosted navigation rail and top bar. */
-#sidebar.sidebar,.sidebar{
-  color:#fff1e7!important;
-  background:linear-gradient(145deg,rgba(142,99,160,.63),rgba(78,49,97,.79) 58%,rgba(52,34,74,.9))!important;
-  border:1px solid rgba(220,188,233,.34)!important;
-  border-left:0!important;
-  box-shadow:0 22px 58px rgba(18,7,27,.32),inset 0 1px 0 rgba(255,255,255,.2),0 0 30px rgba(235,170,112,.11)!important;
-  -webkit-backdrop-filter:blur(25px) saturate(145%)!important;
-  backdrop-filter:blur(25px) saturate(145%)!important;
-}
-#sidebar .side-logo{border-bottom:1px solid rgba(228,198,235,.22)!important}
-#sidebar .side-logo .logo{color:#fff2e6!important;text-shadow:0 2px 16px rgba(30,10,40,.25)!important}
-#sidebar .side-logo .logo span{color:#f2c98d!important}
-#sidebar .side-logo small{color:#ead9e9!important}
-#sidebar .nav-title{
-  color:#f2c98d!important;
-  -webkit-text-fill-color:#f2c98d!important;
-  text-shadow:0 0 12px rgba(255,197,130,.2)!important;
-}
-#sidebar .nav-btn{
-  color:#f0e1ef!important;
-  -webkit-text-fill-color:#f0e1ef!important;
-  border:1px solid transparent!important;
-  border-radius:13px!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  text-shadow:none!important;
-  transition:background .18s ease,border-color .18s ease,color .18s ease!important;
-}
-#sidebar .nav-btn:hover,#sidebar .nav-btn:focus-visible{
-  color:#fff3e5!important;-webkit-text-fill-color:#fff3e5!important;
-  background:rgba(255,222,178,.1)!important;
-  border-color:rgba(238,198,153,.22)!important;
-  text-shadow:0 0 14px rgba(255,204,147,.2)!important;
-}
-#sidebar .nav-btn.active{
-  color:#ffdfad!important;-webkit-text-fill-color:#ffdfad!important;
-  background:linear-gradient(120deg,rgba(255,222,178,.19),rgba(174,119,178,.25))!important;
-  border-color:rgba(255,218,174,.38)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 7px 18px rgba(28,10,37,.16)!important;
-  text-shadow:0 0 14px rgba(255,206,149,.22)!important;
-}
-#sidebar #domaSidebarHomeButton{color:#ffe1b5!important;-webkit-text-fill-color:#ffe1b5!important}
-.top{
-  color:#fff1e7!important;
-  background:linear-gradient(115deg,rgba(132,90,151,.63),rgba(73,46,91,.78) 55%,rgba(48,31,65,.86))!important;
-  border-bottom:1px solid rgba(220,188,233,.34)!important;
-  box-shadow:0 12px 34px rgba(18,7,27,.2),inset 0 1px 0 rgba(255,255,255,.18)!important;
-  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;
-  backdrop-filter:blur(24px) saturate(145%)!important;
-}
-.top h1{color:#fff2e6!important;text-shadow:0 2px 16px rgba(30,10,40,.2)!important}
-.top .muted,.top small{color:#ead9e9!important}
-.mobile-menu{color:#fff1e7!important;background:rgba(93,59,111,.42)!important;border:1px solid rgba(224,190,236,.36)!important;border-radius:12px!important}
-.connection{color:#f0dfed!important}
-.connection .dot.ok{background:#80dda9!important;box-shadow:0 0 10px rgba(128,221,169,.42)!important}
-.connection .dot.bad{background:#ff9ba8!important;box-shadow:0 0 10px rgba(255,155,168,.3)!important}
-
-/* Shared reference glass panel: the same violet translucency, warm reflected light and deep rounded silhouette. */
-:is(
-  .login-card,.card,.table-wrap,.qbank-scroll,
-  .admin-upgrade-card,.admin-health,.qbank-card,
-  .doma-pro6-admin-card,.doma-pro6-admin-row,.doma-pro6-check,.doma-pro6-template,
-  .doma-final-admin-card,.doma-final-review-row,
-  .pro7-admin-kpi,.pro7-admin-ticket,.pro7-admin-parent-link,.pro7-live-preview,
-  .history-row,.student-pro-stat,.daily-form-note,
-  .pro7-admin-msg,.pro7-admin-chat,.info-box,
-  .admin-confirm-dialog,.modal-card,.toast
-){
-  position:relative!important;
-  isolation:isolate!important;
-  color:#fff1e7!important;
-  background-color:rgba(89,55,108,.48)!important;
-  background-image:
-    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.29),transparent 100%),
-    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
-    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
-    linear-gradient(135deg,rgba(164,118,181,.48),rgba(89,56,108,.55) 54%,rgba(55,34,76,.66))!important;
-  border:1px solid rgba(220,188,233,.36)!important;
-  border-radius:25px!important;
-  box-shadow:0 23px 54px rgba(18,7,27,.34),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(255,255,255,.08),0 0 29px rgba(235,170,112,.12)!important;
-  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;
-  backdrop-filter:blur(24px) saturate(145%)!important;
-}
-.card,.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi{transition:border-color .2s,box-shadow .2s,transform .2s!important}
-.card:hover,.admin-upgrade-card:hover,.doma-pro6-admin-card:hover,.doma-final-admin-card:hover,.pro7-admin-kpi:hover,
-.qbank-card:hover,.pro7-admin-ticket:hover{
-  border-color:rgba(255,218,170,.62)!important;
-  box-shadow:0 27px 62px rgba(18,7,27,.4),inset 0 1px 0 rgba(255,255,255,.31),0 0 31px rgba(238,173,114,.2)!important;
-}
-.card .muted,.admin-upgrade-card small,.admin-upgrade-card span,.admin-health p,
-.doma-pro6-admin-card small,.doma-pro6-admin-card span,.doma-pro6-note,
-.pro7-admin-kpi span,.pro7-admin-meta,.pro7-admin-ticket p,.pro7-admin-msg small,
-.daily-word-preview .sentence,.doma-final-review-row p,.doma-final-admin-card span{
-  color:#ead9e8!important;
-}
-.card h2,.card h3,.card h4,.admin-health h3,.modal-head h3,
-.doma-pro6-admin-card b,.doma-final-admin-card b,.pro7-admin-kpi b,
-.pro7-admin-ticket strong,.pro7-admin-ticket b,.admin-upgrade-card b{color:#fff4e8!important}
-.admin-upgrade-card,.admin-health,.qbank-card,.doma-pro6-admin-card,.doma-pro6-admin-row,
-.doma-pro6-check,.doma-pro6-template,.doma-final-admin-card,.doma-final-review-row,
-.pro7-admin-kpi,.pro7-admin-ticket,.pro7-admin-parent-link,.pro7-live-preview,
-.history-row,.student-pro-stat,.daily-form-note,.pro7-admin-msg,.info-box{
-  border-color:rgba(220,188,233,.34)!important;
-}
-.admin-video-link,.audio-link,.hw-attachment-admin,.hw-attachment-admin a{color:#ffdfad!important}
-
-/* Tables sit inside translucent glass while keeping readable row separation and scroll behavior. */
-.table-wrap,.qbank-scroll{overflow:auto!important}
-.table-wrap table,.qbank-scroll table{background:transparent!important}
-.table-wrap thead,.qbank-scroll thead{background:rgba(68,42,86,.52)!important}
-.table-wrap th,.qbank-scroll th{
-  color:#ffdfad!important;
-  background:rgba(68,42,86,.48)!important;
-  border-bottom:1px solid rgba(232,196,224,.28)!important;
-}
-.table-wrap td,.qbank-scroll td{
-  color:#fff0e6!important;
-  border-bottom:1px solid rgba(220,188,233,.17)!important;
-}
-.table-wrap tbody tr:hover,.qbank-scroll tbody tr:hover{background:rgba(255,221,180,.075)!important}
-.table-wrap tr:last-child td,.qbank-scroll tr:last-child td{border-bottom:0!important}
-.empty{color:#ead9e8!important}
-.qbank-card small,.daily-word-preview .ar,.daily-word-preview .sentence{color:#ead9e8!important}
-.daily-word-preview b,.daily-word-preview strong{color:#fff1e5!important}
-.activity-chip,.mini-status,.pill{
-  border:1px solid rgba(220,188,233,.27)!important;
-  background:rgba(105,69,124,.32)!important;color:#fff0e6!important;
-}
-.pill.ok,.pill.free{background:rgba(48,135,91,.22)!important;border-color:rgba(133,224,173,.35)!important;color:#b9f1cf!important}
-.pill.warn{background:rgba(188,135,53,.2)!important;border-color:rgba(247,202,126,.36)!important;color:#ffe0a8!important}
-.pill.bad{background:rgba(174,65,83,.22)!important;border-color:rgba(255,153,169,.36)!important;color:#ffc0ca!important}
-.dot.ok{background:#80dda9!important}
-
-/* Buttons: warm champagne gold for the primary action; secondary actions use the frosted purple glass. */
-.btn{
-  color:#4b2d46!important;
-  background:linear-gradient(135deg,#ffe4b4 0%,#e7b66d 54%,#c98243 100%)!important;
-  border:1px solid rgba(255,233,196,.86)!important;
-  border-radius:14px!important;
-  box-shadow:0 10px 25px rgba(35,15,37,.25),inset 0 1px 0 rgba(255,255,255,.58),0 0 19px rgba(246,189,117,.17)!important;
-  text-shadow:none!important;
-  font-weight:800!important;
-}
-.btn:hover{filter:brightness(1.06)!important;transform:translateY(-1px)!important}
-.btn.secondary{
-  color:#fff0e6!important;
-  background:linear-gradient(135deg,rgba(154,111,172,.43),rgba(75,48,94,.65))!important;
-  border:1px solid rgba(220,188,235,.4)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 20px rgba(20,9,29,.22)!important;
-}
-.btn.ok{color:#eafff1!important;background:linear-gradient(135deg,#39996d,#1e654c)!important;border-color:rgba(170,245,199,.55)!important}
-.btn.warn{color:#452d20!important;background:linear-gradient(135deg,#ffe0a6,#d69a47)!important;border-color:rgba(255,233,196,.75)!important}
-.btn.danger{color:#fff0f2!important;background:linear-gradient(135deg,#b34e69,#7d3047)!important;border-color:rgba(255,175,188,.45)!important}
-.btn:disabled{opacity:.62!important;filter:saturate(.65)!important;transform:none!important}
-
-/* Inputs, filters, forms, and selects share the same softly translucent surface. */
-input,select,textarea,.field,
-.toolbar input,.toolbar select,
-.login-card input,.login-card input[type="email"],.login-card input[type="password"]{
-  color:#fff1e7!important;
-  -webkit-text-fill-color:#fff1e7!important;
-  caret-color:#ffdfad!important;
-  background:rgba(62,39,79,.62)!important;
-  border:1px solid rgba(220,188,233,.38)!important;
-  border-radius:14px!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.11)!important;
-  outline:none!important;
-}
-input::placeholder,textarea::placeholder{color:rgba(241,221,240,.62)!important;-webkit-text-fill-color:rgba(241,221,240,.62)!important}
-input:focus,select:focus,textarea:focus{
-  border-color:rgba(255,218,174,.72)!important;
-  box-shadow:0 0 0 3px rgba(244,190,128,.13),0 0 18px rgba(244,190,128,.1)!important;
-}
-select option,select optgroup{color:#fff1e7!important;background:#432b55!important}
-select option:checked,select option:hover{color:#fff!important;background:#765083!important}
-
-/* Admin sign-in page matches the same reference panel instead of the former dark/teal variant. */
-.login{
-  min-height:100vh!important;min-height:100dvh!important;
-  padding:22px!important;
-  background:
-    radial-gradient(circle 180px at 14% 7%,rgba(255,218,164,.72),transparent 78%),
-    radial-gradient(circle 165px at 91% 91%,rgba(255,211,162,.55),transparent 79%),
-    radial-gradient(ellipse at 50% 4%,rgba(163,116,181,.42),transparent 48%),
-    linear-gradient(135deg,#4b2d58 0%,#3f274c 48%,#2d1b3b 100%)!important;
-}
-.login-card{
-  width:min(460px,100%)!important;
-  padding:clamp(24px,4vw,36px)!important;
-  border:1px solid rgba(220,188,233,.43)!important;
-  border-radius:30px!important;
-  background-color:rgba(89,55,108,.57)!important;
-  background-image:
-    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.3),transparent 100%),
-    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
-    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
-    linear-gradient(135deg,rgba(164,118,181,.55),rgba(89,56,108,.64) 54%,rgba(55,34,76,.75))!important;
-  box-shadow:0 28px 75px rgba(13,5,24,.42),inset 0 1px 0 rgba(255,255,255,.29),0 0 34px rgba(235,170,112,.16)!important;
-  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;
-  backdrop-filter:blur(28px) saturate(150%)!important;
-}
-.login-card .logo{color:#fff1e5!important;letter-spacing:.08em!important;text-shadow:0 2px 18px rgba(35,12,44,.25)!important}
-.login-card .logo span{color:#f2c98d!important;text-shadow:0 0 20px rgba(255,202,139,.18)!important}
-.login-card h1{color:#fff2e6!important}
-.login-card label{color:#ead9e9!important}
-.login-card>.muted{color:#ead9e9!important}
-.login-card .error{color:#ffbac4!important}
-.login-card .btn{min-height:46px!important;border-radius:15px!important}
-
-/* Modal, alerts, and helper surfaces. */
-.modal{background:rgba(24,10,33,.62)!important;backdrop-filter:blur(12px) saturate(.8)!important;-webkit-backdrop-filter:blur(12px) saturate(.8)!important}
-.modal-card{
-  background-color:rgba(88,54,106,.66)!important;
-  background-image:
-    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.3),transparent 100%),
-    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
-    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
-    linear-gradient(135deg,rgba(164,118,181,.55),rgba(89,56,108,.64) 54%,rgba(55,34,76,.75))!important;
-  border:1px solid rgba(220,188,233,.43)!important;border-radius:28px!important;
-  box-shadow:0 28px 75px rgba(13,5,24,.52),inset 0 1px 0 rgba(255,255,255,.29),0 0 34px rgba(235,170,112,.16)!important;
-  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;backdrop-filter:blur(28px) saturate(150%)!important;
-}
-.modal-head{border-bottom:1px solid rgba(220,188,233,.22)!important}
-.modal-head h3,.modal-card h3,.modal-card h4{color:#fff2e6!important}
-.info-box{color:#f0dfee!important}
-.toast{color:#fff1e7!important;background:linear-gradient(135deg,rgba(100,64,118,.9),rgba(57,37,76,.95))!important}
-
-/* Scrollbars are recolored to match the reference palette without changing scrolling behavior. */
-html,body,*{scrollbar-color:#a87aaf #392545!important;scrollbar-width:thin!important}
-::-webkit-scrollbar{width:9px!important;height:9px!important}
-::-webkit-scrollbar-track{background:#392545!important;border-radius:10px!important}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e8bd83,#9b6e9f)!important;border:2px solid #392545!important;border-radius:10px!important}
-::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#ffdfad,#b486b4)!important}
-
-@media(max-width:960px){
-  #sidebar.sidebar,.sidebar{
-    border:1px solid rgba(220,188,233,.42)!important;
-    border-radius:24px!important;
-    background:linear-gradient(145deg,rgba(123,81,142,.97),rgba(68,43,88,.99) 70%,rgba(49,31,68,.995))!important;
-    box-shadow:0 28px 75px rgba(13,5,24,.56),inset 0 1px 0 rgba(255,255,255,.2),0 0 30px rgba(235,170,112,.12)!important;
-    -webkit-backdrop-filter:blur(28px) saturate(150%)!important;backdrop-filter:blur(28px) saturate(150%)!important;
-  }
-  #sidebar .side-logo{display:block!important}
-}
-@media(max-width:760px){
-  #sidebar.sidebar{
-    border:1px solid rgba(220,188,233,.42)!important;
-    border-radius:24px!important;
-    background:linear-gradient(145deg,rgba(123,81,142,.97),rgba(68,43,88,.99) 70%,rgba(49,31,68,.995))!important;
-    box-shadow:0 28px 75px rgba(13,5,24,.56),inset 0 1px 0 rgba(255,255,255,.2),0 0 30px rgba(235,170,112,.12)!important;
-  }
-  #sidebar .nav-btn,#sidebar .nav-btn:hover,#sidebar .nav-btn:focus-visible,#sidebar .nav-btn.active{
-    color:#f0e1ef!important;-webkit-text-fill-color:#f0e1ef!important;background:transparent!important;
-    border:1px solid transparent!important;box-shadow:none!important;text-shadow:none!important;
-  }
-  #sidebar .nav-btn.active{
-    color:#ffdfad!important;-webkit-text-fill-color:#ffdfad!important;
-    background:rgba(255,222,178,.15)!important;border-color:rgba(255,218,174,.34)!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.16)!important;
-  }
-  #sidebar .nav-title{color:#f2c98d!important;-webkit-text-fill-color:#f2c98d!important}
-  .top{background:linear-gradient(115deg,rgba(132,90,151,.76),rgba(73,46,91,.86) 55%,rgba(48,31,65,.92))!important}
-  .content{padding:15px 12px 22px!important}
-  .card,.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi{border-radius:21px!important}
-  .table-wrap,.qbank-scroll{border-radius:20px!important}
-  .modal-card{border-radius:23px!important;padding:17px!important}
-  .login-card{border-radius:24px!important;padding:23px 19px!important}
-}
-@media(max-width:560px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .grid-2{grid-template-columns:1fr!important}
-  .head h2{font-size:21px!important}
-}
-@media(prefers-reduced-motion:reduce){
-  .card,.btn,.nav-btn,tbody tr{transition:none!important}
-  .btn:hover,.nav-btn:hover{transform:none!important}
-}
-</style>
 
 </body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
@@ -4111,5 +3801,316 @@ html,body,*{
 </style>
 
 
+<style id="doma-purple-gold-admin-glass-v1">
+/* DOMA Admin — match the public homepage Purple & Gold Glassmorphism identity.
+   Visual-only overrides: authentication, permissions, data, and admin actions are unchanged. */
+:root{
+  --bg:#3c2547!important;
+  --panel:rgba(89,55,108,.48)!important;
+  --panel2:rgba(89,55,108,.60)!important;
+  --line:rgba(220,188,233,.34)!important;
+  --text:#fff1e7!important;
+  --muted:#ead9e8!important;
+  --accent:#e7b66d!important;
+  --accent2:#c98248!important;
+  --shadow:0 24px 60px rgba(18,7,27,.36)!important;
+}
+html,body{
+  min-height:100%!important;
+  color:#fff1e7!important;
+  background-color:#3c2547!important;
+  background-image:
+    radial-gradient(circle 180px at 14% 0%,rgba(255,218,164,.82),rgba(255,190,132,.42) 28%,rgba(145,82,79,.12) 64%,transparent 78%),
+    radial-gradient(circle 170px at 97% 34%,rgba(255,211,162,.76),rgba(219,154,102,.35) 30%,rgba(103,57,87,.1) 66%,transparent 79%),
+    radial-gradient(circle 185px at 24% 100%,rgba(255,211,166,.72),rgba(215,147,95,.32) 31%,rgba(98,58,88,.1) 66%,transparent 80%),
+    radial-gradient(ellipse at 50% 3%,rgba(163,116,181,.42),transparent 48%),
+    linear-gradient(135deg,#4b2d58 0%,#3f274c 48%,#2d1b3b 100%)!important;
+  background-size:100% 100%!important;
+  background-attachment:fixed!important;
+  color-scheme:dark!important;
+}
+body{position:relative!important;isolation:isolate!important}
+#app,.app,.main,.content{background:transparent!important;background-color:transparent!important}
+.muted,.head p,.small,.qbank-count,.pro7-admin-meta,.pro7-admin-msg small{color:#ead9e8!important}
+
+/* Frosted navigation rail and top bar. */
+#sidebar.sidebar,.sidebar{
+  color:#fff1e7!important;
+  background:linear-gradient(145deg,rgba(142,99,160,.63),rgba(78,49,97,.79) 58%,rgba(52,34,74,.9))!important;
+  border:1px solid rgba(220,188,233,.34)!important;
+  border-left:0!important;
+  box-shadow:0 22px 58px rgba(18,7,27,.32),inset 0 1px 0 rgba(255,255,255,.2),0 0 30px rgba(235,170,112,.11)!important;
+  -webkit-backdrop-filter:blur(25px) saturate(145%)!important;
+  backdrop-filter:blur(25px) saturate(145%)!important;
+}
+#sidebar .side-logo{border-bottom:1px solid rgba(228,198,235,.22)!important}
+#sidebar .side-logo .logo{color:#fff2e6!important;text-shadow:0 2px 16px rgba(30,10,40,.25)!important}
+#sidebar .side-logo .logo span{color:#f2c98d!important}
+#sidebar .side-logo small{color:#ead9e9!important}
+#sidebar .nav-title{
+  color:#f2c98d!important;
+  -webkit-text-fill-color:#f2c98d!important;
+  text-shadow:0 0 12px rgba(255,197,130,.2)!important;
+}
+#sidebar .nav-btn{
+  color:#f0e1ef!important;
+  -webkit-text-fill-color:#f0e1ef!important;
+  border:1px solid transparent!important;
+  border-radius:13px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+  transition:background .18s ease,border-color .18s ease,color .18s ease!important;
+}
+#sidebar .nav-btn:hover,#sidebar .nav-btn:focus-visible{
+  color:#fff3e5!important;-webkit-text-fill-color:#fff3e5!important;
+  background:rgba(255,222,178,.1)!important;
+  border-color:rgba(238,198,153,.22)!important;
+  text-shadow:0 0 14px rgba(255,204,147,.2)!important;
+}
+#sidebar .nav-btn.active{
+  color:#ffdfad!important;-webkit-text-fill-color:#ffdfad!important;
+  background:linear-gradient(120deg,rgba(255,222,178,.19),rgba(174,119,178,.25))!important;
+  border-color:rgba(255,218,174,.38)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 7px 18px rgba(28,10,37,.16)!important;
+  text-shadow:0 0 14px rgba(255,206,149,.22)!important;
+}
+#sidebar #domaSidebarHomeButton{color:#ffe1b5!important;-webkit-text-fill-color:#ffe1b5!important}
+.top{
+  color:#fff1e7!important;
+  background:linear-gradient(115deg,rgba(132,90,151,.63),rgba(73,46,91,.78) 55%,rgba(48,31,65,.86))!important;
+  border-bottom:1px solid rgba(220,188,233,.34)!important;
+  box-shadow:0 12px 34px rgba(18,7,27,.2),inset 0 1px 0 rgba(255,255,255,.18)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;
+  backdrop-filter:blur(24px) saturate(145%)!important;
+}
+.top h1{color:#fff2e6!important;text-shadow:0 2px 16px rgba(30,10,40,.2)!important}
+.top .muted,.top small{color:#ead9e9!important}
+.mobile-menu{color:#fff1e7!important;background:rgba(93,59,111,.42)!important;border:1px solid rgba(224,190,236,.36)!important;border-radius:12px!important}
+.connection{color:#f0dfed!important}
+.connection .dot.ok{background:#80dda9!important;box-shadow:0 0 10px rgba(128,221,169,.42)!important}
+.connection .dot.bad{background:#ff9ba8!important;box-shadow:0 0 10px rgba(255,155,168,.3)!important}
+
+/* Shared reference glass panel: the same violet translucency, warm reflected light and deep rounded silhouette. */
+:is(
+  .login-card,.card,.table-wrap,.qbank-scroll,
+  .admin-upgrade-card,.admin-health,.qbank-card,
+  .doma-pro6-admin-card,.doma-pro6-admin-row,.doma-pro6-check,.doma-pro6-template,
+  .doma-final-admin-card,.doma-final-review-row,
+  .pro7-admin-kpi,.pro7-admin-ticket,.pro7-admin-parent-link,.pro7-live-preview,
+  .history-row,.student-pro-stat,.daily-form-note,
+  .pro7-admin-msg,.pro7-admin-chat,.info-box,
+  .admin-confirm-dialog,.modal-card,.toast
+){
+  position:relative!important;
+  isolation:isolate!important;
+  color:#fff1e7!important;
+  background-color:rgba(89,55,108,.48)!important;
+  background-image:
+    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.29),transparent 100%),
+    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
+    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
+    linear-gradient(135deg,rgba(164,118,181,.48),rgba(89,56,108,.55) 54%,rgba(55,34,76,.66))!important;
+  border:1px solid rgba(220,188,233,.36)!important;
+  border-radius:25px!important;
+  box-shadow:0 23px 54px rgba(18,7,27,.34),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(255,255,255,.08),0 0 29px rgba(235,170,112,.12)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;
+  backdrop-filter:blur(24px) saturate(145%)!important;
+}
+.card,.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi{transition:border-color .2s,box-shadow .2s,transform .2s!important}
+.card:hover,.admin-upgrade-card:hover,.doma-pro6-admin-card:hover,.doma-final-admin-card:hover,.pro7-admin-kpi:hover,
+.qbank-card:hover,.pro7-admin-ticket:hover{
+  border-color:rgba(255,218,170,.62)!important;
+  box-shadow:0 27px 62px rgba(18,7,27,.4),inset 0 1px 0 rgba(255,255,255,.31),0 0 31px rgba(238,173,114,.2)!important;
+}
+.card .muted,.admin-upgrade-card small,.admin-upgrade-card span,.admin-health p,
+.doma-pro6-admin-card small,.doma-pro6-admin-card span,.doma-pro6-note,
+.pro7-admin-kpi span,.pro7-admin-meta,.pro7-admin-ticket p,.pro7-admin-msg small,
+.daily-word-preview .sentence,.doma-final-review-row p,.doma-final-admin-card span{
+  color:#ead9e8!important;
+}
+.card h2,.card h3,.card h4,.admin-health h3,.modal-head h3,
+.doma-pro6-admin-card b,.doma-final-admin-card b,.pro7-admin-kpi b,
+.pro7-admin-ticket strong,.pro7-admin-ticket b,.admin-upgrade-card b{color:#fff4e8!important}
+.admin-upgrade-card,.admin-health,.qbank-card,.doma-pro6-admin-card,.doma-pro6-admin-row,
+.doma-pro6-check,.doma-pro6-template,.doma-final-admin-card,.doma-final-review-row,
+.pro7-admin-kpi,.pro7-admin-ticket,.pro7-admin-parent-link,.pro7-live-preview,
+.history-row,.student-pro-stat,.daily-form-note,.pro7-admin-msg,.info-box{
+  border-color:rgba(220,188,233,.34)!important;
+}
+.admin-video-link,.audio-link,.hw-attachment-admin,.hw-attachment-admin a{color:#ffdfad!important}
+
+/* Tables sit inside translucent glass while keeping readable row separation and scroll behavior. */
+.table-wrap,.qbank-scroll{overflow:auto!important}
+.table-wrap table,.qbank-scroll table{background:transparent!important}
+.table-wrap thead,.qbank-scroll thead{background:rgba(68,42,86,.52)!important}
+.table-wrap th,.qbank-scroll th{
+  color:#ffdfad!important;
+  background:rgba(68,42,86,.48)!important;
+  border-bottom:1px solid rgba(232,196,224,.28)!important;
+}
+.table-wrap td,.qbank-scroll td{
+  color:#fff0e6!important;
+  border-bottom:1px solid rgba(220,188,233,.17)!important;
+}
+.table-wrap tbody tr:hover,.qbank-scroll tbody tr:hover{background:rgba(255,221,180,.075)!important}
+.table-wrap tr:last-child td,.qbank-scroll tr:last-child td{border-bottom:0!important}
+.empty{color:#ead9e8!important}
+.qbank-card small,.daily-word-preview .ar,.daily-word-preview .sentence{color:#ead9e8!important}
+.daily-word-preview b,.daily-word-preview strong{color:#fff1e5!important}
+.activity-chip,.mini-status,.pill{
+  border:1px solid rgba(220,188,233,.27)!important;
+  background:rgba(105,69,124,.32)!important;color:#fff0e6!important;
+}
+.pill.ok,.pill.free{background:rgba(48,135,91,.22)!important;border-color:rgba(133,224,173,.35)!important;color:#b9f1cf!important}
+.pill.warn{background:rgba(188,135,53,.2)!important;border-color:rgba(247,202,126,.36)!important;color:#ffe0a8!important}
+.pill.bad{background:rgba(174,65,83,.22)!important;border-color:rgba(255,153,169,.36)!important;color:#ffc0ca!important}
+.dot.ok{background:#80dda9!important}
+
+/* Buttons: warm champagne gold for the primary action; secondary actions use the frosted purple glass. */
+.btn{
+  color:#4b2d46!important;
+  background:linear-gradient(135deg,#ffe4b4 0%,#e7b66d 54%,#c98243 100%)!important;
+  border:1px solid rgba(255,233,196,.86)!important;
+  border-radius:14px!important;
+  box-shadow:0 10px 25px rgba(35,15,37,.25),inset 0 1px 0 rgba(255,255,255,.58),0 0 19px rgba(246,189,117,.17)!important;
+  text-shadow:none!important;
+  font-weight:800!important;
+}
+.btn:hover{filter:brightness(1.06)!important;transform:translateY(-1px)!important}
+.btn.secondary{
+  color:#fff0e6!important;
+  background:linear-gradient(135deg,rgba(154,111,172,.43),rgba(75,48,94,.65))!important;
+  border:1px solid rgba(220,188,235,.4)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 20px rgba(20,9,29,.22)!important;
+}
+.btn.ok{color:#eafff1!important;background:linear-gradient(135deg,#39996d,#1e654c)!important;border-color:rgba(170,245,199,.55)!important}
+.btn.warn{color:#452d20!important;background:linear-gradient(135deg,#ffe0a6,#d69a47)!important;border-color:rgba(255,233,196,.75)!important}
+.btn.danger{color:#fff0f2!important;background:linear-gradient(135deg,#b34e69,#7d3047)!important;border-color:rgba(255,175,188,.45)!important}
+.btn:disabled{opacity:.62!important;filter:saturate(.65)!important;transform:none!important}
+
+/* Inputs, filters, forms, and selects share the same softly translucent surface. */
+input,select,textarea,.field,
+.toolbar input,.toolbar select,
+.login-card input,.login-card input[type="email"],.login-card input[type="password"]{
+  color:#fff1e7!important;
+  -webkit-text-fill-color:#fff1e7!important;
+  caret-color:#ffdfad!important;
+  background:rgba(62,39,79,.62)!important;
+  border:1px solid rgba(220,188,233,.38)!important;
+  border-radius:14px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.11)!important;
+  outline:none!important;
+}
+input::placeholder,textarea::placeholder{color:rgba(241,221,240,.62)!important;-webkit-text-fill-color:rgba(241,221,240,.62)!important}
+input:focus,select:focus,textarea:focus{
+  border-color:rgba(255,218,174,.72)!important;
+  box-shadow:0 0 0 3px rgba(244,190,128,.13),0 0 18px rgba(244,190,128,.1)!important;
+}
+select option,select optgroup{color:#fff1e7!important;background:#432b55!important}
+select option:checked,select option:hover{color:#fff!important;background:#765083!important}
+
+/* Admin sign-in page matches the same reference panel instead of the former dark/teal variant. */
+.login{
+  min-height:100vh!important;min-height:100dvh!important;
+  padding:22px!important;
+  background:
+    radial-gradient(circle 180px at 14% 7%,rgba(255,218,164,.72),transparent 78%),
+    radial-gradient(circle 165px at 91% 91%,rgba(255,211,162,.55),transparent 79%),
+    radial-gradient(ellipse at 50% 4%,rgba(163,116,181,.42),transparent 48%),
+    linear-gradient(135deg,#4b2d58 0%,#3f274c 48%,#2d1b3b 100%)!important;
+}
+.login-card{
+  width:min(460px,100%)!important;
+  padding:clamp(24px,4vw,36px)!important;
+  border:1px solid rgba(220,188,233,.43)!important;
+  border-radius:30px!important;
+  background-color:rgba(89,55,108,.57)!important;
+  background-image:
+    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.3),transparent 100%),
+    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
+    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
+    linear-gradient(135deg,rgba(164,118,181,.55),rgba(89,56,108,.64) 54%,rgba(55,34,76,.75))!important;
+  box-shadow:0 28px 75px rgba(13,5,24,.42),inset 0 1px 0 rgba(255,255,255,.29),0 0 34px rgba(235,170,112,.16)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;
+  backdrop-filter:blur(28px) saturate(150%)!important;
+}
+.login-card .logo{color:#fff1e5!important;letter-spacing:.08em!important;text-shadow:0 2px 18px rgba(35,12,44,.25)!important}
+.login-card .logo span{color:#f2c98d!important;text-shadow:0 0 20px rgba(255,202,139,.18)!important}
+.login-card h1{color:#fff2e6!important}
+.login-card label{color:#ead9e9!important}
+.login-card>.muted{color:#ead9e9!important}
+.login-card .error{color:#ffbac4!important}
+.login-card .btn{min-height:46px!important;border-radius:15px!important}
+
+/* Modal, alerts, and helper surfaces. */
+.modal{background:rgba(24,10,33,.62)!important;backdrop-filter:blur(12px) saturate(.8)!important;-webkit-backdrop-filter:blur(12px) saturate(.8)!important}
+.modal-card{
+  background-color:rgba(88,54,106,.66)!important;
+  background-image:
+    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.3),transparent 100%),
+    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
+    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
+    linear-gradient(135deg,rgba(164,118,181,.55),rgba(89,56,108,.64) 54%,rgba(55,34,76,.75))!important;
+  border:1px solid rgba(220,188,233,.43)!important;border-radius:28px!important;
+  box-shadow:0 28px 75px rgba(13,5,24,.52),inset 0 1px 0 rgba(255,255,255,.29),0 0 34px rgba(235,170,112,.16)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;backdrop-filter:blur(28px) saturate(150%)!important;
+}
+.modal-head{border-bottom:1px solid rgba(220,188,233,.22)!important}
+.modal-head h3,.modal-card h3,.modal-card h4{color:#fff2e6!important}
+.info-box{color:#f0dfee!important}
+.toast{color:#fff1e7!important;background:linear-gradient(135deg,rgba(100,64,118,.9),rgba(57,37,76,.95))!important}
+
+/* Scrollbars are recolored to match the reference palette without changing scrolling behavior. */
+html,body,*{scrollbar-color:#a87aaf #392545!important;scrollbar-width:thin!important}
+::-webkit-scrollbar{width:9px!important;height:9px!important}
+::-webkit-scrollbar-track{background:#392545!important;border-radius:10px!important}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e8bd83,#9b6e9f)!important;border:2px solid #392545!important;border-radius:10px!important}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#ffdfad,#b486b4)!important}
+
+@media(max-width:960px){
+  #sidebar.sidebar,.sidebar{
+    border:1px solid rgba(220,188,233,.42)!important;
+    border-radius:24px!important;
+    background:linear-gradient(145deg,rgba(123,81,142,.97),rgba(68,43,88,.99) 70%,rgba(49,31,68,.995))!important;
+    box-shadow:0 28px 75px rgba(13,5,24,.56),inset 0 1px 0 rgba(255,255,255,.2),0 0 30px rgba(235,170,112,.12)!important;
+    -webkit-backdrop-filter:blur(28px) saturate(150%)!important;backdrop-filter:blur(28px) saturate(150%)!important;
+  }
+  #sidebar .side-logo{display:block!important}
+}
+@media(max-width:760px){
+  #sidebar.sidebar{
+    border:1px solid rgba(220,188,233,.42)!important;
+    border-radius:24px!important;
+    background:linear-gradient(145deg,rgba(123,81,142,.97),rgba(68,43,88,.99) 70%,rgba(49,31,68,.995))!important;
+    box-shadow:0 28px 75px rgba(13,5,24,.56),inset 0 1px 0 rgba(255,255,255,.2),0 0 30px rgba(235,170,112,.12)!important;
+  }
+  #sidebar .nav-btn,#sidebar .nav-btn:hover,#sidebar .nav-btn:focus-visible,#sidebar .nav-btn.active{
+    color:#f0e1ef!important;-webkit-text-fill-color:#f0e1ef!important;background:transparent!important;
+    border:1px solid transparent!important;box-shadow:none!important;text-shadow:none!important;
+  }
+  #sidebar .nav-btn.active{
+    color:#ffdfad!important;-webkit-text-fill-color:#ffdfad!important;
+    background:rgba(255,222,178,.15)!important;border-color:rgba(255,218,174,.34)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16)!important;
+  }
+  #sidebar .nav-title{color:#f2c98d!important;-webkit-text-fill-color:#f2c98d!important}
+  .top{background:linear-gradient(115deg,rgba(132,90,151,.76),rgba(73,46,91,.86) 55%,rgba(48,31,65,.92))!important}
+  .content{padding:15px 12px 22px!important}
+  .card,.admin-upgrade-card,.doma-pro6-admin-card,.doma-final-admin-card,.pro7-admin-kpi{border-radius:21px!important}
+  .table-wrap,.qbank-scroll{border-radius:20px!important}
+  .modal-card{border-radius:23px!important;padding:17px!important}
+  .login-card{border-radius:24px!important;padding:23px 19px!important}
+}
+@media(max-width:560px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .grid-2{grid-template-columns:1fr!important}
+  .head h2{font-size:21px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .card,.btn,.nav-btn,tbody tr{transition:none!important}
+  .btn:hover,.nav-btn:hover{transform:none!important}
+}
+</style>
 </body>
 </html>
