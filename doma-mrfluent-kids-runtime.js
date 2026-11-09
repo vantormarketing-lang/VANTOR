@@ -650,6 +650,10 @@ function journeyAttachTracker(){
     if(!target||!target.closest)return;
     var button=target.closest('button');
     if(!button||!root.contains(button))return;
+    if(button.hasAttribute('data-mfj-parent-refresh')){kidsJourneyHandleParentRoute();return;}
+    if(button.hasAttribute('data-mfj-speaking-record-start')){mfkjStartSpeakingRecording();return;}
+    if(button.hasAttribute('data-mfj-speaking-record-stop')){mfkjStopSpeakingRecording();return;}
+    if(button.hasAttribute('data-mfj-speaking-record-delete')){mfkjClearSpeakingRecording();var recordingHost=root.querySelector('#mfkjSpeakingRecording'),recordingStatus=root.querySelector('#mfkjSpeakingRecorderStatus');if(recordingHost)recordingHost.innerHTML='';if(recordingStatus)recordingStatus.textContent='تم حذف التسجيل من هذه الجلسة.';var startButton=root.querySelector('[data-mfj-speaking-record-start]'),stopButton=root.querySelector('[data-mfj-speaking-record-stop]'),deleteButton=root.querySelector('[data-mfj-speaking-record-delete]');if(startButton)startButton.disabled=false;if(stopButton)stopButton.disabled=true;if(deleteButton)deleteButton.disabled=true;return;}
     if(button.hasAttribute('data-mfj-speaking-listen')){var listenM=journeySpeakingData(journeyLevelCode())[journeySpeakingCurrentIndex()];if(listenM)journeySpeak(listenM.q);return;}
     if(button.hasAttribute('data-mfj-speaking-answer')){journeySpeak(button.getAttribute('data-mfj-speaking-answer'));return;}
     if(button.hasAttribute('data-mfj-speaking-complete')){journeyCompleteSpeaking();return;}
@@ -785,7 +789,7 @@ function journeyRenderLevelTools(){
   else{
     var mission=missions[mi],pendingSpeaking=journeyToolState.speakingPendingId===mission.id;
     var speakingContent=pendingSpeaking?
-      '<div class="mfkj-model-reply"><span class="mfkj-kicker">MODEL REPLY · الرد الصحيح</span><p lang="en">'+esc(mission.options[mission.correct].en)+'</p><p lang="ar" dir="rtl">'+esc(mission.options[mission.correct].ar)+'</p><div class="mfkj-model-actions"><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-speaking-answer="'+esc(mission.options[mission.correct].en)+'">🔊 Listen to the reply · اسمع الرد</button><button type="button" class="mfkr-btn mfkj-primary" data-mfj-speaking-complete>I said it aloud ✓ · قلتها بصوتي</button></div><small class="mfkj-self-practice-note">اسمع الجملة وكرّرها بصوت واضح، ثم اضغط «قلتُها بصوتي» لإتمام المهمة.</small></div>':
+      '<div class="mfkj-model-reply"><span class="mfkj-kicker">MODEL REPLY · الرد الصحيح</span><p lang="en">'+esc(mission.options[mission.correct].en)+'</p><p lang="ar" dir="rtl">'+esc(mission.options[mission.correct].ar)+'</p><div class="mfkj-model-actions"><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-speaking-answer="'+esc(mission.options[mission.correct].en)+'">🔊 Listen to the reply · اسمع الرد</button><button type="button" class="mfkr-btn mfkj-primary" data-mfj-speaking-complete>I said it aloud ✓ · قلتها بصوتي</button></div><small class="mfkj-self-practice-note">اسمع الجملة وكرّرها بصوت واضح، ثم اضغط «قلتُها بصوتي» لإتمام المهمة.</small><div class="mfkj-speaking-recorder" style="margin-top:14px;padding:13px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(204,169,110,.25)"><p lang="ar" dir="rtl" style="margin:0 0 10px">تدريب اختياري: سجّل الجملة لمدة تصل إلى 15 ثانية ثم استمع إليها وقارنها بالنموذج. التسجيل مؤقت داخل الجلسة فقط؛ لا يتم رفعه أو حفظه في حسابك. استخدم الميكروفون بموافقة ولي أمرك.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-speaking-record-start>🎙️ ابدأ التسجيل</button><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-speaking-record-stop disabled>إيقاف التسجيل</button><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-speaking-record-delete disabled>حذف التسجيل</button></div><div id="mfkjSpeakingRecording" style="margin-top:8px"></div><p id="mfkjSpeakingRecorderStatus" class="mfkj-feedback" aria-live="polite">لا يوجد تسجيل بعد. يمكنك الاكتفاء بالاستماع والتكرار.</p><small>لا نقدم درجة آلية للنطق؛ استخدم التسجيل لمقارنة وضوح الكلمات ونهاياتها وسرعة الكلام بالنموذج.</small></div></small></div>':
       '<div class="mfkj-choice-list">'+mission.options.map(function(opt,index){return '<button type="button" class="mfkj-choice-option'+(journeyToolState.speakingWrongOption===index?' is-wrong':'')+'" data-mfj-speaking-choice="'+index+'"><span>'+esc(opt.en)+'</span><small lang="ar" dir="rtl">'+esc(opt.ar)+'</small></button>';}).join('')+'</div>';
     speaking.innerHTML='<div class="mfkj-panel-head"><div><span class="mfkj-kicker">SPEAKING MISSIONS · محادثة</span><h2>Speaking Studio <i class="mfkj-pulse-dot"></i></h2><p lang="ar">اختار الرد المناسب، وبعدها اسمعه وكرّره بصوتك لإتمام المهمة.</p></div><span class="mfkj-panel-icon">💬</span></div><div class="mfkj-mission-meta"><span>MISSION '+(mi+1)+' / '+missions.length+'</span><span>'+level.speakingKeys.length+' completed</span></div><div class="mfkj-mission-question"><p lang="en">'+esc(mission.q)+'</p><p lang="ar" dir="rtl">'+esc(mission.ar)+'</p><button class="mfkr-btn mfkj-secondary" type="button" data-mfj-speaking-listen>🔊 Listen to the question · اسمع السؤال</button></div>'+speakingContent+'<p class="mfkj-feedback" aria-live="polite">'+esc(journeyToolState.speakingFeedback||'اختار الرد المناسب لإكمال المهمة.')+'</p><div class="mfkj-panel-foot"><span>⭐ اختار الرد الصحيح ثم كرّره بصوتك لإكمال المهمة.</span></div>';
   }
@@ -826,9 +830,66 @@ function journeyHandleSpeakingChoice(index){
   }
   journeyRenderCurrent();
 }
+
+var mfkjSpeakingRecorderState={recorder:null,stream:null,chunks:[],objectUrl:null,timer:null};
+function mfkjClearSpeakingRecording(){
+ var state=mfkjSpeakingRecorderState;
+ if(state.timer){clearTimeout(state.timer);state.timer=null;}
+ if(state.recorder){try{state.recorder.onstop=null;if(state.recorder.state!=='inactive')state.recorder.stop();}catch(_){}state.recorder=null;}
+ if(state.stream){try{state.stream.getTracks().forEach(function(track){track.stop();});}catch(_){}state.stream=null;}
+ if(state.objectUrl){try{URL.revokeObjectURL(state.objectUrl);}catch(_){}state.objectUrl=null;}
+ state.chunks=[];
+}
+function mfkjStopSpeakingRecording(){
+ var state=mfkjSpeakingRecorderState;
+ if(state.recorder&&state.recorder.state!=='inactive'){try{state.recorder.stop();}catch(_){}}
+}
+async function mfkjStartSpeakingRecording(){
+ var status=root.querySelector('#mfkjSpeakingRecorderStatus');
+ var startButton=root.querySelector('[data-mfj-speaking-record-start]');
+ var stopButton=root.querySelector('[data-mfj-speaking-record-stop]');
+ var deleteButton=root.querySelector('[data-mfj-speaking-record-delete]');
+ var host=root.querySelector('#mfkjSpeakingRecording');
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||typeof MediaRecorder==='undefined'){
+  if(status)status.textContent='هذا المتصفح لا يدعم التسجيل الصوتي هنا. استخدم زر الاستماع وكرّر الجملة بصوتك.';
+  return;
+ }
+ mfkjClearSpeakingRecording();
+ try{
+  var stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  var state=mfkjSpeakingRecorderState;
+  var recorder=new MediaRecorder(stream);
+  state.stream=stream;state.recorder=recorder;state.chunks=[];
+  recorder.ondataavailable=function(event){if(event.data&&event.data.size)state.chunks.push(event.data);};
+  recorder.onerror=function(){if(status)status.textContent='تعذر إكمال التسجيل. تحقق من إذن الميكروفون وحاول مرة أخرى.';};
+  recorder.onstop=function(){
+   if(state.timer){clearTimeout(state.timer);state.timer=null;}
+   if(state.stream){try{state.stream.getTracks().forEach(function(track){track.stop();});}catch(_){}state.stream=null;}
+   state.recorder=null;
+   var blob=new Blob(state.chunks,{type:recorder.mimeType||'audio/webm'});
+   state.chunks=[];
+   if(!blob.size){if(status)status.textContent='لم يتم التقاط صوت. حاول مرة أخرى.';if(startButton)startButton.disabled=false;if(stopButton)stopButton.disabled=true;return;}
+   if(state.objectUrl){try{URL.revokeObjectURL(state.objectUrl);}catch(_){}}
+   state.objectUrl=URL.createObjectURL(blob);
+   if(host){host.innerHTML='';var audio=document.createElement('audio');audio.controls=true;audio.preload='none';audio.src=state.objectUrl;audio.style.width='100%';audio.setAttribute('aria-label','Your temporary speaking practice recording');host.appendChild(audio);}
+   if(status)status.textContent='تم التسجيل. استمع الآن وقارن صوتك بالنموذج؛ التسجيل غير محفوظ وسيختفي عند مغادرة الصفحة أو حذفه.';
+   if(startButton)startButton.disabled=false;if(stopButton)stopButton.disabled=true;if(deleteButton)deleteButton.disabled=false;
+  };
+  recorder.start(250);
+  if(status)status.textContent='جاري التسجيل… سيتوقف تلقائيًا بعد 15 ثانية.';
+  if(startButton)startButton.disabled=true;if(stopButton)stopButton.disabled=false;if(deleteButton)deleteButton.disabled=true;
+  state.timer=setTimeout(function(){mfkjStopSpeakingRecording();},15000);
+ }catch(error){
+  if(status)status.textContent='لم نتمكن من فتح الميكروفون. اسمح باستخدامه من إعدادات المتصفح ثم حاول مرة أخرى.';
+  if(startButton)startButton.disabled=false;if(stopButton)stopButton.disabled=true;if(deleteButton)deleteButton.disabled=true;
+ }
+}
+if(!window.__mfkjSpeakingPagehideBound){window.addEventListener('pagehide',mfkjClearSpeakingRecording);window.__mfkjSpeakingPagehideBound=true;}
+
 function journeyCompleteSpeaking(){
   var code=journeyLevelCode(),missions=journeySpeakingData(code),mi=Number(journeyToolState.speakingPendingIndex)||0,mission=missions[mi];
   if(!mission||journeyToolState.speakingPendingId!==mission.id)return;
+  mfkjClearSpeakingRecording();
   var replay=!!journeyToolState.speakingReplay;
   journeyToolState.speakingPendingId='';
   journeyToolState.speakingPendingIndex=0;
@@ -953,11 +1014,47 @@ function renderCourseMap(){document.title='Kids Curriculum Map | Mr. Fluent Kids
 function journeyReviewIsDue(item){if(!item)return false;if(!item.reviewed)return true;var due=Date.parse(item.nextReviewAt||item.next_review_at||'');return !isNaN(due)&&due<=Date.now();}
 function journeyReviewPendingCount(level){return level&&Array.isArray(level.wrongAnswers)?level.wrongAnswers.filter(journeyReviewIsDue).length:0;}
 function journeyReviewNextInterval(item){var a=[1,3,7,14,30],r=Math.max(0,Number(item&&item.reviewRepetitions)||0);return a[Math.min(r,a.length-1)];}
-function renderParentOverview(){document.title='Family Progress | Mr. Fluent Kids';root.innerHTML=shell('FAMILY PROGRESS','Parent Overview.','متابعة ولي الأمر','ملخص داعم للتقدّم المسجّل في الحساب الحالي، دون مقارنة بأطفال آخرين.',mfkjToolsCss()+'<div id="mfkjParentSummary" class="mfkj-t-wrap"></div><div class="mfkj-t-nav"><a href="'+url('map')+'">خريطة المنهج</a><a href="'+url('review')+'">المراجعة الذكية</a><a href="'+url('hub')+'">العودة للمستويات</a></div>');journeyRenderParentOverview();}
-function journeyRenderParentOverview(){var host=root.querySelector('#mfkjParentSummary');if(!host)return;var stars=0,active=0,dueTotal=0,certs=0,lab=0;
-var cards=journeyLevels.map(function(x){var l=journeyGetLevel(x.code),due=journeyReviewPendingCount(l),pct=Math.round(Math.min(1,l.wordsSeen.length/5)*35+Math.min(1,l.speakingKeys.length/3)*30+Math.min(1,l.finalQuizBest/4)*35),steps=l.checkpointKeys.filter(function(k){return /^activity:/.test(k);}).length;stars+=l.stars;dueTotal+=due;lab+=l.checkpointKeys.filter(function(k){return /^activity:lab:/.test(k);}).length;if(l.wordsSeen.length||l.speakingKeys.length||l.finalQuizAttempts||steps)active++;if(l.certificateEarned)certs++;var state=l.certificateEarned?'أنجز الشهادة':pct===0&&!steps?'لسه ما بدأش':pct>=80?'تقدّم جيد':pct>=45?'في مرحلة التقدّم':'بداية التعلّم',advice=due?'الأولوية لمراجعة الأخطاء المستحقة.':l.speakingKeys.length<3?'خصّص وقتًا لمواقف المحادثة.':l.finalQuizBest<4?'أعد التدريب قبل التحدي النهائي.':'شجّعه على شرح ما تعلّمه.';return '<article class="mfkj-t-card"><span class="mfkj-t-kicker">'+esc(x.code)+' · '+esc(x.group)+'</span><h3>'+esc(x.title)+'</h3><p>'+state+' · '+pct+'%</p><div class="mfkj-t-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div><p>نجوم '+l.stars+' · كلمات '+l.wordsSeen.length+' · أنشطة '+steps+' · محادثة '+l.speakingKeys.length+'/3 · أفضل تحدٍّ '+l.finalQuizBest+'/5</p><p>'+(due?'🧠 مراجعات مستحقة '+due+' · ':'')+esc(advice)+'</p><a class="mfkj-t-link" href="'+url(x.route)+'">متابعة المستوى ↗</a></article>';}).join('');
-var next=journeyLevels.find(function(x){var l=journeyGetLevel(x.code);return !l.certificateEarned&&(l.wordsSeen.length<5||l.speakingKeys.length<3||l.finalQuizBest<4);})||journeyLevels[0],advice=dueTotal?'ابدأ بمراجعة الأخطاء المستحقة.':!active?'ابدأ بجلسة قصيرة في A1 واطلب من الطفل شرح ما تعلّمه.':'اختاروا خطوة واحدة كل مرة وركّزوا على الفهم لا عدد النجوم.';
-host.innerHTML='<div class="mfkj-t-stats"><div class="mfkj-t-stat"><b>'+stars+'</b><span>نجوم</span></div><div class="mfkj-t-stat"><b>'+active+'/6</b><span>مستويات بدأ فيها التعلّم</span></div><div class="mfkj-t-stat"><b>'+dueTotal+'</b><span>مراجعات مستحقة</span></div><div class="mfkj-t-stat"><b>'+certs+'</b><span>شهادات</span></div></div><div class="mfkj-t-note"><b>أفضل خطوة تالية:</b> '+esc(advice)+' <a class="mfkj-t-link" href="'+url(dueTotal?'review':next.route)+'">'+(dueTotal?'ابدأ المراجعة':'تابع '+esc(next.code))+' ↗</a></div><div class="mfkj-t-grid">'+cards+'</div><div class="mfkj-t-note">الملخص يعرض بيانات الحساب الحالي أو التقدم المحلي على الجهاز. للمزامنة بين الأجهزة يلزم تسجيل الدخول بحساب الطفل نفسه؛ رقم ولي الأمر وحده لا يفتح بيانات الطفل.</div><div class="mfkj-t-nav"><a href="'+url('map')+'">خريطة المنهج</a><a href="./?kids=lab&amp;kidsTab=missions">مهمات منزلية</a><a href="./?kids=lab&amp;kidsTab=portfolio">ملف الإنجاز · '+lab+'</a></div>';}
+function renderParentOverview(){document.title='Family Progress | Mr. Fluent Kids';root.innerHTML=shell('FAMILY PROGRESS','Parent Overview.','متابعة ولي الأمر','تقرير آمن عن تقدم الطلاب المرتبطين بحساب ولي الأمر.',mfkjToolsCss()+'<div class="mfkj-t-wrap"><div class="mfkj-t-nav"><button type="button" class="mfkr-btn mfkj-secondary" data-mfj-parent-refresh>تحديث التقرير ↻</button><a href="./">العودة إلى DOMA</a></div><div id="mfkjParentSummary" class="mfkj-t-wrap"><div class="mfkj-t-note">جاري تحميل التقرير…</div></div></div>');journeyRenderParentOverview();}
+function journeyRenderParentOverview(){
+ var host=root.querySelector('#mfkjParentSummary');if(!host)return;
+ var report=window.__mfKidsParentReport||null;
+ if(!report){host.innerHTML='<div class="mfkj-t-note">جاري تحميل تقرير ولي الأمر…</div>';return;}
+ var children=Array.isArray(report.children)?report.children:[];
+ if(!children.length){
+  host.innerHTML='<div class="mfkj-t-note"><b>لا يوجد طالب مرتبط بهذا الحساب حتى الآن.</b><p lang="ar" dir="rtl">اطلب من إدارة DOMA ربط حساب ولي الأمر بحساب الطالب من لوحة الإدارة. لن تظهر بيانات أي طالب غير مرتبط بحسابك.</p><p lang="ar" dir="rtl">بعد إنشاء الربط، اضغط «تحديث التقرير» لعرض التقدم.</p></div>';
+  return;
+ }
+ var totals=children.reduce(function(acc,child){
+  (Array.isArray(child.levels)?child.levels:[]).forEach(function(level){
+   acc.stars+=Number(level.stars)||0;
+   acc.due+=Number(level.review_due_count)||0;
+   if(level.certificate_earned)acc.certificates++;
+   if(Number(level.progress_percent)>0)acc.started++;
+   acc.progress+=Number(level.progress_percent)||0;
+   acc.levels++;
+  });
+  if(child.subscription_active)acc.activeSubscriptions++;
+  return acc;
+ },{stars:0,due:0,certificates:0,started:0,progress:0,levels:0,activeSubscriptions:0});
+ var cards=children.map(function(child){
+  var levels=Array.isArray(child.levels)?child.levels:[];
+  var levelCards=levels.map(function(level){
+   var pct=Math.max(0,Math.min(100,Number(level.progress_percent)||0));
+   var due=Number(level.review_due_count)||0;
+   var words=Number(level.words_learned)||0;
+   var speaking=Number(level.speaking_missions_completed)||0;
+   var best=Number(level.final_quiz_best)||0;
+   var status=level.certificate_earned?'أكمل متطلبات الشهادة':pct>=80?'تقدم قوي':pct>=35?'في مرحلة التعلم':pct>0?'بدأ التعلم':'لم يبدأ بعد';
+   var advice=due?'ابدأ بمراجعة الأخطاء المستحقة.':speaking<3?'شجّعه على إكمال مواقف المحادثة.':best<4?'راجعوا الدرس ثم أعيدوا التحدي النهائي.':words<5?'وسّعوا حصيلة الكلمات الجديدة.':'اطلبوا منه شرح ما تعلّمه بجمله الخاصة.';
+   return '<article class="mfkj-t-card"><div class="mfkj-t-kicker">'+esc(level.level_code||'')+' · '+esc(status)+'</div><h3>'+pct+'% · '+(Number(level.stars)||0)+' ⭐</h3><div class="mfkj-t-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div><p>كلمات '+words+' · أنشطة '+(Number(level.activity_count)||0)+' · محادثة '+speaking+'/3 · أفضل تحدٍّ '+best+'/5</p><p>'+(due?'<b>مراجعات مستحقة: '+due+'</b> · ':'')+esc(advice)+'</p></article>';
+  }).join('');
+  var last=child.last_activity_at?journeyDateLabel(child.last_activity_at):'لا يوجد نشاط مسجل';
+  return '<section class="mfkj-t-card" style="grid-column:1/-1"><div class="mfkj-t-kicker">STUDENT REPORT · تقرير الطالب</div><div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div><h2>'+esc(child.student_name||'الطالب')+'</h2><p>'+esc(child.grade_name||'')+' · آخر نشاط: '+esc(last)+'</p></div><span class="mfkj-t-pill">'+(child.subscription_active?'اشتراك Kids نشط':'اشتراك Kids غير نشط')+'</span></div><div class="mfkj-t-grid">'+levelCards+'</div></section>';
+ }).join('');
+ var average=totals.levels?Math.round(totals.progress/totals.levels):0;
+ var advice=totals.due?'ابدأوا بالمراجعات المستحقة قبل فتح دروس جديدة.':'حافظوا على جلسات قصيرة ومنتظمة، واطلبوا من الطالب شرح ما تعلّمه بصوته.';
+ host.innerHTML='<div class="mfkj-t-stats"><div class="mfkj-t-stat"><b>'+children.length+'</b><span>طلاب مرتبطون</span></div><div class="mfkj-t-stat"><b>'+totals.stars+'</b><span>نجوم مكتسبة</span></div><div class="mfkj-t-stat"><b>'+totals.due+'</b><span>مراجعات مستحقة</span></div><div class="mfkj-t-stat"><b>'+totals.certificates+'</b><span>شهادات مكتملة</span></div></div><div class="mfkj-t-note"><b>متوسط التقدم المسجل:</b> '+average+'% · '+esc(advice)+'<div style="margin-top:6px;font-size:12px">الاشتراكات النشطة: '+totals.activeSubscriptions+' / '+children.length+' · تم إنشاء التقرير: '+esc(journeyDateLabel(report.generated_at))+'</div></div><div class="mfkj-t-grid">'+cards+'</div><div class="mfkj-t-note">يعرض هذا التقرير بيانات الطلاب المرتبطين بحساب ولي الأمر فقط. لا تُعرض بيانات حسابات أخرى.</div>';
+}
 function mfkjLabKey(){return 'mrfluent-kids-writing-lab-v1:'+(journeyUserId||(typeof sessionUser!=='undefined'&&sessionUser&&sessionUser.id)||'guest');}
 function mfkjLabRead(){try{return JSON.parse(localStorage.getItem(mfkjLabKey())||'{}')||{};}catch(_){return {};}}
 function renderLearningLab(){
@@ -2728,8 +2825,17 @@ function kidsJourneyRenderEntryScreen(message,kind){
   if(login)login.addEventListener('click',function(){if(typeof openAuth==='function')openAuth('login');});
   if(retry)retry.addEventListener('click',function(){kidsJourneyHandlePreCourseRoute(route);});
 }
+async function kidsJourneyHandleParentRoute(){
+  var user=typeof sessionUser!=='undefined'&&sessionUser?sessionUser:null;
+  if(!user&&typeof sb!=='undefined'&&sb&&sb.auth){try{var sessionResult=await sb.auth.getSession();user=sessionResult&&sessionResult.data&&sessionResult.data.session&&sessionResult.data.session.user||null;}catch(_){}}
+  if(!user){window.__mfKidsToolsAuthorized=false;kidsJourneyRenderEntryScreen('Sign in with the parent account to see your linked students.','is-warn');if(typeof openAuth==='function')setTimeout(function(){try{openAuth('login');}catch(error){console.warn('Parent sign-in could not be opened.',error);}},100);return;}
+  if(typeof sb==='undefined'||!sb||!sb.rpc){window.__mfKidsToolsAuthorized=false;kidsJourneyRenderEntryScreen('Parent reporting is temporarily unavailable. Please try again later.','is-error');return;}
+  try{var response=await sb.rpc('mrfluent_kids_parent_dashboard');if(response&&response.error)throw response.error;window.__mfKidsParentReport=response&&response.data||{children:[]};window.__mfKidsToolsAuthorized=true;renderParentOverview();}
+  catch(error){window.__mfKidsToolsAuthorized=false;kidsJourneyRenderEntryScreen('Could not load the parent report: '+String(error&&error.message||'Please try again.'),'is-error');}
+}
 async function kidsJourneyHandlePreCourseRoute(routeName){
   if(routeName==='map'||routeName==='parents'||routeName==='lab')window.__mfKidsToolsAuthorized=false;
+  if(routeName==='parents'){await kidsJourneyHandleParentRoute();return;}
   var ctx;
   var cachedContext=window.__mfKidsJourneyAccessContext||null;
   var cachedAt=Number(window.__mfKidsJourneyAccessContextAt||0);
