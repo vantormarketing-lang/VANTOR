@@ -335,3 +335,237 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){
   html body *{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
+
+
+/* =========================================================
+   DOMA STUDENT AREA — FINAL SPACE / PURPLE GLASS OVERRIDE
+   Scope: the authenticated student drawer only.
+   Visual-only: preserves routes, subscription state and learning logic.
+========================================================= */
+html body #drawer{
+  --student-space-bg:#120d1e;
+  --student-space-panel:rgba(83,58,112,.42);
+  --student-space-panel-strong:rgba(54,38,77,.76);
+  --student-space-edge:rgba(225,193,233,.34);
+  --student-space-gold:#ffe5bd;
+  --student-space-purple:#b894e9;
+  --student-space-text:#fff4e8;
+  --student-space-muted:#d5c5dc;
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(157,111,199,.22),transparent 34%),
+    radial-gradient(ellipse at 88% 12%,rgba(232,185,116,.12),transparent 31%),
+    radial-gradient(ellipse at 50% 100%,rgba(93,65,134,.19),transparent 46%),
+    rgba(7,5,15,.82)!important;
+  color:var(--student-space-text)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+}
+html body #drawer .drawer-shell{
+  color:var(--student-space-text)!important;
+  background:
+    radial-gradient(ellipse at 85% 0%,rgba(175,132,208,.10),transparent 38%),
+    linear-gradient(145deg,rgba(41,29,59,.91),rgba(19,15,32,.95) 58%,rgba(33,23,47,.92))!important;
+  border:1px solid rgba(255,218,174,.42)!important;
+  box-shadow:0 32px 100px rgba(4,2,12,.62),inset 0 1px 0 rgba(255,255,255,.13),0 0 48px rgba(158,116,203,.10)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;
+  backdrop-filter:blur(28px) saturate(150%)!important;
+}
+html body #drawer .drawer-side{
+  color:var(--student-space-text)!important;
+  background:linear-gradient(180deg,rgba(31,23,47,.96),rgba(21,17,35,.97) 58%,rgba(37,25,48,.96))!important;
+  border-right:1px solid rgba(225,193,233,.24)!important;
+}
+html body #drawer .drawer-brand{
+  border-bottom-color:rgba(255,218,174,.18)!important;
+}
+html body #drawer .drawer-brand .mark{
+  background:linear-gradient(145deg,rgba(184,148,233,.30),rgba(58,42,82,.66))!important;
+  border:1px solid rgba(255,218,174,.48)!important;
+  box-shadow:0 8px 25px rgba(4,2,12,.32),0 0 22px rgba(184,148,233,.15)!important;
+}
+html body #drawer .drawer-brand .mark svg path:first-child{stroke:#ffe5bd!important}
+html body #drawer .drawer-brand .mark svg path:last-child{stroke:#fff4e8!important}
+html body #drawer .drawer-brand .brand,
+html body #drawer .drawer-brand .brand>span{color:var(--student-space-text)!important}
+html body #drawer .drawer-brand .brand small{color:#d8c6e7!important}
+html body #drawer .user-card,
+html body #drawer .student-command-card{
+  color:var(--student-space-text)!important;
+  background:linear-gradient(135deg,rgba(184,148,233,.17),rgba(255,255,255,.035) 55%,rgba(232,185,116,.07))!important;
+  border:1px solid rgba(225,193,233,.32)!important;
+  border-radius:15px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 12px 28px rgba(5,3,15,.18)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(145%)!important;
+  backdrop-filter:blur(18px) saturate(145%)!important;
+}
+html body #drawer .user-card strong,
+html body #drawer .student-command-card strong{color:#fff4e8!important}
+html body #drawer .user-card span,
+html body #drawer .student-command-card span{color:#d5c5dc!important}
+html body #drawer .user-card span:last-child,
+html body #drawer .student-command-card small{color:#ffe0ad!important}
+html body #drawer .student-nav-heading{
+  color:#ffe0ad!important;
+  border-top:1px solid rgba(225,193,233,.18)!important;
+  letter-spacing:1.5px!important;
+}
+html body #drawer .drawer-side>.side-link{
+  color:#e2d5e9!important;
+  border:1px solid transparent!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.018)!important;
+  box-shadow:none!important;
+}
+html body #drawer .drawer-side>.side-link:hover{
+  color:#fff8ee!important;
+  border-color:rgba(255,218,174,.34)!important;
+  background:linear-gradient(110deg,rgba(184,148,233,.19),rgba(255,218,174,.07))!important;
+  box-shadow:0 8px 22px rgba(8,4,18,.18)!important;
+}
+html body #drawer .drawer-side>.side-link.active{
+  color:#fff8ee!important;
+  border-color:rgba(255,218,174,.52)!important;
+  background:linear-gradient(110deg,rgba(184,148,233,.27),rgba(232,185,116,.12))!important;
+  box-shadow:inset 3px 0 0 #e8b974,0 8px 24px rgba(8,4,18,.20)!important;
+}
+html body #drawer #studentNavLogout{
+  color:#ffd1d4!important;
+  background:rgba(190,82,105,.08)!important;
+  border-color:rgba(244,150,165,.20)!important;
+}
+html body #drawer .drawer-main{background:transparent!important}
+html body #drawer .drawer-top{
+  color:var(--student-space-text)!important;
+  background:linear-gradient(90deg,rgba(184,148,233,.075),rgba(255,218,174,.055),rgba(184,148,233,.045))!important;
+  border-bottom:1px solid rgba(225,193,233,.24)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+}
+html body #drawer .drawer-top h2{color:#fff4e8!important}
+html body #drawer .drawer-top p{color:#d5c5dc!important}
+html body #drawer .drawer-top .btn.secondary{
+  color:#ffe5bd!important;
+  background:rgba(255,255,255,.055)!important;
+  border-color:rgba(255,218,174,.34)!important;
+}
+html body #drawer .drawer-body{
+  color:var(--student-space-text)!important;
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(184,148,233,.095),transparent 34%),
+    radial-gradient(ellipse at 8% 38%,rgba(232,185,116,.055),transparent 36%),
+    transparent!important;
+  scrollbar-color:rgba(184,148,233,.46) transparent!important;
+}
+html body #drawer .drawer-body::-webkit-scrollbar-thumb{background:rgba(184,148,233,.48)!important}
+html body #drawer .drawer-body :is(h1,h2,h3,h4,h5){color:#fff4e8!important}
+html body #drawer .drawer-body :is(p,.muted,.small,.desc,small,label,.field-help){color:#d5c5dc!important}
+html body #drawer .drawer-body .eyebrow{color:#ffe0ad!important}
+html body #drawer .drawer-body :is(
+  .dash-pro-card,.workspace-card,.student-home-card,.student-gami-card,
+  .student-plus5-card,.student-home-list-row,.student-achievement,.student-week-day,
+  .doma-subscription-card,.daily100-student-wrap,.daily100-student-item,
+  .hw-card,.hw-card-pro,.hw-stat,.cert,.notification,.profile-avatar-wrap,
+  .lesson-player,.lesson-list,.lesson-content,.lesson-notes,.lesson-toolbar-pro,
+  .question,.assessment-box,.prep-unit,.prep-lesson,.grammar-map .mini-card,
+  .doma-battle-card,.quick-card,.home-continue-card,.home-feature-card,
+  .home-quick,.student-home-insight,.student-gami-stat,.student-gami-row,
+  .student-gami-badge,.plus5-stat,.plus5-item,.progress-mini,.stat,
+  .upgrade-metric,.activity-row,.listrow,.local-insight,.student-home-two,
+  .student-gami-progress,.track-card,.quiz-shell,.demo-lesson,.demo-game
+){
+  color:var(--student-space-text)!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,218,174,.075),transparent 55%),
+    linear-gradient(145deg,rgba(112,82,145,.31),rgba(43,31,65,.63))!important;
+  border:1px solid rgba(225,193,233,.30)!important;
+  box-shadow:0 16px 38px rgba(5,3,15,.24),inset 0 1px 0 rgba(255,255,255,.11)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(140%)!important;
+  backdrop-filter:blur(18px) saturate(140%)!important;
+}
+html body #drawer .drawer-body .student-home-grid .student-home-card{
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,218,174,.08),transparent 55%),
+    linear-gradient(145deg,rgba(112,82,145,.34),rgba(43,31,65,.68))!important;
+  border-color:rgba(225,193,233,.34)!important;
+  border-radius:17px!important;
+}
+html body #drawer .drawer-body :is(.student-home-list-row,.student-home-insight,.student-week-day,.student-achievement,.student-gami-stat,.student-gami-row,.student-gami-badge,.plus5-stat,.plus5-item,.progress-mini,.student-home-two){
+  background:rgba(255,255,255,.045)!important;
+  border-color:rgba(225,193,233,.22)!important;
+}
+html body #drawer .drawer-body :is(.student-home-value,.student-home-card strong,.stat strong,.progress-mini b,.student-command-card strong){
+  color:#ffe5bd!important;
+}
+html body #drawer .drawer-body :is(.student-home-bar,.student-gami-progress,.bar,.rbar,.progress-track,.progressbar){
+  background:rgba(255,255,255,.10)!important;
+  border-color:rgba(225,193,233,.20)!important;
+}
+html body #drawer .drawer-body :is(.student-home-bar i,.student-gami-progress>i,.bar i,.rbar i,.progress-track span,.progressbar span){
+  background:linear-gradient(90deg,#9a79d1,#c0a0ed,#e8b974,#ffe5bd)!important;
+  box-shadow:0 0 12px rgba(184,148,233,.20)!important;
+}
+html body #drawer .drawer-body .progress-ring{
+  background:conic-gradient(#b894e9 calc(var(--p,0)*1%),rgba(225,193,233,.13) 0)!important;
+}
+html body #drawer .drawer-body .progress-ring::after{background:rgba(31,23,47,.98)!important}
+html body #drawer .drawer-body :is(.pill,.tag,.streak-badge,.curriculum-count,.student-home-pill){
+  color:#ffe5bd!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.13),rgba(184,148,233,.16))!important;
+  border-color:rgba(255,218,174,.32)!important;
+}
+html body #drawer .drawer-body :is(.btn.primary,.btn-primary,.primary){
+  color:#4b2d46!important;-webkit-text-fill-color:#4b2d46!important;
+  background:linear-gradient(135deg,#ffe5bd,#e8b974 58%,#c98248)!important;
+  border-color:rgba(255,237,207,.88)!important;
+  box-shadow:0 10px 24px rgba(35,15,37,.24),inset 0 1px 0 rgba(255,255,255,.58)!important;
+}
+html body #drawer .drawer-body :is(.btn.secondary,.btn-soft,.ghost,.btn:not(.primary):not(.danger)){
+  color:#ffe5bd!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(90,65,119,.34))!important;
+  border-color:rgba(225,193,233,.34)!important;
+}
+html body #drawer .drawer-body :is(input:not([type=checkbox]):not([type=radio]),textarea,select,.field){
+  color:#fff4e8!important;
+  background:linear-gradient(135deg,rgba(47,34,68,.76),rgba(32,25,49,.88))!important;
+  border-color:rgba(225,193,233,.34)!important;
+}
+html body #drawer .drawer-body :is(input,textarea,.field)::placeholder{color:rgba(213,197,220,.75)!important}
+html body #drawer .drawer-body :is(.notice,.status,.scorebox,.student-home-alert,.hw-feedback,.empty){
+  color:#f4e9f4!important;
+  background:linear-gradient(135deg,rgba(184,148,233,.13),rgba(255,218,174,.055))!important;
+  border-color:rgba(225,193,233,.28)!important;
+}
+html body #drawer .drawer-body :is(.success,.good,.ok){color:#baf3d0!important}
+html body #drawer .drawer-body :is(.error,.bad){color:#ffc0c8!important}
+html body #drawer #mrStudentBottomNav{
+  background:linear-gradient(180deg,rgba(45,34,65,.91),rgba(22,17,38,.98))!important;
+  border-top:1px solid rgba(225,193,233,.28)!important;
+  box-shadow:0 -10px 32px rgba(5,3,15,.24)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(155%)!important;
+  backdrop-filter:blur(26px) saturate(155%)!important;
+}
+html body #drawer #mrStudentBottomNav .mr-student-tab{
+  color:#d5c5dc!important;
+  background:rgba(255,255,255,.025)!important;
+  border-color:transparent!important;
+}
+html body #drawer #mrStudentBottomNav .mr-student-tab.active{
+  color:#fff4e8!important;
+  background:linear-gradient(145deg,rgba(184,148,233,.24),rgba(232,185,116,.11))!important;
+  border-color:rgba(255,218,174,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 4px 18px rgba(184,148,233,.10)!important;
+}
+html body #drawer #mrStudentBottomNav .mr-student-tab.active svg{color:#ffe0ad!important;filter:drop-shadow(0 0 7px rgba(232,185,116,.23))!important}
+@media(max-width:700px){
+  html body #drawer .drawer-side{
+    background:linear-gradient(165deg,rgba(31,23,47,.99),rgba(18,15,32,.99) 58%,rgba(37,25,48,.99))!important;
+    border-right-color:rgba(225,193,233,.32)!important;
+    box-shadow:0 25px 70px rgba(4,2,12,.62),12px 0 40px rgba(184,148,233,.06)!important;
+  }
+  html body #drawer .drawer-body :is(.student-home-grid,.home-learning-grid,.dashboard-grid-pro){
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  html body #drawer .drawer-body :is(.doma-subscription-grid,.progress-summary){
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
