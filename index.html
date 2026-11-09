@@ -326,7 +326,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
 
     // The query string helps the browser notice a new installer/service-worker build
     // without changing the public sw.js filename required by the existing deployment.
-    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v221', {scope:'./', updateViaCache:'none'});
+    const reg = await navigator.serviceWorker.register('./sw.js?mrfluent=installer-v222', {scope:'./', updateViaCache:'none'});
     reg.update().catch(()=>{});
     const ready = navigator.serviceWorker.ready;
     const timeout = new Promise((_, reject)=>setTimeout(()=>reject(new Error('Offline setup is taking too long. Refresh the page and try again.')), 8000));
@@ -543,7 +543,7 @@ section{padding:88px 0}.head{text-align:center;margin-bottom:38px}.head .eyebrow
     window.addEventListener('load', function(){
       // Background registration keeps the normal site fast; the Install button
       // performs the explicit readiness check.
-      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v221', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
+      navigator.serviceWorker.register('./sw.js?mrfluent=installer-v222', {scope:'./', updateViaCache:'none'}).then(function(reg){reg.update().catch(function(){});}).catch(function(){});
     });
   }
 })();
@@ -15695,4 +15695,71 @@ html body:not(.mf-course-route):not(.mf-kids-route) :is(
 @media(prefers-reduced-motion:reduce){
   html body:not(.mf-course-route):not(.mf-kids-route) *{transition:none!important;scroll-behavior:auto!important}
 }
+</style>
+
+<style id="doma-grade-reference-glass-specificity-fix-v1">
+/* Final high-specificity override for the six dynamically-rendered school grade cards. */
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n){
+  --grade-rgb:226,181,126!important;
+  color:#fff1e5!important;
+  background-color:rgba(78,48,96,.52)!important;
+  background-image:
+    radial-gradient(ellipse 175px 100px at 43% 0%,rgba(255,191,151,.31) 0%,rgba(255,191,151,0) 100%),
+    radial-gradient(ellipse 125px 145px at 100% 48%,rgba(255,203,153,.3) 0%,rgba(255,203,153,0) 100%),
+    radial-gradient(ellipse 185px 95px at 22% 100%,rgba(255,176,142,.24) 0%,rgba(255,176,142,0) 100%),
+    linear-gradient(135deg,rgba(164,119,181,.56) 0%,rgba(91,58,112,.6) 53%,rgba(54,34,75,.72) 100%)!important;
+  border:1px solid rgba(225,193,233,.45)!important;
+  border-radius:27px!important;
+  box-shadow:0 24px 55px rgba(18,7,27,.36),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.09),0 0 30px rgba(235,170,112,.15)!important;
+  -webkit-backdrop-filter:blur(25px) saturate(150%)!important;
+  backdrop-filter:blur(25px) saturate(150%)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n)::before{
+  content:""!important;position:absolute!important;inset:0!important;z-index:0!important;border-radius:inherit!important;pointer-events:none!important;
+  background:linear-gradient(118deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.045) 43%,rgba(255,255,255,.01) 100%),radial-gradient(ellipse 100px 32px at 30% 1%,rgba(255,244,218,.13),transparent 100%)!important;
+  opacity:1!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n)::after{
+  content:""!important;position:absolute!important;inset:0!important;z-index:0!important;border-radius:inherit!important;pointer-events:none!important;
+  background:radial-gradient(ellipse 82px 72px at 45% 0%,rgba(255,186,141,.23),transparent 100%),radial-gradient(ellipse 60px 80px at 100% 48%,rgba(255,209,159,.22),transparent 100%),radial-gradient(ellipse 98px 52px at 23% 100%,rgba(255,178,151,.18),transparent 100%)!important;
+  mix-blend-mode:screen!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n)>*{position:relative!important;z-index:1!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-top{background:transparent!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-icon{
+  color:#ffe9d2!important;background:linear-gradient(145deg,rgba(184,139,174,.62),rgba(92,60,112,.62))!important;
+  border:1px solid rgba(255,220,185,.5)!important;border-radius:16px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 18px rgba(20,8,30,.2),0 0 16px rgba(239,177,119,.14)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-icon svg{color:inherit!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-title{
+  color:#fff2e6!important;-webkit-text-fill-color:#fff2e6!important;text-shadow:0 2px 14px rgba(31,11,39,.32)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-subtitle{color:#ead9e9!important;-webkit-text-fill-color:#ead9e9!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-price{
+  display:block!important;width:100%!important;margin-top:7px!important;padding:7px 9px!important;
+  color:#ffdfad!important;-webkit-text-fill-color:#ffdfad!important;background:rgba(255,213,160,.1)!important;
+  border:1px solid rgba(255,220,180,.3)!important;border-radius:12px!important;text-align:center!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 13px rgba(26,9,35,.13)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-price span{color:#ffdfad!important;-webkit-text-fill-color:#ffdfad!important}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-button,
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .grade-open-button{
+  color:#4b2d46!important;-webkit-text-fill-color:#4b2d46!important;
+  background:linear-gradient(135deg,#ffe5bd 0%,#e8b974 55%,#c98248 100%)!important;
+  border:1px solid rgba(255,237,207,.9)!important;border-radius:14px!important;
+  box-shadow:0 8px 20px rgba(35,15,37,.25),inset 0 1px 0 rgba(255,255,255,.58),0 0 16px rgba(244,190,128,.16)!important;text-shadow:none!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .mf-pastel-grade-button:hover,
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n) .grade-open-button:hover{
+  background:linear-gradient(135deg,#fff0d7 0%,#f0c98f 55%,#d99a5e 100%)!important;border-color:#fff3df!important;
+  box-shadow:0 10px 24px rgba(35,15,37,.3),0 0 20px rgba(244,190,128,.24)!important;
+}
+html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n):hover{
+  border-color:rgba(255,218,174,.72)!important;
+  box-shadow:0 27px 62px rgba(18,7,27,.4),inset 0 1px 0 rgba(255,255,255,.31),0 0 32px rgba(238,173,114,.22)!important;
+  transform:translateY(-2px)!important;
+}
+@media(max-width:700px){html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n){border-radius:21px!important}}
+@media(prefers-reduced-motion:reduce){html body #gradeGrid > article.card.grade.grade-selectable.mf-pastel-grade-card:nth-child(n){transition:none!important}}
 </style>
