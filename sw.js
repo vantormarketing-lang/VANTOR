@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v226';
-const BRAND_VERSION = 'doma-glass-v63';
+const CACHE_NAME = 'mr-fluent-offline-student-v227';
+const BRAND_VERSION = 'doma-glass-v64';
 // Kids curriculum tools release: refresh the app shell and keep learning routes consistent.
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v226', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v227', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
