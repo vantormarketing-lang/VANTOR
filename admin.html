@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" sizes="any" href="./doma-admin-app-icon.svg?v=doma-admin-glass-v6">
 <link rel="apple-touch-icon" sizes="any" href="./doma-admin-app-icon.svg?v=doma-admin-glass-v6">
-<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-glass-v9">
+<link rel="manifest" href="./admin-manifest.webmanifest?v=doma-admin-glass-v10">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b0809;--panel:#130c0f;--panel2:#1b1115;--line:#38232c;--text:#f6eef1;--muted:#a6969d;--accent:#7d2940;--accent2:#a43857;--ok:#2f7f59;--warn:#8c6a23;--danger:#9d304a;--shadow:0 24px 70px rgba(0,0,0,.35)}
@@ -2692,7 +2692,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v57', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v58', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){
@@ -4261,6 +4261,123 @@ html body .content .empty{color:#ead9e8!important}
 html body .content .admin-upgrade-card small,html body .content .admin-upgrade-card span,html body .content .doma-pro6-admin-card small,html body .content .doma-pro6-admin-card span,html body .content .doma-final-admin-card span,html body .content .pro7-admin-kpi span,html body .content .pro7-admin-meta,html body .content .doma-pro6-note,html body .content .doma-final-review-row p,html body .content .pro7-admin-msg small{color:#ead9e8!important}
 html body .content .admin-upgrade-summary,html body .content .pro7-admin-list{background:transparent!important;border:0!important;box-shadow:none!important}
 @media(prefers-reduced-motion:reduce){html body .content *{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+
+<style id="doma-admin-centered-menu-glass-items-v1">
+/* Compact glass tiles for every item and section title in the centered mobile Admin menu. */
+@media(max-width:760px){
+  html body #sidebar.sidebar nav{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    gap:6px!important;
+    width:100%!important;
+    margin:0!important;
+    padding:2px 1px 6px!important;
+    background:transparent!important;
+  }
+
+  /* Each navigation destination gets its own compact frosted-glass rectangle. */
+  html body #sidebar.sidebar nav>.nav-btn,
+  html body #sidebar.sidebar nav>.nav-btn:hover,
+  html body #sidebar.sidebar nav>.nav-btn:focus,
+  html body #sidebar.sidebar nav>.nav-btn:focus-visible,
+  html body #sidebar.sidebar nav>.nav-btn.active{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:38px!important;
+    height:auto!important;
+    margin:0!important;
+    padding:8px 11px!important;
+    border:1px solid rgba(220,188,233,.29)!important;
+    border-radius:12px!important;
+    background:linear-gradient(135deg,rgba(164,118,181,.30),rgba(89,56,108,.43) 55%,rgba(55,34,76,.55))!important;
+    color:#fff1e7!important;
+    -webkit-text-fill-color:#fff1e7!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 5px 13px rgba(18,7,27,.16)!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+    font-weight:700!important;
+    letter-spacing:.005em!important;
+    text-align:left!important;
+    text-shadow:0 1px 9px rgba(31,11,39,.26)!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    transition:background .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important;
+  }
+
+  html body #sidebar.sidebar nav>.nav-btn:hover,
+  html body #sidebar.sidebar nav>.nav-btn:focus-visible{
+    border-color:rgba(255,218,174,.58)!important;
+    background:linear-gradient(135deg,rgba(184,139,174,.42),rgba(113,75,132,.53) 58%,rgba(72,46,92,.65))!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.21),0 7px 17px rgba(18,7,27,.23),0 0 15px rgba(235,170,112,.12)!important;
+    transform:translateY(-1px)!important;
+  }
+
+  html body #sidebar.sidebar nav>.nav-btn.active{
+    color:#ffe1b3!important;
+    -webkit-text-fill-color:#ffe1b3!important;
+    border-color:rgba(255,218,174,.66)!important;
+    background:linear-gradient(135deg,rgba(255,222,178,.19),rgba(174,119,178,.37) 52%,rgba(80,48,99,.63))!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 7px 18px rgba(18,7,27,.22),0 0 17px rgba(235,170,112,.16)!important;
+    text-shadow:0 0 12px rgba(255,206,149,.2)!important;
+  }
+
+  /* Group labels are also boxed, but smaller and lighter than the clickable menu items. */
+  html body #sidebar.sidebar nav>.nav-title{
+    display:inline-flex!important;
+    align-items:center!important;
+    align-self:flex-start!important;
+    box-sizing:border-box!important;
+    width:auto!important;
+    max-width:100%!important;
+    min-height:24px!important;
+    margin:7px 0 0!important;
+    padding:5px 10px!important;
+    border:1px solid rgba(225,193,233,.24)!important;
+    border-radius:9px!important;
+    background:linear-gradient(135deg,rgba(164,118,181,.30),rgba(75,48,94,.52))!important;
+    color:#ffdfad!important;
+    -webkit-text-fill-color:#ffdfad!important;
+    font-size:9px!important;
+    line-height:1.1!important;
+    font-weight:850!important;
+    letter-spacing:.12em!important;
+    text-transform:uppercase!important;
+    text-shadow:0 0 10px rgba(255,197,130,.16)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(18,7,27,.12)!important;
+  }
+
+  html body #sidebar.sidebar nav>#domaSidebarHomeButton{
+    min-height:38px!important;
+    margin:0 0 3px!important;
+    padding:8px 11px!important;
+    border-bottom:1px solid rgba(220,188,233,.29)!important;
+    color:#ffe1b3!important;
+    -webkit-text-fill-color:#ffe1b3!important;
+    font-size:12px!important;
+    font-weight:850!important;
+  }
+
+  html body #sidebar.sidebar nav>#logout{
+    margin-top:5px!important;
+    border-color:rgba(255,195,184,.3)!important;
+    background:linear-gradient(135deg,rgba(148,76,103,.23),rgba(80,43,72,.42))!important;
+  }
+
+  html body #sidebar.sidebar nav>.nav-btn:active{
+    transform:scale(.99)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html body #sidebar.sidebar nav>.nav-btn{transition:none!important}
+}
 </style>
 
 </body>
