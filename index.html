@@ -3365,51 +3365,6 @@ function printCertificate(title,code,issued){
   const w=window.open('','_blank','width=900,height=650');
   if(!w)return;
   w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:40px 24px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style></head><body><div class="c"><div class="small">Mr. Fluent</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">LEARN • SPEAK • MASTER</p></div>
-<style id="doma-programming-embedded-style">
-#domaProgrammingEmbeddedView{position:fixed;inset:0;z-index:2147483000;display:none;background:#120c1d;color:#fff}
-#domaProgrammingEmbeddedView.is-open{display:block}
-#domaProgrammingEmbeddedView .doma-programming-embedded-close{position:absolute;z-index:2;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));width:42px;height:42px;border:1px solid rgba(255,224,173,.55);border-radius:14px;background:rgba(30,17,43,.88);color:#ffe0ad;font:700 25px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.3)}
-#domaProgrammingEmbeddedView iframe{display:block;width:100%;height:100%;border:0;background:#120c1d}
-body.doma-programming-embedded-open{overflow:hidden!important}
-@media(max-width:600px){#domaProgrammingEmbeddedView .doma-programming-embedded-close{top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));width:38px;height:38px}}
-</style>
-<div id="domaProgrammingEmbeddedView" aria-hidden="true">
-  <button type="button" class="doma-programming-embedded-close" aria-label="العودة إلى المنصة" title="العودة إلى المنصة">×</button>
-  <iframe title="DOMA Programming Academy" loading="lazy" src="about:blank"></iframe>
-</div>
-<script id="doma-programming-embedded-controller">
-(function(){
-  var view=document.getElementById('domaProgrammingEmbeddedView');
-  if(!view||view.dataset.ready==='1')return;
-  view.dataset.ready='1';
-  var frame=view.querySelector('iframe');
-  function close(){
-    view.classList.remove('is-open');
-    view.setAttribute('aria-hidden','true');
-    document.body.classList.remove('doma-programming-embedded-open');
-    frame.src='about:blank';
-  }
-  function open(){
-    if(!frame.src||frame.getAttribute('src')==='about:blank')frame.src='./programming.html?embedded=1';
-    view.classList.add('is-open');
-    view.setAttribute('aria-hidden','false');
-    document.body.classList.add('doma-programming-embedded-open');
-  }
-  view.querySelector('.doma-programming-embedded-close').addEventListener('click',close);
-  document.addEventListener('click',function(event){
-    var link=event.target&&event.target.closest?event.target.closest('a.pa-home-cta[href="./programming.html"]'):null;
-    if(!link)return;
-    event.preventDefault();
-    event.stopPropagation();
-    open();
-  },true);
-  document.addEventListener('keydown',function(event){if(event.key==='Escape'&&view.classList.contains('is-open'))close()});
-  window.addEventListener('message',function(event){
-    if(event.origin!==window.location.origin||!event.data||event.data.type!=='DOMA_PROGRAMMING_CLOSE')return;
-    close();
-  });
-})();
-</script>
 
 </body></html>');
   w.document.close();
@@ -13672,6 +13627,52 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 
 
 
+
+<style id="doma-programming-embedded-style">
+#domaProgrammingEmbeddedView{position:fixed;inset:0;z-index:2147483000;display:none;background:#120c1d;color:#fff}
+#domaProgrammingEmbeddedView.is-open{display:block}
+#domaProgrammingEmbeddedView .doma-programming-embedded-close{position:absolute;z-index:2;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));width:42px;height:42px;border:1px solid rgba(255,224,173,.55);border-radius:14px;background:rgba(30,17,43,.88);color:#ffe0ad;font:700 25px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.3)}
+#domaProgrammingEmbeddedView iframe{display:block;width:100%;height:100%;border:0;background:#120c1d}
+body.doma-programming-embedded-open{overflow:hidden!important}
+@media(max-width:600px){#domaProgrammingEmbeddedView .doma-programming-embedded-close{top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));width:38px;height:38px}}
+</style>
+<div id="domaProgrammingEmbeddedView" aria-hidden="true">
+  <button type="button" class="doma-programming-embedded-close" aria-label="العودة إلى المنصة" title="العودة إلى المنصة">×</button>
+  <iframe title="DOMA Programming Academy" loading="lazy" src="about:blank"></iframe>
+</div>
+<script id="doma-programming-embedded-controller">
+(function(){
+  var view=document.getElementById('domaProgrammingEmbeddedView');
+  if(!view||view.dataset.ready==='1')return;
+  view.dataset.ready='1';
+  var frame=view.querySelector('iframe');
+  function close(){
+    view.classList.remove('is-open');
+    view.setAttribute('aria-hidden','true');
+    document.body.classList.remove('doma-programming-embedded-open');
+    frame.src='about:blank';
+  }
+  function open(){
+    if(!frame.src||frame.getAttribute('src')==='about:blank')frame.src='./programming.html?embedded=1';
+    view.classList.add('is-open');
+    view.setAttribute('aria-hidden','false');
+    document.body.classList.add('doma-programming-embedded-open');
+  }
+  view.querySelector('.doma-programming-embedded-close').addEventListener('click',close);
+  document.addEventListener('click',function(event){
+    var link=event.target&&event.target.closest?event.target.closest('a.pa-home-cta[href="./programming.html"]'):null;
+    if(!link)return;
+    event.preventDefault();
+    event.stopPropagation();
+    open();
+  },true);
+  document.addEventListener('keydown',function(event){if(event.key==='Escape'&&view.classList.contains('is-open'))close()});
+  window.addEventListener('message',function(event){
+    if(event.origin!==window.location.origin||!event.data||event.data.type!=='DOMA_PROGRAMMING_CLOSE')return;
+    close();
+  });
+})();
+</script>
 
 </body>
 </html>
