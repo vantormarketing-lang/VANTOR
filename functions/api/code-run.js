@@ -47,12 +47,13 @@ export async function onRequestPost({ request, env }) {
         const rawAuthError = await authResponse.text();
         authErrorDetail = rawAuthError.replace(/[\\r\\n\\t]+/g, " ").slice(0, 400);
       } catch (_) {}
+      const diagnosticText = authErrorDetail || "No response body";
       return json({
-        error: `تعذر التحقق من جلسة DOMA عبر Supabase (HTTP ${authResponse.status}).`,
+        error: `تعذر التحقق من جلسة DOMA عبر Supabase (HTTP ${authResponse.status}). تفاصيل الاستجابة: ${diagnosticText}`,
         diagnostic: {
           endpoint: "Supabase Auth /auth/v1/user",
           contentType: authContentType,
-          response: authErrorDetail || "No response body"
+          response: diagnosticText
         }
       }, 502);
     }
