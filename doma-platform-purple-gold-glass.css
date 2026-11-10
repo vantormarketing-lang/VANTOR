@@ -1866,3 +1866,10 @@ html body #drawer .drawer-body :is(.student-progress-hero,.progress-summary,.stu
 html body #drawer .drawer-body :is(.student-progress-hero,.progress-summary,.student-home-insights,.student-home-insight,.student-home-card,.progress-card,.learning-snapshot,.snapshot-card) :is(p,small,span,label,.muted,.desc){
   color:#e8dced!important;
 }
+
+
+/* Remove the two redundant subscription summary tiles from the student drawer.
+   Subscription and payment flows elsewhere remain available and unchanged. */
+html body #drawer .drawer-body #domaSubscriptionCenter .doma-subscription-grid{
+  display:none!important;
+}
