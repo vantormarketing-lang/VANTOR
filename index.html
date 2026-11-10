@@ -1917,6 +1917,15 @@ html body nav.nav .brand .mrfluent-header-live-dot{
   <div class="container hero-grid">
     <div class="hero-copy">
       <div class="eyebrow hero-eyebrow">YOUR ENGLISH JOURNEY STARTS HERE</div>
+      <section class="mr-fluent-homepage-welcome" id="mrFluentHomepageWelcome" aria-label="Welcome to Mr. Fluent" hidden>
+        <div class="mr-fluent-welcome-mark" aria-hidden="true">✦</div>
+        <div class="mr-fluent-welcome-copy">
+          <span class="mr-fluent-welcome-kicker">A NEW JOURNEY BEGINS</span>
+          <h3 class="mr-fluent-welcome-name">Welcome, Student</h3>
+          <p class="mr-fluent-welcome-to">to <strong>Mr. Fluent</strong></p>
+          <p class="mr-fluent-welcome-message">We’re glad you’re here. Explore, learn, and make every lesson count.</p>
+        </div>
+      </section>
       
 
       <div class="actions hero-actions">
@@ -2359,6 +2368,17 @@ function navActionMarkup(label,loggedOutAction){
     : '<svg class="nav-action-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.6 3.3C10.8 3.5 5.8 5.6 4.5 9.8c-.8 2.5 1 5 3.5 5.2 4.2.3 7.2-5.5 8.6-11.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17c2.7-4 6.1-6.7 10.4-9.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
   return icon+'<span>'+label+'</span>';
 }
+function renderPublicWelcome(){
+  const card=$('mrFluentHomepageWelcome');
+  if(!card)return;
+  const isNewWelcomeAccount=sessionUser?.user_metadata?.mr_fluent_welcome===true;
+  if(!sessionUser||!isNewWelcomeAccount){card.hidden=true;return;}
+  const fullName=String(sessionUser.user_metadata?.full_name||sessionUser.user_metadata?.name||'Student').trim();
+  const firstName=fullName.split(/\s+/)[0]||'Student';
+  const nameNode=card.querySelector('.mr-fluent-welcome-name');
+  if(nameNode)nameNode.textContent='Welcome, '+firstName;
+  card.hidden=false;
+}
 function updateNav(){
   const action=$('navAction');
   if(sessionUser){
@@ -2370,6 +2390,7 @@ function updateNav(){
     $('navLogin').onclick=()=>openAuth('login');
     if(action){action.innerHTML=navActionMarkup('Get Started',false);action.onclick=()=>openAuth('signup');action.setAttribute('aria-label','Get Started');}
   }
+  renderPublicWelcome();
 }
 
 async function getProfile(){if(!sessionUser)return null;const r=await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id',sessionUser.id).maybeSingle();if(r.error){console.warn(r.error);return await ensureProfile(sessionUser)}return r.data||await ensureProfile(sessionUser)}
@@ -2945,30 +2966,6 @@ function updateStudentShell(){
   const userCard=$('userCard');
   userCard.innerHTML='<strong>'+esc(fullName)+'</strong><span>'+esc(p.phone||sessionUser?.user_metadata?.phone||sessionUser?.phone||actualEmail||'')+'</span><span style="display:block;margin-top:6px;color:#d18498">'+esc(currentGrade?.name||'No active grade')+'</span>';
 
-  // Only accounts created through the new signup flow receive this persistent welcome card.
-  const welcomeId='mrFluentWelcomeCard';
-  const isNewWelcomeAccount=sessionUser?.user_metadata?.mr_fluent_welcome===true;
-  let welcomeCard=document.getElementById(welcomeId);
-  if(isNewWelcomeAccount&&userCard?.parentElement){
-    const firstName=String(fullName||'Student').trim().split(/\s+/)[0]||'Student';
-    if(!welcomeCard){
-      userCard.insertAdjacentHTML('afterend',
-        '<section class="mr-fluent-welcome-card" id="'+welcomeId+'" aria-label="Welcome to Mr. Fluent">'+
-          '<div class="mr-fluent-welcome-mark" aria-hidden="true">✦</div>'+
-          '<div class="mr-fluent-welcome-copy">'+
-            '<span class="mr-fluent-welcome-kicker">A NEW JOURNEY BEGINS</span>'+
-            '<h3 class="mr-fluent-welcome-name"></h3>'+
-            '<p class="mr-fluent-welcome-to">to <strong>Mr. Fluent</strong></p>'+
-            '<p class="mr-fluent-welcome-message">We’re glad you’re here. Explore, learn, and make every lesson count.</p>'+
-          '</div>'+
-        '</section>');
-      welcomeCard=document.getElementById(welcomeId);
-    }
-    const nameNode=welcomeCard?.querySelector('.mr-fluent-welcome-name');
-    if(nameNode)nameNode.textContent='Welcome, '+firstName;
-  }else if(welcomeCard){
-    welcomeCard.remove();
-  }
 }
 
 async function ensureActiveGrade(){
