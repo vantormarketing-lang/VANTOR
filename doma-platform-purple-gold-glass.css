@@ -1947,3 +1947,42 @@ html body #drawer .drawer-top{
   padding-top:10px!important;
   padding-bottom:10px!important;
 }
+
+
+/* Student More menu: retain only the student identity card (name, phone, grade).
+   Main navigation remains available through the dedicated student navigation bar. */
+html body #drawer .drawer-side > .drawer-brand,
+html body #drawer .drawer-side > .student-nav-heading,
+html body #drawer .drawer-side > .side-link,
+html body #drawer .drawer-side > #mrStudentMenuClose,
+html body #drawer .drawer-side > .student-tools,
+html body #drawer .drawer-side > .student-tools-grid,
+html body #drawer .drawer-side > .student-shortcuts,
+html body #drawer .drawer-side > .student-quick-actions,
+html body #drawer .drawer-side > .student-cv,
+html body #drawer .drawer-side > .student-cv-card{
+  display:none!important;
+}
+html body #drawer .drawer-side > .user-card#userCard{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  margin:14px!important;
+  padding:18px!important;
+  min-height:100px!important;
+  border:1px solid rgba(225,193,233,.42)!important;
+  border-radius:22px!important;
+  color:#fff1df!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,218,174,.15),transparent 52%),
+    linear-gradient(145deg,rgba(91,65,121,.78),rgba(37,27,57,.94))!important;
+  box-shadow:0 14px 32px rgba(5,3,15,.26),inset 0 1px 0 rgba(255,255,255,.14)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+}
+html body #drawer .drawer-side > .user-card#userCard strong{
+  color:#fff0dc!important;font-size:16px!important;font-weight:800!important;
+}
+html body #drawer .drawer-side > .user-card#userCard span{
+  color:#e8dced!important;font-size:12px!important;line-height:1.6!important;
+}
