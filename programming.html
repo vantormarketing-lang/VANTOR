@@ -139,14 +139,17 @@
       return line?'<p>'+line+'</p>':'';
     }).join('');
   }
-  function openLesson(id){
+  async function openLesson(id){
     if(!hasAccess()){showModal();return}
     var lesson=lessons.find(function(l){return l.id===id});if(!lesson)return;
     activeLesson=id;renderLessons();
     var old=$('paLessonReader');if(old)old.remove();
     var reader=document.createElement('article');reader.id='paLessonReader';reader.className='pa-lesson-reader';
-    reader.innerHTML='<div class="pa-reader-top"><span class="pa-kicker">LESSON CONTENT</span><span>'+Number(lesson.duration_minutes||10)+' دقيقة</span></div><h2>'+esc(lesson.title)+'</h2><p class="pa-reader-summary">'+esc(lesson.summary)+'</p><div class="pa-reader-content">'+markdown(lesson.content_md||'سيتم إضافة محتوى هذا الدرس قريبًا.')+'</div><div class="pa-reader-actions"><button type="button" class="pa-primary-btn" id="paCompleteBtn">'+(completed[id]?'إلغاء إكمال الدرس':'أنهيت الدرس ✓')+'</button><span class="pa-save-note">'+(user?'سيتم حفظ تقدمك على حسابك.':'سجّل الدخول لحفظ تقدمك.')+'</span></div>';
+    reader.innerHTML='<div class="pa-reader-top"><span class="pa-kicker">LESSON CONTENT</span><span>'+Number(lesson.duration_minutes||10)+' دقيقة</span></div><h2>'+esc(lesson.title)+'</h2><p class="pa-reader-summary">'+esc(lesson.summary)+'</p><div id="paReaderContent" class="pa-reader-content"><p>جاري تحميل محتوى الدرس…</p></div><div class="pa-reader-actions"><button type="button" class="pa-primary-btn" id="paCompleteBtn">'+(completed[id]?'إلغاء إكمال الدرس':'أنهيت الدرس ✓')+'</button><span class="pa-save-note">سيتم حفظ تقدمك على حسابك.</span></div>';
     $('paLessons').appendChild(reader);$('paCompleteBtn').addEventListener('click',function(){toggleComplete(id)});
+    var content=await db.rpc('programming_get_lesson_content',{p_lesson_id:id});
+    if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
+    $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
   }
   async function toggleComplete(id){
     if(!user){showModal();return}if(!hasAccess()){showModal();return}
@@ -162,8 +165,7 @@
   async function loadCurriculum(){
     var a=await db.from('programming_tracks').select('*').eq('published',true).order('sort_order');
     var b=await db.from('programming_modules').select('*').eq('published',true).order('sort_order');
-    var fields=hasAccess()?'*':'id,module_id,title,summary,duration_minutes,sort_order,published';
-    var c=await db.from('programming_lessons').select(fields).eq('published',true).order('sort_order');
+    var c=await db.from('programming_lessons').select('id,module_id,title,summary,duration_minutes,sort_order,published').eq('published',true).order('sort_order');
     if(a.error||b.error||c.error){$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل المنهج</h3><p>تأكد من اتصال الإنترنت ثم حدّث الصفحة. إذا استمرت المشكلة، راجع إعداد قاعدة بيانات الأكاديمية.</p></div>';return}
     tracks=a.data||[];modules=b.data||[];lessons=c.data||[];
     completed={};
