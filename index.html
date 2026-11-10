@@ -1917,15 +1917,9 @@ html body nav.nav .brand .mrfluent-header-live-dot{
   <div class="container hero-grid">
     <div class="hero-copy">
       <div class="eyebrow hero-eyebrow">YOUR ENGLISH JOURNEY STARTS HERE</div>
-      <section class="mr-fluent-homepage-welcome" id="mrFluentHomepageWelcome" aria-label="Welcome to Mr. Fluent" hidden>
-        <div class="mr-fluent-welcome-mark" aria-hidden="true">✦</div>
-        <div class="mr-fluent-welcome-copy">
-          <span class="mr-fluent-welcome-kicker">A NEW JOURNEY BEGINS</span>
-          <h3 class="mr-fluent-welcome-name">Welcome, Student</h3>
-          <p class="mr-fluent-welcome-to">to <strong>Mr. Fluent</strong></p>
-          <p class="mr-fluent-welcome-message">We’re glad you’re here. Explore, learn, and make every lesson count.</p>
-        </div>
-      </section>
+      <div class="mr-fluent-homepage-welcome" id="mrFluentHomepageWelcome" aria-label="Welcome to Mr. Fluent" hidden>
+        <h3 class="mr-fluent-welcome-name">Welcome, <span class="mr-fluent-welcome-student">Student</span><span class="mr-fluent-welcome-to">to Mr. Fluent</span></h3>
+      </div>
       
 
       <div class="actions hero-actions">
@@ -2375,8 +2369,8 @@ function renderPublicWelcome(){
   if(!sessionUser){card.hidden=true;return;}
   const fullName=String(sessionUser.user_metadata?.full_name||sessionUser.user_metadata?.name||'Student').trim();
   const firstName=fullName.split(/\s+/)[0]||'Student';
-  const nameNode=card.querySelector('.mr-fluent-welcome-name');
-  if(nameNode)nameNode.textContent='Welcome, '+firstName;
+  const nameNode=card.querySelector('.mr-fluent-welcome-student');
+  if(nameNode)nameNode.textContent=firstName;
   card.hidden=false;
 }
 function updateNav(){
