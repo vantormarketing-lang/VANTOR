@@ -20,6 +20,7 @@ const htmlFiles = [
   'index.html',
   'admin.html',
   'MR_FLUENT_KIDS_A1.html',
+  'programming.html',
   'MR_FLUENT_A1_COURSE.html',
   'MR_FLUENT_A2_COURSE.html',
   'MR_FLUENT_B1_COURSE.html',
