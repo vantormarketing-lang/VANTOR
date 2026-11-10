@@ -922,3 +922,48 @@ html body #drawer #mrStudentBottomNav .mr-student-tab.active svg{color:#91f0ff!i
 @media(prefers-reduced-motion:reduce){
   html body #drawer .drawer-body *{transition:none!important;animation:none!important}
 }
+
+
+/* Final sweep: every remaining student-only card used by More, Account,
+   Notifications, Live Classes, Support and legacy tool subviews. */
+html body #drawer .drawer-body [class*="-card"],
+html body #drawer .drawer-body [class*="-panel"],
+html body #drawer .drawer-body :is(
+  .notification,.profile-avatar-wrap,.profile-grid .workspace-card,
+  .dash-pro-card,.workspace-card,.quick-card,.home-quick,
+  .continue-lesson,.global-result,.doma-v2-card,.doma-v2-sub,
+  .student-home-insight,.student-home-two,.student-gami-center,
+  .lesson-player,.lesson-list,.lesson-content,.lesson-notes,
+  .lesson-toolbar-pro,.hw-card,.hw-card-pro,.hw-stat,.cert,
+  .listrow,.table-list,.assessment-box,.prep-unit,.prep-lesson
+){
+  color:#eef5ff!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(116,175,255,.10),transparent 56%),
+    linear-gradient(145deg,rgba(25,47,94,.67),rgba(8,21,51,.82))!important;
+  border-color:rgba(112,159,255,.30)!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.20),inset 0 1px 0 rgba(225,241,255,.09)!important;
+  -webkit-backdrop-filter:blur(17px) saturate(140%)!important;
+  backdrop-filter:blur(17px) saturate(140%)!important;
+}
+html body #drawer .drawer-body .notification.unread{
+  border-color:rgba(112,210,255,.55)!important;
+  box-shadow:inset 3px 0 0 #63dfff,0 12px 30px rgba(0,0,0,.18)!important;
+}
+html body #drawer .drawer-body .profile-avatar{
+  color:#f2f7ff!important;
+  background:linear-gradient(135deg,#4ab9e8,#6874dc 58%,#9a80f2)!important;
+  border-color:rgba(150,220,255,.58)!important;
+}
+html body #drawer .drawer-body .cert-code{
+  color:#91f0ff!important;background:rgba(5,17,43,.80)!important;
+  border-color:rgba(112,190,255,.40)!important;
+}
+html body #drawer .drawer-body .listrow .listrow-main :is(strong,b){color:#eef5ff!important}
+html body #drawer .drawer-body .listrow .listrow-main :is(span,small){color:#b9cbea!important}
+html body #drawer .drawer-body .quick-card:hover,
+html body #drawer .drawer-body .home-quick:hover{
+  border-color:rgba(112,210,255,.55)!important;
+  background:linear-gradient(135deg,rgba(61,153,214,.25),rgba(113,102,224,.18))!important;
+}
+html body #drawer .drawer-body .profile-avatar-wrap :is(span,p){color:#b9cbea!important}
