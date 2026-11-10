@@ -39,7 +39,10 @@ export async function onRequestPost({ request, env }) {
     const authResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
       headers: { apikey: anonKey, Authorization: `Bearer ${accessToken}` }
     });
-    if (!authResponse.ok) return json({ error: "انتهت جلسة الدخول. سجّل الدخول مرة أخرى." }, 401);
+    if (!authResponse.ok) {
+      if (authResponse.status === 401) return json({ error: "انتهت جلسة الدخول أو لم تعد صالحة. حدّث تسجيل الدخول ثم حاول مرة أخرى." }, 401);
+      return json({ error: `تعذر التحقق من جلسة DOMA عبر Supabase (HTTP ${authResponse.status}). راجع إعدادات الاتصال بالمشروع.` }, 502);
+    }
     const authUser = await authResponse.json();
     if (!authUser || !authUser.id) return json({ error: "تعذر التحقق من حسابك." }, 401);
 
