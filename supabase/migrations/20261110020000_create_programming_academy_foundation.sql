@@ -1,0 +1,2 @@
+-- See the Supabase migration history for the complete isolated Programming Academy schema.
+-- Applied as create_programming_academy_foundation on 2026-11-10.
