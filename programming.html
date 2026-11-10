@@ -254,6 +254,17 @@
   $('paSubmitPayment').addEventListener('click',submitPayment);
   $('paAdminRefresh').addEventListener('click',async function(){var r=await db.rpc('programming_admin_list_payment_requests');if(!r.error)renderAdminRequests(r.data||[])});
   $('paSubscribeModal').querySelectorAll('[data-pa-close]').forEach(function(el){el.addEventListener('click',closeModal)});
+  if(window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1'){
+    document.addEventListener('click',function(event){
+      var link=event.target&&event.target.closest?event.target.closest('a[href]'):null;
+      if(!link)return;
+      var target=new URL(link.getAttribute('href'),window.location.href);
+      if(target.origin===window.location.origin&&(target.pathname==='/'||target.pathname.endsWith('/index.html'))){
+        event.preventDefault();
+        window.parent.postMessage({type:'DOMA_PROGRAMMING_CLOSE'},window.location.origin);
+      }
+    },true);
+  }
   boot().catch(function(error){console.error(error);$('paTracks').innerHTML='<div class="pa-empty-state">حدث خطأ أثناء تحميل الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</div>'});
 })();</script>
 </body>
