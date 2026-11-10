@@ -112,14 +112,25 @@
       var ls=lessons.filter(function(l){return ms.some(function(m){return m.id===l.module_id})});
       var done=ls.filter(function(l){return completed[l.id]}).length;
       var active=t.id===activeTrack,available=ls.length>0;
-      return '<button type="button" class="pa-track-card '+(active?'active':'')+'" data-track="'+esc(t.id)+'"><span class="pa-track-number">'+String(i+1).padStart(2,'0')+'</span><span class="pa-track-content"><b>'+esc(t.title)+'</b><small>'+esc(t.subtitle)+'</small><span class="pa-track-description">'+esc(t.description)+'</span><span class="pa-track-meta">'+(available?(ls.length+' دروس منشورة · '+done+' مكتمل'):'المحتوى قيد الإعداد')+'</span></span><span class="pa-track-arrow">'+(available?(hasAccess()?'←':'🔒'):'◌')+'</span></button>';
+      return '<button type="button" class="pa-track-card '+(active?'active':'')+'" data-track="'+esc(t.id)+'" aria-pressed="'+(active?'true':'false')+'"><span class="pa-track-number">'+String(i+1).padStart(2,'0')+'</span><span class="pa-track-content"><b>'+esc(t.title)+'</b><small>'+esc(t.subtitle)+'</small><span class="pa-track-description">'+esc(t.description)+'</span><span class="pa-track-meta">'+(available?(ls.length+' دروس منشورة · '+done+' مكتمل'):'المحتوى قيد الإعداد')+'</span></span><span class="pa-track-arrow">'+(available?(hasAccess()?'←':'🔒'):'◌')+'</span></button>';
     }).join('');
-    host.querySelectorAll('[data-track]').forEach(function(btn){btn.addEventListener('click',function(){selectTrack(btn.getAttribute('data-track'))})});
+    // Delegate clicks from the grid so the cards remain interactive after every re-render.
+    host.onclick=function(event){
+      var btn=event.target&&event.target.closest?event.target.closest('[data-track]'):null;
+      if(!btn||!host.contains(btn))return;
+      event.preventDefault();
+      selectTrack(btn.getAttribute('data-track'),true);
+    };
   }
-  function selectTrack(id){
-    activeTrack=id;var track=tracks.find(function(t){return t.id===id});if(!track)return;
+  function selectTrack(id,shouldScroll){
+    var track=tracks.find(function(t){return String(t.id)===String(id)});if(!track)return;
+    activeTrack=track.id;
     $('paTrackTitle').textContent=track.title;$('paTrackDescription').textContent=track.description;
     renderTracks();renderLessons();
+    if(shouldScroll){
+      var panel=$('paLessons');
+      if(panel)panel.scrollIntoView({behavior:'smooth',block:'center'});
+    }
   }
   function renderLessons(){
     var ms=modules.filter(function(m){return m.track_id===activeTrack});
