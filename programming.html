@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a1028">
+<title>Programming Academy | DOMA Academy</title>
+<meta name="description" content="تعلم البرمجة من الصفر عبر مسارات متدرجة ومشاريع عملية في DOMA Programming Academy.">
+<link rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
+<link rel="stylesheet" href="./programming-academy.css?v=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="programming-page">
+<header class="pa-topbar">
+  <a class="pa-brand" href="./index.html"><span class="pa-brand-mark">⌘</span><span>DOMA <b>PROGRAMMING</b></span></a>
+  <div class="pa-top-actions"><span id="paAuthStatus" class="pa-auth-status">جاري التحقق من الحساب…</span><a class="pa-home-link" href="./index.html">العودة للمنصة</a></div>
+</header>
+<main class="pa-shell">
+  <section class="pa-hero">
+    <div class="pa-hero-copy">
+      <span class="pa-kicker">INDEPENDENT PROGRAMMING ACADEMY</span>
+      <h1>ابدأ من الصفر، <span>وابنِ أي شيء.</span></h1>
+      <p>أكاديمية برمجة متكاملة تبدأ معك من التفكير المنطقي وأساسيات علوم الكمبيوتر، ثم تنتقل إلى لغات البرمجة وتطوير المواقع والتطبيقات والذكاء الاصطناعي والمشاريع الحقيقية.</p>
+      <div class="pa-hero-actions"><a href="#learning-paths" class="pa-primary-btn">استكشف مسارات التعلم <span>←</span></a><span class="pa-note">لا تحتاج أي خبرة سابقة</span></div>
+    </div>
+    <div class="pa-code-art" aria-hidden="true"><div class="pa-orbit pa-orbit-one"></div><div class="pa-orbit pa-orbit-two"></div><div class="pa-code-window"><div class="pa-window-dots"><i></i><i></i><i></i></div><div class="pa-code-line pa-code-muted">01&nbsp; &nbsp; <span>ابدأ_رحلتك</span> = True</div><div class="pa-code-line"><b>if</b> <span>curiosity</span>:</div><div class="pa-code-line pa-indent"><b>learn</b>(<em>"the fundamentals"</em>)</div><div class="pa-code-line pa-indent"><b>build</b>(<em>"real projects"</em>)</div><div class="pa-code-line pa-code-gold">print("Hello, Programmer!")</div><div class="pa-cursor"></div></div><div class="pa-float-chip">⌘ &nbsp; LEARN • BUILD • GROW</div></div>
+  </section>
+  <section class="pa-stats" aria-label="مميزات الأكاديمية"><div><b>10</b><span>مسارات تعليمية</span></div><div><b>01</b><span>بداية من الصفر</span></div><div><b>∞</b><span>أفكار ومشاريع</span></div><div><b>AI</b><span>مساعد برمجة قادم</span></div></section>
+  <section id="learning-paths" class="pa-path-section">
+    <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING ROADMAP</span><h2>خريطة الأكاديمية</h2><p>كل مسار يبني على المهارات التي تعلمتها في المسار السابق.</p></div><span class="pa-roadmap-label">من الأساسيات إلى المشاريع</span></div>
+    <div id="paTracks" class="pa-track-grid"><div class="pa-loading">جاري تحميل مسارات البرمجة…</div></div>
+  </section>
+  <section class="pa-learning-layout">
+    <div class="pa-lessons-panel">
+      <div class="pa-panel-heading"><div><span class="pa-kicker">START HERE</span><h2 id="paTrackTitle">Computer Science Fundamentals</h2><p id="paTrackDescription">ابدأ بفهم البرمجة قبل كتابة الأكواد.</p></div><span id="paTrackProgress" class="pa-progress-count">0 / 0</span></div>
+      <div class="pa-progress-track"><i id="paProgressBar"></i></div>
+      <div id="paLessons" class="pa-lesson-list"><div class="pa-loading">جاري تحميل الدروس…</div></div>
+    </div>
+    <aside class="pa-side-column">
+      <div class="pa-side-card pa-tutor-card"><span class="pa-side-icon">✦</span><span class="pa-kicker">AI PROGRAMMING TUTOR</span><h3>مدرس البرمجة الذكي</h3><p>مساعد يشرح المفاهيم، ويراجع الأكواد، ويقترح تدريبات تناسب مستواك.</p><span class="pa-coming-soon">قريبًا داخل الأكاديمية</span></div>
+      <div class="pa-side-card"><span class="pa-kicker">YOUR LEARNING RULE</span><h3>افهم، جرّب، ثم ابنِ.</h3><p>لن نتعامل مع البرمجة على أنها حفظ أوامر. ستتعلم كيف تفكر وتحلل المشكلة وتختبر الحل بنفسك.</p></div>
+      <div class="pa-side-card pa-account-card"><h3>احفظ تقدمك</h3><p id="paProgressHint">يمكنك استكشاف الدروس المنشورة. سجّل الدخول بحساب DOMA لحفظ الدروس المكتملة ومتابعة تقدمك.</p><a href="./index.html" class="pa-outline-btn">تسجيل الدخول من المنصة</a></div>
+    </aside>
+  </section>
+  <footer class="pa-footer"><span>DOMA ACADEMY</span><span>PROGRAMMING • LOGIC • CREATIVITY</span><a href="./index.html">العودة إلى الصفحة الرئيسية</a></footer>
+</main>
+<div id="paToast" class="pa-toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  'use strict';
+  var URL='https://dtptxhkcogpoleftguas.supabase.co';
+  var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
+  var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null;
+  var $=function(id){return document.getElementById(id)};
+  var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+  var toastTimer;
+  function toast(message){var el=$('paToast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2600)}
+  function renderTracks(){
+    var host=$('paTracks');
+    host.innerHTML=tracks.map(function(t,i){
+      var ms=modules.filter(function(m){return m.track_id===t.id});
+      var ls=lessons.filter(function(l){return ms.some(function(m){return m.id===l.module_id})});
+      var done=ls.filter(function(l){return completed[l.id]}).length;
+      var active=t.id===activeTrack;
+      var available=ls.length>0;
+      return '<button type="button" class="pa-track-card '+(active?'active':'')+'" data-track="'+esc(t.id)+'"><span class="pa-track-number">'+String(i+1).padStart(2,'0')+'</span><span class="pa-track-content"><b>'+esc(t.title)+'</b><small>'+esc(t.subtitle)+'</small><span class="pa-track-description">'+esc(t.description)+'</span><span class="pa-track-meta">'+(available?(ls.length+' دروس منشورة · '+done+' مكتمل'):'المحتوى قيد الإعداد')+'</span></span><span class="pa-track-arrow">'+(available?'←':'◌')+'</span></button>';
+    }).join('');
+    host.querySelectorAll('[data-track]').forEach(function(btn){btn.addEventListener('click',function(){selectTrack(btn.getAttribute('data-track'))})});
+  }
+  function selectTrack(id){
+    activeTrack=id;
+    var track=tracks.find(function(t){return t.id===id});
+    if(!track)return;
+    $('paTrackTitle').textContent=track.title;
+    $('paTrackDescription').textContent=track.description;
+    renderTracks();renderLessons();
+  }
+  function renderLessons(){
+    var ms=modules.filter(function(m){return m.track_id===activeTrack});
+    var ls=lessons.filter(function(l){return ms.some(function(m){return m.id===l.module_id})});
+    var done=ls.filter(function(l){return completed[l.id]}).length;
+    $('paTrackProgress').textContent=done+' / '+ls.length;
+    $('paProgressBar').style.width=(ls.length?Math.round(done/ls.length*100):0)+'%';
+    if(!ls.length){
+      $('paLessons').innerHTML='<div class="pa-empty-state"><span>✧</span><h3>هذا المسار ضمن خريطة الأكاديمية</h3><p>نعمل على إعداد دروسه ومشاريعه العملية. ابدأ الآن بمسار الأساسيات، فهو نقطة الانطلاق لباقي المسارات.</p></div>';
+      return;
+    }
+    $('paLessons').innerHTML=ls.map(function(l,i){
+      return '<button type="button" class="pa-lesson-row '+(activeLesson===l.id?'selected ':'')+(completed[l.id]?'completed':'')+'" data-lesson="'+esc(l.id)+'"><span class="pa-lesson-index">'+(completed[l.id]?'✓':String(i+1).padStart(2,'0'))+'</span><span class="pa-lesson-copy"><b>'+esc(l.title)+'</b><small>'+esc(l.summary)+'</small></span><span class="pa-lesson-duration">'+Number(l.duration_minutes||10)+' دقيقة</span></button>';
+    }).join('');
+    $('paLessons').querySelectorAll('[data-lesson]').forEach(function(btn){btn.addEventListener('click',function(){openLesson(btn.getAttribute('data-lesson'))})});
+  }
+  function markdown(text){
+    return esc(String(text||'').replace(/\\n/g,'\n')).split('\n').map(function(line){
+      if(line.indexOf('## ')===0)return '<h3>'+line.slice(3)+'</h3>';
+      if(line.indexOf('- ')===0)return '<p class="pa-bullet">• '+line.slice(2)+'</p>';
+      return line?'<p>'+line+'</p>':'';
+    }).join('');
+  }
+  function openLesson(id){
+    var lesson=lessons.find(function(l){return l.id===id});if(!lesson)return;
+    activeLesson=id;renderLessons();
+    var old=$('paLessonReader');if(old)old.remove();
+    var reader=document.createElement('article');reader.id='paLessonReader';reader.className='pa-lesson-reader';
+    reader.innerHTML='<div class="pa-reader-top"><span class="pa-kicker">LESSON CONTENT</span><span>'+Number(lesson.duration_minutes||10)+' دقيقة</span></div><h2>'+esc(lesson.title)+'</h2><p class="pa-reader-summary">'+esc(lesson.summary)+'</p><div class="pa-reader-content">'+markdown(lesson.content_md||'سيتم إضافة محتوى هذا الدرس قريبًا.')+'</div><div class="pa-reader-actions"><button type="button" class="pa-primary-btn" id="paCompleteBtn">'+(completed[id]?'إلغاء إكمال الدرس':'أنهيت الدرس ✓')+'</button><span class="pa-save-note">'+(user?'سيتم حفظ تقدمك على حسابك.':'سجّل الدخول لحفظ تقدمك.')+'</span></div>';
+    $('paLessons').appendChild(reader);
+    $('paCompleteBtn').addEventListener('click',function(){toggleComplete(id)});
+  }
+  async function toggleComplete(id){
+    if(!user){toast('سجّل الدخول من الصفحة الرئيسية أولًا لحفظ تقدمك.');return}
+    if(completed[id]){
+      var del=await db.from('programming_lesson_progress').delete().eq('lesson_id',id).eq('user_id',user.id);
+      if(del.error){toast('تعذر تحديث التقدم. حاول مرة أخرى.');return}
+      delete completed[id];
+    }else{
+      var ins=await db.from('programming_lesson_progress').insert({user_id:user.id,lesson_id:id});
+      if(ins.error&&ins.error.code!=='23505'){toast('تعذر حفظ التقدم. حاول مرة أخرى.');return}
+      completed[id]=true;
+    }
+    renderTracks();renderLessons();openLesson(id);toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
+  }
+  async function boot(){
+    var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
+    $('paAuthStatus').textContent=user?'متصل بحساب DOMA':'زائر · سجّل الدخول لحفظ التقدم';
+    $('paProgressHint').textContent=user?'تقدمك مرتبط بحسابك وسيظهر عند تسجيل الدخول من أي جهاز.':'يمكنك استكشاف الدروس المنشورة. سجّل الدخول بحساب DOMA لحفظ الدروس المكتملة ومتابعة تقدمك.';
+    var a=await db.from('programming_tracks').select('*').eq('published',true).order('sort_order');
+    var b=await db.from('programming_modules').select('*').eq('published',true).order('sort_order');
+    var c=await db.from('programming_lessons').select('*').eq('published',true).order('sort_order');
+    if(a.error||b.error||c.error){$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل المنهج</h3><p>تأكد من اتصال الإنترنت ثم حدّث الصفحة. إذا استمرت المشكلة، راجع إعداد قاعدة بيانات الأكاديمية.</p></div>';return}
+    tracks=a.data||[];modules=b.data||[];lessons=c.data||[];
+    if(user){
+      var p=await db.from('programming_lesson_progress').select('lesson_id').eq('user_id',user.id);
+      if(!p.error)(p.data||[]).forEach(function(row){completed[row.lesson_id]=true});
+    }
+    renderTracks();
+    if(!tracks.some(function(t){return t.id===activeTrack})&&tracks.length)activeTrack=tracks[0].id;
+    selectTrack(activeTrack);
+    var first=lessons.find(function(l){return modules.some(function(m){return m.id===l.module_id&&m.track_id===activeTrack})});
+    if(first)openLesson(first.id);
+    db.auth.onAuthStateChange(function(_event,session){
+      user=session&&session.user?session.user:null;
+      $('paAuthStatus').textContent=user?'متصل بحساب DOMA':'زائر · سجّل الدخول لحفظ التقدم';
+      $('paProgressHint').textContent=user?'تقدمك مرتبط بحسابك وسيظهر عند تسجيل الدخول من أي جهاز.':'يمكنك استكشاف الدروس المنشورة. سجّل الدخول بحساب DOMA لحفظ الدروس المكتملة ومتابعة تقدمك.';
+      if(user)db.from('programming_lesson_progress').select('lesson_id').eq('user_id',user.id).then(function(r){completed={};(r.data||[]).forEach(function(x){completed[x.lesson_id]=true});renderTracks();renderLessons()});
+      else{completed={};renderTracks();renderLessons()}
+    });
+  }
+  boot().catch(function(error){console.error(error);$('paTracks').innerHTML='<div class="pa-empty-state">حدث خطأ أثناء تحميل الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</div>'});
+})();
+</script>
+</body>
+</html>
