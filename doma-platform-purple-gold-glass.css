@@ -569,3 +569,356 @@ html body #drawer #mrStudentBottomNav .mr-student-tab.active svg{color:#ffe0ad!i
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
 }
+
+
+/* =========================================================
+   SPACE EXPLORER — STUDENT TOOLS / PRACTICE HUB / MORE
+   Final component-level skin for all authenticated student tools.
+   Visual-only: no data, navigation, scoring or activity logic changes.
+========================================================= */
+html body #drawer{
+  --sx-bg:#050a19;
+  --sx-bg2:#0b1530;
+  --sx-panel:rgba(19,34,73,.66);
+  --sx-panel2:rgba(12,25,55,.84);
+  --sx-edge:rgba(112,159,255,.32);
+  --sx-edge-hi:rgba(122,218,255,.58);
+  --sx-text:#eef5ff;
+  --sx-muted:#b9cbea;
+  --sx-cyan:#91f0ff;
+  --sx-blue:#76bfff;
+  --sx-violet:#a58aff;
+  color:var(--sx-text)!important;
+  background:
+    radial-gradient(ellipse at 12% 7%,rgba(65,112,220,.24),transparent 34%),
+    radial-gradient(ellipse at 88% 10%,rgba(120,104,230,.18),transparent 31%),
+    radial-gradient(ellipse at 50% 100%,rgba(37,115,179,.16),transparent 46%),
+    rgba(3,7,19,.84)!important;
+}
+html body #drawer .drawer-shell{
+  color:var(--sx-text)!important;
+  background:
+    radial-gradient(ellipse at 84% 0%,rgba(110,151,255,.105),transparent 38%),
+    linear-gradient(145deg,rgba(14,25,58,.94),rgba(5,12,31,.97) 58%,rgba(13,20,49,.95))!important;
+  border:1px solid rgba(126,175,255,.42)!important;
+  box-shadow:0 32px 100px rgba(0,0,0,.62),inset 0 1px 0 rgba(222,238,255,.13),0 0 48px rgba(76,143,255,.12)!important;
+}
+html body #drawer .drawer-side{
+  color:var(--sx-text)!important;
+  background:linear-gradient(180deg,rgba(9,19,43,.97),rgba(7,15,36,.98) 58%,rgba(13,22,49,.97))!important;
+  border-right:1px solid rgba(112,159,255,.25)!important;
+  scrollbar-color:rgba(112,178,255,.48) transparent!important;
+}
+html body #drawer .drawer-brand{border-bottom-color:rgba(112,159,255,.20)!important}
+html body #drawer .drawer-brand .mark{
+  background:linear-gradient(145deg,rgba(103,193,255,.24),rgba(76,83,174,.35))!important;
+  border:1px solid rgba(145,220,255,.48)!important;
+  box-shadow:0 8px 25px rgba(0,0,0,.30),0 0 22px rgba(76,154,255,.16)!important;
+}
+html body #drawer .drawer-brand .mark svg path:first-child{stroke:#91f0ff!important}
+html body #drawer .drawer-brand .mark svg path:last-child{stroke:#edf4ff!important}
+html body #drawer .drawer-brand .brand,
+html body #drawer .drawer-brand .brand>span{color:#eef5ff!important}
+html body #drawer .drawer-brand .brand small{color:#a9c8f0!important}
+html body #drawer .user-card,
+html body #drawer .student-command-card{
+  color:var(--sx-text)!important;
+  background:linear-gradient(135deg,rgba(70,129,205,.20),rgba(255,255,255,.035) 55%,rgba(119,102,217,.13))!important;
+  border:1px solid rgba(112,159,255,.30)!important;
+  border-radius:15px!important;
+  box-shadow:inset 0 1px 0 rgba(225,241,255,.10),0 12px 28px rgba(0,0,0,.20)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(145%)!important;
+  backdrop-filter:blur(18px) saturate(145%)!important;
+}
+html body #drawer .user-card strong,
+html body #drawer .student-command-card strong{color:#f1f7ff!important}
+html body #drawer .user-card span,
+html body #drawer .student-command-card span{color:#b9cbea!important}
+html body #drawer .user-card span:last-child,
+html body #drawer .student-command-card small{color:#91eaff!important}
+html body #drawer .student-nav-heading{
+  color:#91eaff!important;
+  border-top:1px solid rgba(112,159,255,.19)!important;
+}
+html body #drawer .drawer-side>.side-link{
+  color:#c9d9f5!important;
+  border:1px solid transparent!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.018)!important;
+  box-shadow:none!important;
+}
+html body #drawer .drawer-side>.side-link:hover{
+  color:#f4f8ff!important;
+  border-color:rgba(112,190,255,.35)!important;
+  background:linear-gradient(110deg,rgba(66,146,226,.18),rgba(153,126,255,.11))!important;
+}
+html body #drawer .drawer-side>.side-link.active{
+  color:#f5fbff!important;
+  border-color:rgba(112,190,255,.48)!important;
+  background:linear-gradient(110deg,rgba(60,151,225,.25),rgba(141,116,255,.14))!important;
+  box-shadow:inset 3px 0 0 #65dfff,0 8px 24px rgba(0,0,0,.20)!important;
+}
+html body #drawer #studentNavLogout{
+  color:#ffc8d2!important;
+  background:rgba(190,82,125,.075)!important;
+  border-color:rgba(244,150,185,.18)!important;
+}
+html body #drawer .drawer-top{
+  color:var(--sx-text)!important;
+  background:linear-gradient(90deg,rgba(94,147,255,.075),rgba(94,210,255,.065),rgba(149,123,255,.055))!important;
+  border-bottom:1px solid rgba(112,159,255,.25)!important;
+}
+html body #drawer .drawer-top h2{color:#f2f7ff!important}
+html body #drawer .drawer-top p{color:#b9cbea!important}
+html body #drawer .drawer-body{
+  color:var(--sx-text)!important;
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(65,145,235,.095),transparent 34%),
+    radial-gradient(ellipse at 8% 38%,rgba(141,115,255,.07),transparent 36%),
+    transparent!important;
+  scrollbar-color:rgba(104,178,255,.46) transparent!important;
+}
+html body #drawer .drawer-body::-webkit-scrollbar-thumb{background:rgba(104,178,255,.48)!important}
+html body #drawer .drawer-body :is(h1,h2,h3,h4,h5,strong,b){color:#eef5ff!important}
+html body #drawer .drawer-body :is(p,.muted,.small,.desc,small,label,.field-help){color:#b9cbea!important}
+html body #drawer .drawer-body .eyebrow,
+html body #drawer .drawer-body :is(.doma-bs-kicker,.doma-mr-kicker,.doma-movie-scene-tag){color:#91eaff!important}
+html body #drawer .drawer-body a{color:#91eaff!important}
+
+/* The modules below each had their own legacy background and border rules. */
+html body #drawer .drawer-body :is(
+  .student-plus5-card,.student-gami-card,.pro5-card,
+  .doma-bs-hero,.doma-bs-card,.doma-bs-question,.doma-bs-summary,
+  .doma-mr-hero,.doma-mr-card,.doma-movie-stage,.doma-movie-dialogue,
+  .doma-movie-q,.doma-movie-choice,.doma-roulette-card,.doma-roulette-result,
+  .doma-battle-card,.doma-battle-question,.doma-battle-result,
+  .doma-battle-status,.doma-battle-player,.doma-battle-side,
+  .doma-battle-history-row,.doma-battle-achievement,
+  .mr-practice-intro,.mr-practice-card,
+  .doma-subscription-card,.hw-page-head,.cert,.listrow,
+  .daily100-student-wrap,.daily100-student-item
+){
+  color:var(--sx-text)!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(116,175,255,.12),transparent 56%),
+    linear-gradient(145deg,rgba(25,47,94,.73),rgba(8,21,51,.86))!important;
+  border:1px solid rgba(112,159,255,.32)!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.24),inset 0 1px 0 rgba(225,241,255,.11)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(140%)!important;
+  backdrop-filter:blur(18px) saturate(140%)!important;
+}
+html body #drawer .drawer-body :is(.student-plus5-card,.student-gami-card,.pro5-card,.doma-bs-hero,.doma-bs-card,.doma-mr-hero,.doma-mr-card,.doma-battle-card,.mr-practice-intro,.mr-practice-card,.doma-roulette-card){border-radius:18px!important}
+html body #drawer .drawer-body :is(.plus5-item,.plus5-stat,.plus5-q,.plus5-answer,.plus5-msg.bot,.plus5-chat,.pro5-row,.pro5-reward,.pro5-day div,.pro5-note,.pro5-assistant,.pro5-kpi div,.student-gami-stat,.student-gami-row,.student-gami-badge,.student-gami-me,.doma-bs-stat,.doma-bs-answer,.doma-bs-result,.doma-movie-subtitle,.doma-battle-row,.doma-battle-history-row,.doma-battle-achievement,.doma-roulette-item,.student-home-list-row,.student-achievement,.student-week-day,.plus5-list .empty){
+  color:#eaf4ff!important;
+  background:linear-gradient(145deg,rgba(83,125,195,.13),rgba(255,255,255,.035))!important;
+  border-color:rgba(112,159,255,.24)!important;
+}
+html body #drawer .drawer-body :is(.plus5-msg.user,.pro5-msg.user){background:linear-gradient(120deg,rgba(65,164,230,.23),rgba(119,111,226,.17))!important;border:1px solid rgba(112,190,255,.27)!important;color:#f2f8ff!important}
+html body #drawer .drawer-body :is(.plus5-msg.bot,.pro5-msg.bot){background:linear-gradient(120deg,rgba(105,135,217,.16),rgba(255,255,255,.045))!important;border:1px solid rgba(112,159,255,.22)!important;color:#eaf4ff!important}
+html body #drawer .drawer-body :is(.student-plus5-muted,.student-gami-muted,.pro5-muted,.plus5-small,.doma-bs-hint,.doma-bs-meta,.doma-movie-line,.doma-movie-ar,.doma-battle-muted,.doma-battle-note,.doma-roulette-item span,.doma-roulette-result p,.doma-movie-choice span,.pro5-row small,.pro5-row span,.mr-practice-footer){
+  color:#b9cbea!important;
+}
+html body #drawer .drawer-body :is(.student-plus5-card h3,.student-gami-card h3,.pro5-card h3,.doma-bs-hero h3,.doma-mr-hero h3,.doma-movie-line,.doma-roulette-result h3){color:#f0f6ff!important}
+html body #drawer .drawer-body :is(.plus5-stat b,.pro5-kpi b,.student-gami-stat b,.student-home-value,.student-home-card strong,.stat strong,.progress-mini b,.doma-bs-summary .score,.doma-battle-code){
+  color:#91f0ff!important;
+}
+
+/* Practice Hub entry cards and the separate custom student tools. */
+html body #drawer #mrStudentPracticeHub .mr-practice-intro{
+  background:radial-gradient(ellipse at 85% 0%,rgba(133,111,255,.20),transparent 45%),linear-gradient(135deg,rgba(20,48,97,.88),rgba(8,21,53,.94))!important;
+  border-color:rgba(112,190,255,.36)!important;
+}
+html body #drawer #mrStudentPracticeHub .mr-practice-intro h3{color:#f2f7ff!important}
+html body #drawer #mrStudentPracticeHub .mr-practice-intro p,
+html body #drawer #mrStudentPracticeHub .mr-practice-footer{color:#b9cbea!important}
+html body #drawer #mrStudentPracticeHub .mr-practice-card{
+  color:#eef5ff!important;
+  background:linear-gradient(145deg,rgba(25,59,112,.72),rgba(8,24,56,.86))!important;
+  border:1px solid rgba(112,159,255,.32)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(225,241,255,.10)!important;
+}
+html body #drawer #mrStudentPracticeHub .mr-practice-card:hover{
+  background:linear-gradient(145deg,rgba(31,104,163,.56),rgba(52,52,127,.43))!important;
+  border-color:rgba(115,224,255,.60)!important;
+}
+html body #drawer #mrStudentPracticeHub .mr-practice-icon{
+  color:#91f0ff!important;
+  border-color:rgba(112,190,255,.38)!important;
+  background:linear-gradient(145deg,rgba(69,157,224,.27),rgba(126,103,221,.25))!important;
+}
+html body #drawer #mrStudentPracticeHub .mr-practice-card span:last-child{color:#b9cbea!important}
+
+/* Build Your Sentence: chips, answer lane and result state. */
+html body #drawer .drawer-body .doma-bs-stat,
+html body #drawer .drawer-body .doma-bs-chip{
+  color:#eaf5ff!important;
+  background:linear-gradient(135deg,rgba(67,119,192,.24),rgba(95,81,177,.20))!important;
+  border:1px solid rgba(112,190,255,.34)!important;
+}
+html body #drawer .drawer-body .doma-bs-chip:hover,
+html body #drawer .drawer-body .doma-bs-chip.doma-bs-picked{
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(58,153,210,.42),rgba(120,104,221,.38))!important;
+  border-color:rgba(145,240,255,.66)!important;
+}
+html body #drawer .drawer-body .doma-bs-chip.used{opacity:.35!important}
+html body #drawer .drawer-body .doma-bs-progress{background:rgba(112,159,255,.17)!important}
+html body #drawer .drawer-body .doma-bs-progress i{background:linear-gradient(90deg,#63cfff,#8e8dff,#91f0ff)!important}
+html body #drawer .drawer-body .doma-bs-answer{
+  background:rgba(5,14,36,.70)!important;border-color:rgba(112,190,255,.42)!important;
+}
+html body #drawer .drawer-body .doma-bs-answer:before{color:#91eaff!important}
+html body #drawer .drawer-body .doma-bs-result.good{background:rgba(37,133,108,.16)!important;border-color:rgba(100,225,188,.42)!important}
+html body #drawer .drawer-body .doma-bs-result.bad{background:rgba(152,73,111,.16)!important;border-color:rgba(255,139,182,.38)!important}
+html body #drawer .drawer-body .doma-bs-translation{color:#c6d9f5!important}
+
+/* Movie Scene and Skill Roulette visual controls. */
+html body #drawer .drawer-body :is(.doma-movie-stage,.doma-movie-dialogue){
+  background:radial-gradient(ellipse at 85% 0%,rgba(117,111,255,.16),transparent 45%),linear-gradient(145deg,rgba(16,45,87,.84),rgba(6,17,42,.94))!important;
+  border-color:rgba(112,159,255,.36)!important;
+}
+html body #drawer .drawer-body .doma-movie-choice:hover,
+html body #drawer .drawer-body .doma-movie-choice.active,
+html body #drawer .drawer-body .doma-movie-option:hover,
+html body #drawer .drawer-body .doma-movie-option.sel{
+  color:#f3f9ff!important;background:linear-gradient(120deg,rgba(49,151,207,.30),rgba(122,106,218,.25))!important;
+  border-color:rgba(112,210,255,.56)!important;
+}
+html body #drawer .drawer-body .doma-roulette-wheel{
+  border-color:rgba(112,190,255,.52)!important;
+  background:conic-gradient(#267fc1 0deg 45deg,#19285b 45deg 90deg,#725fd0 90deg 135deg,#10274b 135deg 180deg,#267fc1 180deg 225deg,#19285b 225deg 270deg,#725fd0 270deg 315deg,#10274b 315deg 360deg)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.38),0 0 32px rgba(71,166,255,.15)!important;
+}
+html body #drawer .drawer-body .doma-roulette-wheel:before{background:#07152e!important;border-color:rgba(112,190,255,.60)!important}
+html body #drawer .drawer-body .doma-roulette-wheel:after{color:#91f0ff!important}
+html body #drawer .drawer-body .doma-roulette-pointer{border-top-color:#91f0ff!important}
+html body #drawer .drawer-body .doma-roulette-result{
+  background:linear-gradient(135deg,rgba(33,63,117,.74),rgba(8,20,47,.91))!important;
+  border-color:rgba(112,190,255,.42)!important;
+}
+
+/* More, Tools and progress modules: cards, rows, counters and interactive states. */
+html body #drawer .drawer-body :is(.pro5-chip,.activity-chip,.doma-bs-stat,.streak-badge,.curriculum-count,.student-home-pill){
+  color:#bfeeff!important;background:rgba(56,139,207,.16)!important;border-color:rgba(112,190,255,.30)!important;
+}
+html body #drawer .drawer-body :is(.pro5-day .on,.pro5-unread,.student-gami-me){
+  background:linear-gradient(120deg,rgba(44,151,210,.25),rgba(116,104,223,.19))!important;
+  border-color:rgba(112,190,255,.42)!important;
+}
+html body #drawer .drawer-body :is(.plus5-bar,.pro5-progress,.student-gami-progress,.student-gami-skill .bar,.bar,.rbar,.student-home-bar,.progress-track,.progressbar,.hw-progress-bar){
+  background:rgba(103,157,208,.18)!important;border-color:rgba(112,159,255,.22)!important;
+}
+html body #drawer .drawer-body :is(.plus5-bar i,.pro5-progress i,.student-gami-progress>i,.student-gami-skill .bar i,.bar i,.rbar i,.student-home-bar i,.progress-track span,.progressbar span,.hw-progress-bar i){
+  background:linear-gradient(90deg,#4db9f4,#8b8bff,#91f0ff)!important;
+}
+html body #drawer .drawer-body :is(.doma-v2-row,.pro5-row,.listrow,.table-list .listrow){
+  color:#eaf4ff!important;background:linear-gradient(145deg,rgba(50,87,145,.20),rgba(255,255,255,.025))!important;
+  border-color:rgba(112,159,255,.23)!important;
+}
+html body #drawer .drawer-body :is(.pro5-note,.pro5-input,.pro5-textarea){
+  color:#eef5ff!important;background:linear-gradient(135deg,rgba(7,22,50,.85),rgba(17,28,62,.80))!important;
+  border-color:rgba(112,159,255,.34)!important;
+}
+html body #drawer .drawer-body :is(.pro5-empty,.doma-bs-empty,.empty){
+  color:#c6d9f5!important;background:linear-gradient(135deg,rgba(30,66,116,.20),rgba(255,255,255,.025))!important;
+  border-color:rgba(112,159,255,.26)!important;
+}
+html body #drawer .drawer-body :is(.student-home-bar,.plus5-bar,.pro5-progress,.student-gami-progress,.hw-progress-bar){overflow:hidden!important}
+html body #drawer .drawer-body .progress-ring{
+  background:conic-gradient(#64cfff calc(var(--p,0)*1%),rgba(112,159,255,.16) 0)!important;
+}
+html body #drawer .drawer-body .progress-ring::after{background:#0a1735!important}
+html body #drawer .drawer-body :is(.btn.primary,.btn-primary,.primary){
+  color:#07142d!important;-webkit-text-fill-color:#07142d!important;
+  background:linear-gradient(120deg,#91f0ff 0%,#76bfff 48%,#a58aff 100%)!important;
+  border-color:rgba(213,237,255,.82)!important;
+  box-shadow:0 9px 23px rgba(56,137,238,.22),inset 0 1px 0 rgba(255,255,255,.55)!important;
+}
+html body #drawer .drawer-body :is(.btn.secondary,.btn-soft,.ghost,.btn:not(.primary):not(.danger)){
+  color:#d8eaff!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(51,83,144,.28))!important;
+  border-color:rgba(112,159,255,.34)!important;
+}
+html body #drawer .drawer-body :is(input:not([type=checkbox]):not([type=radio]),textarea,select,.field,.pro5-input){
+  color:#eef5ff!important;
+  background:linear-gradient(135deg,rgba(7,22,50,.88),rgba(18,30,65,.92))!important;
+  border-color:rgba(112,159,255,.35)!important;
+}
+html body #drawer .drawer-body :is(input,textarea,.field)::placeholder{color:rgba(185,203,234,.76)!important}
+html body #drawer .drawer-body select option{color:#eef5ff!important;background:#0b1735!important}
+html body #drawer .drawer-body :is(.notice,.status,.scorebox,.student-home-alert,.hw-feedback,.doma-roulette-result,.doma-battle-status){
+  color:#dcecff!important;background:linear-gradient(135deg,rgba(58,124,194,.16),rgba(255,255,255,.035))!important;
+  border-color:rgba(112,159,255,.30)!important;
+}
+html body #drawer .drawer-body :is(.success,.good,.ok){color:#a7f2d5!important}
+html body #drawer .drawer-body :is(.error,.bad){color:#ffbdce!important}
+html body #drawer .drawer-body table{color:#eaf4ff!important}
+html body #drawer .drawer-body :is(th,td){border-color:rgba(112,159,255,.20)!important;color:#d7e5fb!important}
+html body #drawer .drawer-body th{color:#91eaff!important;background:rgba(85,144,218,.10)!important}
+
+/* Battle Mode opens in its own modal, outside the student drawer. */
+html body #domaBattleModal{
+  background:rgba(2,7,22,.84)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+}
+html body #domaBattleModal .doma-battle-shell{
+  color:#eef5ff!important;
+  background:radial-gradient(ellipse at 85% 0%,rgba(104,112,255,.16),transparent 42%),linear-gradient(145deg,rgba(14,28,64,.96),rgba(5,13,34,.98))!important;
+  border:1px solid rgba(112,159,255,.42)!important;
+  box-shadow:0 32px 90px rgba(0,0,0,.64),inset 0 1px 0 rgba(225,241,255,.12),0 0 34px rgba(73,155,255,.12)!important;
+}
+html body #domaBattleModal .doma-battle-head{
+  background:linear-gradient(100deg,rgba(65,125,204,.15),rgba(130,111,235,.10))!important;
+  border-bottom-color:rgba(112,159,255,.25)!important;
+}
+html body #domaBattleModal :is(.doma-battle-head h2,.doma-battle-card h3,.doma-battle-result h2){color:#f2f7ff!important}
+html body #domaBattleModal .doma-battle-head p,
+html body #domaBattleModal .doma-battle-muted,
+html body #domaBattleModal .doma-battle-note{color:#b9cbea!important}
+html body #domaBattleModal :is(.doma-battle-card,.doma-battle-question,.doma-battle-side,.doma-battle-status,.doma-battle-history-row,.doma-battle-player,.doma-battle-achievement,.doma-battle-row,.doma-battle-result){
+  color:#eaf4ff!important;
+  background:linear-gradient(145deg,rgba(25,50,101,.72),rgba(7,20,50,.88))!important;
+  border-color:rgba(112,159,255,.31)!important;
+  box-shadow:inset 0 1px 0 rgba(225,241,255,.08),0 12px 30px rgba(0,0,0,.20)!important;
+}
+html body #domaBattleModal .doma-battle-code{
+  color:#91f0ff!important;background:rgba(4,13,36,.78)!important;border-color:rgba(112,190,255,.48)!important;
+}
+html body #domaBattleModal :is(.doma-battle-player.active,.doma-battle-option.selected,.doma-battle-history-row.me){
+  background:linear-gradient(135deg,rgba(58,154,217,.25),rgba(127,109,228,.20))!important;border-color:rgba(112,210,255,.52)!important;
+}
+html body #domaBattleModal .doma-battle-vs,
+html body #domaBattleModal .doma-battle-qnum{color:#91f0ff!important}
+html body #domaBattleModal :is(input,select,textarea,.field){
+  color:#eef5ff!important;background:rgba(5,19,46,.84)!important;border-color:rgba(112,159,255,.34)!important;
+}
+html body #domaBattleModal .btn.primary{
+  color:#07142d!important;background:linear-gradient(120deg,#91f0ff,#76bfff 48%,#a58aff)!important;border-color:rgba(213,237,255,.82)!important;
+}
+html body #domaBattleModal .btn.secondary{
+  color:#d8eaff!important;background:rgba(255,255,255,.06)!important;border-color:rgba(112,159,255,.34)!important;
+}
+
+/* Mobile navigation and narrow screens keep the same Space Explorer surface. */
+html body #drawer #mrStudentBottomNav{
+  background:linear-gradient(180deg,rgba(11,27,62,.93),rgba(4,12,33,.98))!important;
+  border-top:1px solid rgba(112,159,255,.30)!important;
+  box-shadow:0 -10px 32px rgba(0,0,0,.25)!important;
+}
+html body #drawer #mrStudentBottomNav .mr-student-tab{
+  color:#b9cbea!important;background:rgba(255,255,255,.025)!important;border-color:transparent!important;
+}
+html body #drawer #mrStudentBottomNav .mr-student-tab.active{
+  color:#f2f8ff!important;background:linear-gradient(145deg,rgba(52,147,213,.25),rgba(127,112,231,.20))!important;
+  border-color:rgba(112,190,255,.38)!important;box-shadow:inset 0 1px 0 rgba(225,241,255,.10),0 4px 18px rgba(65,150,255,.12)!important;
+}
+html body #drawer #mrStudentBottomNav .mr-student-tab.active svg{color:#91f0ff!important;filter:drop-shadow(0 0 7px rgba(85,210,255,.24))!important}
+@media(max-width:700px){
+  html body #drawer .drawer-side{background:linear-gradient(165deg,rgba(10,22,51,.99),rgba(5,14,35,.99) 58%,rgba(13,22,54,.99))!important;border-right-color:rgba(112,159,255,.30)!important}
+  html body #drawer .drawer-body :is(.pro5-grid,.student-plus5-grid,.student-gami-grid,.doma-roulette-wrap){grid-template-columns:minmax(0,1fr)!important}
+  html body #drawer .drawer-body :is(.plus5-statgrid,.pro5-kpi,.student-gami-stats,.student-gami-badges,.mr-practice-grid){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body #drawer .drawer-body *{transition:none!important;animation:none!important}
+}
