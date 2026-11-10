@@ -1873,3 +1873,64 @@ html body #drawer .drawer-body :is(.student-progress-hero,.progress-summary,.stu
 html body #drawer .drawer-body #domaSubscriptionCenter .doma-subscription-grid{
   display:none!important;
 }
+
+
+/* FINAL TARGETED STUDENT OVERVIEW OVERRIDE — actual runtime classes */
+html body #drawer #drawerBody .dashboard-grid-pro > .dash-pro-card,
+html body #drawer #drawerBody .dash-pro-card,
+html body #drawer #drawerBody .student-progress-hero{
+  color:#fff4e8!important;
+  border:1px solid rgba(221,190,232,.42)!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,220,178,.15),transparent 48%),
+    radial-gradient(ellipse at 90% 100%,rgba(177,142,229,.18),transparent 55%),
+    linear-gradient(140deg,rgba(83,60,119,.88),rgba(35,25,58,.96))!important;
+  box-shadow:0 16px 38px rgba(4,2,14,.30),inset 0 1px 0 rgba(255,255,255,.15)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(150%)!important;
+  backdrop-filter:blur(22px) saturate(150%)!important;
+}
+html body #drawer #drawerBody .student-progress-hero{
+  display:grid!important;align-items:center!important;
+  padding:18px!important;gap:16px!important;
+}
+html body #drawer #drawerBody .student-progress-hero h3,
+html body #drawer #drawerBody .dash-pro-head h3{
+  color:#fff0dc!important;text-shadow:0 2px 16px rgba(245,205,160,.12)!important;
+}
+html body #drawer #drawerBody .student-progress-hero p,
+html body #drawer #drawerBody .dash-pro-head p,
+html body #drawer #drawerBody .report-line label{
+  color:#e5d8eb!important;
+}
+html body #drawer #drawerBody .student-progress-hero .pill,
+html body #drawer #drawerBody .dash-pro-head .pill{
+  color:#ffe8c5!important;
+  background:linear-gradient(135deg,rgba(222,185,232,.22),rgba(190,151,224,.13))!important;
+  border:1px solid rgba(238,205,171,.45)!important;
+  border-radius:999px!important;
+}
+html body #drawer #drawerBody .progress-ring{
+  background:conic-gradient(#e6b8f1 calc(var(--p)*1%),rgba(224,201,239,.16) 0)!important;
+  box-shadow:0 0 0 7px rgba(212,177,234,.12),0 0 26px rgba(207,164,238,.22)!important;
+}
+html body #drawer #drawerBody .progress-ring::after{
+  background:linear-gradient(145deg,#302342,#21172f)!important;
+}
+html body #drawer #drawerBody .progress-ring strong{color:#ffe7c2!important}
+html body #drawer #drawerBody .progress-ring span{color:#e8d8ed!important}
+html body #drawer #drawerBody .report-line .rbar{
+  background:rgba(13,9,27,.55)!important;
+  border:1px solid rgba(220,196,237,.20)!important;
+}
+html body #drawer #drawerBody .report-line .rbar i{
+  background:linear-gradient(90deg,#c49be8,#f1c78f)!important;
+  box-shadow:0 0 12px rgba(210,170,238,.30)!important;
+}
+html body #drawer #drawerBody .report-line b{color:#ffe9cb!important}
+html body #drawer #drawerBody .dash-pro-head{margin-bottom:15px!important}
+html body #drawer #drawerBody .dash-pro-card{padding:18px!important;border-radius:22px!important}
+@media(max-width:620px){
+  html body #drawer #drawerBody .student-progress-hero{grid-template-columns:72px minmax(0,1fr)!important;padding:14px!important;gap:12px!important}
+  html body #drawer #drawerBody .dash-pro-card{padding:14px!important;border-radius:19px!important}
+}
