@@ -1472,3 +1472,93 @@ html body :is(.btn:hover,.btn-primary:hover,.btn-soft:hover,.btn.primary:hover,.
   html body #gradeModal #gradeModalBody .account-actions .btn{width:100%!important;white-space:normal!important}
 }
 @media(prefers-reduced-motion:reduce){html body *{transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+
+/* =========================================================
+   DOMA PRACTICE HUB — FINAL PURPLE GLASS OVERRIDE v71
+   This deliberately has higher specificity than the legacy
+   inline Midnight Blue / teal Practice Hub rules in index.html.
+========================================================= */
+html body #drawer#drawer #mrStudentPracticeHub{
+  color:#fff5e9!important;
+  background:transparent!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-intro{
+  color:#fff5e9!important;
+  border:1px solid rgba(255,218,174,.48)!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(ellipse at 88% 0%,rgba(232,185,116,.16),transparent 43%),
+    radial-gradient(ellipse at 8% 100%,rgba(184,148,233,.19),transparent 48%),
+    linear-gradient(145deg,rgba(105,72,128,.70),rgba(42,28,60,.90))!important;
+  box-shadow:0 18px 42px rgba(7,3,15,.28),inset 0 1px 0 rgba(255,255,255,.15)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-intro .eyebrow{
+  color:#ffe5bd!important;letter-spacing:1.5px!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-intro h3{
+  color:#fff5e9!important;text-shadow:0 2px 18px rgba(232,185,116,.13)!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-intro p{
+  color:#e4d5e8!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-grid{
+  display:grid!important;gap:12px!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-card{
+  min-width:0!important;min-height:136px!important;padding:16px!important;
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:10px!important;
+  color:#fff5e9!important;text-align:left!important;
+  border:1px solid rgba(225,193,233,.36)!important;border-radius:18px!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,218,174,.10),transparent 58%),
+    linear-gradient(145deg,rgba(112,78,139,.58),rgba(43,29,62,.86))!important;
+  box-shadow:0 14px 34px rgba(8,4,18,.25),inset 0 1px 0 rgba(255,255,255,.13)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(145%)!important;
+  backdrop-filter:blur(18px) saturate(145%)!important;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-card:hover,
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-card:focus-visible{
+  color:#fffaf2!important;border-color:rgba(255,218,174,.78)!important;
+  background:
+    radial-gradient(ellipse at 90% 0%,rgba(255,218,174,.17),transparent 48%),
+    linear-gradient(145deg,rgba(130,91,153,.70),rgba(62,40,82,.92))!important;
+  box-shadow:0 18px 40px rgba(8,4,18,.30),0 0 22px rgba(232,185,116,.10),inset 0 1px 0 rgba(255,255,255,.17)!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-icon{
+  width:42px!important;height:42px!important;min-width:42px!important;
+  display:grid!important;place-items:center!important;
+  color:#ffe5bd!important;font-size:20px!important;
+  border:1px solid rgba(255,218,174,.48)!important;border-radius:14px!important;
+  background:linear-gradient(145deg,rgba(255,218,174,.20),rgba(184,148,233,.24))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 7px 18px rgba(10,4,20,.18)!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-card strong{
+  color:#fff5e9!important;font-size:13px!important;font-weight:850!important;line-height:1.4!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-card span:last-child{
+  color:#e4d5e8!important;font-size:10px!important;line-height:1.65!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-footer{
+  color:#d9c9e1!important;margin-top:15px!important;padding:12px 14px!important;
+  border:1px solid rgba(225,193,233,.25)!important;border-radius:14px!important;
+  background:linear-gradient(135deg,rgba(112,78,139,.25),rgba(255,255,255,.035))!important;
+}
+html body #drawer#drawer #mrStudentPracticeHub .mr-practice-footer b{color:#ffe5bd!important}
+html body #drawer#drawer #mrStudentPracticeHub button:focus-visible{
+  outline:2px solid rgba(255,218,174,.88)!important;outline-offset:3px!important;
+}
+@media(max-width:700px){
+  html body #drawer#drawer #mrStudentPracticeHub .mr-practice-intro{padding:16px!important;border-radius:18px!important}
+  html body #drawer#drawer #mrStudentPracticeHub .mr-practice-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  html body #drawer#drawer #mrStudentPracticeHub .mr-practice-card{min-height:130px!important;padding:13px!important;border-radius:16px!important}
+}
+@media(max-width:360px){
+  html body #drawer#drawer #mrStudentPracticeHub .mr-practice-grid{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body #drawer#drawer #mrStudentPracticeHub .mr-practice-card{transition:none!important}
+}
