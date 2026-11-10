@@ -1753,3 +1753,95 @@ html body #drawer#drawer #mrStudentMenuClose{color:#ffe5bd!important;background:
   html body #drawer#drawer .drawer-body :is(.pro5-grid,.student-plus5-grid,.student-gami-grid,.doma-roulette-wrap){grid-template-columns:minmax(0,1fr)!important}
 }
 @media(prefers-reduced-motion:reduce){html body #drawer#drawer *{scroll-behavior:auto!important}}
+
+
+/* =========================================================
+   DOMA STUDENT REMAINING COMPONENT SWEEP — PURPLE GLASS v73
+   Catch legacy overview, progress, profile and learning sub-panels
+   that were not covered by the earlier shared-card selector.
+   Visual-only: preserve markup, layout, content and behavior.
+========================================================= */
+html body #drawer#drawer .drawer-body :is(
+  .student-progress-hero,.student-command-card,.student-home-insight,
+  .student-home-list-row,.student-achievement,.student-week-day,
+  .student-gami-center,.student-gami-table,.student-gami-skill,
+  .student-plus5-card,.student-plus5-grid,.student-home-card,
+  .home-continue-card,.home-feature-card,.home-shortcut,.home-quick,
+  .quick-card,.progress-mini,.local-insight,.upgrade-metric,
+  .activity-row,.listrow,.lesson-toolbar-pro,.lesson-checklist,
+  .lesson-notes,.profile-avatar-wrap,.doma-offline-card,.doma-offline-hero,
+  .doma-subscription-center,.doma-subscription-card,.doma-progress-sync,
+  .doma-v2-card,.doma-v2-sub,.mf-play-dialogue,.sentence-bank,
+  .mf-video-note,.achievement,.phase-spotlight,.doma-final-history,
+  .doma-final-note,.doma-final-row,.doma-final-unit-head,
+  .doma-final-score,.doma-final-unit-bar,.student-home-alert
+){
+  color:#fff5e9!important;
+  border-color:rgba(225,193,233,.34)!important;
+  background:radial-gradient(ellipse at 12% 0%,rgba(255,218,174,.075),transparent 58%),
+    linear-gradient(145deg,rgba(112,82,145,.43),rgba(43,31,65,.76))!important;
+  box-shadow:0 14px 34px rgba(5,3,15,.22),inset 0 1px 0 rgba(255,255,255,.11)!important;
+  -webkit-backdrop-filter:blur(17px) saturate(140%)!important;
+  backdrop-filter:blur(17px) saturate(140%)!important;
+}
+html body #drawer#drawer .drawer-body :is(
+  .student-home-insights,.student-home-list,.student-home-achievements,
+  .student-week,.student-command-bar,.home-learning-grid,.home-quick-grid,
+  .dashboard-grid-pro,.progress-summary,.profile-grid
+){
+  color:#fff5e9!important;
+}
+html body #drawer#drawer .drawer-body :is(
+  .student-progress-hero,.student-command-card,.student-home-card,
+  .student-gami-center,.student-plus5-card,.doma-offline-card,
+  .doma-offline-hero,.doma-subscription-center,.doma-subscription-card,
+  .doma-progress-sync,.doma-v2-card,.doma-v2-sub,.mf-play-dialogue,
+  .sentence-bank,.mf-video-note,.achievement,.phase-spotlight,
+  .doma-final-history,.doma-final-note,.doma-final-row,.doma-final-score
+) :is(h1,h2,h3,h4,strong,b){color:#fff5e9!important}
+html body #drawer#drawer .drawer-body :is(
+  .student-progress-hero,.student-command-card,.student-home-card,
+  .student-gami-center,.student-plus5-card,.doma-offline-card,
+  .doma-offline-hero,.doma-subscription-center,.doma-subscription-card,
+  .doma-progress-sync,.doma-v2-card,.doma-v2-sub,.mf-play-dialogue,
+  .sentence-bank,.mf-video-note,.achievement,.phase-spotlight,
+  .doma-final-history,.doma-final-note,.doma-final-row,.doma-final-score
+) :is(p,small,span,label,.muted,.desc){color:#e4d5e8!important}
+html body #drawer#drawer .drawer-body :is(
+  .student-home-list-row,.student-achievement,.student-week-day,
+  .student-gami-table,.student-gami-skill,.progress-mini,.local-insight,
+  .upgrade-metric,.activity-row,.listrow,.lesson-notes,.profile-avatar-wrap,
+  .doma-final-unit-head,.doma-final-unit-bar
+){
+  border-color:rgba(225,193,233,.30)!important;
+}
+html body #drawer#drawer .drawer-body :is(
+  .student-home-value,.student-progress-hero strong,.student-command-card strong,
+  .student-gami-center strong,.student-gami-table strong,.doma-final-score,
+  .progress-mini b
+){color:#ffe5bd!important}
+html body #drawer#drawer .drawer-body :is(
+  .student-progress-hero .progress-ring,.student-home-bar,
+  .student-gami-progress,.progress-mini .bar,.doma-final-unit-bar
+){border-color:rgba(225,193,233,.25)!important}
+html body #drawer#drawer .drawer-body :is(
+  .student-progress-hero .progress-ring,.progress-ring
+){background:conic-gradient(#b894e9 calc(var(--p,0)*1%),rgba(225,193,233,.14) 0)!important}
+html body #drawer#drawer .drawer-body :is(
+  .student-home-bar i,.student-gami-progress>i,.doma-final-unit-bar i
+){background:linear-gradient(90deg,#b894e9,#d3b5f0,#e8b974,#ffe5bd)!important}
+html body #domaBattleModal :is(
+  .doma-battle-card,.doma-battle-question,.doma-battle-side,
+  .doma-battle-status,.doma-battle-history-row,.doma-battle-player,
+  .doma-battle-achievement,.doma-battle-row,.doma-battle-result
+){
+  color:#fff5e9!important;
+  background:linear-gradient(145deg,rgba(112,76,135,.50),rgba(44,29,62,.84))!important;
+  border-color:rgba(225,193,233,.34)!important;
+}
+html body #domaBattleModal :is(h1,h2,h3,h4,strong,b){color:#fff5e9!important}
+html body #domaBattleModal :is(p,small,span,.muted,.desc){color:#e4d5e8!important}
+html body #domaBattleModal .doma-battle-code{color:#ffe5bd!important}
+@media(max-width:700px){
+  html body #drawer#drawer .drawer-body :is(.student-progress-hero,.student-home-card,.student-command-card){border-radius:16px!important}
+}
