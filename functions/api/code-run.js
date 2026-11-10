@@ -78,7 +78,11 @@ export async function onRequestPost({ request, env }) {
 
     const judgeUrl = new URL("/submissions?base64_encoded=false&wait=true", env.JUDGE0_URL);
     const judgeHeaders = { "content-type": "application/json" };
-    if (env.JUDGE0_AUTH_TOKEN) judgeHeaders["X-Auth-Token"] = env.JUDGE0_AUTH_TOKEN;
+    const authHeader = String(env.JUDGE0_AUTH_HEADER || "X-Auth-Token").trim();
+    if (env.JUDGE0_AUTH_TOKEN && /^[A-Za-z0-9-]{1,80}$/.test(authHeader)) {
+      judgeHeaders[authHeader] = env.JUDGE0_AUTH_TOKEN;
+    }
+    if (env.JUDGE0_AUTH_HOST) judgeHeaders["X-RapidAPI-Host"] = env.JUDGE0_AUTH_HOST;
 
     const judgeResponse = await fetch(judgeUrl, {
       method: "POST",
@@ -98,9 +102,23 @@ export async function onRequestPost({ request, env }) {
         number_of_runs: 1
       })
     });
-    const result = await judgeResponse.json().catch(() => ({}));
+    let result = await judgeResponse.json().catch(() => ({}));
     if (!judgeResponse.ok) return json({ error: result.error || "خدمة التشغيل لم تستطع تنفيذ البرنامج الآن." }, 502);
-    if (!result.status && result.token) return json({ error: "تم استلام البرنامج لكنه ما زال في قائمة الانتظار. حاول مرة أخرى بعد لحظات." }, 503);
+
+    // Shared Judge0 Cloud plans may disable wait=true, so poll the submission token.
+    if (result.token && (!result.status || result.status.id === 1 || result.status.id === 2)) {
+      const pollUrl = new URL(`/submissions/${encodeURIComponent(result.token)}?base64_encoded=false`, env.JUDGE0_URL);
+      for (let attempt = 0; attempt < 10; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const pollResponse = await fetch(pollUrl, { headers: judgeHeaders });
+        if (!pollResponse.ok) break;
+        result = await pollResponse.json().catch(() => ({}));
+        if (result.status && result.status.id > 2) break;
+      }
+    }
+    if (!result.status || result.status.id === 1 || result.status.id === 2) {
+      return json({ error: "خدمة التشغيل استلمت الكود، لكنها مزدحمة حاليًا. حاول مرة أخرى بعد قليل." }, 503);
+    }
     return json({
       stdout: result.stdout || "",
       stderr: result.stderr || "",
