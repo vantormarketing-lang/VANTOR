@@ -228,6 +228,11 @@ self.addEventListener('fetch', event => {
   // or third-party CDNs. App data and authentication remain network-only.
   if (url.origin !== self.location.origin) return;
 
+  // Let the standalone Programming Academy document navigate directly through
+  // the browser network stack. Its independent page must not be replaced by
+  // the main app-shell fallback when an internal link is followed.
+  if (req.mode === 'navigate' && url.pathname === '/programming.html') return;
+
   // Serve a cached app document immediately. Refresh it in the background so
   // a slow connection never holds the installed app on a blank launch screen.
   if (req.mode === 'navigate' && isShellDocument(url) && !hasSensitiveQuery(url)) {
