@@ -30,13 +30,21 @@ export async function onRequestPost({ request, env }) {
     const accessToken = authorization.slice(7).trim();
     if (!accessToken || accessToken.length > 8192) return json({ error: "جلسة الدخول غير صالحة." }, 401);
 
-    const supabaseUrl = env.SUPABASE_URL;
+    const configuredSupabaseUrl = env.SUPABASE_URL;
     const anonKey = env.SUPABASE_ANON_KEY;
     const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
-    const missingConfig = [!supabaseUrl && "SUPABASE_URL", !anonKey && "SUPABASE_ANON_KEY", !serviceKey && "SUPABASE_SERVICE_ROLE_KEY"].filter(Boolean);
+    const missingConfig = [!configuredSupabaseUrl && "SUPABASE_URL", !anonKey && "SUPABASE_ANON_KEY", !serviceKey && "SUPABASE_SERVICE_ROLE_KEY"].filter(Boolean);
     if (missingConfig.length) return json({ error: `إعدادات التحقق من حساب DOMA غير مكتملة. المتغيرات غير المتاحة: ${missingConfig.join(", ")}` }, 503);
 
-    const authResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
+    let supabaseOrigin;
+    try {
+      supabaseOrigin = new URL(configuredSupabaseUrl.trim()).origin;
+      if (!supabaseOrigin || !/^https:\/\//i.test(supabaseOrigin)) throw new Error("Invalid Supabase URL");
+    } catch (_) {
+      return json({ error: "قيمة SUPABASE_URL غير صالحة. استخدم رابط مشروع Supabase الأساسي بصيغة https://PROJECT_REF.supabase.co" }, 503);
+    }
+
+    const authResponse = await fetch(`${supabaseOrigin}/auth/v1/user`, {
       headers: { apikey: anonKey, Authorization: `Bearer ${accessToken}` }
     });
     if (!authResponse.ok) {
@@ -61,7 +69,7 @@ export async function onRequestPost({ request, env }) {
     if (!authUser || !authUser.id) return json({ error: "تعذر التحقق من حسابك." }, 401);
 
     const adminHeaders = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
-    const profileUrl = new URL(`${supabaseUrl}/rest/v1/profiles`);
+    const profileUrl = new URL(`${supabaseOrigin}/rest/v1/profiles`);
     profileUrl.searchParams.set("id", `eq.${authUser.id}`);
     profileUrl.searchParams.set("select", "role");
     profileUrl.searchParams.set("limit", "1");
@@ -71,7 +79,7 @@ export async function onRequestPost({ request, env }) {
 
     let hasActiveSubscription = false;
     if (!isStaff) {
-      const subscriptionUrl = new URL(`${supabaseUrl}/rest/v1/programming_course_subscriptions`);
+      const subscriptionUrl = new URL(`${supabaseOrigin}/rest/v1/programming_course_subscriptions`);
       subscriptionUrl.searchParams.set("student_id", `eq.${authUser.id}`);
       subscriptionUrl.searchParams.set("status", "eq.active");
       subscriptionUrl.searchParams.set("starts_at", `lte.${new Date().toISOString()}`);
