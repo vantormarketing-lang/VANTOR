@@ -92,7 +92,7 @@
     $('paLessons').querySelectorAll('[data-lesson]').forEach(function(btn){btn.addEventListener('click',function(){openLesson(btn.getAttribute('data-lesson'))})});
   }
   function markdown(text){
-    return esc(text).split('\n').map(function(line){
+    return esc(String(text||'').replace(/\\n/g,'\n')).split('\n').map(function(line){
       if(line.indexOf('## ')===0)return '<h3>'+line.slice(3)+'</h3>';
       if(line.indexOf('- ')===0)return '<p class="pa-bullet">• '+line.slice(2)+'</p>';
       return line?'<p>'+line+'</p>':'';
