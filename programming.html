@@ -120,25 +120,19 @@
       var btn=event.target&&event.target.closest?event.target.closest('[data-track]'):null;
       if(!btn||!host.contains(btn))return;
       event.preventDefault();
-      selectTrack(btn.getAttribute('data-track'),true);
+      window.location.href='./programming.html?track='+encodeURIComponent(btn.getAttribute('data-track'));
     };
   }
   function selectTrack(id,shouldScroll){
     var track=tracks.find(function(t){return String(t.id)===String(id)});if(!track)return;
     activeTrack=track.id;
     $('paTrackTitle').textContent=track.title;$('paTrackDescription').textContent=track.description;
+    document.body.classList.add('pa-track-view');
     renderTracks();renderLessons();
-    if(shouldScroll){
-      document.body.classList.add('pa-track-view');
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
+    if(shouldScroll)window.scrollTo({top:0,behavior:'smooth'});
   }
   function showTrackOverview(){
-    document.body.classList.remove('pa-track-view');
-    var reader=$('paLessonReader');if(reader)reader.remove();
-    activeLesson=null;
-    window.scrollTo({top:0,behavior:'smooth'});
-    renderTracks();
+    window.location.href='./programming.html';
   }
   function renderLessons(){
     var ms=modules.filter(function(m){return m.track_id===activeTrack});
@@ -215,8 +209,16 @@
       var p=await db.from('programming_lesson_progress').select('lesson_id').eq('user_id',user.id);
       if(!p.error)(p.data||[]).forEach(function(row){completed[row.lesson_id]=true});
     }
-    renderTracks();if(!tracks.some(function(t){return t.id===activeTrack})&&tracks.length)activeTrack=tracks[0].id;selectTrack(activeTrack);
-    // Keep the academy on its overview until the student explicitly opens a track.
+    renderTracks();
+    var requestedTrack=new URLSearchParams(window.location.search).get('track');
+    if(requestedTrack&&tracks.some(function(t){return String(t.id)===String(requestedTrack)})){
+      selectTrack(requestedTrack);
+    }else{
+      document.body.classList.remove('pa-track-view');
+      if(!tracks.some(function(t){return String(t.id)===String(activeTrack)})&&tracks.length)activeTrack=tracks[0].id;
+      selectTrack(activeTrack);
+      document.body.classList.remove('pa-track-view');
+    }
   }
   function setPaymentStatus(message,type){var el=$('paPaymentStatus');el.textContent=message;el.className='pa-payment-status '+(type||'')}
   async function submitPayment(){
