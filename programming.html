@@ -7,7 +7,7 @@
 <title>Programming Academy | DOMA Academy</title>
 <meta name="description" content="تعلم البرمجة من الصفر عبر مسارات متدرجة ومشاريع عملية في DOMA Programming Academy.">
 <link rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
-<link rel="stylesheet" href="./programming-academy.css?v=1">
+<link rel="stylesheet" href="./programming-academy.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="programming-page">
@@ -225,11 +225,10 @@
       await refreshMembership();await loadCurriculum();
     });
   }
-  $('paSubscribeBtn').addEventListener('click',showModal);
+  $('paSubscribeBtn').addEventListener('click',function(){if(subscription){toast('اشتراكك في أكاديمية البرمجة نشط بالفعل.');return}showModal()});
   $('paSubmitPayment').addEventListener('click',submitPayment);
   $('paAdminRefresh').addEventListener('click',async function(){var r=await db.rpc('programming_admin_list_payment_requests');if(!r.error)renderAdminRequests(r.data||[])});
   $('paSubscribeModal').querySelectorAll('[data-pa-close]').forEach(function(el){el.addEventListener('click',closeModal)});
-  db.auth.onAuthStateChange(function(_event,session){ if(session&&session.user&&$('paSubscribeModal')&&!$('paSubscribeModal').hidden){} });
   boot().catch(function(error){console.error(error);$('paTracks').innerHTML='<div class="pa-empty-state">حدث خطأ أثناء تحميل الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</div>'});
 })();</script>
 </body>
