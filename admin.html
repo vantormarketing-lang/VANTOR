@@ -893,6 +893,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <button class="nav-btn" data-section="course-sales">🌐 English Course Payments</button>
       <button class="nav-btn" data-section="kids-course-sales">🧸 Kids Course Subscriptions</button>
       <button class="nav-btn" data-section="programming-course-sales">💻 Programming Academy</button>
+      <button class="nav-btn" data-section="programming-course-sales">💻 Programming Academy</button>
       <div class="nav-title">Communication</div>
       <button class="nav-btn" data-section="notifications">✉ Notifications</button>
       <button class="nav-btn" data-section="reviews">★ Reviews</button>
@@ -1029,6 +1030,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="grid" id="mfKidsAdminStats" style="margin-bottom:14px"><div class="card stat"><div class="muted">Pending Requests</div><div class="num">—</div></div><div class="card stat"><div class="muted">Active Memberships</div><div class="num">—</div></div><div class="card stat"><div class="muted">Approved Requests</div><div class="num">—</div></div><div class="card stat"><div class="muted">Rejected Requests</div><div class="num">—</div></div><div class="card stat"><div class="muted">Expiring ≤ 7 days</div><div class="num">—</div></div></div>
         <div class="toolbar" style="margin-bottom:14px"><input id="mfKidsAdminSearch" placeholder="Search child, phone, track or level…"><select id="mfKidsAdminStatus"><option value="">All request statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div>
         <div id="mfKidsAdminTable" class="table-wrap"><div class="empty">Click Refresh to load Kids course requests and subscriptions.</div></div>
+      </section>
+
+      <section id="section-programming-course-sales" class="section">
+        <div class="head"><div><h2>DOMA Programming Academy — Payments</h2><p>Review programming course receipts and manage the separate 100 EGP / 30-day membership.</p></div><button class="btn secondary" id="programmingSalesRefresh" type="button">Refresh</button></div>
+        <div class="info-box" style="margin:12px 0 14px"><b>Programming Academy plan:</b> 100 EGP / 30 days. This is independent from grade subscriptions, Mr. Fluent English Course and Mr. Fluent Kids.</div>
+        <div class="grid" id="programmingSalesStats" style="margin-bottom:14px"><div class="card stat"><div class="muted">Pending Requests</div><div class="num">—</div></div><div class="card stat"><div class="muted">Approved Requests</div><div class="num">—</div></div><div class="card stat"><div class="muted">Rejected Requests</div><div class="num">—</div></div><div class="card stat"><div class="muted">Active Memberships</div><div class="num">—</div></div></div>
+        <div class="toolbar"><input id="programmingSalesSearch" placeholder="Search student, phone or request ID…"><select id="programmingSalesStatus"><option value="">All request statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div>
+        <div id="programmingSalesTable" class="table-wrap"><div class="empty">Click Refresh to load Programming Academy requests.</div></div>
       </section>
 
       <section id="section-programming-course-sales" class="section">
@@ -2069,8 +2078,7 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   window.printAdminCertificate=function(title,code,issued){
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div>
-</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
 };
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
