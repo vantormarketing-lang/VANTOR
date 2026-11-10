@@ -1,0 +1,115 @@
+const LANGUAGE_IDS = {
+  python: 109,
+  javascript: 102,
+  c: 103,
+  cpp: 105,
+  java: 91,
+  csharp: 51,
+  php: 98,
+  go: 107,
+  ruby: 72,
+  rust: 108,
+  kotlin: 111,
+  swift: 83,
+  dart: 90
+};
+
+const json = (body, status = 200) => new Response(JSON.stringify(body), {
+  status,
+  headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
+});
+
+export async function onRequestPost({ request, env }) {
+  try {
+    const origin = request.headers.get("Origin");
+    const requestOrigin = new URL(request.url).origin;
+    if (origin && origin !== requestOrigin) return json({ error: "Origin not allowed." }, 403);
+
+    const authorization = request.headers.get("Authorization") || "";
+    if (!authorization.startsWith("Bearer ")) return json({ error: "سجّل الدخول أولًا." }, 401);
+    const accessToken = authorization.slice(7).trim();
+    if (!accessToken || accessToken.length > 8192) return json({ error: "جلسة الدخول غير صالحة." }, 401);
+
+    const supabaseUrl = env.SUPABASE_URL;
+    const anonKey = env.SUPABASE_ANON_KEY;
+    const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!supabaseUrl || !anonKey || !serviceKey) return json({ error: "إعدادات التحقق من حساب DOMA غير مكتملة." }, 503);
+
+    const authResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: { apikey: anonKey, Authorization: `Bearer ${accessToken}` }
+    });
+    if (!authResponse.ok) return json({ error: "انتهت جلسة الدخول. سجّل الدخول مرة أخرى." }, 401);
+    const authUser = await authResponse.json();
+    if (!authUser || !authUser.id) return json({ error: "تعذر التحقق من حسابك." }, 401);
+
+    const adminHeaders = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
+    const profileUrl = new URL(`${supabaseUrl}/rest/v1/profiles`);
+    profileUrl.searchParams.set("id", `eq.${authUser.id}`);
+    profileUrl.searchParams.set("select", "role");
+    profileUrl.searchParams.set("limit", "1");
+    const profileResponse = await fetch(profileUrl, { headers: adminHeaders });
+    const profiles = profileResponse.ok ? await profileResponse.json() : [];
+    const isStaff = profiles.some(p => p.role === "admin" || p.role === "teacher");
+
+    let hasActiveSubscription = false;
+    if (!isStaff) {
+      const subscriptionUrl = new URL(`${supabaseUrl}/rest/v1/programming_course_subscriptions`);
+      subscriptionUrl.searchParams.set("student_id", `eq.${authUser.id}`);
+      subscriptionUrl.searchParams.set("status", "eq.active");
+      subscriptionUrl.searchParams.set("starts_at", `lte.${new Date().toISOString()}`);
+      subscriptionUrl.searchParams.set("expires_at", `gt.${new Date().toISOString()}`);
+      subscriptionUrl.searchParams.set("select", "id");
+      subscriptionUrl.searchParams.set("limit", "1");
+      const subscriptionResponse = await fetch(subscriptionUrl, { headers: adminHeaders });
+      const subscriptions = subscriptionResponse.ok ? await subscriptionResponse.json() : [];
+      hasActiveSubscription = Array.isArray(subscriptions) && subscriptions.length > 0;
+    }
+    if (!isStaff && !hasActiveSubscription) return json({ error: "تشغيل الأكواد متاح لأصحاب الاشتراك النشط في أكاديمية البرمجة." }, 403);
+
+    const body = await request.json();
+    const language = String(body.language || "");
+    const languageId = LANGUAGE_IDS[language];
+    const sourceCode = String(body.source_code || "");
+    const stdin = String(body.stdin || "");
+    if (!languageId) return json({ error: "لغة البرمجة غير مدعومة حاليًا." }, 400);
+    if (!sourceCode.trim()) return json({ error: "اكتب الكود أولًا." }, 400);
+    if (sourceCode.length > 16000 || stdin.length > 2000) return json({ error: "حجم الكود أو بيانات الإدخال أكبر من الحد المسموح." }, 413);
+    if (!env.JUDGE0_URL) return json({ error: "خدمة تشغيل الأكواد لم تُربط بعد. سيتم تفعيلها فور إعداد خادم التشغيل." }, 503);
+
+    const judgeUrl = new URL("/submissions?base64_encoded=false&wait=true", env.JUDGE0_URL);
+    const judgeHeaders = { "content-type": "application/json" };
+    if (env.JUDGE0_AUTH_TOKEN) judgeHeaders["X-Auth-Token"] = env.JUDGE0_AUTH_TOKEN;
+
+    const judgeResponse = await fetch(judgeUrl, {
+      method: "POST",
+      headers: judgeHeaders,
+      body: JSON.stringify({
+        language_id: languageId,
+        source_code: sourceCode,
+        stdin,
+        cpu_time_limit: 2,
+        cpu_extra_time: 0.5,
+        wall_time_limit: 6,
+        memory_limit: 128000,
+        stack_limit: 64000,
+        max_processes_and_or_threads: 20,
+        max_file_size: 1024,
+        enable_network: false,
+        number_of_runs: 1
+      })
+    });
+    const result = await judgeResponse.json().catch(() => ({}));
+    if (!judgeResponse.ok) return json({ error: result.error || "خدمة التشغيل لم تستطع تنفيذ البرنامج الآن." }, 502);
+    if (!result.status && result.token) return json({ error: "تم استلام البرنامج لكنه ما زال في قائمة الانتظار. حاول مرة أخرى بعد لحظات." }, 503);
+    return json({
+      stdout: result.stdout || "",
+      stderr: result.stderr || "",
+      compile_output: result.compile_output || "",
+      status: result.status && result.status.description ? result.status.description : "انتهى التشغيل",
+      time: result.time || null,
+      memory: result.memory || null
+    });
+  } catch (error) {
+    return json({ error: "حدث خطأ مؤقت أثناء تشغيل الكود. حاول مرة أخرى." }, 500);
+  }
+}
