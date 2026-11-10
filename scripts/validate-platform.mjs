@@ -259,7 +259,7 @@ const responseHeaders = read('_headers');
 for (const required of [
   'X-Content-Type-Options: nosniff',
   'Referrer-Policy: strict-origin-when-cross-origin',
-  'X-Frame-Options: DENY',
+  'X-Frame-Options: SAMEORIGIN',
   'Permissions-Policy: camera=(), microphone=(self), geolocation=()'
 ]) {
   if (!responseHeaders.includes(required)) fail('_headers: missing baseline browser security header: ' + required);
