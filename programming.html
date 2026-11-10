@@ -232,11 +232,25 @@
       preview.hidden=false;preview.srcdoc=source;output.textContent='تم تحديث المعاينة. جرّب تعديل HTML وCSS ثم التشغيل مرة أخرى.';state.textContent='اكتملت المعاينة';return;
     }
     if(!user||!hasAccess()){showModal();return}
-    var session=await db.auth.getSession(),token=session.data&&session.data.session&&session.data.session.access_token;
-    if(!token){output.textContent='انتهت جلسة الدخول. سجّل الدخول ثم حاول مرة أخرى.';return}
+    var sessionResult=await db.auth.getSession(),session=sessionResult.data&&sessionResult.data.session,token=session&&session.access_token;
+    if(!token){
+      var refreshed=await db.auth.refreshSession();
+      session=refreshed.data&&refreshed.data.session;token=session&&session.access_token;
+    }
+    if(!token){output.textContent='تعذر استعادة جلسة الدخول. سجّل الدخول من الصفحة الرئيسية ثم حاول مرة أخرى.';return}
     button.disabled=true;state.textContent='جارٍ تشغيل البرنامج…';output.textContent='يتم إرسال الكود إلى بيئة التشغيل المعزولة…';preview.hidden=true;
     try{
-      var response=await fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({language:lang,source_code:source,stdin:input,lesson_id:lesson.id})});
+      var requestOptions={method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({language:lang,source_code:source,stdin:input,lesson_id:lesson.id})};
+      var response=await fetch('/api/code-run',requestOptions);
+      if(response.status===401){
+        var refreshedSession=await db.auth.refreshSession();
+        var freshSession=refreshedSession.data&&refreshedSession.data.session;
+        if(freshSession&&freshSession.access_token){
+          token=freshSession.access_token;
+          requestOptions.headers.Authorization='Bearer '+token;
+          response=await fetch('/api/code-run',requestOptions);
+        }
+      }
       var result=await response.json();
       if(!response.ok)throw new Error(result.error||'تعذر تشغيل الكود.');
       var textOut=[result.stdout,result.stderr,result.compile_output].filter(Boolean).join('\n');
