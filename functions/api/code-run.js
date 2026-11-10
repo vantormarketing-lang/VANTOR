@@ -33,7 +33,8 @@ export async function onRequestPost({ request, env }) {
     const supabaseUrl = env.SUPABASE_URL;
     const anonKey = env.SUPABASE_ANON_KEY;
     const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!supabaseUrl || !anonKey || !serviceKey) return json({ error: "إعدادات التحقق من حساب DOMA غير مكتملة." }, 503);
+    const missingConfig = [!supabaseUrl && "SUPABASE_URL", !anonKey && "SUPABASE_ANON_KEY", !serviceKey && "SUPABASE_SERVICE_ROLE_KEY"].filter(Boolean);
+    if (missingConfig.length) return json({ error: `إعدادات التحقق من حساب DOMA غير مكتملة. المتغيرات غير المتاحة: ${missingConfig.join(", ")}` }, 503);
 
     const authResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
       headers: { apikey: anonKey, Authorization: `Bearer ${accessToken}` }
