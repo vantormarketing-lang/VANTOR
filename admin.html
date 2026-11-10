@@ -2069,7 +2069,64 @@ window.studentExtendSubscription=async function(id){const r=await db.from('subsc
   window.printAdminCertificate=function(title,code,issued){
   const w=window.open('','_blank','width=1000,height=700');if(!w)return;
   const safe=t=>String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div></body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA ACADEMY Certificate</title><style>body{font-family:Arial;display:grid;place-items:center;min-height:100vh;background:#eee;margin:0}.cert{width:min(850px,90vw);padding:65px;text-align:center;background:#fff;border:12px double #762337;box-sizing:border-box}.brand{font-size:18px;letter-spacing:5px;color:#762337}.cert h1{font-size:42px;margin:25px 0 10px;color:#222}.cert p{color:#555}.code{margin-top:25px;font-family:monospace;font-size:18px;color:#762337}</style></head><body><div class="cert"><div class="brand">DOMA ACADEMY</div><h1>'+safe(title)+'</h1><p>Certificate of Completion</p><p>Issued: '+safe(fmtDate(issued))+'</p><div class="code">'+safe(code)+'</div><p style="margin-top:35px">BY ADHAM</p></div><script id="doma-programming-academy-sales-admin-v1">
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let requests=[],subscriptions=[],busy=false;
+const fmt=v=>v?new Date(v).toLocaleString():'—';
+function render(){
+ const host=$('programmingSalesTable');if(!host)return;
+ const q=String($('programmingSalesSearch')?.value||'').toLowerCase().trim();
+ const st=String($('programmingSalesStatus')?.value||'').toLowerCase();
+ const list=requests.filter(x=>(!st||x.status===st)&&(!q||[x.id,x.student_name,x.student_phone,x.sender_phone,x.student_id].join(' ').toLowerCase().includes(q)));
+ const pending=list.filter(x=>x.status==='pending'),history=list.filter(x=>x.status!=='pending');
+ const row=x=>'<tr><td><code style="font-size:10px;word-break:break-all">'+esc(x.id)+'</code></td><td><b>'+esc(x.student_name||'Student')+'</b><div class="muted">'+esc(x.student_phone||x.student_id||'')+'</div></td><td>'+esc(x.amount||100)+' EGP</td><td>'+esc(x.sender_phone||'—')+'</td><td>'+fmt(x.created_at)+'</td><td><span class="pill '+(x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn')+'">'+esc(x.status)+'</span></td><td>'+(x.status==='pending'?'<div class="actions">':'')+'<button class="btn secondary small" data-p-receipt="'+esc(x.id)+'">View receipt</button>'+(x.status==='pending'?'<button class="btn ok small" data-p-approve="'+esc(x.id)+'">Approve</button><button class="btn danger small" data-p-reject="'+esc(x.id)+'">Reject</button></div>':'')+'</td></tr>';
+ const table=a=>a.length?'<div class="table-wrap"><table><thead><tr><th>Request ID</th><th>Student</th><th>Amount</th><th>Sender phone</th><th>Requested</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+a.map(row).join('')+'</tbody></table></div>':'<div class="empty">No requests here.</div>';
+ host.innerHTML='<h3>Pending payment requests</h3>'+table(pending)+'<h3 style="margin-top:22px">Reviewed request history</h3>'+table(history);
+ const now=Date.now(),active=subscriptions.filter(x=>x.status==='active'&&new Date(x.expires_at).getTime()>now).length;
+ const counts=[requests.filter(x=>x.status==='pending').length,requests.filter(x=>x.status==='approved').length,requests.filter(x=>x.status==='rejected').length,active];
+ $('programmingSalesStats').innerHTML=['Pending Requests','Approved Requests','Rejected Requests','Active Memberships'].map((t,i)=>'<div class="card stat"><div class="muted">'+t+'</div><div class="num">'+counts[i]+'</div></div>').join('');
+}
+async function load(){
+ const host=$('programmingSalesTable');if(!host||busy)return;busy=true;host.innerHTML='<div class="empty">Loading Programming Academy requests…</div>';
+ try{
+  const out=await Promise.all([db.rpc('programming_admin_list_payment_requests'),db.from('programming_course_subscriptions').select('id,student_id,status,expires_at').limit(1000)]);
+  if(out[0].error)throw out[0].error;if(out[1].error)throw out[1].error;
+  requests=(out[0].data||[]).map(x=>({...x,status:String(x.status||'pending').toLowerCase()}));subscriptions=out[1].data||[];render();
+ }catch(e){host.innerHTML='<div class="empty">Could not load Programming Academy requests.<br><b>Database error:</b> '+esc(e?.message||e)+'</div>';}
+ finally{busy=false;}
+}
+async function viewReceipt(id){
+ try{const x=requests.find(v=>v.id===id);if(!x?.proof_path)throw new Error('Receipt path not found.');const r=await db.storage.from('payment-proofs').createSignedUrl(x.proof_path,300);if(r.error)throw r.error;const w=window.open(r.data.signedUrl,'_blank','noopener');if(!w)toast('Allow pop-ups to view the receipt.');}
+ catch(e){toast('Receipt error: '+(e?.message||e));}
+}
+async function review(id,approve){
+ if(!confirm(approve?'Approve payment and activate 30 days of Programming Academy access?':'Reject this Programming Academy payment request?'))return;
+ try{
+  const r=await db.rpc(approve?'programming_approve_payment_request':'programming_reject_payment_request',{p_request_id:id,p_note:approve?'Payment verified by admin.':'Payment receipt could not be verified.'});
+  if(r.error)throw r.error;
+  const v=await db.from('programming_course_payment_requests').select('id,status').eq('id',id).maybeSingle();
+  if(v.error)throw v.error;
+  const expected=approve?'approved':'rejected';if(!v.data||String(v.data.status).toLowerCase()!==expected)throw new Error('Database did not confirm '+expected+'.');
+  toast(approve?'Programming Academy access activated.':'Programming Academy request rejected.');await load();
+ }catch(e){toast('Action not confirmed: '+(e?.message||e));await load();}
+}
+$('programmingSalesRefresh')?.addEventListener('click',load);
+$('programmingSalesSearch')?.addEventListener('input',render);
+$('programmingSalesStatus')?.addEventListener('change',render);
+$('programmingSalesTable')?.addEventListener('click',e=>{
+ const a=e.target.closest('[data-p-receipt]'),b=e.target.closest('[data-p-approve]'),c=e.target.closest('[data-p-reject]');
+ if(a)viewReceipt(a.dataset.pReceipt);else if(b)review(b.dataset.pApprove,true);else if(c)review(c.dataset.pReject,false);
+});
+const prev=window.__domaRouteSection;
+window.__domaRouteSection=function(name){if(name==='programming-course-sales')return load();return typeof prev==='function'?prev(name):Promise.resolve();};
+const old=window.loadSection;
+window.loadSection=function(name){if(name==='programming-course-sales')return load();return typeof old==='function'?old.apply(this,arguments):undefined;};
+})();
+</script>
+</body></html>';
   w.document.open();w.document.write(html);w.document.close();w.focus();w.print();
 };
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(current==='dashboard')window.loadDashboard();},400));
