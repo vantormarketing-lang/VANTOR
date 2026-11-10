@@ -102,7 +102,7 @@ export async function onRequestPost({ request, env }) {
     if (sourceCode.length > 16000 || stdin.length > 2000) return json({ error: "حجم الكود أو بيانات الإدخال أكبر من الحد المسموح." }, 413);
     if (!env.JUDGE0_URL) return json({ error: "خدمة تشغيل الأكواد لم تُربط بعد. سيتم تفعيلها فور إعداد خادم التشغيل." }, 503);
 
-    const judgeUrl = new URL("/submissions?base64_encoded=false&wait=false", env.JUDGE0_URL);
+    const judgeUrl = new URL("/submissions/?base64_encoded=false&wait=false", env.JUDGE0_URL);
     const judgeHeaders = { "content-type": "application/json" };
     const authHeader = String(env.JUDGE0_AUTH_HEADER || "X-Auth-Token").trim();
     if (env.JUDGE0_AUTH_TOKEN && /^[A-Za-z0-9-]{1,80}$/.test(authHeader)) {
