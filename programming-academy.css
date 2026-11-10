@@ -73,3 +73,17 @@ body:not(.pa-track-view) .pa-learning-layout{display:none}
 .pa-code-editor{display:block;width:100%;min-height:250px;resize:vertical;padding:17px;border:1px solid rgba(199,165,224,.27);border-radius:13px;background:#100c19;color:#e9d9f5;direction:ltr;text-align:left;tab-size:4;white-space:pre;overflow:auto;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}.pa-code-editor:focus{border-color:rgba(242,210,160,.65);box-shadow:0 0 0 3px rgba(242,210,160,.08)}
 .pa-lab-output-head{display:flex;justify-content:space-between;align-items:center;margin:13px 0 7px;color:#f2d2a0;font-size:11px}.pa-lab-output-head span{color:#cbbbd6;font-size:10px}.pa-code-output{min-height:75px;max-height:260px;overflow:auto;margin:0;padding:14px;border:1px solid rgba(225,193,233,.18);border-radius:12px;background:#0c0a12;color:#c9e9d2;direction:ltr;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace}.pa-code-preview{display:block;width:100%;height:260px;margin-top:10px;border:1px solid rgba(242,210,160,.25);border-radius:12px;background:#fff}.pa-code-preview[hidden]{display:none}.pa-input-label{display:block;margin:13px 0 6px}.pa-code-input{width:100%;min-height:54px;padding:10px;border:1px solid rgba(225,193,233,.2);border-radius:10px;background:rgba(10,8,16,.6);color:#fff;direction:ltr;text-align:left;font:12px/1.6 ui-monospace,monospace;resize:vertical}.pa-lab-footnote{margin:10px 0 0;color:#b9a9c5;font-size:9px;line-height:1.7}
 @media(max-width:560px){.pa-code-lab{padding:13px}.pa-lab-heading{align-items:flex-start;flex-direction:column}.pa-lab-toolbar{display:grid;grid-template-columns:1fr 1fr}.pa-lab-toolbar label{grid-column:1/-1}.pa-code-select{grid-column:1/-1;width:100%}.pa-lab-run{margin:0}.pa-code-editor{min-height:220px;font-size:11px}}
+
+
+/* Dedicated lesson route: keep each lesson focused on its own page. */
+body.pa-lesson-page-view .pa-hero,
+body.pa-lesson-page-view .pa-stats,
+body.pa-lesson-page-view .pa-path-section,
+body.pa-lesson-page-view .pa-learning-layout,
+body.pa-lesson-page-view .pa-footer { display:none !important; }
+body.pa-lesson-page-view .pa-shell { max-width:1120px; }
+body.pa-lesson-page-view #paLessonPage { display:block; width:100%; margin:28px auto 64px; }
+body.pa-lesson-page-view .pa-lesson-reader { display:block; margin:0; width:100%; }
+body.pa-lesson-page-view .pa-reader-top { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+body.pa-lesson-page-view .pa-reader-content { max-width:900px; margin-inline:auto; }
+body.pa-lesson-page-view .pa-code-lab { max-width:1000px; margin:32px auto; }
