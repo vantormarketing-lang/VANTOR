@@ -2351,8 +2351,13 @@ async function domaSignup(){
   sessionUser=user;
   await ensureProfile(user,name,normalized.local);
   closeModal();
-  if(window.__mfKidsEntryFlow&&typeof window.__mfKidsAfterAuth==='function'){showToast('Account created successfully.');await window.__mfKidsAfterAuth(user);return;}
-  await refreshStudentState();showToast('Account created successfully. You can open My Account whenever you are ready.');
+  // A newly created account always returns to the public homepage.
+  // Keep the Supabase session, but do not enter the student dashboard or a course-specific route.
+  showToast('Account created successfully. Welcome to Mr. Fluent!');
+  const homeUrl=new URL('./',window.location.href);
+  ['auth','kids','level','english-course','english-level'].forEach(key=>homeUrl.searchParams.delete(key));
+  homeUrl.hash='';
+  window.location.assign(homeUrl.href);
 }
 
 async function domaLogout(){if(sb)await sb.auth.signOut();sessionUser=null;currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaSelectedGradeId=null;window.currentLessons=[];window.domaStudentProfile=null;closeDrawer();updateNav();renderDashboardLoggedOut();showToast('You have been logged out.')}
@@ -16306,4 +16311,4 @@ html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot bu
  html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot{margin-bottom:8px!important}
 }
 </style>
-<link id="doma-platform-unified-theme" rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v84">
+<link id="doma-platform-unified-theme" rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
