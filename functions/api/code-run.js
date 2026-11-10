@@ -41,7 +41,20 @@ export async function onRequestPost({ request, env }) {
     });
     if (!authResponse.ok) {
       if (authResponse.status === 401) return json({ error: "انتهت جلسة الدخول أو لم تعد صالحة. حدّث تسجيل الدخول ثم حاول مرة أخرى." }, 401);
-      return json({ error: `تعذر التحقق من جلسة DOMA عبر Supabase (HTTP ${authResponse.status}). راجع إعدادات الاتصال بالمشروع.` }, 502);
+      const authContentType = authResponse.headers.get("content-type") || "unknown";
+      let authErrorDetail = "";
+      try {
+        const rawAuthError = await authResponse.text();
+        authErrorDetail = rawAuthError.replace(/[\\r\\n\\t]+/g, " ").slice(0, 400);
+      } catch (_) {}
+      return json({
+        error: `تعذر التحقق من جلسة DOMA عبر Supabase (HTTP ${authResponse.status}).`,
+        diagnostic: {
+          endpoint: "Supabase Auth /auth/v1/user",
+          contentType: authContentType,
+          response: authErrorDetail || "No response body"
+        }
+      }, 502);
     }
     const authUser = await authResponse.json();
     if (!authUser || !authUser.id) return json({ error: "تعذر التحقق من حسابك." }, 401);
