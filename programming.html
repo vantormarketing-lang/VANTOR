@@ -31,6 +31,7 @@
     <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING ROADMAP</span><h2>خريطة الأكاديمية</h2><p>كل مسار يبني على المهارات التي تعلمتها في المسار السابق.</p></div><span class="pa-roadmap-label">من الأساسيات إلى المشاريع</span></div>
     <div id="paTracks" class="pa-track-grid"><div class="pa-loading">جاري تحميل مسارات البرمجة…</div></div>
   </section>
+  <section id="paLessonPage" class="pa-lesson-page" hidden></section>
   <section class="pa-learning-layout">
     <div class="pa-lessons-panel">
       <button type="button" id="paBackToTracks" class="pa-track-back">← العودة إلى المسارات</button>
@@ -132,7 +133,8 @@
     if(shouldScroll)window.scrollTo({top:0,behavior:'smooth'});
   }
   function showTrackOverview(){
-    window.location.href='./programming.html';
+    activeLesson=null;document.body.classList.remove('pa-lesson-page-view');
+    window.location.href='./programming.html?track='+encodeURIComponent(activeTrack);
   }
   function renderLessons(){
     var ms=modules.filter(function(m){return m.track_id===activeTrack});
@@ -179,10 +181,12 @@
     if(!hasAccess()){showModal();return}
     var lesson=lessons.find(function(l){return l.id===id});if(!lesson)return;
     activeLesson=id;renderLessons();
+    document.body.classList.add('pa-lesson-page-view');
+    history.replaceState(null,'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
     var old=$('paLessonReader');if(old)old.remove();
     var reader=document.createElement('article');reader.id='paLessonReader';reader.className='pa-lesson-reader';
-    reader.innerHTML='<div class="pa-reader-top"><span class="pa-kicker">INTERACTIVE LESSON</span><span>'+Number(lesson.duration_minutes||10)+' دقيقة</span></div><h2>'+esc(lesson.title)+'</h2><p class="pa-reader-summary">'+esc(lesson.summary)+'</p><div id="paReaderContent" class="pa-reader-content"><p>جاري تحميل محتوى الدرس…</p></div><section class="pa-code-lab" aria-label="سبورة البرمجة التفاعلية"><div class="pa-lab-heading"><div><span class="pa-kicker">DOMA CODE LAB</span><h3>السبورة البرمجية</h3><p>اكتب الكود، شغّله، وشاهد النتيجة بنفسك.</p></div><span class="pa-lab-live">● بيئة تدريب</span></div><div class="pa-lab-toolbar"><label for="paCodeLanguage">لغة البرمجة</label><select id="paCodeLanguage" class="pa-code-select"><option value="python">Python</option><option value="javascript">JavaScript</option><option value="html">HTML / CSS</option><option value="c">C</option><option value="cpp">C++</option><option value="java">Java</option><option value="csharp">C#</option><option value="php">PHP</option><option value="go">Go</option><option value="ruby">Ruby</option><option value="rust">Rust</option><option value="kotlin">Kotlin</option><option value="swift">Swift</option><option value="dart">Dart</option></select><button type="button" id="paResetCode" class="pa-lab-secondary">استعادة المثال</button><button type="button" id="paRunCode" class="pa-lab-run">▶ تشغيل الكود</button></div><textarea id="paCodeEditor" class="pa-code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="محرر الكود"></textarea><div class="pa-lab-output-head"><b>النتيجة</b><span id="paRunState">جاهز للتشغيل</span></div><pre id="paCodeOutput" class="pa-code-output" aria-live="polite">اكتب الكود ثم اضغط «تشغيل الكود».</pre><iframe id="paCodePreview" class="pa-code-preview" title="معاينة صفحة HTML" sandbox="allow-scripts" hidden></iframe><label class="pa-input-label" for="paCodeInput">إدخال البرنامج (اختياري)</label><textarea id="paCodeInput" class="pa-code-input" rows="2" placeholder="اكتب بيانات الإدخال هنا إذا طلب البرنامج ذلك…"></textarea><p class="pa-lab-footnote">يتم تشغيل الأكواد البرمجية داخل بيئة معزولة بحدود زمنية وموارد محددة. لا تضع كلمات مرور أو بيانات شخصية في محرر التدريب.</p></section><div class="pa-reader-actions"><button type="button" class="pa-primary-btn" id="paCompleteBtn">'+(completed[id]?'إلغاء إكمال الدرس':'أنهيت الدرس ✓')+'</button><span class="pa-save-note">سيتم حفظ تقدمك على حسابك.</span></div>';
-    $('paLessons').appendChild(reader);$('paCompleteBtn').addEventListener('click',function(){toggleComplete(id)});
+    reader.innerHTML='<div class="pa-reader-top"><button type="button" class="pa-track-back" id="paReaderBack">← العودة إلى قائمة الدروس</button><span>'+Number(lesson.duration_minutes||10)+' دقيقة</span></div><h2>'+esc(lesson.title)+'</h2><p class="pa-reader-summary">'+esc(lesson.summary)+'</p><div id="paReaderContent" class="pa-reader-content"><p>جاري تحميل محتوى الدرس…</p></div><section class="pa-code-lab" aria-label="سبورة البرمجة التفاعلية"><div class="pa-lab-heading"><div><span class="pa-kicker">DOMA CODE LAB</span><h3>السبورة البرمجية</h3><p>اكتب الكود، شغّله، وشاهد النتيجة بنفسك.</p></div><span class="pa-lab-live">● بيئة تدريب</span></div><div class="pa-lab-toolbar"><label for="paCodeLanguage">لغة البرمجة</label><select id="paCodeLanguage" class="pa-code-select"><option value="python">Python</option><option value="javascript">JavaScript</option><option value="html">HTML / CSS</option><option value="c">C</option><option value="cpp">C++</option><option value="java">Java</option><option value="csharp">C#</option><option value="php">PHP</option><option value="go">Go</option><option value="ruby">Ruby</option><option value="rust">Rust</option><option value="kotlin">Kotlin</option><option value="swift">Swift</option><option value="dart">Dart</option></select><button type="button" id="paResetCode" class="pa-lab-secondary">استعادة المثال</button><button type="button" id="paRunCode" class="pa-lab-run">▶ تشغيل الكود</button></div><textarea id="paCodeEditor" class="pa-code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="محرر الكود"></textarea><div class="pa-lab-output-head"><b>النتيجة</b><span id="paRunState">جاهز للتشغيل</span></div><pre id="paCodeOutput" class="pa-code-output" aria-live="polite">اكتب الكود ثم اضغط «تشغيل الكود».</pre><iframe id="paCodePreview" class="pa-code-preview" title="معاينة صفحة HTML" sandbox="allow-scripts" hidden></iframe><label class="pa-input-label" for="paCodeInput">إدخال البرنامج (اختياري)</label><textarea id="paCodeInput" class="pa-code-input" rows="2" placeholder="اكتب بيانات الإدخال هنا إذا طلب البرنامج ذلك…"></textarea><p class="pa-lab-footnote">يتم تشغيل الأكواد البرمجية داخل بيئة معزولة بحدود زمنية وموارد محددة. لا تضع كلمات مرور أو بيانات شخصية في محرر التدريب.</p></section><div class="pa-reader-actions"><button type="button" class="pa-primary-btn" id="paCompleteBtn">'+(completed[id]?'إلغاء إكمال الدرس':'أنهيت الدرس ✓')+'</button><span class="pa-save-note">سيتم حفظ تقدمك على حسابك.</span></div>';
+    $('paLessonPage').hidden=false;$('paLessonPage').appendChild(reader);$('paReaderBack').addEventListener('click',showTrackOverview);$('paCompleteBtn').addEventListener('click',function(){toggleComplete(id)});
     var content=await db.rpc('programming_get_lesson_content',{p_lesson_id:id});
     if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
     $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
@@ -283,6 +287,7 @@
     }
     renderTracks();
     var requestedTrack=new URLSearchParams(window.location.search).get('track');
+    var requestedLesson=new URLSearchParams(window.location.search).get('lesson');
     if(requestedTrack&&tracks.some(function(t){return String(t.id)===String(requestedTrack)})){
       selectTrack(requestedTrack);
     }else{
@@ -291,6 +296,7 @@
       selectTrack(activeTrack);
       document.body.classList.remove('pa-track-view');
     }
+    if(requestedLesson&&lessons.some(function(l){return l.id===requestedLesson})){var target=lessons.find(function(l){return l.id===requestedLesson});var parent=modules.find(function(m){return m.id===target.module_id});if(parent&&parent.track_id===activeTrack)await openLesson(requestedLesson)}
   }
   function setPaymentStatus(message,type){var el=$('paPaymentStatus');el.textContent=message;el.className='pa-payment-status '+(type||'')}
   async function submitPayment(){
