@@ -52,3 +52,16 @@
 .pa-reader-content ul,.pa-reader-content ol{padding-inline-start:24px;margin:9px 0 15px;color:#e8ddea;line-height:1.9}
 .pa-reader-content li{padding:2px 0}
 .pa-reader-content h4{margin:15px 0 7px;color:#f2d5a8;font-size:14px}
+
+
+/* Dedicated lesson-list view for the selected programming track */
+body.pa-track-view .pa-hero,
+body.pa-track-view .pa-stats,
+body.pa-track-view .pa-path-section,
+body.pa-track-view .pa-side-column{display:none!important}
+body.pa-track-view .pa-learning-layout{display:block!important;margin-top:18px}
+body.pa-track-view .pa-lessons-panel{width:100%;max-width:100%;min-height:60vh}
+.pa-track-back{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;padding:10px 14px;border:1px solid rgba(239,211,171,.3);border-radius:12px;background:rgba(255,255,255,.055);color:#f3d9b2;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.2s}
+.pa-track-back:hover{background:rgba(239,211,171,.13);border-color:rgba(239,211,171,.6);transform:translateY(-1px)}
+body:not(.pa-track-view) .pa-learning-layout{display:none}
+.pa-lesson-reader{margin-top:20px}
