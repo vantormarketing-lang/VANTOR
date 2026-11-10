@@ -33,7 +33,8 @@
   </section>
   <section class="pa-learning-layout">
     <div class="pa-lessons-panel">
-      <div class="pa-panel-heading"><div><span class="pa-kicker">START HERE</span><h2 id="paTrackTitle">Computer Science Fundamentals</h2><p id="paTrackDescription">ابدأ بفهم البرمجة قبل كتابة الأكواد.</p></div><span id="paTrackProgress" class="pa-progress-count">0 / 0</span></div>
+      <button type="button" id="paBackToTracks" class="pa-track-back">← العودة إلى المسارات</button>
+      <div class="pa-panel-heading"><div><span class="pa-kicker">TRACK LESSONS</span><h2 id="paTrackTitle">Computer Science Fundamentals</h2><p id="paTrackDescription">ابدأ بفهم البرمجة قبل كتابة الأكواد.</p></div><span id="paTrackProgress" class="pa-progress-count">0 / 0</span></div>
       <div class="pa-progress-track"><i id="paProgressBar"></i></div>
       <div id="paLessons" class="pa-lesson-list"><div class="pa-loading">جاري تحميل الدروس…</div></div>
     </div>
@@ -128,9 +129,16 @@
     $('paTrackTitle').textContent=track.title;$('paTrackDescription').textContent=track.description;
     renderTracks();renderLessons();
     if(shouldScroll){
-      var panel=$('paLessons');
-      if(panel)panel.scrollIntoView({behavior:'smooth',block:'center'});
+      document.body.classList.add('pa-track-view');
+      window.scrollTo({top:0,behavior:'smooth'});
     }
+  }
+  function showTrackOverview(){
+    document.body.classList.remove('pa-track-view');
+    var reader=$('paLessonReader');if(reader)reader.remove();
+    activeLesson=null;
+    window.scrollTo({top:0,behavior:'smooth'});
+    renderTracks();
   }
   function renderLessons(){
     var ms=modules.filter(function(m){return m.track_id===activeTrack});
@@ -208,8 +216,7 @@
       if(!p.error)(p.data||[]).forEach(function(row){completed[row.lesson_id]=true});
     }
     renderTracks();if(!tracks.some(function(t){return t.id===activeTrack})&&tracks.length)activeTrack=tracks[0].id;selectTrack(activeTrack);
-    var first=lessons.find(function(l){return modules.some(function(m){return m.id===l.module_id&&m.track_id===activeTrack})});
-    if(first&&hasAccess())openLesson(first.id);
+    // Keep the academy on its overview until the student explicitly opens a track.
   }
   function setPaymentStatus(message,type){var el=$('paPaymentStatus');el.textContent=message;el.className='pa-payment-status '+(type||'')}
   async function submitPayment(){
@@ -261,6 +268,7 @@
       await refreshMembership();await loadCurriculum();
     });
   }
+  $('paBackToTracks').addEventListener('click',showTrackOverview);
   $('paSubscribeBtn').addEventListener('click',function(){if(subscription){toast('اشتراكك في أكاديمية البرمجة نشط بالفعل.');return}showModal()});
   $('paSubmitPayment').addEventListener('click',submitPayment);
   $('paAdminRefresh').addEventListener('click',async function(){var r=await db.rpc('programming_admin_list_payment_requests');if(!r.error)renderAdminRequests(r.data||[])});
