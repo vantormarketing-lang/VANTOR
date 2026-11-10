@@ -2371,8 +2371,8 @@ function navActionMarkup(label,loggedOutAction){
 function renderPublicWelcome(){
   const card=$('mrFluentHomepageWelcome');
   if(!card)return;
-  const isNewWelcomeAccount=sessionUser?.user_metadata?.mr_fluent_welcome===true;
-  if(!sessionUser||!isNewWelcomeAccount){card.hidden=true;return;}
+  // Show the homepage welcome to every signed-in student, including accounts created before this feature.
+  if(!sessionUser){card.hidden=true;return;}
   const fullName=String(sessionUser.user_metadata?.full_name||sessionUser.user_metadata?.name||'Student').trim();
   const firstName=fullName.split(/\s+/)[0]||'Student';
   const nameNode=card.querySelector('.mr-fluent-welcome-name');
