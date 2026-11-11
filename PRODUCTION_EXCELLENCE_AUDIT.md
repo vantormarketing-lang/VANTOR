@@ -44,6 +44,9 @@ The Supabase project reports an active/healthy status. Its advisors returned the
 - Added `scripts/validate-production-safety.mjs` and wired it into `.github/workflows/validate-platform.yml`. It checks browser-facing secrets, server-side session validation, student/admin PWA caching boundaries, private homework attachment links, security headers, admin theme/cache version alignment, grade-approval persistence verification, and the prepared programming migration.
 - Fixed the admin PWA's stale theme cache reference: the HTML loaded `doma-glass-v70`, while the service worker cached `doma-glass-v65`. The worker cache and registration were advanced to v71 and its theme asset URL now matches v70.
 - Hardened grade-subscription approval feedback: the admin now verifies the persisted request status is `approved` before displaying success, matching the existing English-course approval pattern.
+- Added `mrfluent-course-workspace.js` to the A1–C2 course pages: each lesson now has a separate lesson route, and the lesson workspace includes a pointer/touch whiteboard, pen colors, eraser, undo, clear, and local notes saved per level/lesson on the current device.
+- Added the lesson workspace to the student PWA shell, aligned the asset URL, and advanced the student worker/manifest/registration version from v236 to v237.
+- Added CI checks for the six course-page integrations and JavaScript syntax. These are static checks; the lesson route and drawing experience still require the owner's live browser check.
 - Added `supabase/migrations/20261111010000_optimize_programming_rls_and_fk_indexes.sql` with two non-destructive FK indexes and the four scalar-subquery RLS policy optimizations. The migration is committed to this branch only and has **not** been applied to Supabase production.
 - Confirmed the existing grade, English-course, and Kids receipt flows enforce a 5 MB file limit and use private payment-proof storage paths.
 
