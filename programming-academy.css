@@ -105,3 +105,71 @@ body.pa-lesson-page-view .pa-code-lab { max-width:1000px; margin:32px auto; }
 .pa-content-table td{color:#e9ddec}
 .pa-reader-content pre{margin:16px 0;padding:18px;border-radius:14px;background:#0b0912;border:1px solid rgba(235,205,164,.24);box-shadow:inset 0 0 25px rgba(0,0,0,.18);font-size:13px;line-height:1.85}
 @media(max-width:600px){.pa-reader-content{font-size:14px}.pa-reader-content h2{font-size:20px}.pa-reader-content h3{font-size:17px}.pa-content-table{font-size:11px}}
+
+
+/* Interactive code editor: line gutter, quick actions and keyboard assistance. */
+.pa-editor-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px}
+.pa-editor-tools button{padding:7px 11px;border:1px solid rgba(242,210,160,.2);border-radius:9px;font-size:11px}
+.pa-editor-tools span{margin-inline-start:auto;color:#bcaec8;font-size:10px}
+.pa-editor-wrap{display:flex;direction:ltr;align-items:stretch;overflow:hidden;border:1px solid rgba(199,165,224,.27);border-radius:13px;background:#100c19}
+.pa-editor-wrap:focus-within{border-color:rgba(242,210,160,.65);box-shadow:0 0 0 3px rgba(242,210,160,.08)}
+.pa-code-lines{flex:0 0 42px;max-height:430px;overflow:hidden;margin:0;padding:17px 9px 17px 5px;border-right:1px solid rgba(225,193,233,.12);background:rgba(255,255,255,.025);color:#82738f;text-align:right;white-space:pre;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;user-select:none}
+.pa-editor-wrap .pa-code-editor{flex:1;min-width:0;min-height:250px;max-height:430px;resize:vertical;border:0;border-radius:0;background:transparent}
+.pa-editor-wrap .pa-code-editor:focus{border:0;box-shadow:none}
+.pa-activities,.pa-student-progress,.pa-projects-section,.pa-admin-learning{margin:28px 0;padding:clamp(16px,3vw,28px);border:1px solid rgba(235,205,164,.2);border-radius:20px;background:linear-gradient(145deg,rgba(85,57,107,.38),rgba(28,19,39,.78));box-shadow:0 18px 55px rgba(0,0,0,.16)}
+.pa-activities-heading,.pa-section-heading{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
+.pa-activities-heading h3,.pa-section-heading h2{margin:0;color:#f4d7a9;font-size:clamp(20px,3vw,27px)}
+.pa-activities-heading p,.pa-section-heading p{margin:0;color:#c7b8d1;font-size:13px;line-height:1.8}
+.pa-activity-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.pa-activity-card,.pa-project-card{min-width:0;padding:17px;border:1px solid rgba(235,205,164,.19);border-radius:16px;background:rgba(12,9,20,.42)}
+.pa-activity-card-head{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.pa-activity-card h4,.pa-project-card h3{margin:0;color:#f5d9ad;font-size:17px;line-height:1.6}
+.pa-activity-tag{align-self:flex-start;padding:5px 9px;border-radius:99px;background:rgba(224,185,126,.12);color:#f2d2a0;font-size:10px;font-weight:800}
+.pa-exercise-instructions,.pa-project-card p{color:#e1d5e9;font-size:13px;line-height:1.9;white-space:normal}
+.pa-activity-card .pa-code-select{width:100%;margin-bottom:10px}
+.pa-exercise-editor{min-height:150px;margin-bottom:10px}
+.pa-activity-card .pa-code-input{margin-bottom:10px;direction:auto;text-align:start}
+.pa-activity-submit{display:inline-flex;justify-content:center;align-items:center;min-height:40px;padding:10px 16px;border:0;border-radius:11px;background:linear-gradient(120deg,#f4d9ae,#dcae72);color:#2c1b35;font-weight:900;font-size:12px;cursor:pointer}
+.pa-activity-submit:disabled{opacity:.55;cursor:wait}
+.pa-activity-status{min-height:20px;margin:8px 0 0;color:#e7cfaa;font-size:12px;line-height:1.7}
+.pa-previous-result,.pa-activity-lock{margin-top:12px;padding:12px;border:1px solid rgba(235,205,164,.15);border-radius:11px;background:rgba(235,205,164,.06);color:#ddcce8;font-size:12px;line-height:1.8}
+.pa-previous-result p{margin:6px 0 0;color:#f3d7ac}
+.pa-quiz-question{margin:12px 0;padding:13px;border:1px solid rgba(235,205,164,.15);border-radius:12px}
+.pa-quiz-question legend{padding:0 4px;color:#f0dfc5;font-size:13px;line-height:1.8}
+.pa-quiz-option{display:flex;align-items:flex-start;gap:9px;margin:9px 0;padding:9px;border-radius:9px;background:rgba(255,255,255,.035);color:#e4d9eb;font-size:12px;line-height:1.7;cursor:pointer}
+.pa-quiz-option input{margin-top:4px;accent-color:#e2bd86}
+.pa-progress-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.pa-progress-card{display:flex;flex-direction:column;gap:6px;padding:15px;border:1px solid rgba(235,205,164,.18);border-radius:14px;background:rgba(12,9,20,.4)}
+.pa-progress-card>b{color:#f5d9ad;font-size:25px;font-weight:900}
+.pa-progress-card>span{color:#e6d9eb;font-size:12px}
+.pa-progress-card>small{color:#bbaec7;font-size:10px;line-height:1.7}
+.pa-progress-card>i{height:6px;margin-top:4px;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.09)}
+.pa-progress-card>i>em{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#b88ad5,#f2d2a0)}
+.pa-projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.pa-project-card h3{margin:10px 0}
+.pa-project-card ul{padding-inline-start:22px;color:#d8cce1;font-size:12px;line-height:1.9}
+.pa-project-form{display:grid;gap:10px;margin-top:14px}
+.pa-project-form label{display:grid;gap:6px;color:#f0d7b0;font-size:11px}
+.pa-project-form input,.pa-project-form textarea,.pa-review-controls input{width:100%;min-width:0;padding:10px;border:1px solid rgba(225,193,233,.2);border-radius:9px;background:rgba(10,8,16,.65);color:#fff;font:12px/1.6 inherit}
+.pa-project-form textarea{resize:vertical}
+.pa-admin-learning[hidden]{display:none}
+.pa-admin-learning .pa-section-heading{flex-direction:row;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.pa-admin-learning-queue{display:grid;gap:10px;margin-top:16px}
+.pa-review-card{display:grid;grid-template-columns:minmax(180px,1fr) minmax(230px,1.1fr);gap:14px;padding:14px;border:1px solid rgba(235,205,164,.17);border-radius:13px;background:rgba(12,9,20,.4)}
+.pa-review-meta{display:grid;align-content:start;gap:5px}
+.pa-review-meta b{color:#f5d9ad}
+.pa-review-meta span{color:#e5d8eb;font-size:12px}
+.pa-review-meta small{color:#b7a9c3;font-size:10px}
+.pa-review-controls{display:grid;grid-template-columns:90px 1fr;gap:7px}
+.pa-review-controls button{font-size:11px}
+body.pa-lesson-page-view .pa-student-progress,
+body.pa-lesson-page-view .pa-projects-section,
+body.pa-lesson-page-view .pa-admin-learning{display:none!important}
+@media(max-width:620px){
+ .pa-editor-tools span{width:100%;margin:0}
+ .pa-code-lines{flex-basis:32px;padding-inline:4px;font-size:11px}
+ .pa-editor-wrap .pa-code-editor{font-size:11px}
+ .pa-review-card{grid-template-columns:1fr}
+ .pa-review-controls{grid-template-columns:1fr 1fr}
+ .pa-review-controls input:nth-child(2){grid-column:1/-1}
+}
