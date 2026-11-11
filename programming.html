@@ -485,7 +485,8 @@ function initializeDomaProgrammingAcademy(){
     var result=await db.rpc('programming_create_payment_request',{p_sender_phone:phone,p_proof_path:path});
     if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
     pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
-    await refreshMembership();await loadCurriculum();await loadStudentProgress();if(isStaff)await loadProgrammingAdminLearning();if(new URLSearchParams(window.location.search).get('learning-admin')==='1'){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
+    await loadCurriculum();
+    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(new URLSearchParams(window.location.search).get('learning-admin')==='1'){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
   }
   async function renderAdminRequests(rows){
     var panel=$('paAdminPanel'),host=$('paAdminRequests');panel.hidden=false;
@@ -510,11 +511,12 @@ function initializeDomaProgrammingAcademy(){
   async function boot(){
     var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
     $('paAuthStatus').classList.toggle('is-connected',!!user);
-    await refreshMembership();await loadCurriculum();await loadStudentProgress();
+    await loadCurriculum();
+    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
       $('paAuthStatus').classList.toggle('is-connected',!!user);
-      await refreshMembership();await loadCurriculum();await loadStudentProgress();if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
+      await loadCurriculum();await refreshMembership();await loadStudentProgress();if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
     });
   }
   $('paBackToTracks').addEventListener('click',showTrackOverview);
