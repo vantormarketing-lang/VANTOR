@@ -461,7 +461,7 @@
       var ins=await db.from('programming_lesson_progress').insert({user_id:user.id,lesson_id:id});
       if(ins.error&&ins.error.code!=='23505'){toast('تعذر حفظ التقدم. حاول مرة أخرى.');return}completed[id]=true;
     }
-    renderTracks();renderLessons();openLesson(id);toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
+    renderTracks();renderLessons();openLesson(id);await loadStudentProgress();toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
   }
   async function loadCurriculum(){
     var a=await db.from('programming_tracks').select('*').eq('published',true).order('sort_order');
