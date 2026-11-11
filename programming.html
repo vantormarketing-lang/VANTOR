@@ -7,7 +7,7 @@
 <title>Programming Academy | DOMA Academy</title>
 <meta name="description" content="تعلم البرمجة من الصفر عبر مسارات متدرجة ومشاريع عملية في DOMA Programming Academy.">
 <link rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
-<link rel="stylesheet" href="./programming-academy.css?v=2">
+<link rel="stylesheet" href="./programming-academy.css?v=3">
 <style id="pa-refined-topbar">
 .pa-topbar{min-height:70px;padding:12px max(4vw,18px)}
 .pa-brand-symbol{display:grid;place-items:center;width:43px;height:43px}
@@ -225,7 +225,69 @@ function initializeDomaProgrammingAcademy(){
   var codeSamples={
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
     javascript:'const name = "DOMA Student";\nconsole.log("Hello, " + name);\n\n// جرّب تغيير الاسم ثم شغّل البرنامج',
-    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n</body>\n</html>',
+    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n
+<style id="pa-pull-refresh-style">
+#paPullRefresh{position:fixed;z-index:10000;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;display:flex;align-items:center;gap:9px;padding:10px 15px;border:1px solid rgba(242,210,160,.38);border-radius:999px;background:rgba(35,23,49,.94);color:#f2d2a0;font:700 12px system-ui,sans-serif;box-shadow:0 8px 25px rgba(0,0,0,.28);opacity:0;pointer-events:none;transform:translate(-50%,-150%);transition:opacity .15s,transform .15s}
+#paPullRefresh.is-visible{opacity:1;transform:translate(-50%,0)}
+#paPullRefresh .pa-refresh-icon{display:inline-block;font-size:16px;line-height:1}
+#paPullRefresh.is-refreshing .pa-refresh-icon{animation:paRefreshSpin .7s linear infinite}
+@keyframes paRefreshSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#paPullRefresh,#paPullRefresh .pa-refresh-icon{transition:none;animation:none}}
+</style>
+<div id="paPullRefresh" role="status" aria-live="polite"><span class="pa-refresh-icon">↻</span><span>اسحب للتحديث</span></div>
+<script id="pa-pull-refresh">
+(function(){
+  if(window.__paPullRefreshInstalled)return;
+  window.__paPullRefreshInstalled=true;
+  var indicator=document.getElementById('paPullRefresh');
+  if(!indicator)return;
+  var startY=0,lastY=0,pulling=false,armed=false,reloading=false;
+  var threshold=88;
+  function blocked(target){
+    return !!(target&&target.closest&&target.closest('textarea,input,select,button,a,iframe,[contenteditable="true"],.pa-code-editor,.pa-code-output,.pa-code-input,.pa-reader-content pre,.pa-table-wrap,.pa-modal-card'));
+  }
+  function setState(distance){
+    var ready=distance>=threshold;
+    indicator.classList.add('is-visible');
+    indicator.classList.toggle('is-refreshing',ready);
+    indicator.querySelector('span:last-child').textContent=ready?'اترك للتحديث':'اسحب للتحديث';
+  }
+  document.addEventListener('touchstart',function(event){
+    if(reloading||event.touches.length!==1||window.scrollY>2||blocked(event.target))return;
+    startY=lastY=event.touches[0].clientY;
+    pulling=true;armed=false;
+  },{passive:true});
+  document.addEventListener('touchmove',function(event){
+    if(!pulling||event.touches.length!==1)return;
+    lastY=event.touches[0].clientY;
+    var delta=lastY-startY;
+    if(delta<=0){pulling=false;indicator.classList.remove('is-visible','is-refreshing');return;}
+    if(window.scrollY>2){pulling=false;indicator.classList.remove('is-visible','is-refreshing');return;}
+    if(delta>8){
+      event.preventDefault();
+      setState(Math.min(delta,threshold+25));
+      armed=delta>=threshold;
+    }
+  },{passive:false});
+  function finish(){
+    if(!pulling)return;
+    pulling=false;
+    indicator.classList.remove('is-visible');
+    if(armed&&!reloading){
+      reloading=true;
+      indicator.classList.add('is-visible','is-refreshing');
+      indicator.querySelector('span:last-child').textContent='جاري تحديث الصفحة…';
+      window.setTimeout(function(){window.location.reload();},120);
+    }else{
+      indicator.classList.remove('is-refreshing');
+    }
+    armed=false;
+  }
+  document.addEventListener('touchend',finish,{passive:true});
+  document.addEventListener('touchcancel',finish,{passive:true});
+})();
+</script>
+</body>\n</html>',
     c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, DOMA!\\n");\n    return 0;\n}',
     cpp:'#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, DOMA!" << endl;\n    return 0;\n}',
     java:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, DOMA!");\n    }\n}',
