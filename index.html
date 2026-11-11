@@ -2264,6 +2264,7 @@ function setAuthModalBackButton(isAuth){
   }
 }
 function closeModal(){
+  if(sessionUser?.app_metadata?.must_change_password===true&&$('domaForcedPasswordForm'))return;
   if(document.body)document.body.classList.remove('mf-kids-auth-modal-open');
   if(typeof domaClosePlayerPicker==='function')domaClosePlayerPicker();
   $('modal').classList.remove('show','doma-auth-photo','doma-auth-signup');
