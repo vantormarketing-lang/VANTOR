@@ -467,33 +467,13 @@ body.pa-admin-only .pa-admin-learning{display:block!important;margin-top:28px}
 }
 
 
-/* Professional syntax-colour layer for the interactive code editor */
-.pa-editor-wrap{position:relative;isolation:isolate}
-.pa-editor-wrap .pa-code-highlight{
-  position:absolute;z-index:1;top:0;right:0;bottom:0;left:42px;
-  box-sizing:border-box;margin:0;padding:17px;
-  overflow:hidden;pointer-events:none;white-space:pre;
-  background:transparent;color:#ffffff;
-  text-align:left;direction:ltr;tab-size:4;
-  font:14px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;
-}
-.pa-code-highlight code{font:inherit;color:inherit}
-.pa-code-highlight .pa-syn-keyword{color:#e2b8ff;font-weight:700}
-.pa-code-highlight .pa-syn-string{color:#caff9e;font-weight:600}
-.pa-code-highlight .pa-syn-number{color:#ffb09a;font-weight:600}
-.pa-code-highlight .pa-syn-comment{color:#c2d0e2;font-style:italic}
-.pa-code-highlight .pa-syn-literal{color:#ffe6a6;font-weight:700}
-.pa-code-highlight .pa-syn-function{color:#b6d0ff;font-weight:600}
+/* Use the native editor text directly; remove the floating syntax layer that covered the editor. */
 .pa-editor-wrap .pa-code-editor{
-  position:relative;z-index:2;color:transparent!important;
-  -webkit-text-fill-color:transparent!important;
-  caret-color:#f4d9ae;background:transparent!important;
+  position:relative;
+  z-index:1;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  caret-color:#f4d9ae;
+  background:transparent!important;
   text-shadow:none!important;
-}
-.pa-editor-wrap .pa-code-editor::selection{
-  background:rgba(130,170,255,.28);
-  -webkit-text-fill-color:transparent;
-}
-@media(max-width:620px){
-  .pa-editor-wrap .pa-code-highlight{left:32px;padding:17px 10px;font-size:13px}
 }
