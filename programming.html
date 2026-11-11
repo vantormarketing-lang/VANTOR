@@ -8,7 +8,6 @@
 <meta name="description" content="تعلم البرمجة من الصفر عبر مسارات متدرجة ومشاريع عملية في DOMA Programming Academy.">
 <link rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
 <link rel="stylesheet" href="./programming-academy.css?v=2">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style id="pa-refined-topbar">
 .pa-topbar{min-height:70px;padding:12px max(4vw,18px)}
 .pa-brand-symbol{display:grid;place-items:center;width:43px;height:43px}
@@ -80,11 +79,12 @@
 </div>
 <div id="paToast" class="pa-toast" role="status" aria-live="polite"></div>
 <script>
-(function(){
+function initializeDomaProgrammingAcademy(){
   'use strict';
   var URL='https://dtptxhkcogpoleftguas.supabase.co';
   var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-  var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  var boundedFetch=function(input,init){var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},15000);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
+  var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},global:{fetch:boundedFetch}});
   var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false;
   var $=function(id){return document.getElementById(id)};
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
@@ -438,9 +438,8 @@
     renderTracks();renderLessons();openLesson(id);await loadStudentProgress();toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
   }
   async function loadCurriculum(){
-    var a=await db.from('programming_tracks').select('*').eq('published',true).order('sort_order');
-    var b=await db.from('programming_modules').select('*').eq('published',true).order('sort_order');
-    var c=await db.from('programming_lessons').select('id,module_id,title,summary,duration_minutes,sort_order,published').eq('published',true).order('sort_order');
+    var results=await Promise.all([db.from('programming_tracks').select('*').eq('published',true).order('sort_order'),db.from('programming_modules').select('*').eq('published',true).order('sort_order'),db.from('programming_lessons').select('id,module_id,title,summary,duration_minutes,sort_order,published').eq('published',true).order('sort_order')]);
+    var a=results[0],b=results[1],c=results[2];
     if(a.error||b.error||c.error){$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل المنهج</h3><p>تأكد من اتصال الإنترنت ثم حدّث الصفحة. إذا استمرت المشكلة، راجع إعداد قاعدة بيانات الأكاديمية.</p></div>';return}
     tracks=a.data||[];modules=b.data||[];lessons=c.data||[];
     completed={};
@@ -528,7 +527,22 @@
       }
     },true);
   }
-  boot().catch(function(error){console.error(error);$('paTracks').innerHTML='<div class="pa-empty-state">حدث خطأ أثناء تحميل الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</div>'});
+
+  boot().catch(function(error){console.error(error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء الاتصال. تأكد من الإنترنت ثم أعد المحاولة.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>'});
+}
+(function(){
+  var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2'];
+  function showLoadError(){var host=document.getElementById('paTracks');if(host)host.innerHTML='<div class="pa-empty-state"><h3>تعذر بدء الأكاديمية</h3><p>مكتبة الاتصال لم يتم تحميلها. تحقق من الإنترنت ثم أعد المحاولة.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';}
+  function load(index){
+    if(window.supabase&&window.supabase.createClient){initializeDomaProgrammingAcademy();return;}
+    if(index>=sources.length){showLoadError();return;}
+    var script=document.createElement('script');script.src=sources[index];script.async=true;
+    var settled=false;var timer=setTimeout(function(){if(settled)return;settled=true;script.remove();load(index+1);},10000);
+    script.onload=function(){if(settled)return;settled=true;clearTimeout(timer);if(window.supabase&&window.supabase.createClient)initializeDomaProgrammingAcademy();else load(index+1);};
+    script.onerror=function(){if(settled)return;settled=true;clearTimeout(timer);script.remove();load(index+1);};
+    document.head.appendChild(script);
+  }
+  load(0);
 })();</script>
 </body>
 </html>
