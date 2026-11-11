@@ -61,6 +61,9 @@ check(
   'Student PWA normalizes shell keys and excludes sensitive/dynamic API responses from caching'
 );
 
+const student = read('index.html');
+const admin = read('admin.html');
+
 const adminWorker = read('admin-sw.js');
 check(
   /if\s*\(isAdminDocument\)\s*\{[\s\S]*?fetch\(req,\s*\{\s*cache:\s*['"]no-store['"]\s*\}\)/.test(adminWorker) &&
@@ -83,8 +86,6 @@ check(
   'Grade subscription approval verifies the persisted approved state before reporting success'
 );
 
-const student = read('index.html');
-const admin = read('admin.html');
 check(
   !/storage\.from\(\s*['"]homework-submissions['"]\s*\)\s*\.getPublicUrl\s*\(/.test(student) &&
   admin.includes('createSignedUrl(path,300)') &&
