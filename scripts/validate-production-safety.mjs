@@ -68,7 +68,6 @@ check(
   /if\s*\(SHELL\.includes\(req\.url\)\)/.test(adminWorker),
   'Admin PWA never caches the admin HTML and only caches allowlisted shell assets'
 );
-const admin = read('admin.html');
 const themeHref = admin.match(/<link id="doma-platform-unified-theme" rel="stylesheet" href="([^"]+)"/)?.[1];
 const workerThemeHref = adminWorker.match(/const GLASS_THEME_URL = new URL\('([^']+)'/)?.[1];
 const workerRegistration = admin.match(/new URL\('\.\/admin-sw\.js\?doma-admin=(v\d+)'/)?.[1];
