@@ -898,7 +898,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <button class="nav-btn" data-section="programming-course-sales">💻 Programming Academy</button>
       <a class="nav-btn" href="./programming.html?learning-admin=1">📚 Programming Learning & Reviews ↗</a>
       <div class="nav-title">Communication</div>
-      <button class="nav-btn" data-section="notifications">✉ Notifications</button>
+      <button class="nav-btn" data-section="notifications">✉ Notifications <span id="passwordResetBadge" style="display:none;margin-left:7px;padding:2px 7px;border-radius:20px;background:#c58a3c;color:#1b1028;font-size:11px;font-weight:800">0</span></button>
       <button class="nav-btn" data-section="reviews">★ Reviews</button>
       <div class="nav-title">Learning Tools</div>
       <button class="nav-btn" data-section="daily-words">🔊 Daily Words</button>
@@ -1061,7 +1061,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       </section>
 
       <section id="section-notifications" class="section">
-        <div class="head"><div><h2>Notifications</h2><p>Send a notification to one student or all students.</p></div><button class="btn" id="newNotification">+ New Notification</button></div>
+        <div class="head"><div><h2>Notifications</h2><p>Manage student messages and incoming account requests.</p></div><button class="btn" id="newNotification">+ New Notification</button></div>
+        <div class="card" style="margin:0 0 16px">
+          <div class="head"><div><h3>Password Reset Requests <span id="passwordResetPendingCount" class="pill warn">0 new</span></h3><p>Requests are added when a student presses Forgot Password. New requests appear here automatically.</p></div><button type="button" class="btn secondary small" id="passwordResetRefresh">Refresh</button></div>
+          <div id="passwordResetRequestsTable" class="table-wrap"><div class="empty">Loading requests…</div></div>
+        </div>
         <div id="notifTable" class="table-wrap"></div>
       </section>
 
@@ -1645,7 +1649,42 @@ async function loadCertificates(){const r=await db.from('certificates').select('
 $('newCertificate').onclick=async()=>{const students=await db.from('profiles').select('id,full_name,email').eq('role','student').order('full_name');if(students.error)return toast(students.error.message);openModal('Issue Certificate',`<form id="certForm"><div class="form-row"><label>Student</label><select id="cStudent" required><option value="">Select student</option>${(students.data||[]).map(s=>`<option value="${s.id}">${esc(s.full_name||s.email)}</option>`).join('')}</select></div><div class="form-row"><label>Certificate title</label><input id="cTitle" placeholder="English — 3rd Preparatory Completion" required></div><button class="btn">Issue Certificate</button></form>`);$('certForm').onsubmit=async e=>{e.preventDefault();const code='DOMA-'+new Date().getFullYear()+'-'+Math.random().toString(36).slice(2,8).toUpperCase();const r=await db.from('certificates').insert({student_id:$('cStudent').value,title:$('cTitle').value.trim(),certificate_code:code}).select('id');if(r.error)return toast('Issue failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Certificate issue was not confirmed. Check INSERT RLS/permissions.');closeModal();toast('Certificate issued.');await loadCertificates()}}
 async function deleteCertificate(id){await deletePersisted('certificates',id,'Certificate',loadCertificates)}
 
-async function loadNotifications(){const r=await db.from('notifications').select('id,student_id,title,message,is_read,created_at,profiles(full_name,email)').order('created_at',{ascending:false}).limit(300);if(r.error)return $('notifTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('notifTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Title</th><th>Message</th><th>Status</th><th>Date</th></tr></thead><tbody>'+r.data.map(x=>`<tr><td>${esc(x.profiles?.full_name||'All students')}</td><td>${esc(x.title)}</td><td>${esc(x.message)}</td><td>${x.is_read?'Read':'Unread'}</td><td>${fmt(x.created_at)}</td></tr>`).join('')+'</tbody></table>':'<div class="empty">No notifications yet.</div>'}
+async function loadPasswordResetRequests(){
+  const host=$('passwordResetRequestsTable');if(!host)return;
+  const r=await db.from('password_reset_requests').select('id,phone,student_id,status,created_at,profiles(full_name)').order('created_at',{ascending:false}).limit(100);
+  if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+  const rows=r.data||[],pending=rows.filter(x=>x.status==='pending').length;
+  const badge=$('passwordResetBadge'),count=$('passwordResetPendingCount');
+  if(badge){badge.textContent=String(pending);badge.style.display=pending?'inline-block':'none'}
+  if(count)count.textContent=pending+' new';
+  host.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Phone</th><th>Status</th><th>Requested</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
+    const phone=String(x.phone||'').replace(/[^0-9]/g,'');
+    const name=x.profiles?.full_name||'Unmatched account';
+    const statusLabel=({pending:'New',contacted:'Contacted',completed:'Completed',dismissed:'Dismissed'})[x.status]||x.status;
+    const issue=x.student_id?'<button type="button" class="btn warn small js-reset-from-request" data-student-id="'+esc(x.student_id)+'" data-student-label="'+esc(name)+'">Issue temporary password</button>':'<span class="muted">No matching student</span>';
+    const wa=phone?'<a class="btn secondary small" href="https://wa.me/'+phone+'" target="_blank" rel="noopener noreferrer">WhatsApp</a>':'';
+    const handled=x.status==='pending'?'<button type="button" class="btn secondary small js-close-reset-request" data-request-id="'+esc(x.id)+'">Mark handled</button>':'';
+    return '<tr><td><b>'+esc(name)+'</b></td><td>'+esc(phone)+'</td><td>'+esc(statusLabel)+'</td><td>'+fmt(x.created_at)+'</td><td><div class="actions">'+issue+wa+handled+'</div></td></tr>';
+  }).join('')+'</tbody></table>':'<div class="empty">No password reset requests yet.</div>';
+  host.querySelectorAll('.js-reset-from-request').forEach(btn=>btn.addEventListener('click',()=>window.resetStudentPassword(btn.dataset.studentId,btn.dataset.studentLabel)));
+  host.querySelectorAll('.js-close-reset-request').forEach(btn=>btn.addEventListener('click',async()=>{
+    btn.disabled=true;
+    const user=await db.auth.getUser();
+    const update=await db.from('password_reset_requests').update({status:'completed',handled_at:new Date().toISOString(),handled_by:user.data?.user?.id||null}).eq('id',btn.dataset.requestId).select('id');
+    if(update.error||!Array.isArray(update.data)||!update.data.some(x=>x.id===btn.dataset.requestId)){btn.disabled=false;return toast('Could not update request: '+(update.error?.message||'No row updated'))}
+    toast('Request marked as handled.');await loadPasswordResetRequests();
+  }));
+}
+window.domaInitPasswordResetAlerts=async function(){
+  if(window.__domaStaffProfile?.role!=='admin')return;
+  await loadPasswordResetRequests();
+  if(window.__domaPasswordResetChannel)await db.removeChannel(window.__domaPasswordResetChannel);
+  window.__domaPasswordResetChannel=db.channel('admin-password-reset-requests')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'password_reset_requests'},()=>{toast('New password reset request received.');loadPasswordResetRequests();})
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'password_reset_requests'},()=>loadPasswordResetRequests())
+    .subscribe(status=>{if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Password reset alert channel:',status)});
+};
+async function loadNotifications(){await loadPasswordResetRequests();const r=await db.from('notifications').select('id,student_id,title,message,is_read,created_at,profiles(full_name,email)').order('created_at',{ascending:false}).limit(300);if(r.error)return $('notifTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('notifTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Title</th><th>Message</th><th>Status</th><th>Date</th></tr></thead><tbody>'+r.data.map(x=>'<tr><td>'+esc(x.profiles?.full_name||'All students')+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.message)+'</td><td>'+(x.is_read?'Read':'Unread')+'</td><td>'+fmt(x.created_at)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No notifications yet.</div>'}
 $('newNotification').onclick=async()=>{const students=await db.from('profiles').select('id,full_name,email').eq('role','student').order('full_name');if(students.error)return toast(students.error.message);openModal('New Notification',`<form id="notifForm"><div class="form-row"><label>Recipient</label><select id="nStudent"><option value="">All students</option>${(students.data||[]).map(s=>`<option value="${s.id}">${esc(s.full_name||s.email)}</option>`).join('')}</select></div><div class="form-row"><label>Title</label><input id="nTitle" required></div><div class="form-row"><label>Message</label><textarea id="nMessage" required></textarea></div><button class="btn">Send Notification</button></form>`);$('notifForm').onsubmit=async e=>{e.preventDefault();const r=await db.from('notifications').insert({student_id:$('nStudent').value||null,title:$('nTitle').value.trim(),message:$('nMessage').value.trim()}).select('id');if(r.error)return toast('Send failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Notification send was not confirmed. Check INSERT RLS/permissions.');closeModal();toast('Notification sent.');await loadNotifications()}}
 
 async function loadReviews(){const r=await db.from('reviews').select('id,rating,review_text,is_published,created_at,profiles(full_name,email)').order('created_at',{ascending:false});if(r.error)return $('reviewsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('reviewsTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Rating</th><th>Review</th><th>Status</th><th>Action</th></tr></thead><tbody>'+r.data.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}</td><td>${'★'.repeat(Number(x.rating||0))}</td><td>${esc(x.review_text)}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Hidden'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="toggleReview('${x.id}',${!x.is_published})">${x.is_published?'Hide':'Publish'}</button><button class="btn danger small" onclick="deleteReview('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No reviews yet.</div>'}
@@ -1654,7 +1693,7 @@ async function deleteReview(id){await deletePersisted('reviews',id,'Review',load
 
 function loadSection(n){({dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,homework:loadHomework,students:loadStudents,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews}[n]||(()=>{}))()}
 
-$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=()=>{clearTimeout(window.__unitSearchTimer);window.__unitSearchTimer=setTimeout(loadUnits,250)};$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=()=>{lessonsPage=0;loadLessons()};$('lessonSearch').oninput=()=>{lessonsPage=0;clearTimeout(window.__lessonSearchTimer);window.__lessonSearchTimer=setTimeout(loadLessons,250)};$('lessonGrade').onchange=()=>{lessonsPage=0;loadLessons()};$('lessonType').onchange=()=>{lessonsPage=0;loadLessons()};$('quizRefresh').onclick=()=>{domaQuizListPage=0;loadQuizzes()};$('quizSearch').oninput=()=>{domaQuizListPage=0;clearTimeout(window.__quizSearchTimer);window.__quizSearchTimer=setTimeout(loadQuizzes,250)};$('quizGrade').onchange=()=>{domaQuizListPage=0;loadQuizzes()};$('hwRefresh').onclick=()=>{domaHomeworkListPage=0;window.loadHomework?.()||loadHomework()};$('hwSearch').oninput=()=>{domaHomeworkListPage=0;clearTimeout(window.__homeworkSearchTimer);window.__homeworkSearchTimer=setTimeout(()=>{if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()},250)};$('hwGrade').onchange=()=>{domaHomeworkListPage=0;if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()};$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=()=>{clearTimeout(window.__studentSearchTimer);window.__studentSearchTimer=setTimeout(loadStudents,250)};$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=async()=>{await loadSales();await loadDashboard()};$('salesSearch').oninput=()=>{clearTimeout(window.__salesSearchTimer);window.__salesSearchTimer=setTimeout(loadSales,250)};$('reviewsRefresh').onclick=loadReviews;
+$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=()=>{clearTimeout(window.__unitSearchTimer);window.__unitSearchTimer=setTimeout(loadUnits,250)};$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=()=>{lessonsPage=0;loadLessons()};$('lessonSearch').oninput=()=>{lessonsPage=0;clearTimeout(window.__lessonSearchTimer);window.__lessonSearchTimer=setTimeout(loadLessons,250)};$('lessonGrade').onchange=()=>{lessonsPage=0;loadLessons()};$('lessonType').onchange=()=>{lessonsPage=0;loadLessons()};$('quizRefresh').onclick=()=>{domaQuizListPage=0;loadQuizzes()};$('quizSearch').oninput=()=>{domaQuizListPage=0;clearTimeout(window.__quizSearchTimer);window.__quizSearchTimer=setTimeout(loadQuizzes,250)};$('quizGrade').onchange=()=>{domaQuizListPage=0;loadQuizzes()};$('hwRefresh').onclick=()=>{domaHomeworkListPage=0;window.loadHomework?.()||loadHomework()};$('hwSearch').oninput=()=>{domaHomeworkListPage=0;clearTimeout(window.__homeworkSearchTimer);window.__homeworkSearchTimer=setTimeout(()=>{if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()},250)};$('hwGrade').onchange=()=>{domaHomeworkListPage=0;if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()};$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=()=>{clearTimeout(window.__studentSearchTimer);window.__studentSearchTimer=setTimeout(loadStudents,250)};$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=async()=>{await loadSales();await loadDashboard()};$('salesSearch').oninput=()=>{clearTimeout(window.__salesSearchTimer);window.__salesSearchTimer=setTimeout(loadSales,250)};$('reviewsRefresh').onclick=loadReviews;$('passwordResetRefresh')?.addEventListener('click',loadPasswordResetRequests);
 
 async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Session active':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
 
@@ -1688,6 +1727,7 @@ async function start(){
         return false;
       }
       window.__domaStaffProfile=staff.profile;
+      if(staff.profile.role==='admin')window.domaInitPasswordResetAlerts?.();
       $('login').style.display='none';$('app').style.display='block';
       await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();await checkAdminDataAccess();setTimeout(checkLessonVideoIntegrity,500);return true;
     }catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}
