@@ -5419,7 +5419,7 @@ async function domaRecordPasswordResetRequest(phone){
     body:JSON.stringify({phone})
   });
   const result=await response.json().catch(()=>({}));
-  if(!response.ok||!result.ok)throw new Error(result.error||'Could not notify the administrator.');
+  if(!response.ok||!result.ok)throw new Error(result.error||('Request service returned HTTP '+response.status+'.'));
   return result;
 }
 window.domaForgotPassword=async function(){
@@ -5434,7 +5434,7 @@ window.domaForgotPassword=async function(){
       try{
         await domaRecordPasswordResetRequest(aliasNormalized.local);
         showStatus('authStatus','Your request has been received. After the administrator verifies your account, you will receive a temporary password on the WhatsApp number registered with your account.','success');
-      }catch(e){showStatus('authStatus','We could not submit your request right now. Please try again in a few minutes.','error');}
+      }catch(e){showStatus('authStatus','Request not submitted: '+String(e?.message||'Please try again in a few minutes.').slice(0,180),'error');}
       return;
     }
     showStatus('authStatus','Sending reset link…');
@@ -5450,7 +5450,7 @@ window.domaForgotPassword=async function(){
   try{
     await domaRecordPasswordResetRequest(normalized.local);
     showStatus('authStatus','Your request has been received. After the administrator verifies your account, you will receive a temporary password on the WhatsApp number registered with your account.','success');
-  }catch(e){showStatus('authStatus','We could not submit your request right now. Please try again in a few minutes.','error');}
+  }catch(e){showStatus('authStatus','Request not submitted: '+String(e?.message||'Please try again in a few minutes.').slice(0,180),'error');}
 };
 
 window.domaCompletePhonePasswordReset=async function(){
