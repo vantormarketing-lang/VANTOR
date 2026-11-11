@@ -5,7 +5,8 @@ function json(body, status=200) {
   });
 }
 function config(env) {
-  const url=String(env.SUPABASE_URL||"").replace(/\/+$/,"");
+  // Accept either the project URL or a URL that already includes /rest/v1.
+  const url=String(env.SUPABASE_URL||"").replace(/\/+$/,"").replace(/\/rest\/v1$/i,"");
   const key=String(env.SUPABASE_SERVICE_ROLE_KEY||"");
   return url&&key?{url,key}:null;
 }
