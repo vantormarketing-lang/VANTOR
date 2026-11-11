@@ -22,3 +22,5 @@ jobs:
           node-version: 20
       - name: Validate platform scripts, PWA manifests, and progress safeguards
         run: node scripts/validate-platform.mjs
+      - name: Validate production security and PWA caching safeguards
+        run: node scripts/validate-production-safety.mjs
