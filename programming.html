@@ -271,7 +271,7 @@
     var lessonSample=lessonCodeSamples[lesson.id]||extractedSample||codeSamples[sampleLanguage]||codeSamples[preferred];
     editor.value=localStorage.getItem(key)||lessonSample;
     function saveDraft(){localStorage.setItem('doma-code:'+activeTrack+':'+lesson.id+':'+lang.value,editor.value)}
-    lang.onchange=function(){saveDraft();var k='doma-code:'+activeTrack+':'+lesson.id+':'+lang.value;editor.value=localStorage.getItem(k)||(lang.value===sampleLanguage?lessonSample:(codeSamples[lang.value]||''));$('paCodePreview').hidden=true;$('paCodeOutput').textContent='جاهز للتشغيل.'};
+    lang.onchange=function(){saveDraft();var k='doma-code:'+activeTrack+':'+lesson.id+':'+lang.value;editor.value=localStorage.getItem(k)||(lang.value===sampleLanguage?lessonSample:(codeSamples[lang.value]||''));$('paCodePreview').hidden=true;$('paCodeOutput').textContent='جاهز للتشغيل.';syncLines()};
     var lineHost=$('paCodeLines');
     function syncLines(){if(lineHost)lineHost.textContent=Array.from({length:Math.max(1,editor.value.split('\n').length)},function(_,i){return i+1}).join('\n')}
     function persistAndSync(){saveDraft();syncLines()}
