@@ -52,6 +52,15 @@ The Supabase project reports an active/healthy status. Its advisors returned the
 
 These checks are static source checks only. They do not contact the deployed site or database. The migration file is a reviewed proposal until explicitly applied to the intended database.
 
+### Additional read-only Storage and access-policy review
+
+- Both `payment-proofs` and `homework-submissions` buckets are private (`public = false`).
+- `payment-proofs` has a 5 MiB bucket limit and MIME allowlist for supported receipt formats; `homework-submissions` has a 10 MiB limit and its own allowlist.
+- Payment-proof Storage policies allow an authenticated user to upload/read only inside their own user-id folder; staff can read/delete proofs. Homework attachments are similarly scoped to the submitter or staff.
+- RLS is enabled on `profiles`, grade subscription requests/subscriptions, English-course requests/subscriptions, and Kids enrollment requests/subscriptions. Student read policies are scoped to the current user; staff actions are separately gated.
+- This is a metadata/policy-definition review only. It does not prove that every deployed upload or signed-link workflow succeeds in a browser.
+
+
 ## Next implementation sequence
 
 1. **Auth and signup:** the current student signup uses a phone-derived alias email. If Supabase email confirmation is enabled, signup can create an Auth user without a session; the UI explicitly reports that email confirmation must be disabled for this alias-based flow. The project Auth setting must be confirmed by the owner before changing this design or enabling SMS OTP.
