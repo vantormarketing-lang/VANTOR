@@ -1898,7 +1898,26 @@ html body nav.nav .brand .mrfluent-header-live-dot{
   }
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy.css?v=2">\n</head>
+<link rel="stylesheet" href="./programming-academy.css?v=2">\n<style id="pa-programming-entry-card-css">
+#english-course .pa-programming-entry-card{grid-column:1/-1;justify-self:center;width:min(100%,680px);position:relative;isolation:isolate;display:grid;grid-template-columns:58px minmax(0,1fr);align-items:center;gap:15px;min-width:0;padding:16px;border:1px solid rgba(220,184,126,.48);border-radius:20px;background:radial-gradient(ellipse at 0% 0%,rgba(199,158,83,.12),transparent 46%),linear-gradient(135deg,rgba(49,35,67,.96),rgba(30,23,43,.98));box-shadow:0 14px 34px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.07);color:#fff;text-decoration:none;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s}
+#english-course .pa-programming-entry-card:hover{transform:translateY(-2px);border-color:rgba(235,199,126,.9);box-shadow:0 16px 34px rgba(0,0,0,.28),0 0 23px rgba(211,170,94,.11)}
+#english-course .pa-programming-entry-art{position:relative;display:grid;place-items:center;min-width:0;width:58px;height:58px;border:1px solid rgba(220,184,126,.28);border-radius:16px;background:linear-gradient(145deg,rgba(199,158,83,.12),rgba(151,111,185,.14));box-shadow:inset 0 1px rgba(255,255,255,.06)}
+#english-course .pa-programming-entry-art svg{display:block;width:36px;height:36px;max-width:100%;max-height:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+#english-course .pa-programming-entry-copy{min-width:0;padding:12px 14px;border:1px solid rgba(205,173,119,.2);border-radius:13px;background:linear-gradient(145deg,rgba(12,9,20,.42),rgba(255,255,255,.035));box-shadow:inset 0 1px rgba(255,255,255,.045)}
+#english-course .pa-programming-entry-kicker{display:block;color:#e8c77f;font-size:8px;font-weight:950;letter-spacing:1.5px}
+#english-course .pa-programming-entry-copy h3{margin:7px 0 5px;color:#fff;font-size:clamp(16px,1.7vw,22px);line-height:1.1;font-weight:950;letter-spacing:-.3px}
+#english-course .pa-programming-entry-copy p{margin:0;color:#e0d3bd;font:600 10px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:right;overflow-wrap:anywhere}
+#english-course .pa-programming-entry-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+#english-course .pa-programming-entry-tags span{padding:4px 6px;border-radius:99px;border:1px solid rgba(205,173,119,.24);background:rgba(255,255,255,.045);color:#e8d9bd;font-size:8px;font-weight:850}
+#english-course .pa-programming-entry-price{display:flex;align-items:baseline;gap:8px;margin-top:9px;color:#cdbb9b;font-size:9px}
+#english-course .pa-programming-entry-price strong{color:#f2d18c;font-size:19px;font-weight:950;letter-spacing:-.5px}
+#english-course .pa-programming-entry-price small{font-size:9px}
+#english-course .pa-programming-entry-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid rgba(255,255,255,.1);color:#e8c77f;font-size:10px;font-weight:950}
+#english-course .pa-programming-entry-cta b{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#b78a49,#76542e);color:white;font-size:14px}
+@media(max-width:760px){#english-course .pa-programming-entry-card{grid-column:1/-1!important;grid-row:auto!important;justify-self:stretch;width:100%;grid-template-columns:46px minmax(0,1fr);min-height:0;padding:13px;gap:12px}#english-course .pa-programming-entry-art{width:46px;height:46px}#english-course .pa-programming-entry-art svg{width:32px;height:32px}#english-course .pa-programming-entry-copy{padding:12px}#english-course .pa-programming-entry-copy h3{font-size:17px}}
+@media(max-width:380px){#english-course .pa-programming-entry-card{grid-template-columns:40px minmax(0,1fr);gap:9px;padding:10px}#english-course .pa-programming-entry-art{width:40px;height:40px}#english-course .pa-programming-entry-art svg{width:28px;height:28px}#english-course .pa-programming-entry-copy{padding:10px}#english-course .pa-programming-entry-copy h3{font-size:15px}#english-course .pa-programming-entry-copy p{font-size:10px}}
+</style>
+</head>
 <body>
 <nav class="nav">
 <div class="container navin">
@@ -3383,25 +3402,7 @@ function printCertificate(title,code,issued){
   const w=window.open('','_blank','width=900,height=650');
   if(!w)return;
   w.document.write('<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:40px 24px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style>
-<style id="pa-programming-entry-card-css">
-#english-course .pa-programming-entry-card{grid-column:1/-1;justify-self:center;width:calc(50% - 7px);position:relative;isolation:isolate;display:grid;grid-template-columns:30px minmax(0,1fr);align-items:center;gap:10px;min-width:0;min-height:0;padding:12px;border:1px solid rgba(190,151,91,.58);border-radius:18px;background:radial-gradient(ellipse at 0% 0%,rgba(199,158,83,.13),transparent 46%),linear-gradient(135deg,#1b1727 0%,#292034 56%,#201b2b 100%);box-shadow:0 12px 32px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.055);color:#fff;text-decoration:none;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s}
-#english-course .pa-programming-entry-card:hover{transform:translateY(-2px);border-color:rgba(235,199,126,.9);box-shadow:0 16px 34px rgba(0,0,0,.28),0 0 23px rgba(211,170,94,.11)}
-#english-course .pa-programming-entry-art{position:relative;display:grid;place-items:center;min-width:0;width:30px;height:30px;border:0;border-radius:7px;background:transparent;box-shadow:none}
-#english-course .pa-programming-entry-art svg{display:block;width:30px;height:30px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
-#english-course .pa-programming-entry-copy{min-width:0;padding:12px 14px;border:1px solid rgba(205,173,119,.2);border-radius:13px;background:linear-gradient(145deg,rgba(12,9,20,.42),rgba(255,255,255,.035));box-shadow:inset 0 1px rgba(255,255,255,.045)}
-#english-course .pa-programming-entry-kicker{display:block;color:#e8c77f;font-size:8px;font-weight:950;letter-spacing:1.5px}
-#english-course .pa-programming-entry-copy h3{margin:7px 0 5px;color:#fff;font-size:clamp(16px,1.7vw,22px);line-height:1.1;font-weight:950;letter-spacing:-.3px}
-#english-course .pa-programming-entry-copy p{margin:0;color:#e0d3bd;font:600 10px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:right;overflow-wrap:anywhere}
-#english-course .pa-programming-entry-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
-#english-course .pa-programming-entry-tags span{padding:4px 6px;border-radius:99px;border:1px solid rgba(205,173,119,.24);background:rgba(255,255,255,.045);color:#e8d9bd;font-size:8px;font-weight:850}
-#english-course .pa-programming-entry-price{display:flex;align-items:baseline;gap:8px;margin-top:9px;color:#cdbb9b;font-size:9px}
-#english-course .pa-programming-entry-price strong{color:#f2d18c;font-size:19px;font-weight:950;letter-spacing:-.5px}
-#english-course .pa-programming-entry-price small{font-size:9px}
-#english-course .pa-programming-entry-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid rgba(255,255,255,.1);color:#e8c77f;font-size:10px;font-weight:950}
-#english-course .pa-programming-entry-cta b{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#b78a49,#76542e);color:white;font-size:14px}
-@media(max-width:760px){#english-course .pa-programming-entry-card{grid-column:1!important;grid-row:auto!important;justify-self:stretch;width:100%;grid-template-columns:25px minmax(0,1fr);min-height:0;padding:10px;gap:8px}#english-course .pa-programming-entry-art{width:25px;height:25px}#english-course .pa-programming-entry-art svg{width:25px;height:25px}#english-course .pa-programming-entry-copy{padding:10px}#english-course .pa-programming-entry-copy h3{font-size:16px}}
-@media(max-width:380px){#english-course .pa-programming-entry-card{grid-template-columns:22px minmax(0,1fr);gap:7px;padding:8px}#english-course .pa-programming-entry-art{width:22px;height:22px}#english-course .pa-programming-entry-art svg{width:22px;height:22px}#english-course .pa-programming-entry-copy{padding:9px}#english-course .pa-programming-entry-copy h3{font-size:14px}#english-course .pa-programming-entry-copy p{font-size:9px}}
-</style>
+
 </head><body><div class="c"><div class="small">Mr. Fluent</div><h1>'+esc(title)+'</h1><p>Certificate of Completion</p><p class="small">Issued '+esc(fmtDate(issued))+'</p><div class="code">'+esc(code)+'</div><p class="small">LEARN • SPEAK • MASTER</p></div></body></html>');
   w.document.close();
   w.print();
