@@ -1469,7 +1469,11 @@ window.resetStudentPassword=async function(studentId,studentLabel){
       body:JSON.stringify({student_id:studentId})
     });
     const result=await response.json().catch(()=>({}));
-    if(!response.ok||!result.ok)throw new Error(result.error||'Password reset failed.');
+    if(!response.ok||!result.ok){
+      let message=result.error||'Password reset failed.';
+      if(/not configured/i.test(message))message='One-time setup required: add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY as Cloudflare Pages variables/secrets. See docs/SECURE_STUDENT_PASSWORD_RESET.md.';
+      throw new Error(message);
+    }
     const password=String(result.temporary_password||'');
     if(!password)throw new Error('The server did not return a temporary password.');
     const phone=normEGPhone(result.student?.phone||'');
