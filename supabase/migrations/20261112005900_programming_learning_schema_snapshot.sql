@@ -238,6 +238,16 @@ CREATE POLICY "programming_quizzes_staff_manage" ON public."programming_quizzes"
 USING (( SELECT mrfluent_english_is_staff() AS mrfluent_english_is_staff))
 WITH CHECK (( SELECT mrfluent_english_is_staff() AS mrfluent_english_is_staff));
 
+-- Remove default broad table grants, then restore only required app access.
+REVOKE ALL ON TABLE public."programming_exercises" FROM anon, authenticated, service_role;
+REVOKE ALL ON TABLE public."programming_quizzes" FROM anon, authenticated, service_role;
+REVOKE ALL ON TABLE public."programming_quiz_questions" FROM anon, authenticated, service_role;
+REVOKE ALL ON TABLE public."programming_projects" FROM anon, authenticated, service_role;
+REVOKE ALL ON TABLE public."programming_exercise_submissions" FROM anon, authenticated, service_role;
+REVOKE ALL ON TABLE public."programming_quiz_attempts" FROM anon, authenticated, service_role;
+REVOKE ALL ON TABLE public."programming_project_submissions" FROM anon, authenticated, service_role;
+REVOKE ALL ON TABLE public."programming_certificates" FROM anon, authenticated, service_role;
+
 GRANT SELECT ON TABLE public."programming_certificates" TO "authenticated";
 GRANT INSERT, SELECT ON TABLE public."programming_exercise_submissions" TO "authenticated";
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE public."programming_exercise_submissions" TO "service_role";
