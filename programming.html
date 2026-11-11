@@ -156,6 +156,10 @@ function initializeDomaProgrammingAcademy(){
   }
   function showTrackOverview(){
     activeLesson=null;document.body.classList.remove('pa-lesson-page-view');
+    var learningLayout=document.querySelector('.pa-learning-layout');
+    if(learningLayout)learningLayout.hidden=false;
+    var pathsSection=$('learning-paths');
+    if(pathsSection)pathsSection.hidden=false;
     window.location.href='./programming.html';
   }
   function renderLessons(){
@@ -222,6 +226,12 @@ function initializeDomaProgrammingAcademy(){
     var lesson=lessons.find(function(l){return l.id===id});if(!lesson)return;
     activeLesson=id;renderLessons();
     document.body.classList.add('pa-lesson-page-view');
+    // Hide the lesson list explicitly as well as via CSS. This prevents it
+    // remaining below the reader if a cached stylesheet is still active.
+    var learningLayout=document.querySelector('.pa-learning-layout');
+    if(learningLayout)learningLayout.hidden=true;
+    var pathsSection=$('learning-paths');
+    if(pathsSection)pathsSection.hidden=true;
     history.replaceState(null,'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
     var old=$('paLessonReader');if(old)old.remove();
     var reader=document.createElement('article');reader.id='paLessonReader';reader.className='pa-lesson-reader';
