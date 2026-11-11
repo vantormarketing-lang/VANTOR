@@ -153,11 +153,11 @@
   function markdown(text){
     var lines=String(text||'').replace(/\\n/g,'\n').split('\n'),out=[],code=[],inCode=false,listType='';
     function closeList(){if(listType){out.push('</'+listType+'>');listType=''}}
-    function isTableRow(line){return /^\\s*\\|.*\\|\\s*$/.test(line)}
-    function cells(line){return line.trim().replace(/^\\|/,'').replace(/\\|$/,'').split('|').map(function(cell){return cell.trim()})}
+    function isTableRow(line){return /^\s*\|.*\|\s*$/.test(line)}
+    function cells(line){return line.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(function(cell){return cell.trim()})}
     for(var i=0;i<lines.length;i++){
       var line=lines[i];
-      if(line.slice(0,3)==='\\x60\\x60\\x60'){
+      if(line.slice(0,3)==='\x60\x60\x60'){
         if(inCode){out.push('<pre><code>'+esc(code.join('\n'))+'</code></pre>');code=[];inCode=false}
         else{closeList();inCode=true;code=[]}
         continue;
@@ -179,15 +179,15 @@
       if(line.indexOf('### ')===0){closeList();out.push('<h4>'+inlineMarkdown(line.slice(4))+'</h4>');continue}
       if(line.indexOf('## ')===0){closeList();out.push('<h3>'+inlineMarkdown(line.slice(3))+'</h3>');continue}
       if(line.indexOf('# ')===0){closeList();out.push('<h2>'+inlineMarkdown(line.slice(2))+'</h2>');continue}
-      if(/^\\s*>/.test(line)){closeList();out.push('<blockquote>'+inlineMarkdown(line.replace(/^\\s*>\\s?/,''))+'</blockquote>');continue}
-      if(/^\\s*[-*_]{3,}\\s*$/.test(line)){closeList();out.push('<hr class="pa-content-divider">');continue}
+      if(/^\s*>/.test(line)){closeList();out.push('<blockquote>'+inlineMarkdown(line.replace(/^\s*>\s?/,''))+'</blockquote>');continue}
+      if(/^\s*[-*_]{3,}\s*$/.test(line)){closeList();out.push('<hr class="pa-content-divider">');continue}
       if(line.indexOf('- ')===0){
         if(listType!=='ul'){closeList();listType='ul';out.push('<ul>')}
         out.push('<li>'+inlineMarkdown(line.slice(2))+'</li>');continue;
       }
-      if(/^\\d+\\.\\s/.test(line)){
+      if(/^\d+\.\s/.test(line)){
         if(listType!=='ol'){closeList();listType='ol';out.push('<ol>')}
-        out.push('<li>'+inlineMarkdown(line.replace(/^\\d+\\.\\s/,''))+'</li>');continue;
+        out.push('<li>'+inlineMarkdown(line.replace(/^\d+\.\s/,''))+'</li>');continue;
       }
       closeList();out.push('<p>'+inlineMarkdown(line)+'</p>');
     }
