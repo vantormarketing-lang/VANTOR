@@ -2392,6 +2392,32 @@ function domaShowForcedPasswordChange(){
   };
   $('domaForcedSignout').onclick=async()=>{await sb.auth.signOut();sessionUser=null;closeModal();openAuth('login')};
 }
+function domaShowEmailPasswordRecovery(){
+  const body=$('modalBody');if(!body)return;
+  $('modalTitle').textContent='Reset your password';
+  $('modalText').textContent='Choose a new password for your Mr. Fluent account.';
+  body.innerHTML='<div class="doma-forced-password"><div class="doma-forced-password-icon">✦</div><h3>Create a new password</h3><p>Use at least 10 characters and keep it private.</p><form id="domaEmailRecoveryForm"><label>New password<input id="domaEmailRecoveryPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label><label>Confirm new password<input id="domaEmailRecoveryConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label><div id="domaEmailRecoveryStatus" class="status full"></div><button class="doma-v115-create" type="submit">Save new password</button></form></div>';
+  const form=$('domaEmailRecoveryForm');
+  form.onsubmit=async e=>{
+    e.preventDefault();
+    const password=$('domaEmailRecoveryPassword').value,confirmPassword=$('domaEmailRecoveryConfirm').value;
+    if(password.length<10)return showStatus('domaEmailRecoveryStatus','Use at least 10 characters.','error');
+    if(password!==confirmPassword)return showStatus('domaEmailRecoveryStatus','The two passwords do not match.','error');
+    const submit=form.querySelector('button[type="submit"]');submit.disabled=true;submit.textContent='Saving…';
+    try{
+      const result=await sb.auth.updateUser({password});
+      if(result.error)throw result.error;
+      const refreshed=await sb.auth.getSession();
+      sessionUser=refreshed.data?.session?.user||result.data?.user||sessionUser;
+      closeModal();
+      await refreshStudentState();
+      showToast('Your password has been updated.');
+      if(window.__mfKidsEntryFlow&&typeof window.__mfKidsAfterAuth==='function')await window.__mfKidsAfterAuth(sessionUser);
+      else openDrawer('overview');
+    }catch(error){showStatus('domaEmailRecoveryStatus',error?.message||'Could not update your password.','error');}
+    finally{submit.disabled=false;submit.textContent='Save new password';}
+  };
+}
 async function domaLogin(){
   const identifier=$('loginPhone')?.value.trim()||'',pass=$('loginPass')?.value||'';
   if(!identifier||!pass)return showStatus('authStatus','Enter your mobile number and password.','error');
@@ -3743,8 +3769,12 @@ async function boot(){
     domaShowForcedPasswordChange();
   }
   try{
-    sb.auth.onAuthStateChange((_event,session)=>{
+    sb.auth.onAuthStateChange((event,session)=>{
       sessionUser=session?.user||null;updateNav();
+      if(event==='PASSWORD_RECOVERY'){
+        setTimeout(()=>{openAuth('login');domaShowEmailPasswordRecovery()},0);
+        return;
+      }
       if(sessionUser?.app_metadata?.must_change_password===true){
         setTimeout(()=>{
           if(!$('domaForcedPasswordForm')){openAuth('login');domaShowForcedPasswordChange()}
