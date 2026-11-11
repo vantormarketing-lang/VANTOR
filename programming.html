@@ -167,7 +167,7 @@ function initializeDomaProgrammingAcademy(){
     $('paLessons').innerHTML=ls.map(function(l,i){
       return '<button type="button" class="pa-lesson-row '+(activeLesson===l.id?'selected ':'')+(completed[l.id]?'completed':'')+(!hasAccess()?' pa-locked':'')+'" data-lesson="'+esc(l.id)+'"><span class="pa-lesson-index">'+(completed[l.id]?'✓':(!hasAccess()?'🔒':String(i+1).padStart(2,'0')))+'</span><span class="pa-lesson-copy"><b>'+esc(l.title)+'</b><small>'+esc(l.summary)+'</small></span><span class="pa-lesson-duration">'+(hasAccess()?Number(l.duration_minutes||10)+' دقيقة':'للمشتركين')+'</span></button>';
     }).join('');
-    $('paLessons').querySelectorAll('[data-lesson]').forEach(function(btn){btn.addEventListener('click',function(){openLesson(btn.getAttribute('data-lesson'))})});
+    $('paLessons').querySelectorAll('[data-lesson]').forEach(function(btn){btn.addEventListener('click',function(){var lessonId=btn.getAttribute('data-lesson');window.location.href='./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(lessonId)})});
   }
   function inlineMarkdown(value){
     return esc(value).replace(/\x60([^\x60]+)\x60/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
