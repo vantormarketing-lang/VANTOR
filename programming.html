@@ -522,12 +522,18 @@ function initializeDomaProgrammingAcademy(){
   async function boot(){
     var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
     renderUserIdentity();
+    // Resolve the signed-in user's subscription before loading a deep-linked lesson.
+    // Otherwise openLesson() sees the initial null subscription and incorrectly opens the paywall.
+    await refreshMembership();
     await loadCurriculum();
-    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});
+    await loadStudentProgress();
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
       renderUserIdentity();
-      await loadCurriculum();await refreshMembership();await loadStudentProgress();if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
+      await refreshMembership();
+      await loadCurriculum();
+      await loadStudentProgress();
+      if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
     });
   }
   $('paBackToTracks').addEventListener('click',showTrackOverview);
