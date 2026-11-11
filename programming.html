@@ -511,7 +511,8 @@ function initializeDomaProgrammingAcademy(){
   async function boot(){
     var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
     $('paAuthStatus').classList.toggle('is-connected',!!user);
-    await refreshMembership();await loadCurriculum();await loadStudentProgress();
+    await loadCurriculum();
+    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
       $('paAuthStatus').classList.toggle('is-connected',!!user);
