@@ -245,7 +245,7 @@
     var lang=$('paCodeLanguage'),editor=$('paCodeEditor'),run=$('paRunCode');
     if(!lang||!editor||!run)return;
     var preferred=trackLanguages[activeTrack]||'python';
-    var runnable=/\x60\x60\x60(python|javascript|js|html|cpp|c\+\+|java|csharp|cs)\\s*\\n([\\s\\S]*?)\\n\x60\x60\x60/i.exec(String(lessonContent||''));
+    var runnable=/\x60\x60\x60(python|javascript|js|html|cpp|c\+\+|java|csharp|cs)\s*\n([\s\S]*?)\n\x60\x60\x60/i.exec(String(lessonContent||''));
     var sampleLanguage=preferred;
     var extractedSample='';
     if(runnable){
