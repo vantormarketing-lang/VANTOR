@@ -268,8 +268,18 @@
     var output=$('paCodeOutput'),preview=$('paCodePreview'),state=$('paRunState'),button=$('paRunCode');
     if(!source.trim()){output.textContent='اكتب بعض الكود أولًا.';return}
     if(source.length>16000){output.textContent='الكود طويل جدًا. الحد الأقصى 16,000 حرف.';return}
-    if(lang==='html'){
-      preview.hidden=false;preview.srcdoc=source;output.textContent='تم تحديث المعاينة. جرّب تعديل HTML وCSS ثم التشغيل مرة أخرى.';state.textContent='اكتملت المعاينة';return;
+    // Recover automatically when an old saved JavaScript draft contains HTML.
+    var looksLikeHtml=/^\\s*(?:<!doctype\\s+html|<html\\b|<head\\b|<body\\b|<main\\b|<section\\b|<div\\b|<h[1-6]\\b)/i.test(source);
+    if(lang==='html'||looksLikeHtml){
+      if(looksLikeHtml&&lang!=='html'){
+        lang='html';
+        $('paCodeLanguage').value='html';
+        try{localStorage.setItem('doma-code:'+activeTrack+':'+lesson.id+':html',source)}catch(_){}
+        output.textContent='اكتشفنا أن المحتوى HTML، وتم تصحيح اللغة تلقائيًا بدل تشغيله كـ JavaScript.';
+      }else{
+        output.textContent='تم تحديث المعاينة. جرّب تعديل HTML وCSS ثم التشغيل مرة أخرى.';
+      }
+      preview.hidden=false;preview.srcdoc=source;state.textContent='اكتملت المعاينة';return;
     }
     if(!user||!hasAccess()){showModal();return}
     var sessionResult=await db.auth.getSession(),session=sessionResult.data&&sessionResult.data.session,token=session&&session.access_token;
