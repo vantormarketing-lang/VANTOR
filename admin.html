@@ -864,6 +864,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <label>Email</label><input id="email" type="email" autocomplete="username" required placeholder="admin@domaacademy.com">
     <label>Password</label><input id="password" type="password" autocomplete="current-password" required>
     <button class="btn" style="width:100%;margin-top:18px">Login</button>
+    <button type="button" class="muted" id="adminForgotPassword" style="display:block;margin:12px auto 0;padding:5px 8px;background:none;border:0;color:#e8c39f;text-decoration:underline;cursor:pointer">Forgot password?</button>
     <div id="loginError" class="error"></div>
     <div class="muted" style="font-size:10px;margin-top:10px">Access requires a valid Supabase Auth session with profiles.role = admin or teacher.</div>
   </form>
@@ -1694,7 +1695,35 @@ async function start(){
 }
 
 $('loginForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter;const email=$('email').value.trim(),password=$('password').value;if(btn){btn.disabled=true;btn.textContent='Signing in…'}$('loginError').textContent='';try{const r=await db.auth.signInWithPassword({email,password});if(r.error){$('loginError').textContent='Login error: '+r.error.message;return}if(!(await start()))$('loginError').textContent=$('loginError').textContent||'Login succeeded, but staff verification failed.'}catch(ex){$('loginError').textContent='Unexpected error: '+(ex?.message||String(ex))}finally{if(btn){btn.disabled=false;btn.textContent='Login'}}};
-$('logout').onclick=async()=>{await db.auth.signOut();location.reload()};db.auth.onAuthStateChange(()=>setTimeout(checkConnection,0));
+$('adminForgotPassword').onclick=async()=>{
+  const email=$('email').value.trim();
+  if(!email){$('loginError').textContent='Enter your admin email first, then choose Forgot password.';$('email').focus();return;}
+  const button=$('adminForgotPassword');button.disabled=true;$('loginError').textContent='Sending a secure reset link…';
+  try{
+    const result=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+    if(result.error)throw result.error;
+    $('loginError').textContent='If this email belongs to a staff account, a password reset link has been sent. Check your inbox.';
+  }catch(error){$('loginError').textContent=error?.message||'Could not send the reset email.';}
+  finally{button.disabled=false;}
+};
+function showAdminPasswordRecovery(){
+  openModal('Choose a new admin password','<form id="adminPasswordRecoveryForm"><div class="form-row"><label>New password</label><input id="adminRecoveryPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></div><div class="form-row"><label>Confirm new password</label><input id="adminRecoveryConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></div><div id="adminRecoveryError" class="error"></div><button class="btn" type="submit">Save new password</button></form>');
+  $('adminPasswordRecoveryForm').onsubmit=async e=>{
+    e.preventDefault();const password=$('adminRecoveryPassword').value,confirmPassword=$('adminRecoveryConfirm').value;
+    if(password.length<10){$('adminRecoveryError').textContent='Use at least 10 characters.';return;}
+    if(password!==confirmPassword){$('adminRecoveryError').textContent='The passwords do not match.';return;}
+    const button=e.submitter;if(button){button.disabled=true;button.textContent='Saving…';}
+    try{
+      const result=await db.auth.updateUser({password});
+      if(result.error)throw result.error;
+      closeModal();$('loginError').textContent='Password updated. Sign in with your new password.';
+      await db.auth.signOut();
+    }catch(error){$('adminRecoveryError').textContent=error?.message||'Could not update the password.';}
+    finally{if(button){button.disabled=false;button.textContent='Save new password';}}
+  };
+}
+$('logout').onclick=async()=>{await db.auth.signOut();location.reload()};
+db.auth.onAuthStateChange((event)=>{setTimeout(checkConnection,0);if(event==='PASSWORD_RECOVERY')setTimeout(showAdminPasswordRecovery,0);});
 
 (async()=>{const s=await db.auth.getSession();if(s.data.session)await start();else await checkConnection()})();
 </script>
