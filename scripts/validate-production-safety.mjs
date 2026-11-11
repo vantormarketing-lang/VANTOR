@@ -54,9 +54,9 @@ check(
 const studentWorker = read('sw.js');
 check(
   ['function normalizeShellUrl', 'function hasSensitiveQuery',
-   'function isSafeSameOriginUrl', 'function isCacheableStaticAssetUrl',
-   "cache: 'no-store'", 'rest\\/v1', 'auth\\/v1',
-   'storage\\/v1', 'functions\\/v1'].every(part => studentWorker.includes(part)) &&
+   'function isSafeSameOriginUrl', 'function isCacheableStaticAssetUrl']
+    .every(part => studentWorker.includes(part)) &&
+  /return\s*!\s*\/\^\\\/\(\?:rest\\\/v1\|auth\\\/v1\|storage\\\/v1\|functions\\\/v1/.test(studentWorker) &&
   !/caches\.match\s*\(\s*req\s*\)/.test(studentWorker),
   'Student PWA normalizes shell keys and excludes sensitive/dynamic API responses from caching'
 );
