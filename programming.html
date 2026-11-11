@@ -536,7 +536,7 @@ function initializeDomaProgrammingAcademy(){
     },true);
   }
 
-  boot().catch(function(error){console.error('DOMA Pro academy startup failed:',error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء بدء الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';var progress=$('paProgressCards');if(progress)progress.innerHTML='';var section=$('paStudentProgress');if(section)section.hidden=true;}
+  boot().catch(function(error){console.error('DOMA Pro academy startup failed:',error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء بدء الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';var progress=$('paProgressCards');if(progress)progress.innerHTML='';var section=$('paStudentProgress');if(section)section.hidden=true;});
 }
 (function(){
   var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2'];
