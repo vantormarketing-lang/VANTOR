@@ -226,6 +226,16 @@
     swift:'print("Hello, DOMA!")',
     dart:'void main() {\n  print("Hello, DOMA!");\n}'
   };
+  var lessonCodeSamples={
+    'cs-01-what-is-programming':'print("Hello, DOMA!")\nprint("I am learning how programs follow instructions.")',
+    'cs-02-how-computers-work':'first_number = 12\nsecond_number = 8\ntotal = first_number + second_number\nprint("Output:", total)',
+    'cs-03-algorithms':'a = 14\nb = 9\nif a > b:\n    print("The larger number is", a)\nelif b > a:\n    print("The larger number is", b)\nelse:\n    print("The numbers are equal")',
+    'cs-04-flowcharts':'number = 17\nif number % 2 == 0:\n    print("Even")\nelse:\n    print("Odd")',
+    'cs-05-pseudocode':'length = 8\nwidth = 5\narea = length * width\nprint("Rectangle area:", area)',
+    'cs-06-variables':'student_name = "Mona"\nscore = 10\nscore = score + 5\nprint(student_name, "scored", score)',
+    'cs-07-data-types':'age = 15\ntemperature = 28.5\nstudent_name = "Omar"\nis_active = True\nprint(type(age), type(temperature), type(student_name), type(is_active))',
+    'cs-08-decisions-and-loops':'for number in range(1, 11):\n    if number % 2 == 0:\n        print(number, "Even")\n    else:\n        print(number, "Odd")'
+  };
   var trackLanguages={
     'computer-science':'python','visual-programming':'javascript','python':'python','web-development':'html',
     'programming-languages':'cpp','databases-backend':'python','mobile-development':'dart','ai-data':'python',
@@ -237,11 +247,11 @@
     var preferred=trackLanguages[activeTrack]||'python';
     lang.value=preferred;
     var key='doma-code:'+activeTrack+':'+lesson.id+':'+preferred;
-    editor.value=localStorage.getItem(key)||codeSamples[preferred];
+    var lessonSample=lessonCodeSamples[lesson.id]||codeSamples[preferred];editor.value=localStorage.getItem(key)||lessonSample;
     function saveDraft(){localStorage.setItem('doma-code:'+activeTrack+':'+lesson.id+':'+lang.value,editor.value)}
     lang.onchange=function(){saveDraft();var k='doma-code:'+activeTrack+':'+lesson.id+':'+lang.value;editor.value=localStorage.getItem(k)||codeSamples[lang.value]||'';$('paCodePreview').hidden=true;$('paCodeOutput').textContent='جاهز للتشغيل.'};
     editor.oninput=saveDraft;
-    $('paResetCode').onclick=function(){editor.value=codeSamples[lang.value]||'';saveDraft();$('paCodeOutput').textContent='تمت استعادة المثال.';$('paCodePreview').hidden=true};
+    $('paResetCode').onclick=function(){editor.value=(lang.value===preferred?lessonSample:(codeSamples[lang.value]||''));saveDraft();$('paCodeOutput').textContent='تمت استعادة المثال.';$('paCodePreview').hidden=true};
     run.onclick=function(){executeStudentCode(lesson)};
     $('paCodeOutput').textContent='المحرر جاهز. ابدأ بتعديل المثال.';
   }
