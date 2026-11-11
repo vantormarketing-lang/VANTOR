@@ -428,3 +428,40 @@ body.pa-admin-only .pa-admin-learning{display:block!important;margin-top:28px}
     box-sizing: border-box;
   }
 }
+
+
+/* Keep the programming path cards and lesson panel visually centered on phones. */
+@media (max-width: 700px) {
+  body.programming-page .pa-shell {
+    width: calc(100% - 28px) !important;
+    max-width: 560px !important;
+    margin-inline: auto !important;
+    padding-inline: 0 !important;
+    box-sizing: border-box;
+  }
+  body.programming-page .pa-track-grid {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    justify-self: center;
+    box-sizing: border-box;
+  }
+  body.pa-track-view .pa-shell {
+    width: calc(100% - 28px) !important;
+    max-width: 560px !important;
+    margin-inline: auto !important;
+    padding: 12px 0 28px !important;
+  }
+  body.pa-track-view .pa-learning-layout {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto !important;
+    box-sizing: border-box;
+  }
+  body.pa-track-view .pa-lessons-panel {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+}
