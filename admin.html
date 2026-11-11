@@ -1135,7 +1135,7 @@ const state={started:false,startPromise:null};
 
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>$('toast').classList.remove('show'),3000)}
 function openModal(title,body){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modal').classList.add('open')}
-function closeModal(){const modal=$('modal');modal.classList.remove('open','mf-kids-receipt-modal')}
+function closeModal(){if($('domaTempPasswordOnce'))$('modalBody').innerHTML='';const modal=$('modal');modal.classList.remove('open','mf-kids-receipt-modal')}
 function gradeName(id){return grades.find(g=>g.id===id)?.name||'—'}
 function gradeOptions(selected=''){return '<option value="">Select grade</option>'+grades.map(g=>`<option value="${g.id}" ${g.id===selected?'selected':''}>${esc(g.name)}</option>`).join('')}
 function unitOptions(gradeId='',selected=''){const list=units.filter(u=>!gradeId||u.grade_id===gradeId);return '<option value="">No unit</option>'+list.map(u=>`<option value="${u.id}" ${u.id===selected?'selected':''}>${esc(gradeName(u.grade_id))} — ${esc(u.unit_number+' · '+u.title)}</option>`).join('')}
