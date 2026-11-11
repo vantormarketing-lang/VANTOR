@@ -53,17 +53,14 @@ export async function onRequestPost({ request, env }) {
       let authErrorDetail = "";
       try {
         const rawAuthError = await authResponse.text();
-        authErrorDetail = rawAuthError.replace(/[\\r\\n\\t]+/g, " ").slice(0, 400);
+        authErrorDetail = rawAuthError.replace(/[\r\n\t]+/g, " ").slice(0, 400);
       } catch (_) {}
-      const diagnosticText = authErrorDetail || "No response body";
-      return json({
-        error: `تعذر التحقق من جلسة DOMA عبر Supabase (HTTP ${authResponse.status}). تفاصيل الاستجابة: ${diagnosticText}`,
-        diagnostic: {
-          endpoint: "Supabase Auth /auth/v1/user",
-          contentType: authContentType,
-          response: diagnosticText
-        }
-      }, 502);
+      console.error("[code-run] Supabase auth verification failed", {
+        status: authResponse.status,
+        contentType: authContentType,
+        response: authErrorDetail || "No response body"
+      });
+      return json({ error: "تعذر التحقق من جلسة DOMA حاليًا. حاول مرة أخرى بعد قليل." }, 502);
     }
     const authUser = await authResponse.json();
     if (!authUser || !authUser.id) return json({ error: "تعذر التحقق من حسابك." }, 401);
