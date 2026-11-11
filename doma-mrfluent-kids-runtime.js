@@ -13,6 +13,11 @@ document.body.appendChild(root);
 // The grade cards are nested/initialized by other page code, so hide every element outside
 // this route root while preserving the page's stylesheets and scripts.
 function isolateKidsPage(){
+  // Remove any orphaned text nodes left directly under <body> by the academy shell.
+  // These can leak tiny fragments (for example, literal newline markers) above the Kids header.
+  Array.prototype.slice.call(document.body.childNodes).forEach(function(node){
+    if(node.nodeType===Node.TEXT_NODE && node.textContent.trim()) node.parentNode.removeChild(node);
+  });
   var keepTags = {STYLE:1, SCRIPT:1, LINK:1, META:1};
   document.body.querySelectorAll('*').forEach(function(el){
     // Keep the academy login/signup modal interactive on isolated Kids pages.
