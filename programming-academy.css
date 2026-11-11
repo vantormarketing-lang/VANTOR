@@ -572,3 +572,30 @@ body.pa-lesson-page-view .pa-code-output{background:#0c0a12!important}
 @media(max-width:560px){
   body.pa-lesson-page-view .pa-code-lines{flex-basis:34px!important;min-width:34px!important;padding-inline:5px!important;font-size:10px!important}
 }
+
+
+/* Final editor refinement: no frame, unified editor/gutter surface, green line numbers. */
+body.pa-lesson-page-view .pa-editor-wrap{
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:rgba(43,32,59,.72)!important;
+}
+body.pa-lesson-page-view .pa-editor-wrap:focus-within{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+body.pa-lesson-page-view .pa-code-lines{
+  background:rgba(43,32,59,.72)!important;
+  border:0!important;
+  color:#63e69a!important;
+  font-weight:600!important;
+}
+body.pa-lesson-page-view .pa-editor-wrap .pa-code-editor{
+  background:rgba(43,32,59,.72)!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
