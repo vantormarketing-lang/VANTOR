@@ -157,9 +157,17 @@ function initializeDomaProgrammingAcademy(){
   function showTrackOverview(){
     activeLesson=null;document.body.classList.remove('pa-lesson-page-view');
     var learningLayout=document.querySelector('.pa-learning-layout');
-    if(learningLayout)learningLayout.hidden=false;
+    if(learningLayout){
+      learningLayout.hidden=false;
+      learningLayout.removeAttribute('aria-hidden');
+      learningLayout.style.removeProperty('display');
+    }
     var pathsSection=$('learning-paths');
-    if(pathsSection)pathsSection.hidden=false;
+    if(pathsSection){
+      pathsSection.hidden=false;
+      pathsSection.removeAttribute('aria-hidden');
+      pathsSection.style.removeProperty('display');
+    }
     window.location.href='./programming.html';
   }
   function renderLessons(){
@@ -229,9 +237,24 @@ function initializeDomaProgrammingAcademy(){
     // Hide the lesson list explicitly as well as via CSS. This prevents it
     // remaining below the reader if a cached stylesheet is still active.
     var learningLayout=document.querySelector('.pa-learning-layout');
-    if(learningLayout)learningLayout.hidden=true;
+    if(learningLayout){
+      learningLayout.hidden=true;
+      learningLayout.setAttribute('aria-hidden','true');
+      learningLayout.style.setProperty('display','none','important');
+    }
     var pathsSection=$('learning-paths');
-    if(pathsSection)pathsSection.hidden=true;
+    if(pathsSection){
+      pathsSection.hidden=true;
+      pathsSection.setAttribute('aria-hidden','true');
+      pathsSection.style.setProperty('display','none','important');
+    }
+    // Keep the lesson reader as the only student-facing content on this view.
+    ['.pa-student-progress','.pa-projects-section','.pa-footer'].forEach(function(selector){
+      document.querySelectorAll(selector).forEach(function(section){
+        section.hidden=true;
+        section.style.setProperty('display','none','important');
+      });
+    });
     history.replaceState(null,'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
     var old=$('paLessonReader');if(old)old.remove();
     var reader=document.createElement('article');reader.id='paLessonReader';reader.className='pa-lesson-reader';
