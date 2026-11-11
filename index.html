@@ -1957,6 +1957,16 @@ body{min-height:100vh;min-height:100dvh}
  body{min-height:calc(100dvh - env(safe-area-inset-top));padding-bottom:env(safe-area-inset-bottom)}
 }
 </style>
+<style id="doma-forced-password-reset-css">
+.doma-forced-password{max-width:440px;margin:0 auto;padding:8px 2px;color:#f7f1fa}
+.doma-forced-password-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,#39204b,#70233f);color:#f5d7a3;font-size:22px;margin:0 auto 12px}
+.doma-forced-password h3{text-align:center;margin:0 0 7px;font-size:20px}
+.doma-forced-password p{text-align:center;color:#b9aabd;font-size:12px;line-height:1.6;margin:0 0 18px}
+.doma-forced-password label{display:block;color:#d6c7dd;font-size:11px;margin:12px 0}
+.doma-forced-password input{display:block;width:100%;margin-top:6px;padding:12px;border-radius:11px;border:1px solid #50345d;background:#100b15;color:#fff}
+.doma-forced-password .doma-v115-create{width:100%;margin-top:10px}
+.doma-forced-signout{display:block;margin:14px auto 0;border:0;background:none;color:#c7b5d0;font-size:11px;text-decoration:underline}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -2343,6 +2353,45 @@ async function ensureProfile(user,name='',phone=''){
   return payload;
 }
 
+function domaShowForcedPasswordChange(){
+  const body=$('modalBody');
+  if(!body)return;
+  $('modalTitle').textContent='Secure your account';
+  $('modalText').textContent='Your temporary password must be replaced before continuing.';
+  body.innerHTML='<div class="doma-forced-password"><div class="doma-forced-password-icon">✦</div><h3>Choose a new password</h3><p>For your security, create a new password that only you know.</p><form id="domaForcedPasswordForm"><label>New password<input id="domaForcedPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required placeholder="At least 10 characters"></label><label>Confirm new password<input id="domaForcedPasswordConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required placeholder="Enter it again"></label><div id="domaForcedPasswordStatus" class="status full"></div><button class="doma-v115-create" type="submit">Save new password</button></form><button type="button" class="doma-forced-signout" id="domaForcedSignout">Sign out</button></div>';
+  const form=$('domaForcedPasswordForm');
+  form.onsubmit=async e=>{
+    e.preventDefault();
+    const password=$('domaForcedPassword').value,confirm=$('domaForcedPasswordConfirm').value;
+    if(password.length<10)return showStatus('domaForcedPasswordStatus','Use at least 10 characters.','error');
+    if(password!==confirm)return showStatus('domaForcedPasswordStatus','The two passwords do not match.','error');
+    const submit=form.querySelector('button[type="submit"]');
+    submit.disabled=true;submit.textContent='Saving…';
+    try{
+      const sessionResult=await sb.auth.getSession();
+      const token=sessionResult.data?.session?.access_token;
+      if(!token)throw new Error('Your session expired. Sign in again.');
+      const response=await fetch('/api/student/complete-password-reset',{
+        method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+token},
+        body:JSON.stringify({password})
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.ok)throw new Error(result.error||'Could not update your password.');
+      const refreshed=await sb.auth.refreshSession();
+      if(refreshed.error)throw new Error('Password saved. Please sign in again to continue.');
+      sessionUser=refreshed.data?.user||refreshed.data?.session?.user||sessionUser;
+      closeModal();
+      await refreshStudentState();
+      showToast('Your password has been updated.');
+      openDrawer('overview');
+    }catch(error){
+      showStatus('domaForcedPasswordStatus',error?.message||'Password update failed.','error');
+    }finally{
+      if(submit){submit.disabled=false;submit.textContent='Save new password'}
+    }
+  };
+  $('domaForcedSignout').onclick=async()=>{await sb.auth.signOut();sessionUser=null;closeModal();openAuth('login')};
+}
 async function domaLogin(){
   const identifier=$('loginPhone')?.value.trim()||'',pass=$('loginPass')?.value||'';
   if(!identifier||!pass)return showStatus('authStatus','Enter your mobile number and password.','error');
@@ -2365,6 +2414,7 @@ async function domaLogin(){
   }
   sessionUser=r.data.user;
   await ensureProfile(sessionUser,'',sessionUser.user_metadata?.phone||'');
+  if(sessionUser.app_metadata?.must_change_password===true){domaShowForcedPasswordChange();return;}
   closeModal();if(window.__mfKidsEntryFlow&&typeof window.__mfKidsAfterAuth==='function'){showToast('Welcome back to Mr. Fluent.');await window.__mfKidsAfterAuth(sessionUser);return;}await refreshStudentState();showToast('Welcome back to Mr. Fluent.');openDrawer('overview');
 }
 
@@ -3688,6 +3738,10 @@ async function boot(){
     sessionUser=null;
   }
   updateNav();
+  if(sessionUser?.app_metadata?.must_change_password===true){
+    openAuth('login');
+    domaShowForcedPasswordChange();
+  }
   try{
     sb.auth.onAuthStateChange((_event,session)=>{
       sessionUser=session?.user||null;updateNav();
@@ -5328,7 +5382,9 @@ window.domaForgotPassword=async function(){
   if(!identifier)return showStatus('authStatus','Enter your registered mobile number or your existing account email first.','error');
   if(identifier.includes('@')){
     if(isPhoneAliasEmail(identifier)){
-      return showStatus('authStatus','This is an internal login alias, not a real inbox. For phone-based accounts, contact the platform administrator to reset the password.','error');
+      const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: ';
+      window.open('https://wa.me/201095439588?text='+encodeURIComponent(waText),'_blank','noopener');
+      return showStatus('authStatus','WhatsApp opened. Send your registered mobile number so the administrator can verify your account.','success');
     }
     showStatus('authStatus','Sending reset link…');
     try{
@@ -5340,7 +5396,9 @@ window.domaForgotPassword=async function(){
   }
   var normalized=normalizeEgyptianPhone(identifier);
   if(!normalized)return showStatus('authStatus','Enter a valid Egyptian mobile number, e.g. 01012345678.','error');
-  showStatus('authStatus','SMS password reset is not enabled in this free setup. Contact the platform administrator to reset this account password.','error');
+  const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: '+normalized.local;
+  window.open('https://wa.me/201095439588?text='+encodeURIComponent(waText),'_blank','noopener');
+  showStatus('authStatus','WhatsApp opened. Send the message so the administrator can verify your account and issue a temporary password.','success');
 };
 
 window.domaCompletePhonePasswordReset=async function(){
