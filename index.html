@@ -2683,7 +2683,7 @@ function mrfluentStartPlacementTest(){
 function mrfluentRenderEnglishLevelCards(){
  const host=$('mrfluentEnglishLevels');if(!host)return;
  const descriptors={A1:'Beginner · Essential foundations',A2:'Elementary · Everyday communication',B1:'Intermediate · Independent English',B2:'Upper-intermediate · Confident fluency',C1:'Advanced · Academic and professional',C2:'Proficiency · Precision and mastery'};
- if(!mrFluentEnglishSubscription||!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){host.innerHTML='<div class="empty">Subscribe and complete the placement test before accessing levels.</div>';return}
+ if(!mrFluentEnglishSubscription||!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){host.innerHTML='';return}
  const order=['A1','A2','B1','B2','C1','C2'];const assigned=order.indexOf(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code);
  host.innerHTML=mrFluentEnglishLevels.length?mrFluentEnglishLevels.map(l=>{const canOpen=order.indexOf(l.code)===assigned;return '<article class="mf-course-level" '+(!canOpen?'aria-disabled="true"':'')+'><span class="pill">'+esc(l.code)+'</span><h3>'+esc(l.title)+'</h3><p>'+esc(l.description||descriptors[l.code]||'English learning level')+'</p><span class="pill">'+(canOpen?'Current level':'🔒 Locked')+'</span><button class="btn '+(canOpen?'primary':'secondary')+'" type="button" '+(!canOpen?'disabled':'')+' onclick="mrfluentOpenEnglishLevel(\''+esc(l.id)+'\')">'+(canOpen?'Start this level':'Locked for now')+'</button></article>'}).join(''):'<div class="empty">No published levels. Publish levels from Admin → English Course.</div>';
 }
