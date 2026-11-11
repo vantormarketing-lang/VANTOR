@@ -222,6 +222,7 @@
     if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
     $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
     setupCodeLab(lesson,content.data||'');
+    await loadLessonActivities(lesson);
   }
   var codeSamples={
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
@@ -338,6 +339,117 @@
     }catch(error){output.textContent=error.message||'حدث خطأ أثناء تشغيل الكود.';state.textContent='تعذر التشغيل'}
     finally{button.disabled=false}
   }
+  async function loadLessonActivities(lesson){
+    var host=$('paActivityContent');if(!host)return;
+    if(!user||!hasAccess()){host.innerHTML='<div class="pa-activity-lock">سجّل الدخول واشترك في الأكاديمية لفتح التدريب والاختبار وحفظ نتيجتك.</div>';return}
+    host.innerHTML='<p class="pa-loading">جاري تحميل التدريب والاختبار…</p>';
+    var response=await db.rpc('programming_get_lesson_activities',{p_lesson_id:lesson.id});
+    if(response.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل أنشطة الدرس. '+esc(response.error.message)+'</div>';return}
+    var data=response.data||{},exercise=data.exercise,quiz=data.quiz,html='';
+    if(exercise){
+      var languages=[['python','Python'],['javascript','JavaScript'],['html','HTML / CSS'],['cpp','C++'],['java','Java'],['csharp','C#']];
+      var languageOptions=languages.map(function(item){return '<option value="'+item[0]+'" '+(item[0]===exercise.language?'selected':'')+'>'+item[1]+'</option>'}).join('');
+      var previous=data.exercise_submission;
+      html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">تطبيق عملي</span><h4>'+esc(exercise.title)+'</h4></div><p class="pa-exercise-instructions">'+esc(exercise.instructions).replace(/\n/g,'<br>')+'</p><form id="paExerciseForm"><label class="pa-input-label" for="paExerciseLanguage">لغة الحل</label><select id="paExerciseLanguage" class="pa-code-select">'+languageOptions+'</select><label class="pa-input-label" for="paExerciseCode">اكتب الحل البرمجي</label><textarea id="paExerciseCode" class="pa-code-editor pa-exercise-editor" spellcheck="false" placeholder="اكتب حلك هنا…">'+esc(exercise.starter_code||'')+'</textarea><label class="pa-input-label" for="paExerciseNotes">اشرح فكرتك أو طريقة الاختبار (اختياري)</label><textarea id="paExerciseNotes" class="pa-code-input" dir="auto" placeholder="ما الفكرة التي طبقتها؟ وكيف تأكدت من الحل؟"></textarea><button type="submit" class="pa-activity-submit">إرسال الحل للمراجعة</button><p id="paExerciseStatus" class="pa-activity-status"></p></form>';
+      if(previous)html+='<div class="pa-previous-result">آخر تسليم: '+(previous.status==='reviewed'?'تمت مراجعته':previous.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(previous.score!==null&&previous.score!==undefined?' · الدرجة '+previous.score+'/100':'')+(previous.feedback?'<p>'+esc(previous.feedback)+'</p>':'')+'</div>';
+      html+='</article>';
+    }
+    if(quiz&&quiz.questions&&quiz.questions.length){
+      html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">اختبار سريع</span><h4>'+esc(quiz.title)+'</h4></div><form id="paQuizForm" data-quiz-id="'+esc(quiz.id)+'">';
+      quiz.questions.forEach(function(question,index){
+        html+='<fieldset class="pa-quiz-question"><legend><b>'+(index+1)+'. '+esc(question.prompt)+'</b></legend>';
+        (question.options||[]).forEach(function(option,optionIndex){html+='<label class="pa-quiz-option"><input type="radio" name="paq-'+esc(question.id)+'" value="'+optionIndex+'"><span>'+esc(option)+'</span></label>'});
+        html+='</fieldset>';
+      });
+      html+='<button type="submit" class="pa-activity-submit">تصحيح الاختبار وحفظ النتيجة</button><p id="paQuizStatus" class="pa-activity-status"></p></form>';
+      if(data.quiz_attempt)html+='<div class="pa-previous-result">آخر نتيجة: '+data.quiz_attempt.score+'/100 · '+(data.quiz_attempt.passed?'اجتزت الاختبار ✓':'حاول مرة أخرى لتحسين نتيجتك')+'</div>';
+      html+='</article>';
+    }
+    host.innerHTML=html||'<div class="pa-activity-lock">سيتم إضافة أنشطة هذا الدرس قريبًا.</div>';
+    var exerciseForm=$('paExerciseForm');
+    if(exerciseForm)exerciseForm.addEventListener('submit',async function(event){
+      event.preventDefault();
+      var source=$('paExerciseCode').value.trim(),status=$('paExerciseStatus');
+      if(!source){status.textContent='اكتب الحل قبل الإرسال.';return}
+      if(source.length>16000){status.textContent='الحل أطول من الحد المسموح.';return}
+      var button=exerciseForm.querySelector('button[type="submit"]');button.disabled=true;status.textContent='جارٍ حفظ الحل…';
+      var saved=await db.from('programming_exercise_submissions').insert({exercise_id:exercise.id,student_id:user.id,language:$('paExerciseLanguage').value,source_code:source,notes:$('paExerciseNotes').value.trim()});
+      button.disabled=false;
+      if(saved.error){status.textContent='تعذر حفظ الحل: '+saved.error.message;return}
+      toast('تم إرسال التطبيق العملي للمراجعة.');await loadLessonActivities(lesson);await loadStudentProgress();
+    });
+    var quizForm=$('paQuizForm');
+    if(quizForm)quizForm.addEventListener('submit',async function(event){
+      event.preventDefault();var answers={},complete=true;
+      (quiz.questions||[]).forEach(function(question){var selected=quizForm.querySelector('input[name="paq-'+question.id+'"]:checked');if(!selected)complete=false;else answers[question.id]=Number(selected.value)});
+      var status=$('paQuizStatus');if(!complete){status.textContent='أجب عن كل الأسئلة أولًا.';return}
+      var button=quizForm.querySelector('button[type="submit"]');button.disabled=true;status.textContent='جارٍ تصحيح إجاباتك…';
+      var graded=await db.rpc('programming_submit_quiz',{p_quiz_id:quiz.id,p_answers:answers});button.disabled=false;
+      if(graded.error){status.textContent='تعذر تصحيح الاختبار: '+graded.error.message;return}
+      var result=graded.data||{};status.textContent='نتيجتك '+result.score+'/100 · '+result.correct+' من '+result.total+' إجابة صحيحة · '+(result.passed?'اجتزت الاختبار بنجاح ✓':'راجع الدرس وحاول مرة أخرى.');
+      toast('تم حفظ نتيجة الاختبار.');await loadStudentProgress();
+    });
+  }
+  async function loadStudentProgress(){
+    var host=$('paProgressCards');if(!host)return;
+    if(!user){host.innerHTML='<div class="pa-activity-lock">سجّل الدخول بحساب DOMA لعرض تقدمك.</div>';return}
+    if(!hasAccess()){host.innerHTML='<div class="pa-activity-lock">فعّل اشتراك أكاديمية البرمجة لبدء حفظ تقدمك ونتائجك.</div>';return}
+    var results=await Promise.all([
+      db.from('programming_lesson_progress').select('lesson_id').eq('user_id',user.id),
+      db.from('programming_quiz_attempts').select('id,score,passed').eq('student_id',user.id),
+      db.from('programming_exercise_submissions').select('id,status,score').eq('student_id',user.id),
+      db.from('programming_project_submissions').select('id,status,score').eq('student_id',user.id)
+    ]);
+    var done=results[0].data||[],quizzes=results[1].data||[],exercises=results[2].data||[],projects=results[3].data||[];
+    var percent=lessons.length?Math.round(done.length/lessons.length*100):0,passed=quizzes.filter(function(q){return q.passed}).length;
+    var avg=quizzes.length?Math.round(quizzes.reduce(function(sum,q){return sum+Number(q.score||0)},0)/quizzes.length):0;
+    host.innerHTML='<article class="pa-progress-card"><b>'+done.length+' / '+lessons.length+'</b><span>دروس مكتملة</span><i><em style="width:'+percent+'%"></em></i></article><article class="pa-progress-card"><b>'+quizzes.length+'</b><span>محاولات الاختبار</span><small>'+passed+' اختبارات مجتازة · متوسط '+avg+'%</small></article><article class="pa-progress-card"><b>'+exercises.length+'</b><span>تطبيقات مرسلة</span><small>'+exercises.filter(function(x){return x.status==='reviewed'}).length+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+projects.length+'</b><span>مشاريع مرسلة</span><small>'+projects.filter(function(x){return x.status==='reviewed'}).length+' تمت مراجعتها</small></article>';
+  }
+  async function loadProjects(){
+    var host=$('paProjectsGrid');if(!host)return;
+    if(!user||!hasAccess()){host.innerHTML='<div class="pa-activity-lock">المشاريع العملية متاحة للطلاب أصحاب الاشتراك النشط بعد تسجيل الدخول.</div>';return}
+    var result=await db.from('programming_projects').select('id,track_id,title,brief,requirements').eq('is_published',true).order('sort_order');
+    if(result.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل المشاريع: '+esc(result.error.message)+'</div>';return}
+    var previous=await db.from('programming_project_submissions').select('project_id,status,score,feedback,submitted_at').eq('student_id',user.id).order('submitted_at',{ascending:false});
+    var latest={};(previous.data||[]).forEach(function(item){if(!latest[item.project_id])latest[item.project_id]=item});
+    if(!result.data||!result.data.length){host.innerHTML='<div class="pa-activity-lock">سيتم نشر المشاريع قريبًا.</div>';return}
+    host.innerHTML=result.data.map(function(project){
+      var submission=latest[project.id],requirements=Array.isArray(project.requirements)?project.requirements:[];
+      return '<article class="pa-project-card" data-project-card="'+esc(project.id)+'"><span class="pa-activity-tag">مشروع مسار</span><h3>'+esc(project.title)+'</h3><p>'+esc(project.brief)+'</p><ul>'+requirements.map(function(item){return '<li>'+esc(item)+'</li>'}).join('')+'</ul><form class="pa-project-form" data-project-id="'+esc(project.id)+'"><label>رابط المستودع (اختياري)<input type="url" name="repository_url" placeholder="https://github.com/…"></label><label>رابط المعاينة (اختياري)<input type="url" name="demo_url" placeholder="https://…"></label><label>ملاحظاتك<textarea name="notes" rows="2" placeholder="اشرح ما بنيته وأهم ما تعلمته…"></textarea></label><button type="submit" class="pa-activity-submit">إرسال المشروع للمراجعة</button><p class="pa-activity-status" data-project-status></p></form>'+(submission?'<div class="pa-previous-result">آخر تسليم: '+(submission.status==='reviewed'?'تمت مراجعته':submission.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(submission.score!==null&&submission.score!==undefined?' · '+submission.score+'/100':'')+(submission.feedback?'<p>'+esc(submission.feedback)+'</p>':'')+'</div>':'')+'</article>';
+    }).join('');
+    host.querySelectorAll('.pa-project-form').forEach(function(form){form.addEventListener('submit',async function(event){
+      event.preventDefault();var status=form.querySelector('[data-project-status]'),button=form.querySelector('button[type="submit"]');
+      var repo=form.elements.repository_url.value.trim(),demo=form.elements.demo_url.value.trim(),notes=form.elements.notes.value.trim();
+      if(!repo&&!demo&&!notes){status.textContent='أضف رابط المشروع أو اكتب ملاحظة عن التنفيذ.';return}
+      button.disabled=true;status.textContent='جارٍ إرسال المشروع…';
+      var saved=await db.from('programming_project_submissions').insert({project_id:form.dataset.projectId,student_id:user.id,repository_url:repo,demo_url:demo,notes:notes});
+      button.disabled=false;
+      if(saved.error){status.textContent='تعذر إرسال المشروع: '+saved.error.message;return}
+      toast('تم إرسال المشروع للمراجعة.');await loadProjects();await loadStudentProgress();
+    })});
+  }
+  async function loadProgrammingAdminLearning(){
+    var panel=$('paAdminLearning');if(!panel||!isStaff)return;panel.hidden=false;
+    var result=await db.rpc('programming_admin_learning_overview');
+    if(result.error){$('paAdminLearningQueue').innerHTML='<div class="pa-activity-lock">تعذر تحميل متابعة الطلاب: '+esc(result.error.message)+'</div>';return}
+    var data=result.data||{};
+    $('paAdminLearningStats').innerHTML='<article class="pa-progress-card"><b>'+Number(data.students||0)+'</b><span>طلاب نشطون في التعلم</span></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات اختبارات</span></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.pending_reviews||0)+'</b><span>تحتاج إلى مراجعة</span></article>';
+    var rows=(data.recent_exercises||[]).concat(data.recent_projects||[]).sort(function(a,b){return new Date(b.submitted_at)-new Date(a.submitted_at)});
+    var queue=$('paAdminLearningQueue');
+    if(!rows.length){queue.innerHTML='<div class="pa-activity-lock">لا توجد تسليمات حتى الآن.</div>';return}
+    queue.innerHTML=rows.map(function(row){
+      var title=row.kind==='exercise'?row.exercise_title:row.project_title;
+      return '<article class="pa-review-card" data-review-kind="'+row.kind+'" data-review-id="'+esc(row.id)+'"><div class="pa-review-meta"><b>'+esc(row.student_name)+'</b><span>'+esc(title)+'</span><small>'+new Date(row.submitted_at).toLocaleString('ar-EG')+' · '+(row.status==='submitted'?'قيد المراجعة':row.status==='reviewed'?'تمت المراجعة':'يحتاج إلى تعديل')+'</small></div><div class="pa-review-controls"><input type="number" min="0" max="100" placeholder="الدرجة" value="'+(row.score===null||row.score===undefined?'':row.score)+'" data-review-score><input type="text" placeholder="ملاحظات المراجعة" data-review-feedback><button type="button" class="pa-activity-submit" data-review-action="reviewed">اعتماد التقييم</button><button type="button" class="pa-lab-secondary" data-review-action="needs_revision">طلب تعديل</button></div></article>';
+    }).join('');
+    queue.querySelectorAll('[data-review-action]').forEach(function(button){button.addEventListener('click',async function(){
+      var card=button.closest('[data-review-id]'),scoreText=card.querySelector('[data-review-score]').value,score=scoreText===''?null:Number(scoreText);
+      if(score!==null&&(!Number.isInteger(score)||score<0||score>100)){toast('اكتب درجة صحيحة من 0 إلى 100.');return}
+      button.disabled=true;
+      var saved=await db.rpc('programming_admin_review_submission',{p_kind:card.dataset.reviewKind,p_submission_id:card.dataset.reviewId,p_status:button.dataset.reviewAction,p_score:score,p_feedback:card.querySelector('[data-review-feedback]').value});
+      button.disabled=false;if(saved.error){toast('تعذر حفظ التقييم: '+saved.error.message);return}
+      toast('تم حفظ مراجعة الطالب.');await loadProgrammingAdminLearning();
+    })});
+  }
   async function toggleComplete(id){
     if(!user){showModal();return}if(!hasAccess()){showModal();return}
     if(completed[id]){
@@ -391,7 +503,7 @@
     var result=await db.rpc('programming_create_payment_request',{p_sender_phone:phone,p_proof_path:path});
     if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
     pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
-    await refreshMembership();await loadCurriculum();
+    await refreshMembership();await loadCurriculum();await loadStudentProgress();await loadProjects();if(isStaff)await loadProgrammingAdminLearning();
   }
   async function renderAdminRequests(rows){
     var panel=$('paAdminPanel'),host=$('paAdminRequests');panel.hidden=false;
@@ -420,12 +532,13 @@
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
       $('paAuthStatus').textContent=user?'متصل بحساب DOMA':'زائر · سجّل الدخول لحفظ التقدم';
-      await refreshMembership();await loadCurriculum();
+      await refreshMembership();await loadCurriculum();await loadStudentProgress();await loadProjects();if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
     });
   }
   $('paBackToTracks').addEventListener('click',showTrackOverview);
   $('paSubscribeBtn').addEventListener('click',function(){if(subscription){toast('اشتراكك في أكاديمية البرمجة نشط بالفعل.');return}showModal()});
   $('paSubmitPayment').addEventListener('click',submitPayment);
+  $('paAdminLearningRefresh').addEventListener('click',loadProgrammingAdminLearning);
   $('paAdminRefresh').addEventListener('click',async function(){var r=await db.rpc('programming_admin_list_payment_requests');if(!r.error)renderAdminRequests(r.data||[])});
   $('paSubscribeModal').querySelectorAll('[data-pa-close]').forEach(function(el){el.addEventListener('click',closeModal)});
   if(window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1'){
