@@ -1659,7 +1659,7 @@ async function loadPasswordResetRequests(){
   if(count)count.textContent=pending+' new';
   host.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Phone</th><th>Status</th><th>Requested</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
     const phone=String(x.phone||'').replace(/[^0-9]/g,'');
-    const name=x.profiles?.full_name||'Unmatched account';
+    const name=x.student?.full_name||'Unmatched account';
     const statusLabel=({pending:'New',contacted:'Contacted',completed:'Completed',dismissed:'Dismissed'})[x.status]||x.status;
     const issue=x.student_id?'<button type="button" class="btn warn small js-reset-from-request" data-student-id="'+esc(x.student_id)+'" data-student-label="'+esc(name)+'">Issue temporary password</button>':'<span class="muted">No matching student</span>';
     const wa=phone?'<a class="btn secondary small" href="https://wa.me/'+phone+'" target="_blank" rel="noopener noreferrer">WhatsApp</a>':'';
