@@ -13,22 +13,12 @@
 <body class="programming-page">
 <header class="pa-topbar">
   <a class="pa-brand" href="./index.html"><span class="pa-brand-mark">⌘</span><span>DOMA <b>PROGRAMMING</b></span></a>
-  <div class="pa-top-actions"><span id="paAuthStatus" class="pa-auth-status">جاري التحقق من الحساب…</span><a class="pa-home-link" href="./index.html">العودة للمنصة</a></div>
+  <div class="pa-top-actions"><a class="pa-home-link" href="./index.html">العودة للمنصة</a></div>
 </header>
 <main class="pa-shell">
-  <section class="pa-hero">
-    <div class="pa-hero-copy">
-      <span class="pa-kicker">INDEPENDENT PROGRAMMING ACADEMY</span>
-      <h1>ابدأ من الصفر، <span>وابنِ أي شيء.</span></h1>
-      <p>أكاديمية برمجة متكاملة تبدأ معك من التفكير المنطقي وأساسيات علوم الكمبيوتر، ثم تنتقل إلى لغات البرمجة وتطوير المواقع والتطبيقات والذكاء الاصطناعي والمشاريع الحقيقية.</p>
-      <div class="pa-hero-actions"><a href="#learning-paths" class="pa-primary-btn">استكشف مسارات التعلم <span>←</span></a><span class="pa-note">لا تحتاج أي خبرة سابقة</span></div>
-      <div class="pa-price-strip"><div><span>اشتراك مستقل للأكاديمية</span><strong>100 جنيه <small>/ 30 يومًا</small></strong></div><button id="paSubscribeBtn" type="button" class="pa-primary-btn">اشترك الآن <span>←</span></button><span id="paMembershipStatus" class="pa-membership-status">محتوى الأكاديمية باشتراك مستقل</span></div>
-    </div>
-    <div class="pa-code-art" aria-hidden="true"><div class="pa-orbit pa-orbit-one"></div><div class="pa-orbit pa-orbit-two"></div><div class="pa-code-window"><div class="pa-window-dots"><i></i><i></i><i></i></div><div class="pa-code-line pa-code-muted">01&nbsp; &nbsp; <span>ابدأ_رحلتك</span> = True</div><div class="pa-code-line"><b>if</b> <span>curiosity</span>:</div><div class="pa-code-line pa-indent"><b>learn</b>(<em>"the fundamentals"</em>)</div><div class="pa-code-line pa-indent"><b>build</b>(<em>"real projects"</em>)</div><div class="pa-code-line pa-code-gold">print("Hello, Programmer!")</div><div class="pa-cursor"></div></div><div class="pa-float-chip">⌘ &nbsp; LEARN • BUILD • GROW</div></div>
-  </section>
-  <section class="pa-stats" aria-label="مميزات الأكاديمية"><div><b>10</b><span>مسارات تعليمية</span></div><div><b>01</b><span>بداية من الصفر</span></div><div><b>∞</b><span>أفكار ومشاريع</span></div><div><b>AI</b><span>مساعد برمجة قادم</span></div></section>
+  <section class="pa-subscription-compact" aria-label="اشتراك أكاديمية البرمجة"><div class="pa-subscription-copy"><span>DOMA PROGRAMMING ACADEMY</span><strong>اشتراك الأكاديمية</strong><small>100 جنيه · 30 يومًا</small></div><button id="paSubscribeBtn" type="button" class="pa-primary-btn">اشترك الآن ←</button><span id="paMembershipStatus" class="pa-membership-status">جاري التحقق من حالة الاشتراك…</span></section>
   <section id="learning-paths" class="pa-path-section">
-    <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING ROADMAP</span><h2>خريطة الأكاديمية</h2><p>كل مسار يبني على المهارات التي تعلمتها في المسار السابق.</p></div><span class="pa-roadmap-label">من الأساسيات إلى المشاريع</span></div>
+    <div class="pa-section-heading"><div><h2>ابدأ رحلتك في البرمجة</h2><p>اختار المسار المناسب وابدأ التعلم خطوة بخطوة.</p></div></div>
     <div id="paTracks" class="pa-track-grid"><div class="pa-loading">جاري تحميل مسارات البرمجة…</div></div>
   </section>
   <section id="paLessonPage" class="pa-lesson-page" hidden></section>
@@ -39,12 +29,7 @@
       <div class="pa-progress-track"><i id="paProgressBar"></i></div>
       <div id="paLessons" class="pa-lesson-list"><div class="pa-loading">جاري تحميل الدروس…</div></div>
     </div>
-    <aside class="pa-side-column">
-      <div class="pa-side-card pa-tutor-card"><span class="pa-side-icon">✦</span><span class="pa-kicker">AI PROGRAMMING TUTOR</span><h3>مدرس البرمجة الذكي</h3><p>مساعد يشرح المفاهيم، ويراجع الأكواد، ويقترح تدريبات تناسب مستواك.</p><span class="pa-coming-soon">قريبًا داخل الأكاديمية</span></div>
-      <div class="pa-side-card"><span class="pa-kicker">YOUR LEARNING RULE</span><h3>افهم، جرّب، ثم ابنِ.</h3><p>لن نتعامل مع البرمجة على أنها حفظ أوامر. ستتعلم كيف تفكر وتحلل المشكلة وتختبر الحل بنفسك.</p></div>
-      <div class="pa-side-card pa-account-card"><h3>احفظ تقدمك</h3><p id="paProgressHint">يمكنك استكشاف الدروس المنشورة. سجّل الدخول بحساب DOMA لحفظ الدروس المكتملة ومتابعة تقدمك.</p><a href="./index.html" class="pa-outline-btn">تسجيل الدخول من المنصة</a></div>
-      <section id="paAdminPanel" class="pa-side-card pa-admin-panel" hidden><div class="pa-admin-heading"><div><span class="pa-kicker">ACADEMY ADMIN</span><h3>طلبات اشتراك البرمجة</h3></div><button id="paAdminRefresh" type="button" class="pa-outline-btn">تحديث</button></div><div id="paAdminRequests"><p>جاري تحميل الطلبات…</p></div></section>
-    </aside>
+    <aside class="pa-side-column">      <section id="paAdminPanel" class="pa-side-card pa-admin-panel" hidden><div class="pa-admin-heading"><div><span class="pa-kicker">ACADEMY ADMIN</span><h3>طلبات اشتراك البرمجة</h3></div><button id="paAdminRefresh" type="button" class="pa-outline-btn">تحديث</button></div><div id="paAdminRequests"><p>جاري تحميل الطلبات…</p></div></section></aside>
   </section>
   <section id="paStudentProgress" class="pa-student-progress">
     <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
@@ -390,7 +375,9 @@
     var printWindow=window.open('','_blank');
     if(!printWindow){toast('اسمح بفتح نافذة جديدة لطباعة الشهادة.');return}
     var issued=new Date(certificate.issued_at).toLocaleDateString('ar-EG');
-    var html='<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>DOMA Certificate</title><style>*{box-sizing:border-box}body{margin:0;padding:36px;background:#f5efe6;color:#24172f;font-family:Arial,sans-serif}.certificate{min-height:90vh;border:12px double #b88a4f;padding:50px 35px;text-align:center;display:flex;flex-direction:column;justify-content:center}.brand{font-size:18px;letter-spacing:5px;color:#8c6535;font-weight:800}.title{font-size:42px;margin:28px 0 10px}.subtitle{font-size:18px;color:#725b46}.student{font-size:30px;margin:35px 0 20px;border-bottom:1px solid #b88a4f;padding-bottom:16px}.track{font-size:24px;font-weight:800;color:#7b4d8f}.note{font-size:16px;line-height:2;margin:20px auto;max-width:700px}.code{margin-top:35px;font-size:13px;color:#735d47}.date{margin-top:12px;color:#735d47}@media print{body{padding:0}.certificate{min-height:100vh}}</style></head><body><main class="certificate"><div class="brand">DOMA ACADEMY</div><h1 class="title">شهادة إتمام مسار</h1><p class="subtitle">تُمنح هذه الشهادة تقديرًا لإتمام متطلبات التعلم والتطبيق العملي في</p><div class="student">'+esc(user&&user.user_metadata&&user.user_metadata.full_name||'طالب DOMA')+'</div><div class="track">'+esc(certificate.track_title)+'</div><p class="note">أتم المتعلم دروس المسار وقدم مشروعًا عمليًا تمت مراجعته وتقييمه بنجاح. نتمنى له دوام التعلم والإبداع.</p><div class="code">رقم الشهادة: '+esc(certificate.certificate_code)+'</div><div class="date">تاريخ الإصدار: '+esc(issued)+'</div></main></body></html>';
+    var html='<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>DOMA Certificate</title><style>*{box-sizing:border-box}body{margin:0;padding:36px;background:#f5efe6;color:#24172f;font-family:Arial,sans-serif}.certificate{min-height:90vh;border:12px double #b88a4f;padding:50px 35px;text-align:center;display:flex;flex-direction:column;justify-content:center}.brand{font-size:18px;letter-spacing:5px;color:#8c6535;font-weight:800}.title{font-size:42px;margin:28px 0 10px}.subtitle{font-size:18px;color:#725b46}.student{font-size:30px;margin:35px 0 20px;border-bottom:1px solid #b88a4f;padding-bottom:16px}.track{font-size:24px;font-weight:800;color:#7b4d8f}.note{font-size:16px;line-height:2;margin:20px auto;max-width:700px}.code{margin-top:35px;font-size:13px;color:#735d47}.date{margin-top:12px;color:#735d47}@media print{body{padding:0}.certificate{min-height:100vh}}</style>
+<style id="pa-simplified-academy-home">.pa-subscription-compact{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 16px;margin:18px 0 28px;padding:18px 20px;border:1px solid rgba(205,170,111,.48);border-radius:18px;background:linear-gradient(120deg,rgba(49,34,62,.96),rgba(28,25,42,.98));box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}.pa-subscription-copy{display:flex;flex-direction:column;gap:4px}.pa-subscription-copy>span{font-size:9px;letter-spacing:1.3px;color:#d9b873;font-weight:900}.pa-subscription-copy strong{font-size:17px;color:#fff}.pa-subscription-copy small{font-size:12px;color:#d8c7a6}.pa-subscription-compact .pa-membership-status{grid-column:1/-1;margin:0;color:#d8c7a6;font-size:12px}.pa-subscription-compact .pa-primary-btn{white-space:nowrap}.pa-path-section{margin-top:8px}.pa-section-heading{margin-bottom:18px}@media(max-width:520px){.pa-subscription-compact{padding:14px;gap:9px}.pa-subscription-copy strong{font-size:15px}.pa-subscription-compact .pa-primary-btn{font-size:12px;padding:10px 12px}}</style>
+</head><body><main class="certificate"><div class="brand">DOMA ACADEMY</div><h1 class="title">شهادة إتمام مسار</h1><p class="subtitle">تُمنح هذه الشهادة تقديرًا لإتمام متطلبات التعلم والتطبيق العملي في</p><div class="student">'+esc(user&&user.user_metadata&&user.user_metadata.full_name||'طالب DOMA')+'</div><div class="track">'+esc(certificate.track_title)+'</div><p class="note">أتم المتعلم دروس المسار وقدم مشروعًا عمليًا تمت مراجعته وتقييمه بنجاح. نتمنى له دوام التعلم والإبداع.</p><div class="code">رقم الشهادة: '+esc(certificate.certificate_code)+'</div><div class="date">تاريخ الإصدار: '+esc(issued)+'</div></main></body></html>';
     printWindow.document.open();printWindow.document.write(html);printWindow.document.close();printWindow.focus();printWindow.print();
   }
   async function loadStudentProgress(){
