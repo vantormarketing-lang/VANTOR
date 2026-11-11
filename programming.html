@@ -373,7 +373,7 @@
       if(!source){status.textContent='اكتب الحل قبل الإرسال.';return}
       if(source.length>16000){status.textContent='الحل أطول من الحد المسموح.';return}
       var button=exerciseForm.querySelector('button[type="submit"]');button.disabled=true;status.textContent='جارٍ حفظ الحل…';
-      var saved=await db.from('programming_exercise_submissions').insert({exercise_id:exercise.id,student_id:user.id,language:$('paExerciseLanguage').value,source_code:source,notes:$('paExerciseNotes').value.trim()});
+      var saved=await db.rpc('programming_submit_exercise',{p_exercise_id:exercise.id,p_language:$('paExerciseLanguage').value,p_source_code:source,p_notes:$('paExerciseNotes').value.trim()});
       button.disabled=false;
       if(saved.error){status.textContent='تعذر حفظ الحل: '+saved.error.message;return}
       toast('تم إرسال التطبيق العملي للمراجعة.');await loadLessonActivities(lesson);await loadStudentProgress();
@@ -394,27 +394,20 @@
     var host=$('paProgressCards');if(!host)return;
     if(!user){host.innerHTML='<div class="pa-activity-lock">سجّل الدخول بحساب DOMA لعرض تقدمك.</div>';return}
     if(!hasAccess()){host.innerHTML='<div class="pa-activity-lock">فعّل اشتراك أكاديمية البرمجة لبدء حفظ تقدمك ونتائجك.</div>';return}
-    var results=await Promise.all([
-      db.from('programming_lesson_progress').select('lesson_id').eq('user_id',user.id),
-      db.from('programming_quiz_attempts').select('id,score,passed').eq('student_id',user.id),
-      db.from('programming_exercise_submissions').select('id,status,score').eq('student_id',user.id),
-      db.from('programming_project_submissions').select('id,status,score').eq('student_id',user.id)
-    ]);
-    var done=results[0].data||[],quizzes=results[1].data||[],exercises=results[2].data||[],projects=results[3].data||[];
-    var percent=lessons.length?Math.round(done.length/lessons.length*100):0,passed=quizzes.filter(function(q){return q.passed}).length;
-    var avg=quizzes.length?Math.round(quizzes.reduce(function(sum,q){return sum+Number(q.score||0)},0)/quizzes.length):0;
-    host.innerHTML='<article class="pa-progress-card"><b>'+done.length+' / '+lessons.length+'</b><span>دروس مكتملة</span><i><em style="width:'+percent+'%"></em></i></article><article class="pa-progress-card"><b>'+quizzes.length+'</b><span>محاولات الاختبار</span><small>'+passed+' اختبارات مجتازة · متوسط '+avg+'%</small></article><article class="pa-progress-card"><b>'+exercises.length+'</b><span>تطبيقات مرسلة</span><small>'+exercises.filter(function(x){return x.status==='reviewed'}).length+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+projects.length+'</b><span>مشاريع مرسلة</span><small>'+projects.filter(function(x){return x.status==='reviewed'}).length+' تمت مراجعتها</small></article>';
+    var result=await db.rpc('programming_get_my_learning_progress');
+    if(result.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل تقدمك: '+esc(result.error.message)+'</div>';return}
+    var data=result.data||{},done=Number(data.completed_lessons||0),total=Number(data.total_lessons||lessons.length),percent=total?Math.round(done/total*100):0;
+    host.innerHTML='<article class="pa-progress-card"><b>'+done+' / '+total+'</b><span>دروس مكتملة</span><i><em style="width:'+percent+'%"></em></i></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات الاختبار</span><small>'+Number(data.passed_quizzes||0)+' اختبارات مجتازة · متوسط '+Number(data.average_quiz_score||0)+'%</small></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span><small>'+Number(data.reviewed_exercises||0)+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span><small>'+Number(data.reviewed_projects||0)+' تمت مراجعتها</small></article>';
   }
   async function loadProjects(){
     var host=$('paProjectsGrid');if(!host)return;
     if(!user||!hasAccess()){host.innerHTML='<div class="pa-activity-lock">المشاريع العملية متاحة للطلاب أصحاب الاشتراك النشط بعد تسجيل الدخول.</div>';return}
-    var result=await db.from('programming_projects').select('id,track_id,title,brief,requirements').eq('is_published',true).order('sort_order');
+    var result=await db.rpc('programming_get_projects');
     if(result.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل المشاريع: '+esc(result.error.message)+'</div>';return}
-    var previous=await db.from('programming_project_submissions').select('project_id,status,score,feedback,submitted_at').eq('student_id',user.id).order('submitted_at',{ascending:false});
-    var latest={};(previous.data||[]).forEach(function(item){if(!latest[item.project_id])latest[item.project_id]=item});
-    if(!result.data||!result.data.length){host.innerHTML='<div class="pa-activity-lock">سيتم نشر المشاريع قريبًا.</div>';return}
-    host.innerHTML=result.data.map(function(project){
-      var submission=latest[project.id],requirements=Array.isArray(project.requirements)?project.requirements:[];
+    var projects=Array.isArray(result.data)?result.data:[];
+    if(!projects.length){host.innerHTML='<div class="pa-activity-lock">سيتم نشر المشاريع قريبًا.</div>';return}
+    host.innerHTML=projects.map(function(project){
+      var requirements=Array.isArray(project.requirements)?project.requirements:[],submission=project.latest_submission;
       return '<article class="pa-project-card" data-project-card="'+esc(project.id)+'"><span class="pa-activity-tag">مشروع مسار</span><h3>'+esc(project.title)+'</h3><p>'+esc(project.brief)+'</p><ul>'+requirements.map(function(item){return '<li>'+esc(item)+'</li>'}).join('')+'</ul><form class="pa-project-form" data-project-id="'+esc(project.id)+'"><label>رابط المستودع (اختياري)<input type="url" name="repository_url" placeholder="https://github.com/…"></label><label>رابط المعاينة (اختياري)<input type="url" name="demo_url" placeholder="https://…"></label><label>ملاحظاتك<textarea name="notes" rows="2" placeholder="اشرح ما بنيته وأهم ما تعلمته…"></textarea></label><button type="submit" class="pa-activity-submit">إرسال المشروع للمراجعة</button><p class="pa-activity-status" data-project-status></p></form>'+(submission?'<div class="pa-previous-result">آخر تسليم: '+(submission.status==='reviewed'?'تمت مراجعته':submission.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(submission.score!==null&&submission.score!==undefined?' · '+submission.score+'/100':'')+(submission.feedback?'<p>'+esc(submission.feedback)+'</p>':'')+'</div>':'')+'</article>';
     }).join('');
     host.querySelectorAll('.pa-project-form').forEach(function(form){form.addEventListener('submit',async function(event){
@@ -422,7 +415,7 @@
       var repo=form.elements.repository_url.value.trim(),demo=form.elements.demo_url.value.trim(),notes=form.elements.notes.value.trim();
       if(!repo&&!demo&&!notes){status.textContent='أضف رابط المشروع أو اكتب ملاحظة عن التنفيذ.';return}
       button.disabled=true;status.textContent='جارٍ إرسال المشروع…';
-      var saved=await db.from('programming_project_submissions').insert({project_id:form.dataset.projectId,student_id:user.id,repository_url:repo,demo_url:demo,notes:notes});
+      var saved=await db.rpc('programming_submit_project',{p_project_id:form.dataset.projectId,p_repository_url:repo,p_demo_url:demo,p_notes:notes});
       button.disabled=false;
       if(saved.error){status.textContent='تعذر إرسال المشروع: '+saved.error.message;return}
       toast('تم إرسال المشروع للمراجعة.');await loadProjects();await loadStudentProgress();
