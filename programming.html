@@ -117,6 +117,9 @@ function initializeDomaProgrammingAcademy(){
       if(isStaff)renderAdminRequests(staff.data||[]);
     }
     renderMembership();
+    // Repaint track and lesson lock indicators after the subscription lookup completes.
+    renderTracks();
+    renderLessons();
   }
   function renderTracks(){
     var host=$('paTracks');
