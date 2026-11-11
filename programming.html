@@ -46,6 +46,19 @@
       <section id="paAdminPanel" class="pa-side-card pa-admin-panel" hidden><div class="pa-admin-heading"><div><span class="pa-kicker">ACADEMY ADMIN</span><h3>طلبات اشتراك البرمجة</h3></div><button id="paAdminRefresh" type="button" class="pa-outline-btn">تحديث</button></div><div id="paAdminRequests"><p>جاري تحميل الطلبات…</p></div></section>
     </aside>
   </section>
+  <section id="paStudentProgress" class="pa-student-progress">
+    <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
+    <div id="paProgressCards" class="pa-progress-cards"><div class="pa-loading">جاري حساب تقدمك…</div></div>
+  </section>
+  <section id="paProjectsSection" class="pa-projects-section">
+    <div class="pa-section-heading"><div><span class="pa-kicker">BUILD SOMETHING REAL</span><h2>مشاريع المسارات</h2><p>حوّل ما تعلمته إلى مشروع يمكنك عرضه في ملف أعمالك.</p></div></div>
+    <div id="paProjectsGrid" class="pa-projects-grid"><div class="pa-loading">جاري تحميل المشاريع…</div></div>
+  </section>
+  <section id="paAdminLearning" class="pa-admin-learning" hidden>
+    <div class="pa-section-heading"><div><span class="pa-kicker">ACADEMY CONTROL</span><h2>متابعة تعلم الطلاب</h2><p>راجع التطبيقات والمشاريع، وأضف التقييم والملاحظات.</p></div><button type="button" id="paAdminLearningRefresh" class="pa-outline-btn">تحديث البيانات</button></div>
+    <div id="paAdminLearningStats" class="pa-progress-cards"></div>
+    <div id="paAdminLearningQueue" class="pa-admin-learning-queue"></div>
+  </section>
   <footer class="pa-footer"><span>DOMA ACADEMY</span><span>PROGRAMMING • LOGIC • CREATIVITY</span><a href="./index.html">العودة إلى الصفحة الرئيسية</a></footer>
 </main>
 
@@ -203,7 +216,7 @@
     history.replaceState(null,'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
     var old=$('paLessonReader');if(old)old.remove();
     var reader=document.createElement('article');reader.id='paLessonReader';reader.className='pa-lesson-reader';
-    reader.innerHTML='<div class="pa-reader-top"><button type="button" class="pa-track-back" id="paReaderBack">← العودة إلى قائمة الدروس</button><span>'+Number(lesson.duration_minutes||10)+' دقيقة</span></div><h2>'+esc(lesson.title)+'</h2><p class="pa-reader-summary">'+esc(lesson.summary)+'</p><div id="paReaderContent" class="pa-reader-content"><p>جاري تحميل محتوى الدرس…</p></div><section class="pa-code-lab" aria-label="سبورة البرمجة التفاعلية"><div class="pa-lab-heading"><div><span class="pa-kicker">DOMA CODE LAB</span><h3>السبورة البرمجية</h3><p>اكتب الكود، شغّله، وشاهد النتيجة بنفسك.</p></div><span class="pa-lab-live">● بيئة تدريب</span></div><div class="pa-lab-toolbar"><label for="paCodeLanguage">لغة البرمجة</label><select id="paCodeLanguage" class="pa-code-select"><option value="python">Python</option><option value="javascript">JavaScript</option><option value="html">HTML / CSS</option><option value="c">C</option><option value="cpp">C++</option><option value="java">Java</option><option value="csharp">C#</option><option value="php">PHP</option><option value="go">Go</option><option value="ruby">Ruby</option><option value="rust">Rust</option><option value="kotlin">Kotlin</option><option value="swift">Swift</option><option value="dart">Dart</option></select><button type="button" id="paResetCode" class="pa-lab-secondary">استعادة المثال</button><button type="button" id="paRunCode" class="pa-lab-run">▶ تشغيل الكود</button></div><textarea id="paCodeEditor" class="pa-code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="محرر الكود"></textarea><div class="pa-lab-output-head"><b>النتيجة</b><span id="paRunState">جاهز للتشغيل</span></div><pre id="paCodeOutput" class="pa-code-output" aria-live="polite">اكتب الكود ثم اضغط «تشغيل الكود».</pre><iframe id="paCodePreview" class="pa-code-preview" title="معاينة صفحة HTML" sandbox="allow-scripts" hidden></iframe><label class="pa-input-label" for="paCodeInput">إدخال البرنامج (اختياري)</label><textarea id="paCodeInput" class="pa-code-input" rows="2" placeholder="اكتب بيانات الإدخال هنا إذا طلب البرنامج ذلك…"></textarea><p class="pa-lab-footnote">يتم تشغيل الأكواد البرمجية داخل بيئة معزولة بحدود زمنية وموارد محددة. لا تضع كلمات مرور أو بيانات شخصية في محرر التدريب.</p></section><div class="pa-reader-actions"><button type="button" class="pa-primary-btn" id="paCompleteBtn">'+(completed[id]?'إلغاء إكمال الدرس':'أنهيت الدرس ✓')+'</button><span class="pa-save-note">سيتم حفظ تقدمك على حسابك.</span></div>';
+    reader.innerHTML='<div class="pa-reader-top"><button type="button" class="pa-track-back" id="paReaderBack">← العودة إلى قائمة الدروس</button><span>'+Number(lesson.duration_minutes||10)+' دقيقة</span></div><h2>'+esc(lesson.title)+'</h2><p class="pa-reader-summary">'+esc(lesson.summary)+'</p><div id="paReaderContent" class="pa-reader-content"><p>جاري تحميل محتوى الدرس…</p></div><section class="pa-code-lab" aria-label="سبورة البرمجة التفاعلية"><div class="pa-lab-heading"><div><span class="pa-kicker">DOMA CODE LAB</span><h3>السبورة البرمجية</h3><p>اكتب الكود، شغّله، وشاهد النتيجة بنفسك.</p></div><span class="pa-lab-live">● بيئة تدريب</span></div><div class="pa-lab-toolbar"><label for="paCodeLanguage">لغة البرمجة</label><select id="paCodeLanguage" class="pa-code-select"><option value="python">Python</option><option value="javascript">JavaScript</option><option value="html">HTML / CSS</option><option value="c">C</option><option value="cpp">C++</option><option value="java">Java</option><option value="csharp">C#</option><option value="php">PHP</option><option value="go">Go</option><option value="ruby">Ruby</option><option value="rust">Rust</option><option value="kotlin">Kotlin</option><option value="swift">Swift</option><option value="dart">Dart</option></select><button type="button" id="paResetCode" class="pa-lab-secondary">استعادة المثال</button><button type="button" id="paRunCode" class="pa-lab-run">▶ تشغيل الكود</button></div><div class="pa-editor-tools"><button type="button" id="paCopyCode" class="pa-lab-secondary">نسخ الكود</button><button type="button" id="paClearCode" class="pa-lab-secondary">مسح المحرر</button><span>Tab للإزاحة · Ctrl + Enter للتشغيل</span></div><div class="pa-editor-wrap"><pre id="paCodeLines" class="pa-code-lines">1</pre><textarea id="paCodeEditor" class="pa-code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="محرر الكود"></textarea></div><div class="pa-lab-output-head"><b>النتيجة</b><span id="paRunState">جاهز للتشغيل</span></div><pre id="paCodeOutput" class="pa-code-output" aria-live="polite">اكتب الكود ثم اضغط «تشغيل الكود».</pre><iframe id="paCodePreview" class="pa-code-preview" title="معاينة صفحة HTML" sandbox="allow-scripts" hidden></iframe><label class="pa-input-label" for="paCodeInput">إدخال البرنامج (اختياري)</label><textarea id="paCodeInput" class="pa-code-input" rows="2" placeholder="اكتب بيانات الإدخال هنا إذا طلب البرنامج ذلك…"></textarea><p class="pa-lab-footnote">يتم تشغيل الأكواد البرمجية داخل بيئة معزولة بحدود زمنية وموارد محددة. لا تضع كلمات مرور أو بيانات شخصية في محرر التدريب.</p></section><section class="pa-activities" aria-label="تدريبات واختبارات الدرس"><div class="pa-activities-heading"><span class="pa-kicker">PRACTICE & CHECKPOINT</span><h3>طبّق اللي اتعلمته</h3><p>حل التدريب، ثم اختبر فهمك واحفظ نتيجتك.</p></div><div id="paActivityContent" class="pa-activity-content"><p class="pa-loading">جاري تجهيز التدريب والاختبار…</p></div></section><div class="pa-reader-actions"><button type="button" class="pa-primary-btn" id="paCompleteBtn">'+(completed[id]?'إلغاء إكمال الدرس':'أنهيت الدرس ✓')+'</button><span class="pa-save-note">سيتم حفظ تقدمك على حسابك.</span></div>';
     $('paLessonPage').hidden=false;$('paLessonPage').appendChild(reader);$('paReaderBack').addEventListener('click',function(){window.location.href='./programming.html?track='+encodeURIComponent(activeTrack)});$('paCompleteBtn').addEventListener('click',function(){toggleComplete(id)});
     var content=await db.rpc('programming_get_lesson_content',{p_lesson_id:id});
     if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
@@ -258,9 +271,25 @@
     editor.value=localStorage.getItem(key)||lessonSample;
     function saveDraft(){localStorage.setItem('doma-code:'+activeTrack+':'+lesson.id+':'+lang.value,editor.value)}
     lang.onchange=function(){saveDraft();var k='doma-code:'+activeTrack+':'+lesson.id+':'+lang.value;editor.value=localStorage.getItem(k)||(lang.value===sampleLanguage?lessonSample:(codeSamples[lang.value]||''));$('paCodePreview').hidden=true;$('paCodeOutput').textContent='جاهز للتشغيل.'};
-    editor.oninput=saveDraft;
-    $('paResetCode').onclick=function(){editor.value=(lang.value===sampleLanguage?lessonSample:(codeSamples[lang.value]||''));saveDraft();$('paCodeOutput').textContent='تمت استعادة المثال.';$('paCodePreview').hidden=true};
+    var lineHost=$('paCodeLines');
+    function syncLines(){if(lineHost)lineHost.textContent=Array.from({length:Math.max(1,editor.value.split('\n').length)},function(_,i){return i+1}).join('\n')}
+    function persistAndSync(){saveDraft();syncLines()}
+    editor.oninput=persistAndSync;
+    editor.addEventListener('scroll',function(){if(lineHost)lineHost.scrollTop=editor.scrollTop});
+    editor.addEventListener('keydown',function(event){
+      if(event.key==='Tab'){event.preventDefault();var start=editor.selectionStart,end=editor.selectionEnd;editor.setRangeText('    ',start,end,'end');persistAndSync();return}
+      if(event.key==='Enter'&&!event.shiftKey){
+        var before=editor.value.slice(0,editor.selectionStart),line=before.slice(before.lastIndexOf('\n')+1),indent=(line.match(/^[ \t]*/)||[''])[0];
+        if(/[:{]\s*$/.test(line))indent+='    ';
+        if(indent){event.preventDefault();var pos=editor.selectionStart;editor.setRangeText('\n'+indent,pos,editor.selectionEnd,'end');persistAndSync()}
+      }
+      if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){event.preventDefault();run.click()}
+    });
+    $('paCopyCode').onclick=async function(){try{await navigator.clipboard.writeText(editor.value);toast('تم نسخ الكود.')}catch(_){editor.focus();editor.select();toast('حددنا الكود؛ استخدم Ctrl+C لنسخه.')}};
+    $('paClearCode').onclick=function(){if(!window.confirm('مسح الكود الموجود في المحرر؟'))return;editor.value='';persistAndSync();editor.focus()};
+    $('paResetCode').onclick=function(){editor.value=(lang.value===sampleLanguage?lessonSample:(codeSamples[lang.value]||''));persistAndSync();$('paCodeOutput').textContent='تمت استعادة المثال.';$('paCodePreview').hidden=true};
     run.onclick=function(){executeStudentCode(lesson)};
+    syncLines();
     $('paCodeOutput').textContent='المحرر جاهز. ابدأ بتعديل المثال.';
   }
   async function executeStudentCode(lesson){
