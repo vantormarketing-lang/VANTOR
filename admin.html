@@ -1576,7 +1576,16 @@ async function approveSub(id){
   try{
     const r=await db.rpc('doma_approve_subscription_request',{p_request_id:id,p_note:'Payment verified.'});
     if(r.error)throw r.error;
-    toast('Subscription approved and activated.');
+    // Confirm the persisted request state before telling staff that access was activated.
+    const verify=await db.from('subscription_requests')
+      .select('id,status,reviewed_at')
+      .eq('id',id)
+      .maybeSingle();
+    if(verify.error)throw new Error('Approval RPC responded, but request status could not be verified: '+verify.error.message);
+    if(!verify.data||String(verify.data.status||'').trim().toLowerCase()!=='approved'){
+      throw new Error('The request is not confirmed as approved in Supabase. Do not retry payment; inspect request '+id+'.');
+    }
+    toast('Subscription approval verified and activated.');
     await Promise.all([loadSales(),loadDashboard(),loadStudents()]);
   }catch(e){toast('Approval failed: '+(e?.message||String(e)));await Promise.all([loadSales(),loadDashboard(),loadStudents()]);}
   finally{if(btn)btn.disabled=false;}
@@ -2705,7 +2714,7 @@ async function mfRejectEnglishCourseRequest(id){
   function registerAdminServiceWorker(){
     if(!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
     try{
-      var swUrl = new URL('./admin-sw.js?doma-admin=v70', window.location.href);
+      var swUrl = new URL('./admin-sw.js?doma-admin=v71', window.location.href);
       var adminUrl = new URL('./admin.html', window.location.href);
       navigator.serviceWorker.register(swUrl, {scope: adminUrl.pathname, updateViaCache:'none'})
         .then(function(reg){ return reg.update().catch(function(){}).then(function(){

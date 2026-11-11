@@ -1,0 +1,144 @@
+#!/usr/bin/env node
+/**
+ * DOMA production safety guardrails.
+ * Static checks only: this script never contacts the deployed website or database.
+ */
+import { existsSync, readFileSync } from 'node:fs';
+
+const root = process.cwd();
+const errors = [];
+const checks = [];
+
+function read(path) {
+  const full = `${root}/${path}`;
+  if (!existsSync(full)) {
+    errors.push(`Missing required file: ${path}`);
+    return '';
+  }
+  return readFileSync(full, 'utf8');
+}
+function check(condition, message) {
+  if (condition) checks.push(message);
+  else errors.push(message);
+}
+
+const browserFiles = [
+  'index.html', 'admin.html', 'programming.html',
+  'MR_FLUENT_KIDS_A1.html',
+  'MR_FLUENT_A1_COURSE.html', 'MR_FLUENT_A2_COURSE.html',
+  'MR_FLUENT_B1_COURSE.html', 'MR_FLUENT_B2_COURSE.html',
+  'MR_FLUENT_C1_COURSE.html', 'MR_FLUENT_C2_COURSE.html',
+  'doma-mrfluent-kids-runtime.js', 'mf-kids-learning-experiences.js', 'mrfluent-course-workspace.js'
+];
+let browserSecretsFound = false;
+for (const path of browserFiles) {
+  const source = read(path);
+  if (!source) continue;
+  if (/sb_secret_[A-Za-z0-9_-]{16,}/.test(source) ||
+      /SUPABASE_SERVICE_ROLE_KEY\s*[:=]\s*['"][^'"]+['"]/.test(source)) {
+    browserSecretsFound = true;
+    errors.push(`${path}: a Supabase secret/service-role key literal must never be shipped to the browser`);
+  }
+}
+check(!browserSecretsFound, 'Browser-facing files contain no recognizable Supabase secret-key literals');
+
+const runner = read('functions/api/code-run.js');
+check(
+  runner.includes('env.SUPABASE_SERVICE_ROLE_KEY') &&
+  runner.includes('/auth/v1/user') &&
+  runner.includes('Authorization: `Bearer ${accessToken}`') &&
+  runner.includes('accessToken.length > 8192'),
+  'Cloudflare code runner keeps privileged configuration server-side and validates the Supabase user session'
+);
+
+const studentWorker = read('sw.js');
+check(
+  ['function normalizeShellUrl', 'function hasSensitiveQuery',
+   'function isSafeSameOriginUrl', 'function isCacheableStaticAssetUrl']
+    .every(part => studentWorker.includes(part)) &&
+  /return\s*!\s*\/\^\\\/\(\?:rest\\\/v1\|auth\\\/v1\|storage\\\/v1\|functions\\\/v1/.test(studentWorker) &&
+  !/caches\.match\s*\(\s*req\s*\)/.test(studentWorker),
+  'Student PWA normalizes shell keys and excludes sensitive/dynamic API responses from caching'
+);
+
+const student = read('index.html');
+const admin = read('admin.html');
+
+const adminWorker = read('admin-sw.js');
+check(
+  /if\s*\(isAdminDocument\)\s*\{[\s\S]*?fetch\(req,\s*\{\s*cache:\s*['"]no-store['"]\s*\}\)/.test(adminWorker) &&
+  /SHELL\.filter\(url\s*=>\s*url\s*!==\s*ADMIN_URL\)/.test(adminWorker) &&
+  /if\s*\(SHELL\.includes\(req\.url\)\)/.test(adminWorker),
+  'Admin PWA never caches the admin HTML and only caches allowlisted shell assets'
+);
+const themeHref = admin.match(/<link id="doma-platform-unified-theme" rel="stylesheet" href="([^"]+)"/)?.[1];
+const workerThemeHref = adminWorker.match(/const GLASS_THEME_URL = new URL\('([^']+)'/)?.[1];
+const workerRegistration = admin.match(/new URL\('\.\/admin-sw\.js\?doma-admin=(v\d+)'/)?.[1];
+const workerCacheVersion = adminWorker.match(/const CACHE_NAME = 'doma-admin-offline-(v\d+)'/)?.[1];
+check(
+  Boolean(themeHref && workerThemeHref && themeHref === workerThemeHref) &&
+  Boolean(workerRegistration && workerCacheVersion && workerRegistration === workerCacheVersion),
+  'Admin PWA theme asset URL and service-worker registration/cache versions stay in sync'
+);
+check(
+  admin.includes('Approval RPC responded, but request status could not be verified') &&
+  admin.includes("String(verify.data.status||'').trim().toLowerCase()!=='approved'"),
+  'Grade subscription approval verifies the persisted approved state before reporting success'
+);
+
+check(
+  !/storage\.from\(\s*['"]homework-submissions['"]\s*\)\s*\.getPublicUrl\s*\(/.test(student) &&
+  admin.includes('createSignedUrl(path,300)') &&
+  admin.includes('data-doma-homework-attachment'),
+  'Homework attachment access remains private and uses signed URLs'
+);
+
+
+const programmingMigration = read('supabase/migrations/20261111010000_optimize_programming_rls_and_fk_indexes.sql');
+const requiredMigrationItems = [
+  'programming_course_payment_requests_reviewed_by_idx',
+  'programming_lesson_progress_lesson_id_idx',
+  'Students read own programming progress',
+  'Staff manage programming lessons',
+  'Staff manage programming modules',
+  'Staff manage programming tracks',
+  '(select auth.uid())'
+];
+check(
+  requiredMigrationItems.every(item => programmingMigration.includes(item)) &&
+  !/\\b(?:DROP\\s+TABLE|DROP\\s+INDEX|DELETE\\s+FROM|TRUNCATE)\\b/i.test(programmingMigration),
+  'Programming performance migration adds two FK indexes and optimizes four RLS policies without deleting data or indexes'
+);
+
+const workspace = read('mrfluent-course-workspace.js');
+check(
+  ['function addLessonLinks()', 'function applyStandaloneLesson()', 'function createWhiteboard(id)',
+   'pointerdown', 'pointermove', 'mf-lesson-board-v1:']
+    .every(part => workspace.includes(part)) &&
+  read('sw.js').includes("versioned('./mrfluent-course-workspace.js')"),
+  'Mr. Fluent course workspace provides standalone lesson routes, a local interactive whiteboard, and PWA shell caching'
+);
+for (const level of ['A1','A2','B1','B2','C1','C2']) {
+  const coursePage = read(`MR_FLUENT_${level}_COURSE.html`);
+  if (!coursePage.includes('./mrfluent-course-workspace.js?v=doma-glass-v72')) {
+    fail(`MR_FLUENT_${level}_COURSE.html: standalone lesson workspace script is not loaded with the current shell version`);
+  }
+}
+
+const headers = read('_headers');
+check(
+  ['X-Content-Type-Options: nosniff',
+   'Referrer-Policy: strict-origin-when-cross-origin',
+   'X-Frame-Options: SAMEORIGIN',
+   'Permissions-Policy: camera=(), microphone=(self), geolocation=()']
+    .every(value => headers.includes(value)),
+  'Baseline browser security response headers are present'
+);
+
+for (const message of checks) console.log('PASS', message);
+if (errors.length) {
+  for (const message of errors) console.error('FAIL', message);
+  process.exitCode = 1;
+} else {
+  console.log(`\nProduction safety validation passed (${checks.length} checks).`);
+}
