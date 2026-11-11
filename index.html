@@ -2090,9 +2090,9 @@ body{min-height:100vh;min-height:100dvh}
         <span class="mf-kids-entry-cta">Open <b aria-hidden="true">↗</b></span>
       </div>
     </a>
-    <a class="pa-programming-entry-card" href="./programming.html" aria-label="Open Code Lab">
+    <a class="pa-programming-entry-card" href="./programming.html" aria-label="Open DOMA Pro">
       <div class="pa-programming-entry-copy">
-        <h3 class="pa-programming-entry-title"><svg class="pa-programming-entry-title-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m8 5-7 7 7 7M16 5l7 7-7 7M14 3l-4 18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Code Lab</span></h3>
+        <h3>DOMA Pro</h3>
         <div class="pa-programming-entry-info">
           <div class="pa-programming-entry-tags"><span>Python</span><span>Web</span><span>AI</span></div>
           <div class="pa-programming-entry-price" aria-label="DOMA Pro price: 100 Egyptian pounds per 30 days"><strong>100 <small>EGP</small></strong><span>30 days</span></div>
@@ -3426,30 +3426,7 @@ function printCertificate(title,code,issued){
   if(!w)return;
   w.document.write(`<!doctype html><html><head><title>DOMA Certificate</title><style>body{font-family:Arial;background:#0b0809;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}.c{width:min(760px,90vw);padding:40px 24px;border:3px solid #9d304a;text-align:center;background:#130c0f}.small{color:#aaa;font-size:14px}.code{font:18px monospace;color:#c05269;margin-top:20px}</style>
 </head><body><div class="c"><div class="small">Mr. Fluent</div><h1>${esc(title)}</h1><p>Certificate of Completion</p><p class="small">Issued ${esc(fmtDate(issued))}</p><div class="code">${esc(code)}</div><p class="small">LEARN • SPEAK • MASTER</p></div>
-<style id="doma-code-lab-home-card-glass-v1">
-/* Match the programming entry card to the two neighboring course glass cards without changing its layout or dimensions. */
-html body:not(.mf-course-route):not(.mf-kids-route) section#english-course a.pa-programming-entry-card{
-  color:#fff1e7!important;
-  background-color:rgba(89,55,108,.48)!important;
-  background-image:
-    radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.29),transparent 100%),
-    radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.29),transparent 100%),
-    radial-gradient(ellipse 185px 95px at 21% 100%,rgba(255,176,142,.22),transparent 100%),
-    linear-gradient(135deg,rgba(164,118,181,.48),rgba(89,56,108,.55) 54%,rgba(55,34,76,.66))!important;
-  border:1px solid rgba(220,188,233,.34)!important;
-  border-radius:27px!important;
-  box-shadow:0 23px 54px rgba(18,7,27,.34),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(255,255,255,.08),0 0 29px rgba(235,170,112,.12)!important;
-  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;
-  backdrop-filter:blur(24px) saturate(145%)!important;
-}
-html body section#english-course .pa-programming-entry-copy h3.pa-programming-entry-title{
-  display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;
-}
-html body section#english-course .pa-programming-entry-title-icon{
-  display:block!important;width:22px!important;height:22px!important;flex:0 0 22px!important;
-  color:#f2c98d!important;filter:drop-shadow(0 2px 5px rgba(20,8,30,.3))!important;
-}
-</style>
+
 </body></html>`);
   w.document.close();
   w.print();
