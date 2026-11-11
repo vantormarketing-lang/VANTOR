@@ -24,3 +24,5 @@ jobs:
         run: node scripts/validate-platform.mjs
       - name: Validate production security and PWA caching safeguards
         run: node scripts/validate-production-safety.mjs
+      - name: Check standalone lesson workspace JavaScript syntax
+        run: node --check mrfluent-course-workspace.js
