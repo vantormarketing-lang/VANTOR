@@ -22,6 +22,7 @@ Never put SUPABASE_SERVICE_ROLE_KEY in HTML, JavaScript shipped to browsers, Git
 - The temporary password is returned only in the immediate response. It is not written to the database or server logs.
 - At the next sign-in, the student is held at the password-change screen until the new password is saved through the server endpoint.
 - The login-page Forgot password? action opens a prefilled WhatsApp message. The administrator must verify the student's identity before issuing a temporary password.
+- Student phone-recovery requests are routed to the support WhatsApp number `+20 100 652 5147` (`https://wa.me/201006525147`). This is a manual support channel, not an OTP verification service.
 
 ## Email recovery and redirect allow-list
 
