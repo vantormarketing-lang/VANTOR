@@ -28,9 +28,9 @@
   <div class="pa-top-actions"><span id="paAuthStatus" class="pa-auth-status" role="status" aria-label="حالة الاتصال" title="حالة الاتصال"></span><a class="pa-home-link" href="./index.html" aria-label="العودة للمنصة" title="العودة للمنصة">←</a></div>
 </header>
 <main class="pa-shell">
-  <section class="pa-subscription-compact" aria-label="اشتراك أكاديمية البرمجة"><div class="pa-subscription-copy"><span>DOMA PROGRAMMING ACADEMY</span><strong>اشتراك الأكاديمية</strong><small>100 جنيه · 30 يومًا</small></div><button id="paSubscribeBtn" type="button" class="pa-primary-btn">اشترك الآن ←</button><span id="paMembershipStatus" class="pa-membership-status">جاري التحقق من حالة الاشتراك…</span></section>
+
   <section id="learning-paths" class="pa-path-section">
-    <div class="pa-section-heading"><div><h2>ابدأ رحلتك في البرمجة</h2><p>اختار المسار المناسب وابدأ التعلم خطوة بخطوة.</p></div></div>
+    <div class="pa-section-heading"><div><h2>اختر مسارك</h2></div></div>
     <div id="paTracks" class="pa-track-grid"><div class="pa-loading">جاري تحميل مسارات البرمجة…</div></div>
   </section>
   <section id="paLessonPage" class="pa-lesson-page" hidden></section>
@@ -43,7 +43,7 @@
     </div>
     <aside class="pa-side-column">      <section id="paAdminPanel" class="pa-side-card pa-admin-panel" hidden><div class="pa-admin-heading"><div><span class="pa-kicker">ACADEMY ADMIN</span><h3>طلبات اشتراك البرمجة</h3></div><button id="paAdminRefresh" type="button" class="pa-outline-btn">تحديث</button></div><div id="paAdminRequests"><p>جاري تحميل الطلبات…</p></div></section></aside>
   </section>
-  <section id="paStudentProgress" class="pa-student-progress">
+  <section id="paStudentProgress" class="pa-student-progress" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
     <div id="paProgressCards" class="pa-progress-cards"><div class="pa-loading">جاري حساب تقدمك…</div></div>
   </section>
@@ -94,11 +94,15 @@ function initializeDomaProgrammingAcademy(){
   function showModal(){if(!user){$('paLoginNotice').hidden=false;$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=true}else{$('paLoginNotice').hidden=true;$('paPaymentForm').hidden=!(!subscription&&!pendingRequest);$('paPendingNotice').hidden=!pendingRequest;$('paSubmitPayment').disabled=!!pendingRequest;$('paSubmitPayment').textContent=pendingRequest?'طلبك قيد المراجعة':'إرسال طلب الاشتراك'}$('paSubscribeModal').hidden=false;document.body.classList.add('pa-modal-open')}
   function closeModal(){$('paSubscribeModal').hidden=true;document.body.classList.remove('pa-modal-open')}
   function renderMembership(){
-    var status=$('paMembershipStatus');
-    if(subscription){status.textContent='اشتراكك نشط حتى '+new Date(subscription.expires_at).toLocaleDateString('ar-EG');$('paSubscribeBtn').textContent='الاشتراك نشط ✓'}
-    else if(pendingRequest){status.textContent='طلب الاشتراك قيد مراجعة الإدارة';$('paSubscribeBtn').textContent='عرض حالة الطلب'}
-    else{status.textContent='100 جنيه · 30 يومًا';$('paSubscribeBtn').textContent='اشترك الآن ←'}
-    $('paProgressHint').textContent=hasAccess()?'اشتراكك يتيح فتح جميع المسارات والدروس، وسيُحفظ تقدمك على حسابك.':'يمكنك مشاهدة خريطة المسارات وعناوين الدروس. اشترك لفتح المحتوى وحفظ تقدمك على حسابك.';
+    var status=$('paMembershipStatus'),button=$('paSubscribeBtn');
+    if(status){
+      if(subscription)status.textContent='اشتراكك نشط حتى '+new Date(subscription.expires_at).toLocaleDateString('ar-EG');
+      else if(pendingRequest)status.textContent='طلب الاشتراك قيد مراجعة الإدارة';
+      else status.textContent='100 جنيه · 30 يومًا';
+    }
+    if(button){
+      button.textContent=subscription?'الاشتراك نشط ✓':(pendingRequest?'عرض حالة الطلب':'اشترك الآن ←');
+    }
   }
   async function refreshMembership(){
     subscription=null;pendingRequest=null;isStaff=false;
@@ -395,8 +399,11 @@ function initializeDomaProgrammingAcademy(){
   }
   async function loadStudentProgress(){
     var host=$('paProgressCards');if(!host)return;
-    if(!user){host.innerHTML='<div class="pa-activity-lock">سجّل الدخول بحساب DOMA لعرض تقدمك.</div>';return}
-    if(!hasAccess()){host.innerHTML='<div class="pa-activity-lock">فعّل اشتراك أكاديمية البرمجة لبدء حفظ تقدمك ونتائجك.</div>';return}
+    var section=$('paStudentProgress');
+    if(!user){if(section)section.hidden=true;host.innerHTML='';return}
+    if(!hasAccess()){if(section)section.hidden=true;host.innerHTML='';return}
+    if(section)section.hidden=false;
+    host.innerHTML='<div class="pa-loading">جاري تحميل تقدمك…</div>';
     var result=await db.rpc('programming_get_my_learning_progress');
     if(result.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل تقدمك: '+esc(result.error.message)+'</div>';return}
     var data=result.data||{},done=Number(data.completed_lessons||0),total=Number(data.total_lessons||lessons.length),percent=total?Math.round(done/total*100):0;
@@ -503,7 +510,7 @@ function initializeDomaProgrammingAcademy(){
   async function boot(){
     var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
     $('paAuthStatus').classList.toggle('is-connected',!!user);
-    await refreshMembership();await loadCurriculum();
+    await refreshMembership();await loadCurriculum();await loadStudentProgress();
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
       $('paAuthStatus').classList.toggle('is-connected',!!user);
@@ -511,7 +518,6 @@ function initializeDomaProgrammingAcademy(){
     });
   }
   $('paBackToTracks').addEventListener('click',showTrackOverview);
-  $('paSubscribeBtn').addEventListener('click',function(){if(subscription){toast('اشتراكك في أكاديمية البرمجة نشط بالفعل.');return}showModal()});
   $('paSubmitPayment').addEventListener('click',submitPayment);
   $('paAdminLearningRefresh').addEventListener('click',loadProgrammingAdminLearning);
   $('paAdminRefresh').addEventListener('click',async function(){var r=await db.rpc('programming_admin_list_payment_requests');if(!r.error)renderAdminRequests(r.data||[])});
@@ -528,7 +534,7 @@ function initializeDomaProgrammingAcademy(){
     },true);
   }
 
-  boot().catch(function(error){console.error(error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء الاتصال. تأكد من الإنترنت ثم أعد المحاولة.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>'});
+  boot().catch(function(error){console.error('DOMA Pro academy startup failed:',error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء بدء الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';var progress=$('paProgressCards');if(progress)progress.innerHTML='';var section=$('paStudentProgress');if(section)section.hidden=true;}
 }
 (function(){
   var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2'];
