@@ -1666,7 +1666,25 @@ async function loadPasswordResetRequests(){
     const handled=x.status==='pending'?'<button type="button" class="btn secondary small js-close-reset-request" data-request-id="'+esc(x.id)+'">Mark handled</button>':'';
     return '<tr><td><b>'+esc(name)+'</b></td><td>'+esc(phone)+'</td><td>'+esc(statusLabel)+'</td><td>'+fmt(x.created_at)+'</td><td><div class="actions">'+issue+wa+handled+'</div></td></tr>';
   }).join('')+'</tbody></table>':'<div class="empty">No password reset requests yet.</div>';
-  host.querySelectorAll('.js-reset-from-request').forEach(btn=>btn.addEventListener('click',()=>window.resetStudentPassword(btn.dataset.studentId,btn.dataset.studentLabel)));
+  // Use one delegated click handler so the action keeps working after the requests table is re-rendered.
+  if(!host.dataset.resetActionBound){
+    host.dataset.resetActionBound='1';
+    host.addEventListener('click',async event=>{
+      const btn=event.target.closest('.js-reset-from-request');
+      if(!btn||!host.contains(btn))return;
+      event.preventDefault();
+      event.stopPropagation();
+      if(btn.disabled)return;
+      btn.disabled=true;
+      try{
+        if(typeof window.resetStudentPassword!=='function')throw new Error('Password reset action is not available. Refresh the Admin page and sign in again.');
+        await window.resetStudentPassword(btn.dataset.studentId,btn.dataset.studentLabel);
+      }catch(error){
+        console.error('Temporary password action failed:',error);
+        toast('Could not open password reset: '+(error?.message||error));
+      }finally{btn.disabled=false;}
+    });
+  }
   host.querySelectorAll('.js-close-reset-request').forEach(btn=>btn.addEventListener('click',async()=>{
     btn.disabled=true;
     const user=await db.auth.getUser();
