@@ -50,10 +50,6 @@
     <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
     <div id="paProgressCards" class="pa-progress-cards"><div class="pa-loading">جاري حساب تقدمك…</div></div>
   </section>
-  <section id="paProjectsSection" class="pa-projects-section">
-    <div class="pa-section-heading"><div><span class="pa-kicker">BUILD SOMETHING REAL</span><h2>مشاريع المسارات</h2><p>حوّل ما تعلمته إلى مشروع يمكنك عرضه في ملف أعمالك.</p></div></div>
-    <div id="paProjectsGrid" class="pa-projects-grid"><div class="pa-loading">جاري تحميل المشاريع…</div></div>
-  </section>
   <section id="paAdminLearning" class="pa-admin-learning" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">ACADEMY CONTROL</span><h2>متابعة تعلم الطلاب</h2><p>راجع التطبيقات والمشاريع، وأضف التقييم والملاحظات.</p></div><button type="button" id="paAdminLearningRefresh" class="pa-outline-btn">تحديث البيانات</button></div>
     <div id="paAdminLearningStats" class="pa-progress-cards"></div>
@@ -346,14 +342,6 @@
     var response=await db.rpc('programming_get_lesson_activities',{p_lesson_id:lesson.id});
     if(response.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل أنشطة الدرس. '+esc(response.error.message)+'</div>';return}
     var data=response.data||{},exercise=data.exercise,quiz=data.quiz,html='';
-    if(exercise){
-      var languages=[['python','Python'],['javascript','JavaScript'],['html','HTML / CSS'],['cpp','C++'],['java','Java'],['csharp','C#']];
-      var languageOptions=languages.map(function(item){return '<option value="'+item[0]+'" '+(item[0]===exercise.language?'selected':'')+'>'+item[1]+'</option>'}).join('');
-      var previous=data.exercise_submission;
-      html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">تطبيق عملي</span><h4>'+esc(exercise.title)+'</h4></div><p class="pa-exercise-instructions">'+esc(exercise.instructions).replace(/\n/g,'<br>')+'</p><form id="paExerciseForm"><label class="pa-input-label" for="paExerciseLanguage">لغة الحل</label><select id="paExerciseLanguage" class="pa-code-select">'+languageOptions+'</select><label class="pa-input-label" for="paExerciseCode">اكتب الحل البرمجي</label><textarea id="paExerciseCode" class="pa-code-editor pa-exercise-editor" spellcheck="false" placeholder="اكتب حلك هنا…">'+esc(exercise.starter_code||'')+'</textarea><label class="pa-input-label" for="paExerciseNotes">اشرح فكرتك أو طريقة الاختبار (اختياري)</label><textarea id="paExerciseNotes" class="pa-code-input" dir="auto" placeholder="ما الفكرة التي طبقتها؟ وكيف تأكدت من الحل؟"></textarea><button type="submit" class="pa-activity-submit">إرسال الحل للمراجعة</button><p id="paExerciseStatus" class="pa-activity-status"></p></form>';
-      if(previous)html+='<div class="pa-previous-result">آخر تسليم: '+(previous.status==='reviewed'?'تمت مراجعته':previous.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(previous.score!==null&&previous.score!==undefined?' · الدرجة '+previous.score+'/100':'')+(previous.feedback?'<p>'+esc(previous.feedback)+'</p>':'')+'</div>';
-      html+='</article>';
-    }
     if(quiz&&quiz.questions&&quiz.questions.length){
       html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">اختبار سريع</span><h4>'+esc(quiz.title)+'</h4></div><form id="paQuizForm" data-quiz-id="'+esc(quiz.id)+'">';
       quiz.questions.forEach(function(question,index){
@@ -363,6 +351,14 @@
       });
       html+='<button type="submit" class="pa-activity-submit">تصحيح الاختبار وحفظ النتيجة</button><p id="paQuizStatus" class="pa-activity-status"></p></form>';
       if(data.quiz_attempt)html+='<div class="pa-previous-result">آخر نتيجة: '+data.quiz_attempt.score+'/100 · '+(data.quiz_attempt.passed?'اجتزت الاختبار ✓':'حاول مرة أخرى لتحسين نتيجتك')+'</div>';
+      html+='</article>';
+    }
+    if(exercise){
+      var languages=[['python','Python'],['javascript','JavaScript'],['html','HTML / CSS'],['cpp','C++'],['java','Java'],['csharp','C#']];
+      var languageOptions=languages.map(function(item){return '<option value="'+item[0]+'" '+(item[0]===exercise.language?'selected':'')+'>'+item[1]+'</option>'}).join('');
+      var previous=data.exercise_submission;
+      html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">مشروع الدرس · بعد الاختبار</span><h4>'+esc(exercise.title)+'</h4></div><p class="pa-exercise-instructions">'+esc(exercise.instructions).replace(/\n/g,'<br>')+'</p><form id="paExerciseForm"><label class="pa-input-label" for="paExerciseLanguage">لغة الحل</label><select id="paExerciseLanguage" class="pa-code-select">'+languageOptions+'</select><label class="pa-input-label" for="paExerciseCode">اكتب الحل البرمجي</label><textarea id="paExerciseCode" class="pa-code-editor pa-exercise-editor" spellcheck="false" placeholder="اكتب حلك هنا…">'+esc(exercise.starter_code||'')+'</textarea><label class="pa-input-label" for="paExerciseNotes">اشرح فكرتك أو طريقة الاختبار (اختياري)</label><textarea id="paExerciseNotes" class="pa-code-input" dir="auto" placeholder="ما الفكرة التي طبقتها؟ وكيف تأكدت من الحل؟"></textarea><button type="submit" class="pa-activity-submit">إرسال مشروع الدرس للمراجعة</button><p id="paExerciseStatus" class="pa-activity-status"></p></form>';
+      if(previous)html+='<div class="pa-previous-result">آخر تسليم: '+(previous.status==='reviewed'?'تمت مراجعته':previous.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(previous.score!==null&&previous.score!==undefined?' · الدرجة '+previous.score+'/100':'')+(previous.feedback?'<p>'+esc(previous.feedback)+'</p>':'')+'</div>';
       html+='</article>';
     }
     host.innerHTML=html||'<div class="pa-activity-lock">سيتم إضافة أنشطة هذا الدرس قريبًا.</div>';
@@ -407,28 +403,6 @@
     var badges=Array.isArray(data.badges)?data.badges.filter(Boolean):[],certificates=Array.isArray(data.certificates)?data.certificates:[];
     host.innerHTML='<article class="pa-progress-card"><b>'+done+' / '+total+'</b><span>دروس مكتملة</span><i><em style="width:'+percent+'%"></em></i></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات الاختبار</span><small>'+Number(data.passed_quizzes||0)+' اختبارات مجتازة · متوسط '+Number(data.average_quiz_score||0)+'%</small></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span><small>'+Number(data.reviewed_exercises||0)+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span><small>'+Number(data.reviewed_projects||0)+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+Number(data.points||0)+'</b><span>نقاط التعلم</span><small>تُحتسب من الدروس والاختبارات والتطبيقات والمشاريع المقيّمة.</small></article><section class="pa-achievement-panel"><h3>أوسمة الإنجاز</h3><div class="pa-badges-grid">'+(badges.length?badges.map(function(badge){return '<article class="pa-student-badge"><b>'+esc(badge.icon||'✦')+'</b><strong>'+esc(badge.title)+'</strong><small>'+esc(badge.description)+'</small></article>'}).join(''):'<p>أكمل الدروس والاختبارات والتطبيقات لتحصل على أوسمتك الأولى.</p>')+'</div></section><section class="pa-achievement-panel"><h3>شهادات المسارات</h3><div class="pa-certificates-grid">'+(certificates.length?certificates.map(function(cert,index){return '<article class="pa-certificate-card"><b>'+esc(cert.track_title)+'</b><small>'+esc(cert.certificate_code)+'</small><button type="button" class="pa-activity-submit" data-certificate-index="'+index+'">عرض وطباعة الشهادة</button></article>'}).join(''):'<p>تُصدر الشهادة بعد إكمال جميع دروس المسار والحصول على تقييم 70% أو أكثر في مشروعه.</p>')+'</div></section>';
     host.querySelectorAll('[data-certificate-index]').forEach(function(button){button.addEventListener('click',function(){printProgrammingCertificate(certificates[Number(button.dataset.certificateIndex)])})});
-  }
-  async function loadProjects(){
-    var host=$('paProjectsGrid');if(!host)return;
-    if(!user||!hasAccess()){host.innerHTML='<div class="pa-activity-lock">المشاريع العملية متاحة للطلاب أصحاب الاشتراك النشط بعد تسجيل الدخول.</div>';return}
-    var result=await db.rpc('programming_get_projects');
-    if(result.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل المشاريع: '+esc(result.error.message)+'</div>';return}
-    var projects=Array.isArray(result.data)?result.data:[];
-    if(!projects.length){host.innerHTML='<div class="pa-activity-lock">سيتم نشر المشاريع قريبًا.</div>';return}
-    host.innerHTML=projects.map(function(project){
-      var requirements=Array.isArray(project.requirements)?project.requirements:[],submission=project.latest_submission;
-      return '<article class="pa-project-card" data-project-card="'+esc(project.id)+'"><span class="pa-activity-tag">مشروع مسار</span><h3>'+esc(project.title)+'</h3><p>'+esc(project.brief)+'</p><ul>'+requirements.map(function(item){return '<li>'+esc(item)+'</li>'}).join('')+'</ul><form class="pa-project-form" data-project-id="'+esc(project.id)+'"><label>رابط المستودع (اختياري)<input type="url" name="repository_url" placeholder="https://github.com/…"></label><label>رابط المعاينة (اختياري)<input type="url" name="demo_url" placeholder="https://…"></label><label>ملاحظاتك<textarea name="notes" rows="2" placeholder="اشرح ما بنيته وأهم ما تعلمته…"></textarea></label><button type="submit" class="pa-activity-submit">إرسال المشروع للمراجعة</button><p class="pa-activity-status" data-project-status></p></form>'+(submission?'<div class="pa-previous-result">آخر تسليم: '+(submission.status==='reviewed'?'تمت مراجعته':submission.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(submission.score!==null&&submission.score!==undefined?' · '+submission.score+'/100':'')+(submission.feedback?'<p>'+esc(submission.feedback)+'</p>':'')+'</div>':'')+'</article>';
-    }).join('');
-    host.querySelectorAll('.pa-project-form').forEach(function(form){form.addEventListener('submit',async function(event){
-      event.preventDefault();var status=form.querySelector('[data-project-status]'),button=form.querySelector('button[type="submit"]');
-      var repo=form.elements.repository_url.value.trim(),demo=form.elements.demo_url.value.trim(),notes=form.elements.notes.value.trim();
-      if(!repo&&!demo&&!notes){status.textContent='أضف رابط المشروع أو اكتب ملاحظة عن التنفيذ.';return}
-      button.disabled=true;status.textContent='جارٍ إرسال المشروع…';
-      var saved=await db.rpc('programming_submit_project',{p_project_id:form.dataset.projectId,p_repository_url:repo,p_demo_url:demo,p_notes:notes});
-      button.disabled=false;
-      if(saved.error){status.textContent='تعذر إرسال المشروع: '+saved.error.message;return}
-      toast('تم إرسال المشروع للمراجعة.');await loadProjects();await loadStudentProgress();
-    })});
   }
   async function loadProgrammingAdminLearning(){
     var panel=$('paAdminLearning');if(!panel||!isStaff)return;panel.hidden=false;
