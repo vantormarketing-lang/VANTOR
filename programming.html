@@ -318,7 +318,7 @@ function initializeDomaProgrammingAcademy(){
     function paintHighlight(){
       if(!highlightCode)return;
       var source=editor.value;
-      var tokenPattern=/(\/\/[^\n]*|#[^\n]*|"(?:\\\\.|[^"\\\\])*"|'(?:\\\\.|[^'\\\\])*'|\x60(?:\\\\.|[^\x60\\\\])*\x60|\b\d+(?:\.\d+)?\b|\b(?:const|let|var|function|return|if|else|for|while|class|new|this|import|from|export|default|async|await|try|catch|throw|true|false|null|undefined|None|True|False|and|or|not|def|print|in|is|pass|break|continue|lambda|public|private|static|void|int|string|float|double|bool|using|namespace|include|echo|package|func|var)\b|\b[A-Za-z_$][\\w$]*(?=\\s*\\()/g;
+      var tokenPattern=/(\/\/[^\n]*|#[^\n]*|"[^"\n]*"|'[^'\n]*'|\x60[^\x60\n]*\x60|\b\d+(?:\.\d+)?\b|\b(?:const|let|var|function|return|if|else|for|while|class|new|this|import|from|export|default|async|await|try|catch|throw|true|false|null|undefined|None|True|False|and|or|not|def|print|in|is|pass|break|continue|lambda|public|private|static|void|int|string|float|double|bool|using|namespace|include|echo|package|func)\b|\b[A-Za-z_$][\w$]*(?=\s*\()/g;
       var html='',last=0,match;
       while((match=tokenPattern.exec(source))){
         html+=esc(source.slice(last,match.index));
