@@ -27,33 +27,37 @@ The Supabase project reports an active/healthy status. Its advisors returned the
 
 ### Security
 
-- Three tables have RLS enabled but no policies: `public.doma_battle_session_answers`, `public.doma_battle_sessions`, and `public.subscription_renewal_history`.
-- The advisor reports 62 SECURITY DEFINER functions executable by the `authenticated` role. This is a warning to review, not proof that all 62 functions are exploitable: each function body and its authorization checks must be inspected before changing grants or security mode.
+- Three tables have RLS enabled but no policies: `public.doma_battle_session_answers`, `public.doma_battle_sessions`, and `public.subscription_renewal_history`. A read-only privilege check found no direct table privileges for `anon` or `authenticated`; the tables are effectively closed to client roles. Do not add broad policies just to silence the advisor.
+- The advisor reports 62 SECURITY DEFINER functions executable by the `authenticated` role. A read-only screening found no `anon` execution grants; all 62 have an explicit function `search_path` and an auth/user/staff guard pattern in their bodies. This is an encouraging first pass, not a substitute for manual review of each function's authorization logic and callable inputs.
 
 ### Performance
 
 - Two foreign keys are reported without covering indexes:
   - `programming_course_payment_requests.reviewed_by`
   - `programming_lesson_progress.lesson_id`
-- Four RLS policies are reported as repeatedly evaluating auth/current-setting functions per row. Review the policies and consider the documented `(select auth.uid())` / `(select auth.<function>())` form where appropriate.
+- Four programming-course RLS policies were identified: student progress SELECT and staff ALL policies on lessons, modules, and tracks. Their direct `auth.uid()` calls can use the scalar-subquery form `(select auth.uid())`.
+- Read-only index inspection confirmed that `programming_course_payment_requests.reviewed_by` has no index. `programming_lesson_progress` has a composite primary key beginning with `user_id`, but no leading index on `lesson_id`; the composite key does not efficiently cover lookups by `lesson_id` alone.
 - The advisor also lists unused indexes. Do not drop indexes based on a single advisor snapshot; first review query patterns and sufficient usage history.
 
 ## Changes made on the working branch
 
-- Added `scripts/validate-production-safety.mjs` with static checks for browser-exposed Supabase secret literals, server-side session validation in the Cloudflare code runner, student/admin PWA caching boundaries, private homework attachment links, and baseline response headers.
-- Added the new static safety script to `.github/workflows/validate-platform.yml`.
+- Added `scripts/validate-production-safety.mjs` and wired it into `.github/workflows/validate-platform.yml`. It checks browser-facing secrets, server-side session validation, student/admin PWA caching boundaries, private homework attachment links, security headers, admin theme/cache version alignment, grade-approval persistence verification, and the prepared programming migration.
+- Fixed the admin PWA's stale theme cache reference: the HTML loaded `doma-glass-v70`, while the service worker cached `doma-glass-v65`. The worker cache and registration were advanced to v71 and its theme asset URL now matches v70.
+- Hardened grade-subscription approval feedback: the admin now verifies the persisted request status is `approved` before displaying success, matching the existing English-course approval pattern.
+- Added `supabase/migrations/20261111010000_optimize_programming_rls_and_fk_indexes.sql` with two non-destructive FK indexes and the four scalar-subquery RLS policy optimizations. The migration is committed to this branch only and has **not** been applied to Supabase production.
+- Confirmed the existing grade, English-course, and Kids receipt flows enforce a 5 MB file limit and use private payment-proof storage paths.
 
-These checks are static source checks only. They do not contact the deployed site or database.
+These checks are static source checks only. They do not contact the deployed site or database. The migration file is a reviewed proposal until explicitly applied to the intended database.
 
 ## Next implementation sequence
 
-1. **Complete Phase 1 source review:** inspect the reported SECURITY DEFINER function bodies, table policies, Storage policies, Cloudflare Pages Functions, and current GitHub Actions results. Do not change production permissions until the intended access model is confirmed.
-2. **Auth and signup:** trace the existing signup, verification, session restoration, and profile creation paths; change only a confirmed defect.
-3. **Subscriptions and receipts:** trace grade, English-course, and Kids request flows, file validation, private storage, approval, expiry, and entitlement checks.
-4. **Student learning:** review the student dashboard and lesson routing against the approved UI decisions; then implement any confirmed gaps in a separate change set.
-5. **Admin operations:** review staff authorization and the admin request/student workflows before UI or RPC changes.
-6. **PWA and performance:** preserve the current separate app identities and caching boundaries; measure and optimize only identified bottlenecks.
-7. **Security hardening:** address each advisor finding with function-by-function and policy-by-policy review, then run advisors again.
+1. **Auth and signup:** the current student signup uses a phone-derived alias email. If Supabase email confirmation is enabled, signup can create an Auth user without a session; the UI explicitly reports that email confirmation must be disabled for this alias-based flow. The project Auth setting must be confirmed by the owner before changing this design or enabling SMS OTP.
+2. **Subscriptions and receipts:** client-side code already enforces 5 MB receipts and uses the private `payment-proofs` bucket. Grade approval now verifies persisted status. Live receipt upload, approval, expiry, and entitlement checks remain owner-tested.
+3. **Student learning:** the English A1–C2 and Kids runtimes already exist. Review the dashboard and lesson routing against the approved UI decisions; change only gaps confirmed in source review or by the owner.
+4. **Admin operations:** staff startup verifies the signed-in profile and restricts access to `admin` / `teacher`; approval flows should continue to verify persisted results.
+5. **PWA and performance:** admin theme/cache versions are aligned; retain separate app identities and network-only admin HTML. Run the prepared SQL migration only after review and approval.
+6. **Security hardening:** manually inspect the 62 SECURITY DEFINER function bodies and Storage policies; the three RLS-closed tables should remain closed unless a documented client workflow requires access.
+7. **Live acceptance:** the owner tests signup, subscriptions, receipt upload, student lessons, admin approvals, and installed PWAs. Static CI is not a substitute for these checks.
 
 ## Acceptance rules
 
