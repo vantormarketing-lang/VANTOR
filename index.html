@@ -5412,15 +5412,32 @@ document.addEventListener('DOMContentLoaded',function(){
 /* ---------- UUID fallback for non-HTTPS contexts ---------- */
 try{if(typeof crypto!=='undefined'&&!crypto.randomUUID){crypto.randomUUID=function(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});};}}catch(e){}
 
-/* ---------- Forgot password ---------- */
+/* ---------- Forgot password + in-app admin request alert ---------- */
+async function domaRecordPasswordResetRequest(phone){
+  const response=await fetch('/api/student/request-password-reset',{
+    method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({phone})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.ok)throw new Error(result.error||'Could not notify the administrator.');
+  return result;
+}
 window.domaForgotPassword=async function(){
   var identifier=(document.getElementById('loginPhone')?.value||'').trim();
   if(!identifier)return showStatus('authStatus','Enter your registered mobile number or your existing account email first.','error');
   if(identifier.includes('@')){
     if(isPhoneAliasEmail(identifier)){
-      const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: ';
+      const aliasDigits=identifier.split('@')[0].replace(/\\D/g,'');
+      const aliasPhone=aliasDigits.startsWith('20')?'0'+aliasDigits.slice(2):aliasDigits;
+      const aliasNormalized=normalizeEgyptianPhone(aliasPhone);
+      if(!aliasNormalized)return showStatus('authStatus','Enter your registered mobile number first, then try again.','error');
+      const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: '+aliasNormalized.local;
       window.open('https://wa.me/201006525147?text='+encodeURIComponent(waText),'_blank','noopener');
-      return showStatus('authStatus','WhatsApp opened. Send your registered mobile number so the administrator can verify your account.','success');
+      try{
+        await domaRecordPasswordResetRequest(aliasNormalized.local);
+        showStatus('authStatus','Your reset request was sent to the administrator. WhatsApp opened; send the message to continue verification.','success');
+      }catch(e){showStatus('authStatus','WhatsApp opened, but the in-app request alert could not be recorded. Please send the WhatsApp message.','error');}
+      return;
     }
     showStatus('authStatus','Sending reset link…');
     try{
@@ -5434,7 +5451,10 @@ window.domaForgotPassword=async function(){
   if(!normalized)return showStatus('authStatus','Enter a valid Egyptian mobile number, e.g. 01012345678.','error');
   const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: '+normalized.local;
   window.open('https://wa.me/201006525147?text='+encodeURIComponent(waText),'_blank','noopener');
-  showStatus('authStatus','WhatsApp opened. Send the message so the administrator can verify your account and issue a temporary password.','success');
+  try{
+    await domaRecordPasswordResetRequest(normalized.local);
+    showStatus('authStatus','Your reset request was sent to the administrator. WhatsApp opened; send the message to continue verification.','success');
+  }catch(e){showStatus('authStatus','WhatsApp opened, but the in-app request alert could not be recorded. Please send the WhatsApp message.','error');}
 };
 
 window.domaCompletePhonePasswordReset=async function(){
