@@ -507,7 +507,7 @@
     await refreshMembership();await loadCurriculum();
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
-      $('paAuthStatus').textContent=user?'متصل بحساب DOMA':'زائر · سجّل الدخول لحفظ التقدم';
+      $('paAuthStatus').classList.toggle('is-connected',!!user);
       await refreshMembership();await loadCurriculum();await loadStudentProgress();if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
     });
   }
