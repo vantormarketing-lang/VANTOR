@@ -5431,12 +5431,10 @@ window.domaForgotPassword=async function(){
       const aliasPhone=aliasDigits.startsWith('20')?'0'+aliasDigits.slice(2):aliasDigits;
       const aliasNormalized=normalizeEgyptianPhone(aliasPhone);
       if(!aliasNormalized)return showStatus('authStatus','Enter your registered mobile number first, then try again.','error');
-      const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: '+aliasNormalized.local;
-      window.open('https://wa.me/201006525147?text='+encodeURIComponent(waText),'_blank','noopener');
       try{
         await domaRecordPasswordResetRequest(aliasNormalized.local);
-        showStatus('authStatus','Your reset request was sent to the administrator. WhatsApp opened; send the message to continue verification.','success');
-      }catch(e){showStatus('authStatus','WhatsApp opened, but the in-app request alert could not be recorded. Please send the WhatsApp message.','error');}
+        showStatus('authStatus','Your request has been received. After the administrator verifies your account, you will receive a temporary password on the WhatsApp number registered with your account.','success');
+      }catch(e){showStatus('authStatus','We could not submit your request right now. Please try again in a few minutes.','error');}
       return;
     }
     showStatus('authStatus','Sending reset link…');
@@ -5449,12 +5447,10 @@ window.domaForgotPassword=async function(){
   }
   var normalized=normalizeEgyptianPhone(identifier);
   if(!normalized)return showStatus('authStatus','Enter a valid Egyptian mobile number, e.g. 01012345678.','error');
-  const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: '+normalized.local;
-  window.open('https://wa.me/201006525147?text='+encodeURIComponent(waText),'_blank','noopener');
   try{
     await domaRecordPasswordResetRequest(normalized.local);
-    showStatus('authStatus','Your reset request was sent to the administrator. WhatsApp opened; send the message to continue verification.','success');
-  }catch(e){showStatus('authStatus','WhatsApp opened, but the in-app request alert could not be recorded. Please send the WhatsApp message.','error');}
+    showStatus('authStatus','Your request has been received. After the administrator verifies your account, you will receive a temporary password on the WhatsApp number registered with your account.','success');
+  }catch(e){showStatus('authStatus','We could not submit your request right now. Please try again in a few minutes.','error');}
 };
 
 window.domaCompletePhonePasswordReset=async function(){
