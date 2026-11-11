@@ -5419,7 +5419,7 @@ window.domaForgotPassword=async function(){
   if(identifier.includes('@')){
     if(isPhoneAliasEmail(identifier)){
       const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: ';
-      window.open('https://wa.me/201095439588?text='+encodeURIComponent(waText),'_blank','noopener');
+      window.open('https://wa.me/201006525147?text='+encodeURIComponent(waText),'_blank','noopener');
       return showStatus('authStatus','WhatsApp opened. Send your registered mobile number so the administrator can verify your account.','success');
     }
     showStatus('authStatus','Sending reset link…');
@@ -5433,7 +5433,7 @@ window.domaForgotPassword=async function(){
   var normalized=normalizeEgyptianPhone(identifier);
   if(!normalized)return showStatus('authStatus','Enter a valid Egyptian mobile number, e.g. 01012345678.','error');
   const waText='Hello, I need help resetting my Mr. Fluent account password. My registered mobile number is: '+normalized.local;
-  window.open('https://wa.me/201095439588?text='+encodeURIComponent(waText),'_blank','noopener');
+  window.open('https://wa.me/201006525147?text='+encodeURIComponent(waText),'_blank','noopener');
   showStatus('authStatus','WhatsApp opened. Send the message so the administrator can verify your account and issue a temporary password.','success');
 };
 
