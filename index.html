@@ -13667,13 +13667,12 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 <style id="doma-programming-embedded-style">
 #domaProgrammingEmbeddedView{position:fixed;inset:0;z-index:2147483000;display:none;background:#120c1d;color:#fff}
 #domaProgrammingEmbeddedView.is-open{display:block}
-#domaProgrammingEmbeddedView .doma-programming-embedded-close{position:absolute;z-index:2;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));width:42px;height:42px;border:1px solid rgba(255,224,173,.55);border-radius:14px;background:rgba(30,17,43,.88);color:#ffe0ad;font:700 25px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.3)}
+
 #domaProgrammingEmbeddedView iframe{display:block;width:100%;height:100%;border:0;background:#120c1d}
 body.doma-programming-embedded-open{overflow:hidden!important}
-@media(max-width:600px){#domaProgrammingEmbeddedView .doma-programming-embedded-close{top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));width:38px;height:38px}}
+
 </style>
 <div id="domaProgrammingEmbeddedView" aria-hidden="true">
-  <button type="button" class="doma-programming-embedded-close" aria-label="العودة إلى المنصة" title="العودة إلى المنصة">×</button>
   <iframe title="DOMA Programming Academy" loading="lazy" src="about:blank"></iframe>
 </div>
 <script id="doma-programming-embedded-controller">
@@ -13694,7 +13693,6 @@ body.doma-programming-embedded-open{overflow:hidden!important}
     view.setAttribute('aria-hidden','false');
     document.body.classList.add('doma-programming-embedded-open');
   }
-  view.querySelector('.doma-programming-embedded-close').addEventListener('click',close);
   document.addEventListener('click',function(event){
     var link=event.target&&event.target.closest?event.target.closest('a.pa-home-cta[href="./programming.html"]'):null;
     if(!link)return;
