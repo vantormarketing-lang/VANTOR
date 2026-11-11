@@ -108,7 +108,7 @@ check(
   !/\\b(?:DROP\\s+TABLE|DROP\\s+INDEX|DELETE\\s+FROM|TRUNCATE)\\b/i.test(programmingMigration),
   'Programming performance migration adds two FK indexes and optimizes four RLS policies without deleting data or indexes'
 );
-\n
+
 const workspace = read('mrfluent-course-workspace.js');
 check(
   ['function addLessonLinks()', 'function applyStandaloneLesson()', 'function createWhiteboard(id)',
