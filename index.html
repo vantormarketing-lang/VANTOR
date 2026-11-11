@@ -1903,7 +1903,7 @@ html body nav.nav .brand .mrfluent-header-live-dot{
 #english-course .pa-programming-entry-card:hover{transform:translateY(-2px);border-color:rgba(235,199,126,.9);box-shadow:0 16px 34px rgba(0,0,0,.28),0 0 23px rgba(211,170,94,.11)}
 #english-course .pa-programming-entry-art{position:relative;display:grid;place-items:center;min-width:0;width:58px;height:58px;border:1px solid rgba(220,184,126,.28);border-radius:16px;background:linear-gradient(145deg,rgba(199,158,83,.12),rgba(151,111,185,.14));box-shadow:inset 0 1px rgba(255,255,255,.06)}
 #english-course .pa-programming-entry-art svg{display:block;width:36px;height:36px;max-width:100%;max-height:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
-#english-course .pa-programming-entry-copy{min-width:0;padding:12px 14px;border:1px solid rgba(205,173,119,.2);border-radius:13px;background:linear-gradient(145deg,rgba(12,9,20,.42),rgba(255,255,255,.035));box-shadow:inset 0 1px rgba(255,255,255,.045)}
+#english-course .pa-programming-entry-copy{min-width:0;padding:2px 0;border:0;border-radius:0;background:transparent;box-shadow:none}
 #english-course .pa-programming-entry-kicker{display:block;color:#e8c77f;font-size:8px;font-weight:950;letter-spacing:1.5px}
 #english-course .pa-programming-entry-copy h3{margin:7px 0 5px;color:#fff;font-size:clamp(16px,1.7vw,22px);line-height:1.1;font-weight:950;letter-spacing:-.3px}
 #english-course .pa-programming-entry-copy p{margin:0;color:#e0d3bd;font:600 10px/1.7 Tahoma,"Segoe UI",sans-serif;direction:rtl;text-align:right;overflow-wrap:anywhere}
@@ -1914,8 +1914,8 @@ html body nav.nav .brand .mrfluent-header-live-dot{
 #english-course .pa-programming-entry-price small{font-size:9px}
 #english-course .pa-programming-entry-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid rgba(255,255,255,.1);color:#e8c77f;font-size:10px;font-weight:950}
 #english-course .pa-programming-entry-cta b{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#b78a49,#76542e);color:white;font-size:14px}
-@media(max-width:760px){#english-course .pa-programming-entry-card{grid-column:1/-1!important;grid-row:auto!important;justify-self:stretch;width:100%;grid-template-columns:46px minmax(0,1fr);min-height:0;padding:13px;gap:12px}#english-course .pa-programming-entry-art{width:46px;height:46px}#english-course .pa-programming-entry-art svg{width:32px;height:32px}#english-course .pa-programming-entry-copy{padding:12px}#english-course .pa-programming-entry-copy h3{font-size:17px}}
-@media(max-width:380px){#english-course .pa-programming-entry-card{grid-template-columns:40px minmax(0,1fr);gap:9px;padding:10px}#english-course .pa-programming-entry-art{width:40px;height:40px}#english-course .pa-programming-entry-art svg{width:28px;height:28px}#english-course .pa-programming-entry-copy{padding:10px}#english-course .pa-programming-entry-copy h3{font-size:15px}#english-course .pa-programming-entry-copy p{font-size:10px}}
+@media(max-width:760px){#english-course .pa-programming-entry-card{grid-column:1/-1!important;grid-row:auto!important;justify-self:stretch;width:100%;grid-template-columns:46px minmax(0,1fr);min-height:0;padding:13px;gap:12px}#english-course .pa-programming-entry-art{width:46px;height:46px}#english-course .pa-programming-entry-art svg{width:32px;height:32px}#english-course .pa-programming-entry-copy{padding:2px 0}#english-course .pa-programming-entry-copy h3{font-size:17px}}
+@media(max-width:380px){#english-course .pa-programming-entry-card{grid-template-columns:40px minmax(0,1fr);gap:9px;padding:10px}#english-course .pa-programming-entry-art{width:40px;height:40px}#english-course .pa-programming-entry-art svg{width:28px;height:28px}#english-course .pa-programming-entry-copy{padding:2px 0}#english-course .pa-programming-entry-copy h3{font-size:15px}#english-course .pa-programming-entry-copy p{font-size:10px}}
 </style>
 </head>
 <body>
@@ -13695,7 +13695,7 @@ body.doma-programming-embedded-open{overflow:hidden!important}
     document.body.classList.add('doma-programming-embedded-open');
   }
   document.addEventListener('click',function(event){
-    var link=event.target&&event.target.closest?event.target.closest('a.pa-home-cta[href="./programming.html"]'):null;
+    var link=event.target&&event.target.closest?event.target.closest('a.pa-programming-entry-card[href="./programming.html"]'):null;
     if(!link)return;
     event.preventDefault();
     event.stopPropagation();
