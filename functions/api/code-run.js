@@ -99,6 +99,43 @@ export async function onRequestPost({ request, env }) {
     if (sourceCode.length > 16000 || stdin.length > 2000) return json({ error: "حجم الكود أو بيانات الإدخال أكبر من الحد المسموح." }, 413);
     if (!env.JUDGE0_URL) return json({ error: "خدمة تشغيل الأكواد لم تُربط بعد. سيتم تفعيلها فور إعداد خادم التشغيل." }, 503);
 
+    // Consume a database-backed per-user quota before contacting Judge0.
+    // The RPC is atomic, so concurrent requests cannot bypass the limits.
+    let quotaResponse;
+    try {
+      quotaResponse = await fetch(`${supabaseOrigin}/rest/v1/rpc/doma_consume_code_run_quota`, {
+        method: "POST",
+        headers: { ...adminHeaders, "content-type": "application/json" },
+        body: JSON.stringify({ p_user_id: authUser.id })
+      });
+    } catch (_) {
+      return json({ error: "تعذر التحقق من حد تشغيل الأكواد حاليًا. حاول مرة أخرى بعد قليل." }, 503);
+    }
+    if (!quotaResponse.ok) {
+      console.error("[code-run] quota RPC failed", { status: quotaResponse.status });
+      return json({ error: "خدمة حماية تشغيل الأكواد غير متاحة حاليًا. لم يتم إرسال الكود للتشغيل." }, 503);
+    }
+    const quotaRows = await quotaResponse.json().catch(() => []);
+    const quota = Array.isArray(quotaRows) ? quotaRows[0] : null;
+    if (!quota || typeof quota.allowed !== "boolean") {
+      console.error("[code-run] quota RPC returned an invalid response");
+      return json({ error: "تعذر تأكيد حد تشغيل الأكواد. لم يتم إرسال الكود للتشغيل." }, 503);
+    }
+    if (!quota.allowed) {
+      const retryAfter = Math.max(1, Number(quota.retry_after_seconds) || 60);
+      const message = quota.limit_type === "day"
+        ? "وصلت للحد اليومي لتشغيل الأكواد (50 مرة). حاول مرة أخرى بعد تجديد الحد اليومي."
+        : "وصلت للحد المسموح لتشغيل الأكواد في الدقيقة (5 مرات). انتظر قليلًا ثم حاول مرة أخرى.";
+      return new Response(JSON.stringify({ error: message, retry_after_seconds: retryAfter }), {
+        status: 429,
+        headers: {
+          "content-type": "application/json; charset=utf-8",
+          "cache-control": "no-store",
+          "retry-after": String(retryAfter)
+        }
+      });
+    }
+
     const judgeUrl = new URL("/submissions/?base64_encoded=false&wait=false", env.JUDGE0_URL);
     const judgeHeaders = { "content-type": "application/json" };
     const authHeader = String(env.JUDGE0_AUTH_HEADER || "X-Auth-Token").trim();
