@@ -208,7 +208,7 @@
     var content=await db.rpc('programming_get_lesson_content',{p_lesson_id:id});
     if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
     $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
-    setupCodeLab(lesson);
+    setupCodeLab(lesson,content.data||'');
   }
   var codeSamples={
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
@@ -241,17 +241,25 @@
     'programming-languages':'cpp','databases-backend':'python','mobile-development':'dart','ai-data':'python',
     'developer-tools':'javascript','real-world-projects':'python'
   };
-  function setupCodeLab(lesson){
+  function setupCodeLab(lesson,lessonContent){
     var lang=$('paCodeLanguage'),editor=$('paCodeEditor'),run=$('paRunCode');
     if(!lang||!editor||!run)return;
     var preferred=trackLanguages[activeTrack]||'python';
-    lang.value=preferred;
-    var key='doma-code:'+activeTrack+':'+lesson.id+':'+preferred;
-    var lessonSample=lessonCodeSamples[lesson.id]||codeSamples[preferred];editor.value=localStorage.getItem(key)||lessonSample;
+    var runnable=/\x60\x60\x60(python|javascript|js|html|cpp|c\+\+|java|csharp|cs)\\s*\\n([\\s\\S]*?)\\n\x60\x60\x60/i.exec(String(lessonContent||''));
+    var sampleLanguage=preferred;
+    var extractedSample='';
+    if(runnable){
+      sampleLanguage=({js:'javascript','c++':'cpp',cs:'csharp'})[runnable[1].toLowerCase()]||runnable[1].toLowerCase();
+      extractedSample=runnable[2];
+    }
+    lang.value=sampleLanguage;
+    var key='doma-code:'+activeTrack+':'+lesson.id+':'+sampleLanguage;
+    var lessonSample=lessonCodeSamples[lesson.id]||extractedSample||codeSamples[sampleLanguage]||codeSamples[preferred];
+    editor.value=localStorage.getItem(key)||lessonSample;
     function saveDraft(){localStorage.setItem('doma-code:'+activeTrack+':'+lesson.id+':'+lang.value,editor.value)}
-    lang.onchange=function(){saveDraft();var k='doma-code:'+activeTrack+':'+lesson.id+':'+lang.value;editor.value=localStorage.getItem(k)||codeSamples[lang.value]||'';$('paCodePreview').hidden=true;$('paCodeOutput').textContent='جاهز للتشغيل.'};
+    lang.onchange=function(){saveDraft();var k='doma-code:'+activeTrack+':'+lesson.id+':'+lang.value;editor.value=localStorage.getItem(k)||(lang.value===sampleLanguage?lessonSample:(codeSamples[lang.value]||''));$('paCodePreview').hidden=true;$('paCodeOutput').textContent='جاهز للتشغيل.'};
     editor.oninput=saveDraft;
-    $('paResetCode').onclick=function(){editor.value=(lang.value===preferred?lessonSample:(codeSamples[lang.value]||''));saveDraft();$('paCodeOutput').textContent='تمت استعادة المثال.';$('paCodePreview').hidden=true};
+    $('paResetCode').onclick=function(){editor.value=(lang.value===sampleLanguage?lessonSample:(codeSamples[lang.value]||''));saveDraft();$('paCodeOutput').textContent='تمت استعادة المثال.';$('paCodePreview').hidden=true};
     run.onclick=function(){executeStudentCode(lesson)};
     $('paCodeOutput').textContent='المحرر جاهز. ابدأ بتعديل المثال.';
   }
