@@ -2060,29 +2060,18 @@ html body nav.nav .brand .mrfluent-header-live-dot{
         <span class="mf-kids-entry-cta">Open <b aria-hidden="true">↗</b></span>
       </div>
     </a>
-    <a class="pa-programming-entry-card" href="./programming.html" aria-label="Open DOMA Programming Academy">
-      <div class="pa-programming-entry-art" aria-hidden="true">
-        <svg viewBox="0 0 40 40" role="img" focusable="false">
-          <rect x="2" y="4" width="36" height="31" rx="6" fill="#171326" stroke="#b88b49" stroke-width="1.2"/>
-          <path d="M2 11h36" stroke="#8d6c9f" stroke-width="1"/>
-          <circle cx="7" cy="7.5" r="1.2" fill="#e8c77f"/><circle cx="11" cy="7.5" r="1.2" fill="#b994d9"/><circle cx="15" cy="7.5" r="1.2" fill="#8b79a5"/>
-          <path d="M8 17l-3 3 3 3" fill="none" stroke="#e8c77f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M13 17h10M13 21h16M13 25h8" stroke="#a8d7bd" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M26 17h5" stroke="#c5a1eb" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </div>
+    <a class="pa-programming-entry-card" href="./programming.html" aria-label="Open DOMA Pro">
       <div class="pa-programming-entry-copy">
-        <span class="pa-programming-entry-kicker">BUILD · CODE · CREATE</span>
-        <h3>DOMA Programming Academy</h3>
-        <p dir="rtl" lang="ar">اتعلم البرمجة من الصفر وابدأ تبني مشاريعك بنفسك.</p>
-        <div class="pa-programming-entry-tags"><span>10 Paths</span><span>Python</span><span>Web · AI</span></div>
-        <div class="pa-programming-entry-price" aria-label="Programming Academy price: 100 Egyptian pounds per 30 days"><strong>100 <small>EGP</small></strong><span>per 30 days</span></div>
-        <span class="pa-programming-entry-cta">Open Academy <b aria-hidden="true">↗</b></span>
+        <h3>DOMA Pro</h3>
+        <div class="pa-programming-entry-info">
+          <div class="pa-programming-entry-tags"><span>Python</span><span>Web</span><span>AI</span></div>
+          <div class="pa-programming-entry-price" aria-label="DOMA Pro price: 100 Egyptian pounds per 30 days"><strong>100 <small>EGP</small></strong><span>30 days</span></div>
+        </div>
+        <span class="pa-programming-entry-cta">Open <b aria-hidden="true">↗</b></span>
       </div>
-    </a>
-    <div id="mrfluentEnglishCourseStatus" class="mf-course-status" aria-live="polite"><span class="pill">Loading</span> Checking your English Course access…</div>
+    </a>    <div id="mrfluentEnglishCourseStatus" class="mf-course-status" aria-live="polite"><span class="pill">Loading</span> Checking your English Course access…</div>
     
-    <div style="display:flex;justify-content:flex-end;margin:4px 0 0"><button class="btn secondary" type="button" onclick="mrfluentRefreshEnglishCourse()" style="font-size:10px;padding:6px 10px">Refresh Course Status</button></div>
+    <div style="display:flex;justify-content:flex-end;margin:4px 0 0"><button class="btn secondary" type="button" onclick="mrfluentRefreshEnglishCourse()" style="font-size:10px;padding:6px 10px">Check Your English Course Access</button></div>
   </div>
 </section>
 <div id="mrfluentEnglishWorkspace" class="mf-course-workspace" hidden aria-label="English Course student workspace">
@@ -16404,5 +16393,20 @@ html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot bu
 <link id="doma-platform-unified-theme" rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
 
 <style id="doma-programming-card-mobile-final">
-@media(max-width:700px){html body section#english-course a.pa-programming-entry-card{grid-column:1!important;grid-row:auto!important;justify-self:stretch!important;width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}}
+@media(max-width:700px){html body section#english-course a.pa-programming-entry-card{grid-column:1!important;grid-row:3!important;justify-self:stretch!important;width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important;display:flex!important;align-items:stretch!important;min-height:0!important;height:auto!important;padding:10px!important}
+html body section#english-course .pa-programming-entry-art{display:none!important}
+html body section#english-course .pa-programming-entry-copy{display:flex!important;flex-direction:column!important;gap:7px!important;width:100%!important;min-width:0!important;padding:0!important}
+html body section#english-course .pa-programming-entry-copy h3{font-size:14px!important;line-height:1.2!important;margin:0!important;text-align:center!important}
+html body section#english-course .pa-programming-entry-kicker,html body section#english-course .pa-programming-entry-copy p{display:none!important}
+html body section#english-course .pa-programming-entry-info{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:5px!important;min-width:0!important}
+html body section#english-course .pa-programming-entry-tags{display:flex!important;flex-wrap:nowrap!important;gap:3px!important;margin:0!important;min-width:0!important}
+html body section#english-course .pa-programming-entry-tags span{padding:4px 5px!important;font-size:8px!important;white-space:nowrap!important}
+html body section#english-course .pa-programming-entry-price{display:flex!important;align-items:baseline!important;gap:3px!important;margin:0!important;white-space:nowrap!important;font-size:8px!important}
+html body section#english-course .pa-programming-entry-price strong{font-size:14px!important}
+html body section#english-course .pa-programming-entry-price small,html body section#english-course .pa-programming-entry-price span{font-size:8px!important}
+html body section#english-course .pa-programming-entry-cta{display:flex!important;justify-content:center!important;gap:5px!important;margin:0!important;padding:6px 4px!important;border:0!important;border-radius:8px!important;background:linear-gradient(110deg,#b88b49,#e8c77f)!important;color:#21162a!important;font-size:10px!important}
+html body section#english-course .pa-programming-entry-cta b{width:16px!important;height:16px!important;border-radius:5px!important;background:rgba(38,24,40,.12)!important;color:#21162a!important}
+html body section#english-course #mrfluentEnglishCourseStatus{grid-column:1!important;grid-row:4!important;min-width:0!important;margin:0!important}
+html body section#english-course .container>div[style*="justify-content:flex-end"]{grid-column:1!important;grid-row:5!important;justify-self:stretch!important;margin:0!important}
+html body section#english-course .container>div[style*="justify-content:flex-end"] button{width:100%!important;min-height:32px!important;font-size:9px!important}}
 </style>
