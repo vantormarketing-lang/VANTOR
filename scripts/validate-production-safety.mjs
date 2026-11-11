@@ -68,6 +68,21 @@ check(
   /if\s*\(SHELL\.includes\(req\.url\)\)/.test(adminWorker),
   'Admin PWA never caches the admin HTML and only caches allowlisted shell assets'
 );
+const admin = read('admin.html');
+const themeHref = admin.match(/<link id="doma-platform-unified-theme" rel="stylesheet" href="([^"]+)"/)?.[1];
+const workerThemeHref = adminWorker.match(/const GLASS_THEME_URL = new URL\('([^']+)'/)?.[1];
+const workerRegistration = admin.match(/new URL\('\.\/admin-sw\.js\?doma-admin=(v\d+)'/)?.[1];
+const workerCacheVersion = adminWorker.match(/const CACHE_NAME = 'doma-admin-offline-(v\d+)'/)?.[1];
+check(
+  Boolean(themeHref && workerThemeHref && themeHref === workerThemeHref) &&
+  Boolean(workerRegistration && workerCacheVersion && workerRegistration === workerCacheVersion),
+  'Admin PWA theme asset URL and service-worker registration/cache versions stay in sync'
+);
+check(
+  admin.includes('Approval RPC responded, but request status could not be verified') &&
+  admin.includes("String(verify.data.status||'').trim().toLowerCase()!=='approved'"),
+  'Grade subscription approval verifies the persisted approved state before reporting success'
+);
 
 const student = read('index.html');
 const admin = read('admin.html');
@@ -78,7 +93,23 @@ check(
   'Homework attachment access remains private and uses signed URLs'
 );
 
-const headers = read('_headers');
+
+const programmingMigration = read('supabase/migrations/20261111010000_optimize_programming_rls_and_fk_indexes.sql');
+const requiredMigrationItems = [
+  'programming_course_payment_requests_reviewed_by_idx',
+  'programming_lesson_progress_lesson_id_idx',
+  'Students read own programming progress',
+  'Staff manage programming lessons',
+  'Staff manage programming modules',
+  'Staff manage programming tracks',
+  '(select auth.uid())'
+];
+check(
+  requiredMigrationItems.every(item => programmingMigration.includes(item)) &&
+  !/\\b(?:DROP\\s+TABLE|DROP\\s+INDEX|DELETE\\s+FROM|TRUNCATE)\\b/i.test(programmingMigration),
+  'Programming performance migration adds two FK indexes and optimizes four RLS policies without deleting data or indexes'
+);
+\nconst headers = read('_headers');
 check(
   ['X-Content-Type-Options: nosniff',
    'Referrer-Policy: strict-origin-when-cross-origin',
