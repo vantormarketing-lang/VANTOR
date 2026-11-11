@@ -23,6 +23,15 @@ Never put SUPABASE_SERVICE_ROLE_KEY in HTML, JavaScript shipped to browsers, Git
 - At the next sign-in, the student is held at the password-change screen until the new password is saved through the server endpoint.
 - The login-page Forgot password? action opens a prefilled WhatsApp message. The administrator must verify the student's identity before issuing a temporary password.
 
+## Email recovery and redirect allow-list
+
+- The admin login now includes **Forgot password?**. It sends a Supabase recovery email and opens a secure password-change form when the recovery link returns to `admin.html`.
+- Student accounts that have a real email address can use the login-page **Forgot password?** link. The recovery link opens a secure password-change form on the student site.
+- In Supabase Dashboard → Authentication → URL Configuration, add the production URLs to the Redirect URLs allow-list:
+  - `https://doma-academy.pages.dev/`
+  - `https://doma-academy.pages.dev/admin.html`
+- Add equivalent preview/custom-domain URLs only if those environments are used. Keep the Site URL set to the primary production site.
+
 ## OTP note
 
-Student accounts currently use internal .invalid email aliases with Supabase Email/Password Auth. That means SMS/WhatsApp OTP recovery cannot work until a real SMS/WhatsApp verification provider and a verified delivery flow are configured. The current WhatsApp path deliberately does not claim that an OTP was sent.
+Student accounts currently use internal .invalid email aliases with Supabase Email/Password Auth. That means SMS/WhatsApp OTP recovery cannot work until a real SMS/WhatsApp verification provider and a verified delivery flow are configured. The current WhatsApp path deliberately does not claim that an OTP was sent. For phone-only students, the flow opens a WhatsApp request; an administrator must verify the student before using the admin-only temporary-password reset action.
