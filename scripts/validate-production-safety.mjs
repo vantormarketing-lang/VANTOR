@@ -123,7 +123,8 @@ for (const level of ['A1','A2','B1','B2','C1','C2']) {
     fail(`MR_FLUENT_${level}_COURSE.html: standalone lesson workspace script is not loaded with the current shell version`);
   }
 }
-\nconst headers = read('_headers');
+
+const headers = read('_headers');
 check(
   ['X-Content-Type-Options: nosniff',
    'Referrer-Policy: strict-origin-when-cross-origin',
