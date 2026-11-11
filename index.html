@@ -3745,6 +3745,11 @@ async function boot(){
   try{
     sb.auth.onAuthStateChange((_event,session)=>{
       sessionUser=session?.user||null;updateNav();
+      if(sessionUser?.app_metadata?.must_change_password===true){
+        setTimeout(()=>{
+          if(!$('domaForcedPasswordForm')){openAuth('login');domaShowForcedPasswordChange()}
+        },0);
+      }
       if(sessionUser)setTimeout(()=>refreshStudentState().catch(error=>console.warn('Student refresh failed.',error)),0);
       else{closeDrawer();renderDashboardLoggedOut()}
     });
