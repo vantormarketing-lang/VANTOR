@@ -1,5 +1,6 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import vm from 'node:vm';
 
 const root = process.cwd();
 const errors = [];
@@ -45,7 +46,13 @@ for (const path of htmlFiles) {
       // Compile without executing browser code.
       new Function(code);
     } catch (error) {
-      fail(`${path}: inline script ${scriptCount}: ${error.message}`);
+      let detail = error.message;
+      try {
+        const diagnostic = new vm.Script(code, { filename: `${path}:inline-script-${scriptCount}` });
+      } catch (parseError) {
+        detail += ` | ${parseError.stack || parseError.message}`;
+      }
+      fail(`${path}: inline script ${scriptCount}: ${detail}`);
     }
   }
   ok(`${path}: checked ${scriptCount} inline JavaScript block(s)`);
