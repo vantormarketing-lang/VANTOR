@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v248';
-const BRAND_VERSION = 'doma-glass-v96';
+const CACHE_NAME = 'mr-fluent-offline-student-v249';
+const BRAND_VERSION = 'doma-glass-v97';
 // Kids curriculum tools release: refresh the app shell and keep learning routes consistent.
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
