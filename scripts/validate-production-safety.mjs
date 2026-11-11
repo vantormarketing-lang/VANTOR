@@ -28,7 +28,7 @@ const browserFiles = [
   'MR_FLUENT_A1_COURSE.html', 'MR_FLUENT_A2_COURSE.html',
   'MR_FLUENT_B1_COURSE.html', 'MR_FLUENT_B2_COURSE.html',
   'MR_FLUENT_C1_COURSE.html', 'MR_FLUENT_C2_COURSE.html',
-  'doma-mrfluent-kids-runtime.js', 'mf-kids-learning-experiences.js'
+  'doma-mrfluent-kids-runtime.js', 'mf-kids-learning-experiences.js', 'mrfluent-course-workspace.js'
 ];
 let browserSecretsFound = false;
 for (const path of browserFiles) {
@@ -108,6 +108,21 @@ check(
   !/\\b(?:DROP\\s+TABLE|DROP\\s+INDEX|DELETE\\s+FROM|TRUNCATE)\\b/i.test(programmingMigration),
   'Programming performance migration adds two FK indexes and optimizes four RLS policies without deleting data or indexes'
 );
+\n
+const workspace = read('mrfluent-course-workspace.js');
+check(
+  ['function addLessonLinks()', 'function applyStandaloneLesson()', 'function createWhiteboard(id)',
+   'pointerdown', 'pointermove', 'mf-lesson-board-v1:']
+    .every(part => workspace.includes(part)) &&
+  read('sw.js').includes("versioned('./mrfluent-course-workspace.js')"),
+  'Mr. Fluent course workspace provides standalone lesson routes, a local interactive whiteboard, and PWA shell caching'
+);
+for (const level of ['A1','A2','B1','B2','C1','C2']) {
+  const coursePage = read(`MR_FLUENT_${level}_COURSE.html`);
+  if (!coursePage.includes('./mrfluent-course-workspace.js?v=doma-glass-v72')) {
+    fail(`MR_FLUENT_${level}_COURSE.html: standalone lesson workspace script is not loaded with the current shell version`);
+  }
+}
 \nconst headers = read('_headers');
 check(
   ['X-Content-Type-Options: nosniff',
