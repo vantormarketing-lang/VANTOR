@@ -1924,6 +1924,27 @@ html body nav.nav .brand .mrfluent-header-live-dot{
 @media(max-width:380px){#english-course .pa-programming-entry-card{grid-template-columns:40px minmax(0,1fr);gap:9px;padding:10px}#english-course .pa-programming-entry-art{width:40px;height:40px}#english-course .pa-programming-entry-art svg{width:28px;height:28px}#english-course .pa-programming-entry-copy{padding:2px 0}#english-course .pa-programming-entry-copy h3{font-size:15px}#english-course .pa-programming-entry-copy p{font-size:10px}}
 
 @media(max-width:700px){html body section#english-course .pa-programming-entry-card{grid-column:1!important;grid-row:auto!important;justify-self:stretch!important;width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}}
+/* Subtle illuminated marker beside Kids and Code Lab course names */
+#english-course .mf-kids-entry-copy h3::before,
+#english-course .pa-programming-entry-copy h3::before{
+  content:"";
+  display:inline-block;
+  width:6px;
+  height:6px;
+  margin:0 9px 2px 0;
+  border-radius:50%;
+  vertical-align:middle;
+  background:#f4d58d;
+  box-shadow:0 0 5px 2px rgba(244,213,141,.72),0 0 13px 4px rgba(190,139,255,.35);
+  animation:mfCourseNameGlow 2.2s ease-in-out infinite;
+}
+#english-course .pa-programming-entry-copy h3::before{
+  background:#d7b5ff;
+  box-shadow:0 0 5px 2px rgba(215,181,255,.72),0 0 13px 4px rgba(176,129,255,.4);
+  animation-delay:.65s;
+}
+@keyframes mfCourseNameGlow{0%,100%{opacity:.55;transform:scale(.85)}50%{opacity:1;transform:scale(1.2)}}
+@media(prefers-reduced-motion:reduce){#english-course .mf-kids-entry-copy h3::before,#english-course .pa-programming-entry-copy h3::before{animation:none;opacity:1}}
 </style>
 <style id="doma-pwa-purple-system-chrome">html,body{background-color:#170f22!important}@supports(padding:env(safe-area-inset-top)){html{min-height:100%;background-color:#170f22!important}body{min-height:100vh;min-height:100dvh;padding-bottom:env(safe-area-inset-bottom)}}</style>
 <style id="doma-mobile-system-bar-theme">
