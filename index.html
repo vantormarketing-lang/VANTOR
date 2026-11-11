@@ -3487,6 +3487,7 @@ function printCertificate(title,code,issued){
    $('pro5ClearNote').onclick=()=>{$('pro5NoteLesson').value='';$('pro5NoteText').value=''};
  }
  async function notificationsRender(){
+   try{await sb.rpc('doma_generate_student_reminders')}catch(_){}
    if(!sessionUser?.id){$('drawerBody').innerHTML='<div class="pro5-empty">Please log in to view notifications.</div>';return}
    const r=await sb.from('notifications').select('id,title,message,is_read,created_at').eq('student_id',sessionUser.id).order('created_at',{ascending:false}).limit(100);if(r.error){$('drawerBody').innerHTML='<div class="pro5-empty">Could not load notifications: '+E(r.error.message)+'</div>';return}
    const rows=r.data||[];const prefs=read('notificationPrefs',{enabled:true,reminders:true});
