@@ -71,7 +71,12 @@ export async function onRequestPost({ request, env }) {
     profileUrl.searchParams.set("select", "role");
     profileUrl.searchParams.set("limit", "1");
     const profileResponse = await fetch(profileUrl, { headers: adminHeaders });
-    const profiles = profileResponse.ok ? await profileResponse.json() : [];
+    if (!profileResponse.ok) {
+      console.error("[code-run] profile lookup failed", { status: profileResponse.status });
+      return json({ error: "تعذر التحقق من صلاحيات الحساب حاليًا. لم يتم تشغيل الكود." }, 503);
+    }
+    const profiles = await profileResponse.json().catch(() => null);
+    if (!Array.isArray(profiles)) return json({ error: "تعذر قراءة صلاحيات الحساب حاليًا. لم يتم تشغيل الكود." }, 503);
     const isStaff = profiles.some(p => p.role === "admin" || p.role === "teacher");
 
     let hasActiveSubscription = false;
@@ -89,7 +94,15 @@ export async function onRequestPost({ request, env }) {
     }
     if (!isStaff && !hasActiveSubscription) return json({ error: "تشغيل الأكواد متاح لأصحاب الاشتراك النشط في أكاديمية البرمجة." }, 403);
 
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (_) {
+      return json({ error: "بيانات الطلب غير صالحة. أعد المحاولة." }, 400);
+    }
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return json({ error: "صيغة الطلب غير صالحة." }, 400);
+    }
     const language = String(body.language || "");
     const languageId = LANGUAGE_IDS[language];
     const sourceCode = String(body.source_code || "");
@@ -185,41 +198,52 @@ export async function onRequestPost({ request, env }) {
     }
     if (env.JUDGE0_AUTH_HOST) judgeHeaders["X-RapidAPI-Host"] = env.JUDGE0_AUTH_HOST;
 
-    async function executeSubmission(inputText) {
-      const judgeResponse = await fetch(judgeUrl, {
+    async function executeSubmissions(inputTexts) {
+      const submissions = inputTexts.map(inputText => ({
+        language_id: languageId,
+        source_code: sourceCode,
+        stdin: inputText,
+        cpu_time_limit: 2,
+        cpu_extra_time: 0.5,
+        wall_time_limit: 6,
+        memory_limit: 128000,
+        stack_limit: 64000,
+        max_processes_and_or_threads: 20,
+        max_file_size: 1024,
+        enable_network: false,
+        number_of_runs: 1
+      }));
+      const batchUrl = new URL("/submissions/batch?base64_encoded=false&wait=false", env.JUDGE0_URL);
+      const submitResponse = await fetch(batchUrl, {
         method: "POST",
-        headers: judgeHeaders,
-        body: JSON.stringify({
-          language_id: languageId,
-          source_code: sourceCode,
-          stdin: inputText,
-          cpu_time_limit: 2,
-          cpu_extra_time: 0.5,
-          wall_time_limit: 6,
-          memory_limit: 128000,
-          stack_limit: 64000,
-          max_processes_and_or_threads: 20,
-          max_file_size: 1024,
-          enable_network: false,
-          number_of_runs: 1
-        })
+        headers: { ...judgeHeaders, "content-type": "application/json" },
+        body: JSON.stringify({ submissions })
       });
-      let result = await judgeResponse.json().catch(() => ({}));
-      if (!judgeResponse.ok) return { error: result.error || "خدمة التشغيل لم تستطع تنفيذ البرنامج الآن." };
-      if (result.token && (!result.status || result.status.id === 1 || result.status.id === 2)) {
-        const pollUrl = new URL(`/submissions/${encodeURIComponent(result.token)}?base64_encoded=false`, env.JUDGE0_URL);
-        for (let attempt = 0; attempt < 10; attempt++) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-          const pollResponse = await fetch(pollUrl, { headers: judgeHeaders });
-          if (!pollResponse.ok) break;
-          result = await pollResponse.json().catch(() => ({}));
-          if (result.status && result.status.id > 2) break;
+      const submitted = await submitResponse.json().catch(() => null);
+      if (!submitResponse.ok || !Array.isArray(submitted) || submitted.length !== submissions.length ||
+          submitted.some(item => !item || !item.token)) {
+        return { error: "خدمة التشغيل لم تستطع استقبال مجموعة الاختبارات الآن." };
+      }
+      const tokens = submitted.map(item => item.token);
+      const pollUrl = new URL("/submissions/batch", env.JUDGE0_URL);
+      pollUrl.searchParams.set("tokens", tokens.join(","));
+      pollUrl.searchParams.set("base64_encoded", "false");
+      let results = submitted;
+      for (let attempt = 0; attempt < 10; attempt++) {
+        if (results.every(item => item && item.status && item.status.id > 2)) break;
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const pollResponse = await fetch(pollUrl, { headers: judgeHeaders });
+        if (!pollResponse.ok) return { error: "تعذر متابعة نتائج تشغيل الاختبارات." };
+        const payload = await pollResponse.json().catch(() => null);
+        if (!Array.isArray(payload) || payload.length !== tokens.length) {
+          return { error: "خدمة التشغيل أعادت نتائج غير مكتملة." };
         }
+        results = payload;
       }
-      if (!result.status || result.status.id === 1 || result.status.id === 2) {
-        return { error: "خدمة التشغيل استلمت الكود، لكنها مزدحمة حاليًا. حاول مرة أخرى بعد قليل." };
+      if (results.some(item => !item || !item.status || item.status.id === 1 || item.status.id === 2)) {
+        return { error: "خدمة التشغيل مزدحمة حاليًا. حاول مرة أخرى بعد قليل." };
       }
-      return { result };
+      return { results };
     }
 
     const normalizeOutput = value => String(value || "")
@@ -232,25 +256,23 @@ export async function onRequestPost({ request, env }) {
     let allTestsPassed = null;
 
     if (exerciseTests) {
-      testResults = [];
-      for (const test of exerciseTests) {
-        const execution = await executeSubmission(test.stdin);
-        if (execution.error) return json({ error: execution.error }, 503);
-        const result = execution.result;
+      const execution = await executeSubmissions(exerciseTests.map(test => test.stdin));
+      if (execution.error) return json({ error: execution.error }, 503);
+      testResults = execution.results.map((result, index) => {
         if (!firstResult) firstResult = result;
         const stdout = result.stdout || "";
         const stderr = result.stderr || "";
         const compileOutput = result.compile_output || "";
         const passed = !!(result.status && result.status.id === 3) &&
           !stderr && !compileOutput &&
-          normalizeOutput(stdout) === normalizeOutput(test.expected_output);
-        testResults.push({ label: String(test.label || "فحص الناتج"), passed });
-      }
+          normalizeOutput(stdout) === normalizeOutput(exerciseTests[index].expected_output);
+        return { label: String(exerciseTests[index].label || "فحص الناتج"), passed };
+      });
       allTestsPassed = testResults.every(test => test.passed);
     } else {
-      const execution = await executeSubmission(stdin);
+      const execution = await executeSubmissions([stdin]);
       if (execution.error) return json({ error: execution.error }, 503);
-      firstResult = execution.result;
+      firstResult = execution.results[0];
     }
 
     const stdout = firstResult.stdout || "";
