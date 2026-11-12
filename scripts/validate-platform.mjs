@@ -202,11 +202,11 @@ if (!student.includes('window.domaSelectedGradeId=String(g.id);') ||
   ok('index.html: selected-grade navigation regression guard is present');
 }
 
-const quizSecurity = read('database/SECURE_QUIZ_REVIEW_RPC.sql');
+const quizSecurity = read('supabase/archive/legacy-database/SECURE_QUIZ_REVIEW_RPC.sql');
 if (!quizSecurity.includes("Answer review is disabled for this quiz") ||
     !quizSecurity.includes("coalesce(qps.show_review, true)") ||
     !quizSecurity.includes("IF NOT v_is_staff THEN")) {
-  fail('database/SECURE_QUIZ_REVIEW_RPC.sql: student review must enforce the Show Review setting while preserving staff access');
+  fail('supabase/archive/legacy-database/SECURE_QUIZ_REVIEW_RPC.sql: student review must enforce the Show Review setting while preserving staff access');
 }
 
 const battleRequirements = [
@@ -275,7 +275,7 @@ for (const required of [
 }
 ok('_headers: baseline browser security headers are present');
 
-const kidsForeignKeyIndexes = read('database/ADD_MISSING_KIDS_FOREIGN_KEY_INDEXES.sql');
+const kidsForeignKeyIndexes = read('supabase/archive/legacy-database/ADD_MISSING_KIDS_FOREIGN_KEY_INDEXES.sql');
 const requiredKidsIndexNames = [
   'doma_fkidx_kids_enroll_req_level',
   'doma_fkidx_kids_enroll_req_reviewed',
@@ -427,12 +427,16 @@ if (pilotStyleStart < 0 || pilotStyleEnd < 0 || finalBodyClose < 0 ||
 
 
 const certificateVerification = read('verify-certificate.html');
-if (!certificateVerification.includes("programming_lookup_certificate") ||
-    !certificateVerification.includes("autoRefreshToken:false") ||
-    !certificateVerification.includes("textContent")) {
-  fail('verify-certificate.html: certificate lookup must use the public verification RPC without exposing user data or enabling persistent auth');
+const certificateApi = read('functions/api/verify-certificate.js');
+if (!certificateVerification.includes("/api/verify-certificate") ||
+    !certificateVerification.includes("textContent") ||
+    certificateVerification.includes("@supabase/supabase-js") ||
+    !certificateApi.includes("CF-Connecting-IP") ||
+    !certificateApi.includes("doma_allow_certificate_lookup") ||
+    !certificateApi.includes("programming_lookup_certificate")) {
+  fail('verify-certificate.html: certificate checks must use the rate-limited server endpoint and safe text rendering');
 } else {
-  ok('verify-certificate.html: certificate lookup uses the limited public RPC and safe text rendering');
+  ok('verify-certificate.html: certificate verification uses a server-side IP quota and masked result');
 }
 
 for (const message of checks) console.log('PASS', message);
