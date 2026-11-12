@@ -36,10 +36,10 @@ For the safest first baseline, export the current production state at the existi
 
 ## 2. Export schema only (read-only)
 
-From the repository root, with the intended Supabase project linked:
+From the repository root, with the intended Supabase project linked. Supabase CLI v3 uses `--remote` for the linked hosted database; `--linked` is deprecated in v3 and removed in v4:
 
 ```bash
-supabase db dump --linked -f supabase/baseline/prod-schema.sql
+supabase db dump --remote -f supabase/baseline/prod-schema.sql
 ```
 
 Use the schema-only default; do not add data flags. The generated dump is ignored by Git. The build script rejects common row-data statements and recognizable secret patterns, but that is a safety net, not a substitute for reviewing the dump.
