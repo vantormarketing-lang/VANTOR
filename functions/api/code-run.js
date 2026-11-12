@@ -94,10 +94,38 @@ export async function onRequestPost({ request, env }) {
     const languageId = LANGUAGE_IDS[language];
     const sourceCode = String(body.source_code || "");
     const stdin = String(body.stdin || "");
+    const exerciseId = String(body.exercise_id || "").trim();
+    const lessonId = String(body.lesson_id || "").trim();
     if (!languageId) return json({ error: "لغة البرمجة غير مدعومة حاليًا." }, 400);
     if (!sourceCode.trim()) return json({ error: "اكتب الكود أولًا." }, 400);
     if (sourceCode.length > 16000 || stdin.length > 2000) return json({ error: "حجم الكود أو بيانات الإدخال أكبر من الحد المسموح." }, 413);
     if (!env.JUDGE0_URL) return json({ error: "خدمة تشغيل الأكواد لم تُربط بعد. سيتم تفعيلها فور إعداد خادم التشغيل." }, 503);
+
+    // For graded exercises, load the authoritative test cases from the database.
+    // Never trust test definitions supplied by the browser.
+    let exerciseTests = null;
+    if (exerciseId) {
+      if (!/^[0-9a-f-]{36}$/i.test(exerciseId)) return json({ error: "معرّف التدريب غير صالح." }, 400);
+      const exerciseUrl = new URL(`${supabaseOrigin}/rest/v1/programming_exercises`);
+      exerciseUrl.searchParams.set("id", `eq.${exerciseId}`);
+      exerciseUrl.searchParams.set("select", "id,lesson_id,language,test_cases,is_published");
+      exerciseUrl.searchParams.set("limit", "1");
+      const exerciseResponse = await fetch(exerciseUrl, { headers: adminHeaders });
+      if (!exerciseResponse.ok) {
+        console.error("[code-run] exercise lookup failed", { status: exerciseResponse.status });
+        return json({ error: "تعذر تحميل اختبارات التدريب حاليًا." }, 503);
+      }
+      const exerciseRows = await exerciseResponse.json().catch(() => []);
+      const exercise = Array.isArray(exerciseRows) ? exerciseRows[0] : null;
+      if (!exercise || exercise.is_published !== true) return json({ error: "التدريب غير متاح." }, 404);
+      if (exercise.language !== language || (lessonId && exercise.lesson_id !== lessonId)) {
+        return json({ error: "لغة التدريب أو الدرس لا تطابق الطلب." }, 400);
+      }
+      exerciseTests = Array.isArray(exercise.test_cases) ? exercise.test_cases : [];
+      if (!exerciseTests.length || exerciseTests.some(test => !test || typeof test.contains !== "string")) {
+        return json({ error: "اختبارات هذا التدريب غير مكتملة." }, 409);
+      }
+    }
 
     // Consume a database-backed per-user quota before contacting Judge0.
     // The RPC is atomic, so concurrent requests cannot bypass the limits.
@@ -179,13 +207,25 @@ export async function onRequestPost({ request, env }) {
     if (!result.status || result.status.id === 1 || result.status.id === 2) {
       return json({ error: "خدمة التشغيل استلمت الكود، لكنها مزدحمة حاليًا. حاول مرة أخرى بعد قليل." }, 503);
     }
+    const stdout = result.stdout || "";
+    const stderr = result.stderr || "";
+    const compileOutput = result.compile_output || "";
+    const executionAccepted = !!(result.status && result.status.id === 3);
+    const testResults = exerciseTests ? exerciseTests.map(test => ({
+      label: String(test.label || "فحص الناتج"),
+      passed: executionAccepted && stdout.includes(test.contains)
+    })) : null;
+    const allTestsPassed = !!(exerciseTests && executionAccepted && !stderr && !compileOutput &&
+      testResults.every(test => test.passed));
+
     return json({
-      stdout: result.stdout || "",
-      stderr: result.stderr || "",
-      compile_output: result.compile_output || "",
+      stdout,
+      stderr,
+      compile_output: compileOutput,
       status: result.status && result.status.description ? result.status.description : "انتهى التشغيل",
       time: result.time || null,
-      memory: result.memory || null
+      memory: result.memory || null,
+      ...(testResults ? { test_results: testResults, all_tests_passed: allTestsPassed } : {})
     });
   } catch (error) {
     return json({ error: "حدث خطأ مؤقت أثناء تشغيل الكود. حاول مرة أخرى." }, 500);
