@@ -2766,7 +2766,7 @@ async function domaSubmitSubscription(){
   if(up.error)return showStatus('subStatus','Receipt upload failed: '+up.error.message,'error');
   const r=await sb.rpc('doma_create_subscription_request',{p_grade_id:grade.id,p_plan:selectedPlan,p_student_phone:phone,p_proof_path:path});
   if(r.error){await sb.storage.from('payment-proofs').remove([path]);return showStatus('subStatus','Request failed: '+r.error.message,'error')}
-  showStatus('subStatus','Request submitted successfully. Your request is now Pending. Access will activate after admin approval.','success');$('domaReceipt').value='';$('domaSenderPhone').value='';await refreshStudentState();showToast('Payment request submitted.')
+  showStatus('subStatus','تم استلام إيصال الدفع بنجاح.\nوصل الإيصال للإدارة، وهيتم مراجعته وتحديث حالة اشتراكك بعد التأكد من الدفع.','success');$('domaReceipt').value='';$('domaSenderPhone').value='';await refreshStudentState();showToast('تم استلام إيصال الدفع بنجاح')
 }
 
 
