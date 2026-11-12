@@ -15,6 +15,8 @@ Keep server secrets in Cloudflare Pages environment variables only. Never put a 
 
 The canonical, ordered database change history is `supabase/migrations/`. Read [supabase/README.md](supabase/README.md) before changing the database.
 
+**Rebuild limitation:** the tracked history currently lacks the initial schema baseline for legacy core tables. A clean `supabase db reset` is not yet verified; follow the rebuild-status section in `supabase/README.md` and do not assume a fresh staging database can be created from this repo today.
+
 The `supabase/archive/`, `supabase/snapshots/`, and legacy `database/` SQL files are retained for historical reference. They are not automatically executed and must not be replayed against production as a batch.
 
 ## Validation
