@@ -104,12 +104,19 @@ def top_level_function_names(source: str) -> list[str]:
             continue
 
         # Skip regular-expression literals so quantifier braces do not alter scope depth.
-        prefix = source[:i].rstrip()
-        regex_can_start = (
-            not prefix
-            or previous in "=(,:;!&|?{}[]\n+-*%^~<>"
-            or re.search(r"\b(return|throw|case|delete|void|typeof|instanceof|in|of|yield|await|else|do)\s*$", prefix)
-        )
+        regex_can_start = previous in "=(,:;!&|?{}[]\\n+-*%^~<>"
+        if not regex_can_start:
+            j = i - 1
+            while j >= 0 and source[j].isspace():
+                j -= 1
+            token_end = j + 1
+            while j >= 0 and (source[j].isalnum() or source[j] in "_$"):
+                j -= 1
+            previous_word = source[j + 1:token_end]
+            regex_can_start = previous_word in {
+                "return", "throw", "case", "delete", "void", "typeof",
+                "instanceof", "in", "of", "yield", "await", "else", "do"
+            }
         if char == "/" and regex_can_start:
             j = i + 1
             in_character_class = False
