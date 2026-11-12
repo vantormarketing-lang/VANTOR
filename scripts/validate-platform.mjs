@@ -22,6 +22,7 @@ const htmlFiles = [
   'admin.html',
   'MR_FLUENT_KIDS_A1.html',
   'programming.html',
+  'verify-certificate.html',
   'MR_FLUENT_A1_COURSE.html',
   'MR_FLUENT_A2_COURSE.html',
   'MR_FLUENT_B1_COURSE.html',
@@ -421,6 +422,16 @@ if (pilotStyleStart < 0 || pilotStyleEnd < 0 || finalBodyClose < 0 ||
   fail('programming.html: pa-python-pilot-enhancements style block must be outside JavaScript and before the final </body>');
 } else {
   ok('programming.html: pa-python-pilot-enhancements CSS is outside inline scripts and before the final body close');
+}
+
+
+const certificateVerification = read('verify-certificate.html');
+if (!certificateVerification.includes("programming_lookup_certificate") ||
+    !certificateVerification.includes("autoRefreshToken:false") ||
+    !certificateVerification.includes("textContent")) {
+  fail('verify-certificate.html: certificate lookup must use the public verification RPC without exposing user data or enabling persistent auth');
+} else {
+  ok('verify-certificate.html: certificate lookup uses the limited public RPC and safe text rendering');
 }
 
 for (const message of checks) console.log('PASS', message);
