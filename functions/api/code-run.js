@@ -101,19 +101,19 @@ export async function onRequestPost({ request, env }) {
     if (sourceCode.length > 16000 || stdin.length > 2000) return json({ error: "حجم الكود أو بيانات الإدخال أكبر من الحد المسموح." }, 413);
     if (!env.JUDGE0_URL) return json({ error: "خدمة تشغيل الأكواد لم تُربط بعد. سيتم تفعيلها فور إعداد خادم التشغيل." }, 503);
 
-    // For graded exercises, load the authoritative test cases from the database.
-    // Never trust test definitions supplied by the browser.
+    // Load grading data only through a service-role RPC backed by the private schema.
+    // No test definitions are returned to the browser.
     let exerciseTests = null;
     if (exerciseId) {
       if (!/^[0-9a-f-]{36}$/i.test(exerciseId)) return json({ error: "معرّف التدريب غير صالح." }, 400);
       const exerciseUrl = new URL(`${supabaseOrigin}/rest/v1/programming_exercises`);
       exerciseUrl.searchParams.set("id", `eq.${exerciseId}`);
-      exerciseUrl.searchParams.set("select", "id,lesson_id,language,test_cases,is_published");
+      exerciseUrl.searchParams.set("select", "id,lesson_id,language,is_published");
       exerciseUrl.searchParams.set("limit", "1");
       const exerciseResponse = await fetch(exerciseUrl, { headers: adminHeaders });
       if (!exerciseResponse.ok) {
         console.error("[code-run] exercise lookup failed", { status: exerciseResponse.status });
-        return json({ error: "تعذر تحميل اختبارات التدريب حاليًا." }, 503);
+        return json({ error: "تعذر تحميل بيانات التدريب حاليًا." }, 503);
       }
       const exerciseRows = await exerciseResponse.json().catch(() => []);
       const exercise = Array.isArray(exerciseRows) ? exerciseRows[0] : null;
@@ -121,9 +121,22 @@ export async function onRequestPost({ request, env }) {
       if (exercise.language !== language || (lessonId && exercise.lesson_id !== lessonId)) {
         return json({ error: "لغة التدريب أو الدرس لا تطابق الطلب." }, 400);
       }
-      exerciseTests = Array.isArray(exercise.test_cases) ? exercise.test_cases : [];
-      if (!exerciseTests.length || exerciseTests.some(test => !test || typeof test.contains !== "string")) {
-        return json({ error: "اختبارات هذا التدريب غير مكتملة." }, 409);
+      const testsResponse = await fetch(`${supabaseOrigin}/rest/v1/rpc/doma_get_programming_exercise_tests`, {
+        method: "POST",
+        headers: { ...adminHeaders, "content-type": "application/json" },
+        body: JSON.stringify({ p_exercise_id: exerciseId })
+      });
+      if (!testsResponse.ok) {
+        console.error("[code-run] private exercise tests lookup failed", { status: testsResponse.status });
+        return json({ error: "تعذر تحميل اختبارات التدريب حاليًا." }, 503);
+      }
+      const testsPayload = await testsResponse.json().catch(() => []);
+      exerciseTests = Array.isArray(testsPayload) ? testsPayload : [];
+      if (!exerciseTests.length || exerciseTests.length > 5 ||
+          exerciseTests.some(test => !test || typeof test.stdin !== "string" ||
+            typeof test.expected_output !== "string" ||
+            test.stdin.length > 2000 || test.expected_output.length > 4000)) {
+        return json({ error: "هذا التدريب لم تكتمل له اختبارات دقيقة متعددة المدخلات بعد؛ يمكنك إرسال الحل للمراجعة." }, 409);
       }
     }
 
@@ -172,59 +185,84 @@ export async function onRequestPost({ request, env }) {
     }
     if (env.JUDGE0_AUTH_HOST) judgeHeaders["X-RapidAPI-Host"] = env.JUDGE0_AUTH_HOST;
 
-    const judgeResponse = await fetch(judgeUrl, {
-      method: "POST",
-      headers: judgeHeaders,
-      body: JSON.stringify({
-        language_id: languageId,
-        source_code: sourceCode,
-        stdin,
-        cpu_time_limit: 2,
-        cpu_extra_time: 0.5,
-        wall_time_limit: 6,
-        memory_limit: 128000,
-        stack_limit: 64000,
-        max_processes_and_or_threads: 20,
-        max_file_size: 1024,
-        enable_network: false,
-        number_of_runs: 1
-      })
-    });
-    let result = await judgeResponse.json().catch(() => ({}));
-    if (!judgeResponse.ok) return json({ error: result.error || "خدمة التشغيل لم تستطع تنفيذ البرنامج الآن." }, 502);
-
-    // Shared Judge0 Cloud plans may disable wait=true, so poll the submission token.
-    if (result.token && (!result.status || result.status.id === 1 || result.status.id === 2)) {
-      const pollUrl = new URL(`/submissions/${encodeURIComponent(result.token)}?base64_encoded=false`, env.JUDGE0_URL);
-      for (let attempt = 0; attempt < 10; attempt++) {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        const pollResponse = await fetch(pollUrl, { headers: judgeHeaders });
-        if (!pollResponse.ok) break;
-        result = await pollResponse.json().catch(() => ({}));
-        if (result.status && result.status.id > 2) break;
+    async function executeSubmission(inputText) {
+      const judgeResponse = await fetch(judgeUrl, {
+        method: "POST",
+        headers: judgeHeaders,
+        body: JSON.stringify({
+          language_id: languageId,
+          source_code: sourceCode,
+          stdin: inputText,
+          cpu_time_limit: 2,
+          cpu_extra_time: 0.5,
+          wall_time_limit: 6,
+          memory_limit: 128000,
+          stack_limit: 64000,
+          max_processes_and_or_threads: 20,
+          max_file_size: 1024,
+          enable_network: false,
+          number_of_runs: 1
+        })
+      });
+      let result = await judgeResponse.json().catch(() => ({}));
+      if (!judgeResponse.ok) return { error: result.error || "خدمة التشغيل لم تستطع تنفيذ البرنامج الآن." };
+      if (result.token && (!result.status || result.status.id === 1 || result.status.id === 2)) {
+        const pollUrl = new URL(`/submissions/${encodeURIComponent(result.token)}?base64_encoded=false`, env.JUDGE0_URL);
+        for (let attempt = 0; attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          const pollResponse = await fetch(pollUrl, { headers: judgeHeaders });
+          if (!pollResponse.ok) break;
+          result = await pollResponse.json().catch(() => ({}));
+          if (result.status && result.status.id > 2) break;
+        }
       }
+      if (!result.status || result.status.id === 1 || result.status.id === 2) {
+        return { error: "خدمة التشغيل استلمت الكود، لكنها مزدحمة حاليًا. حاول مرة أخرى بعد قليل." };
+      }
+      return { result };
     }
-    if (!result.status || result.status.id === 1 || result.status.id === 2) {
-      return json({ error: "خدمة التشغيل استلمت الكود، لكنها مزدحمة حاليًا. حاول مرة أخرى بعد قليل." }, 503);
-    }
-    const stdout = result.stdout || "";
-    const stderr = result.stderr || "";
-    const compileOutput = result.compile_output || "";
-    const executionAccepted = !!(result.status && result.status.id === 3);
-    const testResults = exerciseTests ? exerciseTests.map(test => ({
-      label: String(test.label || "فحص الناتج"),
-      passed: executionAccepted && stdout.includes(test.contains)
-    })) : null;
-    const allTestsPassed = !!(exerciseTests && executionAccepted && !stderr && !compileOutput &&
-      testResults.every(test => test.passed));
 
+    const normalizeOutput = value => String(value || "")
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+      .replace(/[ \t]+$/gm, "")
+      .replace(/\n+$/, "");
+    let firstResult = null;
+    let testResults = null;
+    let allTestsPassed = null;
+
+    if (exerciseTests) {
+      testResults = [];
+      for (const test of exerciseTests) {
+        const execution = await executeSubmission(test.stdin);
+        if (execution.error) return json({ error: execution.error }, 503);
+        const result = execution.result;
+        if (!firstResult) firstResult = result;
+        const stdout = result.stdout || "";
+        const stderr = result.stderr || "";
+        const compileOutput = result.compile_output || "";
+        const passed = !!(result.status && result.status.id === 3) &&
+          !stderr && !compileOutput &&
+          normalizeOutput(stdout) === normalizeOutput(test.expected_output);
+        testResults.push({ label: String(test.label || "فحص الناتج"), passed });
+      }
+      allTestsPassed = testResults.every(test => test.passed);
+    } else {
+      const execution = await executeSubmission(stdin);
+      if (execution.error) return json({ error: execution.error }, 503);
+      firstResult = execution.result;
+    }
+
+    const stdout = firstResult.stdout || "";
+    const stderr = firstResult.stderr || "";
+    const compileOutput = firstResult.compile_output || "";
     return json({
       stdout,
       stderr,
       compile_output: compileOutput,
-      status: result.status && result.status.description ? result.status.description : "انتهى التشغيل",
-      time: result.time || null,
-      memory: result.memory || null,
+      status: firstResult.status && firstResult.status.description ? firstResult.status.description : "انتهى التشغيل",
+      time: firstResult.time || null,
+      memory: firstResult.memory || null,
       ...(testResults ? { test_results: testResults, all_tests_passed: allTestsPassed } : {})
     });
   } catch (error) {
