@@ -854,6 +854,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 </style>
 <style>.nav-btn[href*="programming.html"]{display:block;text-decoration:none;cursor:pointer}</style>
+
+<style id="doma-password-reset-error-dialog-css">
+#domaPasswordResetErrorOverlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(8,4,12,.84);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);padding:20px;align-items:center;justify-content:center}
+#domaPasswordResetErrorOverlay.open{display:flex}
+#domaPasswordResetErrorDialog{width:min(680px,100%);max-height:min(86vh,760px);overflow:auto;padding:24px;border:1px solid rgba(238,196,151,.48);border-radius:22px;background:linear-gradient(145deg,rgba(83,55,103,.98),rgba(35,22,48,.99));box-shadow:0 28px 90px #000b,inset 0 1px 0 #ffffff2b;color:#fff4e9}
+#domaPasswordResetErrorDialog h2{margin:0;font-size:22px;color:#ffe2b8}
+#domaPasswordResetErrorDialog p{color:#eaddeb;line-height:1.65}
+#domaPasswordResetErrorText{display:block;white-space:pre-wrap;overflow-wrap:anywhere;max-height:42vh;overflow:auto;padding:16px;border-radius:13px;background:rgba(12,8,17,.72);border:1px solid rgba(220,188,233,.28);color:#fff;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;user-select:text}
+#domaPasswordResetErrorDialog .doma-reset-error-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:17px}
+@media(max-width:560px){#domaPasswordResetErrorOverlay{padding:12px}#domaPasswordResetErrorDialog{padding:18px;border-radius:18px}#domaPasswordResetErrorDialog h2{font-size:19px}}
+</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -1115,6 +1126,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 <div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Edit</h3><button class="btn secondary" id="closeModal">Close</button></div><div id="modalBody"></div></div></div>
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<div id="domaPasswordResetErrorOverlay" role="dialog" aria-modal="true" aria-labelledby="domaPasswordResetErrorTitle">
+ <div id="domaPasswordResetErrorDialog">
+  <h2 id="domaPasswordResetErrorTitle">تعذّر إصدار كلمة المرور</h2>
+  <p>تفاصيل الخطأ موجودة بالأسفل. النافذة هتفضل مفتوحة لحد ما تقفلها بنفسك.</p>
+  <pre id="domaPasswordResetErrorText"></pre>
+  <div class="doma-reset-error-actions">
+   <button type="button" class="btn" id="domaCopyPasswordResetError">Copy Error</button>
+   <button type="button" class="btn secondary" id="domaClosePasswordResetError">إغلاق</button>
+  </div>
+ </div>
+</div>
+
 
 <script>
 const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';
@@ -1139,6 +1162,19 @@ const DOMA_HOMEWORK_PAGE_SIZE=100;
 const state={started:false,startPromise:null};
 
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>$('toast').classList.remove('show'),3000)}
+function showPasswordResetError(error){
+ const message=String(error?.message||error||'Password reset failed.');
+ const overlay=$('domaPasswordResetErrorOverlay'),detail=$('domaPasswordResetErrorText');
+ if(!overlay||!detail){alert('Password reset failed: '+message);return}
+ detail.textContent=message;
+ overlay.classList.add('open');
+ $('domaCopyPasswordResetError').onclick=async()=>{
+  try{await navigator.clipboard.writeText(message);$('domaCopyPasswordResetError').textContent='Copied';}
+  catch(e){const range=document.createRange();range.selectNodeContents(detail);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);$('domaCopyPasswordResetError').textContent='حدّد النص وانسخه';}
+ };
+ $('domaClosePasswordResetError').onclick=()=>overlay.classList.remove('open');
+}
+
 function openModal(title,body){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modal').classList.add('open')}
 function closeModal(){if($('domaTempPasswordOnce'))$('modalBody').innerHTML='';const modal=$('modal');modal.classList.remove('open','mf-kids-receipt-modal')}
 function gradeName(id){return grades.find(g=>g.id===id)?.name||'—'}
@@ -1497,7 +1533,7 @@ window.resetStudentPassword=async function(studentId,studentLabel){
       try{await navigator.clipboard.writeText(password);toast('Temporary password copied.')}
       catch(e){input.select();document.execCommand('copy');toast('Temporary password copied.')}
     };
-  }catch(error){toast(error?.message||'Password reset failed.')}
+  }catch(error){showPasswordResetError(error)}
 };
 // Shared phone normalizer for the Students table (outside the later admin enhancement IIFE).
 function normEGPhone(v){let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0020'))d=d.slice(2);if(d.startsWith('0'))d='20'+d.slice(1);if(!d.startsWith('20'))d='20'+d;return d}
