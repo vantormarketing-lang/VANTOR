@@ -1,0 +1,2 @@
+alter publication supabase_realtime add table public.mrfluent_english_course_requests;
+alter publication supabase_realtime add table public.mrfluent_english_course_subscriptions;
