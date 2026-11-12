@@ -46,6 +46,16 @@ begin
   end loop;
 
   if not exists (
+    select 1 from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'private'
+      and c.relname = 'password_reset_ip_limits'
+      and c.relrowsecurity
+  ) then
+    raise exception 'Baseline check failed: private.password_reset_ip_limits does not have RLS enabled';
+  end if;
+
+  if not exists (
     select 1 from storage.buckets
     where id = 'homework-submissions'
       and name = 'homework-submissions'
