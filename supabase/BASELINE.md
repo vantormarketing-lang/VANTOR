@@ -115,7 +115,7 @@ This step is local only:
 
 ```bash
 supabase start
-supabase db reset
+supabase db reset --local
 supabase/baseline/verify-baseline.sh supabase/baseline/prod-schema.sql
 ```
 
