@@ -1407,7 +1407,26 @@ async function loadQuizzes(){
   const total=Number(r.count||0);
   const lastPage=Math.max(0,Math.ceil(total/DOMA_QUIZ_PAGE_SIZE)-1);
   if(domaQuizListPage>lastPage){domaQuizListPage=lastPage;return loadQuizzes();}
-$('quizzesTable').innerHTML=rows.length?'<table><thead><tr><th>Quiz</th><th>Grade</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')} • ${x.duration_minutes||20} min</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="manageQuestions('${x.id}')">Questions</button><button class="btn secondary small" onclick="editQuiz('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleQuizPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteQuiz('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No quizzes found.</div>';
+$('quizzesTable').innerHTML=rows.length?'<table><thead><tr><th>Quiz</th><th>Grade</th><th>Access</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="muted">${esc(x.description||'')} • ${x.duration_minutes||20} min</div></td><td>${esc(gradeName(x.grade_id))}</td><td><span class="pill ${x.is_free?'free':'warn'}">${x.is_free?'Free':'Subscription'}</span></td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Draft'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="manageQuestions('${x.id}')">Questions</button><button class="btn secondary small" onclick="editQuiz('${x.id}')">Edit</button><button class="btn ${x.is_published?'warn':'ok'} small" onclick="toggleQuizPublish('${x.id}',${!x.is_published})">${x.is_published?'Unpublish':'Publish'}</button><button class="btn danger small" onclick="deleteQuiz('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No quizzes found.</div>'}
+function quizForm(title,x=null){openModal(title,`<form id="quizForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="qGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="qDur" type="number" min="1" value="${Number(x?.duration_minutes||20)}"></div><div class="form-row full"><label>Title</label><input id="qTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="qDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="qFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free quiz</option></select></div><div class="form-row"><label>Publishing</label><select id="qPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Quiz</button></form>`);$('quizForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('qGrade').value,title:$('qTitle').value.trim(),description:$('qDesc').value.trim(),duration_minutes:Number($('qDur').value||20),is_free:$('qFree').value==='true',is_published:$('qPub').value==='true'};const r=x?await db.from('quizzes').update(p).eq('id',x.id).select('id'):await db.from('quizzes').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Quiz save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Quiz saved.');await loadQuizzes()}}
+$('newQuiz').onclick=()=>quizForm('New Quiz');
+async function editQuiz(id){const r=await db.from('quizzes').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);quizForm('Edit Quiz',r.data)}
+async function toggleQuizPublish(id,v){const r=await db.from('quizzes').update({is_published:v}).eq('id',id).select('id,is_published');if(r.error)return toast('Quiz update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===v))return toast('Quiz update was not confirmed. Check UPDATE RLS/permissions.');await loadQuizzes()}
+async function deleteQuiz(id){await deletePersisted('quizzes',id,'Quiz',loadQuizzes)}
+async function manageQuestions(quizId){const q=await db.from('quizzes').select('id,title').eq('id',quizId).single();if(q.error)return toast(q.error.message);const r=await db.from('quiz_questions').select('id,question,options,correct_answer,points,sort_order').eq('quiz_id',quizId).order('sort_order',{ascending:true});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Questions — '+q.data.title,`<div class="info-box" style="margin-bottom:12px">Students receive only question, options and points through the secure quiz RPC. The correct answer stays server-side.</div><div id="questionList">${rows.length?rows.map(x=>questionRow(quizId,x)).join(''):'<div class="empty">No questions yet.</div>'}</div><button class="btn" style="margin-top:12px" onclick="editQuestion('${quizId}','')">+ Add Question</button>`)}
+function questionRow(quizId,x){let opts=Array.isArray(x.options)?x.options:[];if(typeof x.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}return `<div class="card" style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;gap:10px"><div><b>${esc(x.question)}</b><div class="muted" style="font-size:10px;margin-top:4px">Points: ${x.points} • Options: ${esc(opts.join(' | '))}</div></div><div class="actions"><button class="btn secondary small" onclick="editQuestion('${quizId}','${x.id}')">Edit</button><button class="btn danger small" onclick="deleteQuestion('${quizId}','${x.id}')">Delete</button></div></div></div>`}
+async function editQuestion(quizId,id){let x=null;if(id){const r=await db.from('quiz_questions').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);x=r.data}let opts=Array.isArray(x?.options)?x.options:[];if(typeof x?.options==='string'){try{opts=JSON.parse(x.options)}catch{opts=[]}}openModal(id?'Edit Question':'New Question',`<form id="questionForm"><div class="form-row"><label>Question</label><textarea id="qqQuestion" required>${esc(x?.question||'')}</textarea></div><div class="form-row"><label>Options (one per line)</label><textarea id="qqOptions" required>${esc(opts.join('\n'))}</textarea></div><div class="form-row"><label>Correct answer (exactly one option)</label><input id="qqCorrect" value="${esc(x?.correct_answer||'')}" required></div><div class="form-grid"><div class="form-row"><label>Points</label><input id="qqPoints" type="number" min="1" value="${Number(x?.points||1)}"></div><div class="form-row"><label>Sort order</label><input id="qqSort" type="number" min="0" value="${Number(x?.sort_order||0)}"></div></div><button class="btn">Save Question</button></form>`);$('questionForm').onsubmit=async e=>{e.preventDefault();const options=$('qqOptions').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);const correct=$('qqCorrect').value.trim();if(!options.length||!options.includes(correct))return toast('Correct answer must exactly match one option.');const p={quiz_id:quizId,question:$('qqQuestion').value.trim(),options,correct_answer:correct,points:Number($('qqPoints').value||1),sort_order:Number($('qqSort').value||0)};const r=id?await db.from('quiz_questions').update(p).eq('id',id).select('id'):await db.from('quiz_questions').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Question save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();await manageQuestions(quizId)}}
+async function deleteQuestion(quizId,id){
+  if(!(await domaConfirm('Delete this question permanently?',{title:'Delete question',confirmText:'Delete question'})))return;
+  const r=await db.from('quiz_questions').delete().eq('id',id).select('id');
+  if(r.error)return toast('Delete failed: '+r.error.message);
+  const returned=Array.isArray(r.data)&&r.data.some(row=>row.id===id);
+  if(!returned)return toast('Nothing was deleted. Check DELETE RLS/permissions.');
+  const verify=await db.from('quiz_questions').select('id').eq('id',id).maybeSingle();
+  if(verify.error)return toast('Delete verification failed: '+verify.error.message);
+  if(verify.data)return toast('Delete did not persist. The question still exists.');
+  toast('Question deleted permanently.');
+  await manageQuestions(quizId);
   const pagination=$('quizzesPagination');
   const pageCount=Math.max(1,Math.ceil(total/DOMA_QUIZ_PAGE_SIZE));
   const shownStart=total?from+1:0;
@@ -1418,8 +1437,8 @@ $('quizzesTable').innerHTML=rows.length?'<table><thead><tr><th>Quiz</th><th>Grad
     '<button type="button" class="btn secondary small" id="quizPageNext" '+(domaQuizListPage>=pageCount-1?'disabled':'')+'>Next</button></div>';
   $('quizPagePrev').onclick=()=>{if(domaQuizListPage>0){domaQuizListPage--;loadQuizzes();}};
   $('quizPageNext').onclick=()=>{if(domaQuizListPage<pageCount-1){domaQuizListPage++;loadQuizzes();}};
-}
-function quizForm(title,x=null){openModal(title,`<form id="quizForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="qGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="qDur" type="number" min="1" value="${Number(x?.duration_minutes||20)}"></div><div class="form-row full"><label>Title</label><input id="qTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="qDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="qFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free quiz</option></select></div><div class="form-row"><label>Publishing</label><select id="qPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Quiz</button></form>`);$('quizForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('qGrade').value,title:$('qTitle').value.trim(),description:$('qDesc').value.trim(),duration_minutes:Number($('qDur').value||20),is_free:$('qFree').value==='true',is_published:$('qPub').value==='true'};const r=x?await db.from('quizzes').update(p).eq('id',x.id).select('id'):await db.from('quizzes').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Quiz save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Quiz saved.');await loadQuizzes()}}
+
+}function quizForm(title,x=null){openModal(title,`<form id="quizForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="qGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Duration (minutes)</label><input id="qDur" type="number" min="1" value="${Number(x?.duration_minutes||20)}"></div><div class="form-row full"><label>Title</label><input id="qTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="qDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="qFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free quiz</option></select></div><div class="form-row"><label>Publishing</label><select id="qPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Quiz</button></form>`);$('quizForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('qGrade').value,title:$('qTitle').value.trim(),description:$('qDesc').value.trim(),duration_minutes:Number($('qDur').value||20),is_free:$('qFree').value==='true',is_published:$('qPub').value==='true'};const r=x?await db.from('quizzes').update(p).eq('id',x.id).select('id'):await db.from('quizzes').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Quiz save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Quiz saved.');await loadQuizzes()}}
 $('newQuiz').onclick=()=>quizForm('New Quiz');
 async function editQuiz(id){const r=await db.from('quizzes').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);quizForm('Edit Quiz',r.data)}
 async function toggleQuizPublish(id,v){const r=await db.from('quizzes').update({is_published:v}).eq('id',id).select('id,is_published');if(r.error)return toast('Quiz update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===v))return toast('Quiz update was not confirmed. Check UPDATE RLS/permissions.');await loadQuizzes()}
@@ -1517,6 +1536,540 @@ window.resetStudentPassword=async function(studentId,studentLabel){
   }catch(error){showPasswordResetError(error)}
 };
 // Shared phone normalizer for the Students table (outside the later admin enhancement IIFE).
+function normEGPhone(v){let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0020'))d=d.slice(2);if(d.startsWith('0'))d='20'+d.slice(1);if(!d.startsWith('20'))d='20'+d;return d}
+
+async function loadStudents(){
+  const host=$('studentsTable');
+  if(!host)return;
+  host.innerHTML='<div class="empty">Loading students…</div>';
+  const r=await db.rpc('doma_admin_list_students');
+  if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+  let all=r.data||[];
+  $('stStudents').textContent=String(all.length);
+
+  // The admin-list RPC on older deployments may omit profiles.phone. Enrich its
+  // returned rows from profiles without changing the existing RPC or auth flow.
+  const ids=all.map(x=>x.id).filter(Boolean);
+  const profileById=new Map();
+  if(ids.length){
+    const batches=[];
+    for(let i=0;i<ids.length;i+=200)batches.push(ids.slice(i,i+200));
+    const profileResults=await Promise.all(batches.map(batch=>db.from('profiles').select('id,full_name,phone,favorite_team').in('id',batch)));
+    profileResults.forEach(pr=>{if(!pr.error)(pr.data||[]).forEach(p=>profileById.set(String(p.id),p));});
+  }
+  all=all.map(x=>{const p=profileById.get(String(x.id))||{};return {...x,full_name:x.full_name||p.full_name||'',phone:x.phone||p.phone||'',favorite_team:x.favorite_team||p.favorite_team||''};});
+
+  const term=($('studentSearch')?.value||'').trim().toLowerCase();
+  const rows=term?all.filter(x=>(x.full_name||'').toLowerCase().includes(term)||(x.phone||'').toLowerCase().includes(term)||(x.email||'').toLowerCase().includes(term)||(x.favorite_team||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term)):all;
+  const rowHtml=rows.map(x=>{
+    const rawPhone=String(x.phone||'').trim();
+    const waNumber=rawPhone?normEGPhone(rawPhone):'';
+    const canWhatsApp=!!rawPhone&&/^20\d{10}$/.test(waNumber);
+    const phoneCell=rawPhone?(canWhatsApp?'<a class="student-phone-link" href="https://wa.me/'+waNumber+'" target="_blank" rel="noopener noreferrer" title="Open WhatsApp chat">'+esc(rawPhone)+'</a>':'<span>'+esc(rawPhone)+'</span>'):'<span class="muted">Phone not saved</span>';
+    const teamLabel=x.favorite_team==='Barcelona'?'Barcelona':(x.favorite_team==='Real Madrid'?'Real Madrid':(x.favorite_team||''));
+    const teamCell=teamLabel?'<span class="pill '+(teamLabel==='Barcelona'?'ok':'warn')+'">'+esc(teamLabel)+'</span>':'<span class="muted">Not selected</span>';
+    const resetButton=window.__domaStaffProfile?.role==='admin'?'<button type="button" class="btn warn small js-reset-student-password" data-student-id="'+esc(x.id)+'" data-student-label="'+esc(x.full_name||rawPhone||'Student')+'">Reset password</button>':'';
+    return '<tr><td><b>'+esc(x.full_name||'Student')+'</b></td><td>'+phoneCell+(canWhatsApp?'<div class="muted student-phone-hint">Click number to open WhatsApp</div>':'')+'</td><td>'+teamCell+'</td><td>'+esc(gradeName(x.grade_id))+'</td><td>'+fmtDate(x.created_at)+'</td><td><div class="actions"><button type="button" class="btn secondary small js-student-details" data-student-id="'+esc(x.id)+'">Details</button>'+resetButton+'<button type="button" class="btn danger small js-delete-student" data-student-id="'+esc(x.id)+'" data-student-label="'+esc(x.full_name||rawPhone||'Student')+'">Delete permanently</button></div></td></tr>';
+  }).join('');
+  host.innerHTML=rows.length?'<table><thead><tr><th>Student name</th><th>Phone / WhatsApp</th><th>Favorite team</th><th>Grade</th><th>Joined</th><th>Actions</th></tr></thead><tbody>'+rowHtml+'</tbody></table>':'<div class="empty">No students found.</div>';
+
+
+}function homeworkForm(title,x=null){const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);$('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true'};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Homework save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Homework saved.');await loadHomework()}}
+$('newHomework').onclick=()=>homeworkForm('New Homework');
+async function editHomework(id){const r=await db.from('homework').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);homeworkForm('Edit Homework',r.data)}
+async function deleteHomework(id){await deletePersisted('homework',id,'Homework',loadHomework)}
+async function viewHomeworkSubmissions(id){const h=await db.from('homework').select('title').eq('id',id).single();if(h.error)return toast(h.error.message);const r=await db.from('homework_submissions').select('id,student_id,answer_text,status,grade,feedback,submitted_at,profiles(full_name,email)').eq('homework_id',id).order('submitted_at',{ascending:false});if(r.error)return toast(r.error.message);const rows=r.data||[];openModal('Submissions — '+h.data.title,rows.length?'<table><thead><tr><th>Student</th><th>Answer</th><th>Status</th><th>Grade</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}<div class="muted">${esc(x.profiles?.email||'')}</div></td><td style="white-space:pre-wrap">${linkifyAnswer(x.answer_text||'')}</td><td>${esc(x.status)}</td><td>${x.grade??'—'}</td><td><button class="btn secondary small" onclick="reviewSubmission('${x.id}','${id}')">Review</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No submissions yet.</div>')}
+async function reviewSubmission(subId,hwId){const r=await db.from('homework_submissions').select('*').eq('id',subId).single();if(r.error)return toast(r.error.message);const x=r.data;openModal('Review Homework',`<form id="reviewForm"><div class="info-box" style="white-space:pre-wrap;margin-bottom:12px">${linkifyAnswer(x.answer_text||'')}</div><div class="form-grid"><div class="form-row"><label>Status</label><select id="rsStatus"><option ${x.status==='submitted'?'selected':''}>submitted</option><option ${x.status==='reviewed'?'selected':''}>reviewed</option><option ${x.status==='returned'?'selected':''}>returned</option></select></div><div class="form-row"><label>Grade</label><input id="rsGrade" type="number" min="0" value="${x.grade??''}"></div><div class="form-row full"><label>Feedback</label><textarea id="rsFeedback">${esc(x.feedback||'')}</textarea></div></div><button class="btn">Save Review</button></form>`);$('reviewForm').onsubmit=async e=>{e.preventDefault();const p={status:$('rsStatus').value,grade:$('rsGrade').value===''?null:Number($('rsGrade').value),feedback:$('rsFeedback').value.trim()};const u=await db.from('homework_submissions').update(p).eq('id',subId).select('id');if(u.error)return toast('Review failed: '+u.error.message);if(!Array.isArray(u.data)||!u.data.some(x=>x.id===subId))return toast('Review update was not confirmed. Check UPDATE RLS/permissions.');closeModal();toast('Submission reviewed.');await viewHomeworkSubmissions(hwId)}}
+
+// Shared phone normalizer for the Students table (outside the later admin enhancement IIFE).
+function normEGPhone(v){let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0020'))d=d.slice(2);if(d.startsWith('0'))d='20'+d.slice(1);if(!d.startsWith('20'))d='20'+d;return d}
+
+async function loadStudents(){
+  const host=$('studentsTable');
+  if(!host)return;
+  host.innerHTML='<div class="empty">Loading students…</div>';
+  const r=await db.rpc('doma_admin_list_students');
+  if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+  let all=r.data||[];
+  $('stStudents').textContent=String(all.length);
+
+  // The admin-list RPC on older deployments may omit profiles.phone. Enrich its
+  // returned rows from profiles without changing the existing RPC or auth flow.
+  const ids=all.map(x=>x.id).filter(Boolean);
+  const profileById=new Map();
+  if(ids.length){
+    const batches=[];
+    for(let i=0;i<ids.length;i+=200)batches.push(ids.slice(i,i+200));
+    const profileResults=await Promise.all(batches.map(batch=>db.from('profiles').select('id,full_name,phone,favorite_team').in('id',batch)));
+    profileResults.forEach(pr=>{if(!pr.error)(pr.data||[]).forEach(p=>profileById.set(String(p.id),p));});
+  }
+  all=all.map(x=>{const p=profileById.get(String(x.id))||{};return {...x,full_name:x.full_name||p.full_name||'',phone:x.phone||p.phone||'',favorite_team:x.favorite_team||p.favorite_team||''};});
+
+  const term=($('studentSearch')?.value||'').trim().toLowerCase();
+  const rows=term?all.filter(x=>(x.full_name||'').toLowerCase().includes(term)||(x.phone||'').toLowerCase().includes(term)||(x.email||'').toLowerCase().includes(term)||(x.favorite_team||'').toLowerCase().includes(term)||gradeName(x.grade_id).toLowerCase().includes(term)):all;
+  const rowHtml=rows.map(x=>{
+    const rawPhone=String(x.phone||'').trim();
+    const waNumber=rawPhone?normEGPhone(rawPhone):'';
+    const canWhatsApp=!!rawPhone&&/^20\d{10}$/.test(waNumber);
+    const phoneCell=rawPhone?(canWhatsApp?'<a class="student-phone-link" href="https://wa.me/'+waNumber+'" target="_blank" rel="noopener noreferrer" title="Open WhatsApp chat">'+esc(rawPhone)+'</a>':'<span>'+esc(rawPhone)+'</span>'):'<span class="muted">Phone not saved</span>';
+    const teamLabel=x.favorite_team==='Barcelona'?'Barcelona':(x.favorite_team==='Real Madrid'?'Real Madrid':(x.favorite_team||''));
+    const teamCell=teamLabel?'<span class="pill '+(teamLabel==='Barcelona'?'ok':'warn')+'">'+esc(teamLabel)+'</span>':'<span class="muted">Not selected</span>';
+    const resetButton=window.__domaStaffProfile?.role==='admin'?'<button type="button" class="btn warn small js-reset-student-password" data-student-id="'+esc(x.id)+'" data-student-label="'+esc(x.full_name||rawPhone||'Student')+'">Reset password</button>':'';
+    return '<tr><td><b>'+esc(x.full_name||'Student')+'</b></td><td>'+phoneCell+(canWhatsApp?'<div class="muted student-phone-hint">Click number to open WhatsApp</div>':'')+'</td><td>'+teamCell+'</td><td>'+esc(gradeName(x.grade_id))+'</td><td>'+fmtDate(x.created_at)+'</td><td><div class="actions"><button type="button" class="btn secondary small js-student-details" data-student-id="'+esc(x.id)+'">Details</button>'+resetButton+'<button type="button" class="btn danger small js-delete-student" data-student-id="'+esc(x.id)+'" data-student-label="'+esc(x.full_name||rawPhone||'Student')+'">Delete permanently</button></div></td></tr>';
+  }).join('');
+  host.innerHTML=rows.length?'<table><thead><tr><th>Student name</th><th>Phone / WhatsApp</th><th>Favorite team</th><th>Grade</th><th>Joined</th><th>Actions</th></tr></thead><tbody>'+rowHtml+'</tbody></table>':'<div class="empty">No students found.</div>';
+  host.querySelectorAll('.js-reset-student-password').forEach(button=>button.addEventListener('click',()=>window.resetStudentPassword(button.dataset.studentId,button.dataset.studentLabel)));
+}
+async function studentDetails(id){const [p,s,pr,cs,cr]=await Promise.all([db.from('profiles').select('id,full_name,email,grade_id,created_at,favorite_team,phone').eq('id',id).single(),db.from('subscriptions').select('id,grade_id,plan,amount,starts_at,expires_at,status').eq('student_id',id).order('expires_at',{ascending:false}),db.from('lesson_progress').select('lesson_id,completed,progress_percent,last_opened_at,lessons(title)').eq('student_id',id).order('last_opened_at',{ascending:false}).limit(100),db.from('mrfluent_english_course_subscriptions').select('amount,starts_at,expires_at,status,created_at').eq('student_id',id).order('expires_at',{ascending:false}).limit(10),db.from('mrfluent_english_course_requests').select('amount,status,created_at,admin_note').eq('student_id',id).order('created_at',{ascending:false}).limit(10)]);if(p.error)return toast(p.error.message);const team=p.data.favorite_team||'Not selected';const courseSubs=cs.error?[]:(cs.data||[]);const courseReqs=cr.error?[]:(cr.data||[]);openModal('Student Details',`<div class="grid-2"><div class="card"><b>${esc(p.data.full_name||'Student')}</b><p class="muted">${esc(p.data.email||'')}</p><p>Phone: <b>${esc(p.data.phone||'Not saved')}</b></p><p>Grade: ${esc(gradeName(p.data.grade_id))}</p><p>Favorite team: <b>${esc(team)}</b></p></div><div class="card"><b>Grade subscriptions</b><p class="muted">${(s.data||[]).map(x=>esc(gradeName(x.grade_id)+' · '+x.plan+' · '+x.status+' · '+fmtDate(x.expires_at))).join('<br>')||'None'}</p></div></div><div class="card" style="margin-top:12px"><b>Independent English Course Membership</b><p class="muted">${courseSubs.map(x=>esc(x.amount+' EGP · '+x.status+' · '+fmtDate(x.starts_at)+' – '+fmtDate(x.expires_at))).join('<br>')||'No course subscription'}${courseReqs.length?'<br><br><b>Course payment requests</b><br>'+courseReqs.map(x=>esc(x.amount+' EGP · '+x.status+' · '+fmtDate(x.created_at)+(x.admin_note?' · '+x.admin_note:''))).join('<br>'):''}</p></div><div class="card" style="margin-top:12px"><b>Recent Progress</b><p class="muted">${(pr.data||[]).slice(0,15).map(x=>esc((x.lessons?.title||'Lesson')+' · '+x.progress_percent+'% · '+(x.completed?'Completed':'In progress'))).join('<br>')||'No progress yet.'}</p></div>`)}
+
+async function loadSales(silent=false){
+  const box=$('salesTable');
+  if(box&&!silent)box.innerHTML='<div class="empty">Loading subscription requests…</div>';
+  const [rq,sub]=await Promise.all([
+    db.rpc('doma_admin_list_subscription_requests'),
+    db.rpc('doma_admin_list_subscriptions')
+  ]);
+  if(rq.error){
+    if(box)box.innerHTML='<div class="empty"><b>Could not load subscription requests.</b><br>'+esc(rq.error.message)+'</div>';
+    $('salesPending').textContent='ERROR';$('salesApproved').textContent='ERROR';$('salesRejected').textContent='ERROR';$('salesActive').textContent='ERROR';return;
+  }
+  const all=rq.data||[], subs=sub.data||[];
+  $('salesPending').textContent=String(all.filter(x=>String(x.status||'').toLowerCase()==='pending').length);
+  $('salesApproved').textContent=String(all.filter(x=>String(x.status||'').toLowerCase()==='approved').length);
+  $('salesRejected').textContent=String(all.filter(x=>String(x.status||'').toLowerCase()==='rejected').length);
+  $('salesActive').textContent=String(subs.filter(x=>String(x.status||'').toLowerCase()==='active'&&new Date(x.expires_at)>new Date()).length);
+  if($('salesExpiring'))$('salesExpiring').textContent=String(subs.filter(x=>String(x.status||'').toLowerCase()==='active'&&new Date(x.expires_at)>new Date()&&new Date(x.expires_at).getTime()<=Date.now()+7*86400000).length);
+  let rows=all.slice();
+  const term=($('salesSearch')?.value||'').trim().toLowerCase();
+  if(term)rows=rows.filter(x=>(x.student_name||'').toLowerCase().includes(term)||(x.student_email||'').toLowerCase().includes(term)||(x.student_phone||'').toLowerCase().includes(term)||(x.status||'').toLowerCase().includes(term));
+  const subByStudent={};subs.forEach(x=>{subByStudent[x.student_id]=x});
+  const pending=rows.filter(x=>String(x.status||'').toLowerCase()==='pending');
+  const pendingBanner=pending.length?'<div class="info-box" style="margin-bottom:14px;border-color:#6b3150;background:linear-gradient(135deg,#1b1018,#25101b)"><b style="color:#fff">Pending payment requests: '+pending.length+'</b><span class="muted" style="display:block;margin-top:4px">The newest requests appear first below. Review the receipt, then Accept or Reject.</span></div>':'';
+  const table=rows.length?'<table><thead><tr><th>Student</th><th>Grade</th><th>Plan</th><th>Amount</th><th>Phone</th><th>Subscription</th><th>Receipt</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
+    const sx=subByStudent[x.student_id]; let expiry='—',badge='';
+    if(sx){const d=Math.ceil((new Date(sx.expires_at)-Date.now())/86400000);expiry=fmtDate(sx.expires_at);if(sx.status==='active'&&d>=0&&d<=7)badge='<span class="expiry-badge">'+(d<=1?'Expires tomorrow':d+' days left')+'</span>';else if(sx.status==='active'&&d<0)badge='<span class="expiry-badge">Expired</span>'}
+    const st=String(x.status||'pending').toLowerCase();
+    return '<tr><td><b>'+esc(x.student_name||'Student')+'</b><div class="muted">'+esc(x.student_email||'')+'</div><div class="muted" style="font-size:9px">'+esc(fmt(x.created_at))+'</div></td><td>'+esc(gradeName(x.grade_id))+'</td><td>'+esc(x.plan||'Monthly')+'</td><td>'+esc(x.amount)+' EGP</td><td><a style="color:#8fd4a9" target="_blank" rel="noopener" href="https://wa.me/20'+esc(x.student_phone||'').replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')+'">'+esc(x.student_phone||'—')+'</a></td><td>'+(sx?'<div>'+esc(sx.status||'')+' · '+expiry+'</div>'+badge:'—')+'</td><td>'+(x.proof_path?'<button class="btn secondary small" onclick="viewReceipt(\''+x.id+'\')">View</button>':'—')+'</td><td><span class="pill '+(st==='approved'?'ok':st==='rejected'?'bad':'warn')+'">'+esc(st)+'</span></td><td>'+(st==='pending'?'<div class="actions"><button class="btn ok small js-approve-request" data-request-id="'+esc(x.id)+'">Accept</button><button class="btn danger small js-reject-request" data-request-id="'+esc(x.id)+'">Reject</button></div>':st==='approved'?'<div class="actions"><button type="button" class="btn danger small js-delete-student" data-student-id="'+esc(x.student_id||'')+'" data-student-label="'+esc(x.student_email||x.student_name||'Student')+'">Delete student</button></div>':'—')+'</td></tr>';
+  }).join('')+'</tbody></table>':'<div class="empty">No subscription requests found for the current account.</div>';
+  if(box)box.innerHTML=pendingBanner+table;
+}
+async function viewReceipt(id){const r=await db.from('subscription_requests').select('proof_path').eq('id',id).single();if(r.error||!r.data?.proof_path)return toast('Receipt not found.');const s=await db.storage.from('payment-proofs').createSignedUrl(r.data.proof_path,300);if(s.error)return toast('Receipt error: '+s.error.message);window.open(s.data.signedUrl,'_blank')}
+async function approveSub(id){
+  if(!id)return;
+  const btn=document.querySelector('.js-approve-request[data-request-id="'+CSS.escape(id)+'"]');if(btn)btn.disabled=true;
+  try{
+    const r=await db.rpc('doma_approve_subscription_request',{p_request_id:id,p_note:'Payment verified.'});
+    if(r.error)throw r.error;
+    // Confirm the persisted request state before telling staff that access was activated.
+    const verify=await db.from('subscription_requests')
+      .select('id,status,reviewed_at')
+      .eq('id',id)
+      .maybeSingle();
+    if(verify.error)throw new Error('Approval RPC responded, but request status could not be verified: '+verify.error.message);
+    if(!verify.data||String(verify.data.status||'').trim().toLowerCase()!=='approved'){
+      throw new Error('The request is not confirmed as approved in Supabase. Do not retry payment; inspect request '+id+'.');
+    }
+    toast('Subscription approval verified and activated.');
+    await Promise.all([loadSales(),loadDashboard(),loadStudents()]);
+  }catch(e){toast('Approval failed: '+(e?.message||String(e)));await Promise.all([loadSales(),loadDashboard(),loadStudents()]);}
+  finally{if(btn)btn.disabled=false;}
+}
+async function rejectSub(id){
+  if(!id)return;
+  const note=prompt('Rejection reason:','Payment receipt could not be verified.');if(note===null)return;
+  const btn=document.querySelector('.js-reject-request[data-request-id="'+CSS.escape(id)+'"]');if(btn)btn.disabled=true;
+  try{
+    const r=await db.rpc('doma_reject_subscription_request',{p_request_id:id,p_note:note});
+    if(r.error)throw r.error;
+    toast('Request rejected.');
+    await Promise.all([loadSales(),loadDashboard()]);
+  }catch(e){toast('Rejection failed: '+(e?.message||String(e)));await Promise.all([loadSales(),loadDashboard()]);}
+  finally{if(btn)btn.disabled=false;}
+}
+async function loadProgress(){const r=await db.from('lesson_progress').select('student_id,lesson_id,completed,progress_percent,last_opened_at,profiles(full_name,email),lessons(title,grade_id)').order('last_opened_at',{ascending:false}).limit(500);if(r.error)return $('progressTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('progressTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Lesson</th><th>Grade</th><th>Progress</th><th>Status</th><th>Last opened</th></tr></thead><tbody>'+r.data.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}<div class="muted">${esc(x.profiles?.email||'')}</div></td><td>${esc(x.lessons?.title||'')}</td><td>${esc(gradeName(x.lessons?.grade_id))}</td><td>${x.progress_percent}%</td><td><span class="pill ${x.completed?'ok':'warn'}">${x.completed?'Completed':'In progress'}</span></td><td>${fmt(x.last_opened_at)}</td></tr>`).join('')+'</tbody></table>':'<div class="empty">No progress records yet.</div>'}
+async function loadResults(){const r=await db.from('quiz_attempts').select('id,score,total_points,submitted_at,student_id,quiz_id,profiles(full_name,email),quizzes(title,grade_id)').order('submitted_at',{ascending:false}).limit(500);if(r.error)return $('resultsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('resultsTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Quiz</th><th>Grade</th><th>Score</th><th>Percent</th><th>Submitted</th></tr></thead><tbody>'+r.data.map(x=>{const total=Number(x.total_points||0),score=Number(x.score||0),pct=total?Math.round(score/total*100):0;return `<tr><td>${esc(x.profiles?.full_name||'Student')}</td><td>${esc(x.quizzes?.title||'')}</td><td>${esc(gradeName(x.quizzes?.grade_id))}</td><td>${score}/${total}</td><td>${pct}%</td><td>${fmt(x.submitted_at)}</td></tr>`}).join('')+'</tbody></table>':'<div class="empty">No quiz results yet.</div>'}
+async function loadCertificates(){const r=await db.from('certificates').select('id,title,issued_at,certificate_code,student_id,profiles(full_name,email)').order('issued_at',{ascending:false});if(r.error)return $('certTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('certTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Certificate</th><th>Code</th><th>Issued</th><th>Action</th></tr></thead><tbody>'+r.data.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}<div class="muted">${esc(x.profiles?.email||'')}</div></td><td>${esc(x.title)}</td><td>${esc(x.certificate_code)}</td><td>${fmtDate(x.issued_at)}</td><td><button class="btn danger small" onclick="deleteCertificate('${x.id}')">Delete</button></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No certificates yet.</div>'}
+$('newCertificate').onclick=async()=>{const students=await db.from('profiles').select('id,full_name,email').eq('role','student').order('full_name');if(students.error)return toast(students.error.message);openModal('Issue Certificate',`<form id="certForm"><div class="form-row"><label>Student</label><select id="cStudent" required><option value="">Select student</option>${(students.data||[]).map(s=>`<option value="${s.id}">${esc(s.full_name||s.email)}</option>`).join('')}</select></div><div class="form-row"><label>Certificate title</label><input id="cTitle" placeholder="English — 3rd Preparatory Completion" required></div><button class="btn">Issue Certificate</button></form>`);$('certForm').onsubmit=async e=>{e.preventDefault();const code='DOMA-'+new Date().getFullYear()+'-'+Math.random().toString(36).slice(2,8).toUpperCase();const r=await db.from('certificates').insert({student_id:$('cStudent').value,title:$('cTitle').value.trim(),certificate_code:code}).select('id');if(r.error)return toast('Issue failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Certificate issue was not confirmed. Check INSERT RLS/permissions.');closeModal();toast('Certificate issued.');await loadCertificates()}}
+async function deleteCertificate(id){await deletePersisted('certificates',id,'Certificate',loadCertificates)}
+
+async function loadPasswordResetRequests(){
+  const host=$('passwordResetRequestsTable');if(!host)return;
+  const r=await db.from('password_reset_requests').select('id,phone,student_id,status,created_at,student:profiles!password_reset_requests_student_id_fkey(full_name)').order('created_at',{ascending:false}).limit(100);
+  if(r.error){host.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+  const rows=r.data||[],pending=rows.filter(x=>x.status==='pending').length;
+  const badge=$('passwordResetBadge'),count=$('passwordResetPendingCount');
+  if(badge){badge.textContent=String(pending);badge.style.display=pending?'inline-block':'none'}
+  if(count)count.textContent=pending+' new';
+  host.innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Phone</th><th>Status</th><th>Requested</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
+    const phone=String(x.phone||'').replace(/[^0-9]/g,'');
+    const name=x.student?.full_name||'Unmatched account';
+    const statusLabel=({pending:'New',contacted:'Contacted',completed:'Completed',dismissed:'Dismissed'})[x.status]||x.status;
+    const issue=x.student_id?'<button type="button" class="btn warn small js-reset-from-request" data-student-id="'+esc(x.student_id)+'" data-student-label="'+esc(name)+'">Issue temporary password</button>':'<span class="muted">No matching student</span>';
+    const wa=phone?'<a class="btn secondary small" href="https://wa.me/'+phone+'" target="_blank" rel="noopener noreferrer">WhatsApp</a>':'';
+    const handled=x.status==='pending'?'<button type="button" class="btn secondary small js-close-reset-request" data-request-id="'+esc(x.id)+'">Mark handled</button>':'';
+    return '<tr><td><b>'+esc(name)+'</b></td><td>'+esc(phone)+'</td><td>'+esc(statusLabel)+'</td><td>'+fmt(x.created_at)+'</td><td><div class="actions">'+issue+wa+handled+'</div></td></tr>';
+  }).join('')+'</tbody></table>':'<div class="empty">No password reset requests yet.</div>';
+  // Use one delegated click handler so the action keeps working after the requests table is re-rendered.
+  if(!host.dataset.resetActionBound){
+    host.dataset.resetActionBound='1';
+    host.addEventListener('click',async event=>{
+      const btn=event.target.closest('.js-reset-from-request');
+      if(!btn||!host.contains(btn))return;
+      event.preventDefault();
+      event.stopPropagation();
+      if(btn.disabled)return;
+      btn.disabled=true;
+      try{
+        if(typeof window.resetStudentPassword!=='function')throw new Error('Password reset action is not available. Refresh the Admin page and sign in again.');
+        await window.resetStudentPassword(btn.dataset.studentId,btn.dataset.studentLabel);
+      }catch(error){
+        console.error('Temporary password action failed:',error);
+        toast('Could not open password reset: '+(error?.message||error));
+      }finally{btn.disabled=false;}
+    });
+  }
+  host.querySelectorAll('.js-close-reset-request').forEach(btn=>btn.addEventListener('click',async()=>{
+    btn.disabled=true;
+    const user=await db.auth.getUser();
+    const update=await db.from('password_reset_requests').update({status:'completed',handled_at:new Date().toISOString(),handled_by:user.data?.user?.id||null}).eq('id',btn.dataset.requestId).select('id');
+    if(update.error||!Array.isArray(update.data)||!update.data.some(x=>x.id===btn.dataset.requestId)){btn.disabled=false;return toast('Could not update request: '+(update.error?.message||'No row updated'))}
+    toast('Request marked as handled.');await loadPasswordResetRequests();
+  }));
+}
+window.domaInitPasswordResetAlerts=async function(){
+  if(window.__domaStaffProfile?.role!=='admin')return;
+  await loadPasswordResetRequests();
+  if(window.__domaPasswordResetChannel)await db.removeChannel(window.__domaPasswordResetChannel);
+  window.__domaPasswordResetChannel=db.channel('admin-password-reset-requests')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'password_reset_requests'},()=>{toast('New password reset request received.');loadPasswordResetRequests();})
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'password_reset_requests'},()=>loadPasswordResetRequests())
+    .subscribe(status=>{if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Password reset alert channel:',status)});
+};
+async function loadNotifications(){await loadPasswordResetRequests();const r=await db.from('notifications').select('id,student_id,title,message,is_read,created_at,profiles(full_name,email)').order('created_at',{ascending:false}).limit(300);if(r.error)return $('notifTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('notifTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Title</th><th>Message</th><th>Status</th><th>Date</th></tr></thead><tbody>'+r.data.map(x=>'<tr><td>'+esc(x.profiles?.full_name||'All students')+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.message)+'</td><td>'+(x.is_read?'Read':'Unread')+'</td><td>'+fmt(x.created_at)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No notifications yet.</div>'}
+$('newNotification').onclick=async()=>{const students=await db.from('profiles').select('id,full_name,email').eq('role','student').order('full_name');if(students.error)return toast(students.error.message);openModal('New Notification',`<form id="notifForm"><div class="form-row"><label>Recipient</label><select id="nStudent"><option value="">All students</option>${(students.data||[]).map(s=>`<option value="${s.id}">${esc(s.full_name||s.email)}</option>`).join('')}</select></div><div class="form-row"><label>Title</label><input id="nTitle" required></div><div class="form-row"><label>Message</label><textarea id="nMessage" required></textarea></div><button class="btn">Send Notification</button></form>`);$('notifForm').onsubmit=async e=>{e.preventDefault();const r=await db.from('notifications').insert({student_id:$('nStudent').value||null,title:$('nTitle').value.trim(),message:$('nMessage').value.trim()}).select('id');if(r.error)return toast('Send failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Notification send was not confirmed. Check INSERT RLS/permissions.');closeModal();toast('Notification sent.');await loadNotifications()}}
+
+async function loadReviews(){const r=await db.from('reviews').select('id,rating,review_text,is_published,created_at,profiles(full_name,email)').order('created_at',{ascending:false});if(r.error)return $('reviewsTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';$('reviewsTable').innerHTML=(r.data||[]).length?'<table><thead><tr><th>Student</th><th>Rating</th><th>Review</th><th>Status</th><th>Action</th></tr></thead><tbody>'+r.data.map(x=>`<tr><td>${esc(x.profiles?.full_name||'Student')}</td><td>${'★'.repeat(Number(x.rating||0))}</td><td>${esc(x.review_text)}</td><td><span class="pill ${x.is_published?'ok':'warn'}">${x.is_published?'Published':'Hidden'}</span></td><td><div class="actions"><button class="btn secondary small" onclick="toggleReview('${x.id}',${!x.is_published})">${x.is_published?'Hide':'Publish'}</button><button class="btn danger small" onclick="deleteReview('${x.id}')">Delete</button></div></td></tr>`).join('')+'</tbody></table>':'<div class="empty">No reviews yet.</div>'}
+async function toggleReview(id,v){const r=await db.from('reviews').update({is_published:v}).eq('id',id).select('id');if(r.error)return toast(r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id))return toast('Review update was not confirmed. Check UPDATE RLS/permissions.');await loadReviews()}
+async function deleteReview(id){await deletePersisted('reviews',id,'Review',loadReviews)}
+
+function loadSection(n){({dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,homework:loadHomework,students:loadStudents,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews}[n]||(()=>{}))()}
+
+$('dashboardRefresh').onclick=loadDashboard;$('gradesRefresh').onclick=loadGradesTable;$('unitRefresh').onclick=loadUnits;$('unitSearch').oninput=()=>{clearTimeout(window.__unitSearchTimer);window.__unitSearchTimer=setTimeout(loadUnits,250)};$('unitGrade').onchange=loadUnits;$('lessonRefresh').onclick=()=>{lessonsPage=0;loadLessons()};$('lessonSearch').oninput=()=>{lessonsPage=0;clearTimeout(window.__lessonSearchTimer);window.__lessonSearchTimer=setTimeout(loadLessons,250)};$('lessonGrade').onchange=()=>{lessonsPage=0;loadLessons()};$('lessonType').onchange=()=>{lessonsPage=0;loadLessons()};$('quizRefresh').onclick=()=>{domaQuizListPage=0;loadQuizzes()};$('quizSearch').oninput=()=>{domaQuizListPage=0;clearTimeout(window.__quizSearchTimer);window.__quizSearchTimer=setTimeout(loadQuizzes,250)};$('quizGrade').onchange=()=>{domaQuizListPage=0;loadQuizzes()};$('hwRefresh').onclick=()=>{domaHomeworkListPage=0;window.loadHomework?.()||loadHomework()};$('hwSearch').oninput=()=>{domaHomeworkListPage=0;clearTimeout(window.__homeworkSearchTimer);window.__homeworkSearchTimer=setTimeout(()=>{if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()},250)};$('hwGrade').onchange=()=>{domaHomeworkListPage=0;if(typeof window.loadHomework==='function')window.loadHomework();else loadHomework()};$('studentsRefresh').onclick=loadStudents;$('studentSearch').oninput=()=>{clearTimeout(window.__studentSearchTimer);window.__studentSearchTimer=setTimeout(loadStudents,250)};$('progressRefresh').onclick=loadProgress;$('resultsRefresh').onclick=loadResults;$('certRefresh')?.addEventListener('click',loadCertificates);$('salesRefresh').onclick=async()=>{await loadSales();await loadDashboard()};$('salesSearch').oninput=()=>{clearTimeout(window.__salesSearchTimer);window.__salesSearchTimer=setTimeout(loadSales,250)};$('reviewsRefresh').onclick=loadReviews;$('passwordResetRefresh')?.addEventListener('click',loadPasswordResetRequests);
+
+async function checkConnection(){try{const s=await db.auth.getSession();$('connectionDot').className='dot '+(s.data.session?'ok':'bad');$('connectionText').textContent=s.data.session?'Session active':'Not signed in'}catch(e){$('connectionDot').className='dot bad';$('connectionText').textContent='Connection error'}}
+
+async function checkAdminDataAccess(){
+  try{
+    const [g,l,q,h]=await Promise.all([
+      db.from('grades').select('id',{count:'exact',head:true}),
+      db.from('lessons').select('id',{count:'exact',head:true}),
+      db.from('quizzes').select('id',{count:'exact',head:true}),
+      db.from('homework').select('id',{count:'exact',head:true})
+    ]);
+    const errors=[g,l,q,h].filter(x=>x?.error);
+    if(errors.length) console.warn('DOMA Admin data access check:',errors.map(x=>x.error?.message));
+    return {ok:errors.length===0,errors};
+  }catch(e){return {ok:false,errors:[e]}}
+}
+
+async function start(){
+  if(state.started)return true;if(state.startPromise)return state.startPromise;
+  state.startPromise=(async()=>{
+    try{
+      const s=await db.auth.getSession();
+      if(!s.data.session)return false;
+      const staff=await getStaffProfile();
+      if(!staff.ok){
+        await db.auth.signOut();
+        if(staff.reason==='profile_query')$('loginError').textContent='Login succeeded, but Supabase blocked the staff profile read: '+staff.message;
+        else if(staff.reason==='missing_profile')$('loginError').textContent='Login succeeded, but this Auth account has no matching staff profile in public.profiles.';
+        else if(staff.reason==='wrong_role')$('loginError').textContent='Login succeeded, but this account has role “'+(staff.profile?.role||'unknown')+'”. Set the profile role to admin or teacher.';
+        else $('loginError').textContent=staff.message||'Staff verification failed.';
+        return false;
+      }
+      window.__domaStaffProfile=staff.profile;
+      if(staff.profile.role==='admin')window.domaInitPasswordResetAlerts?.();
+      $('login').style.display='none';$('app').style.display='block';
+      await loadGrades();await loadUnitsCache();state.started=true;show('dashboard');await checkConnection();await checkAdminDataAccess();setTimeout(checkLessonVideoIntegrity,500);return true;
+    }catch(e){console.error(e);$('loginError').textContent='Admin startup failed: '+(e?.message||String(e));return false}
+    finally{state.startPromise=null}
+  })();return state.startPromise
+}
+
+$('loginForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter;const email=$('email').value.trim(),password=$('password').value;if(btn){btn.disabled=true;btn.textContent='Signing in…'}$('loginError').textContent='';try{const r=await db.auth.signInWithPassword({email,password});if(r.error){$('loginError').textContent='Login error: '+r.error.message;return}if(!(await start()))$('loginError').textContent=$('loginError').textContent||'Login succeeded, but staff verification failed.'}catch(ex){$('loginError').textContent='Unexpected error: '+(ex?.message||String(ex))}finally{if(btn){btn.disabled=false;btn.textContent='Login'}}};
+$('adminForgotPassword').onclick=async()=>{
+  const email=$('email').value.trim();
+  if(!email){$('loginError').textContent='Enter your admin email first, then choose Forgot password.';$('email').focus();return;}
+  const button=$('adminForgotPassword');button.disabled=true;$('loginError').textContent='Sending a secure reset link…';
+  try{
+    const result=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+    if(result.error)throw result.error;
+    $('loginError').textContent='If this email belongs to a staff account, a password reset link has been sent. Check your inbox.';
+  }catch(error){$('loginError').textContent=error?.message||'Could not send the reset email.';}
+  finally{button.disabled=false;}
+};
+function showAdminPasswordRecovery(){
+  openModal('Choose a new admin password','<form id="adminPasswordRecoveryForm"><div class="form-row"><label>New password</label><input id="adminRecoveryPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></div><div class="form-row"><label>Confirm new password</label><input id="adminRecoveryConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></div><div id="adminRecoveryError" class="error"></div><button class="btn" type="submit">Save new password</button></form>');
+  $('adminPasswordRecoveryForm').onsubmit=async e=>{
+    e.preventDefault();const password=$('adminRecoveryPassword').value,confirmPassword=$('adminRecoveryConfirm').value;
+    if(password.length<10){$('adminRecoveryError').textContent='Use at least 10 characters.';return;}
+    if(password!==confirmPassword){$('adminRecoveryError').textContent='The passwords do not match.';return;}
+    const button=e.submitter;if(button){button.disabled=true;button.textContent='Saving…';}
+    try{
+      const result=await db.auth.updateUser({password});
+      if(result.error)throw result.error;
+      closeModal();$('loginError').textContent='Password updated. Sign in with your new password.';
+      await db.auth.signOut();
+    }catch(error){$('adminRecoveryError').textContent=error?.message||'Could not update the password.';}
+    finally{if(button){button.disabled=false;button.textContent='Save new password';}}
+  };
+}
+$('logout').onclick=async()=>{await db.auth.signOut();location.reload()};
+db.auth.onAuthStateChange((event)=>{setTimeout(checkConnection,0);if(event==='PASSWORD_RECOVERY')setTimeout(showAdminPasswordRecovery,0);});
+
+(async()=>{const s=await db.auth.getSession();if(s.data.session)await start();else await checkConnection()})();
+</script>
+
+<script>
+/* DOMA V2 admin enhancements */
+async function loadQuestionBank(){
+  const box=$('questionBankTable');
+  if(!box)return;
+  box.innerHTML='<div class="empty">Loading question bank…</div>';
+  const r=await db.from('question_bank')
+    .select('id,grade_id,topic,question,options,correct_answer,points,created_at')
+    .order('created_at',{ascending:false})
+    .range(0,999);
+  if(r.error){
+    box.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+    if($('questionBankCount'))$('questionBankCount').textContent='0 questions';
+    return;
+  }
+  let rows=r.data||[];
+  const g=$('bankGrade')?.value||'';
+  const t=($('bankSearch')?.value||'').trim().toLowerCase();
+  if(g)rows=rows.filter(x=>x.grade_id===g);
+  if(t)rows=rows.filter(x=>(x.question||'').toLowerCase().includes(t)||(x.topic||'').toLowerCase().includes(t));
+  if($('questionBankCount'))$('questionBankCount').textContent=rows.length+' question'+(rows.length===1?'':'s');
+  box.innerHTML=rows.length?'<table><thead><tr><th>Grade</th><th>Topic</th><th>Question</th><th>Options</th><th>Points</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>{
+    let n=0;
+    if(Array.isArray(x.options))n=x.options.length;
+    else if(typeof x.options==='string'){try{n=JSON.parse(x.options).length}catch{n=0}}
+    return '<tr><td>'+esc(gradeName(x.grade_id))+'</td><td>'+esc(x.topic||'General')+'</td><td><b>'+esc(x.question)+'</b></td><td>'+n+'</td><td>'+Number(x.points||1)+'</td><td><div class="actions"><button class="btn secondary small" onclick="editQuestionBank('+JSON.stringify(x.id)+')">Edit</button><button class="btn secondary small" onclick="copyQuestionToQuiz('+JSON.stringify(x.id)+')">Copy to Quiz</button><button class="btn danger small" onclick="deletePersisted('+JSON.stringify('question_bank')+','+JSON.stringify(x.id)+','+JSON.stringify('Question')+',loadQuestionBank)">Delete</button></div></td></tr>';
+  }).join('')+'</tbody></table>':'<div class="empty">No reusable questions yet.</div>';
+}
+
+function questionBankForm(title,x=null){
+  openModal(title,'<form id="bankForm"><div class="form-grid"><div><label>Grade</label><select id="bGrade" required>'+gradeOptions(x?.grade_id||'')+'</select></div><div><label>Topic</label><input id="bTopic" value="'+esc(x?.topic||'')+'" placeholder="Grammar / Vocabulary / Reading"></div><div class="full"><label>Question</label><textarea id="bQuestion" required>'+esc(x?.question||'')+'</textarea></div><div class="full"><label>Options (one per line)</label><textarea id="bOptions" required>'+esc((Array.isArray(x?.options)?x.options:[]).join('\n'))+'</textarea></div><div><label>Correct answer</label><input id="bCorrect" value="'+esc(x?.correct_answer||'')+'" required></div><div><label>Points</label><input id="bPoints" type="number" min="1" value="'+(x?.points||1)+'"></div></div><button class="btn full">Save Question</button></form>');
+  $('bankForm').onsubmit=async e=>{e.preventDefault();const opts=$('bOptions').value.split(/\n/).map(x=>x.trim()).filter(Boolean),correct=$('bCorrect').value.trim();if(opts.length<2||!opts.includes(correct))return toast('Correct answer must match one option.');const p={grade_id:$('bGrade').value,topic:$('bTopic').value.trim()||null,question:$('bQuestion').value.trim(),options:opts,correct_answer:correct,points:Number($('bPoints').value||1),updated_at:new Date().toISOString()};const r=x?await db.from('question_bank').update(p).eq('id',x.id).select('id'):await db.from('question_bank').insert(p).select('id');if(r.error)return toast('Save failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Question bank save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Question bank saved.');await loadQuestionBank()};
+}
+$('newBankQuestion')?.addEventListener('click',()=>questionBankForm('New Question Bank Entry'));
+async function editQuestionBank(id){const r=await db.from('question_bank').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);questionBankForm('Edit Question Bank Entry',r.data)}
+async function copyQuestionToQuiz(id){
+  const [q,qs]=await Promise.all([
+    db.from('question_bank').select('id,grade_id,question,options,correct_answer,points').eq('id',id).single(),
+    db.from('quizzes').select('id,title,grade_id').order('created_at',{ascending:false}).limit(500)
+  ]);
+  if(q.error)return toast(q.error.message);
+  if(qs.error)return toast(qs.error.message);
+  const list=(qs.data||[]).filter(x=>x.grade_id===q.data.grade_id);
+  if(!list.length)return toast('Create a quiz for this grade first.');
+  openModal('Copy Question to Quiz','<form id="copyBankForm"><div class="info-box" style="margin-bottom:12px">This copies the saved question into the selected quiz. The original Question Bank entry remains unchanged.</div><div class="form-row"><label>Quiz</label><select id="copyQuiz" required><option value="">Select quiz</option>'+list.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.title)+'</option>').join('')+'</select></div><button class="btn">Copy Question</button></form>');
+  $('copyBankForm').onsubmit=async e=>{
+    e.preventDefault();
+    const quizId=$('copyQuiz').value;
+    if(!quizId)return;
+    const last=await db.from('quiz_questions').select('sort_order').eq('quiz_id',quizId).order('sort_order',{ascending:false}).limit(1);
+    if(last.error)return toast('Could not read quiz order: '+last.error.message);
+    const sort=(last.data?.length?Number(last.data[0].sort_order||0)+1:0);
+    const ins=await db.from('quiz_questions').insert({quiz_id:quizId,question:q.data.question,options:q.data.options,correct_answer:q.data.correct_answer,points:Number(q.data.points||1),sort_order:sort}).select('id');
+    if(ins.error)return toast('Copy failed: '+ins.error.message);
+    closeModal();toast('Question copied to quiz.');
+  };
+}
+async function loadActivity(){
+  const r=await db.from('student_activity').select('id,student_id,activity_type,entity_id,metadata,created_at,profiles(full_name,email,phone,grade_id)').order('created_at',{ascending:false}).limit(500);
+  if(r.error)return $('activityTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+  let rows=r.data||[];const t=($('activitySearch')?.value||'').trim().toLowerCase();if(t)rows=rows.filter(x=>(x.profiles?.full_name||'').toLowerCase().includes(t)||(x.activity_type||'').toLowerCase().includes(t));
+  $('activityTable').innerHTML=rows.length?'<table><thead><tr><th>Student</th><th>Activity</th><th>Details</th><th>Date</th><th>WhatsApp</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.profiles?.full_name||'Student')+'</b><div class="muted">'+esc(x.profiles?.email||'')+'</div></td><td><span class="activity-chip">'+esc(x.activity_type)+'</span></td><td>'+esc(x.metadata?.title||x.metadata?.name||'')+'</td><td>'+esc(fmt(x.created_at))+'</td><td>'+(x.profiles?.phone?'<a class="wa" target="_blank" href="https://wa.me/20'+esc(x.profiles.phone).replace(/\D/g,'').replace(/^20/,'').replace(/^0/,'')+'">Open</a>':'—')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No activity records yet.</div>';
+}
+
+async function loadThirdSecondarySummary(){
+  if(typeof db==='undefined')return;
+  const g=await db.from('grades').select('id,name').eq('name','3rd Secondary').maybeSingle();
+  if(g.error||!g.data){$('thirdSecondaryStatus').textContent='3rd Secondary is not seeded yet. Run the 3rd Secondary SQL file.';return}
+  const id=g.data.id;
+  const [u,l,q]=await Promise.all([
+    db.from('units').select('id',{count:'exact',head:true}).eq('grade_id',id),
+    db.from('lessons').select('id,video_url',{count:'exact'}).eq('grade_id',id),
+    db.from('quizzes').select('id',{count:'exact',head:true}).eq('grade_id',id)
+  ]);
+  const ls=l.data||[];
+  if($('tsUnits'))$('tsUnits').textContent=u.count??0;
+  if($('tsLessons'))$('tsLessons').textContent=l.count??ls.length;
+  if($('tsQuizzes'))$('tsQuizzes').textContent=q.count??0;
+  if($('tsVideoLessons'))$('tsVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length;
+  if($('thirdSecondaryStatus'))$('thirdSecondaryStatus').textContent='Full-year structure is ready in Supabase. Use the SQL seed to populate missing content.';
+  if($('openThirdSecondary'))$('openThirdSecondary').onclick=async()=>{document.querySelector('[data-section="lessons"]')?.click();await loadLessons();if($('lessonGrade')){$('lessonGrade').value=id;await loadLessons();}};
+}
+
+
+window.loadSection=(name)=>{const map={dashboard:loadDashboard,grades:loadGradesTable,units:loadUnits,lessons:loadLessons,quizzes:loadQuizzes,'question-bank':loadQuestionBank,homework:loadHomework,students:loadStudents,activity:loadActivity,progress:loadProgress,results:loadResults,certificates:loadCertificates,sales:loadSales,notifications:loadNotifications,reviews:loadReviews};(map[name]||(()=>{}))();if(name==='question-bank'&&$('bankGrade')&&!$('bankGrade').dataset.ready){$('bankGrade').innerHTML='<option value="">All Grades</option>'+grades.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');$('bankGrade').dataset.ready='1'};};
+$('bankRefresh')?.addEventListener('click',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankSearch')?.addEventListener('input',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('bankGrade')?.addEventListener('change',()=>{const s=document.querySelector('.qbank-scroll');if(s)s.scrollTop=0;loadQuestionBank()});$('activityRefresh')?.addEventListener('click',loadActivity);$('activityRefresh2')?.addEventListener('click',loadActivity);$('activitySearch')?.addEventListener('input',loadActivity);
+</script>
+
+<script id="doma-admin-all-upgrades-script">
+(function(){
+  'use strict';
+  function showAdminUpgradePanel(){
+    const host=document.querySelector('#section-dashboard .panel-body')||document.querySelector('#section-dashboard');
+    if(!host||document.getElementById('adminUpgradePanel'))return;
+    const wrap=document.createElement('div');wrap.id='adminUpgradePanel';
+    wrap.innerHTML='<div class="admin-health"><h3>DOMA ACADEMY — Live Content Health</h3><p>Quick checks for published lessons, videos, homework resources and student activity. These cards read the same Supabase data used by the main Admin dashboard.</p><div class="admin-upgrade-summary"><div class="admin-upgrade-card"><small>Published lessons</small><b id="upPublishedLessons">—</b><span>All grades</span></div><div class="admin-upgrade-card"><small>Lessons with video</small><b id="upVideoLessons">—</b><span>video_url filled</span></div><div class="admin-upgrade-card"><small>Published homework</small><b id="upPublishedHomework">—</b><span>All grades</span></div><div class="admin-upgrade-card"><small>Homework with files</small><b id="upHomeworkFiles">—</b><span>attachment_url filled</span></div></div></div>';
+    host.appendChild(wrap);
+    refreshHealth();
+  }
+  async function refreshHealth(){
+    if(typeof db==='undefined')return;
+    const [l,h]=await Promise.all([
+      db.from('lessons').select('id,video_url',{count:'exact'}).eq('is_published',true),
+      db.from('homework').select('id,attachment_url',{count:'exact'}).eq('is_published',true)
+    ]);
+    const ls=l.data||[],hs=h.data||[];
+    const el=id=>document.getElementById(id); if(el('upPublishedLessons'))el('upPublishedLessons').textContent=l.count??ls.length; if(el('upVideoLessons'))el('upVideoLessons').textContent=ls.filter(x=>String(x.video_url||'').trim()).length; if(el('upPublishedHomework'))el('upPublishedHomework').textContent=h.count??hs.length; if(el('upHomeworkFiles'))el('upHomeworkFiles').textContent=hs.filter(x=>String(x.attachment_url||'').trim()).length;
+  }
+  async function loadHomeworkUpgraded(){
+    const gradeId=$('hwGrade').value;
+    const term=$('hwSearch').value.trim()
+      .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g,' ')
+      .replace(/\s+/g,' ')
+      .trim()
+      .slice(0,80)
+      .toLowerCase();
+    let q=db.from('homework')
+      .select('id,grade_id,title,description,due_at,attachment_url,is_free,is_published,created_at',{count:'exact'})
+      .order('created_at',{ascending:false});
+    if(gradeId)q=q.eq('grade_id',gradeId);
+    if(term){
+      const matchingGradeIds=grades.filter(g=>String(g.name||'').toLowerCase().includes(term))
+        .map(g=>String(g.id)).filter(id=>/^[0-9a-f-]{36}$/i.test(id));
+      const filters=['title.ilike.%'+term+'%','description.ilike.%'+term+'%'];
+      if(matchingGradeIds.length)filters.push('grade_id.in.('+matchingGradeIds.join(',')+')');
+      q=q.or(filters.join(','));
+    }
+    const from=domaHomeworkListPage*DOMA_HOMEWORK_PAGE_SIZE;
+    const r=await q.range(from,from+DOMA_HOMEWORK_PAGE_SIZE-1);
+    if(r.error){
+      $('homeworkTable').innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';
+      $('homeworkPagination').innerHTML='';
+      return;
+    }
+    const rows=r.data||[];
+    const total=Number(r.count||0);
+    const lastPage=Math.max(0,Math.ceil(total/DOMA_HOMEWORK_PAGE_SIZE)-1);
+    if(domaHomeworkListPage>lastPage){domaHomeworkListPage=lastPage;return loadHomeworkUpgraded();}
+    $('homeworkTable').innerHTML=rows.length?'<table><thead><tr><th>Title</th><th>Grade</th><th>Access</th><th>Due</th><th>Resource</th><th>Publish</th><th>Action</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.title)+'</b><div class="muted">'+esc(x.description||'')+'</div></td><td>'+esc(gradeName(x.grade_id))+'</td><td><span class="pill '+(x.is_free?'free':'warn')+'">'+(x.is_free?'Free':'Subscription')+'</span></td><td>'+fmt(x.due_at)+'</td><td>'+(x.attachment_url?'<a class="admin-video-link" href="'+esc(x.attachment_url)+'" target="_blank" rel="noopener noreferrer">Open file ↗</a>':'<span class="mini-status">No file</span>')+'</td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Draft')+'</span></td><td><div class="actions"><button class="btn secondary small" onclick="editHomework(\''+x.id+'\')">Edit</button><button class="btn danger small" onclick="deleteHomework(\''+x.id+'\')">Delete</button><button class="btn secondary small" onclick="viewHomeworkSubmissions(\''+x.id+'\')">Submissions</button></div></td></tr>').join('')+'</tbody></table>':'<div class="empty">No homework found.</div>';
+
+    const pagination=$('homeworkPagination');
+    const pageCount=Math.max(1,Math.ceil(total/DOMA_HOMEWORK_PAGE_SIZE));
+    const shownStart=total?from+1:0;
+    const shownEnd=Math.min(from+rows.length,total);
+    pagination.innerHTML='<span class="qbank-count">Showing '+shownStart+'&ndash;'+shownEnd+' of '+total+' assignments</span>'+
+      '<div class="actions"><button type="button" class="btn secondary small" id="homeworkPagePrev" '+(domaHomeworkListPage<=0?'disabled':'')+'>Previous</button>'+
+      '<span class="pill">Page '+(domaHomeworkListPage+1)+' of '+pageCount+'</span>'+
+      '<button type="button" class="btn secondary small" id="homeworkPageNext" '+(domaHomeworkListPage>=pageCount-1?'disabled':'')+'>Next</button></div>';
+    $('homeworkPagePrev').onclick=()=>{if(domaHomeworkListPage>0){domaHomeworkListPage--;loadHomeworkUpgraded();}};
+    $('homeworkPageNext').onclick=()=>{if(domaHomeworkListPage<pageCount-1){domaHomeworkListPage++;loadHomeworkUpgraded();}};
+  }  function homeworkFormUpgraded(title,x=null){
+    const due=x?.due_at?new Date(x.due_at).toISOString().slice(0,16):'';
+    openModal(title,`<form id="hwForm"><div class="form-grid"><div class="form-row"><label>Grade</label><select id="hGrade" required>${gradeOptions(x?.grade_id||'')}</select></div><div class="form-row"><label>Due date</label><input id="hDue" type="datetime-local" value="${due}"></div><div class="form-row full"><label>Title</label><input id="hTitle" value="${esc(x?.title||'')}" required></div><div class="form-row full"><label>Description</label><textarea id="hDesc">${esc(x?.description||'')}</textarea></div><div class="form-row full"><label>Attachment / Resource URL</label><input id="hAttachment" value="${esc(x?.attachment_url||'')}" placeholder="https://… PDF / worksheet / image / resource"></div><div class="form-row"><label>Access</label><select id="hFree"><option value="false" ${!x?.is_free?'selected':''}>Subscription required</option><option value="true" ${x?.is_free?'selected':''}>Free homework</option></select></div><div class="form-row"><label>Publishing</label><select id="hPub"><option value="false" ${!x?.is_published?'selected':''}>Draft</option><option value="true" ${x?.is_published?'selected':''}>Published</option></select></div></div><button class="btn">Save Homework</button></form>`);
+    $('hwForm').onsubmit=async e=>{e.preventDefault();const p={grade_id:$('hGrade').value,title:$('hTitle').value.trim(),description:$('hDesc').value.trim(),due_at:$('hDue').value?new Date($('hDue').value).toISOString():null,is_free:$('hFree').value==='true',is_published:$('hPub').value==='true',attachment_url:$('hAttachment').value.trim()||null};const r=x?await db.from('homework').update(p).eq('id',x.id).select('id'):await db.from('homework').insert(p).select('id');if(r.error){toast('Save failed: '+r.error.message);return}if(!Array.isArray(r.data)||!r.data.some(x=>x.id))return toast('Homework save was not confirmed. Check INSERT/UPDATE RLS/permissions.');closeModal();toast('Homework saved.');await loadHomeworkUpgraded();await loadDashboard();refreshHealth()};
+  }
+  async function reviewSubmissionUpgraded(subId,hwId){
+    const r=await db.from('homework_submissions').select('*').eq('id',subId).single();if(r.error)return toast(r.error.message);const x=r.data;
+    openModal('Review Homework',`<form id="reviewForm"><div class="info-box" style="white-space:pre-wrap;margin-bottom:12px">${linkifyAnswer(x.answer_text||'')}</div><div class="form-grid"><div class="form-row"><label>Status</label><select id="rsStatus"><option ${x.status==='submitted'?'selected':''}>submitted</option><option ${x.status==='reviewed'?'selected':''}>reviewed</option><option ${x.status==='returned'?'selected':''}>returned</option></select></div><div class="form-row"><label>Grade</label><input id="rsGrade" type="number" min="0" value="${x.grade??''}"></div><div class="form-row full"><label>Feedback</label><textarea id="rsFeedback">${esc(x.feedback||'')}</textarea></div></div><button class="btn">Save Review</button></form>`);
+    $('reviewForm').onsubmit=async e=>{e.preventDefault();const status=$('rsStatus').value,grade=$('rsGrade').value===''?null:Number($('rsGrade').value),feedback=$('rsFeedback').value.trim();const u=await db.from('homework_submissions').update({status,grade,feedback}).eq('id',subId).select('id,student_id');if(u.error)return toast('Review failed: '+u.error.message);if(!Array.isArray(u.data)||!u.data.some(x=>x.id===subId))return toast('Review update was not confirmed. Check UPDATE RLS/permissions.');const studentId=u.data?.[0]?.student_id||x.student_id;if(studentId){await db.from('notifications').insert({student_id:studentId,title:'Homework reviewed',message:grade===null?'Your homework has been reviewed.':'Your homework has been reviewed. Grade: '+String(grade)+'/'+100+'.'}).catch(()=>{});}closeModal();toast('Submission reviewed.');await viewHomeworkSubmissions(hwId)}
+  }
+  // Replace only the homework-related functions; the rest of the existing production admin stays intact.
+  window.loadHomework=loadHomeworkUpgraded;window.homeworkForm=homeworkFormUpgraded;window.editHomework=async function(id){const r=await db.from('homework').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);homeworkFormUpgraded('Edit Homework',r.data)};window.reviewSubmission=reviewSubmissionUpgraded;
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(showAdminUpgradePanel,450));
+  window.addEventListener('load',()=>setTimeout(showAdminUpgradePanel,250));
+})();
+</script>
+
+<script id="doma-daily-words-admin-script">
+(function(){
+  'use strict';
+  const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Cairo'}).format(new Date());
+  function ensureDate(){if($('dailyWordsDate')&&!$('dailyWordsDate').value)$('dailyWordsDate').value=today()}
+  function dailyQuery(){
+    let q=db.from('daily_words').select('*').order('position',{ascending:true});
+    const d=$('dailyWordsDate')?.value;if(d)q=q.eq('day_date',d);
+    const pub=$('dailyWordsPublished')?.value;if(pub!=='')q=q.eq('is_published',pub==='true');
+    return q;
+  }
+  async function loadDailyWords(){
+    ensureDate();
+    const box=$('dailyWordsTable');if(!box)return;
+    const r=await dailyQuery();
+    if(r.error){$('dailyWordsCount').textContent='Table not ready';box.innerHTML='<div class="empty">Could not load Daily Words: '+esc(r.error.message)+'</div>';return}
+    let rows=r.data||[];const term=($('dailyWordsSearch')?.value||'').trim().toLowerCase();
+    if(term)rows=rows.filter(x=>[x.word,x.translation,x.sentence,x.sentence_translation].some(v=>String(v||'').toLowerCase().includes(term)));
+    $('dailyWordsCount').textContent=rows.length+' word'+(rows.length===1?'':'s');
+    box.innerHTML=rows.length?'<table><thead><tr><th>#</th><th>Word</th><th>Translation</th><th>Example Sentence</th><th>Audio</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><span class="daily-position">'+Number(x.position||0)+'</span></td><td><div class="daily-word-preview"><b>'+esc(x.word||'')+'</b></div></td><td><div class="daily-word-preview"><span class="ar">'+esc(x.translation||'')+'</span></div></td><td><div class="daily-word-preview"><div class="sentence">'+esc(x.sentence||'')+'</div><div class="ar">'+esc(x.sentence_translation||'')+'</div></div></td><td>'+(x.word_audio_url?'<a class="audio-link" target="_blank" rel="noopener" href="'+esc(x.word_audio_url)+'">Word audio ↗</a>':'<span class="mini-status">Word: browser voice</span>')+(x.sentence_audio_url?'<br><a class="audio-link" target="_blank" rel="noopener" href="'+esc(x.sentence_audio_url)+'">Sentence audio ↗</a>':'<br><span class="mini-status">Sentence: browser voice</span>')+'</td><td><span class="pill '+(x.is_published?'ok':'warn')+'">'+(x.is_published?'Published':'Draft')+'</span></td><td><div class="daily-actions"><button class="btn secondary small" onclick="editDailyWord('+JSON.stringify(x.id)+')">Edit</button><button class="btn danger small" onclick="deleteDailyWord('+JSON.stringify(x.id)+')">Delete</button><button class="btn '+(x.is_published?'warn':'ok')+' small" onclick="toggleDailyWord('+JSON.stringify(x.id)+','+(!x.is_published)+')">'+(x.is_published?'Unpublish':'Publish')+'</button></div></td></tr>').join('')+'</tbody></table>':'<div class="empty">No Daily Words found for this date/filter.</div>';
+  }
+  function dailyWordForm(title,x=null){
+    const d=x?.day_date||$('dailyWordsDate')?.value||today();
+    openModal(title,'<form id="dailyWordForm"><div class="daily-form-note" style="margin-bottom:12px">Use positions 1–100. The student page reads published rows from the <b>daily_words</b> table. If an audio URL is empty, the student page can use browser speech automatically.</div><div class="form-grid"><div class="form-row"><label>Date</label><input id="dwDate" type="date" value="'+esc(d)+'" required></div><div class="form-row"><label>Position (1–100)</label><input id="dwPosition" type="number" min="1" max="100" value="'+Number(x?.position||1)+'" required></div><div class="form-row"><label>English Word</label><input id="dwWord" value="'+esc(x?.word||'')+'" required placeholder="achieve"></div><div class="form-row"><label>Arabic Translation</label><input id="dwTranslation" value="'+esc(x?.translation||'')+'" required placeholder="يحقق"></div><div class="form-row full"><label>Example Sentence</label><textarea id="dwSentence" required>'+esc(x?.sentence||'')+'</textarea></div><div class="form-row full"><label>Arabic Sentence Translation</label><textarea id="dwSentenceTranslation" required>'+esc(x?.sentence_translation||'')+'</textarea></div><div class="form-row full"><label>Word Audio MP3</label><input id="dwWordAudioFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav"><div class="mini-status">'+(x?.word_audio_url?'Current audio is already connected. Choose a file only if you want to replace it.':'Upload the MP3 for the word.')+'</div><input id="dwWordAudio" type="hidden" value="'+esc(x?.word_audio_url||'')+'"></div><div class="form-row full"><label>Sentence Audio MP3</label><input id="dwSentenceAudioFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav"><div class="mini-status">'+(x?.sentence_audio_url?'Current audio is already connected. Choose a file only if you want to replace it.':'Upload the MP3 for the sentence.')+'</div><input id="dwSentenceAudio" type="hidden" value="'+esc(x?.sentence_audio_url||'')+'"></div><div class="form-row"><label>Publishing</label><select id="dwPublished"><option value="true" '+(x?.is_published!==false?'selected':'')+'>Published</option><option value="false" '+(x?.is_published===false?'selected':'')+'>Draft</option></select></div></div><button class="btn full">Save Daily Word</button></form>');
+    $('dailyWordForm').onsubmit=async e=>{
+      e.preventDefault();
+      let wordAudioUrl=$('dwWordAudio').value.trim()||null;
+      let sentenceAudioUrl=$('dwSentenceAudio').value.trim()||null;
+      const day=$('dwDate').value; const pos=Number($('dwPosition').value);
+      async function uploadDailyAudio(inputId,type,currentUrl){
+        const file=$(inputId)?.files?.[0];
+        if(!file)return currentUrl;
+        if(file.size>10*1024*1024)throw new Error('Audio file must be 10 MB or less.');
+        const ext=(file.name.split('.').pop()||'mp3').toLowerCase().replace(/[^a-z0-9]/g,'')||'mp3';
+        const path=day+'/'+String(pos).padStart(3,'0')+'-'+type+'.'+ext;
+        const up=await db.storage.from('daily-words-audio').upload(path,file,{contentType:file.type||'audio/mpeg',upsert:true});
+        if(up.error)throw new Error('Audio upload failed: '+up.error.message);
+        const pub=db.storage.from('daily-words-audio').getPublicUrl(path);
+        return pub.data?.publicUrl||currentUrl;
+      }
+      try{
+        wordAudioUrl=await uploadDailyAudio('dwWordAudioFile','word',wordAudioUrl);
+        sentenceAudioUrl=await uploadDailyAudio('dwSentenceAudioFile','sentence',sentenceAudioUrl);
+      }catch(err){return toast(err.message||'Audio upload failed.')}
+      const p={day_date:day,position:pos,word:$('dwWord').value.trim(),translation:$('dwTranslation').value.trim(),sentence:$('dwSentence').value.trim(),sentence_translation:$('dwSentenceTranslation').value.trim(),word_audio_url:wordAudioUrl,sentence_audio_url:sentenceAudioUrl,is_published:$('dwPublished').value==='true'};
+      const r=x?await db.from('daily_words').update(p).eq('id',x.id).select('id'):await db.from('daily_words').insert(p).select('id');
+      if(r.error)return toast('Save failed: '+r.error.message);
+      closeModal();toast('Daily Word saved.');$('dailyWordsDate').value=p.day_date;await loadDailyWords();
+    };
+  }
+  window.editDailyWord=async function(id){const r=await db.from('daily_words').select('*').eq('id',id).single();if(r.error)return toast(r.error.message);dailyWordForm('Edit Daily Word',r.data)};
+  window.deleteDailyWord=async function(id){
+     await window.deletePersisted('daily_words',id,'Daily Word',loadDailyWords);
+   };
+  window.toggleDailyWord=async function(id,value){const r=await db.from('daily_words').update({is_published:value}).eq('id',id).select('id,is_published');if(r.error)return toast('Update failed: '+r.error.message);if(!Array.isArray(r.data)||!r.data.some(x=>x.id===id&&x.is_published===value))return toast('Daily Word update was not confirmed. Check UPDATE RLS/permissions.');await loadDailyWords()};
+  $('newDailyWord')?.addEventListener('click',()=>dailyWordForm('New Daily Word'));
+  $('dailyWordsRefresh')?.addEventListener('click',loadDailyWords);
+  $('dailyWordsToday')?.addEventListener('click',()=>{$('dailyWordsDate').value=today();loadDailyWords()});
+  $('dailyWordsDate')?.addEventListener('change',loadDailyWords);
+  $('dailyWordsSearch')?.addEventListener('input',loadDailyWords);
+  $('dailyWordsPublished')?.addEventListener('change',loadDailyWords);
+  window.loadDailyWords=loadDailyWords;
+})();
+</script>
+
+<style id="doma-pro-admin-v3-css">
+.student-pro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.student-pro-stat{background:#100a0c;border:1px solid #33202a;border-radius:11px;padding:12px}.student-pro-stat small{display:block;color:#82767b;font-size:9px;text-transform:uppercase}.student-pro-stat b{display:block;font-size:18px;margin-top:5px}.history-row{padding:10px;border:1px solid #30202a;border-radius:10px;background:#0d090a;margin-bottom:7px}.history-row strong{font-size:12px}.history-row span{font-size:10px;color:#8d8186}.expiry-badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;background:#422d12;color:#f0cf79}.expiry-badge.ok{background:#173b2b;color:#a7e5c3}.wa-btn{background:#1d6d48!important}.admin-logo-mark{width:34px;height:34px;border-radius:10px;border:1px solid #432530;display:inline-grid;place-items:center;background:#180d12;margin-right:8px;vertical-align:middle}
+@media(max-width:900px){.student-pro-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.student-pro-grid{grid-template-columns:1fr}}
+</style>
+<script id="doma-pro-admin-v3">
+(function(){
+'use strict';
+const _oldStudentDetails=window.studentDetails;
 function normEGPhone(v){let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0020'))d=d.slice(2);if(d.startsWith('0'))d='20'+d.slice(1);if(!d.startsWith('20'))d='20'+d;return d}
 window.openStudentWhatsApp=function(phone){const d=normEGPhone(phone);if(d.length<12)return toast('Student phone number is not valid.');window.open('https://wa.me/'+d,'_blank','noopener,noreferrer')};
 async function deleteAndVerify(table,column,value){
