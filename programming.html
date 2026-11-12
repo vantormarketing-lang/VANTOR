@@ -29,7 +29,7 @@
 
   <section id="learning-paths" class="pa-path-section">
     <div class="pa-section-heading"><div><h2>اختر مسارك</h2></div></div>
-    <div id="paTracks" class="pa-track-grid"><div class="pa-loading">جاري تحميل مسارات البرمجة…</div></div>
+    <div id="paTracks" class="pa-track-grid"><div class="pa-loading">سيظهر محتوى المسارات هنا بعد التحقق من حالة الاشتراك.</div></div>
   </section>
   <section id="paLessonPage" class="pa-lesson-page" hidden></section>
   <section class="pa-learning-layout">
@@ -639,6 +639,11 @@ function initializeDomaProgrammingAcademy(){
     toast(action==='approve'?'تم تفعيل الاشتراك لمدة 30 يومًا.':'تم رفض طلب الاشتراك.');
     var list=await db.rpc('programming_admin_list_payment_requests');if(!list.error)renderAdminRequests(list.data||[]);
   }
+  function renderLockedTracks(){
+    var message=pendingRequest?'طلب اشتراكك قيد مراجعة الإدارة. هيتفعل أول ما يتم اعتماده.':'اشترك لفتح مسارات البرمجة.';
+    $('paTracks').innerHTML='<div class="pa-empty-state"><h3>المحتوى متاح للمشتركين</h3><p>'+message+'</p></div>';
+  }
+
   async function boot(){
     // Fail closed immediately: never show curriculum while membership is being checked.
     setAcademyLocked(true);
@@ -654,6 +659,7 @@ function initializeDomaProgrammingAcademy(){
     renderUserIdentity();
     await refreshMembership();
     if(!hasAccess()){
+      renderLockedTracks();
       setAcademyLocked(true);
       showModal();
     }else{
@@ -665,22 +671,36 @@ function initializeDomaProgrammingAcademy(){
       await loadStudentProgress();
     }
     syncEmbeddedView();
-    db.auth.onAuthStateChange(async function(_event,session){
-      user=session&&session.user?session.user:null;
-      renderUserIdentity();
-      await refreshMembership();
-      if(!hasAccess()){
-        setAcademyLocked(true);
-        showModal();
-        syncEmbeddedView();
-        return;
-      }
-      setAcademyLocked(false);
-      syncEmbeddedView();
-      await loadCurriculum();
-      await loadStudentProgress();
-      if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
-      closeModal();
+    db.auth.onAuthStateChange(function(event,session){
+      // INITIAL_SESSION is already handled by boot(); never call auth APIs
+      // while the supabase-js auth callback holds its internal lock.
+      if(event==='INITIAL_SESSION')return;
+      setTimeout(async function(){
+        try{
+          user=session&&session.user?session.user:null;
+          renderUserIdentity();
+          await refreshMembership();
+          if(!hasAccess()){
+            renderLockedTracks();
+            setAcademyLocked(true);
+            showModal();
+            syncEmbeddedView();
+            return;
+          }
+          setAcademyLocked(false);
+          syncEmbeddedView();
+          await loadCurriculum();
+          await loadStudentProgress();
+          if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
+          closeModal();
+        }catch(error){
+          console.error('DOMA academy auth refresh failed:',error);
+          renderLockedTracks();
+          setAcademyLocked(true);
+          showModal();
+          syncEmbeddedView();
+        }
+      },0);
     });
   }
   $('paBackToTracks').addEventListener('click',showTrackOverview);
