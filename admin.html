@@ -1470,12 +1470,19 @@ window.resetStudentPassword=async function(studentId,studentLabel){
     const token=sessionResult.data?.session?.access_token;
     if(!token)return toast('Your admin session expired. Sign in again.');
     const response=await fetch('/api/admin/reset-student-password',{
-      method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+token},
+      method:'POST',
+      cache:'no-store',
+      headers:{'content-type':'application/json','authorization':'Bearer '+token,'accept':'application/json'},
       body:JSON.stringify({student_id:studentId})
     });
-    const result=await response.json().catch(()=>({}));
+    const rawResponse=await response.text();
+    let result={};
+    try{result=rawResponse?JSON.parse(rawResponse):{};}catch(parseError){
+      const preview=rawResponse.replace(/<script[\\s\\S]*?<\\/script>/gi,' ').replace(/<style[\\s\\S]*?<\\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim().slice(0,220);
+      throw new Error('Password reset API returned a non-JSON response (HTTP '+response.status+'). '+(preview||'The API route may not be deployed.'));
+    }
     if(!response.ok||!result.ok){
-      let message=result.error||'Password reset failed.';
+      let message=result.error||result.message||('Password reset API failed (HTTP '+response.status+').');
       if(/not configured/i.test(message))message='One-time setup required: add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY as Cloudflare Pages variables/secrets. See docs/SECURE_STUDENT_PASSWORD_RESET.md.';
       throw new Error(message);
     }
