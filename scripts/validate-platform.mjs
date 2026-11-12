@@ -409,6 +409,20 @@ if (!dashboardLoader.includes("requests.slice().sort") ||
 }
 ok('admin.html: dashboard provides safe quick actions and a sanitized latest-five request summary');
 
+
+const programmingPage = read('programming.html');
+const pilotStyleStart = programmingPage.indexOf('<style id="pa-python-pilot-enhancements">');
+const pilotStyleEnd = pilotStyleStart >= 0 ? programmingPage.indexOf('</style>', pilotStyleStart) : -1;
+const finalBodyClose = programmingPage.lastIndexOf('</body>');
+const lastScriptOpen = programmingPage.lastIndexOf('<script', pilotStyleStart);
+const lastScriptClose = programmingPage.lastIndexOf('</script>', pilotStyleStart);
+if (pilotStyleStart < 0 || pilotStyleEnd < 0 || finalBodyClose < 0 ||
+    pilotStyleEnd > finalBodyClose || lastScriptOpen > lastScriptClose) {
+  fail('programming.html: pa-python-pilot-enhancements style block must be outside JavaScript and before the final </body>');
+} else {
+  ok('programming.html: pa-python-pilot-enhancements CSS is outside inline scripts and before the final body close');
+}
+
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
   for (const message of errors) console.error('FAIL', message);
