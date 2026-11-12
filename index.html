@@ -13826,8 +13826,8 @@ html body #english-course .mf-kids-cube-c{background:linear-gradient(145deg,#58e
 <style id="doma-programming-embedded-style">
 #domaProgrammingEmbeddedView{position:fixed;inset:0;z-index:2147483000;display:none;background:#120c1d;color:#fff}
 #domaProgrammingEmbeddedView.is-open{display:block}
-
-#domaProgrammingEmbeddedView iframe{display:block;width:100%;height:100%;border:0;background:#120c1d}
+#domaProgrammingEmbeddedView.is-subscription-only{background:rgba(8,4,16,.16);backdrop-filter:blur(7px)}
+#domaProgrammingEmbeddedView iframe{display:block;width:100%;height:100%;border:0;background:transparent}
 body.doma-programming-embedded-open{overflow:hidden!important}
 
 </style>
@@ -13841,7 +13841,7 @@ body.doma-programming-embedded-open{overflow:hidden!important}
   view.dataset.ready='1';
   var frame=view.querySelector('iframe');
   function close(){
-    view.classList.remove('is-open');
+    view.classList.remove('is-open','is-subscription-only');
     view.setAttribute('aria-hidden','true');
     document.body.classList.remove('doma-programming-embedded-open');
     frame.src='about:blank';
@@ -13861,8 +13861,11 @@ body.doma-programming-embedded-open{overflow:hidden!important}
   },true);
   document.addEventListener('keydown',function(event){if(event.key==='Escape'&&view.classList.contains('is-open'))close()});
   window.addEventListener('message',function(event){
-    if(event.origin!==window.location.origin||!event.data||event.data.type!=='DOMA_PROGRAMMING_CLOSE')return;
-    close();
+    if(event.origin!==window.location.origin||!event.data)return;
+    if(event.data.type==='DOMA_PROGRAMMING_CLOSE'){close();return;}
+    if(event.data.type==='DOMA_PROGRAMMING_SUBSCRIPTION_VIEW'){
+      view.classList.toggle('is-subscription-only',!event.data.access);
+    }
   });
 })();
 </script>
