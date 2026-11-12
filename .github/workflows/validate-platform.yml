@@ -22,6 +22,8 @@ jobs:
           node-version: 20
       - name: Validate platform scripts, PWA manifests, and progress safeguards
         run: node scripts/validate-platform.mjs
+      - name: Validate migration safety safeguards
+        run: node scripts/validate-migration-safety.mjs
       - name: Validate production security and PWA caching safeguards
         run: node scripts/validate-production-safety.mjs
       - name: Check standalone lesson workspace JavaScript syntax
