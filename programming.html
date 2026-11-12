@@ -62,6 +62,7 @@
     <div class="pa-modal-price"><strong>100 جنيه</strong><span>لمدة 30 يومًا</span></div>
     <p class="pa-modal-copy">الاشتراك مستقل عن اشتراك الصفوف وكورسات الإنجليزي والأطفال. بعد تحويل المبلغ ورفع الإيصال، يراجع فريق الإدارة الطلب ويفعّل الأكاديمية.</p>
     <div id="paPendingNotice" class="pa-pending-notice" hidden>طلبك قيد مراجعة الإدارة. لا تحتاج إلى إرسال طلب آخر.</div>
+    <div id="paMembershipError" class="pa-payment-status error" role="alert" hidden>تعذر التحقق من حالة الاشتراك. حدّث الصفحة بعد قليل أو تواصل مع الإدارة.</div>
     <div id="paPaymentForm">
       <div class="pa-cash-number"><span>رقم التحويل عبر Mobile Cash</span><strong dir="ltr">01006525147</strong><small>حوّل 100 جنيه إلى الرقم الموضح ثم ارفع صورة الإيصال.</small></div>
       <label class="pa-form-label" for="paSenderPhone">رقم الهاتف المُحوِّل</label>
@@ -83,7 +84,7 @@ function initializeDomaProgrammingAcademy(){
   var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
   var boundedFetch=function(input,init){var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},15000);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
   var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},global:{fetch:boundedFetch}});
-  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false;
+  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null;
   var $=function(id){return document.getElementById(id)};
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
@@ -99,8 +100,9 @@ function initializeDomaProgrammingAcademy(){
     $('paAuthStatus').classList.toggle('is-connected',!!user);
     $('paAuthStatus').title=user?'متصل بالحساب':'غير مسجل الدخول';
   }
-  function showModal(){if(!user){$('paLoginNotice').hidden=false;$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=true}else{$('paLoginNotice').hidden=true;$('paPaymentForm').hidden=!(!subscription&&!pendingRequest);$('paPendingNotice').hidden=!pendingRequest;$('paSubmitPayment').disabled=!!pendingRequest;$('paSubmitPayment').textContent=pendingRequest?'طلبك قيد المراجعة':'إرسال طلب الاشتراك'}$('paSubscribeModal').hidden=false;document.body.classList.add('pa-modal-open')}
-  function closeModal(){$('paSubscribeModal').hidden=true;document.body.classList.remove('pa-modal-open')}
+  function setAcademyLocked(locked){['learning-paths','paStudentProgress','paAdminLearning'].forEach(function(id){var el=$(id);if(el)el.hidden=!!locked});var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close)close.hidden=!!locked}
+  function showModal(){var error=$('paMembershipError');if(error){error.hidden=!membershipCheckError;if(membershipCheckError)error.textContent='تعذر التحقق من حالة الاشتراك: '+membershipCheckError+' — حدّث الصفحة أو تواصل مع الإدارة.'}if(!user){$('paLoginNotice').hidden=false;$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=true}else{$('paLoginNotice').hidden=true;$('paPaymentForm').hidden=!!membershipCheckError||!(!subscription&&!pendingRequest);$('paPendingNotice').hidden=!pendingRequest;$('paSubmitPayment').disabled=!!pendingRequest||!!membershipCheckError;$('paSubmitPayment').textContent=pendingRequest?'طلبك قيد المراجعة':'إرسال طلب الاشتراك'}$('paSubscribeModal').hidden=false;document.body.classList.add('pa-modal-open')}
+  function closeModal(){if(!hasAccess())return;$('paSubscribeModal').hidden=true;document.body.classList.remove('pa-modal-open')}
   function renderMembership(){
     var status=$('paMembershipStatus'),button=$('paSubscribeBtn');
     if(status){
@@ -113,13 +115,13 @@ function initializeDomaProgrammingAcademy(){
     }
   }
   async function refreshMembership(){
-    subscription=null;pendingRequest=null;isStaff=false;
+    subscription=null;pendingRequest=null;isStaff=false;membershipCheckError=null;
     if(user){
       var now=new Date().toISOString();
       var sub=await db.from('programming_course_subscriptions').select('id,amount,starts_at,expires_at,status').eq('student_id',user.id).eq('status','active').lte('starts_at',now).gt('expires_at',now).order('expires_at',{ascending:false}).limit(1);
-      if(!sub.error&&sub.data&&sub.data.length)subscription=sub.data[0];
+      if(sub.error)membershipCheckError='فشل الاستعلام عن الاشتراك ('+sub.error.code+').';else if(sub.data&&sub.data.length)subscription=sub.data[0];
       var req=await db.from('programming_course_payment_requests').select('id,status').eq('student_id',user.id).eq('status','pending').limit(1);
-      if(!req.error&&req.data&&req.data.length)pendingRequest=req.data[0];
+      if(req.error)membershipCheckError=membershipCheckError||'فشل الاستعلام عن طلب الدفع ('+req.error.code+').';else if(req.data&&req.data.length)pendingRequest=req.data[0];
       var staff=await db.rpc('programming_admin_list_payment_requests');
       isStaff=!staff.error;
       if(isStaff)renderAdminRequests(staff.data||[]);
@@ -603,18 +605,29 @@ function initializeDomaProgrammingAcademy(){
   async function boot(){
     var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
     renderUserIdentity();
-    // Resolve the signed-in user's subscription before loading a deep-linked lesson.
-    // Otherwise openLesson() sees the initial null subscription and incorrectly opens the paywall.
     await refreshMembership();
-    await loadCurriculum();
-    await loadStudentProgress();
+    if(!hasAccess()){
+      setAcademyLocked(true);
+      showModal();
+    }else{
+      setAcademyLocked(false);
+      await loadCurriculum();
+      await loadStudentProgress();
+    }
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
       renderUserIdentity();
       await refreshMembership();
+      if(!hasAccess()){
+        setAcademyLocked(true);
+        showModal();
+        return;
+      }
+      setAcademyLocked(false);
       await loadCurriculum();
       await loadStudentProgress();
       if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
+      closeModal();
     });
   }
   $('paBackToTracks').addEventListener('click',showTrackOverview);
