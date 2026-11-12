@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import re
 import tempfile
 from html.parser import HTMLParser
 from pathlib import Path
@@ -41,6 +42,117 @@ class InlineScriptParser(HTMLParser):
             self.current = None
 
 
+
+def top_level_function_names(source: str) -> list[str]:
+    """Return classic-script function declarations at brace depth zero."""
+    names: list[str] = []
+    i = 0
+    brace_depth = 0
+    state = "code"
+    quote = ""
+    previous = ""
+
+    while i < len(source):
+        char = source[i]
+        nxt = source[i + 1] if i + 1 < len(source) else ""
+
+        if state == "line_comment":
+            if char == "\n":
+                state = "code"
+            i += 1
+            continue
+        if state == "block_comment":
+            if char == "*" and nxt == "/":
+                state = "code"
+                i += 2
+            else:
+                i += 1
+            continue
+        if state == "quoted":
+            if char == "\\":
+                i += 2
+                continue
+            if char == quote:
+                state = "code"
+            i += 1
+            continue
+        if state == "template":
+            if char == "\\":
+                i += 2
+                continue
+            if ord(char) == 96:
+                state = "code"
+            i += 1
+            continue
+
+        if char == "/" and nxt == "/":
+            state = "line_comment"
+            i += 2
+            continue
+        if char == "/" and nxt == "*":
+            state = "block_comment"
+            i += 2
+            continue
+        if char in ("'", '"'):
+            state = "quoted"
+            quote = char
+            i += 1
+            continue
+        if ord(char) == 96:
+            state = "template"
+            i += 1
+            continue
+
+        # Skip regular-expression literals so quantifier braces do not alter scope depth.
+        prefix = source[:i].rstrip()
+        regex_can_start = (
+            not prefix
+            or previous in "=(,:;!&|?{}[]\n+-*%^~<>"
+            or re.search(r"\b(return|throw|case|delete|void|typeof|instanceof|in|of|yield|await|else|do)\s*$", prefix)
+        )
+        if char == "/" and regex_can_start:
+            j = i + 1
+            in_character_class = False
+            while j < len(source):
+                if source[j] == "\\":
+                    j += 2
+                    continue
+                if source[j] == "[":
+                    in_character_class = True
+                elif source[j] == "]":
+                    in_character_class = False
+                elif source[j] == "/" and not in_character_class:
+                    j += 1
+                    while j < len(source) and source[j].isalpha():
+                        j += 1
+                    break
+                elif source[j] == "\n":
+                    break
+                j += 1
+            if j > i + 1 and source[j - 1] != "\n":
+                i = j
+                previous = "x"
+                continue
+
+        if brace_depth == 0:
+            match = re.match(r"(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(", source[i:])
+            if match:
+                names.append(match.group(1))
+                i += len(match.group(0))
+                previous = "("
+                continue
+
+        if char == "{":
+            brace_depth += 1
+        elif char == "}":
+            brace_depth = max(0, brace_depth - 1)
+        if not char.isspace():
+            previous = char
+        i += 1
+
+    return names
+
+
 def validate_page(page: Path) -> bool:
     if not page.is_file() or page.stat().st_size == 0:
         print(f"FAIL: {page.name} is missing or empty")
@@ -56,6 +168,7 @@ def validate_page(page: Path) -> bool:
     parser.feed(source)
     parser.close()
     checked = 0
+    global_function_names: list[str] = []
 
     for number, (attrs, body) in enumerate(parser.scripts, start=1):
         if attrs.get("src") or not body.strip():
@@ -63,6 +176,8 @@ def validate_page(page: Path) -> bool:
         script_type = (attrs.get("type") or "").split(";", 1)[0].strip().lower()
         if script_type in SKIP_SCRIPT_TYPES:
             continue
+        if script_type != "module":
+            global_function_names.extend(top_level_function_names(body))
         suffix = ".mjs" if script_type == "module" else ".js"
         with tempfile.NamedTemporaryFile(
             mode="w", encoding="utf-8", suffix=suffix, delete=False
@@ -88,6 +203,18 @@ def validate_page(page: Path) -> bool:
     if checked == 0:
         print(f"FAIL: no inline JavaScript was checked in {page.name}")
         return False
+
+    if page.name in ("admin.html", "index.html"):
+        seen: set[str] = set()
+        duplicates: set[str] = set()
+        for name in global_function_names:
+            if name in seen:
+                duplicates.add(name)
+            seen.add(name)
+        if duplicates:
+            names = ", ".join(sorted(duplicates))
+            print(f"FAIL: {page.name} has duplicate top-level function declarations: {names}")
+            return False
 
     if page.name == "admin.html":
         for marker in ('id="section-dashboard"', 'id="studentsTable"', 'id="salesTable"'):
