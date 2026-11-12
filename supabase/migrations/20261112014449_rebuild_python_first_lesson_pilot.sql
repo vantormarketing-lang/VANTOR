@@ -1,8 +1,8 @@
 -- Rebuild the first Python lesson with the verified teaching content and activity data.
 begin;
 update public.programming_lessons
-set title="أول برنامج لك بلغة Python",
-    summary="شغّل أول برنامج Python، وافهم print وترتيب التنفيذ والتعليقات، ثم عدّل البرنامج بنفسك.",
+set title=$lesson_title$أول برنامج لك بلغة Python$lesson_title$,
+    summary=$lesson_summary$شغّل أول برنامج Python، وافهم print وترتيب التنفيذ والتعليقات، ثم عدّل البرنامج بنفسك.$lesson_summary$,
     content_md=$lesson_content$
 # أول برنامج لك بلغة Python
 
