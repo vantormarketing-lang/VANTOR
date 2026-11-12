@@ -100,9 +100,9 @@ function initializeDomaProgrammingAcademy(){
     $('paAuthStatus').classList.toggle('is-connected',!!user);
     $('paAuthStatus').title=user?'متصل بالحساب':'غير مسجل الدخول';
   }
-  function setAcademyLocked(locked){['learning-paths'].forEach(function(id){var el=$(id);if(el)el.hidden=!!locked});var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;if(locked){$('paStudentProgress').hidden=true;$('paAdminLearning').hidden=true}var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close)close.hidden=!!locked}
+  function setAcademyLocked(locked){['learning-paths'].forEach(function(id){var el=$(id);if(el)el.hidden=!!locked});var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;if(locked){$('paStudentProgress').hidden=true;$('paAdminLearning').hidden=true}var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close){close.hidden=false;close.setAttribute('aria-label','إغلاق رسالة الاشتراك');close.title='إغلاق والعودة إلى الأكاديمية'}}
   function showModal(){var error=$('paMembershipError');if(error){error.hidden=!membershipCheckError;if(membershipCheckError)error.textContent='تعذر التحقق من حالة الاشتراك: '+membershipCheckError+' — حدّث الصفحة أو تواصل مع الإدارة.'}if(!user){$('paLoginNotice').hidden=false;$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=true}else{$('paLoginNotice').hidden=true;$('paPaymentForm').hidden=!!membershipCheckError||!(!subscription&&!pendingRequest);$('paPendingNotice').hidden=!pendingRequest;$('paSubmitPayment').disabled=!!pendingRequest||!!membershipCheckError;$('paSubmitPayment').textContent=pendingRequest?'طلبك قيد المراجعة':'إرسال طلب الاشتراك'}$('paSubscribeModal').hidden=false;document.body.classList.add('pa-modal-open')}
-  function closeModal(){if(!hasAccess())return;$('paSubscribeModal').hidden=true;document.body.classList.remove('pa-modal-open')}
+  function closeModal(){$('paSubscribeModal').hidden=true;document.body.classList.remove('pa-modal-open')}
   function renderMembership(){
     var status=$('paMembershipStatus'),button=$('paSubscribeBtn');
     if(status){
