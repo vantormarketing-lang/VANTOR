@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#1a1028">
 <title>التحقق من الشهادة | DOMA Academy</title>
 <meta name="description" content="تحقق من صحة شهادات أكاديمية DOMA باستخدام رقم الشهادة أو رمز QR.">
+<meta name="robots" content="noindex,nofollow">
 <style>
 :root{color-scheme:dark;--gold:#d6b477;--purple:#281a3d;--muted:#c7b8d5}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px;background:radial-gradient(circle at 15% 10%,#49305f 0,transparent 35%),linear-gradient(145deg,#120d1e,#21142f 55%,#17101f);font-family:system-ui,"Segoe UI",Arial,sans-serif;color:#f8f1e8;display:grid;place-items:center}
@@ -15,7 +16,6 @@ h1{text-align:center;margin:14px 0 8px;font-size:clamp(25px,5vw,34px)}.intro{tex
 form{display:flex;gap:10px;flex-wrap:wrap}input{flex:1 1 250px;min-width:0;border:1px solid #d6b47766;border-radius:14px;background:#130d20;color:white;padding:15px;font-size:16px;direction:ltr;text-align:left}button{border:0;border-radius:14px;padding:14px 22px;background:linear-gradient(135deg,#f1d49a,#b98b4b);color:#26172d;font-weight:800;cursor:pointer}
 #status{margin-top:18px;color:var(--muted);min-height:26px;text-align:center}.result{display:none;margin-top:22px;padding:22px;border:1px solid #d6b47766;border-radius:18px;background:#0f0b18aa}.result.valid{display:block}.result h2{color:#d9c08f;margin:0 0 18px;font-size:22px}.row{padding:12px 0;border-bottom:1px solid #ffffff18}.row:last-child{border:0}.label{display:block;color:#bca9ce;font-size:12px;margin-bottom:5px}.value{font-weight:700;overflow-wrap:anywhere}.invalid{color:#ffb5ad}.valid-label{color:#a7e3bd}.foot{text-align:center;margin-top:24px;font-size:12px;color:#aa9bb9}.foot a{color:var(--gold)}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <main>
@@ -38,26 +38,60 @@ form{display:flex;gap:10px;flex-wrap:wrap}input{flex:1 1 250px;min-width:0;borde
 </main>
 <script>
 (function(){
-  const SUPABASE_URL='https://dtptxhkcogpoleftguas.supabase.co';
-  const SUPABASE_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-  const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
-  const form=document.getElementById('verifyForm'),input=document.getElementById('certificateCode'),status=document.getElementById('status'),result=document.getElementById('result');
-  const params=new URLSearchParams(location.search);const initial=params.get('code');if(initial)input.value=initial;
+  const form=document.getElementById('verifyForm');
+  const input=document.getElementById('certificateCode');
+  const status=document.getElementById('status');
+  const result=document.getElementById('result');
+  const params=new URLSearchParams(location.search);
+  const initial=params.get('code');
+  if(initial)input.value=initial;
+
   form.addEventListener('submit',async function(event){
-    event.preventDefault();result.style.display='none';result.classList.remove('valid');
-    const code=input.value.trim();if(code.length<8||code.length>80){status.textContent='رقم الشهادة غير مكتمل.';status.className='invalid';return}
-    status.textContent='جاري التحقق…';status.className='';
+    event.preventDefault();
+    result.style.display='none';
+    result.classList.remove('valid');
+    const code=input.value.trim();
+    if(code.length<8||code.length>80){
+      status.textContent='رقم الشهادة غير مكتمل.';
+      status.className='invalid';
+      return;
+    }
+    status.textContent='جاري التحقق…';
+    status.className='';
     try{
-      const {data,error}=await db.rpc('programming_lookup_certificate',{p_code:code});
-      if(error)throw error;
-      const certificate=Array.isArray(data)?data[0]:null;
-      if(!certificate){status.textContent='لم نعثر على شهادة بهذا الرقم. راجع الرقم وحاول مرة أخرى.';status.className='invalid';return}
+      const response=await fetch('/api/verify-certificate',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        cache:'no-store',
+        credentials:'same-origin',
+        body:JSON.stringify({code})
+      });
+      const payload=await response.json().catch(()=>({}));
+      if(response.status===429){
+        status.textContent='تم الوصول إلى الحد المسموح للتحقق. حاول مرة أخرى بعد 15 دقيقة.';
+        status.className='invalid';
+        return;
+      }
+      if(!response.ok)throw new Error('verification_unavailable');
+      const certificate=payload.certificate||null;
+      if(!certificate){
+        status.textContent='لم نعثر على شهادة بهذا الرقم. راجع الرقم وحاول مرة أخرى.';
+        status.className='invalid';
+        return;
+      }
       document.getElementById('studentName').textContent=certificate.student_name||'—';
       document.getElementById('trackTitle').textContent=certificate.track_title||'—';
       document.getElementById('verifiedCode').textContent=certificate.certificate_code||code;
       document.getElementById('issuedAt').textContent=certificate.issued_at?new Date(certificate.issued_at).toLocaleDateString('ar-EG'):'—';
-      result.style.display='block';result.classList.add('valid');status.textContent='تم العثور على سجل الشهادة بنجاح.';status.className='valid-label';
-    }catch(error){status.textContent='تعذر التحقق حاليًا. حاول مرة أخرى لاحقًا.';status.className='invalid';console.error('[certificate-verify]',error&&error.name||'Error')}
+      result.style.display='block';
+      result.classList.add('valid');
+      status.textContent='تم العثور على سجل الشهادة بنجاح.';
+      status.className='valid-label';
+    }catch(error){
+      status.textContent='تعذر التحقق حاليًا. حاول مرة أخرى لاحقًا.';
+      status.className='invalid';
+      console.error('[certificate-verify]',error&&error.name||'Error');
+    }
   });
   if(initial)form.requestSubmit();
 })();
