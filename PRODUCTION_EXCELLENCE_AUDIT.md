@@ -1,9 +1,9 @@
 # DOMA Production Excellence — Initial Audit
 
-**Audit date:** 2026-11-11  
+**Initial audit date:** 2026-11-11  
 **Repository:** `vantormarketing-lang/VANTOR`  
 **Production Supabase project:** `VANTOR` (`dtptxhkcogpoleftguas`)  
-**Working branch:** `production-excellence/phase-1-audit`
+**Current implementation branch:** `main`
 
 ## Scope and safety boundary
 
@@ -77,3 +77,34 @@ These checks are static source checks only. They do not contact the deployed sit
 - No deployment or merge to `main` without review.
 - The owner performs live-site login, subscription, receipt, lesson, and mobile/PWA checks.
 - Static CI results are reported separately from live-site verification.
+
+
+## Implementation status update — 2026-11-12
+
+This update supersedes stale statements in the initial audit where they conflict with verified changes below. It does not claim that Cloudflare Pages has deployed these commits.
+
+### Verified production database changes
+
+- Applied the programming RLS/FK-index optimization as migration `20261112170000_optimize_programming_rls_and_fk_indexes`. The production policy definitions and both requested indexes were queried after application.
+- Applied `20261112170500_block_temp_password_storage_realtime`. The student Storage and Realtime policy definitions were queried after application and contain the `app_metadata.must_change_password` guard. Public read policies were not modified.
+
+### Source changes on `main`
+
+- `programming.html`: replaces the permanent loading placeholder with a subscription-required or pending-review state when access is unavailable; defers Supabase Auth listener work outside the auth callback and skips `INITIAL_SESSION`, which is already handled by startup.
+- `scripts/validate-production-safety.mjs`: now reads the programming optimization migration from `supabase/migrations/` rather than `supabase/archive/`.
+- `_headers`: CSP phase 1 now uses an explicit script allowlist for same-origin, jsDelivr, and unpkg; narrows Supabase connections to the project origin; and specifies the known frame sources. Inline scripts remain allowed temporarily, so CSP phase 2 is not complete.
+- `functions/api/student/request-password-reset.js`: unknown phone numbers receive the same public success response without creating orphaned request rows.
+- `functions/api/code-run.js`: exercise submissions use Judge0 batch submission/polling; malformed JSON returns 400; profile lookup failures fail closed with 503. The existing quota RPC still counts one API request per run, so per-test quota accounting remains open.
+
+### Still open / not verified
+
+- Cloudflare Pages deployment of the latest `main` commit and live browser acceptance.
+- CSP phase 2 (remove inline scripts / hashes), CDN SRI or local vendoring.
+- Admin password-reset audit log and issuance rate limit; stronger new-password blocklist and session-revocation verification.
+- Correct 192/512/maskable PNG PWA icons and manifest naming cleanup.
+- Workflow consolidation, migration ordering/duplicate checks, secret scanning, unused-file removal, static-asset caching rules, and sitemap domain handling.
+- Live test of Judge0 batch endpoint compatibility and per-test quota accounting.
+
+### Verification boundary
+
+GitHub source updates and Supabase policy/migration checks are separate from Cloudflare deployment. GitHub Actions for the latest code-run commit were still running at the time of this update; no passing result is claimed here. The deployed website was not re-tested after these latest source changes.
