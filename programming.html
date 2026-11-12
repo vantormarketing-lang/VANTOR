@@ -422,7 +422,7 @@ function initializeDomaProgrammingAcademy(){
       var languages=[['python','Python'],['javascript','JavaScript'],['html','HTML / CSS'],['cpp','C++'],['java','Java'],['csharp','C#']];
       var languageOptions=languages.map(function(item){return '<option value="'+item[0]+'" '+(item[0]===exercise.language?'selected':'')+'>'+item[1]+'</option>'}).join('');
       var previous=data.exercise_submission;
-      var hasAutoPractice=Array.isArray(exercise.test_cases)&&exercise.test_cases.length>0;
+      var hasAutoPractice=exercise.has_auto_test===true;
       html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">تدريب عملي · اختبر ثم أرسل</span><h4>'+esc(exercise.title)+'</h4></div><div class="pa-exercise-instructions">'+markdown(exercise.instructions)+'</div><form id="paExerciseForm"><label class="pa-input-label" for="paExerciseLanguage">لغة الحل</label><select id="paExerciseLanguage" class="pa-code-select">'+languageOptions+'</select><label class="pa-input-label" for="paExerciseCode">اكتب الحل البرمجي</label><textarea id="paExerciseCode" class="pa-code-editor pa-exercise-editor" spellcheck="false" placeholder="اكتب حلك هنا…">'+esc(exercise.starter_code||'')+'</textarea>'+(hasAutoPractice?'<div class="pa-exercise-tools"><button type="button" id="paExerciseHints" class="pa-lab-secondary">عرض التلميحات</button><button type="button" id="paRunExerciseTests" class="pa-lab-run">▶ اختبر الحل</button></div>':'')+'<div id="paExerciseHintList" class="pa-exercise-hints" hidden></div><div id="paExerciseTestResults" class="pa-exercise-test-results" aria-live="polite"></div><div id="paExerciseSolution" class="pa-exercise-solution" hidden></div><label class="pa-input-label" for="paExerciseNotes">اشرح فكرتك أو طريقة الاختبار (اختياري)</label><textarea id="paExerciseNotes" class="pa-code-input" dir="auto" placeholder="ما الفكرة التي طبقتها؟ وكيف تأكدت من الحل؟"></textarea><button type="submit" class="pa-activity-submit">إرسال الحل للمراجعة</button><p id="paExerciseStatus" class="pa-activity-status"></p></form>';
       if(previous){html+='<div class="pa-previous-result">آخر تسليم: '+(previous.status==='reviewed'?'تمت مراجعته':previous.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(previous.score!==null&&previous.score!==undefined?' · الدرجة '+previous.score+'/100':'')+(previous.feedback?'<p>'+esc(previous.feedback)+'</p>':'')+'</div>';if(hasAutoPractice)html+='<button type="button" id="paShowModelSolution" class="pa-lab-secondary">عرض الحل النموذجي بعد المحاولة</button>';}
       html+='</article>';
@@ -435,8 +435,7 @@ function initializeDomaProgrammingAcademy(){
       var source=$('paExerciseCode').value.trim(),panel=$('paExerciseTestResults');
       if(!source){panel.textContent='اكتب الكود أولًا.';return}
       if(source.length>16000){panel.textContent='الكود أطول من الحد المسموح.';return}
-      var cases=Array.isArray(exercise.test_cases)?exercise.test_cases:[];
-      if(!cases.length){panel.textContent='لا توجد اختبارات تلقائية مضافة لهذا التدريب بعد.';return}
+      if(exercise.has_auto_test!==true){panel.textContent='لا توجد اختبارات تلقائية دقيقة لهذا التدريب بعد؛ يمكنك إرسال الحل للمراجعة.';return}
       testButton.disabled=true;panel.textContent='جارٍ تشغيل الكود والتحقق من النتائج…';
       try{
         var sessionResult=await db.auth.getSession(),session=sessionResult.data&&sessionResult.data.session,token=session&&session.access_token;
@@ -650,7 +649,7 @@ function initializeDomaProgrammingAcademy(){
   boot().catch(function(error){console.error('DOMA Pro academy startup failed:',error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء بدء الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';var progress=$('paProgressCards');if(progress)progress.innerHTML='';var section=$('paStudentProgress');if(section)section.hidden=true;});
 }
 (function(){
-  var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2'];
+  var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0','https://unpkg.com/@supabase/supabase-js@2.119.0'];
   function showLoadError(){var host=document.getElementById('paTracks');if(host)host.innerHTML='<div class="pa-empty-state"><h3>تعذر بدء الأكاديمية</h3><p>مكتبة الاتصال لم يتم تحميلها. تحقق من الإنترنت ثم أعد المحاولة.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';}
   function load(index){
     if(window.supabase&&window.supabase.createClient){initializeDomaProgrammingAcademy();return;}
