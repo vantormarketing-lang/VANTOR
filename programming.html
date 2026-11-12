@@ -269,7 +269,22 @@ function initializeDomaProgrammingAcademy(){
   var codeSamples={
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
     javascript:'const name = "DOMA Student";\nconsole.log("Hello, " + name);\n\n// جرّب تغيير الاسم ثم شغّل البرنامج',
-    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n</body>\n</html>',
+    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n
+<style id="pa-python-pilot-enhancements">
+.pa-quiz-feedback{display:grid;gap:10px;margin-top:14px}
+.pa-quiz-feedback-item,.pa-exercise-hints,.pa-exercise-test-results,.pa-exercise-solution{padding:13px 15px;border:1px solid rgba(205,170,111,.25);border-radius:14px;background:rgba(24,18,34,.42);margin-top:12px}
+.pa-quiz-feedback-item p{margin:6px 0}.pa-quiz-feedback-item small{display:block;line-height:1.8;color:#d8c9b3}
+.pa-quiz-feedback-item.is-correct,.pa-test-summary.is-correct,.pa-exercise-test-results .is-correct{color:#9cdbb3}
+.pa-quiz-feedback-item.is-wrong,.pa-test-summary.is-wrong,.pa-exercise-test-results .is-wrong{color:#f0b0a5}
+.pa-exercise-tools{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.pa-exercise-hints p{margin:7px 0;line-height:1.8}
+.pa-exercise-test-results p{margin:7px 0}
+.pa-test-summary{font-weight:800;margin-bottom:8px}
+.pa-test-output,.pa-exercise-solution pre{white-space:pre-wrap;direction:ltr;text-align:left;overflow:auto;padding:12px;border-radius:10px;background:rgba(0,0,0,.28);color:#f3e9d8}
+.pa-test-next{color:#e5c47e;font-weight:700}
+#paShowModelSolution{margin-top:12px}
+@media(max-width:600px){.pa-exercise-tools>*{flex:1 1 100%}}
+</style></body>\n</html>',
     c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, DOMA!\\n");\n    return 0;\n}',
     cpp:'#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, DOMA!" << endl;\n    return 0;\n}',
     java:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, DOMA!");\n    }\n}',
@@ -412,7 +427,7 @@ function initializeDomaProgrammingAcademy(){
         (question.options||[]).forEach(function(option,optionIndex){html+='<label class="pa-quiz-option"><input type="radio" name="paq-'+esc(question.id)+'" value="'+optionIndex+'"><span>'+esc(option)+'</span></label>'});
         html+='</fieldset>';
       });
-      html+='<button type="submit" class="pa-activity-submit">تصحيح الاختبار وحفظ النتيجة</button><p id="paQuizStatus" class="pa-activity-status"></p></form>';
+      html+='<button type="submit" class="pa-activity-submit">تصحيح الاختبار وحفظ النتيجة</button><p id="paQuizStatus" class="pa-activity-status"></p><div id="paQuizFeedback" class="pa-quiz-feedback" aria-live="polite"></div></form>';
       if(data.quiz_attempt)html+='<div class="pa-previous-result">آخر نتيجة: '+data.quiz_attempt.score+'/100 · '+(data.quiz_attempt.passed?'اجتزت الاختبار ✓':'حاول مرة أخرى لتحسين نتيجتك')+'</div>';
       html+='</article>';
     }
@@ -420,11 +435,38 @@ function initializeDomaProgrammingAcademy(){
       var languages=[['python','Python'],['javascript','JavaScript'],['html','HTML / CSS'],['cpp','C++'],['java','Java'],['csharp','C#']];
       var languageOptions=languages.map(function(item){return '<option value="'+item[0]+'" '+(item[0]===exercise.language?'selected':'')+'>'+item[1]+'</option>'}).join('');
       var previous=data.exercise_submission;
-      html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">مشروع الدرس · بعد الاختبار</span><h4>'+esc(exercise.title)+'</h4></div><div class="pa-exercise-instructions">'+markdown(exercise.instructions)+'</div><form id="paExerciseForm"><label class="pa-input-label" for="paExerciseLanguage">لغة الحل</label><select id="paExerciseLanguage" class="pa-code-select">'+languageOptions+'</select><label class="pa-input-label" for="paExerciseCode">اكتب الحل البرمجي</label><textarea id="paExerciseCode" class="pa-code-editor pa-exercise-editor" spellcheck="false" placeholder="اكتب حلك هنا…">'+esc(exercise.starter_code||'')+'</textarea><label class="pa-input-label" for="paExerciseNotes">اشرح فكرتك أو طريقة الاختبار (اختياري)</label><textarea id="paExerciseNotes" class="pa-code-input" dir="auto" placeholder="ما الفكرة التي طبقتها؟ وكيف تأكدت من الحل؟"></textarea><button type="submit" class="pa-activity-submit">إرسال مشروع الدرس للمراجعة</button><p id="paExerciseStatus" class="pa-activity-status"></p></form>';
-      if(previous)html+='<div class="pa-previous-result">آخر تسليم: '+(previous.status==='reviewed'?'تمت مراجعته':previous.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(previous.score!==null&&previous.score!==undefined?' · الدرجة '+previous.score+'/100':'')+(previous.feedback?'<p>'+esc(previous.feedback)+'</p>':'')+'</div>';
+      html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">تدريب عملي · اختبر ثم أرسل</span><h4>'+esc(exercise.title)+'</h4></div><div class="pa-exercise-instructions">'+markdown(exercise.instructions)+'</div><form id="paExerciseForm"><label class="pa-input-label" for="paExerciseLanguage">لغة الحل</label><select id="paExerciseLanguage" class="pa-code-select">'+languageOptions+'</select><label class="pa-input-label" for="paExerciseCode">اكتب الحل البرمجي</label><textarea id="paExerciseCode" class="pa-code-editor pa-exercise-editor" spellcheck="false" placeholder="اكتب حلك هنا…">'+esc(exercise.starter_code||'')+'</textarea><div class="pa-exercise-tools"><button type="button" id="paExerciseHints" class="pa-lab-secondary">عرض التلميحات</button><button type="button" id="paRunExerciseTests" class="pa-lab-run">▶ اختبر الحل</button></div><div id="paExerciseHintList" class="pa-exercise-hints" hidden></div><div id="paExerciseTestResults" class="pa-exercise-test-results" aria-live="polite"></div><div id="paExerciseSolution" class="pa-exercise-solution" hidden></div><label class="pa-input-label" for="paExerciseNotes">اشرح فكرتك أو طريقة الاختبار (اختياري)</label><textarea id="paExerciseNotes" class="pa-code-input" dir="auto" placeholder="ما الفكرة التي طبقتها؟ وكيف تأكدت من الحل؟"></textarea><button type="submit" class="pa-activity-submit">إرسال الحل للمراجعة</button><p id="paExerciseStatus" class="pa-activity-status"></p></form>';
+      if(previous)html+='<div class="pa-previous-result">آخر تسليم: '+(previous.status==='reviewed'?'تمت مراجعته':previous.status==='needs_revision'?'يحتاج إلى تعديل':'قيد المراجعة')+(previous.score!==null&&previous.score!==undefined?' · الدرجة '+previous.score+'/100':'')+(previous.feedback?'<p>'+esc(previous.feedback)+'</p>':'')+'</div><button type="button" id="paShowModelSolution" class="pa-lab-secondary">عرض الحل النموذجي بعد المحاولة</button>';
       html+='</article>';
     }
     host.innerHTML=html||'<div class="pa-activity-lock">سيتم إضافة أنشطة هذا الدرس قريبًا.</div>';
+    var hintsButton=$('paExerciseHints');
+    if(hintsButton)hintsButton.addEventListener('click',function(){var panel=$('paExerciseHintList');if(!panel)return;var open=panel.hidden;panel.hidden=!open;panel.innerHTML=open?(exercise.hints||[]).map(function(hint,index){return '<p><b>تلميح '+(index+1)+':</b> '+esc(hint)+'</p>'}).join(''):' ';hintsButton.textContent=open?'إخفاء التلميحات':'عرض التلميحات'});
+    var testButton=$('paRunExerciseTests');
+    if(testButton)testButton.addEventListener('click',async function(){
+      var source=$('paExerciseCode').value.trim(),panel=$('paExerciseTestResults');
+      if(!source){panel.textContent='اكتب الكود أولًا.';return}
+      if(source.length>16000){panel.textContent='الكود أطول من الحد المسموح.';return}
+      var cases=Array.isArray(exercise.test_cases)?exercise.test_cases:[];
+      if(!cases.length){panel.textContent='لا توجد اختبارات تلقائية مضافة لهذا التدريب بعد.';return}
+      testButton.disabled=true;panel.textContent='جارٍ تشغيل الكود والتحقق من النتائج…';
+      try{
+        var sessionResult=await db.auth.getSession(),session=sessionResult.data&&sessionResult.data.session,token=session&&session.access_token;
+        if(!token){var refreshed=await db.auth.refreshSession();session=refreshed.data&&refreshed.data.session;token=session&&session.access_token}
+        if(!token)throw new Error('انتهت جلسة الدخول. سجّل الدخول ثم حاول مرة أخرى.');
+        var response=await fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({language:$('paExerciseLanguage').value,source_code:source,stdin:''})});
+        if(response.status===401){var refreshedAgain=await db.auth.refreshSession(),fresh=refreshedAgain.data&&refreshedAgain.data.session;if(fresh&&fresh.access_token)response=await fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+fresh.access_token},body:JSON.stringify({language:$('paExerciseLanguage').value,source_code:source,stdin:''})})}
+        var result=await response.json();if(!response.ok)throw new Error(result.error||'تعذر تشغيل الكود.');
+        var output=[result.stdout,result.stderr,result.compile_output].filter(Boolean).join('\\n');
+        var checks=cases.map(function(item){var ok=!!item.contains&&String(result.stdout||'').indexOf(item.contains)!==-1;return {label:item.label||'فحص الناتج',ok:ok}});
+        var allPassed=checks.every(function(item){return item.ok})&&!(result.stderr||result.compile_output);
+        panel.innerHTML='<div class="pa-test-summary '+(allPassed?'is-correct':'is-wrong')+'">'+(allPassed?'نجحت كل الفحوصات ✓':'بعض الفحوصات لم تنجح بعد')+'</div>'+checks.map(function(item){return '<p class="'+(item.ok?'is-correct':'is-wrong')+'">'+(item.ok?'✓ ':'✕ ')+esc(item.label)+'</p>'}).join('')+(output?'<pre class="pa-test-output">'+esc(output)+'</pre>':'');
+        if(allPassed)panel.innerHTML+='<p class="pa-test-next">ممتاز! يمكنك الآن إرسال الحل للمراجعة.</p>';
+      }catch(error){panel.textContent=error.message||'حدث خطأ أثناء اختبار الحل.'}
+      finally{testButton.disabled=false}
+    });
+    var previousSolutionButton=$('paShowModelSolution');
+    if(previousSolutionButton)previousSolutionButton.addEventListener('click',async function(){var panel=$('paExerciseSolution');previousSolutionButton.disabled=true;panel.hidden=false;panel.textContent='جارٍ تحميل الحل النموذجي…';var response=await db.rpc('programming_get_exercise_solution',{p_exercise_id:exercise.id});previousSolutionButton.disabled=false;if(response.error){panel.textContent='تعذر تحميل الحل النموذجي: '+response.error.message;return}panel.innerHTML='<h5>الحل النموذجي</h5><pre>'+esc(response.data||'')+'</pre>'});
     var exerciseForm=$('paExerciseForm');
     if(exerciseForm)exerciseForm.addEventListener('submit',async function(event){
       event.preventDefault();
@@ -446,6 +488,7 @@ function initializeDomaProgrammingAcademy(){
       var graded=await db.rpc('programming_submit_quiz',{p_quiz_id:quiz.id,p_answers:answers});button.disabled=false;
       if(graded.error){status.textContent='تعذر تصحيح الاختبار: '+graded.error.message;return}
       var result=graded.data||{};status.textContent='نتيجتك '+result.score+'/100 · '+result.correct+' من '+result.total+' إجابة صحيحة · '+(result.passed?'اجتزت الاختبار بنجاح ✓':'راجع الدرس وحاول مرة أخرى.');
+      var feedbackHost=$('paQuizFeedback');if(feedbackHost&&Array.isArray(result.feedback)){feedbackHost.innerHTML=result.feedback.map(function(item,index){return '<div class="pa-quiz-feedback-item '+(item.is_correct?'is-correct':'is-wrong')+'"><b>'+(index+1)+'. '+(item.is_correct?'إجابة صحيحة ✓':'إجابة تحتاج مراجعة')+'</b><p>'+esc(item.prompt)+'</p><small>'+esc(item.explanation||'راجع شرح الدرس ثم حاول مرة أخرى.')+'</small></div>'}).join('')}
       toast('تم حفظ نتيجة الاختبار.');await loadStudentProgress();
     });
   }
