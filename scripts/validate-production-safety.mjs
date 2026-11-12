@@ -94,7 +94,7 @@ check(
 );
 
 
-const programmingMigration = read('supabase/archive/20261111010000_optimize_programming_rls_and_fk_indexes.sql');
+const programmingMigration = read('supabase/migrations/20261112170000_optimize_programming_rls_and_fk_indexes.sql');
 const requiredMigrationItems = [
   'programming_course_payment_requests_reviewed_by_idx',
   'programming_lesson_progress_lesson_id_idx',
@@ -121,7 +121,7 @@ check(
 for (const level of ['A1','A2','B1','B2','C1','C2']) {
   const coursePage = read(`MR_FLUENT_${level}_COURSE.html`);
   if (!coursePage.includes('./mrfluent-course-workspace.js?v=doma-glass-v72')) {
-    fail(`MR_FLUENT_${level}_COURSE.html: standalone lesson workspace script is not loaded with the current shell version`);
+    errors.push(`MR_FLUENT_${level}_COURSE.html: standalone lesson workspace script is not loaded with the current shell version`);
   }
 }
 
