@@ -260,13 +260,14 @@ export async function onRequestPost({ request, env }) {
       if (execution.error) return json({ error: execution.error }, 503);
       testResults = execution.results.map((result, index) => {
         if (!firstResult) firstResult = result;
+        const test = exerciseTests[index];
         const stdout = result.stdout || "";
         const stderr = result.stderr || "";
         const compileOutput = result.compile_output || "";
         const passed = !!(result.status && result.status.id === 3) &&
           !stderr && !compileOutput &&
-          normalizeOutput(stdout) === normalizeOutput(exerciseTests[index].expected_output);
-        return { label: String(exerciseTests[index].label || "فحص الناتج"), passed };
+          normalizeOutput(stdout) === normalizeOutput(test.expected_output);
+        return { label: String(test.label || "فحص الناتج"), passed };
       });
       allTestsPassed = testResults.every(test => test.passed);
     } else {
