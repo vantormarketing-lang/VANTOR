@@ -102,7 +102,19 @@ function initializeDomaProgrammingAcademy(){
   }
   function setAcademyLocked(locked){['learning-paths'].forEach(function(id){var el=$(id);if(el)el.hidden=!!locked});var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;if(locked){$('paStudentProgress').hidden=true;$('paAdminLearning').hidden=true}var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close){close.hidden=false;close.setAttribute('aria-label','إغلاق رسالة الاشتراك');close.title='إغلاق والعودة إلى الأكاديمية'}}
   function showModal(){var error=$('paMembershipError');if(error){error.hidden=!membershipCheckError;if(membershipCheckError)error.textContent='تعذر التحقق من حالة الاشتراك: '+membershipCheckError+' — حدّث الصفحة أو تواصل مع الإدارة.'}if(!user){$('paLoginNotice').hidden=false;$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=true}else{$('paLoginNotice').hidden=true;$('paPaymentForm').hidden=!!membershipCheckError||!(!subscription&&!pendingRequest);$('paPendingNotice').hidden=!pendingRequest;$('paSubmitPayment').disabled=!!pendingRequest||!!membershipCheckError;$('paSubmitPayment').textContent=pendingRequest?'طلبك قيد المراجعة':'إرسال طلب الاشتراك'}$('paSubscribeModal').hidden=false;document.body.classList.add('pa-modal-open')}
-  function closeModal(){$('paSubscribeModal').hidden=true;document.body.classList.remove('pa-modal-open')}
+  function syncEmbeddedView(){
+    var embedded=window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1';
+    if(!embedded)return;
+    var locked=!hasAccess();
+    document.body.classList.toggle('pa-embedded-subscription-only',locked);
+    window.parent.postMessage({type:'DOMA_PROGRAMMING_SUBSCRIPTION_VIEW',access:!locked,pending:!!pendingRequest},window.location.origin);
+  }
+  function closeModal(){
+    $('paSubscribeModal').hidden=true;document.body.classList.remove('pa-modal-open');
+    if(window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1'&&!hasAccess()){
+      window.parent.postMessage({type:'DOMA_PROGRAMMING_CLOSE'},window.location.origin);
+    }
+  }
   function renderMembership(){
     var status=$('paMembershipStatus'),button=$('paSubscribeBtn');
     if(status){
@@ -288,7 +300,17 @@ function initializeDomaProgrammingAcademy(){
   var codeSamples={
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
     javascript:'const name = "DOMA Student";\nconsole.log("Hello, " + name);\n\n// جرّب تغيير الاسم ثم شغّل البرنامج',
-    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n</body>\n</html>',
+    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n<style id="pa-homepage-subscription-overlay">
+body.pa-embedded-subscription-only{background:transparent!important;overflow:hidden!important}
+body.pa-embedded-subscription-only>.pa-topbar,
+body.pa-embedded-subscription-only>.pa-shell,
+body.pa-embedded-subscription-only>#paToast,
+body.pa-embedded-subscription-only>#paPullRefresh{display:none!important}
+body.pa-embedded-subscription-only #paSubscribeModal{background:transparent!important}
+body.pa-embedded-subscription-only .pa-modal-backdrop{background:rgba(8,4,16,.20)!important;backdrop-filter:blur(7px)!important}
+body.pa-embedded-subscription-only .pa-modal-card{max-height:min(88vh,820px);box-shadow:0 22px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.12)}
+</style>
+</body>\n</html>',
     c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, DOMA!\\n");\n    return 0;\n}',
     cpp:'#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, DOMA!" << endl;\n    return 0;\n}',
     java:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, DOMA!");\n    }\n}',
@@ -595,7 +617,7 @@ function initializeDomaProgrammingAcademy(){
     if(up.error){$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر رفع الإيصال: '+up.error.message,'error');return}
     var result=await db.rpc('programming_create_payment_request',{p_sender_phone:phone,p_proof_path:path});
     if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
-    pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
+    pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;syncEmbeddedView();toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
     await loadCurriculum();
     refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(new URLSearchParams(window.location.search).get('learning-admin')==='1'){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
   }
@@ -631,6 +653,7 @@ function initializeDomaProgrammingAcademy(){
       await loadCurriculum();
       await loadStudentProgress();
     }
+    syncEmbeddedView();
     db.auth.onAuthStateChange(async function(_event,session){
       user=session&&session.user?session.user:null;
       renderUserIdentity();
@@ -638,9 +661,11 @@ function initializeDomaProgrammingAcademy(){
       if(!hasAccess()){
         setAcademyLocked(true);
         showModal();
+        syncEmbeddedView();
         return;
       }
       setAcademyLocked(false);
+      syncEmbeddedView();
       await loadCurriculum();
       await loadStudentProgress();
       if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
