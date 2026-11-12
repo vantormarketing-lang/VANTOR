@@ -7,7 +7,7 @@ PROD_DUMP="${1:?Usage: bash supabase/baseline/verify-baseline.sh <production-sch
 command -v supabase >/dev/null || { echo "Supabase CLI is required." >&2; exit 2; }
 
 echo "Resetting the LOCAL Supabase database from the checked-out migrations..."
-supabase db reset
+supabase db reset --local
 echo "Exporting the LOCAL schema..."
 supabase db dump --local -f /tmp/doma-local-schema.sql
 
