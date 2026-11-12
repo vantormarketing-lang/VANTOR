@@ -615,8 +615,8 @@ function initializeDomaProgrammingAcademy(){
     if(up.error){$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر رفع الإيصال: '+up.error.message,'error');return}
     var result=await db.rpc('programming_create_payment_request',{p_sender_phone:phone,p_proof_path:path});
     if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
-    pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;syncEmbeddedView();toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
-    await loadCurriculum();
+    pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;setAcademyLocked(true);syncEmbeddedView();toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
+    // A pending request must never trigger curriculum loading.
     refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(new URLSearchParams(window.location.search).get('learning-admin')==='1'){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
   }
   async function renderAdminRequests(rows){
