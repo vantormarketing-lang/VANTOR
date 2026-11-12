@@ -30,6 +30,9 @@ export async function onRequestPost({request,env}) {
     if(!update.ok) return json({error:"Could not save the new password"},502);
     return json({ok:true});
   } catch(error) {
-    return json({error:error?.message||"Password change failed"},500);
+    console.error("[complete-password-reset] password update failed", {
+      name: error && error.name ? String(error.name).slice(0,80) : "UnknownError"
+    });
+    return json({error:"تعذر تغيير كلمة المرور حاليًا. حاول مرة أخرى بعد قليل."},500);
   }
 }
