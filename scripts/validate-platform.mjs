@@ -439,6 +439,21 @@ if (!certificateVerification.includes("/api/verify-certificate") ||
   ok('verify-certificate.html: certificate verification uses a server-side IP quota and masked result');
 }
 
+const programmingPage = read('programming.html');
+const codeRunner = read('functions/api/code-run.js');
+const exactGradingMigration = read('supabase/migrations/20261112035346_hide_programming_tests_and_add_private_exact_grading.sql');
+if (!codeRunner.includes('doma_get_programming_exercise_tests') ||
+    !codeRunner.includes('normalizeOutput(stdout) === normalizeOutput(test.expected_output)') ||
+    codeRunner.includes('stdout.includes') ||
+    !programmingPage.includes('exercise.has_auto_test===true') ||
+    programmingPage.includes('exercise.test_cases') ||
+    !exactGradingMigration.includes('private.programming_exercise_tests') ||
+    !exactGradingMigration.includes('revoke select on table public.programming_exercises')) {
+  fail('Programming auto-grader: hidden exact-output tests and restricted database access must remain enabled');
+} else {
+  ok('Programming auto-grader: tests are private, output matching is exact, and only prepared exercises expose automatic testing');
+}
+
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
   for (const message of errors) console.error('FAIL', message);
