@@ -439,16 +439,16 @@ if (!certificateVerification.includes("/api/verify-certificate") ||
   ok('verify-certificate.html: certificate verification uses a server-side IP quota and masked result');
 }
 
-const programmingPage = read('programming.html');
-const codeRunner = read('functions/api/code-run.js');
-const exactGradingMigration = read('supabase/migrations/20261112035346_hide_programming_tests_and_add_private_exact_grading.sql');
-if (!codeRunner.includes('doma_get_programming_exercise_tests') ||
-    !codeRunner.includes('normalizeOutput(stdout) === normalizeOutput(test.expected_output)') ||
-    codeRunner.includes('stdout.includes') ||
-    !programmingPage.includes('exercise.has_auto_test===true') ||
-    programmingPage.includes('exercise.test_cases') ||
-    !exactGradingMigration.includes('private.programming_exercise_tests') ||
-    !exactGradingMigration.includes('revoke select on table public.programming_exercises')) {
+const autoGraderPageSource = read('programming.html');
+const autoGraderWorkerSource = read('functions/api/code-run.js');
+const autoGraderMigrationSource = read('supabase/migrations/20261112035346_hide_programming_tests_and_add_private_exact_grading.sql');
+if (!autoGraderWorkerSource.includes('doma_get_programming_exercise_tests') ||
+    !autoGraderWorkerSource.includes('normalizeOutput(stdout) === normalizeOutput(test.expected_output)') ||
+    autoGraderWorkerSource.includes('stdout.includes') ||
+    !autoGraderPageSource.includes('exercise.has_auto_test===true') ||
+    autoGraderPageSource.includes('exercise.test_cases') ||
+    !autoGraderMigrationSource.includes('private.programming_exercise_tests') ||
+    !autoGraderMigrationSource.includes('revoke select on table public.programming_exercises')) {
   fail('Programming auto-grader: hidden exact-output tests and restricted database access must remain enabled');
 } else {
   ok('Programming auto-grader: tests are private, output matching is exact, and only prepared exercises expose automatic testing');
