@@ -2358,8 +2358,8 @@ function domaShowForcedPasswordChange(){
   const body=$('modalBody');
   if(!body)return;
   $('modalTitle').textContent='Secure your account';
-  $('modalText').textContent='Your temporary password must be replaced before continuing.';
-  body.innerHTML='<div class="doma-forced-password"><div class="doma-forced-password-icon">✦</div><h3>Choose a new password</h3><p>For your security, create a new password that only you know.</p><form id="domaForcedPasswordForm"><label>New password<input id="domaForcedPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required placeholder="At least 10 characters"></label><label>Confirm new password<input id="domaForcedPasswordConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required placeholder="Enter it again"></label><div id="domaForcedPasswordStatus" class="status full"></div><button class="doma-v115-create" type="submit">Save new password</button></form><button type="button" class="doma-forced-signout" id="domaForcedSignout">Sign out</button></div>';
+  $('modalText').textContent='يجب تغيير كلمة المرور المؤقتة قبل المتابعة.';
+  body.innerHTML='<div class="doma-forced-password"><div class="doma-forced-password-icon">✦</div><h3>Choose a new password</h3><p>For your security, create a new password that only you know.</p><form id="domaForcedPasswordForm"><label>New password<input id="domaForcedPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required placeholder="At least 10 characters"></label><label>Confirm new password<input id="domaForcedPasswordConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required placeholder="Enter it again"></label><div id="domaForcedPasswordStatus" class="status full"></div><button class="doma-v115-create" type="submit">احفظ كلمة المرور الجديدة</button></form><button type="button" class="doma-forced-signout" id="domaForcedSignout">Sign out</button></div>';
   const form=$('domaForcedPasswordForm');
   form.onsubmit=async e=>{
     e.preventDefault();
@@ -2388,7 +2388,7 @@ function domaShowForcedPasswordChange(){
     }catch(error){
       showStatus('domaForcedPasswordStatus',error?.message||'Password update failed.','error');
     }finally{
-      if(submit){submit.disabled=false;submit.textContent='Save new password'}
+      if(submit){submit.disabled=false;submit.textContent='احفظ كلمة المرور الجديدة'}
     }
   };
   $('domaForcedSignout').onclick=async()=>{await sb.auth.signOut();sessionUser=null;closeModal();openAuth('login')};
@@ -2397,7 +2397,7 @@ function domaShowEmailPasswordRecovery(){
   const body=$('modalBody');if(!body)return;
   $('modalTitle').textContent='Reset your password';
   $('modalText').textContent='Choose a new password for your Mr. Fluent account.';
-  body.innerHTML='<div class="doma-forced-password"><div class="doma-forced-password-icon">✦</div><h3>Create a new password</h3><p>Use at least 10 characters and keep it private.</p><form id="domaEmailRecoveryForm"><label>New password<input id="domaEmailRecoveryPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label><label>Confirm new password<input id="domaEmailRecoveryConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label><div id="domaEmailRecoveryStatus" class="status full"></div><button class="doma-v115-create" type="submit">Save new password</button></form></div>';
+  body.innerHTML='<div class="doma-forced-password"><div class="doma-forced-password-icon">✦</div><h3>Create a new password</h3><p>Use at least 10 characters and keep it private.</p><form id="domaEmailRecoveryForm"><label>New password<input id="domaEmailRecoveryPassword" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label><label>Confirm new password<input id="domaEmailRecoveryConfirm" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label><div id="domaEmailRecoveryStatus" class="status full"></div><button class="doma-v115-create" type="submit">احفظ كلمة المرور الجديدة</button></form></div>';
   const form=$('domaEmailRecoveryForm');
   form.onsubmit=async e=>{
     e.preventDefault();
@@ -2416,7 +2416,7 @@ function domaShowEmailPasswordRecovery(){
       if(window.__mfKidsEntryFlow&&typeof window.__mfKidsAfterAuth==='function')await window.__mfKidsAfterAuth(sessionUser);
       else openDrawer('overview');
     }catch(error){showStatus('domaEmailRecoveryStatus',error?.message||'Could not update your password.','error');}
-    finally{submit.disabled=false;submit.textContent='Save new password';}
+    finally{submit.disabled=false;submit.textContent='احفظ كلمة المرور الجديدة';}
   };
 }
 async function domaLogin(){
@@ -5436,7 +5436,7 @@ window.domaForgotPassword=async function(){
       if(!aliasNormalized)return showStatus('authStatus','Enter your registered mobile number first, then try again.','error');
       try{
         await domaRecordPasswordResetRequest(aliasNormalized.local);
-        showStatus('authStatus','Your request has been received. After the administrator verifies your account, you will receive a temporary password on the WhatsApp number registered with your account.','success');
+        showStatus('authStatus','تم استلام طلبك. بعد مراجعة الإدارة، سنرسل كلمة مرور مؤقتة إلى رقم واتساب المسجل بحسابك.','success');
       }catch(e){showStatus('authStatus','Request not submitted: '+String(e?.message||'Please try again in a few minutes.').slice(0,180),'error');}
       return;
     }
@@ -5452,7 +5452,7 @@ window.domaForgotPassword=async function(){
   if(!normalized)return showStatus('authStatus','Enter a valid Egyptian mobile number, e.g. 01012345678.','error');
   try{
     await domaRecordPasswordResetRequest(normalized.local);
-    showStatus('authStatus','Your request has been received. After the administrator verifies your account, you will receive a temporary password on the WhatsApp number registered with your account.','success');
+    showStatus('authStatus','تم استلام طلبك. بعد مراجعة الإدارة، سنرسل كلمة مرور مؤقتة إلى رقم واتساب المسجل بحسابك.','success');
   }catch(e){showStatus('authStatus','Request not submitted: '+String(e?.message||'Please try again in a few minutes.').slice(0,180),'error');}
 };
 
