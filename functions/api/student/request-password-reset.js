@@ -71,10 +71,14 @@ export async function onRequestPost({request,env}) {
     const matches=await readJson(lookup);
     if(!lookup.ok||!Array.isArray(matches)) throw new Error("Could not process the request");
 
+    // Keep the public response identical for unknown numbers, but do not create
+    // orphaned admin-queue rows that cannot be tied to a student account.
+    if(matches.length===0) return json({ok:true});
+
     const insert=await fetch(cfg.url+"/rest/v1/password_reset_requests",{
       method:"POST",
       headers:{apikey:cfg.key,authorization:"Bearer "+cfg.key,"content-type":"application/json",prefer:"return=minimal"},
-      body:JSON.stringify({phone,student_id:matches[0]?.id||null})
+      body:JSON.stringify({phone,student_id:matches[0].id})
     });
     if(!insert.ok) throw new Error("Could not save the request");
     return json({ok:true});
