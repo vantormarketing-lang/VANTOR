@@ -270,6 +270,200 @@ function initializeDomaProgrammingAcademy(){
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
     javascript:'const name = "DOMA Student";\nconsole.log("Hello, " + name);\n\n// جرّب تغيير الاسم ثم شغّل البرنامج',
     html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n
+s="title">شهادة إتمام مسار</h1><p class="subtitle">تُمنح هذه الشهادة تقديرًا لإتمام متطلبات التعلم والتطبيق العملي في</p><div class="student">${esc(user&&user.user_metadata&&user.user_metadata.full_name||'طالب DOMA')}</div><div class="track">${esc(certificate.track_title)}</div><p class="note">أتم المتعلم دروس المسار وقدم مشروعًا عمليًا تمت مراجعته وتقييمه بنجاح. نتمنى له دوام التعلم والإبداع.</p><div class="code">رقم الشهادة: ${esc(certificate.certificate_code)}</div><div class="date">تاريخ الإصدار: ${esc(issued)}</div></main></body></html>`;
+    printWindow.document.open();printWindow.document.write(html);printWindow.document.close();printWindow.focus();printWindow.print();
+  }
+  async function loadStudentProgress(){
+    var host=$('paProgressCards');if(!host)return;
+    var section=$('paStudentProgress');
+    if(!user){if(section)section.hidden=true;host.innerHTML='';return}
+    if(!hasAccess()){if(section)section.hidden=true;host.innerHTML='';return}
+    if(section)section.hidden=false;
+    host.innerHTML='<div class="pa-loading">جاري تحميل تقدمك…</div>';
+    var result=await db.rpc('programming_get_my_learning_progress');
+    if(result.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل تقدمك: '+esc(result.error.message)+'</div>';return}
+    var data=result.data||{},done=Number(data.completed_lessons||0),total=Number(data.total_lessons||lessons.length),percent=total?Math.round(done/total*100):0;
+    var badges=Array.isArray(data.badges)?data.badges.filter(Boolean):[],certificates=Array.isArray(data.certificates)?data.certificates:[];
+    host.innerHTML='<article class="pa-progress-card"><b>'+done+' / '+total+'</b><span>دروس مكتملة</span><i><em style="width:'+percent+'%"></em></i></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات الاختبار</span><small>'+Number(data.passed_quizzes||0)+' اختبارات مجتازة · متوسط '+Number(data.average_quiz_score||0)+'%</small></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span><small>'+Number(data.reviewed_exercises||0)+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span><small>'+Number(data.reviewed_projects||0)+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+Number(data.points||0)+'</b><span>نقاط التعلم</span><small>تُحتسب من الدروس والاختبارات والتطبيقات والمشاريع المقيّمة.</small></article><section class="pa-achievement-panel"><h3>أوسمة الإنجاز</h3><div class="pa-badges-grid">'+(badges.length?badges.map(function(badge){return '<article class="pa-student-badge"><b>'+esc(badge.icon||'✦')+'</b><strong>'+esc(badge.title)+'</strong><small>'+esc(badge.description)+'</small></article>'}).join(''):'<p>أكمل الدروس والاختبارات والتطبيقات لتحصل على أوسمتك الأولى.</p>')+'</div></section><section class="pa-achievement-panel"><h3>شهادات المسارات</h3><div class="pa-certificates-grid">'+(certificates.length?certificates.map(function(cert,index){return '<article class="pa-certificate-card"><b>'+esc(cert.track_title)+'</b><small>'+esc(cert.certificate_code)+'</small><button type="button" class="pa-activity-submit" data-certificate-index="'+index+'">عرض وطباعة الشهادة</button></article>'}).join(''):'<p>تُصدر الشهادة بعد إكمال جميع دروس المسار والحصول على تقييم 70% أو أكثر في مشروعه.</p>')+'</div></section>';
+    host.querySelectorAll('[data-certificate-index]').forEach(function(button){button.addEventListener('click',function(){printProgrammingCertificate(certificates[Number(button.dataset.certificateIndex)])})});
+  }
+  async function loadProgrammingAdminLearning(){
+    var panel=$('paAdminLearning');if(!panel||!isStaff)return;panel.hidden=false;
+    var result=await db.rpc('programming_admin_learning_overview');
+    if(result.error){$('paAdminLearningQueue').innerHTML='<div class="pa-activity-lock">تعذر تحميل متابعة الطلاب: '+esc(result.error.message)+'</div>';return}
+    var data=result.data||{};
+    $('paAdminLearningStats').innerHTML='<article class="pa-progress-card"><b>'+Number(data.students||0)+'</b><span>طلاب نشطون في التعلم</span></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات اختبارات</span></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.pending_reviews||0)+'</b><span>تحتاج إلى مراجعة</span></article>';
+    var rows=(data.recent_exercises||[]).concat(data.recent_projects||[]).sort(function(a,b){return new Date(b.submitted_at)-new Date(a.submitted_at)});
+    var queue=$('paAdminLearningQueue');
+    if(!rows.length){queue.innerHTML='<div class="pa-activity-lock">لا توجد تسليمات حتى الآن.</div>';return}
+    queue.innerHTML=rows.map(function(row){
+      var title=row.kind==='exercise'?row.exercise_title:row.project_title;
+      var details=row.kind==='exercise'?'<details class="pa-review-details"><summary>عرض كود الطالب وملاحظاته</summary><pre>'+esc(row.source_code||'لا يوجد كود مرفق.')+'</pre><p>'+esc(row.notes||'')+'</p></details>':'<details class="pa-review-details"><summary>تفاصيل المشروع</summary><p>المستودع: '+esc(row.repository_url||'غير مرفق')+'</p><p>المعاينة: '+esc(row.demo_url||'غير مرفقة')+'</p><p>'+esc(row.notes||'')+'</p></details>';return '<article class="pa-review-card" data-review-kind="'+row.kind+'" data-review-id="'+esc(row.id)+'"><div class="pa-review-meta"><b>'+esc(row.student_name)+'</b><span>'+esc(title)+'</span><small>'+new Date(row.submitted_at).toLocaleString('ar-EG')+' · '+(row.status==='submitted'?'قيد المراجعة':row.status==='reviewed'?'تمت المراجعة':'يحتاج إلى تعديل')+'</small>'+details+'</div><div class="pa-review-controls"><input type="number" min="0" max="100" placeholder="الدرجة" value="'+(row.score===null||row.score===undefined?'':row.score)+'" data-review-score><input type="text" placeholder="ملاحظات المراجعة" data-review-feedback><button type="button" class="pa-activity-submit" data-review-action="reviewed">اعتماد التقييم</button><button type="button" class="pa-lab-secondary" data-review-action="needs_revision">طلب تعديل</button></div></article>';
+    }).join('');
+    queue.querySelectorAll('[data-review-action]').forEach(function(button){button.addEventListener('click',async function(){
+      var card=button.closest('[data-review-id]'),scoreText=card.querySelector('[data-review-score]').value,score=scoreText===''?null:Number(scoreText);
+      if(score!==null&&(!Number.isInteger(score)||score<0||score>100)){toast('اكتب درجة صحيحة من 0 إلى 100.');return}
+      button.disabled=true;
+      var saved=await db.rpc('programming_admin_review_submission',{p_kind:card.dataset.reviewKind,p_submission_id:card.dataset.reviewId,p_status:button.dataset.reviewAction,p_score:score,p_feedback:card.querySelector('[data-review-feedback]').value});
+      button.disabled=false;if(saved.error){toast('تعذر حفظ التقييم: '+saved.error.message);return}
+      toast('تم حفظ مراجعة الطالب.');await loadProgrammingAdminLearning();
+    })});
+  }
+  async function toggleComplete(id){
+    if(!user){showModal();return}if(!hasAccess()){showModal();return}
+    if(completed[id]){
+      var del=await db.from('programming_lesson_progress').delete().eq('lesson_id',id).eq('user_id',user.id);
+      if(del.error){toast('تعذر تحديث التقدم. حاول مرة أخرى.');return}delete completed[id];
+    }else{
+      var ins=await db.from('programming_lesson_progress').insert({user_id:user.id,lesson_id:id});
+      if(ins.error&&ins.error.code!=='23505'){toast('تعذر حفظ التقدم. حاول مرة أخرى.');return}completed[id]=true;
+    }
+    renderTracks();renderLessons();openLesson(id);await loadStudentProgress();toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
+  }
+  async function loadCurriculum(){
+    var results=await Promise.all([db.from('programming_tracks').select('*').eq('published',true).order('sort_order'),db.from('programming_modules').select('*').eq('published',true).order('sort_order'),db.from('programming_lessons').select('id,module_id,title,summary,duration_minutes,sort_order,published').eq('published',true).order('sort_order')]);
+    var a=results[0],b=results[1],c=results[2];
+    if(a.error||b.error||c.error){$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل المنهج</h3><p>تأكد من اتصال الإنترنت ثم حدّث الصفحة. إذا استمرت المشكلة، راجع إعداد قاعدة بيانات الأكاديمية.</p></div>';return}
+    tracks=a.data||[];modules=b.data||[];lessons=c.data||[];
+    completed={};
+    if(user&&hasAccess()){
+      var p=await db.from('programming_lesson_progress').select('lesson_id').eq('user_id',user.id);
+      if(!p.error)(p.data||[]).forEach(function(row){completed[row.lesson_id]=true});
+    }
+    renderTracks();
+    var requestedTrack=new URLSearchParams(window.location.search).get('track');
+    var requestedLesson=new URLSearchParams(window.location.search).get('lesson');
+    if(requestedTrack&&tracks.some(function(t){return String(t.id)===String(requestedTrack)})){
+      selectTrack(requestedTrack);
+    }else{
+      document.body.classList.remove('pa-track-view');
+      if(!tracks.some(function(t){return String(t.id)===String(activeTrack)})&&tracks.length)activeTrack=tracks[0].id;
+      selectTrack(activeTrack);
+      document.body.classList.remove('pa-track-view');
+    }
+    if(requestedLesson&&lessons.some(function(l){return l.id===requestedLesson})){var target=lessons.find(function(l){return l.id===requestedLesson});var parent=modules.find(function(m){return m.id===target.module_id});if(parent&&parent.track_id===activeTrack)await openLesson(requestedLesson)}
+  }
+  function setPaymentStatus(message,type){var el=$('paPaymentStatus');el.textContent=message;el.className='pa-payment-status '+(type||'')}
+  async function submitPayment(){
+    if(!user){showModal();return}
+    if(pendingRequest){setPaymentStatus('طلبك الحالي قيد مراجعة الإدارة. لا ترسل طلبًا جديدًا.','info');return}
+    var phone=$('paSenderPhone').value.trim(),file=$('paReceiptFile').files&&$('paReceiptFile').files[0];
+    if(!phone){setPaymentStatus('اكتب رقم الهاتف الذي تم التحويل منه.','error');return}
+    if(!file){setPaymentStatus('ارفع صورة إيصال التحويل أولًا.','error');return}
+    if(file.size>5*1024*1024){setPaymentStatus('حجم الإيصال يجب ألا يتجاوز 5 ميجابايت.','error');return}
+    var ext=(file.name.split('.').pop()||'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+    var mime=String(file.type||'').toLowerCase()||({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',heic:'image/heic',heif:'image/heif'})[ext]||'';
+    if(['image/jpeg','image/png','image/webp','image/gif','image/heic','image/heif'].indexOf(mime)<0){setPaymentStatus('استخدم صورة JPEG أو PNG أو WebP أو GIF أو HEIC.','error');return}
+    $('paSubmitPayment').disabled=true;setPaymentStatus('جارٍ رفع الإيصال بشكل آمن…','info');
+    var path=user.id+'/programming/'+crypto.randomUUID()+'.'+(ext||'jpg');
+    var up=await db.storage.from('payment-proofs').upload(path,file,{contentType:mime,upsert:false});
+    if(up.error){$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر رفع الإيصال: '+up.error.message,'error');return}
+    var result=await db.rpc('programming_create_payment_request',{p_sender_phone:phone,p_proof_path:path});
+    if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
+    pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
+    await loadCurriculum();
+    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(new URLSearchParams(window.location.search).get('learning-admin')==='1'){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
+  }
+  async function renderAdminRequests(rows){
+    var panel=$('paAdminPanel'),host=$('paAdminRequests');panel.hidden=false;
+    if(!rows.length){host.innerHTML='<p class="pa-admin-empty">لا توجد طلبات اشتراك حتى الآن.</p>';return}
+    var cards=await Promise.all(rows.map(async function(r){
+      var signed=await db.storage.from('payment-proofs').createSignedUrl(r.proof_path,300);
+      var receipt=signed.data&&signed.data.signedUrl?'<a class="pa-outline-btn" href="'+esc(signed.data.signedUrl)+'" target="_blank" rel="noopener">عرض الإيصال</a>':'<span>تعذر فتح الإيصال</span>';
+      var actions=r.status==='pending'?'<div class="pa-admin-actions"><button type="button" data-pa-approve="'+esc(r.id)+'" class="pa-admin-approve">تفعيل 30 يومًا</button><button type="button" data-pa-reject="'+esc(r.id)+'" class="pa-admin-reject">رفض الطلب</button></div>':'<span class="pa-admin-status">'+(r.status==='approved'?'تم التفعيل':'مرفوض')+'</span>';
+      return '<article class="pa-admin-request"><div><b>'+esc(r.student_name||'طالب')+'</b><small>'+esc(r.student_phone||'')+' · '+esc(r.sender_phone)+'</small><small>100 جنيه · '+new Date(r.created_at).toLocaleString('ar-EG')+'</small></div>'+receipt+actions+'</article>';
+    }));
+    host.innerHTML=cards.join('');
+    host.querySelectorAll('[data-pa-approve]').forEach(function(btn){btn.addEventListener('click',function(){reviewRequest(btn.getAttribute('data-pa-approve'),'approve')})});
+    host.querySelectorAll('[data-pa-reject]').forEach(function(btn){btn.addEventListener('click',function(){reviewRequest(btn.getAttribute('data-pa-reject'),'reject')})});
+  }
+  async function reviewRequest(id,action){
+    if(!window.confirm(action==='approve'?'تأكيد تفعيل اشتراك البرمجة لمدة 30 يومًا؟':'تأكيد رفض طلب الاشتراك؟'))return;
+    var r=await db.rpc(action==='approve'?'programming_approve_payment_request':'programming_reject_payment_request',{p_request_id:id,p_note:action==='approve'?'Payment verified by admin.':'Payment receipt could not be verified.'});
+    if(r.error){toast('تعذر مراجعة الطلب: '+r.error.message);return}
+    toast(action==='approve'?'تم تفعيل الاشتراك لمدة 30 يومًا.':'تم رفض طلب الاشتراك.');
+    var list=await db.rpc('programming_admin_list_payment_requests');if(!list.error)renderAdminRequests(list.data||[]);
+  }
+  async function boot(){
+    var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
+    renderUserIdentity();
+    // Resolve the signed-in user's subscription before loading a deep-linked lesson.
+    // Otherwise openLesson() sees the initial null subscription and incorrectly opens the paywall.
+    await refreshMembership();
+    await loadCurriculum();
+    await loadStudentProgress();
+    db.auth.onAuthStateChange(async function(_event,session){
+      user=session&&session.user?session.user:null;
+      renderUserIdentity();
+      await refreshMembership();
+      await loadCurriculum();
+      await loadStudentProgress();
+      if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
+    });
+  }
+  $('paBackToTracks').addEventListener('click',showTrackOverview);
+  $('paSubmitPayment').addEventListener('click',submitPayment);
+  $('paAdminLearningRefresh').addEventListener('click',loadProgrammingAdminLearning);
+  $('paAdminRefresh').addEventListener('click',async function(){var r=await db.rpc('programming_admin_list_payment_requests');if(!r.error)renderAdminRequests(r.data||[])});
+  $('paSubscribeModal').querySelectorAll('[data-pa-close]').forEach(function(el){el.addEventListener('click',closeModal)});
+  if(window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1'){
+    document.addEventListener('click',function(event){
+      var link=event.target&&event.target.closest?event.target.closest('a[href]'):null;
+      if(!link)return;
+      var target=new URL(link.getAttribute('href'),window.location.href);
+      if(target.origin===window.location.origin&&(target.pathname==='/'||target.pathname.endsWith('/index.html'))){
+        event.preventDefault();
+        window.parent.postMessage({type:'DOMA_PROGRAMMING_CLOSE'},window.location.origin);
+      }
+    },true);
+  }
+
+  boot().catch(function(error){console.error('DOMA Pro academy startup failed:',error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء بدء الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';var progress=$('paProgressCards');if(progress)progress.innerHTML='';var section=$('paStudentProgress');if(section)section.hidden=true;});
+}
+(function(){
+  var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2'];
+  function showLoadError(){var host=document.getElementById('paTracks');if(host)host.innerHTML='<div class="pa-empty-state"><h3>تعذر بدء الأكاديمية</h3><p>مكتبة الاتصال لم يتم تحميلها. تحقق من الإنترنت ثم أعد المحاولة.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';}
+  function load(index){
+    if(window.supabase&&window.supabase.createClient){initializeDomaProgrammingAcademy();return;}
+    if(index>=sources.length){showLoadError();return;}
+    var script=document.createElement('script');script.src=sources[index];script.async=true;
+    var settled=false;var timer=setTimeout(function(){if(settled)return;settled=true;script.remove();load(index+1);},10000);
+    script.onload=function(){if(settled)return;settled=true;clearTimeout(timer);if(window.supabase&&window.supabase.createClient)initializeDomaProgrammingAcademy();else load(index+1);};
+    script.onerror=function(){if(settled)return;settled=true;clearTimeout(timer);script.remove();load(index+1);};
+    document.head.appendChild(script);
+  }
+  load(0);
+})();</script>
+
+<style id="pa-pull-refresh-style">
+#paPullRefresh{position:fixed;z-index:10000;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;display:flex;align-items:center;gap:9px;padding:10px 15px;border:1px solid rgba(242,210,160,.38);border-radius:999px;background:rgba(35,23,49,.94);color:#f2d2a0;font:700 12px system-ui,sans-serif;box-shadow:0 8px 25px rgba(0,0,0,.28);opacity:0;pointer-events:none;transform:translate(-50%,-150%);transition:opacity .15s,transform .15s}
+#paPullRefresh.is-visible{opacity:1;transform:translate(-50%,0)}
+#paPullRefresh .pa-refresh-icon{display:inline-block;font-size:16px;line-height:1}
+#paPullRefresh.is-refreshing .pa-refresh-icon{animation:paRefreshSpin .7s linear infinite}
+@keyframes paRefreshSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#paPullRefresh,#paPullRefresh .pa-refresh-icon{transition:none;animation:none}}
+</style>
+<div id="paPullRefresh" role="status" aria-live="polite"><span class="pa-refresh-icon">↻</span><span>اسحب للتحديث</span></div>
+<script id="pa-pull-refresh">
+(function(){
+  if(window.__paPullRefreshInstalled)return;
+  window.__paPullRefreshInstalled=true;
+  var indicator=document.getElementById('paPullRefresh');
+  if(!indicator)return;
+  var startY=0,pulling=false,armed=false,reloading=false,threshold=88;
+  function blocked(target){return !!(target&&target.closest&&target.closest('textarea,input,select,button,a,iframe,[contenteditable="true"],.pa-code-editor,.pa-code-output,.pa-code-input,.pa-reader-content pre,.pa-table-wrap,.pa-modal-card'))}
+  function hide(){pulling=false;armed=false;indicator.classList.remove('is-visible','is-refreshing')}
+  document.addEventListener('touchstart',function(event){if(reloading||event.touches.length!==1||window.scrollY>2||blocked(event.target))return;startY=event.touches[0].clientY;pulling=true;armed=false},{passive:true});
+  document.addEventListener('touchmove',function(event){
+    if(!pulling||event.touches.length!==1)return;
+    var delta=event.touches[0].clientY-startY;
+    if(delta<=0||window.scrollY>2){hide();return}
+    if(delta>8){event.preventDefault();armed=delta>=threshold;indicator.classList.add('is-visible');indicator.classList.toggle('is-refreshing',armed);indicator.querySelector('span:last-child').textContent=armed?'اترك للتحديث':'اسحب للتحديث'}
+  },{passive:false});
+  function finish(){if(!pulling)return;var shouldReload=armed;hide();if(shouldReload&&!reloading){reloading=true;indicator.classList.add('is-visible','is-refreshing');indicator.querySelector('span:last-child').textContent='جاري تحديث الصفحة…';window.setTimeout(function(){window.location.reload()},120)}}
+  document.addEventListener('touchend',finish,{passive:true});document.addEventListener('touchcancel',finish,{passive:true});
+})();
+</script>
 <style id="pa-python-pilot-enhancements">
 .pa-quiz-feedback{display:grid;gap:10px;margin-top:14px}
 .pa-quiz-feedback-item,.pa-exercise-hints,.pa-exercise-test-results,.pa-exercise-solution{padding:13px 15px;border:1px solid rgba(205,170,111,.25);border-radius:14px;background:rgba(24,18,34,.42);margin-top:12px}
@@ -499,199 +693,6 @@ function initializeDomaProgrammingAcademy(){
     var issued=new Date(certificate.issued_at).toLocaleDateString('ar-EG');
     var html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>DOMA Certificate</title><style>*{box-sizing:border-box}body{margin:0;padding:36px;background:#f5efe6;color:#24172f;font-family:Arial,sans-serif}.certificate{min-height:90vh;border:12px double #b88a4f;padding:50px 35px;text-align:center;display:flex;flex-direction:column;justify-content:center}.brand{font-size:18px;letter-spacing:5px;color:#8c6535;font-weight:800}.title{font-size:42px;margin:28px 0 10px}.subtitle{font-size:18px;color:#725b46}.student{font-size:30px;margin:35px 0 20px;border-bottom:1px solid #b88a4f;padding-bottom:16px}.track{font-size:24px;font-weight:800;color:#7b4d8f}.note{font-size:16px;line-height:2;margin:20px auto;max-width:700px}.code{margin-top:35px;font-size:13px;color:#735d47}.date{margin-top:12px;color:#735d47}@media print{body{padding:0}.certificate{min-height:100vh}}</style>
 <style id="pa-simplified-academy-home">.pa-subscription-compact{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 16px;margin:18px 0 28px;padding:18px 20px;border:1px solid rgba(205,170,111,.48);border-radius:18px;background:linear-gradient(120deg,rgba(49,34,62,.96),rgba(28,25,42,.98));box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}.pa-subscription-copy{display:flex;flex-direction:column;gap:4px}.pa-subscription-copy>span{font-size:9px;letter-spacing:1.3px;color:#d9b873;font-weight:900}.pa-subscription-copy strong{font-size:17px;color:#fff}.pa-subscription-copy small{font-size:12px;color:#d8c7a6}.pa-subscription-compact .pa-membership-status{grid-column:1/-1;margin:0;color:#d8c7a6;font-size:12px}.pa-subscription-compact .pa-primary-btn{white-space:nowrap}.pa-path-section{margin-top:8px}.pa-section-heading{margin-bottom:18px}@media(max-width:520px){.pa-subscription-compact{padding:14px;gap:9px}.pa-subscription-copy strong{font-size:15px}.pa-subscription-compact .pa-primary-btn{font-size:12px;padding:10px 12px}}</style>
-</head><body><main class="certificate"><div class="brand">DOMA ACADEMY</div><h1 class="title">شهادة إتمام مسار</h1><p class="subtitle">تُمنح هذه الشهادة تقديرًا لإتمام متطلبات التعلم والتطبيق العملي في</p><div class="student">${esc(user&&user.user_metadata&&user.user_metadata.full_name||'طالب DOMA')}</div><div class="track">${esc(certificate.track_title)}</div><p class="note">أتم المتعلم دروس المسار وقدم مشروعًا عمليًا تمت مراجعته وتقييمه بنجاح. نتمنى له دوام التعلم والإبداع.</p><div class="code">رقم الشهادة: ${esc(certificate.certificate_code)}</div><div class="date">تاريخ الإصدار: ${esc(issued)}</div></main></body></html>`;
-    printWindow.document.open();printWindow.document.write(html);printWindow.document.close();printWindow.focus();printWindow.print();
-  }
-  async function loadStudentProgress(){
-    var host=$('paProgressCards');if(!host)return;
-    var section=$('paStudentProgress');
-    if(!user){if(section)section.hidden=true;host.innerHTML='';return}
-    if(!hasAccess()){if(section)section.hidden=true;host.innerHTML='';return}
-    if(section)section.hidden=false;
-    host.innerHTML='<div class="pa-loading">جاري تحميل تقدمك…</div>';
-    var result=await db.rpc('programming_get_my_learning_progress');
-    if(result.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل تقدمك: '+esc(result.error.message)+'</div>';return}
-    var data=result.data||{},done=Number(data.completed_lessons||0),total=Number(data.total_lessons||lessons.length),percent=total?Math.round(done/total*100):0;
-    var badges=Array.isArray(data.badges)?data.badges.filter(Boolean):[],certificates=Array.isArray(data.certificates)?data.certificates:[];
-    host.innerHTML='<article class="pa-progress-card"><b>'+done+' / '+total+'</b><span>دروس مكتملة</span><i><em style="width:'+percent+'%"></em></i></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات الاختبار</span><small>'+Number(data.passed_quizzes||0)+' اختبارات مجتازة · متوسط '+Number(data.average_quiz_score||0)+'%</small></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span><small>'+Number(data.reviewed_exercises||0)+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span><small>'+Number(data.reviewed_projects||0)+' تمت مراجعتها</small></article><article class="pa-progress-card"><b>'+Number(data.points||0)+'</b><span>نقاط التعلم</span><small>تُحتسب من الدروس والاختبارات والتطبيقات والمشاريع المقيّمة.</small></article><section class="pa-achievement-panel"><h3>أوسمة الإنجاز</h3><div class="pa-badges-grid">'+(badges.length?badges.map(function(badge){return '<article class="pa-student-badge"><b>'+esc(badge.icon||'✦')+'</b><strong>'+esc(badge.title)+'</strong><small>'+esc(badge.description)+'</small></article>'}).join(''):'<p>أكمل الدروس والاختبارات والتطبيقات لتحصل على أوسمتك الأولى.</p>')+'</div></section><section class="pa-achievement-panel"><h3>شهادات المسارات</h3><div class="pa-certificates-grid">'+(certificates.length?certificates.map(function(cert,index){return '<article class="pa-certificate-card"><b>'+esc(cert.track_title)+'</b><small>'+esc(cert.certificate_code)+'</small><button type="button" class="pa-activity-submit" data-certificate-index="'+index+'">عرض وطباعة الشهادة</button></article>'}).join(''):'<p>تُصدر الشهادة بعد إكمال جميع دروس المسار والحصول على تقييم 70% أو أكثر في مشروعه.</p>')+'</div></section>';
-    host.querySelectorAll('[data-certificate-index]').forEach(function(button){button.addEventListener('click',function(){printProgrammingCertificate(certificates[Number(button.dataset.certificateIndex)])})});
-  }
-  async function loadProgrammingAdminLearning(){
-    var panel=$('paAdminLearning');if(!panel||!isStaff)return;panel.hidden=false;
-    var result=await db.rpc('programming_admin_learning_overview');
-    if(result.error){$('paAdminLearningQueue').innerHTML='<div class="pa-activity-lock">تعذر تحميل متابعة الطلاب: '+esc(result.error.message)+'</div>';return}
-    var data=result.data||{};
-    $('paAdminLearningStats').innerHTML='<article class="pa-progress-card"><b>'+Number(data.students||0)+'</b><span>طلاب نشطون في التعلم</span></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات اختبارات</span></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.pending_reviews||0)+'</b><span>تحتاج إلى مراجعة</span></article>';
-    var rows=(data.recent_exercises||[]).concat(data.recent_projects||[]).sort(function(a,b){return new Date(b.submitted_at)-new Date(a.submitted_at)});
-    var queue=$('paAdminLearningQueue');
-    if(!rows.length){queue.innerHTML='<div class="pa-activity-lock">لا توجد تسليمات حتى الآن.</div>';return}
-    queue.innerHTML=rows.map(function(row){
-      var title=row.kind==='exercise'?row.exercise_title:row.project_title;
-      var details=row.kind==='exercise'?'<details class="pa-review-details"><summary>عرض كود الطالب وملاحظاته</summary><pre>'+esc(row.source_code||'لا يوجد كود مرفق.')+'</pre><p>'+esc(row.notes||'')+'</p></details>':'<details class="pa-review-details"><summary>تفاصيل المشروع</summary><p>المستودع: '+esc(row.repository_url||'غير مرفق')+'</p><p>المعاينة: '+esc(row.demo_url||'غير مرفقة')+'</p><p>'+esc(row.notes||'')+'</p></details>';return '<article class="pa-review-card" data-review-kind="'+row.kind+'" data-review-id="'+esc(row.id)+'"><div class="pa-review-meta"><b>'+esc(row.student_name)+'</b><span>'+esc(title)+'</span><small>'+new Date(row.submitted_at).toLocaleString('ar-EG')+' · '+(row.status==='submitted'?'قيد المراجعة':row.status==='reviewed'?'تمت المراجعة':'يحتاج إلى تعديل')+'</small>'+details+'</div><div class="pa-review-controls"><input type="number" min="0" max="100" placeholder="الدرجة" value="'+(row.score===null||row.score===undefined?'':row.score)+'" data-review-score><input type="text" placeholder="ملاحظات المراجعة" data-review-feedback><button type="button" class="pa-activity-submit" data-review-action="reviewed">اعتماد التقييم</button><button type="button" class="pa-lab-secondary" data-review-action="needs_revision">طلب تعديل</button></div></article>';
-    }).join('');
-    queue.querySelectorAll('[data-review-action]').forEach(function(button){button.addEventListener('click',async function(){
-      var card=button.closest('[data-review-id]'),scoreText=card.querySelector('[data-review-score]').value,score=scoreText===''?null:Number(scoreText);
-      if(score!==null&&(!Number.isInteger(score)||score<0||score>100)){toast('اكتب درجة صحيحة من 0 إلى 100.');return}
-      button.disabled=true;
-      var saved=await db.rpc('programming_admin_review_submission',{p_kind:card.dataset.reviewKind,p_submission_id:card.dataset.reviewId,p_status:button.dataset.reviewAction,p_score:score,p_feedback:card.querySelector('[data-review-feedback]').value});
-      button.disabled=false;if(saved.error){toast('تعذر حفظ التقييم: '+saved.error.message);return}
-      toast('تم حفظ مراجعة الطالب.');await loadProgrammingAdminLearning();
-    })});
-  }
-  async function toggleComplete(id){
-    if(!user){showModal();return}if(!hasAccess()){showModal();return}
-    if(completed[id]){
-      var del=await db.from('programming_lesson_progress').delete().eq('lesson_id',id).eq('user_id',user.id);
-      if(del.error){toast('تعذر تحديث التقدم. حاول مرة أخرى.');return}delete completed[id];
-    }else{
-      var ins=await db.from('programming_lesson_progress').insert({user_id:user.id,lesson_id:id});
-      if(ins.error&&ins.error.code!=='23505'){toast('تعذر حفظ التقدم. حاول مرة أخرى.');return}completed[id]=true;
-    }
-    renderTracks();renderLessons();openLesson(id);await loadStudentProgress();toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
-  }
-  async function loadCurriculum(){
-    var results=await Promise.all([db.from('programming_tracks').select('*').eq('published',true).order('sort_order'),db.from('programming_modules').select('*').eq('published',true).order('sort_order'),db.from('programming_lessons').select('id,module_id,title,summary,duration_minutes,sort_order,published').eq('published',true).order('sort_order')]);
-    var a=results[0],b=results[1],c=results[2];
-    if(a.error||b.error||c.error){$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل المنهج</h3><p>تأكد من اتصال الإنترنت ثم حدّث الصفحة. إذا استمرت المشكلة، راجع إعداد قاعدة بيانات الأكاديمية.</p></div>';return}
-    tracks=a.data||[];modules=b.data||[];lessons=c.data||[];
-    completed={};
-    if(user&&hasAccess()){
-      var p=await db.from('programming_lesson_progress').select('lesson_id').eq('user_id',user.id);
-      if(!p.error)(p.data||[]).forEach(function(row){completed[row.lesson_id]=true});
-    }
-    renderTracks();
-    var requestedTrack=new URLSearchParams(window.location.search).get('track');
-    var requestedLesson=new URLSearchParams(window.location.search).get('lesson');
-    if(requestedTrack&&tracks.some(function(t){return String(t.id)===String(requestedTrack)})){
-      selectTrack(requestedTrack);
-    }else{
-      document.body.classList.remove('pa-track-view');
-      if(!tracks.some(function(t){return String(t.id)===String(activeTrack)})&&tracks.length)activeTrack=tracks[0].id;
-      selectTrack(activeTrack);
-      document.body.classList.remove('pa-track-view');
-    }
-    if(requestedLesson&&lessons.some(function(l){return l.id===requestedLesson})){var target=lessons.find(function(l){return l.id===requestedLesson});var parent=modules.find(function(m){return m.id===target.module_id});if(parent&&parent.track_id===activeTrack)await openLesson(requestedLesson)}
-  }
-  function setPaymentStatus(message,type){var el=$('paPaymentStatus');el.textContent=message;el.className='pa-payment-status '+(type||'')}
-  async function submitPayment(){
-    if(!user){showModal();return}
-    if(pendingRequest){setPaymentStatus('طلبك الحالي قيد مراجعة الإدارة. لا ترسل طلبًا جديدًا.','info');return}
-    var phone=$('paSenderPhone').value.trim(),file=$('paReceiptFile').files&&$('paReceiptFile').files[0];
-    if(!phone){setPaymentStatus('اكتب رقم الهاتف الذي تم التحويل منه.','error');return}
-    if(!file){setPaymentStatus('ارفع صورة إيصال التحويل أولًا.','error');return}
-    if(file.size>5*1024*1024){setPaymentStatus('حجم الإيصال يجب ألا يتجاوز 5 ميجابايت.','error');return}
-    var ext=(file.name.split('.').pop()||'').replace(/[^a-z0-9]/gi,'').toLowerCase();
-    var mime=String(file.type||'').toLowerCase()||({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',heic:'image/heic',heif:'image/heif'})[ext]||'';
-    if(['image/jpeg','image/png','image/webp','image/gif','image/heic','image/heif'].indexOf(mime)<0){setPaymentStatus('استخدم صورة JPEG أو PNG أو WebP أو GIF أو HEIC.','error');return}
-    $('paSubmitPayment').disabled=true;setPaymentStatus('جارٍ رفع الإيصال بشكل آمن…','info');
-    var path=user.id+'/programming/'+crypto.randomUUID()+'.'+(ext||'jpg');
-    var up=await db.storage.from('payment-proofs').upload(path,file,{contentType:mime,upsert:false});
-    if(up.error){$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر رفع الإيصال: '+up.error.message,'error');return}
-    var result=await db.rpc('programming_create_payment_request',{p_sender_phone:phone,p_proof_path:path});
-    if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
-    pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
-    await loadCurriculum();
-    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(new URLSearchParams(window.location.search).get('learning-admin')==='1'){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
-  }
-  async function renderAdminRequests(rows){
-    var panel=$('paAdminPanel'),host=$('paAdminRequests');panel.hidden=false;
-    if(!rows.length){host.innerHTML='<p class="pa-admin-empty">لا توجد طلبات اشتراك حتى الآن.</p>';return}
-    var cards=await Promise.all(rows.map(async function(r){
-      var signed=await db.storage.from('payment-proofs').createSignedUrl(r.proof_path,300);
-      var receipt=signed.data&&signed.data.signedUrl?'<a class="pa-outline-btn" href="'+esc(signed.data.signedUrl)+'" target="_blank" rel="noopener">عرض الإيصال</a>':'<span>تعذر فتح الإيصال</span>';
-      var actions=r.status==='pending'?'<div class="pa-admin-actions"><button type="button" data-pa-approve="'+esc(r.id)+'" class="pa-admin-approve">تفعيل 30 يومًا</button><button type="button" data-pa-reject="'+esc(r.id)+'" class="pa-admin-reject">رفض الطلب</button></div>':'<span class="pa-admin-status">'+(r.status==='approved'?'تم التفعيل':'مرفوض')+'</span>';
-      return '<article class="pa-admin-request"><div><b>'+esc(r.student_name||'طالب')+'</b><small>'+esc(r.student_phone||'')+' · '+esc(r.sender_phone)+'</small><small>100 جنيه · '+new Date(r.created_at).toLocaleString('ar-EG')+'</small></div>'+receipt+actions+'</article>';
-    }));
-    host.innerHTML=cards.join('');
-    host.querySelectorAll('[data-pa-approve]').forEach(function(btn){btn.addEventListener('click',function(){reviewRequest(btn.getAttribute('data-pa-approve'),'approve')})});
-    host.querySelectorAll('[data-pa-reject]').forEach(function(btn){btn.addEventListener('click',function(){reviewRequest(btn.getAttribute('data-pa-reject'),'reject')})});
-  }
-  async function reviewRequest(id,action){
-    if(!window.confirm(action==='approve'?'تأكيد تفعيل اشتراك البرمجة لمدة 30 يومًا؟':'تأكيد رفض طلب الاشتراك؟'))return;
-    var r=await db.rpc(action==='approve'?'programming_approve_payment_request':'programming_reject_payment_request',{p_request_id:id,p_note:action==='approve'?'Payment verified by admin.':'Payment receipt could not be verified.'});
-    if(r.error){toast('تعذر مراجعة الطلب: '+r.error.message);return}
-    toast(action==='approve'?'تم تفعيل الاشتراك لمدة 30 يومًا.':'تم رفض طلب الاشتراك.');
-    var list=await db.rpc('programming_admin_list_payment_requests');if(!list.error)renderAdminRequests(list.data||[]);
-  }
-  async function boot(){
-    var auth=await db.auth.getSession();user=auth.data&&auth.data.session?auth.data.session.user:null;
-    renderUserIdentity();
-    // Resolve the signed-in user's subscription before loading a deep-linked lesson.
-    // Otherwise openLesson() sees the initial null subscription and incorrectly opens the paywall.
-    await refreshMembership();
-    await loadCurriculum();
-    await loadStudentProgress();
-    db.auth.onAuthStateChange(async function(_event,session){
-      user=session&&session.user?session.user:null;
-      renderUserIdentity();
-      await refreshMembership();
-      await loadCurriculum();
-      await loadStudentProgress();
-      if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
-    });
-  }
-  $('paBackToTracks').addEventListener('click',showTrackOverview);
-  $('paSubmitPayment').addEventListener('click',submitPayment);
-  $('paAdminLearningRefresh').addEventListener('click',loadProgrammingAdminLearning);
-  $('paAdminRefresh').addEventListener('click',async function(){var r=await db.rpc('programming_admin_list_payment_requests');if(!r.error)renderAdminRequests(r.data||[])});
-  $('paSubscribeModal').querySelectorAll('[data-pa-close]').forEach(function(el){el.addEventListener('click',closeModal)});
-  if(window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1'){
-    document.addEventListener('click',function(event){
-      var link=event.target&&event.target.closest?event.target.closest('a[href]'):null;
-      if(!link)return;
-      var target=new URL(link.getAttribute('href'),window.location.href);
-      if(target.origin===window.location.origin&&(target.pathname==='/'||target.pathname.endsWith('/index.html'))){
-        event.preventDefault();
-        window.parent.postMessage({type:'DOMA_PROGRAMMING_CLOSE'},window.location.origin);
-      }
-    },true);
-  }
-
-  boot().catch(function(error){console.error('DOMA Pro academy startup failed:',error);$('paTracks').innerHTML='<div class="pa-empty-state"><h3>تعذر تحميل الأكاديمية</h3><p>حصلت مشكلة أثناء بدء الأكاديمية. حدّث الصفحة وحاول مرة أخرى.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';var progress=$('paProgressCards');if(progress)progress.innerHTML='';var section=$('paStudentProgress');if(section)section.hidden=true;});
-}
-(function(){
-  var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2'];
-  function showLoadError(){var host=document.getElementById('paTracks');if(host)host.innerHTML='<div class="pa-empty-state"><h3>تعذر بدء الأكاديمية</h3><p>مكتبة الاتصال لم يتم تحميلها. تحقق من الإنترنت ثم أعد المحاولة.</p><button type="button" class="pa-primary-btn" onclick="location.reload()">إعادة المحاولة</button></div>';}
-  function load(index){
-    if(window.supabase&&window.supabase.createClient){initializeDomaProgrammingAcademy();return;}
-    if(index>=sources.length){showLoadError();return;}
-    var script=document.createElement('script');script.src=sources[index];script.async=true;
-    var settled=false;var timer=setTimeout(function(){if(settled)return;settled=true;script.remove();load(index+1);},10000);
-    script.onload=function(){if(settled)return;settled=true;clearTimeout(timer);if(window.supabase&&window.supabase.createClient)initializeDomaProgrammingAcademy();else load(index+1);};
-    script.onerror=function(){if(settled)return;settled=true;clearTimeout(timer);script.remove();load(index+1);};
-    document.head.appendChild(script);
-  }
-  load(0);
-})();</script>
-
-<style id="pa-pull-refresh-style">
-#paPullRefresh{position:fixed;z-index:10000;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;display:flex;align-items:center;gap:9px;padding:10px 15px;border:1px solid rgba(242,210,160,.38);border-radius:999px;background:rgba(35,23,49,.94);color:#f2d2a0;font:700 12px system-ui,sans-serif;box-shadow:0 8px 25px rgba(0,0,0,.28);opacity:0;pointer-events:none;transform:translate(-50%,-150%);transition:opacity .15s,transform .15s}
-#paPullRefresh.is-visible{opacity:1;transform:translate(-50%,0)}
-#paPullRefresh .pa-refresh-icon{display:inline-block;font-size:16px;line-height:1}
-#paPullRefresh.is-refreshing .pa-refresh-icon{animation:paRefreshSpin .7s linear infinite}
-@keyframes paRefreshSpin{to{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){#paPullRefresh,#paPullRefresh .pa-refresh-icon{transition:none;animation:none}}
-</style>
-<div id="paPullRefresh" role="status" aria-live="polite"><span class="pa-refresh-icon">↻</span><span>اسحب للتحديث</span></div>
-<script id="pa-pull-refresh">
-(function(){
-  if(window.__paPullRefreshInstalled)return;
-  window.__paPullRefreshInstalled=true;
-  var indicator=document.getElementById('paPullRefresh');
-  if(!indicator)return;
-  var startY=0,pulling=false,armed=false,reloading=false,threshold=88;
-  function blocked(target){return !!(target&&target.closest&&target.closest('textarea,input,select,button,a,iframe,[contenteditable="true"],.pa-code-editor,.pa-code-output,.pa-code-input,.pa-reader-content pre,.pa-table-wrap,.pa-modal-card'))}
-  function hide(){pulling=false;armed=false;indicator.classList.remove('is-visible','is-refreshing')}
-  document.addEventListener('touchstart',function(event){if(reloading||event.touches.length!==1||window.scrollY>2||blocked(event.target))return;startY=event.touches[0].clientY;pulling=true;armed=false},{passive:true});
-  document.addEventListener('touchmove',function(event){
-    if(!pulling||event.touches.length!==1)return;
-    var delta=event.touches[0].clientY-startY;
-    if(delta<=0||window.scrollY>2){hide();return}
-    if(delta>8){event.preventDefault();armed=delta>=threshold;indicator.classList.add('is-visible');indicator.classList.toggle('is-refreshing',armed);indicator.querySelector('span:last-child').textContent=armed?'اترك للتحديث':'اسحب للتحديث'}
-  },{passive:false});
-  function finish(){if(!pulling)return;var shouldReload=armed;hide();if(shouldReload&&!reloading){reloading=true;indicator.classList.add('is-visible','is-refreshing');indicator.querySelector('span:last-child').textContent='جاري تحديث الصفحة…';window.setTimeout(function(){window.location.reload()},120)}}
-  document.addEventListener('touchend',finish,{passive:true});document.addEventListener('touchcancel',finish,{passive:true});
-})();
-</script>
+</head><body><main class="certificate"><div class="brand">DOMA ACADEMY</div><h1 clas
 </body>
 </html>
