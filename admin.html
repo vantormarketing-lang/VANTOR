@@ -1478,7 +1478,7 @@ window.resetStudentPassword=async function(studentId,studentLabel){
     const rawResponse=await response.text();
     let result={};
     try{result=rawResponse?JSON.parse(rawResponse):{};}catch(parseError){
-      const preview=rawResponse.replace(/<script[\\s\\S]*?<\\/script>/gi,' ').replace(/<style[\\s\\S]*?<\\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim().slice(0,220);
+      const preview=String(rawResponse||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,220);
       throw new Error('Password reset API returned a non-JSON response (HTTP '+response.status+'). '+(preview||'The API route may not be deployed.'));
     }
     if(!response.ok||!result.ok){
