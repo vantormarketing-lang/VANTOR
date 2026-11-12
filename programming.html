@@ -131,11 +131,14 @@ function initializeDomaProgrammingAcademy(){
         }
         user=refreshedAuth.data.session.user;
       }
-      var now=new Date().toISOString();
-      var sub=await db.from('programming_course_subscriptions').select('id,amount,starts_at,expires_at,status').eq('student_id',user.id).eq('status','active').lte('starts_at',now).gt('expires_at',now).order('expires_at',{ascending:false}).limit(1);
-      if(sub.error)membershipCheckError='فشل الاستعلام عن الاشتراك ('+sub.error.code+').';else if(sub.data&&sub.data.length)subscription=sub.data[0];
-      var req=await db.from('programming_course_payment_requests').select('id,status').eq('student_id',user.id).eq('status','pending').limit(1);
-      if(req.error)membershipCheckError=membershipCheckError||'فشل الاستعلام عن طلب الدفع ('+req.error.code+').';else if(req.data&&req.data.length)pendingRequest=req.data[0];
+      var membership=await db.rpc('programming_get_my_membership_status');
+      if(membership.error){
+        membershipCheckError='فشل التحقق من الاشتراك ('+membership.error.code+').';
+      }else{
+        var membershipData=membership.data||{};
+        subscription=membershipData.subscription||null;
+        pendingRequest=membershipData.pending_request||null;
+      }
       var staff=await db.rpc('programming_admin_list_payment_requests');
       isStaff=!staff.error;
       if(isStaff)renderAdminRequests(staff.data||[]);
