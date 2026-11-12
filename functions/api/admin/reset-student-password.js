@@ -27,7 +27,7 @@ async function profile(cfg,id) {
     headers:{apikey:cfg.key,authorization:"Bearer "+cfg.key}
   });
   const rows=await readJson(q);
-  if(!q.ok||!Array.isArray(rows)) throw new Error("Could not verify account profile");
+  if(!q.ok||!Array.isArray(rows)) throw new Error("Profile lookup failed ("+q.status+"): "+String(rows?.message||rows?.hint||rows?.details||"Supabase profile query was rejected"));
   return rows[0]||null;
 }
 async function authAdminUser(cfg,id) {
@@ -35,7 +35,7 @@ async function authAdminUser(cfg,id) {
     headers:{apikey:cfg.key,authorization:"Bearer "+cfg.key}
   });
   const data=await readJson(r);
-  if(!r.ok||!data.id) throw new Error("Could not load target Auth account");
+  if(!r.ok||!data.id) throw new Error("Could not load target Auth account ("+r.status+"): "+String(data.message||data.msg||data.error_description||data.error||"Supabase Auth admin lookup failed"));
   return data;
 }
 function makeTemporaryPassword() {
@@ -80,7 +80,7 @@ export async function onRequestPost({request,env}) {
       body:JSON.stringify({password:temporaryPassword,app_metadata:appMetadata})
     });
     const result=await readJson(update);
-    if(!update.ok) return json({error:"Supabase could not reset this account"},502);
+    if(!update.ok) return json({error:"Supabase password update failed ("+update.status+"): "+String(result.message||result.msg||result.error_description||result.error||"No additional details returned")},502);
     return json({ok:true,temporary_password:temporaryPassword,student:{name:student.full_name||"",phone:student.phone||""}});
   } catch(error) {
     return json({error:error?.message||"Password reset failed"},500);
