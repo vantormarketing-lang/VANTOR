@@ -35,7 +35,8 @@ begin
 
   return v_count <= 30;
 end;
-$function$;
+$function$
+;
 
 -- Keep all scheduled student reminders in Arabic.
 CREATE OR REPLACE FUNCTION public.doma_generate_all_student_reminders()
@@ -135,4 +136,5 @@ begin
 
   return v_inserted;
 end;
-$function$;
+$function$
+;
