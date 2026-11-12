@@ -151,9 +151,16 @@ function initializeDomaProgrammingAcademy(){
         subscription=membershipData.subscription||null;
         pendingRequest=membershipData.pending_request||null;
       }
-      var staff=await db.rpc('programming_admin_list_payment_requests');
-      isStaff=!staff.error;
-      if(isStaff)renderAdminRequests(staff.data||[]);
+      // Never infer staff access from whether an admin RPC happens to be callable.
+      // Read the signed-in user's own profile role and grant staff access only explicitly.
+      var profile=await db.from('profiles').select('role').eq('id',user.id).maybeSingle();
+      var role=profile.data&&profile.data.role?String(profile.data.role).toLowerCase():'';
+      isStaff=!profile.error&&(role==='admin'||role==='teacher');
+      if(isStaff){
+        var staff=await db.rpc('programming_admin_list_payment_requests');
+        if(!staff.error)renderAdminRequests(staff.data||[]);
+        else isStaff=false;
+      }
     }
     renderMembership();
     // Repaint track and lesson lock indicators after the subscription lookup completes.
