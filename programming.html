@@ -117,6 +117,20 @@ function initializeDomaProgrammingAcademy(){
   async function refreshMembership(){
     subscription=null;pendingRequest=null;isStaff=false;membershipCheckError=null;
     if(user){
+      // Verify the JWT before protected membership reads. A stale/missing auth token
+      // can make PostgREST execute as anon and return 42501 despite valid RLS grants.
+      var authCheck=await db.auth.getUser();
+      if(authCheck.error||!authCheck.data||!authCheck.data.user||authCheck.data.user.id!==user.id){
+        var refreshedAuth=await db.auth.refreshSession();
+        if(refreshedAuth.error||!refreshedAuth.data||!refreshedAuth.data.session){
+          membershipCheckError='جلسة الدخول انتهت أو لم تكتمل. سجّل الخروج ثم ادخل إلى حسابك مرة أخرى.';
+          user=null;
+          renderUserIdentity();
+          renderMembership();
+          return;
+        }
+        user=refreshedAuth.data.session.user;
+      }
       var now=new Date().toISOString();
       var sub=await db.from('programming_course_subscriptions').select('id,amount,starts_at,expires_at,status').eq('student_id',user.id).eq('status','active').lte('starts_at',now).gt('expires_at',now).order('expires_at',{ascending:false}).limit(1);
       if(sub.error)membershipCheckError='فشل الاستعلام عن الاشتراك ('+sub.error.code+').';else if(sub.data&&sub.data.length)subscription=sub.data[0];
