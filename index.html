@@ -2440,8 +2440,8 @@ async function domaLogin(){
     return showStatus('authStatus',msg||'Could not sign in. Please try again.','error');
   }
   sessionUser=r.data.user;
-  await ensureProfile(sessionUser,'',sessionUser.user_metadata?.phone||'');
   if(sessionUser.app_metadata?.must_change_password===true){domaShowForcedPasswordChange();return;}
+  await ensureProfile(sessionUser,'',sessionUser.user_metadata?.phone||'');
   closeModal();if(window.__mfKidsEntryFlow&&typeof window.__mfKidsAfterAuth==='function'){showToast('Welcome back to Mr. Fluent.');await window.__mfKidsAfterAuth(sessionUser);return;}await refreshStudentState();showToast('Welcome back to Mr. Fluent.');openDrawer('overview');
 }
 
@@ -3781,21 +3781,24 @@ async function boot(){
           if(!$('domaForcedPasswordForm')){openAuth('login');domaShowForcedPasswordChange()}
         },0);
       }
-      if(sessionUser)setTimeout(()=>refreshStudentState().catch(error=>console.warn('Student refresh failed.',error)),0);
-      else{closeDrawer();renderDashboardLoggedOut()}
+      if(sessionUser&&sessionUser.app_metadata?.must_change_password!==true){
+        setTimeout(()=>refreshStudentState().catch(error=>console.warn('Student refresh failed.',error)),0);
+      }else if(!sessionUser){closeDrawer();renderDashboardLoggedOut()}
     });
   }catch(error){console.warn('Auth state listener could not be started.',error)}
 
   await gradesPromise;
-  if(sessionUser&&sb){
+  if(sessionUser&&sb&&sessionUser.app_metadata?.must_change_password!==true){
     try{sb.rpc('doma_log_activity',{p_activity_type:'login',p_entity_id:null,p_metadata:{source:'student_web'}}).catch(()=>{})}
     catch(error){console.warn('Login activity could not be recorded.',error)}
   }
   // Account and course-route checks run after the grade UI is rendered, without blocking app startup.
   domaBootInProgress=false;
   domaBootRetryRequested=false;
-  refreshStudentState().catch(error=>console.warn('Student account refresh failed; grade cards remain available.',error));
-  Promise.resolve().then(()=>mrfluentHandleEnglishCourseRoute()).catch(error=>console.warn('Course deep-link handling failed; grade list remains available.',error));
+  if(sessionUser?.app_metadata?.must_change_password!==true){
+    refreshStudentState().catch(error=>console.warn('Student account refresh failed; grade cards remain available.',error));
+    Promise.resolve().then(()=>mrfluentHandleEnglishCourseRoute()).catch(error=>console.warn('Course deep-link handling failed; grade list remains available.',error));
+  }
 }
 window.domaOpenGrade=domaOpenGrade;window.openDomaV2Reports=openDomaV2Reports;window.openAttemptReview=openAttemptReview;window.openDomaV2Notifications=openDomaV2Notifications;window.domaStartSubscription=domaStartSubscription;window.domaSubmitSubscription=domaSubmitSubscription;window.openAuth=openAuth;window.openModal=openModal;window.closeModal=closeModal;window.closeGradeModal=closeGradeModal;window.filterGrades=filterGrades;window.showGradeInfo=showGradeInfo;window.studentView=studentView;window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.domaLogout=domaLogout;window.toggleMobileMenu=toggleMobileMenu;window.closeMobileMenu=closeMobileMenu;window.openSearch=openSearch;window.applyModalSearch=applyModalSearch;window.selectLesson=selectLesson;window.changeLesson=changeLesson;window.completeCurrentLesson=completeCurrentLesson;window.startQuiz=startQuiz;window.submitQuiz=submitQuiz;window.openHomework=openHomework;window.submitHomework=submitHomework;window.markNotificationRead=markNotificationRead;window.saveProfile=saveProfile;window.openReviewForm=openReviewForm;window.submitReview=submitReview;window.printCertificate=printCertificate;
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();</script>
