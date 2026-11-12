@@ -30,6 +30,23 @@ export async function onRequestPost({request,env}) {
     const phone=normalizePhone(body.phone);
     if(!phone) return json({error:"Enter a valid Egyptian mobile number"},400);
 
+    // Cloudflare supplies this header from the connecting client, so callers cannot
+    // choose the IP key used by the server-side rate limiter.
+    const clientIp=String(request.headers.get("CF-Connecting-IP")||"").trim();
+    if(!clientIp) return json({error:"Request could not be verified. Please try again later."},503);
+    const ipLimit=await fetch(cfg.url+"/rest/v1/rpc/doma_allow_password_reset_ip",{
+      method:"POST",
+      headers:{apikey:cfg.key,authorization:"Bearer "+cfg.key,"content-type":"application/json"},
+      body:JSON.stringify({p_ip:clientIp})
+    });
+    if(!ipLimit.ok) {
+      console.error("[password-reset-request] IP rate-limit check failed", {status:ipLimit.status});
+      return json({error:"Password recovery is temporarily unavailable. Please try again later."},503);
+    }
+    const ipAllowed=await readJson(ipLimit);
+    if(ipAllowed!==true)
+      return json({error:"Too many requests from this connection. Please wait 15 minutes and try again."},429);
+
     const since=new Date(Date.now()-15*60*1000).toISOString();
     const recentUrl=cfg.url+"/rest/v1/password_reset_requests?"+new URLSearchParams({
       select:"id",phone:"eq."+phone,created_at:"gte."+since,order:"created_at.desc",limit:"3"
@@ -62,6 +79,9 @@ export async function onRequestPost({request,env}) {
     if(!insert.ok) throw new Error("Could not save the request");
     return json({ok:true});
   } catch(error) {
-    return json({error:error?.message||"Could not submit password reset request"},500);
+    console.error("[password-reset-request] request failed", {
+      name: error && error.name ? String(error.name).slice(0,80) : "UnknownError"
+    });
+    return json({error:"تعذر استقبال طلب الاسترجاع حاليًا. حاول مرة أخرى لاحقًا."},500);
   }
 }
