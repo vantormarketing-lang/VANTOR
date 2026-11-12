@@ -21,6 +21,14 @@ function check(condition, message) {
   if (condition) checks.push(message);
   else errors.push(message);
 }
+function readFirst(paths) {
+  for (const path of paths) {
+    const full = `${root}/${path}`;
+    if (existsSync(full)) return readFileSync(full, 'utf8');
+  }
+  errors.push(`Missing required file in all supported locations: ${paths.join(' or ')}`);
+  return '';
+}
 
 const browserFiles = [
   'index.html', 'admin.html', 'programming.html',
@@ -94,7 +102,10 @@ check(
 );
 
 
-const programmingMigration = read('supabase/migrations/20261112170000_optimize_programming_rls_and_fk_indexes.sql');
+const programmingMigration = readFirst([
+  'supabase/migrations/20261112170000_optimize_programming_rls_and_fk_indexes.sql',
+  'supabase/migrations_legacy/20261112170000_optimize_programming_rls_and_fk_indexes.sql'
+]);
 const requiredMigrationItems = [
   'programming_course_payment_requests_reviewed_by_idx',
   'programming_lesson_progress_lesson_id_idx',
