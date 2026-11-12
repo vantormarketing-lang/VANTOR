@@ -649,13 +649,14 @@ s="title">شهادة إتمام مسار</h1><p class="subtitle">تُمنح هذ
         var sessionResult=await db.auth.getSession(),session=sessionResult.data&&sessionResult.data.session,token=session&&session.access_token;
         if(!token){var refreshed=await db.auth.refreshSession();session=refreshed.data&&refreshed.data.session;token=session&&session.access_token}
         if(!token)throw new Error('انتهت جلسة الدخول. سجّل الدخول ثم حاول مرة أخرى.');
-        var response=await fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({language:$('paExerciseLanguage').value,source_code:source,stdin:''})});
-        if(response.status===401){var refreshedAgain=await db.auth.refreshSession(),fresh=refreshedAgain.data&&refreshedAgain.data.session;if(fresh&&fresh.access_token)response=await fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+fresh.access_token},body:JSON.stringify({language:$('paExerciseLanguage').value,source_code:source,stdin:''})})}
+        var runExercise=function(accessToken){return fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},body:JSON.stringify({language:$('paExerciseLanguage').value,source_code:source,stdin:'',exercise_id:exercise.id,lesson_id:lesson.id})})};
+        var response=await runExercise(token);
+        if(response.status===401){var refreshedAgain=await db.auth.refreshSession(),fresh=refreshedAgain.data&&refreshedAgain.data.session;if(fresh&&fresh.access_token)response=await runExercise(fresh.access_token)}
         var result=await response.json();if(!response.ok)throw new Error(result.error||'تعذر تشغيل الكود.');
         var output=[result.stdout,result.stderr,result.compile_output].filter(Boolean).join('\\n');
-        var checks=cases.map(function(item){var ok=!!item.contains&&String(result.stdout||'').indexOf(item.contains)!==-1;return {label:item.label||'فحص الناتج',ok:ok}});
-        var allPassed=checks.every(function(item){return item.ok})&&result.status==='Accepted'&&!(result.stderr||result.compile_output);
-        panel.innerHTML='<div class="pa-test-summary '+(allPassed?'is-correct':'is-wrong')+'">'+(allPassed?'نجحت كل الفحوصات ✓':'بعض الفحوصات لم تنجح بعد')+'</div>'+checks.map(function(item){return '<p class="'+(item.ok?'is-correct':'is-wrong')+'">'+(item.ok?'✓ ':'✕ ')+esc(item.label)+'</p>'}).join('')+(output?'<pre class="pa-test-output">'+esc(output)+'</pre>':'');
+        var checks=Array.isArray(result.test_results)?result.test_results:[];
+        var allPassed=result.all_tests_passed===true&&checks.length===cases.length;
+        panel.innerHTML='<div class="pa-test-summary '+(allPassed?'is-correct':'is-wrong')+'">'+(allPassed?'نجحت كل الفحوصات ✓':'بعض الفحوصات لم تنجح بعد')+'</div>'+checks.map(function(item){return '<p class="'+(item.passed?'is-correct':'is-wrong')+'">'+(item.passed?'✓ ':'✕ ')+esc(item.label)+'</p>'}).join('')+(output?'<pre class="pa-test-output">'+esc(output)+'</pre>':'');
         if(allPassed)panel.innerHTML+='<p class="pa-test-next">ممتاز! يمكنك الآن إرسال الحل للمراجعة.</p>';
       }catch(error){panel.textContent=error.message||'حدث خطأ أثناء اختبار الحل.'}
       finally{testButton.disabled=false}
