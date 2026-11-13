@@ -341,7 +341,7 @@ function initializeDomaProgrammingAcademy(){
   async function openLesson(id){
     if(!hasAccess()){showModal();return}
     var lesson=lessons.find(function(l){return l.id===id});if(!lesson)return;
-    activeLesson=id;activeTutorHints=[];renderLessons();
+    activeLesson=id;activeTutorHints=[];activeTutorEditor='lab';renderLessons();
     document.body.classList.add('pa-lesson-page-view');
     // Hide the lesson list explicitly as well as via CSS. This prevents it
     // remaining below the reader if a cached stylesheet is still active.
