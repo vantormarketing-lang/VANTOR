@@ -32,7 +32,7 @@
 .pa-free-tutor-note{display:block;margin-top:9px;color:#aa9eae;font-size:10px;line-height:1.7}
 @media(max-width:560px){.pa-free-tutor{padding:14px}.pa-free-tutor-actions button{flex:1 1 calc(50% - 8px)}.pa-free-tutor-question{flex-direction:column}.pa-free-tutor-send{min-height:42px}}
 </style>
-<body class="programming-page"><body class="programming-page">
+<body class="programming-page">
 <header class="pa-topbar">
   <div class="pa-user-identity" aria-label="حساب الطالب"><span id="paAuthStatus" class="pa-auth-status" role="status" aria-label="حالة الاتصال" title="حالة الاتصال"></span><span id="paUserName" class="pa-user-identity-name">حساب الطالب</span></div>
   <div class="pa-top-actions"><a class="pa-home-link" href="./index.html" aria-label="العودة للمنصة" title="العودة للمنصة">←</a></div>
@@ -96,7 +96,7 @@ function initializeDomaProgrammingAcademy(){
   var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
   var boundedFetch=function(input,init){var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},15000);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
   var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},global:{fetch:boundedFetch}});
-  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[];var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null;
+  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[];
   var $=function(id){return document.getElementById(id)};
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
@@ -337,10 +337,10 @@ function initializeDomaProgrammingAcademy(){
     panel.querySelectorAll('[data-tutor-mode]').forEach(function(btn){btn.addEventListener('click',function(){answer.textContent=respond(btn.getAttribute('data-tutor-mode'),'')})});
     panel.querySelector('form').addEventListener('submit',function(e){e.preventDefault();var q=question.value.trim();answer.textContent=q?respond('',q):'اكتب سؤالك الأول.'});
   }
-  async function openLesson(id){  async function openLesson(id){
+  async function openLesson(id){
     if(!hasAccess()){showModal();return}
     var lesson=lessons.find(function(l){return l.id===id});if(!lesson)return;
-    activeLesson=id;activeTutorHints=[];renderLessons();    activeLesson=id;renderLessons();
+    activeLesson=id;activeTutorHints=[];renderLessons();
     document.body.classList.add('pa-lesson-page-view');
     // Hide the lesson list explicitly as well as via CSS. This prevents it
     // remaining below the reader if a cached stylesheet is still active.
@@ -373,7 +373,6 @@ function initializeDomaProgrammingAcademy(){
     $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
     setupCodeLab(lesson,content.data||'');
     mountFreeTutor(lesson,content.data||'');
-    await loadLessonActivities(lesson);    setupCodeLab(lesson,content.data||'');
     await loadLessonActivities(lesson);
   }
   var codeSamples={
@@ -515,7 +514,7 @@ function initializeDomaProgrammingAcademy(){
     var response=await db.rpc('programming_get_lesson_activities',{p_lesson_id:lesson.id});
     if(response.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل أنشطة الدرس. '+esc(response.error.message)+'</div>';return}
     var data=response.data||{},exercise=data.exercise,quiz=data.quiz,html='';
-    activeTutorHints=exercise&&Array.isArray(exercise.hints)?exercise.hints.slice():[];    var data=response.data||{},exercise=data.exercise,quiz=data.quiz,html='';
+    activeTutorHints=exercise&&Array.isArray(exercise.hints)?exercise.hints.slice():[];
     if(quiz&&quiz.questions&&quiz.questions.length){
       html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">اختبار سريع</span><h4>'+esc(quiz.title)+'</h4></div><form id="paQuizForm" data-quiz-id="'+esc(quiz.id)+'">';
       quiz.questions.forEach(function(question,index){
