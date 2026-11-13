@@ -96,7 +96,7 @@ function initializeDomaProgrammingAcademy(){
   var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
   var boundedFetch=function(input,init){var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},15000);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
   var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},global:{fetch:boundedFetch}});
-  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[],activeTutorEditor='lab';
+  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[],activeTutorEditor='lab';
   var $=function(id){return document.getElementById(id)};
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
