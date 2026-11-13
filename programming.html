@@ -20,6 +20,18 @@
 @media(max-width:520px){.pa-topbar{min-height:62px;padding:10px 14px}.pa-user-identity{font-size:12px;gap:8px}.pa-home-link{width:36px;height:36px}}
 </style>
 </head>
+<style id="pa-free-tutor-style">
+.pa-free-tutor{margin:18px 0;padding:18px;border:1px solid rgba(214,177,111,.36);border-radius:20px;background:linear-gradient(145deg,rgba(45,31,58,.92),rgba(25,20,35,.94));box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}
+.pa-free-tutor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.pa-free-tutor-head h3{margin:4px 0;color:#f6e8d2;font-size:19px}.pa-free-tutor-head p{margin:5px 0;color:#d5c6b2;font-size:12px;line-height:1.8}
+.pa-free-tutor-label{color:#e4c27d;font-size:10px;font-weight:900;letter-spacing:1px}.pa-free-tutor-local{padding:5px 9px;border:1px solid rgba(214,177,111,.28);border-radius:999px;color:#e5c98e;font-size:10px;white-space:nowrap}
+.pa-free-tutor-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.pa-free-tutor-actions button,.pa-free-tutor-send{border:1px solid rgba(214,177,111,.34);border-radius:11px;padding:9px 12px;background:rgba(255,255,255,.055);color:#f4e6d2;font:700 12px system-ui,sans-serif;cursor:pointer}
+.pa-free-tutor-actions button:hover,.pa-free-tutor-send:hover{background:rgba(214,177,111,.14)}.pa-free-tutor-question{display:flex;gap:8px;align-items:stretch}
+.pa-free-tutor-question input{min-width:0;flex:1;border:1px solid rgba(214,177,111,.25);border-radius:11px;padding:11px 12px;background:rgba(9,7,15,.4);color:#fff;font:inherit}
+.pa-free-tutor-question input:focus{outline:2px solid rgba(214,177,111,.45);outline-offset:1px}.pa-free-tutor-send{background:linear-gradient(120deg,#8e6734,#c69d5b);color:#20172a;border:0}
+.pa-free-tutor-answer{margin-top:12px;padding:13px 14px;border:1px solid rgba(214,177,111,.2);border-radius:13px;background:rgba(8,7,13,.3);color:#eadfce;line-height:1.9;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;min-height:48px}
+.pa-free-tutor-note{display:block;margin-top:9px;color:#aa9eae;font-size:10px;line-height:1.7}
+@media(max-width:560px){.pa-free-tutor{padding:14px}.pa-free-tutor-actions button{flex:1 1 calc(50% - 8px)}.pa-free-tutor-question{flex-direction:column}.pa-free-tutor-send{min-height:42px}}
+</style>
 <body class="programming-page">
 <header class="pa-topbar">
   <div class="pa-user-identity" aria-label="حساب الطالب"><span id="paAuthStatus" class="pa-auth-status" role="status" aria-label="حالة الاتصال" title="حالة الاتصال"></span><span id="paUserName" class="pa-user-identity-name">حساب الطالب</span></div>
@@ -84,7 +96,7 @@ function initializeDomaProgrammingAcademy(){
   var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
   var boundedFetch=function(input,init){var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},15000);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
   var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},global:{fetch:boundedFetch}});
-  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null;
+  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[],activeTutorEditor='lab';
   var $=function(id){return document.getElementById(id)};
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
@@ -267,10 +279,69 @@ function initializeDomaProgrammingAcademy(){
     if(inCode)out.push('<pre><code>'+esc(code.join('\n'))+'</code></pre>');
     return out.join('');
   }
+  function mountFreeTutor(lesson,lessonContent){
+    var reader=$('paLessonReader'),lab=reader&&reader.querySelector('.pa-code-lab');
+    if(!reader||!lab)return;
+    var panel=document.createElement('section');
+    panel.className='pa-free-tutor';panel.setAttribute('aria-label','مساعد DOMA التعليمي المجاني');
+    panel.innerHTML='<div class="pa-free-tutor-head"><div><span class="pa-free-tutor-label">DOMA STUDY ASSISTANT</span><h3>مساعدك التعليمي</h3><p>شرح الدرس والكود وملاحظات تصحيح أولية وتلميحات متدرجة.</p></div><span class="pa-free-tutor-local">مجاني · يعمل محليًا</span></div><div class="pa-free-tutor-actions"><button type="button" data-tutor-mode="lesson">اشرح الدرس</button><button type="button" data-tutor-mode="code">اشرح الكود</button><button type="button" data-tutor-mode="debug">ساعدني في الخطأ</button><button type="button" data-tutor-mode="hint">أعطني تلميحًا</button></div><form class="pa-free-tutor-question"><input id="paTutorQuestion" type="text" maxlength="240" autocomplete="off" placeholder="اكتب سؤالك عن الدرس أو الكود…"><button class="pa-free-tutor-send" type="submit">اسأل</button></form><div id="paTutorAnswer" class="pa-free-tutor-answer" role="status" aria-live="polite">اختار مساعدة من الأزرار أو اكتب سؤالًا. لا يتم إرسال الكود أو السؤال إلى أي خدمة خارجية.</div><small class="pa-free-tutor-note">هذا مساعد تعليمي قائم على قواعد وأمثلة مبرمجة، وليس نموذج محادثة توليديًا. ملاحظات الأخطاء إرشادية وليست بديلًا عن تشغيل الكود.</small>';
+    lab.parentNode.insertBefore(panel,lab);
+    var answer=$('paTutorAnswer'),question=$('paTutorQuestion'),hintIndex=0,labEditor=$('paCodeEditor');
+    if(labEditor){labEditor.addEventListener('focus',function(){activeTutorEditor='lab'});labEditor.addEventListener('input',function(){activeTutorEditor='lab'})}
+    function currentCode(){var ex=$('paExerciseCode'),ed=$('paCodeEditor');return activeTutorEditor==='exercise'&&ex?ex.value:(ed?ed.value:(ex?ex.value:''))}
+    function lessonNotes(){
+      var lines=String(lessonContent||'').replace(/\r/g,'').split('\n').map(function(x){return x.trim()}).filter(function(x){return x&&!/^\x60{3}/.test(x)&&!/^#{1,6}\s/.test(x)&&!/^[-*_]{3,}$/.test(x)});
+      var notes=lines.slice(0,7).map(function(x){return x.replace(/^[-*]\s*/,'').replace(/\*\*/g,'').replace(/\*/g,'')});
+      return 'الدرس: '+(lesson.title||'الدرس الحالي')+'\n\n'+(lesson.summary||'راجع النقاط الأساسية في محتوى الدرس.')+(notes.length?'\n\nنقاط من محتوى الدرس:\n• '+notes.join('\n• '):'');
+    }
+    function explainCode(){
+      var source=currentCode();if(!source.trim())return 'مفيش كود في المحرر حاليًا. اكتب مثالًا أو اضغط «استعادة المثال» ثم جرّب مرة أخرى.';
+      var lines=source.split('\n').filter(function(x){return x.trim()}).slice(0,12);
+      var notes=lines.map(function(line,i){var t=line.trim(),m='تعليمة برمجية تنفّذ جزءًا من البرنامج.';
+        if(/^(#|\/\/|\/\*)/.test(t))m='تعليق للتوضيح؛ لا يُنفّذ كتعليمة.';
+        else if(/^<\/?[a-z]/i.test(t))m='وسم HTML يحدد عنصرًا في بنية الصفحة.';
+        else if(/^(print\s*\(|console\.log\s*\(|echo\b)/i.test(t))m='يعرض قيمة أو رسالة في المخرجات.';
+        else if(/^(if|elif|else|switch|case)\b/.test(t))m='شرط أو فرع يحدد أي جزء من البرنامج سيتم تنفيذه.';
+        else if(/^(for|while)\b/.test(t))m='حلقة تكرار تعيد تنفيذ مجموعة تعليمات.';
+        else if(/^(def|function|class)\b/.test(t))m='تعريف دالة أو بنية قابلة لإعادة الاستخدام.';
+        else if(/^[A-Za-z_$][\w$]*\s*=/.test(t))m='إسناد قيمة إلى متغير أو تحديث قيمة موجودة.';
+        else if(/^(return|break|continue)\b/.test(t))m='تعليمة تتحكم في مسار تنفيذ الدالة أو الحلقة.';
+        return (i+1)+'. '+t+'\n   '+m});
+      return 'قراءة مبدئية للكود:\n'+notes.join('\n')+'\n\nجرّب تغيير سطر واحد ثم شغّل الكود لملاحظة الفرق.';
+    }
+    function debugCode(){
+      var source=currentCode(),out=$('paCodeOutput'),runtime=out?out.textContent:'',langEl=activeTutorEditor==='exercise'?$('paExerciseLanguage'):$('paCodeLanguage'),activeLanguage=String(langEl&&langEl.value||'').toLowerCase();
+      if(!source.trim())return 'اكتب الكود أولًا، ثم اضغط «تشغيل الكود».';
+      var notes=[];
+      if(/IndentationError/i.test(runtime))notes.push('راجع المسافات البادئة؛ أسطر الكتلة الواحدة تحتاج نفس مستوى الإزاحة.');
+      if(/SyntaxError/i.test(runtime))notes.push('راجع تركيب الكود والأقواس وعلامات الاقتباس، والنقطتين بعد if أو for في Python.');
+      if(/NameError|ReferenceError/i.test(runtime))notes.push('قد يكون اسم متغير أو دالة غير معرّف، أو مكتوبًا بشكل مختلف.');
+      if(/TypeError/i.test(runtime))notes.push('راجع نوع البيانات المستخدم في العملية أو الدالة.');
+      if(/\bif\b[^\n]*\s(?<![=!<>])=(?!=)/.test(source)&&activeLanguage==='python')notes.push('داخل شرط Python استخدم == للمقارنة، أما = فتُستخدم لإسناد قيمة.');
+      if(activeLanguage==='python'&&/^\s{1,3}\S/m.test(source)&&/^\S/m.test(source))notes.push('راجع الإزاحة داخل كتل if وfor وwhile وdef.');
+      if((source.match(/["']/g)||[]).length%2)notes.push('علامات الاقتباس تبدو غير متوازنة؛ راجع النصوص بين علامات الاقتباس.');
+      if((source.match(/[([{]/g)||[]).length!==(source.match(/[)\]}]/g)||[]).length)notes.push('عدد الأقواس المفتوحة والمغلقة مختلف؛ راجع () و[] و{}.');
+      if(!notes.length)notes.push('لم أجد نمط خطأ شائعًا بوضوح. شغّل الكود واقرأ رسالة المخرجات وحدد السطر المشار إليه.');
+      return 'مراجعة أولية وليست فحصًا كاملًا:\n• '+notes.join('\n• ')+'\n\nالمخرجات الحالية: '+(runtime&&runtime!=='اكتب الكود ثم اضغط «تشغيل الكود».'?runtime.slice(0,450):'لم يتم تشغيل الكود بعد.');
+    }
+    function nextHint(){var hints=Array.isArray(activeTutorHints)?activeTutorHints:[];if(hints.length){var h=hints[Math.min(hintIndex,hints.length-1)];hintIndex++;return 'تلميح '+Math.min(hintIndex,hints.length)+' من '+hints.length+':\n'+h+(hintIndex>=hints.length?'\n\nوصلت لآخر تلميح متاح.':'\n\nجرّب هذه الخطوة ثم اطلب تلميحًا آخر.')};return 'حدد المطلوب من التمرين، ثم قسّمه إلى خطوات صغيرة. استخدم مثال الدرس واختبر كل خطوة وحدها قبل جمعها.'}
+    function respond(mode,q){
+      q=String(q||'').toLowerCase();
+      if(mode==='lesson')return lessonNotes();if(mode==='code')return explainCode();if(mode==='debug')return debugCode();if(mode==='hint')return nextHint();
+      if(/(تلميح|hint)/i.test(q))return nextHint();if(/(خطأ|error|bug|مش شغال|لا يعمل|بيطلع)/i.test(q))return debugCode();if(/(كود|code|سطر|شرح الكود)/i.test(q))return explainCode();
+      if(/(متغير|variable)/i.test(q))return 'المتغير اسم نستخدمه للاحتفاظ بقيمة نقدر نقرأها أو نغيّرها أثناء تشغيل البرنامج. مثال Python: score = 10 ثم print(score).';
+      if(/(شرط|if|condition)/i.test(q))return 'الشرط يسمح للبرنامج باختيار مسار حسب نتيجة مقارنة. في Python مثلًا: if score >= 50: ثم تكتب التعليمات داخل الكتلة بمسافة بادئة.';
+      if(/(تكرار|حلقة|loop|for|while)/i.test(q))return 'حلقة التكرار تنفّذ مجموعة تعليمات أكثر من مرة. for مناسبة للتكرار على عناصر أو عدد معروف، وwhile تستمر ما دام الشرط صحيحًا.';
+      if(/(دالة|function|def)/i.test(q))return 'الدالة تجمع تعليمات تحت اسم واحد لتقدر تستدعيها عند الحاجة. في Python تبدأ غالبًا بـ def function_name(): ثم تكتب جسمها بمسافة بادئة.';
+      return 'أقدر أساعدك محليًا في شرح الدرس، قراءة الكود، مراجعة أخطاء شائعة، وتقديم تلميحات. جرّب سؤالًا مثل «يعني إيه متغير؟» أو استخدم أزرار المساعدة.\n\n'+lesson.title+'\n'+(lesson.summary||'');
+    }
+    panel.querySelectorAll('[data-tutor-mode]').forEach(function(btn){btn.addEventListener('click',function(){answer.textContent=respond(btn.getAttribute('data-tutor-mode'),'')})});
+    panel.querySelector('form').addEventListener('submit',function(e){e.preventDefault();var q=question.value.trim();answer.textContent=q?respond('',q):'اكتب سؤالك الأول.'});
+  }
   async function openLesson(id){
     if(!hasAccess()){showModal();return}
     var lesson=lessons.find(function(l){return l.id===id});if(!lesson)return;
-    activeLesson=id;renderLessons();
+    activeLesson=id;activeTutorHints=[];activeTutorEditor='lab';renderLessons();
     document.body.classList.add('pa-lesson-page-view');
     // Hide the lesson list explicitly as well as via CSS. This prevents it
     // remaining below the reader if a cached stylesheet is still active.
@@ -302,6 +373,7 @@ function initializeDomaProgrammingAcademy(){
     if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
     $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
     setupCodeLab(lesson,content.data||'');
+    mountFreeTutor(lesson,content.data||'');
     await loadLessonActivities(lesson);
   }
   var codeSamples={
@@ -443,6 +515,7 @@ function initializeDomaProgrammingAcademy(){
     var response=await db.rpc('programming_get_lesson_activities',{p_lesson_id:lesson.id});
     if(response.error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل أنشطة الدرس. '+esc(response.error.message)+'</div>';return}
     var data=response.data||{},exercise=data.exercise,quiz=data.quiz,html='';
+    activeTutorHints=exercise&&Array.isArray(exercise.hints)?exercise.hints.slice():[];
     if(quiz&&quiz.questions&&quiz.questions.length){
       html+='<article class="pa-activity-card"><div class="pa-activity-card-head"><span class="pa-activity-tag">اختبار سريع</span><h4>'+esc(quiz.title)+'</h4></div><form id="paQuizForm" data-quiz-id="'+esc(quiz.id)+'">';
       quiz.questions.forEach(function(question,index){
@@ -465,6 +538,8 @@ function initializeDomaProgrammingAcademy(){
       html+='</article>';
     }
     host.innerHTML=html||'<div class="pa-activity-lock">سيتم إضافة أنشطة هذا الدرس قريبًا.</div>';
+    var tutorExerciseEditor=$('paExerciseCode');
+    if(tutorExerciseEditor){tutorExerciseEditor.addEventListener('focus',function(){activeTutorEditor='exercise'});tutorExerciseEditor.addEventListener('input',function(){activeTutorEditor='exercise'})}
     var hintsButton=$('paExerciseHints');
     if(hintsButton)hintsButton.addEventListener('click',function(){var panel=$('paExerciseHintList');if(!panel)return;var open=panel.hidden;panel.hidden=!open;panel.innerHTML=open?(exercise.hints||[]).map(function(hint,index){return '<p><b>تلميح '+(index+1)+':</b> '+esc(hint)+'</p>'}).join(''):' ';hintsButton.textContent=open?'إخفاء التلميحات':'عرض التلميحات'});
     var testButton=$('paRunExerciseTests');
