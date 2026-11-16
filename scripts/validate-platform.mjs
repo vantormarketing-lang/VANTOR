@@ -491,8 +491,8 @@ if (!assistantWorkerSource.includes('@cf/zai-org/glm-4.7-flash') ||
 }
 try {
   const workerForSyntax = assistantWorkerSource.replace(
-    'export async function onRequestPost(',
-    'async function onRequestPost('
+    /^export async function (onRequest(?:Get|Post))\(/gm,
+    'async function $1('
   );
   new Function(workerForSyntax);
   ok('functions/api/assistant.js: Pages Function JavaScript syntax is valid');
