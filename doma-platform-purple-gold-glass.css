@@ -2064,3 +2064,186 @@ html body .mr-fluent-homepage-welcome .mr-fluent-welcome-to{
 @media(max-width:700px){
   html body .mr-fluent-homepage-welcome:not([hidden]){padding:13px 15px!important;margin-bottom:18px!important;border-radius:16px!important}
 }
+
+
+/* MR. FLUENT A1–C2 course interiors — unified DOMA purple / champagne glass UI.
+   Visual-only layer: preserves lesson content, access checks, navigation and progress logic. */
+html body:has(.course-hero){
+  --mf-level-ink:#fff4e8;
+  --mf-level-muted:#e4d5e8;
+  --mf-level-gold:#ffe5bd;
+  --mf-level-edge:rgba(255,218,174,.42);
+}
+html body:has(.course-hero) header{
+  padding:clamp(25px,4vw,48px) max(4%,calc((100% - 1180px)/2)) clamp(24px,4vw,42px)!important;
+  text-align:left!important;
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(255,218,174,.13),transparent 48%),
+    radial-gradient(ellipse at 92% 100%,rgba(184,148,233,.23),transparent 48%),
+    linear-gradient(135deg,rgba(91,65,121,.42),rgba(37,27,57,.66))!important;
+  border-bottom:1px solid rgba(255,218,174,.2)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+}
+html body:has(.course-hero) .course-hero{gap:clamp(18px,3vw,38px)!important}
+html body:has(.course-hero) header .pill,
+html body:has(.course-hero) .a1-level{
+  color:#ffe8c5!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.17),rgba(184,148,233,.20))!important;
+  border:1px solid var(--mf-level-edge)!important;
+  border-radius:999px!important;
+  letter-spacing:.08em!important;
+}
+html body:has(.course-hero) header h1{
+  color:var(--mf-level-ink)!important;
+  font-size:clamp(34px,5vw,62px)!important;
+  letter-spacing:-.045em!important;
+  text-shadow:0 8px 30px rgba(184,148,233,.2)!important;
+}
+html body:has(.course-hero) header p,
+html body:has(.course-hero) header .ar{color:var(--mf-level-muted)!important}
+html body:has(.course-hero) .course-hero-card{
+  min-height:300px!important;
+  padding:clamp(19px,3vw,30px)!important;
+  border:1px solid rgba(255,218,174,.5)!important;
+  border-radius:26px!important;
+  color:var(--mf-level-ink)!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,218,174,.18),transparent 48%),
+    radial-gradient(ellipse at 100% 100%,rgba(184,148,233,.22),transparent 52%),
+    linear-gradient(145deg,rgba(111,76,139,.78),rgba(43,29,65,.94))!important;
+  box-shadow:0 24px 58px rgba(8,3,18,.34),inset 0 1px 0 rgba(255,255,255,.18)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(150%)!important;
+  backdrop-filter:blur(24px) saturate(150%)!important;
+}
+html body:has(.course-hero) .a1-eyebrow{color:var(--mf-level-gold)!important;letter-spacing:.18em!important}
+html body:has(.course-hero) .a1-logo,
+html body:has(.course-hero) .a1-logo span{color:#fff4e8!important}
+html body:has(.course-hero) .a1-logo span{text-shadow:0 0 18px rgba(255,218,174,.55)!important}
+html body:has(.course-hero) .course-hero-card h2{color:#fff4e8!important}
+html body:has(.course-hero) .course-hero-card p{color:#e4d5e8!important}
+html body:has(.course-hero) .course-hero-stats div{
+  border:1px solid rgba(255,218,174,.28)!important;
+  border-radius:15px!important;
+  background:linear-gradient(145deg,rgba(32,21,48,.62),rgba(65,43,82,.54))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body:has(.course-hero) .course-hero-stats b{color:#ffe5bd!important}
+html body:has(.course-hero) .course-hero-stats span{color:#e4d5e8!important}
+html body:has(.course-hero) header:after{
+  border-color:rgba(255,218,174,.16)!important;
+  box-shadow:0 0 0 45px rgba(184,148,233,.035),0 0 0 90px rgba(255,218,174,.025)!important;
+}
+html body:has(.course-hero) .student-layout{gap:20px!important}
+html body:has(.course-hero) .student-sidebar{
+  border:1px solid rgba(255,218,174,.36)!important;
+  border-radius:22px!important;
+  background:linear-gradient(150deg,rgba(83,57,111,.88),rgba(31,22,49,.96))!important;
+  box-shadow:0 18px 42px rgba(8,3,18,.30),inset 0 1px 0 rgba(255,255,255,.13)!important;
+}
+html body:has(.course-hero) .sidebar-brand{border-bottom-color:rgba(255,218,174,.2)!important}
+html body:has(.course-hero) .sidebar-mark{
+  color:#fff4e8!important;
+  border:1px solid rgba(255,218,174,.55)!important;
+  background:linear-gradient(145deg,#9672b4,#49315f)!important;
+  box-shadow:0 8px 22px rgba(8,3,18,.28)!important;
+}
+html body:has(.course-hero) .sidebar-brand strong{color:#fff4e8!important}
+html body:has(.course-hero) .sidebar-brand span,
+html body:has(.course-hero) .sidebar-caption{color:#e1cce8!important}
+html body:has(.course-hero) .student-sidebar nav button{
+  color:#eee2f1!important;
+  border:1px solid transparent!important;
+  border-radius:13px!important;
+  background:rgba(255,255,255,.025)!important;
+}
+html body:has(.course-hero) .student-sidebar nav button:hover{
+  color:#fff!important;border-color:rgba(255,218,174,.35)!important;
+  background:rgba(184,148,233,.16)!important;
+}
+html body:has(.course-hero) .student-sidebar nav button.active{
+  color:#fff4e8!important;
+  border-color:rgba(255,218,174,.42)!important;
+  background:linear-gradient(100deg,rgba(184,148,233,.28),rgba(255,218,174,.10))!important;
+  box-shadow:inset 3px 0 #ffe5bd!important;
+}
+html body:has(.course-hero) .sidebar-foot{border-top-color:rgba(255,218,174,.2)!important;color:#e4d5e8!important}
+html body:has(.course-hero) .student-content{min-width:0!important}
+html body:has(.course-hero) .student-content :is(.stat,.unit,.lesson,.tool,.lab-card,.recording-panel,.mf-dialogue,.quiz-mini,.achievement,.sentence-bank,.sentence-result,.box,.video-card,.track-card,.quiz-shell,.assessment-box,.workspace-card){
+  color:#fff4e8!important;
+  border:1px solid rgba(225,193,233,.34)!important;
+  border-radius:19px!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,218,174,.09),transparent 52%),
+    linear-gradient(145deg,rgba(103,73,128,.50),rgba(39,27,59,.82))!important;
+  box-shadow:0 14px 34px rgba(8,3,18,.22),inset 0 1px 0 rgba(255,255,255,.10)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(135%)!important;
+  backdrop-filter:blur(16px) saturate(135%)!important;
+}
+html body:has(.course-hero) .student-content :is(.unit,.lesson){padding:clamp(15px,2.5vw,24px)!important}
+html body:has(.course-hero) .student-content :is(.unit h2,.lesson h3,.lab-card h3,.tool h3,.recording-panel h3){color:#fff0dc!important}
+html body:has(.course-hero) .student-content :is(.small,.muted,.desc,.lab-note,.small-print){color:#d9c9e2!important}
+html body:has(.course-hero) .student-content .tag{
+  color:#ffe5bd!important;border:1px solid rgba(255,218,174,.36)!important;
+  border-radius:999px!important;background:rgba(255,218,174,.10)!important;
+}
+html body:has(.course-hero) .student-content .box{
+  background:rgba(25,17,40,.48)!important;border-color:rgba(255,218,174,.20)!important;
+}
+html body:has(.course-hero) .student-content .example{
+  border-left-color:#e8b974!important;background:rgba(255,218,174,.08)!important;
+}
+html body:has(.course-hero) .student-content .ar,
+html body:has(.course-hero) .student-content .word-ar{color:#f0e3f1!important}
+html body:has(.course-hero) .student-content :is(button,select,.lab-actions button){
+  color:#fff4e8!important;
+  border:1px solid rgba(255,218,174,.32)!important;border-radius:12px!important;
+  background:linear-gradient(135deg,rgba(112,77,145,.78),rgba(61,39,83,.92))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body:has(.course-hero) .student-content button:hover,
+html body:has(.course-hero) .student-content button.active{
+  border-color:rgba(255,218,174,.68)!important;
+  background:linear-gradient(135deg,rgba(151,112,181,.88),rgba(91,59,119,.96))!important;
+}
+html body:has(.course-hero) .student-content :is(input[type=text],textarea){
+  color:#fff4e8!important;background:rgba(20,13,33,.78)!important;
+  border:1px solid rgba(225,193,233,.32)!important;border-radius:13px!important;
+}
+html body:has(.course-hero) .student-content :is(input,textarea)::placeholder{color:#c9b6d3!important}
+html body:has(.course-hero) .student-content .choices label{
+  color:#f7eaf4!important;border:1px solid rgba(225,193,233,.25)!important;
+  border-radius:13px!important;background:rgba(255,255,255,.035)!important;
+}
+html body:has(.course-hero) .student-content .choices label:hover{
+  border-color:rgba(255,218,174,.52)!important;background:rgba(184,148,233,.14)!important;
+}
+html body:has(.course-hero) .student-content .progressbar{
+  background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,218,174,.20)!important;
+}
+html body:has(.course-hero) .student-content .progressbar span{
+  background:linear-gradient(90deg,#a985d0,#d5b6e7,#ffe0ad)!important;
+}
+html body:has(.course-hero) .student-content .video-card a,
+html body:has(.course-hero) .student-content .mf-play-dialogue{
+  color:#2b1b36!important;border:1px solid rgba(255,218,174,.65)!important;
+  background:linear-gradient(135deg,#ffe5bd,#e8b974)!important;
+}
+html body:has(.course-hero) .student-content .achievement{
+  color:#ffe5bd!important;border-color:rgba(255,218,174,.4)!important;
+  background:rgba(255,218,174,.10)!important;
+}
+html body:has(.course-hero) footer{color:#d9c9e2!important;border-top-color:rgba(255,218,174,.18)!important}
+@media(max-width:760px){
+  html body:has(.course-hero) header{padding:26px 4% 28px!important}
+  html body:has(.course-hero) .course-hero{grid-template-columns:minmax(0,1fr)!important;gap:18px!important}
+  html body:has(.course-hero) .course-hero-card{min-height:250px!important}
+  html body:has(.course-hero) .student-layout{grid-template-columns:minmax(0,1fr)!important}
+  html body:has(.course-hero) .student-sidebar{position:relative!important;top:auto!important;max-height:none!important}
+  html body:has(.course-hero) .topgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:420px){
+  html body:has(.course-hero) .topgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body:has(.course-hero) .course-hero-stats{gap:7px!important}
+  html body:has(.course-hero) .course-hero-stats div{padding:10px!important}
+}
