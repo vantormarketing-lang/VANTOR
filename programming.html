@@ -70,6 +70,7 @@
     <div class="pa-section-heading"><div><h2>اختر مسارك</h2></div></div>
     <div id="paTracks" class="pa-track-grid"><div class="pa-loading">سيظهر محتوى المسارات هنا بعد التحقق من حالة الاشتراك.</div></div>
   </section>
+  <section id="paGlobalTutor" class="pa-global-tutor-wrap" aria-label="المساعد الذكي لأكاديمية البرمجة"></section>
   <section id="paLessonPage" class="pa-lesson-page" hidden></section>
   <section class="pa-learning-layout">
     <div class="pa-lessons-panel">
@@ -77,6 +78,10 @@
       <div class="pa-panel-heading"><div><span class="pa-kicker">TRACK LESSONS</span><h2 id="paTrackTitle">Computer Science Fundamentals</h2><p id="paTrackDescription">ابدأ بفهم البرمجة قبل كتابة الأكواد.</p></div><span id="paTrackProgress" class="pa-progress-count">0 / 0</span></div>
       <div class="pa-progress-track"><i id="paProgressBar"></i></div>
       <div id="paLessons" class="pa-lesson-list"><div class="pa-loading">جاري تحميل الدروس…</div></div>
+      <section id="paStudentProgress" class="pa-student-progress" hidden>
+        <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>تقدمك في المسار</h2><p>تابع إنجازك ونتائجك التعليمية هنا.</p></div></div>
+        <div id="paProgressCards" class="pa-progress-cards"><div class="pa-loading">جاري حساب تقدمك…</div></div>
+      </section>
       <section id="paProjectsSection" class="pa-projects-section" hidden>
         <div class="pa-section-heading"><div><span class="pa-kicker">BUILD • SUBMIT • IMPROVE</span><h2>مشاريع هذا المسار</h2><p>بعد الانتهاء من الدروس، نفّذ مشروع المسار وأرسله للمراجعة.</p></div></div>
         <div id="paProjectsGrid" class="pa-projects-grid"><div class="pa-loading">جاري تحميل مشاريع المسار…</div></div>
@@ -87,10 +92,6 @@
   <section id="paDailyChallenges" class="pa-daily-challenges" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">DAILY CODING ARENA</span><h2>التحدي البرمجي اليومي</h2><p>ثلاث درجات صعوبة، تلميحات تدريجية، واختبارات تلقائية لحلك.</p></div><span id="paDailyChallengeDate" class="pa-progress-count"></span></div>
     <div id="paDailyChallengeGrid" class="pa-daily-challenge-grid"><div class="pa-loading">جاري تجهيز تحديات اليوم…</div></div>
-  </section>
-  <section id="paStudentProgress" class="pa-student-progress" hidden>
-    <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
-    <div id="paProgressCards" class="pa-progress-cards"><div class="pa-loading">جاري حساب تقدمك…</div></div>
   </section>
   <section id="paAdminLearning" class="pa-admin-learning" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">ACADEMY CONTROL</span><h2>متابعة تعلم الطلاب</h2><p>راجع التطبيقات والمشاريع، وأضف التقييم والملاحظات.</p></div><button type="button" id="paAdminLearningRefresh" class="pa-outline-btn">تحديث البيانات</button></div>
@@ -241,6 +242,8 @@ function initializeDomaProgrammingAcademy(){
     $('paTrackTitle').textContent=track.title;$('paTrackDescription').textContent=track.description;
     document.body.classList.add('pa-track-view');
     renderTracks();renderLessons();
+    var progressSection=$('paStudentProgress');if(progressSection)progressSection.hidden=false;
+    loadStudentProgress();
     loadProgrammingProjects();
     if(shouldScroll)window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -319,14 +322,15 @@ function initializeDomaProgrammingAcademy(){
     if(inCode)out.push('<pre><code>'+esc(code.join('\n'))+'</code></pre>');
     return out.join('');
   }
-  function mountFreeTutor(lesson,lessonContent){
+  function mountFreeTutor(lesson,lessonContent,targetContainer){
     var reader=$('paLessonReader'),lab=reader&&reader.querySelector('.pa-code-lab');
-    if(!reader||!lab)return;
+    if(targetContainer){if(targetContainer.querySelector('.pa-free-tutor'))return;}
+    else if(!reader||!lab)return;
     var panel=document.createElement('section');
-    panel.className='pa-free-tutor';panel.setAttribute('aria-label','مساعد DOMA التعليمي');
+    panel.className='pa-free-tutor'+(targetContainer?' pa-global-tutor':'');panel.setAttribute('aria-label','مساعد DOMA التعليمي');
     panel.innerHTML='<div class="pa-free-tutor-head"><div><span class="pa-free-tutor-label">DOMA STUDY ASSISTANT</span><h3>مساعدك التعليمي</h3><p>اسأل مساعدًا ذكيًا يشرح الدرس والكود خطوة بخطوة.</p></div><span class="pa-free-tutor-local">ذكاء اصطناعي + بديل محلي</span></div><div class="pa-free-tutor-actions"><button type="button" data-tutor-mode="lesson">اشرح الدرس</button><button type="button" data-tutor-mode="code">اشرح الكود</button><button type="button" data-tutor-mode="debug">ساعدني في الخطأ</button><button type="button" data-tutor-mode="hint">أعطني تلميحًا</button></div><form class="pa-free-tutor-question"><input id="paTutorQuestion" type="text" maxlength="240" autocomplete="off" placeholder="اكتب سؤالك عن الدرس أو الكود…"><button class="pa-free-tutor-send" type="submit">اسأل</button></form><div id="paTutorQuota" class="pa-free-tutor-status" role="status" aria-live="polite">المساعد المحلي متاح دائمًا. الذكاء الاصطناعي يستخدم حصة يومية محدودة.</div><div id="paTutorAnswer" class="pa-free-tutor-answer" role="status" aria-live="polite">اختار مساعدة من الأزرار أو اكتب سؤالك.</div><small class="pa-free-tutor-note">عند استخدام الذكاء الاصطناعي يُرسل سؤالك ومقتطف من الدرس إلى Cloudflare. لا يُرسل الكود إلا عند اختيار شرحه أو تصحيح خطئه. لا تشارك كلمات مرور أو بيانات شخصية.</small>';
-    lab.parentNode.insertBefore(panel,lab);
-    var answer=$('paTutorAnswer'),question=$('paTutorQuestion'),hintIndex=0,labEditor=$('paCodeEditor'),aiHistory=[],aiBusy=false,quotaStatus=$('paTutorQuota');
+    if(targetContainer)targetContainer.appendChild(panel);else lab.parentNode.insertBefore(panel,lab);
+    var answer=panel.querySelector('#paTutorAnswer'),question=panel.querySelector('#paTutorQuestion'),hintIndex=0,labEditor=$('paCodeEditor'),aiHistory=[],aiBusy=false,quotaStatus=panel.querySelector('#paTutorQuota');
     if(labEditor){labEditor.addEventListener('focus',function(){activeTutorEditor='lab'});labEditor.addEventListener('input',function(){activeTutorEditor='lab'})}
     function currentCode(){var ex=$('paExerciseCode'),ed=$('paCodeEditor');return activeTutorEditor==='exercise'&&ex?ex.value:(ed?ed.value:(ex?ex.value:''))}
     function lessonNotes(){
@@ -805,6 +809,7 @@ function initializeDomaProgrammingAcademy(){
     var section=$('paStudentProgress');
     if(!user){if(section)section.hidden=true;host.innerHTML='';return}
     if(!hasAccess()){if(section)section.hidden=true;host.innerHTML='';return}
+    if(!document.body.classList.contains('pa-track-view')){if(section)section.hidden=true;host.innerHTML='';return}
     if(section)section.hidden=false;
     host.innerHTML='<div class="pa-loading">جاري تحميل تقدمك…</div>';
     var result=await db.rpc('programming_get_my_learning_progress');
@@ -989,6 +994,7 @@ function initializeDomaProgrammingAcademy(){
       setAcademyLocked(false);
       syncEmbeddedView();
       await loadCurriculum();
+      mountFreeTutor({title:'مساعد البرمجة',summary:'اسأل عن أي مفهوم أو لغة أو مشكلة في مسارات الأكاديمية.'},'',$('paGlobalTutor'));
       await loadStudentProgress();
       await loadDailyChallenges();
       await loadProgrammingProjects();
@@ -1013,6 +1019,7 @@ function initializeDomaProgrammingAcademy(){
           setAcademyLocked(false);
           syncEmbeddedView();
           await loadCurriculum();
+          mountFreeTutor({title:'مساعد البرمجة',summary:'اسأل عن أي مفهوم أو لغة أو مشكلة في مسارات الأكاديمية.'},'',$('paGlobalTutor'));
           await loadStudentProgress();
           await loadDailyChallenges();
           await loadProgrammingProjects();
@@ -1119,5 +1126,16 @@ body.pa-embedded-subscription-only .pa-modal-card{max-height:min(88vh,820px);box
 </style>
 <style id="pa-simplified-academy-home">.pa-subscription-compact{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 16px;margin:18px 0 28px;padding:18px 20px;border:1px solid rgba(205,170,111,.48);border-radius:18px;background:linear-gradient(120deg,rgba(49,34,62,.96),rgba(28,25,42,.98));box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}.pa-subscription-copy{display:flex;flex-direction:column;gap:4px}.pa-subscription-copy>span{font-size:9px;letter-spacing:1.3px;color:#d9b873;font-weight:900}.pa-subscription-copy strong{font-size:17px;color:#fff}.pa-subscription-copy small{font-size:12px;color:#d8c7a6}.pa-subscription-compact .pa-membership-status{grid-column:1/-1;margin:0;color:#d8c7a6;font-size:12px}.pa-subscription-compact .pa-primary-btn{white-space:nowrap}.pa-path-section{margin-top:8px}.pa-section-heading{margin-bottom:18px}@media(max-width:520px){.pa-subscription-compact{padding:14px;gap:9px}.pa-subscription-copy strong{font-size:15px}.pa-subscription-compact .pa-primary-btn{font-size:12px;padding:10px 12px}}</style>
 <script src="./programming-lab-extras.js?v=1" defer></script>
+
+<style id="pa-global-tutor-orange-glass">
+.pa-global-tutor-wrap{margin:22px 0 30px}
+.pa-global-tutor{position:relative;isolation:isolate;overflow:hidden;margin:0;padding:clamp(18px,3vw,28px);border:1px solid rgba(255,174,105,.42);border-radius:24px;background:linear-gradient(135deg,rgba(238,119,47,.28),rgba(92,49,42,.24) 48%,rgba(255,190,123,.13)),rgba(25,18,25,.48);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 18px 48px rgba(12,8,8,.24),inset 0 1px rgba(255,255,255,.18)}
+.pa-global-tutor:before{content:"";position:absolute;inset:-35% auto auto -8%;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,147,73,.2),transparent 68%);pointer-events:none;z-index:-1}
+.pa-global-tutor .pa-free-tutor-label{color:#ffc18c}.pa-global-tutor .pa-free-tutor-head h3{color:#fff1e5;font-size:clamp(21px,3vw,26px)}.pa-global-tutor .pa-free-tutor-head p{color:#f0d8c9}.pa-global-tutor .pa-free-tutor-local{border-color:rgba(255,184,127,.42);background:rgba(255,157,91,.09);color:#ffd0a9}
+.pa-global-tutor .pa-free-tutor-actions button{border-color:rgba(255,181,125,.3);background:rgba(255,255,255,.075);color:#fff0e4}.pa-global-tutor .pa-free-tutor-actions button:hover{background:rgba(255,151,78,.2);border-color:rgba(255,190,137,.6)}
+.pa-global-tutor .pa-free-tutor-question input{border-color:rgba(255,181,125,.34);background:rgba(25,16,16,.3);color:#fff8f1}.pa-global-tutor .pa-free-tutor-send{background:linear-gradient(120deg,#e98243,#ffc18b);color:#321c16;box-shadow:0 6px 18px rgba(205,103,48,.2)}
+.pa-global-tutor .pa-free-tutor-answer{border-color:rgba(255,184,127,.25);background:rgba(20,13,13,.25);color:#fff0e5}.pa-global-tutor .pa-free-tutor-status,.pa-global-tutor .pa-free-tutor-note{color:#e5c9b9}
+@media(max-width:560px){.pa-global-tutor{border-radius:19px;padding:15px}.pa-global-tutor .pa-free-tutor-head{gap:8px}}
+</style>
 </body>
 </html>
