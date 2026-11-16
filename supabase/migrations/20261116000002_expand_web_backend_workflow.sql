@@ -612,7 +612,9 @@ select l.id,
          when l.id like 'backend-%' then '-- اكتب استعلام SQL أو مثال JSON هنا'
          else '// اكتب الحل هنا'
        end,
-       case when l.id like 'web-0%' then 'html'
+       case when l.id in ('web-01-html-structure','web-02-semantic-forms') then 'html'
+            when l.id in ('web-03-css-foundations','web-04-responsive-layout') then 'css'
+            when l.id like 'web-%' then 'javascript'
             when l.id like 'workflow-%' then 'text'
             when l.id like 'backend-%' then 'sql'
             else 'javascript' end,
