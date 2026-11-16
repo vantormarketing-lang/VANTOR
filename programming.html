@@ -95,7 +95,10 @@ function initializeDomaProgrammingAcademy(){
   var URL='https://dtptxhkcogpoleftguas.supabase.co';
   var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
   var boundedFetch=function(input,init){var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},15000);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
-  var db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},global:{fetch:boundedFetch}});
+  var isAdminLearningView=new URLSearchParams(window.location.search).get('learning-admin')==='1';
+  var authOptions={persistSession:true,autoRefreshToken:true,detectSessionInUrl:true};
+  if(isAdminLearningView)authOptions.storageKey='doma-admin-auth';
+  var db=window.supabase.createClient(URL,KEY,{auth:authOptions,global:{fetch:boundedFetch}});
   var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[],activeTutorEditor='lab';
   var $=function(id){return document.getElementById(id)};
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
@@ -691,7 +694,7 @@ function initializeDomaProgrammingAcademy(){
     if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
     pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;setAcademyLocked(true);syncEmbeddedView();toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
     // A pending request must never trigger curriculum loading.
-    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(new URLSearchParams(window.location.search).get('learning-admin')==='1'){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
+    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(isAdminLearningView){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
   }
   async function renderAdminRequests(rows){
     var panel=$('paAdminPanel'),host=$('paAdminRequests');panel.hidden=false;

@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v262';
+const CACHE_NAME = 'mr-fluent-offline-student-v263';
 const BRAND_VERSION = 'doma-glass-v110';
 // Kids curriculum tools release: refresh the app shell and keep learning routes consistent.
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
-const appStartUrl = new URL('./?doma-app=student&launch=v262', self.registration.scope);
+const appStartUrl = new URL('./?doma-app=student&launch=v263', self.registration.scope);
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const programmingAcademyUrl = new URL('./programming.html', self.registration.scope);
@@ -153,11 +153,28 @@ async function navigationFallback(requestedUrl) {
   return Response.error();
 }
 
+function normalizeRedirectedResponse(response) {
+  if (!response || !response.redirected) return response;
+  if (response.type === 'opaque' || response.type === 'opaqueredirect') return response;
+  try {
+    const finalUrl = response.url ? new URL(response.url) : null;
+    if (!finalUrl || finalUrl.origin !== self.location.origin) return response;
+    return new Response(response.clone().body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers
+    });
+  } catch (_) {
+    return response;
+  }
+}
+
 async function fetchWithTimeout(input, init = {}, timeoutMs = 4500) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    return await fetch(input, {...init, signal:controller.signal});
+    const response = await fetch(input, {...init, redirect:'follow', signal:controller.signal});
+    return normalizeRedirectedResponse(response);
   } finally {
     clearTimeout(timer);
   }
