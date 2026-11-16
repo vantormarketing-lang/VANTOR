@@ -1144,7 +1144,7 @@ const SB_URL='https://dtptxhkcogpoleftguas.supabase.co';
 const SB_KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
 // Force fresh HTTP reads for Supabase so browser/proxy caches cannot leave request statuses stale.
 const mfNoCacheFetch=(input,init={})=>fetch(input,{...init,cache:'no-store'});
-const db=supabase.createClient(SB_URL,SB_KEY,{global:{fetch:mfNoCacheFetch},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const db=supabase.createClient(SB_URL,SB_KEY,{global:{fetch:mfNoCacheFetch},auth:{storageKey:'doma-admin-auth',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const fmt=v=>v?new Date(v).toLocaleString(): '—';
