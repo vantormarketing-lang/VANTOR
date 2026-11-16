@@ -89,22 +89,6 @@ if (!/hasSensitiveQuery\s*\(/.test(studentWorkerPolicy)) {
 }
 ok('sw.js: only safe same-origin static assets are cached; navigations refresh online and dynamic data is network-only');
 
-if (!admin.includes("storageKey:'doma-admin-auth'")) {
-  fail('admin.html: Admin Supabase client must use the dedicated doma-admin-auth storage key');
-}
-const programming = read('programming.html');
-if (!programming.includes("var isAdminLearningView=new URLSearchParams(window.location.search).get('learning-admin')==='1';") ||
-    !programming.includes("if(isAdminLearningView)authOptions.storageKey='doma-admin-auth';") ||
-    !programming.includes('if(isAdminLearningView){if(isStaff){')) {
-  fail('programming.html: Admin-learning route must share the Admin session without granting staff access from the URL');
-}
-if (!studentWorkerPolicy.includes('function normalizeRedirectedResponse(response)') ||
-    !studentWorkerPolicy.includes("redirect:'follow'") ||
-    !studentWorkerPolicy.includes('return normalizeRedirectedResponse(response);')) {
-  fail('sw.js: same-origin redirected responses must be normalized before caching or returning them');
-}
-ok('Admin session separation and same-origin redirect normalization regression guards are present');
-
 for (const path of ['manifest.webmanifest', 'admin-manifest.webmanifest']) {
   const source = read(path);
   if (!source) continue;
@@ -200,6 +184,22 @@ if (!student.includes('storage://homework-submissions/')) {
 }
 
 const admin = read('admin.html');
+
+if (!admin.includes("storageKey:'doma-admin-auth'")) {
+  fail('admin.html: Admin Supabase client must use the dedicated doma-admin-auth storage key');
+}
+const programming = read('programming.html');
+if (!programming.includes("var isAdminLearningView=new URLSearchParams(window.location.search).get('learning-admin')==='1';") ||
+    !programming.includes("if(isAdminLearningView)authOptions.storageKey='doma-admin-auth';") ||
+    !programming.includes('if(isAdminLearningView){if(isStaff){')) {
+  fail('programming.html: Admin-learning route must share the Admin session without granting staff access from the URL');
+}
+if (!studentWorkerPolicy.includes('function normalizeRedirectedResponse(response)') ||
+    !studentWorkerPolicy.includes("redirect:'follow'") ||
+    !studentWorkerPolicy.includes('return normalizeRedirectedResponse(response);')) {
+  fail('sw.js: same-origin redirected responses must be normalized before caching or returning them');
+}
+ok('Admin session separation and same-origin redirect normalization regression guards are present');
 if (!admin.includes('createSignedUrl(path,300)') || !admin.includes('data-doma-homework-attachment')) {
   fail('admin.html: secure signed-link handling for private homework attachments is missing');
 }
