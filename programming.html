@@ -19,6 +19,18 @@
 .pa-home-link:hover{background:rgba(242,210,160,.12);border-color:rgba(242,210,160,.65)}
 @media(max-width:520px){.pa-topbar{min-height:62px;padding:10px 14px}.pa-user-identity{font-size:12px;gap:8px}.pa-home-link{width:36px;height:36px}}
 </style>
+<style id="pa-projects-style">
+.pa-projects-section{margin:28px 0;padding:22px;border:1px solid rgba(214,177,111,.22);border-radius:22px;background:linear-gradient(145deg,rgba(43,29,55,.72),rgba(20,16,29,.82));}
+.pa-projects-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pa-project-card{min-width:0;padding:17px;border:1px solid rgba(214,177,111,.2);border-radius:17px;background:rgba(255,255,255,.035)}
+.pa-project-card h3{margin:5px 0 9px;color:#f2dfc3;font-size:17px}.pa-project-card p{color:#cbbba9;font-size:12px;line-height:1.9}
+.pa-project-track{color:#d9b77a;font-size:10px;font-weight:800}.pa-project-requirements{padding-inline-start:20px;color:#d9cbbb;font-size:12px;line-height:1.9}
+.pa-project-rubric{margin:12px 0;padding:12px;border-radius:12px;background:rgba(0,0,0,.18)}.pa-project-rubric h4{margin:0 0 8px;color:#e7c98e;font-size:12px}.pa-project-rubric li{margin:5px 0;color:#d1c2b2;font-size:11px;line-height:1.7}.pa-project-rubric b{color:#f0d39a}
+.pa-project-form{display:grid;gap:8px;margin-top:13px}.pa-project-form label{color:#e5d6c5;font-size:11px;font-weight:700}.pa-project-form input,.pa-project-form textarea{width:100%;box-sizing:border-box;border:1px solid rgba(214,177,111,.22);border-radius:10px;padding:10px;background:rgba(8,7,13,.42);color:#fff;font:inherit;font-size:12px}.pa-project-form textarea{min-height:78px;resize:vertical}
+.pa-project-submit{border:0;border-radius:11px;padding:11px;background:linear-gradient(120deg,#a77c42,#d8b978);color:#24172f;font-weight:900;cursor:pointer}.pa-project-submit:disabled{opacity:.55;cursor:wait}
+.pa-project-status{padding:10px;border-radius:10px;background:rgba(255,255,255,.04);color:#d8c8b6;font-size:11px;line-height:1.8}.pa-project-status.is-reviewed{border:1px solid rgba(75,210,139,.25)}.pa-project-status.is-revision{border:1px solid rgba(230,166,92,.3)}
+@media(max-width:700px){.pa-projects-section{padding:14px}.pa-projects-grid{grid-template-columns:1fr}.pa-project-card{padding:14px}}
+</style>
 </head>
 <style id="pa-free-tutor-style">
 .pa-free-tutor{margin:18px 0;padding:18px;border:1px solid rgba(214,177,111,.36);border-radius:20px;background:linear-gradient(145deg,rgba(45,31,58,.92),rgba(25,20,35,.94));box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}
@@ -57,6 +69,10 @@
   <section id="paStudentProgress" class="pa-student-progress" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
     <div id="paProgressCards" class="pa-progress-cards"><div class="pa-loading">جاري حساب تقدمك…</div></div>
+  </section>
+  <section id="paProjectsSection" class="pa-projects-section" hidden>
+    <div class="pa-section-heading"><div><span class="pa-kicker">BUILD • SUBMIT • IMPROVE</span><h2>مشاريعك العملية</h2><p>اختر مشروعًا من مسارك، راجع معايير التقييم، ثم أرسل رابط العمل أو وصفه لتحصل على مراجعة وملاحظات.</p></div></div>
+    <div id="paProjectsGrid" class="pa-projects-grid"><div class="pa-loading">جاري تحميل المشاريع…</div></div>
   </section>
   <section id="paAdminLearning" class="pa-admin-learning" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">ACADEMY CONTROL</span><h2>متابعة تعلم الطلاب</h2><p>راجع التطبيقات والمشاريع، وأضف التقييم والملاحظات.</p></div><button type="button" id="paAdminLearningRefresh" class="pa-outline-btn">تحديث البيانات</button></div>
@@ -116,7 +132,7 @@ function initializeDomaProgrammingAcademy(){
     $('paAuthStatus').classList.toggle('is-connected',!!user);
     $('paAuthStatus').title=user?'متصل بالحساب':'غير مسجل الدخول';
   }
-  function setAcademyLocked(locked){['learning-paths'].forEach(function(id){var el=$(id);if(el)el.hidden=!!locked});var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;if(locked){$('paStudentProgress').hidden=true;$('paAdminLearning').hidden=true}var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close){close.hidden=false;close.setAttribute('aria-label','إغلاق رسالة الاشتراك');close.title='إغلاق والعودة إلى الأكاديمية'}}
+  function setAcademyLocked(locked){['learning-paths','paProjectsSection'].forEach(function(id){var el=$(id);if(el)el.hidden=!!locked});var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;if(locked){$('paStudentProgress').hidden=true;$('paAdminLearning').hidden=true}var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close){close.hidden=false;close.setAttribute('aria-label','إغلاق رسالة الاشتراك');close.title='إغلاق والعودة إلى الأكاديمية'}}
   function showModal(){var error=$('paMembershipError');if(error){error.hidden=!membershipCheckError;if(membershipCheckError)error.textContent='تعذر التحقق من حالة الاشتراك: '+membershipCheckError+' — حدّث الصفحة أو تواصل مع الإدارة.'}if(!user){$('paLoginNotice').hidden=false;$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=true}else{$('paLoginNotice').hidden=true;$('paPaymentForm').hidden=!!membershipCheckError||!(!subscription&&!pendingRequest);$('paPendingNotice').hidden=!pendingRequest;$('paSubmitPayment').disabled=!!pendingRequest||!!membershipCheckError;$('paSubmitPayment').textContent=pendingRequest?'طلبك قيد المراجعة':'إرسال طلب الاشتراك'}$('paSubscribeModal').hidden=false;document.body.classList.add('pa-modal-open')}
   function syncEmbeddedView(){
     var embedded=window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1';
@@ -686,6 +702,38 @@ function initializeDomaProgrammingAcademy(){
 </head><body><main class="certificate"><div class="brand">DOMA ACADEMY</div><h1 class="title">شهادة إتمام مسار</h1><p class="subtitle">تُمنح هذه الشهادة تقديرًا لإتمام متطلبات التعلم والتطبيق العملي في</p><div class="student">${esc(user&&user.user_metadata&&user.user_metadata.full_name||'طالب DOMA')}</div><div class="track">${esc(certificate.track_title)}</div><p class="note">أتم المتعلم دروس المسار وقدم مشروعًا عمليًا تمت مراجعته وتقييمه بنجاح. نتمنى له دوام التعلم والإبداع.</p><div class="code">رقم الشهادة: ${esc(certificate.certificate_code)}</div><div class="date">تاريخ الإصدار: ${esc(issued)}</div><div class="qr" style="margin:28px auto 0;display:grid;justify-items:center;gap:8px"><div id="certificateQr" style="background:#fff;padding:8px;border-radius:10px"></div><small style="color:#735d47">امسح الرمز للتحقق من الشهادة</small></div><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" onload="new QRCode(document.getElementById('certificateQr'),{text:'${verificationUrl}',width:128,height:128,colorDark:'#24172f',colorLight:'#ffffff'});window.setTimeout(function(){window.print()},350)" onerror="window.print()"><\/script></main></body></html>`;
     printWindow.document.open();printWindow.document.write(html);printWindow.document.close();printWindow.focus();
   }
+  async function loadProgrammingProjects(){
+    var section=$('paProjectsSection'),host=$('paProjectsGrid');
+    if(!section||!host)return;
+    if(!user||!hasAccess()){section.hidden=true;return}
+    section.hidden=false;host.innerHTML='<div class="pa-loading">جاري تحميل المشاريع…</div>';
+    var results=await Promise.all([
+      db.from('programming_projects').select('id,track_id,title,brief,requirements,rubric,difficulty,estimated_hours').eq('is_published',true).order('sort_order'),
+      db.from('programming_project_submissions').select('id,project_id,status,score,feedback,repository_url,demo_url,notes,submitted_at,reviewed_at').eq('student_id',user.id).order('submitted_at',{ascending:false})
+    ]);
+    if(results[0].error||results[1].error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل المشاريع أو حالة تسليماتك. '+esc((results[0].error||results[1].error).message)+'</div>';return}
+    var projects=results[0].data||[],submissions=results[1].data||[],latest={};
+    submissions.forEach(function(row){if(!latest[row.project_id])latest[row.project_id]=row});
+    var trackNames={};tracks.forEach(function(track){trackNames[track.id]=track.title});
+    if(!projects.length){host.innerHTML='<div class="pa-activity-lock">سيتم إضافة المشاريع العملية قريبًا.</div>';return}
+    host.innerHTML=projects.map(function(project){
+      var previous=latest[project.id],requirements=Array.isArray(project.requirements)?project.requirements:[],rubric=Array.isArray(project.rubric)?project.rubric:[];
+      var status=previous?(previous.status==='reviewed'?'تمت مراجعة المشروع':previous.status==='needs_revision'?'المشروع يحتاج إلى تعديل':'تم استلام المشروع وجارٍ مراجعته'):'لم ترسل هذا المشروع بعد';
+      var statusClass=previous&&previous.status==='reviewed'?'is-reviewed':previous&&previous.status==='needs_revision'?'is-revision':'';
+      var review=previous?'<div class="pa-project-status '+statusClass+'"><b>'+status+'</b>'+(previous.score!==null&&previous.score!==undefined?' · الدرجة '+Number(previous.score)+'/100':'')+(previous.feedback?'<p>'+esc(previous.feedback)+'</p>':'')+'<small>آخر إرسال: '+new Date(previous.submitted_at).toLocaleString('ar-EG')+'</small></div>':'<div class="pa-project-status">لم يتم إرسال أي نسخة حتى الآن.</div>';
+      return '<article class="pa-project-card" data-project-card="'+esc(project.id)+'"><span class="pa-project-track">'+esc(trackNames[project.track_id]||project.track_id)+' · '+esc(project.difficulty||'beginner')+' · '+Number(project.estimated_hours||2)+' ساعة تقريبًا</span><h3>'+esc(project.title)+'</h3><p>'+esc(project.brief||'')+'</p><h4>المتطلبات</h4><ol class="pa-project-requirements">'+requirements.map(function(item){return '<li>'+esc(item)+'</li>'}).join('')+'</ol><div class="pa-project-rubric"><h4>معايير التقييم · 100 درجة</h4><ul>'+rubric.map(function(item){return '<li><b>'+Number(item.weight||0)+'%</b> — '+esc(item.criterion||'')+' '+esc(item.description||'')+'</li>'}).join('')+'</ul></div>'+review+'<form class="pa-project-form" data-project-form="'+esc(project.id)+'"><label>رابط GitHub / المستودع</label><input type="url" name="repository_url" maxlength="500" placeholder="https://github.com/username/project" value="'+esc(previous&&previous.repository_url||'')+'"><label>رابط المعاينة (اختياري)</label><input type="url" name="demo_url" maxlength="500" placeholder="https://..." value="'+esc(previous&&previous.demo_url||'')+'"><label>اشرح ما أنجزته أو أضف ملاحظاتك</label><textarea name="notes" maxlength="3000" placeholder="اكتب وصفًا مختصرًا للمشروع والاختبارات التي أجريتها…">'+esc(previous&&previous.notes||'')+'</textarea><button class="pa-project-submit" type="submit">إرسال المشروع للمراجعة</button><p class="pa-project-form-status" role="status"></p></form></article>';
+    }).join('');
+    host.querySelectorAll('[data-project-form]').forEach(function(form){form.addEventListener('submit',async function(event){
+      event.preventDefault();var values=new FormData(form),repo=String(values.get('repository_url')||'').trim(),demo=String(values.get('demo_url')||'').trim(),notes=String(values.get('notes')||'').trim(),status=form.querySelector('.pa-project-form-status'),button=form.querySelector('button[type="submit"]');
+      if(!repo&&!demo&&!notes){status.textContent='أضف رابطًا واحدًا على الأقل أو اكتب وصفًا للمشروع.';return}
+      if(repo&&!/^https:\/\//i.test(repo)||demo&&!/^https:\/\//i.test(demo)){status.textContent='استخدم روابط تبدأ بـ https://';return}
+      button.disabled=true;status.textContent='جارٍ إرسال المشروع…';
+      var saved=await db.rpc('programming_submit_project',{p_project_id:form.dataset.projectForm,p_repository_url:repo,p_demo_url:demo,p_notes:notes});
+      button.disabled=false;
+      if(saved.error){status.textContent='تعذر إرسال المشروع: '+saved.error.message;return}
+      toast('تم إرسال المشروع للمراجعة بنجاح.');await loadProgrammingProjects();await loadStudentProgress();
+    })});
+  }
   async function loadStudentProgress(){
     var host=$('paProgressCards');if(!host)return;
     var section=$('paStudentProgress');
@@ -827,6 +875,7 @@ function initializeDomaProgrammingAcademy(){
       syncEmbeddedView();
       await loadCurriculum();
       await loadStudentProgress();
+      await loadProgrammingProjects();
     }
     syncEmbeddedView();
     db.auth.onAuthStateChange(function(event,session){
@@ -849,6 +898,7 @@ function initializeDomaProgrammingAcademy(){
           syncEmbeddedView();
           await loadCurriculum();
           await loadStudentProgress();
+          await loadProgrammingProjects();
           if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
           closeModal();
         }catch(error){
