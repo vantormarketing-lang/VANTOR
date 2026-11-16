@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DOMA Cloudflare Pages Smoke Test</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; background: #160f24; color: #f6edda; }
+    main { width: min(90vw, 560px); padding: 28px; border: 1px solid #b99b65; border-radius: 20px; background: #241832; }
+    h1 { color: #e6c98f; } code, pre { color: #e6c98f; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>DOMA Pages test</h1>
+    <p>This is an isolated Cloudflare Pages smoke test. It does not replace the DOMA website.</p>
+    <p>Backend check: <strong id="status">Checking…</strong></p>
+    <pre id="details"></pre>
+  </main>
+  <script>
+    fetch("/api/health")
+      .then(async response => {
+        const data = await response.json();
+        document.querySelector("#status").textContent = response.ok ? "PASS" : "FAIL";
+        document.querySelector("#details").textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.querySelector("#status").textContent = "FAIL";
+        document.querySelector("#details").textContent = String(error);
+      });
+  </script>
+</body>
+</html>
