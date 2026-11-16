@@ -58,7 +58,7 @@ export async function onRequestPost({ request, env }) {
     const adminHeaders = { apikey: serviceKey, Authorization: "Bearer " + serviceKey };
     const profileUrl = new URL(supabaseOrigin + "/rest/v1/profiles");
     profileUrl.searchParams.set("id", "eq." + authUser.id);
-    profileUrl.searchParams.set("select", "role");
+    profileUrl.searchParams.set("select", "role,is_suspended");
     profileUrl.searchParams.set("limit", "1");
     const profileResponse = await fetch(profileUrl, { headers: adminHeaders, cache: "no-store" });
     if (!profileResponse.ok) {
@@ -67,7 +67,10 @@ export async function onRequestPost({ request, env }) {
     }
     const profiles = await profileResponse.json().catch(() => null);
     if (!Array.isArray(profiles)) return json({ error: "membership_check_unavailable" }, 503);
-    const isStaff = profiles.some(profile => profile && (profile.role === "admin" || profile.role === "teacher"));
+    const profile = profiles[0];
+    if (!profile) return json({ error: "profile_required" }, 403);
+    if (profile.is_suspended === true) return json({ error: "account_suspended" }, 403);
+    const isStaff = profile.role === "admin" || profile.role === "teacher";
 
     let hasActiveSubscription = false;
     if (!isStaff) {
