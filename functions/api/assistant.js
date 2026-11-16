@@ -212,7 +212,7 @@ export async function onRequestPost({ request, env }) {
       try {
         const modelResult = await env.AI.run(modelId, {
           messages,
-          max_completion_tokens: 450,
+          max_tokens: 450,
           temperature: 0.35
         });
         answer = extractAnswer(modelResult).slice(0, 7000);
