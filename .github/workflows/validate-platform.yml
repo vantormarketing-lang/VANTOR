@@ -22,6 +22,8 @@ jobs:
           node-version: 20
       - name: Validate platform scripts, PWA manifests, and progress safeguards
         run: node scripts/validate-platform.mjs
+      - name: Test Judge0 batch response handling
+        run: node scripts/test-judge0-batch.mjs
       - name: Validate migration safety safeguards
         run: node scripts/validate-migration-safety.mjs
       - name: Validate production security and PWA caching safeguards

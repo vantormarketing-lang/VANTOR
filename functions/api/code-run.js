@@ -1,3 +1,5 @@
+import { readBatchSubmissions, mergeBatchResults, batchResultsComplete } from "../_shared/judge0-batch.mjs";
+
 const LANGUAGE_IDS = {
   python: 109,
   javascript: 102,
@@ -219,28 +221,40 @@ export async function onRequestPost({ request, env }) {
         headers: { ...judgeHeaders, "content-type": "application/json" },
         body: JSON.stringify({ submissions })
       });
-      const submitted = await submitResponse.json().catch(() => null);
+      const submitPayload = await submitResponse.json().catch(() => null);
+      const submitted = readBatchSubmissions(submitPayload);
       if (!submitResponse.ok || !Array.isArray(submitted) || submitted.length !== submissions.length ||
-          submitted.some(item => !item || !item.token)) {
+          submitted.some(item => !item || typeof item.token !== "string" || !item.token)) {
         return { error: "خدمة التشغيل لم تستطع استقبال مجموعة الاختبارات الآن." };
       }
       const tokens = submitted.map(item => item.token);
       const pollUrl = new URL("/submissions/batch", env.JUDGE0_URL);
       pollUrl.searchParams.set("tokens", tokens.join(","));
       pollUrl.searchParams.set("base64_encoded", "false");
-      let results = submitted;
-      for (let attempt = 0; attempt < 10; attempt++) {
-        if (results.every(item => item && item.status && item.status.id > 2)) break;
+      let results = tokens.map(() => null);
+      for (let attempt = 0; attempt < 12; attempt++) {
+        if (batchResultsComplete(results)) break;
         await new Promise(resolve => setTimeout(resolve, 500));
         const pollResponse = await fetch(pollUrl, { headers: judgeHeaders });
         if (!pollResponse.ok) return { error: "تعذر متابعة نتائج تشغيل الاختبارات." };
         const payload = await pollResponse.json().catch(() => null);
-        if (!Array.isArray(payload) || payload.length !== tokens.length) {
-          return { error: "خدمة التشغيل أعادت نتائج غير مكتملة." };
+        const received = readBatchSubmissions(payload);
+        if (!Array.isArray(received)) {
+          console.error("[code-run] Judge0 batch poll returned an unsupported response shape", {
+            responseType: payload && typeof payload === "object" ? "object" : typeof payload
+          });
+          return { error: "خدمة التشغيل أعادت صيغة نتائج غير مفهومة." };
         }
-        results = payload;
+        // Judge0 CE returns { submissions: [...] }. Some compatible runners return
+        // a bare array. Merge partial polls by token so one delayed result does not
+        // discard the results that have already arrived.
+        results = mergeBatchResults(tokens, results, received);
+        if (batchResultsComplete(results)) break;
       }
-      if (results.some(item => !item || !item.status || item.status.id === 1 || item.status.id === 2)) {
+      if (results.some(item => !item)) {
+        return { error: "لم تصل جميع نتائج التشغيل بعد. انتظر قليلًا ثم حاول مرة أخرى." };
+      }
+      if (!batchResultsComplete(results)) {
         return { error: "خدمة التشغيل مزدحمة حاليًا. حاول مرة أخرى بعد قليل." };
       }
       return { results };
