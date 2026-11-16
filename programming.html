@@ -31,7 +31,12 @@
 .pa-project-status{padding:10px;border-radius:10px;background:rgba(255,255,255,.04);color:#d8c8b6;font-size:11px;line-height:1.8}.pa-project-status.is-reviewed{border:1px solid rgba(75,210,139,.25)}.pa-project-status.is-revision{border:1px solid rgba(230,166,92,.3)}
 @media(max-width:700px){.pa-projects-section{padding:14px}.pa-projects-grid{grid-template-columns:1fr}.pa-project-card{padding:14px}}
 </style>
-</head>
+<style id="pa-admin-learning-filters-style">
+.pa-admin-learning-filters{display:grid;grid-template-columns:minmax(180px,2fr) repeat(2,minmax(150px,1fr));gap:10px;margin:14px 0}
+.pa-admin-learning-filters input,.pa-admin-learning-filters select{width:100%;min-width:0;box-sizing:border-box;border:1px solid rgba(214,177,111,.25);border-radius:11px;padding:11px 12px;background:rgba(20,15,27,.8);color:#f4e8d8;font:inherit;font-size:12px}
+.pa-admin-learning-filters option{background:#21182b;color:#fff}
+@media(max-width:650px){.pa-admin-learning-filters{grid-template-columns:1fr}.pa-admin-learning-filters input,.pa-admin-learning-filters select{min-height:42px}}
+</style></head>
 <style id="pa-free-tutor-style">
 .pa-free-tutor{margin:18px 0;padding:18px;border:1px solid rgba(214,177,111,.36);border-radius:20px;background:linear-gradient(145deg,rgba(45,31,58,.92),rgba(25,20,35,.94));box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}
 .pa-free-tutor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.pa-free-tutor-head h3{margin:4px 0;color:#f6e8d2;font-size:19px}.pa-free-tutor-head p{margin:5px 0;color:#d5c6b2;font-size:12px;line-height:1.8}
@@ -754,21 +759,40 @@ function initializeDomaProgrammingAcademy(){
     if(result.error){$('paAdminLearningQueue').innerHTML='<div class="pa-activity-lock">تعذر تحميل متابعة الطلاب: '+esc(result.error.message)+'</div>';return}
     var data=result.data||{};
     $('paAdminLearningStats').innerHTML='<article class="pa-progress-card"><b>'+Number(data.students||0)+'</b><span>طلاب نشطون في التعلم</span></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات اختبارات</span></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.pending_reviews||0)+'</b><span>تحتاج إلى مراجعة</span></article>';
-    var rows=(data.recent_exercises||[]).concat(data.recent_projects||[]).sort(function(a,b){return new Date(b.submitted_at)-new Date(a.submitted_at)});
+    var rows=(data.recent_exercises||[]).concat(data.recent_projects||[]);
+    rows.sort(function(a,b){var ap=a.status==='submitted'?1:0,bp=b.status==='submitted'?1:0;return bp-ap||new Date(b.submitted_at)-new Date(a.submitted_at)});
     var queue=$('paAdminLearningQueue');
-    if(!rows.length){queue.innerHTML='<div class="pa-activity-lock">لا توجد تسليمات حتى الآن.</div>';return}
-    queue.innerHTML=rows.map(function(row){
-      var title=row.kind==='exercise'?row.exercise_title:row.project_title;
-      var details=row.kind==='exercise'?'<details class="pa-review-details"><summary>عرض كود الطالب وملاحظاته</summary><pre>'+esc(row.source_code||'لا يوجد كود مرفق.')+'</pre><p>'+esc(row.notes||'')+'</p></details>':'<details class="pa-review-details"><summary>تفاصيل المشروع</summary><p>المستودع: '+esc(row.repository_url||'غير مرفق')+'</p><p>المعاينة: '+esc(row.demo_url||'غير مرفقة')+'</p><p>'+esc(row.notes||'')+'</p></details>';return '<article class="pa-review-card" data-review-kind="'+row.kind+'" data-review-id="'+esc(row.id)+'"><div class="pa-review-meta"><b>'+esc(row.student_name)+'</b><span>'+esc(title)+'</span><small>'+new Date(row.submitted_at).toLocaleString('ar-EG')+' · '+(row.status==='submitted'?'قيد المراجعة':row.status==='reviewed'?'تمت المراجعة':'يحتاج إلى تعديل')+'</small>'+details+'</div><div class="pa-review-controls"><input type="number" min="0" max="100" placeholder="الدرجة" value="'+(row.score===null||row.score===undefined?'':row.score)+'" data-review-score><input type="text" placeholder="ملاحظات المراجعة" data-review-feedback><button type="button" class="pa-activity-submit" data-review-action="reviewed">اعتماد التقييم</button><button type="button" class="pa-lab-secondary" data-review-action="needs_revision">طلب تعديل</button></div></article>';
-    }).join('');
-    queue.querySelectorAll('[data-review-action]').forEach(function(button){button.addEventListener('click',async function(){
-      var card=button.closest('[data-review-id]'),scoreText=card.querySelector('[data-review-score]').value,score=scoreText===''?null:Number(scoreText);
-      if(score!==null&&(!Number.isInteger(score)||score<0||score>100)){toast('اكتب درجة صحيحة من 0 إلى 100.');return}
-      button.disabled=true;
-      var saved=await db.rpc('programming_admin_review_submission',{p_kind:card.dataset.reviewKind,p_submission_id:card.dataset.reviewId,p_status:button.dataset.reviewAction,p_score:score,p_feedback:card.querySelector('[data-review-feedback]').value});
-      button.disabled=false;if(saved.error){toast('تعذر حفظ التقييم: '+saved.error.message);return}
-      toast('تم حفظ مراجعة الطالب.');await loadProgrammingAdminLearning();
-    })});
+    if(!$('paAdminLearningFilters')){
+      var filters=document.createElement('div');filters.id='paAdminLearningFilters';filters.className='pa-admin-learning-filters';
+      filters.innerHTML='<input id="paAdminLearningSearch" type="search" placeholder="ابحث باسم الطالب أو المشروع…" aria-label="البحث في التسليمات"><select id="paAdminLearningKind" aria-label="نوع التسليم"><option value="all">كل أنواع التسليم</option><option value="project">المشاريع</option><option value="exercise">التطبيقات</option></select><select id="paAdminLearningStatus" aria-label="حالة التسليم"><option value="all">كل الحالات</option><option value="submitted">بانتظار المراجعة</option><option value="reviewed">تمت المراجعة</option><option value="needs_revision">تحتاج إلى تعديل</option></select>';
+      queue.parentNode.insertBefore(filters,queue);
+    }
+    var search=$('paAdminLearningSearch'),kindFilter=$('paAdminLearningKind'),statusFilter=$('paAdminLearningStatus');
+    function renderRows(){
+      var term=(search.value||'').trim().toLocaleLowerCase();
+      var filtered=rows.filter(function(row){
+        var title=row.kind==='exercise'?row.exercise_title:row.project_title;
+        var matchesText=!term||(String(row.student_name||'')+' '+String(title||'')).toLocaleLowerCase().includes(term);
+        return matchesText&&(kindFilter.value==='all'||row.kind===kindFilter.value)&&(statusFilter.value==='all'||row.status===statusFilter.value);
+      });
+      if(!filtered.length){queue.innerHTML='<div class="pa-activity-lock">لا توجد تسليمات مطابقة للفلاتر الحالية.</div>';return}
+      queue.innerHTML=filtered.map(function(row){
+        var title=row.kind==='exercise'?row.exercise_title:row.project_title;
+        var details=row.kind==='exercise'?'<details class="pa-review-details"><summary>عرض كود الطالب وملاحظاته</summary><pre>'+esc(row.source_code||'لا يوجد كود مرفق.')+'</pre><p>'+esc(row.notes||'')+'</p></details>':'<details class="pa-review-details"><summary>تفاصيل المشروع</summary><p>المستودع: '+esc(row.repository_url||'غير مرفق')+'</p><p>المعاينة: '+esc(row.demo_url||'غير مرفقة')+'</p><p>'+esc(row.notes||'')+'</p></details>';
+        var statusLabel=row.status==='submitted'?'بانتظار المراجعة':row.status==='reviewed'?'تمت المراجعة':'يحتاج إلى تعديل';
+        return '<article class="pa-review-card" data-review-kind="'+row.kind+'" data-review-id="'+esc(row.id)+'"><div class="pa-review-meta"><b>'+esc(row.student_name)+'</b><span>'+esc(title)+'</span><small>'+new Date(row.submitted_at).toLocaleString('ar-EG')+' · '+statusLabel+'</small>'+details+'</div><div class="pa-review-controls"><input type="number" min="0" max="100" placeholder="الدرجة" value="'+(row.score===null||row.score===undefined?'':row.score)+'" data-review-score><input type="text" placeholder="ملاحظات المراجعة" value="'+esc(row.feedback||'')+'" data-review-feedback><button type="button" class="pa-activity-submit" data-review-action="reviewed">اعتماد التقييم</button><button type="button" class="pa-lab-secondary" data-review-action="needs_revision">طلب تعديل</button></div></article>';
+      }).join('');
+      queue.querySelectorAll('[data-review-action]').forEach(function(button){button.addEventListener('click',async function(){
+        var card=button.closest('[data-review-id]'),scoreText=card.querySelector('[data-review-score]').value,score=scoreText===''?null:Number(scoreText);
+        if(score!==null&&(!Number.isInteger(score)||score<0||score>100)){toast('اكتب درجة صحيحة من 0 إلى 100.');return}
+        button.disabled=true;
+        var saved=await db.rpc('programming_admin_review_submission',{p_kind:card.dataset.reviewKind,p_submission_id:card.dataset.reviewId,p_status:button.dataset.reviewAction,p_score:score,p_feedback:card.querySelector('[data-review-feedback]').value});
+        button.disabled=false;if(saved.error){toast('تعذر حفظ التقييم: '+saved.error.message);return}
+        toast('تم حفظ مراجعة الطالب.');await loadProgrammingAdminLearning();
+      })});
+    }
+    if(!search.dataset.bound){[search,kindFilter,statusFilter].forEach(function(control){control.addEventListener('input',renderRows);control.addEventListener('change',renderRows)});search.dataset.bound='1'}
+    renderRows();
   }
   async function toggleComplete(id){
     if(!user){showModal();return}if(!hasAccess()){showModal();return}
