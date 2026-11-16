@@ -390,6 +390,14 @@ function initializeDomaProgrammingAcademy(){
       };
       var prompt=typedQuestion||prompts[mode]||'ساعدني في فهم الدرس الحالي.';
       var includeCode=mode==='code'||mode==='debug'||/(اشرح الكود|راجع الكود|code|debug|خطأ)/i.test(prompt);
+      if(includeCode&&!currentCode().trim()){
+        var editorAvailable=!!$('paLessonReader')&&!!$('paCodeEditor');
+        answer.textContent=editorAvailable
+          ? 'محرر الكود مفتوح لكنه فارغ. اضغط «استعادة المثال» أعلى المحرر، أو اكتب كودك، ثم اطلب الشرح مرة أخرى.'
+          : 'لفتح محرر الكود، افتح أحد المسارات ثم اختر درسًا. ستجد المحرر داخل الدرس، ومعه مثال جاهز وزر «استعادة المثال».';
+        if(quotaStatus)quotaStatus.textContent='لم يتم إرسال طلب إلى خدمة الذكاء الاصطناعي ولم تُستهلك حصة.';
+        return;
+      }
       var sendButton=panel.querySelector('.pa-free-tutor-send');
       aiBusy=true;if(sendButton)sendButton.disabled=true;
       answer.textContent='جاري تجهيز الشرح من المساعد الذكي…';
