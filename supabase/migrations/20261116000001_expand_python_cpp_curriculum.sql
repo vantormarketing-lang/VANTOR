@@ -1,12 +1,12 @@
 -- Extend Python beyond the introductory module and add a dedicated C++ track.
+insert into public.programming_tracks (id,title,subtitle,description,sort_order,published)
+values ('cpp','C++ Programming','من الأساسيات إلى البرمجة الكائنية','تعلم C++ خطوة بخطوة مع أمثلة عملية وتمارين واختبارات ومشاريع.',11,true)
+on conflict (id) do nothing;
 
 insert into public.programming_modules (id,track_id,title,description,sort_order,published,level,prerequisites)
 values
 ('python-intermediate','python','Python: المستوى المتوسط والمتقدم','توسّع في هياكل البيانات والنصوص والملفات والاستثناءات والوحدات والبرمجة الكائنية.',2,true,'intermediate',ARRAY['python-foundations']::text[]),
 ('cpp-foundations','cpp','أساسيات C++ من الصفر','ابدأ كتابة C++ وتعلّم الأنواع والشروط والحلقات والدوال والمصفوفات والمراجع والأصناف.',1,true,'beginner',ARRAY['cs-start-here']::text[])
-on conflict (id) do nothing;
-insert into public.programming_tracks (id,title,subtitle,description,sort_order,published)
-values ('cpp','C++ Programming','من الأساسيات إلى البرمجة الكائنية','تعلم C++ خطوة بخطوة مع أمثلة عملية وتمارين واختبارات ومشاريع.',11,true)
 on conflict (id) do nothing;
 
 insert into public.programming_lessons (id,module_id,title,summary,content_md,duration_minutes,sort_order,published,learning_objectives,prerequisites)
