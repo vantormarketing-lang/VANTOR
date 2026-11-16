@@ -240,7 +240,7 @@ export async function onRequestPost({ request, env }) {
         }
         results = payload;
       }
-      if (results.some(item => !item || !item.status || item.status.id === 1 || item.status.id === 2)) {
+      if (!batchResultsComplete(results)) {
         return { error: "خدمة التشغيل مزدحمة حاليًا. حاول مرة أخرى بعد قليل." };
       }
       return { results };
