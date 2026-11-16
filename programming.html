@@ -82,6 +82,7 @@
   <section id="paAdminLearning" class="pa-admin-learning" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">ACADEMY CONTROL</span><h2>متابعة تعلم الطلاب</h2><p>راجع التطبيقات والمشاريع، وأضف التقييم والملاحظات.</p></div><button type="button" id="paAdminLearningRefresh" class="pa-outline-btn">تحديث البيانات</button></div>
     <div id="paAdminLearningStats" class="pa-progress-cards"></div>
+    <section id="paAdminStudentReports" class="pa-admin-student-reports"><div class="pa-admin-report-heading"><div><h3>التقرير الفردي للطالب</h3><p>تقدم الدروس ونتائج الاختبارات والتطبيقات والمشاريع.</p></div><select id="paAdminStudentSelect" aria-label="اختر طالبًا"><option value="">اختر طالبًا لعرض تقريره</option></select></div><div id="paAdminStudentReportBody" class="pa-admin-student-report-body"><p class="pa-activity-lock">اختر طالبًا لعرض تقريره التفصيلي.</p></div></section>
     <div id="paAdminLearningQueue" class="pa-admin-learning-queue"></div>
   </section>
   <footer class="pa-footer"><span>DOMA ACADEMY</span><span>PROGRAMMING • LOGIC • CREATIVITY</span><a href="./index.html">العودة إلى الصفحة الرئيسية</a></footer>
@@ -484,7 +485,7 @@ function initializeDomaProgrammingAcademy(){
   var codeSamples={
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
     javascript:'const name = "DOMA Student";\nconsole.log("Hello, " + name);\n\n// جرّب تغيير الاسم ثم شغّل البرنامج',
-    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n</body>\n</html>',
+    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n\n<style id="pa-admin-student-report-style">\n.pa-admin-student-reports{margin:22px 0;padding:18px;border:1px solid rgba(205,170,111,.3);border-radius:18px;background:rgba(28,20,39,.55)}.pa-admin-report-heading,.pa-admin-report-identity,.pa-admin-report-activity{display:flex;align-items:center;justify-content:space-between;gap:12px}.pa-admin-report-heading h3,.pa-admin-report-identity h3{margin:0 0 5px}.pa-admin-report-heading p,.pa-admin-report-identity p{margin:0;color:#d2c3ae;font-size:12px}.pa-admin-report-heading select{min-width:min(100%,320px);padding:11px;border-radius:10px;background:#261d32;color:#fff;border:1px solid rgba(205,170,111,.4)}.pa-admin-student-report-body{margin-top:16px}.pa-admin-report-identity{padding:14px 0;border-bottom:1px solid rgba(205,170,111,.2)}.pa-admin-report-identity small,.pa-admin-report-activity small{display:block;color:#c9b99f;font-size:11px;margin-top:5px}.pa-admin-report-progress{padding:15px 0}.pa-admin-report-progress>div:first-child{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px}.pa-admin-report-list{margin-top:18px}.pa-admin-report-list h4{margin:0 0 10px;color:#e6c78e}.pa-admin-report-activity{padding:11px 12px;margin:8px 0;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(205,170,111,.15)}.pa-admin-report-activity p{margin:6px 0 0;color:#e2d2bb;font-size:12px}.pa-admin-report-activity>strong{white-space:nowrap;color:#e6c78e}@media(max-width:600px){.pa-admin-report-heading,.pa-admin-report-identity{align-items:stretch;flex-direction:column}.pa-admin-report-heading select{width:100%}.pa-admin-report-activity{align-items:flex-start}}\n</style>\n</body>\n</html>',
     c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, DOMA!\\n");\n    return 0;\n}',
     cpp:'#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, DOMA!" << endl;\n    return 0;\n}',
     java:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, DOMA!");\n    }\n}',
@@ -759,6 +760,36 @@ function initializeDomaProgrammingAcademy(){
     if(result.error){$('paAdminLearningQueue').innerHTML='<div class="pa-activity-lock">تعذر تحميل متابعة الطلاب: '+esc(result.error.message)+'</div>';return}
     var data=result.data||{};
     $('paAdminLearningStats').innerHTML='<article class="pa-progress-card"><b>'+Number(data.students||0)+'</b><span>طلاب نشطون في التعلم</span></article><article class="pa-progress-card"><b>'+Number(data.exercise_submissions||0)+'</b><span>تطبيقات مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.quiz_attempts||0)+'</b><span>محاولات اختبارات</span></article><article class="pa-progress-card"><b>'+Number(data.project_submissions||0)+'</b><span>مشاريع مرسلة</span></article><article class="pa-progress-card"><b>'+Number(data.pending_reviews||0)+'</b><span>تحتاج إلى مراجعة</span></article>';
+    var reportSelect=$('paAdminStudentSelect'),reportHost=$('paAdminStudentReportBody');
+    async function renderStudentReport(studentId){
+      if(!studentId){reportHost.innerHTML='<p class="pa-activity-lock">اختر طالبًا لعرض تقريره التفصيلي.</p>';return}
+      reportHost.innerHTML='<p class="pa-loading">جاري تحميل تقرير الطالب…</p>';
+      var response=await db.rpc('programming_admin_student_report',{p_student_id:studentId});
+      if(response.error){reportHost.innerHTML='<p class="pa-activity-lock">تعذر تحميل التقرير: '+esc(response.error.message)+'</p>';return}
+      var report=response.data&&response.data.report;
+      if(!report){reportHost.innerHTML='<p class="pa-activity-lock">لا توجد بيانات لهذا الطالب.</p>';return}
+      var pct=report.published_lessons?Math.min(100,Math.round(Number(report.lessons_completed||0)*100/Number(report.published_lessons))):0;
+      function activityList(title,items,kind){
+        if(!items||!items.length)return '<section class="pa-admin-report-list"><h4>'+title+'</h4><p>لا توجد بيانات حتى الآن.</p></section>';
+        return '<section class="pa-admin-report-list"><h4>'+title+'</h4>'+items.map(function(item){
+          var state=kind==='quiz'?(item.passed?'اجتاز':'لم يجتز'):item.status==='reviewed'?'تمت المراجعة':item.status==='needs_revision'?'يحتاج تعديل':'بانتظار المراجعة';
+          var score=kind==='quiz'?Number(item.score||0)+'%':(item.score===null||item.score===undefined?'لم تُقيّم':Number(item.score)+'/100');
+          return '<article class="pa-admin-report-activity"><div><b>'+esc(item.title)+'</b><small>'+new Date(item.submitted_at).toLocaleString('ar-EG')+' · '+state+'</small>'+(item.feedback?'<p>'+esc(item.feedback)+'</p>':'')+'</div><strong>'+score+'</strong></article>';
+        }).join('')+'</section>';
+      }
+      reportHost.innerHTML='<div class="pa-admin-report-identity"><div><h3>'+esc(report.student_name)+'</h3><p>'+esc(report.phone||'لا يوجد هاتف')+' · '+esc(report.email||'لا يوجد بريد')+'</p></div><small>تاريخ الانضمام: '+(report.joined_at?new Date(report.joined_at).toLocaleDateString('ar-EG'):'—')+'</small></div><div class="pa-admin-report-progress"><div><span>إنجاز الدروس</span><b>'+Number(report.lessons_completed||0)+' / '+Number(report.published_lessons||0)+' ('+pct+'%)</b></div><div class="pa-progress-track"><i style="width:'+pct+'%"></i></div></div><div class="pa-progress-cards"><article class="pa-progress-card"><b>'+Number(report.quiz_attempts||0)+'</b><span>محاولات الاختبارات</span><small>'+Number(report.passed_quizzes||0)+' اجتياز · متوسط '+Number(report.average_quiz_score||0)+'%</small></article><article class="pa-progress-card"><b>'+Number(report.exercise_submissions||0)+'</b><span>التطبيقات</span><small>'+Number(report.reviewed_exercises||0)+' تمت مراجعتها · متوسط '+Number(report.average_exercise_score||0)+'</small></article><article class="pa-progress-card"><b>'+Number(report.project_submissions||0)+'</b><span>المشاريع</span><small>'+Number(report.reviewed_projects||0)+' تمت مراجعتها · متوسط '+Number(report.average_project_score||0)+'</small></article></div>'+activityList('أحدث الاختبارات',report.recent_quizzes,'quiz')+activityList('أحدث التطبيقات',report.recent_exercises,'exercise')+activityList('أحدث المشاريع',report.recent_projects,'project');
+    }
+    if(reportSelect&&!reportSelect.dataset.bound){
+      var studentsResponse=await db.rpc('programming_admin_student_report',{p_student_id:null});
+      if(studentsResponse.error){reportHost.innerHTML='<p class="pa-activity-lock">تعذر تحميل قائمة الطلاب: '+esc(studentsResponse.error.message)+'</p>'}
+      else{
+        var students=studentsResponse.data&&studentsResponse.data.students||[];
+        reportSelect.innerHTML='<option value="">اختر طالبًا لعرض تقريره ('+students.length+')</option>'+students.map(function(student){return '<option value="'+esc(student.student_id)+'">'+esc(student.student_name)+' · '+esc(student.phone||'بدون هاتف')+'</option>'}).join('');
+        if(!students.length)reportHost.innerHTML='<p class="pa-activity-lock">لا توجد حسابات لديها نشاط في أكاديمية البرمجة حتى الآن.</p>';
+      }
+      reportSelect.addEventListener('change',function(){renderStudentReport(reportSelect.value)});
+      reportSelect.dataset.bound='1';
+    }
     var rows=(data.recent_exercises||[]).concat(data.recent_projects||[]);
     rows.sort(function(a,b){var ap=a.status==='submitted'?1:0,bp=b.status==='submitted'?1:0;return bp-ap||new Date(b.submitted_at)-new Date(a.submitted_at)});
     var queue=$('paAdminLearningQueue');
