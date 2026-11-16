@@ -42,6 +42,13 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
 
 const clip = (value, maxLength) => String(value == null ? "" : value).slice(0, maxLength);
 
+// Public, read-only health probe. It reveals only whether the Pages AI binding
+// exists; it never invokes a model, reads account data, or consumes student quota.
+export async function onRequestGet({ env }) {
+  const configured = Boolean(env.AI && typeof env.AI.run === "function");
+  return json({ configured }, configured ? 200 : 503);
+}
+
 export async function onRequestPost({ request, env }) {
   try {
     const requestOrigin = new URL(request.url).origin;
