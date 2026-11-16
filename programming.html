@@ -332,7 +332,7 @@ function initializeDomaProgrammingAcademy(){
     if(targetContainer)targetContainer.appendChild(panel);else lab.parentNode.insertBefore(panel,lab);
     var answer=panel.querySelector('#paTutorAnswer'),question=panel.querySelector('#paTutorQuestion'),hintIndex=0,labEditor=$('paCodeEditor'),aiHistory=[],aiBusy=false,quotaStatus=panel.querySelector('#paTutorQuota');
     if(labEditor){labEditor.addEventListener('focus',function(){activeTutorEditor='lab'});labEditor.addEventListener('input',function(){activeTutorEditor='lab'})}
-    function currentCode(){var ex=$('paExerciseCode'),ed=$('paCodeEditor');return activeTutorEditor==='exercise'&&ex?ex.value:(ed?ed.value:(ex?ex.value:''))}
+    function currentCode(){var ex=$('paExerciseCode'),ed=$('paCodeEditor'),focused=document.activeElement;if(focused===ex&&ex){activeTutorEditor='exercise';return String(ex.value||'')}if(focused===ed&&ed){activeTutorEditor='lab';return String(ed.value||'')}var preferred=activeTutorEditor==='exercise'?ex:ed,other=activeTutorEditor==='exercise'?ed:ex;if(preferred&&String(preferred.value||'').trim())return String(preferred.value||'');if(other&&String(other.value||'').trim())return String(other.value||'');if(preferred)return String(preferred.value||'');return other?String(other.value||''):''}
     function lessonNotes(){
       var lines=String(lessonContent||'').replace(/\r/g,'').split('\n').map(function(x){return x.trim()}).filter(function(x){return x&&!/^\x60{3}/.test(x)&&!/^#{1,6}\s/.test(x)&&!/^[-*_]{3,}$/.test(x)});
       var notes=lines.slice(0,7).map(function(x){return x.replace(/^[-*]\s*/,'').replace(/\*\*/g,'').replace(/\*/g,'')});
