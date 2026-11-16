@@ -1,4 +1,35 @@
-const MODEL_ID = "@cf/zai-org/glm-4.7-flash";
+const MODEL_IDS = [
+  "@cf/google/gemma-4-26b-a4b-it",
+  "@cf/zai-org/glm-4.7-flash"
+];
+
+const textFrom = value => {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value.map(part => {
+      if (typeof part === "string") return part;
+      return part && typeof part.text === "string" ? part.text : "";
+    }).join("");
+  }
+  return "";
+};
+
+const extractAnswer = result => {
+  if (!result || typeof result !== "object") return "";
+  const candidates = [
+    result.response,
+    result.choices && result.choices[0] && result.choices[0].message && result.choices[0].message.content,
+    result.output_text,
+    result.result && result.result.response,
+    result.result && result.result.choices && result.result.choices[0] &&
+      result.result.choices[0].message && result.result.choices[0].message.content
+  ];
+  for (const candidate of candidates) {
+    const answer = textFrom(candidate).trim();
+    if (answer) return answer;
+  }
+  return "";
+};
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status,
@@ -155,31 +186,51 @@ export async function onRequestPost({ request, env }) {
       { role: "user", content: userContent }
     ];
 
-    let modelResult;
-    try {
-      modelResult = await env.AI.run(MODEL_ID, {
-        messages,
-        max_tokens: 450,
-        temperature: 0.35
-      });
-    } catch (error) {
-      console.error("[assistant] Workers AI inference failed", { name: error && error.name ? error.name : "Error" });
-      return json({ error: "assistant_temporarily_unavailable", quotaConsumed: true }, 503);
+    let answer = "";
+    let usedModel = "";
+    const modelFailures = [];
+
+    // Try Gemma first, then GLM as a fallback. One student question consumes one quota unit.
+    for (const modelId of MODEL_IDS) {
+      try {
+        const modelResult = await env.AI.run(modelId, {
+          messages,
+          max_completion_tokens: 450,
+          temperature: 0.35
+        });
+        answer = extractAnswer(modelResult).slice(0, 7000);
+        if (answer) {
+          usedModel = modelId;
+          break;
+        }
+        modelFailures.push({ model: modelId, reason: "empty_response" });
+        console.error("[assistant] Workers AI returned no text", { model: modelId });
+      } catch (error) {
+        const details = {
+          model: modelId,
+          name: error && error.name ? String(error.name).slice(0, 80) : "Error",
+          status: error && Number.isFinite(Number(error.status)) ? Number(error.status) : undefined,
+          code: error && (typeof error.code === "string" || typeof error.code === "number")
+            ? String(error.code).slice(0, 80)
+            : undefined
+        };
+        modelFailures.push(details);
+        console.error("[assistant] Workers AI model attempt failed", details);
+      }
     }
 
-    const answerValue = modelResult && (
-      modelResult.response ||
-      (modelResult.choices && modelResult.choices[0] && modelResult.choices[0].message && modelResult.choices[0].message.content) ||
-      modelResult.output_text
-    );
-    const answer = typeof answerValue === "string" ? answerValue.trim().slice(0, 7000) : "";
-    if (!answer) return json({ error: "assistant_empty_response", quotaConsumed: true }, 503);
+    if (!answer) {
+      console.error("[assistant] all Workers AI models failed", {
+        attempts: modelFailures.map(item => ({ model: item.model, reason: item.reason || item.code || item.status || item.name }))
+      });
+      return json({ error: "assistant_temporarily_unavailable", quotaConsumed: true }, 503);
+    }
 
     return json({
       answer,
       remainingUser: Number(quota.remaining_user || 0),
       remainingGlobal: Number(quota.remaining_global || 0),
-      model: MODEL_ID
+      model: usedModel
     });
   } catch (error) {
     console.error("[assistant] unexpected request failure", { name: error && error.name ? error.name : "Error" });
