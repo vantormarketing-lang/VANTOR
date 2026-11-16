@@ -357,8 +357,12 @@ function initializeDomaProgrammingAcademy(){
       try{
         var sessionResult=await db.auth.getSession();
         var session=sessionResult&&sessionResult.data&&sessionResult.data.session;
+        if(!session||!session.access_token){
+          var initialRefresh=await db.auth.refreshSession();
+          session=initialRefresh&&initialRefresh.data&&initialRefresh.data.session;
+        }
         if(!session||!session.access_token)throw new Error('no_session');
-        var response=await fetch('/api/assistant',{
+        var requestOptions={
           method:'POST',
           headers:{'content-type':'application/json','authorization':'Bearer '+session.access_token},
           body:JSON.stringify({
@@ -371,13 +375,30 @@ function initializeDomaProgrammingAcademy(){
             },
             code:includeCode?String(currentCode()||'').slice(0,2000):''
           })
-        });
+        };
+        var response=await fetch('/api/assistant',requestOptions);
+        if(response.status===401){
+          var refreshedResult=await db.auth.refreshSession();
+          var freshSession=refreshedResult&&refreshedResult.data&&refreshedResult.data.session;
+          if(freshSession&&freshSession.access_token){
+            requestOptions.headers.authorization='Bearer '+freshSession.access_token;
+            response=await fetch('/api/assistant',requestOptions);
+          }
+        }
         var payload=await response.json().catch(function(){return {}});
         if(!response.ok){
           var reason=String(payload.reason||'');
+          var errorCode=String(payload.error||'');
           var notice=reason==='user_daily_limit'?'وصلت للحد اليومي المسموح به للمساعد الذكي.':
             reason==='global_daily_limit'?'الحصة اليومية للمساعد الذكي في DOMA اكتملت حاليًا.':
             response.status===401?'جلسة الدخول غير متاحة للمساعد الذكي حاليًا.':
+            errorCode==='assistant_not_configured'?'ربط خدمة الذكاء الاصطناعي غير مكتمل في بيئة الموقع.':
+            errorCode==='assistant_temporarily_unavailable'?'نماذج الذكاء الاصطناعي لا تستجيب حاليًا من خدمة التشغيل.':
+            errorCode==='assistant_auth_not_configured'||errorCode==='invalid_supabase_url'?'إعدادات التحقق من حساب DOMA غير مكتملة.':
+            errorCode==='membership_check_unavailable'||errorCode==='auth_verification_unavailable'||errorCode==='quota_check_unavailable'?'تعذر التحقق من الحساب أو الحصة اليومية حاليًا.':
+            errorCode==='active_programming_subscription_required'?'يلزم اشتراك برمجة نشط لاستخدام المساعد الذكي.':
+            errorCode==='profile_required'?'ملف الطالب غير مكتمل في DOMA.':
+            errorCode==='account_suspended'?'الحساب موقوف حاليًا.':
             'المساعد الذكي غير متاح الآن.';
           answer.textContent=notice+' استخدم المساعد المحلي كبديل.\n\n'+respond(mode,typedQuestion);
           if(quotaStatus)quotaStatus.textContent='المساعد المحلي متاح الآن دون إرسال طلب جديد إلى Cloudflare.';
