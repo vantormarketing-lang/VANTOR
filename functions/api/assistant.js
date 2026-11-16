@@ -51,7 +51,7 @@ export async function onRequestGet({ env }) {
   );
   return json(
     { configured, authConfigured },
-    configured && authConfigured ? 200 : 503
+    200
   );
 }
 
