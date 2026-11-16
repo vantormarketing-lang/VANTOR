@@ -47,13 +47,16 @@ const clip = (value, maxLength) => String(value == null ? "" : value).slice(0, m
 // exists; it never invokes a model, reads account data, or consumes student quota.
 export async function onRequestGet({ env }) {
   const configured = Boolean(env.AI && typeof env.AI.run === "function");
-  const authConfigured = Boolean(
-    env.SUPABASE_URL && env.SUPABASE_ANON_KEY && env.SUPABASE_SERVICE_ROLE_KEY
-  );
-  return json(
-    { configured, authConfigured },
-    200
-  );
+  const missingAuthSettings = [
+    !env.SUPABASE_URL && "SUPABASE_URL",
+    !env.SUPABASE_ANON_KEY && "SUPABASE_ANON_KEY",
+    !env.SUPABASE_SERVICE_ROLE_KEY && "SUPABASE_SERVICE_ROLE_KEY"
+  ].filter(Boolean);
+  return json({
+    configured,
+    authConfigured: missingAuthSettings.length === 0,
+    missingAuthSettings
+  }, 200);
 }
 
 export async function onRequestPost({ request, env }) {
