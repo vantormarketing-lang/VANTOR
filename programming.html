@@ -28,6 +28,7 @@
 .pa-free-tutor-actions button:hover,.pa-free-tutor-send:hover{background:rgba(214,177,111,.14)}.pa-free-tutor-question{display:flex;gap:8px;align-items:stretch}
 .pa-free-tutor-question input{min-width:0;flex:1;border:1px solid rgba(214,177,111,.25);border-radius:11px;padding:11px 12px;background:rgba(9,7,15,.4);color:#fff;font:inherit}
 .pa-free-tutor-question input:focus{outline:2px solid rgba(214,177,111,.45);outline-offset:1px}.pa-free-tutor-send{background:linear-gradient(120deg,#8e6734,#c69d5b);color:#20172a;border:0}
+.pa-free-tutor-status{margin:10px 0 0;color:#c4b1c5;font-size:11px;line-height:1.7}.pa-free-tutor-send:disabled{opacity:.55;cursor:wait}
 .pa-free-tutor-answer{margin-top:12px;padding:13px 14px;border:1px solid rgba(214,177,111,.2);border-radius:13px;background:rgba(8,7,13,.3);color:#eadfce;line-height:1.9;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;min-height:48px}
 .pa-free-tutor-note{display:block;margin-top:9px;color:#aa9eae;font-size:10px;line-height:1.7}
 @media(max-width:560px){.pa-free-tutor{padding:14px}.pa-free-tutor-actions button{flex:1 1 calc(50% - 8px)}.pa-free-tutor-question{flex-direction:column}.pa-free-tutor-send{min-height:42px}}
@@ -286,10 +287,10 @@ function initializeDomaProgrammingAcademy(){
     var reader=$('paLessonReader'),lab=reader&&reader.querySelector('.pa-code-lab');
     if(!reader||!lab)return;
     var panel=document.createElement('section');
-    panel.className='pa-free-tutor';panel.setAttribute('aria-label','مساعد DOMA التعليمي المجاني');
-    panel.innerHTML='<div class="pa-free-tutor-head"><div><span class="pa-free-tutor-label">DOMA STUDY ASSISTANT</span><h3>مساعدك التعليمي</h3><p>شرح الدرس والكود وملاحظات تصحيح أولية وتلميحات متدرجة.</p></div><span class="pa-free-tutor-local">مجاني · يعمل محليًا</span></div><div class="pa-free-tutor-actions"><button type="button" data-tutor-mode="lesson">اشرح الدرس</button><button type="button" data-tutor-mode="code">اشرح الكود</button><button type="button" data-tutor-mode="debug">ساعدني في الخطأ</button><button type="button" data-tutor-mode="hint">أعطني تلميحًا</button></div><form class="pa-free-tutor-question"><input id="paTutorQuestion" type="text" maxlength="240" autocomplete="off" placeholder="اكتب سؤالك عن الدرس أو الكود…"><button class="pa-free-tutor-send" type="submit">اسأل</button></form><div id="paTutorAnswer" class="pa-free-tutor-answer" role="status" aria-live="polite">اختار مساعدة من الأزرار أو اكتب سؤالًا. لا يتم إرسال الكود أو السؤال إلى أي خدمة خارجية.</div><small class="pa-free-tutor-note">هذا مساعد تعليمي قائم على قواعد وأمثلة مبرمجة، وليس نموذج محادثة توليديًا. ملاحظات الأخطاء إرشادية وليست بديلًا عن تشغيل الكود.</small>';
+    panel.className='pa-free-tutor';panel.setAttribute('aria-label','مساعد DOMA التعليمي');
+    panel.innerHTML='<div class="pa-free-tutor-head"><div><span class="pa-free-tutor-label">DOMA STUDY ASSISTANT</span><h3>مساعدك التعليمي</h3><p>اسأل مساعدًا ذكيًا يشرح الدرس والكود خطوة بخطوة.</p></div><span class="pa-free-tutor-local">ذكاء اصطناعي + بديل محلي</span></div><div class="pa-free-tutor-actions"><button type="button" data-tutor-mode="lesson">اشرح الدرس</button><button type="button" data-tutor-mode="code">اشرح الكود</button><button type="button" data-tutor-mode="debug">ساعدني في الخطأ</button><button type="button" data-tutor-mode="hint">أعطني تلميحًا</button></div><form class="pa-free-tutor-question"><input id="paTutorQuestion" type="text" maxlength="240" autocomplete="off" placeholder="اكتب سؤالك عن الدرس أو الكود…"><button class="pa-free-tutor-send" type="submit">اسأل</button></form><div id="paTutorQuota" class="pa-free-tutor-status" role="status" aria-live="polite">المساعد المحلي متاح دائمًا. الذكاء الاصطناعي يستخدم حصة يومية محدودة.</div><div id="paTutorAnswer" class="pa-free-tutor-answer" role="status" aria-live="polite">اختار مساعدة من الأزرار أو اكتب سؤالك.</div><small class="pa-free-tutor-note">عند استخدام الذكاء الاصطناعي يُرسل سؤالك ومقتطف من الدرس إلى Cloudflare. لا يُرسل الكود إلا عند اختيار شرحه أو تصحيح خطئه. لا تشارك كلمات مرور أو بيانات شخصية.</small>';
     lab.parentNode.insertBefore(panel,lab);
-    var answer=$('paTutorAnswer'),question=$('paTutorQuestion'),hintIndex=0,labEditor=$('paCodeEditor');
+    var answer=$('paTutorAnswer'),question=$('paTutorQuestion'),hintIndex=0,labEditor=$('paCodeEditor'),aiHistory=[],aiBusy=false,quotaStatus=$('paTutorQuota');
     if(labEditor){labEditor.addEventListener('focus',function(){activeTutorEditor='lab'});labEditor.addEventListener('input',function(){activeTutorEditor='lab'})}
     function currentCode(){var ex=$('paExerciseCode'),ed=$('paCodeEditor');return activeTutorEditor==='exercise'&&ex?ex.value:(ed?ed.value:(ex?ex.value:''))}
     function lessonNotes(){
@@ -338,8 +339,67 @@ function initializeDomaProgrammingAcademy(){
       if(/(دالة|function|def)/i.test(q))return 'الدالة تجمع تعليمات تحت اسم واحد لتقدر تستدعيها عند الحاجة. في Python تبدأ غالبًا بـ def function_name(): ثم تكتب جسمها بمسافة بادئة.';
       return 'أقدر أساعدك محليًا في شرح الدرس، قراءة الكود، مراجعة أخطاء شائعة، وتقديم تلميحات. جرّب سؤالًا مثل «يعني إيه متغير؟» أو استخدم أزرار المساعدة.\n\n'+lesson.title+'\n'+(lesson.summary||'');
     }
-    panel.querySelectorAll('[data-tutor-mode]').forEach(function(btn){btn.addEventListener('click',function(){answer.textContent=respond(btn.getAttribute('data-tutor-mode'),'')})});
-    panel.querySelector('form').addEventListener('submit',function(e){e.preventDefault();var q=question.value.trim();answer.textContent=q?respond('',q):'اكتب سؤالك الأول.'});
+    async function askTutorAI(mode,q){
+      if(aiBusy)return;
+      var typedQuestion=String(q||'').trim();
+      var prompts={
+        lesson:'اشرح لي الدرس الحالي من البداية، مع مثال بسيط وسؤال أتأكد به من فهمي.',
+        code:'اشرح الكود الموجود في محرر الدرس سطرًا سطرًا، ووضح وظيفة أهم الأجزاء.',
+        debug:'راجع الكود الموجود في المحرر وحدد الأخطاء أو التحسينات المحتملة، واشرح السبب دون ادعاء تشغيله.',
+        hint:'أعطني تلميحًا تدريجيًا يساعدني على حل تمرين الدرس دون كشف الحل كاملًا.'
+      };
+      var prompt=typedQuestion||prompts[mode]||'ساعدني في فهم الدرس الحالي.';
+      var includeCode=mode==='code'||mode==='debug'||/(اشرح الكود|راجع الكود|code|debug|خطأ)/i.test(prompt);
+      var sendButton=panel.querySelector('.pa-free-tutor-send');
+      aiBusy=true;if(sendButton)sendButton.disabled=true;
+      answer.textContent='جاري تجهيز الشرح من المساعد الذكي…';
+      if(quotaStatus)quotaStatus.textContent='جارٍ الاتصال بالمساعد الذكي. لو الخدمة غير متاحة، هنستخدم المساعد المحلي.';
+      try{
+        var sessionResult=await db.auth.getSession();
+        var session=sessionResult&&sessionResult.data&&sessionResult.data.session;
+        if(!session||!session.access_token)throw new Error('no_session');
+        var response=await fetch('/api/assistant',{
+          method:'POST',
+          headers:{'content-type':'application/json','authorization':'Bearer '+session.access_token},
+          body:JSON.stringify({
+            question:prompt,
+            history:aiHistory.slice(-6),
+            lesson:{
+              title:String(lesson.title||'').slice(0,120),
+              summary:String(lesson.summary||'').slice(0,500),
+              excerpt:String(lessonContent||'').slice(0,1200)
+            },
+            code:includeCode?String(currentCode()||'').slice(0,2000):''
+          })
+        });
+        var payload=await response.json().catch(function(){return {}});
+        if(!response.ok){
+          var reason=String(payload.reason||'');
+          var notice=reason==='user_daily_limit'?'وصلت للحد اليومي المسموح به للمساعد الذكي.':
+            reason==='global_daily_limit'?'الحصة اليومية للمساعد الذكي في DOMA اكتملت حاليًا.':
+            response.status===401?'جلسة الدخول غير متاحة للمساعد الذكي حاليًا.':
+            'المساعد الذكي غير متاح الآن.';
+          answer.textContent=notice+' استخدم المساعد المحلي كبديل.\n\n'+respond(mode,typedQuestion);
+          if(quotaStatus)quotaStatus.textContent='المساعد المحلي متاح الآن دون إرسال طلب جديد إلى Cloudflare.';
+          return;
+        }
+        var reply=String(payload.answer||'').trim();
+        if(!reply)throw new Error('empty_response');
+        aiHistory.push({role:'user',content:prompt});
+        aiHistory.push({role:'assistant',content:reply});
+        aiHistory=aiHistory.slice(-6);
+        answer.textContent=reply;
+        if(quotaStatus)quotaStatus.textContent='متبقي لك اليوم '+Number(payload.remainingUser||0)+' من 10 أسئلة للمساعد الذكي.';
+        if(typedQuestion)question.value='';
+      }catch(error){
+        answer.textContent='تعذر الاتصال بالمساعد الذكي. المساعد المحلي سيكمل معك.\n\n'+respond(mode,typedQuestion);
+        if(quotaStatus)quotaStatus.textContent='المساعد المحلي متاح دائمًا. لم يتم حفظ المحادثة في المتصفح.';
+      }finally{
+        aiBusy=false;if(sendButton)sendButton.disabled=false;
+      }
+    }
+    panel.querySelectorAll('[data-tutor-mode]').forEach(function(btn){btn.addEventListener('click',function(){askTutorAI(btn.getAttribute('data-tutor-mode'),'')})});
+    panel.querySelector('form').addEventListener('submit',function(e){e.preventDefault();var q=question.value.trim();if(q)askTutorAI('',q);else answer.textContent='اكتب سؤالك الأول.'});
   }
   async function openLesson(id){
     if(!hasAccess()){showModal();return}

@@ -470,6 +470,58 @@ if (!autoGraderWorkerSource.includes('doma_get_programming_exercise_tests') ||
   ok('Programming auto-grader: tests are private, output matching is exact, and only prepared exercises expose automatic testing');
 }
 
+
+const assistantPageSource = read('programming.html');
+const assistantWorkerSource = read('functions/api/assistant.js');
+const assistantQuotaMigration = read('supabase/migrations/20261116010000_doma_programming_assistant_quota.sql');
+
+if (!assistantPageSource.includes("fetch('/api/assistant'") ||
+    !assistantPageSource.includes('paTutorQuota') ||
+    !assistantPageSource.includes('المساعد المحلي')) {
+  fail('programming.html: the AI tutor must call the server endpoint and keep its local fallback/status UI');
+}
+if (!assistantWorkerSource.includes('@cf/zai-org/glm-4.7-flash') ||
+    !assistantWorkerSource.includes('doma_consume_assistant_quota') ||
+    !assistantWorkerSource.includes('SUPABASE_SERVICE_ROLE_KEY') ||
+    !assistantWorkerSource.includes('programming_course_subscriptions') ||
+    !assistantWorkerSource.includes('select", "role,is_suspended"') ||
+    !assistantWorkerSource.includes('profile.is_suspended === true') ||
+    !assistantWorkerSource.includes('env.AI.run')) {
+  fail('functions/api/assistant.js: the AI endpoint must verify Auth, an active programming subscription, quota, and the Workers AI binding');
+}
+try {
+  const workerForSyntax = assistantWorkerSource.replace(
+    'export async function onRequestPost(',
+    'async function onRequestPost('
+  );
+  new Function(workerForSyntax);
+  ok('functions/api/assistant.js: Pages Function JavaScript syntax is valid');
+} catch (error) {
+  fail('functions/api/assistant.js: invalid JavaScript syntax: ' + error.message);
+}
+for (const required of [
+  'private.doma_assistant_usage',
+  'public.doma_consume_assistant_quota',
+  'security definer',
+  'set search_path = pg_catalog, private',
+  'pg_advisory_xact_lock',
+  'user_daily_limit',
+  'global_daily_limit',
+  'grant execute on function public.doma_consume_assistant_quota(uuid) to service_role',
+  '150',
+  '10'
+]) {
+  if (!assistantQuotaMigration.toLowerCase().includes(required.toLowerCase())) {
+    fail('Programming AI quota migration is missing a required security/limit feature: ' + required);
+  }
+}
+if (assistantQuotaMigration.includes('DROP TABLE') ||
+    assistantQuotaMigration.includes('TRUNCATE') ||
+    assistantQuotaMigration.includes('DELETE FROM')) {
+  fail('Programming AI quota migration must not destructively modify unrelated data');
+}
+ok('Programming AI quota migration: private RLS-protected usage table, serialized global cap, and service-role-only RPC');
+
 for (const message of checks) console.log('PASS', message);
 if (errors.length) {
   for (const message of errors) console.error('FAIL', message);
