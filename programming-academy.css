@@ -599,3 +599,94 @@ body.pa-lesson-page-view .pa-editor-wrap .pa-code-editor{
   outline:0!important;
   box-shadow:none!important;
 }
+
+
+/* DOMA warm orange glass — align Programming Academy cards with the public homepage */
+:root{
+  --pa-bg:#21150f;
+  --pa-glass:rgba(104,62,35,.20);
+  --pa-edge:rgba(255,177,112,.24);
+  --pa-gold:#ffc18a;
+  --pa-muted:#e8d0bd;
+}
+html,body.programming-page{
+  background:
+    radial-gradient(ellipse 620px 440px at 8% 0%,rgba(231,126,62,.17),transparent 70%),
+    radial-gradient(ellipse 560px 430px at 100% 18%,rgba(255,183,119,.10),transparent 72%),
+    radial-gradient(ellipse 650px 420px at 50% 100%,rgba(133,75,43,.13),transparent 72%),
+    linear-gradient(145deg,#21150f 0%,#2b1a12 52%,#18100d 100%)!important;
+  background-attachment:fixed!important;
+}
+.programming-page{color:#fff2e7!important}
+.programming-page .pa-hero,
+.programming-page .pa-lessons-panel,
+.programming-page .pa-side-card,
+.programming-page .pa-projects-section,
+.programming-page .pa-daily-challenges,
+.programming-page .pa-student-progress,
+.programming-page .pa-free-tutor,
+.programming-page .pa-global-tutor{
+  color:#fff2e7!important;
+  border:1px solid rgba(255,178,119,.25)!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,185,127,.09),transparent 55%),
+    linear-gradient(145deg,rgba(130,78,46,.24),rgba(49,31,22,.34))!important;
+  box-shadow:0 14px 34px rgba(12,7,4,.18),inset 0 1px rgba(255,255,255,.10)!important;
+  -webkit-backdrop-filter:blur(8px) saturate(112%)!important;
+  backdrop-filter:blur(8px) saturate(112%)!important;
+}
+.programming-page .pa-track-card,
+.programming-page .pa-project-card,
+.programming-page .pa-daily-card,
+.programming-page .pa-progress-cards>div,
+.programming-page .pa-stats>div{
+  color:#fff2e7!important;
+  border:1px solid rgba(255,178,119,.24)!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,185,127,.08),transparent 58%),
+    linear-gradient(145deg,rgba(142,82,43,.25),rgba(56,35,23,.38))!important;
+  box-shadow:0 10px 26px rgba(12,7,4,.15),inset 0 1px rgba(255,255,255,.09)!important;
+  -webkit-backdrop-filter:blur(7px) saturate(108%)!important;
+  backdrop-filter:blur(7px) saturate(108%)!important;
+}
+.programming-page .pa-track-card:hover,
+.programming-page .pa-track-card.active{
+  border-color:rgba(255,190,139,.52)!important;
+  background:linear-gradient(145deg,rgba(181,103,55,.32),rgba(73,44,27,.44))!important;
+  box-shadow:0 14px 30px rgba(12,7,4,.20),inset 0 1px rgba(255,255,255,.12)!important;
+}
+.programming-page :is(.pa-kicker,.pa-track-number,.pa-track-content small,.pa-track-arrow,.pa-project-track,.pa-daily-level,.pa-progress-count){
+  color:#ffc18a!important;
+}
+.programming-page :is(.pa-track-description,.pa-track-meta,.pa-section-heading p,.pa-panel-heading p,.pa-project-card p,.pa-daily-card p){
+  color:#e6cdbb!important;
+}
+.programming-page .pa-global-tutor{
+  border-color:rgba(255,179,119,.32)!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,164,91,.14),transparent 58%),
+    linear-gradient(145deg,rgba(130,71,37,.30),rgba(48,30,22,.40))!important;
+}
+.programming-page .pa-global-tutor .pa-free-tutor-head h3,
+.programming-page .pa-global-tutor .pa-free-tutor-answer{color:#fff1e6!important}
+.programming-page .pa-global-tutor .pa-free-tutor-send,
+.programming-page .pa-primary-btn,
+.programming-page .pa-outline-btn{
+  border-color:rgba(255,191,143,.35)!important;
+  background:linear-gradient(120deg,#d77a3d,#f0ad70)!important;
+  color:#2d190f!important;
+}
+.programming-page .pa-code-window,
+.programming-page .pa-daily-editor{
+  border-color:rgba(255,178,119,.22)!important;
+  background:rgba(25,16,12,.70)!important;
+}
+.programming-page .pa-topbar{
+  background:rgba(34,22,15,.50)!important;
+  border-color:rgba(255,178,119,.16)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+  backdrop-filter:blur(8px)!important;
+}
+@media(max-width:650px){
+  .programming-page .pa-track-card,.programming-page .pa-project-card,.programming-page .pa-daily-card{border-radius:16px!important}
+}
