@@ -1,6 +1,7 @@
 const MODEL_IDS = [
   "@cf/google/gemma-4-26b-a4b-it",
-  "@cf/zai-org/glm-4.7-flash"
+  "@cf/zai-org/glm-4.7-flash",
+  "@cf/qwen/qwen3.8-27b"
 ];
 
 const textFrom = value => {
