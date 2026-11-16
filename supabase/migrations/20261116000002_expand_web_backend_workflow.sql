@@ -517,7 +517,7 @@ ORDER BY name;
 ## إضافة وتحديث
 ```sql
 INSERT INTO students (name, grade)
-VALUES ('Sara', 1);
+VALUES (''Sara'', 1);
 
 UPDATE students
 SET grade = 2
