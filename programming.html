@@ -36,6 +36,15 @@
 .pa-admin-learning-filters input,.pa-admin-learning-filters select{width:100%;min-width:0;box-sizing:border-box;border:1px solid rgba(214,177,111,.25);border-radius:11px;padding:11px 12px;background:rgba(20,15,27,.8);color:#f4e8d8;font:inherit;font-size:12px}
 .pa-admin-learning-filters option{background:#21182b;color:#fff}
 @media(max-width:650px){.pa-admin-learning-filters{grid-template-columns:1fr}.pa-admin-learning-filters input,.pa-admin-learning-filters select{min-height:42px}}
+</style><style>
+.pa-daily-challenges{margin:22px 0;padding:20px;border:1px solid rgba(205,170,111,.25);border-radius:22px;background:linear-gradient(145deg,rgba(43,31,55,.92),rgba(24,20,34,.96));color:#f1e5d4}
+.pa-daily-challenge-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pa-daily-card{min-width:0;padding:16px;border:1px solid rgba(205,170,111,.2);border-radius:16px;background:rgba(255,255,255,.035)}
+.pa-daily-card h3{margin:6px 0;color:#e5c47e;font-size:17px}.pa-daily-card p{font-size:13px;line-height:1.8;color:#d8cbbb}
+.pa-daily-level{font-size:11px;color:#e8c987}.pa-daily-editor{width:100%;min-height:150px;resize:vertical;direction:ltr;text-align:left;font:13px/1.65 ui-monospace,Consolas,monospace;color:#f6eee2;background:#100d17;border:1px solid rgba(205,170,111,.25);border-radius:12px;padding:12px;box-sizing:border-box}
+.pa-daily-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pa-daily-actions button{border:0;border-radius:9px;padding:9px 12px;background:linear-gradient(120deg,#b58a4e,#e0c07b);color:#21172a;font-weight:800;cursor:pointer}.pa-daily-actions button.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(205,170,111,.22);color:#ead9bd}.pa-daily-actions button:disabled{opacity:.55;cursor:wait}
+.pa-daily-hints,.pa-daily-result{margin-top:9px;padding:10px;border-radius:10px;background:rgba(0,0,0,.2);font-size:12px;line-height:1.8;white-space:pre-wrap}.pa-daily-result .pass{color:#9cdbad}.pa-daily-result .fail{color:#f0a4a4}
+@media(max-width:900px){.pa-daily-challenge-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.pa-daily-challenges{padding:14px}.pa-daily-challenge-grid{grid-template-columns:1fr}}
 </style></head>
 <style id="pa-free-tutor-style">
 .pa-free-tutor{margin:18px 0;padding:18px;border:1px solid rgba(214,177,111,.36);border-radius:20px;background:linear-gradient(145deg,rgba(45,31,58,.92),rgba(25,20,35,.94));box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}
@@ -70,6 +79,10 @@
       <div id="paLessons" class="pa-lesson-list"><div class="pa-loading">جاري تحميل الدروس…</div></div>
     </div>
     <aside class="pa-side-column">      <section id="paAdminPanel" class="pa-side-card pa-admin-panel" hidden><div class="pa-admin-heading"><div><span class="pa-kicker">ACADEMY ADMIN</span><h3>طلبات اشتراك البرمجة</h3></div><button id="paAdminRefresh" type="button" class="pa-outline-btn">تحديث</button></div><div id="paAdminRequests"><p>جاري تحميل الطلبات…</p></div></section></aside>
+  </section>
+  <section id="paDailyChallenges" class="pa-daily-challenges" hidden>
+    <div class="pa-section-heading"><div><span class="pa-kicker">DAILY CODING ARENA</span><h2>التحدي البرمجي اليومي</h2><p>ثلاث درجات صعوبة، تلميحات تدريجية، واختبارات تلقائية لحلك.</p></div><span id="paDailyChallengeDate" class="pa-progress-count"></span></div>
+    <div id="paDailyChallengeGrid" class="pa-daily-challenge-grid"><div class="pa-loading">جاري تجهيز تحديات اليوم…</div></div>
   </section>
   <section id="paStudentProgress" class="pa-student-progress" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
@@ -740,6 +753,52 @@ function initializeDomaProgrammingAcademy(){
       toast('تم إرسال المشروع للمراجعة بنجاح.');await loadProgrammingProjects();await loadStudentProgress();
     })});
   }
+  async function loadDailyChallenges(){
+    var section=$('paDailyChallenges'),host=$('paDailyChallengeGrid');
+    if(!section||!host)return;
+    if(!user||!hasAccess()){section.hidden=true;return}
+    section.hidden=false;host.innerHTML='<div class="pa-loading">جاري تحميل تحديات اليوم…</div>';
+    var dayName=new Intl.DateTimeFormat('en-US',{timeZone:'Africa/Cairo',weekday:'short'}).format(new Date());
+    var dayMap={Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7},day=dayMap[dayName]||1;
+    $('paDailyChallengeDate').textContent=new Intl.DateTimeFormat('ar-EG',{timeZone:'Africa/Cairo',dateStyle:'full'}).format(new Date());
+    var result=await db.from('programming_exercises').select('id,lesson_id,title,instructions,starter_code,hints,daily_challenge_difficulty').eq('daily_challenge_day',day).eq('is_published',true).order('daily_challenge_difficulty');
+    if(result.error){host.innerHTML='<p class="pa-activity-lock">تعذر تحميل تحديات اليوم: '+esc(result.error.message)+'</p>';return}
+    var challenges=result.data||[];
+    var order={beginner:0,intermediate:1,advanced:2},labels={beginner:'سهل',intermediate:'متوسط',advanced:'متقدم'};
+    challenges.sort(function(a,b){return order[a.daily_challenge_difficulty]-order[b.daily_challenge_difficulty]});
+    var history=await db.from('programming_exercise_submissions').select('exercise_id,status,score,submitted_at').eq('student_id',user.id).in('exercise_id',challenges.map(function(x){return x.id})).order('submitted_at',{ascending:false});
+    var previous={};if(!history.error)(history.data||[]).forEach(function(x){if(!previous[x.exercise_id])previous[x.exercise_id]=x});
+    host.innerHTML=challenges.map(function(challenge,index){
+      return '<article class="pa-daily-card" data-daily-card="'+esc(challenge.id)+'"><span class="pa-daily-level">'+labels[challenge.daily_challenge_difficulty]+'</span><h3>'+esc(challenge.title)+'</h3><p>'+esc(challenge.instructions)+'</p><label class="pa-input-label" for="paDailyCode'+index+'">اكتب الحل بلغة Python</label><textarea id="paDailyCode'+index+'" class="pa-daily-editor" spellcheck="false">'+esc(challenge.starter_code||'')+'</textarea><div class="pa-daily-actions"><button type="button" data-daily-test="'+index+'">اختبر الحل</button><button type="button" class="secondary" data-daily-hint="'+index+'">تلميح</button><button type="button" class="secondary" data-daily-submit="'+index+'">حفظ المحاولة</button></div><div class="pa-daily-hints" id="paDailyHint'+index+'" hidden></div><div class="pa-daily-result" id="paDailyResult'+index+'" aria-live="polite">'+(previous[challenge.id]?'آخر محاولة: '+(previous[challenge.id].status==='reviewed'?'تمت مراجعتها':'تم حفظها'):'لم تُرسل محاولة بعد.')+'</div></article>';
+    }).join('')||'<p class="pa-activity-lock">لا توجد تحديات منشورة لهذا اليوم.</p>';
+    challenges.forEach(function(challenge,index){
+      var card=host.querySelector('[data-daily-card="'+challenge.id+'"]'),editor=$('paDailyCode'+index),resultHost=$('paDailyResult'+index),hintHost=$('paDailyHint'+index),hintButton=card.querySelector('[data-daily-hint]'),hintIndex=0,lastScore=null;
+      hintButton.addEventListener('click',function(){var hints=Array.isArray(challenge.hints)?challenge.hints:[];if(!hints.length){hintHost.hidden=false;hintHost.textContent='لا توجد تلميحات إضافية.';return}hintHost.hidden=false;if(hintIndex<hints.length){hintHost.textContent+='تلميح '+(hintIndex+1)+': '+hints[hintIndex]+'\n';hintIndex++}else hintHost.textContent+='استخدم التلميحات السابقة وجرّب بنفسك.'});
+      card.querySelector('[data-daily-test]').addEventListener('click',async function(event){
+        var button=event.currentTarget,source=editor.value.trim();if(!source){resultHost.textContent='اكتب الحل أولًا.';return}if(source.length>16000){resultHost.textContent='الكود أطول من الحد المسموح.';return}
+        button.disabled=true;resultHost.textContent='جارٍ تشغيل الاختبارات المخفية…';
+        try{
+          var auth=await db.auth.getSession(),session=auth.data&&auth.data.session,token=session&&session.access_token;
+          if(!token){var refreshed=await db.auth.refreshSession();session=refreshed.data&&refreshed.data.session;token=session&&session.access_token}
+          if(!token)throw new Error('انتهت جلسة الدخول. سجّل الدخول ثم حاول مرة أخرى.');
+          var response=await fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({language:'python',source_code:source,stdin:'',exercise_id:challenge.id,lesson_id:challenge.lesson_id})});
+          if(response.status===401){var again=await db.auth.refreshSession();if(again.data&&again.data.session)response=await fetch('/api/code-run',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+again.data.session.access_token},body:JSON.stringify({language:'python',source_code:source,stdin:'',exercise_id:challenge.id,lesson_id:challenge.lesson_id})})}
+          var payload=await response.json();if(!response.ok)throw new Error(payload.error||'تعذر تشغيل الاختبارات.');
+          var checks=Array.isArray(payload.test_results)?payload.test_results:[],passed=checks.filter(function(x){return x.passed}).length;
+          lastScore=checks.length?Math.round(passed*100/checks.length):0;
+          resultHost.innerHTML='<strong class="'+(payload.all_tests_passed?'pass':'fail')+'">'+(payload.all_tests_passed?'ممتاز! اجتزت كل الاختبارات ✓':'نتيجتك '+lastScore+'% — حاول تحسين الحل')+'</strong><p>'+passed+' من '+checks.length+' اختبارات ناجحة</p>'+checks.map(function(x){return '<div class="'+(x.passed?'pass':'fail')+'">'+(x.passed?'✓ ':'✕ ')+esc(x.label)+'</div>'}).join('');
+        }catch(error){resultHost.textContent=error.message||'حدث خطأ أثناء الاختبار.'}
+        finally{button.disabled=false}
+      });
+      card.querySelector('[data-daily-submit]').addEventListener('click',async function(event){
+        var button=event.currentTarget,source=editor.value.trim();if(!source){resultHost.textContent='اكتب الحل قبل الحفظ.';return}
+        button.disabled=true;
+        var saved=await db.rpc('programming_submit_exercise',{p_exercise_id:challenge.id,p_language:'python',p_source_code:source,p_notes:lastScore===null?'محاولة تحدي يومي لم يتم اختبارها بعد.':'نتيجة الاختبارات: '+lastScore+'/100'});
+        button.disabled=false;if(saved.error){resultHost.textContent='تعذر حفظ المحاولة: '+saved.error.message;return}
+        toast('تم حفظ محاولة التحدي اليومي.');resultHost.textContent='تم حفظ محاولتك بنجاح'+(lastScore===null?'، شغّل الاختبارات لمعرفة نتيجتك.':' · نتيجة آخر اختبار '+lastScore+'/100');await loadStudentProgress();
+      });
+    });
+  }
   async function loadStudentProgress(){
     var host=$('paProgressCards');if(!host)return;
     var section=$('paStudentProgress');
@@ -930,6 +989,7 @@ function initializeDomaProgrammingAcademy(){
       syncEmbeddedView();
       await loadCurriculum();
       await loadStudentProgress();
+      await loadDailyChallenges();
       await loadProgrammingProjects();
     }
     syncEmbeddedView();
@@ -953,6 +1013,7 @@ function initializeDomaProgrammingAcademy(){
           syncEmbeddedView();
           await loadCurriculum();
           await loadStudentProgress();
+          await loadDailyChallenges();
           await loadProgrammingProjects();
           if(isStaff)await loadProgrammingAdminLearning();else $('paAdminLearning').hidden=true;
           closeModal();
