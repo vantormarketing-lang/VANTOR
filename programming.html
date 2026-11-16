@@ -77,6 +77,10 @@
       <div class="pa-panel-heading"><div><span class="pa-kicker">TRACK LESSONS</span><h2 id="paTrackTitle">Computer Science Fundamentals</h2><p id="paTrackDescription">ابدأ بفهم البرمجة قبل كتابة الأكواد.</p></div><span id="paTrackProgress" class="pa-progress-count">0 / 0</span></div>
       <div class="pa-progress-track"><i id="paProgressBar"></i></div>
       <div id="paLessons" class="pa-lesson-list"><div class="pa-loading">جاري تحميل الدروس…</div></div>
+      <section id="paProjectsSection" class="pa-projects-section" hidden>
+        <div class="pa-section-heading"><div><span class="pa-kicker">BUILD • SUBMIT • IMPROVE</span><h2>مشاريع هذا المسار</h2><p>بعد الانتهاء من الدروس، نفّذ مشروع المسار وأرسله للمراجعة.</p></div></div>
+        <div id="paProjectsGrid" class="pa-projects-grid"><div class="pa-loading">جاري تحميل مشاريع المسار…</div></div>
+      </section>
     </div>
     <aside class="pa-side-column">      <section id="paAdminPanel" class="pa-side-card pa-admin-panel" hidden><div class="pa-admin-heading"><div><span class="pa-kicker">ACADEMY ADMIN</span><h3>طلبات اشتراك البرمجة</h3></div><button id="paAdminRefresh" type="button" class="pa-outline-btn">تحديث</button></div><div id="paAdminRequests"><p>جاري تحميل الطلبات…</p></div></section></aside>
   </section>
@@ -87,10 +91,6 @@
   <section id="paStudentProgress" class="pa-student-progress" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">YOUR LEARNING JOURNEY</span><h2>لوحة تقدمك</h2><p>تابع إنجازاتك ونتائجك في الأكاديمية.</p></div></div>
     <div id="paProgressCards" class="pa-progress-cards"><div class="pa-loading">جاري حساب تقدمك…</div></div>
-  </section>
-  <section id="paProjectsSection" class="pa-projects-section" hidden>
-    <div class="pa-section-heading"><div><span class="pa-kicker">BUILD • SUBMIT • IMPROVE</span><h2>مشاريعك العملية</h2><p>اختر مشروعًا من مسارك، راجع معايير التقييم، ثم أرسل رابط العمل أو وصفه لتحصل على مراجعة وملاحظات.</p></div></div>
-    <div id="paProjectsGrid" class="pa-projects-grid"><div class="pa-loading">جاري تحميل المشاريع…</div></div>
   </section>
   <section id="paAdminLearning" class="pa-admin-learning" hidden>
     <div class="pa-section-heading"><div><span class="pa-kicker">ACADEMY CONTROL</span><h2>متابعة تعلم الطلاب</h2><p>راجع التطبيقات والمشاريع، وأضف التقييم والملاحظات.</p></div><button type="button" id="paAdminLearningRefresh" class="pa-outline-btn">تحديث البيانات</button></div>
@@ -241,6 +241,7 @@ function initializeDomaProgrammingAcademy(){
     $('paTrackTitle').textContent=track.title;$('paTrackDescription').textContent=track.description;
     document.body.classList.add('pa-track-view');
     renderTracks();renderLessons();
+    loadProgrammingProjects();
     if(shouldScroll)window.scrollTo({top:0,behavior:'smooth'});
   }
   function showTrackOverview(){
@@ -724,17 +725,17 @@ function initializeDomaProgrammingAcademy(){
   async function loadProgrammingProjects(){
     var section=$('paProjectsSection'),host=$('paProjectsGrid');
     if(!section||!host)return;
-    if(!user||!hasAccess()){section.hidden=true;return}
-    section.hidden=false;host.innerHTML='<div class="pa-loading">جاري تحميل المشاريع…</div>';
+    if(!user||!hasAccess()||!activeTrack){section.hidden=true;return}
+    section.hidden=false;host.innerHTML='<div class="pa-loading">جاري تحميل مشاريع هذا المسار…</div>';
     var results=await Promise.all([
-      db.from('programming_projects').select('id,track_id,title,brief,requirements,rubric,difficulty,estimated_hours').eq('is_published',true).order('sort_order'),
+      db.from('programming_projects').select('id,track_id,title,brief,requirements,rubric,difficulty,estimated_hours').eq('is_published',true).eq('track_id',activeTrack).order('sort_order'),
       db.from('programming_project_submissions').select('id,project_id,status,score,feedback,repository_url,demo_url,notes,submitted_at,reviewed_at').eq('student_id',user.id).order('submitted_at',{ascending:false})
     ]);
-    if(results[0].error||results[1].error){host.innerHTML='<div class="pa-activity-lock">تعذر تحميل المشاريع أو حالة تسليماتك. '+esc((results[0].error||results[1].error).message)+'</div>';return}
+    if(results[0].error||results[1].error){section.hidden=false;host.innerHTML='<div class="pa-activity-lock">تعذر تحميل المشاريع أو حالة تسليماتك. '+esc((results[0].error||results[1].error).message)+'</div>';return}
     var projects=results[0].data||[],submissions=results[1].data||[],latest={};
     submissions.forEach(function(row){if(!latest[row.project_id])latest[row.project_id]=row});
     var trackNames={};tracks.forEach(function(track){trackNames[track.id]=track.title});
-    if(!projects.length){host.innerHTML='<div class="pa-activity-lock">سيتم إضافة المشاريع العملية قريبًا.</div>';return}
+    if(!projects.length){section.hidden=true;host.innerHTML='';return}
     host.innerHTML=projects.map(function(project){
       var previous=latest[project.id],requirements=Array.isArray(project.requirements)?project.requirements:[],rubric=Array.isArray(project.rubric)?project.rubric:[];
       var status=previous?(previous.status==='reviewed'?'تمت مراجعة المشروع':previous.status==='needs_revision'?'المشروع يحتاج إلى تعديل':'تم استلام المشروع وجارٍ مراجعته'):'لم ترسل هذا المشروع بعد';
