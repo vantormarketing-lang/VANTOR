@@ -325,6 +325,8 @@ function initializeDomaProgrammingAcademy(){
   }
   function mountFreeTutor(lesson,lessonContent,targetContainer){
     var reader=$('paLessonReader'),lab=reader&&reader.querySelector('.pa-code-lab');
+    function tutorLesson(){return standaloneTutorContext&&standaloneTutorContext.lesson?standaloneTutorContext.lesson:lesson}
+    function tutorContent(){return standaloneTutorContext?standaloneTutorContext.content:lessonContent}
     if(targetContainer){if(targetContainer.querySelector('.pa-free-tutor'))return;}
     else if(!reader||!lab)return;
     var panel=document.createElement('section');
@@ -335,9 +337,9 @@ function initializeDomaProgrammingAcademy(){
     if(labEditor){labEditor.addEventListener('focus',function(){activeTutorEditor='lab'});labEditor.addEventListener('input',function(){activeTutorEditor='lab'})}
     function currentCode(){var ex=$('paExerciseCode'),ed=$('paCodeEditor'),focused=document.activeElement;if(focused===ex&&ex){activeTutorEditor='exercise';return String(ex.value||'')}if(focused===ed&&ed){activeTutorEditor='lab';return String(ed.value||'')}var preferred=activeTutorEditor==='exercise'?ex:ed,other=activeTutorEditor==='exercise'?ed:ex;if(preferred&&String(preferred.value||'').trim())return String(preferred.value||'');if(other&&String(other.value||'').trim())return String(other.value||'');if(preferred)return String(preferred.value||'');return other?String(other.value||''):''}
     function lessonNotes(){
-      var lines=String(lessonContent||'').replace(/\r/g,'').split('\n').map(function(x){return x.trim()}).filter(function(x){return x&&!/^\x60{3}/.test(x)&&!/^#{1,6}\s/.test(x)&&!/^[-*_]{3,}$/.test(x)});
+      var lines=String(tutorContent()||'').replace(/\r/g,'').split('\n').map(function(x){return x.trim()}).filter(function(x){return x&&!/^\x60{3}/.test(x)&&!/^#{1,6}\s/.test(x)&&!/^[-*_]{3,}$/.test(x)});
       var notes=lines.slice(0,7).map(function(x){return x.replace(/^[-*]\s*/,'').replace(/\*\*/g,'').replace(/\*/g,'')});
-      return 'الدرس: '+(lesson.title||'الدرس الحالي')+'\n\n'+(lesson.summary||'راجع النقاط الأساسية في محتوى الدرس.')+(notes.length?'\n\nنقاط من محتوى الدرس:\n• '+notes.join('\n• '):'');
+      return 'الدرس: '+(tutorLesson().title||'الدرس الحالي')+'\n\n'+(tutorLesson().summary||'راجع النقاط الأساسية في محتوى الدرس.')+(notes.length?'\n\nنقاط من محتوى الدرس:\n• '+notes.join('\n• '):'');
     }
     function explainCode(){
       var source=currentCode();if(!source.trim())return 'مفيش كود في المحرر حاليًا. اكتب مثالًا أو اضغط «استعادة المثال» ثم جرّب مرة أخرى.';
@@ -418,9 +420,9 @@ function initializeDomaProgrammingAcademy(){
             question:prompt,
             history:aiHistory.slice(-6),
             lesson:{
-              title:String(lesson.title||'').slice(0,120),
-              summary:String(lesson.summary||'').slice(0,500),
-              excerpt:String(lessonContent||'').slice(0,1200)
+              title:String(tutorLesson().title||'').slice(0,120),
+              summary:String(tutorLesson().summary||'').slice(0,500),
+              excerpt:String(tutorContent()||'').slice(0,1200)
             },
             code:includeCode?String(currentCode()||'').slice(0,2000):''
           })
@@ -511,7 +513,7 @@ function initializeDomaProgrammingAcademy(){
     var content=await db.rpc('programming_get_lesson_content',{p_lesson_id:id});
     if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
     $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
-    standaloneTutorContext={lesson:lesson,content:content.data||''};
+    standaloneTutorContext.lesson=lesson;standaloneTutorContext.content=content.data||'';
     await loadLessonActivities(lesson);
   }
   var codeSamples={
