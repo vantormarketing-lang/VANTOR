@@ -170,7 +170,7 @@ function initializeDomaProgrammingAcademy(){
     $('paAuthStatus').classList.toggle('is-connected',!!user);
     $('paAuthStatus').title=user?'متصل بالحساب':'غير مسجل الدخول';
   }
-  function setAcademyLocked(locked){['learning-paths','paProjectsSection'].forEach(function(id){var el=$(id);if(el)el.hidden=!!locked});var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;if(locked){$('paStudentProgress').hidden=true;$('paAdminLearning').hidden=true}var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close){close.hidden=false;close.setAttribute('aria-label','إغلاق رسالة الاشتراك');close.title='إغلاق والعودة إلى الأكاديمية'}}
+  function setAcademyLocked(locked){var projects=$('paProjectsSection');if(projects)projects.hidden=!!locked;var paths=$('learning-paths');if(paths&&locked)paths.hidden=true;var layout=document.querySelector('.pa-learning-layout');if(layout)layout.hidden=!!locked;if(locked){$('paStudentProgress').hidden=true;$('paAdminLearning').hidden=true}var close=$('paSubscribeModal').querySelector('.pa-modal-close');if(close){close.hidden=false;close.setAttribute('aria-label','إغلاق رسالة الاشتراك');close.title='إغلاق والعودة إلى الأكاديمية'}}
   function showModal(){var error=$('paMembershipError');if(error){error.hidden=!membershipCheckError;if(membershipCheckError)error.textContent='تعذر التحقق من حالة الاشتراك: '+membershipCheckError+' — حدّث الصفحة أو تواصل مع الإدارة.'}if(!user){$('paLoginNotice').hidden=false;$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=true}else{$('paLoginNotice').hidden=true;$('paPaymentForm').hidden=!!membershipCheckError||!(!subscription&&!pendingRequest);$('paPendingNotice').hidden=!pendingRequest;$('paSubmitPayment').disabled=!!pendingRequest||!!membershipCheckError;$('paSubmitPayment').textContent=pendingRequest?'طلبك قيد المراجعة':'إرسال طلب الاشتراك'}$('paSubscribeModal').hidden=false;document.body.classList.add('pa-modal-open')}
   function syncEmbeddedView(){
     var embedded=window.parent!==window&&new URLSearchParams(window.location.search).get('embedded')==='1';
@@ -275,9 +275,11 @@ function initializeDomaProgrammingAcademy(){
     }
     var pathsSection=$('learning-paths');
     if(pathsSection){
-      pathsSection.hidden=false;
-      pathsSection.removeAttribute('aria-hidden');
-      pathsSection.style.removeProperty('display');
+      // Returning from a lesson must return to the academy landing page.
+      // The five tracks remain closed until the student presses the Paths tile.
+      pathsSection.hidden=true;
+      pathsSection.setAttribute('aria-hidden','true');
+      pathsSection.style.setProperty('display','none','important');
     }
     window.location.href='./programming.html';
   }
@@ -593,6 +595,13 @@ body.programming-page .pa-tool-page .pa-free-tutor-note{color:#405b48!important}
 body.programming-page .pa-tool-page .pa-free-tutor-label,
 body.programming-page .pa-tool-page .pa-free-tutor-local{color:#176b37!important}
 body.programming-page .pa-tool-page .pa-free-tutor-answer{color:#294b35!important}
+</style>
+<style id="pa20-paths-closed-by-default">
+/* Never expose the five-track list unless the Paths tile explicitly opens it. */
+body.programming-page #learning-paths[hidden],
+body.programming-page #learning-paths[aria-hidden="true"]{
+ display:none!important;
+}
 </style>
 </body>\n</html>',
     c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, DOMA!\\n");\n    return 0;\n}',
@@ -1170,10 +1179,17 @@ body.programming-page .pa-tool-page .pa-free-tutor-answer{color:#294b35!importan
   $('paOpenBoard').addEventListener('click',function(){openStandaloneTool('board')});
   function pa20ShowPaths(){
     var section=$('learning-paths');if(!section)return;
-    section.hidden=false;section.scrollIntoView({behavior:'smooth',block:'start'});
+    section.hidden=false;
+    section.removeAttribute('aria-hidden');
+    section.style.removeProperty('display');
+    section.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function pa20HidePaths(){
-    var section=$('learning-paths');if(section)section.hidden=true;
+    var section=$('learning-paths');if(section){
+      section.hidden=true;
+      section.setAttribute('aria-hidden','true');
+      section.style.setProperty('display','none','important');
+    }
     window.scrollTo({top:0,behavior:'smooth'});
   }
   $('pa20ExplorePaths').addEventListener('click',pa20ShowPaths);
