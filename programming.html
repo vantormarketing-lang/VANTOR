@@ -928,6 +928,14 @@ function initializeDomaProgrammingAcademy(){
     renderTracks();
     var requestedTrack=new URLSearchParams(window.location.search).get('track');
     var requestedLesson=new URLSearchParams(window.location.search).get('lesson');
+    var legacyTrackAliases={
+      'python':'programming-languages','cpp':'programming-languages',
+      'visual-programming':'computer-science',
+      'ai-data':'real-world-projects','mobile-development':'real-world-projects',
+      'developer-tools':'databases-backend','developer-workflow':'databases-backend',
+      'backend-foundations':'databases-backend'
+    };
+    if(requestedTrack&&legacyTrackAliases[requestedTrack])requestedTrack=legacyTrackAliases[requestedTrack];
     if(requestedTrack&&tracks.some(function(t){return String(t.id)===String(requestedTrack)})){
       selectTrack(requestedTrack);
     }else{
