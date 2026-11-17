@@ -45,7 +45,7 @@
 .pa-daily-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pa-daily-actions button{border:0;border-radius:9px;padding:9px 12px;background:linear-gradient(120deg,#b58a4e,#e0c07b);color:#21172a;font-weight:800;cursor:pointer}.pa-daily-actions button.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(205,170,111,.22);color:#ead9bd}.pa-daily-actions button:disabled{opacity:.55;cursor:wait}
 .pa-daily-hints,.pa-daily-result{margin-top:9px;padding:10px;border-radius:10px;background:rgba(0,0,0,.2);font-size:12px;line-height:1.8;white-space:pre-wrap}.pa-daily-result .pass{color:#9cdbad}.pa-daily-result .fail{color:#f0a4a4}
 @media(max-width:900px){.pa-daily-challenge-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.pa-daily-challenges{padding:14px}.pa-daily-challenge-grid{grid-template-columns:1fr}}
-</style></head>
+</style><style id="pa-standalone-learning-tools">.pa-top-actions{gap:8px!important}.pa-tool-trigger{appearance:none;cursor:pointer;color:#f2d2a0!important;font:800 19px/1 system-ui!important;padding:0}.pa-tool-trigger:hover{background:rgba(242,210,160,.16)!important;border-color:rgba(242,210,160,.7)!important}.pa-tool-page[hidden]{display:none!important}.pa-tool-page{position:fixed;z-index:45;inset:70px 0 0;overflow:auto;padding:clamp(14px,3vw,30px);background:radial-gradient(ellipse at 10% 0%,rgba(155,111,188,.22),transparent 38%),linear-gradient(145deg,#170f22,#241632 55%,#120c1d);color:#fff4e8}.pa-tool-page-head{width:min(1120px,100%);margin:0 auto 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 18px;border:1px solid rgba(232,197,151,.28);border-radius:18px;background:rgba(40,28,54,.72);backdrop-filter:blur(18px)}.pa-tool-page-head h2{margin:5px 0;color:#f4d9ae;font-size:clamp(21px,3vw,30px)}.pa-tool-page-head p{margin:0;color:#d4c4dd;font-size:12px}.pa-tool-page-body{width:min(1120px,100%);margin:0 auto}.pa-tool-page-body>.pa-free-tutor,.pa-tool-page-body>.pa-code-lab{margin:0!important;width:100%;box-sizing:border-box}.pa-tool-page-body>.pa-code-lab{max-height:calc(100vh - 175px);overflow:auto}.pa-tool-page-body .pa-extra-labs{display:none!important}body.pa-tool-view{overflow:hidden}body.pa-tool-view .pa-tool-page{display:block!important}@media(max-width:600px){.pa-tool-page{inset:62px 0 0;padding:12px}.pa-tool-page-head{align-items:flex-start;flex-direction:column;padding:13px}.pa-tool-page-head>button{width:100%}.pa-tool-page-body>.pa-code-lab{max-height:calc(100vh - 190px)}} </style></head>
 <style id="pa-free-tutor-style">
 .pa-free-tutor{margin:18px 0;padding:18px;border:1px solid rgba(214,177,111,.36);border-radius:20px;background:linear-gradient(145deg,rgba(45,31,58,.92),rgba(25,20,35,.94));box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}
 .pa-free-tutor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.pa-free-tutor-head h3{margin:4px 0;color:#f6e8d2;font-size:19px}.pa-free-tutor-head p{margin:5px 0;color:#d5c6b2;font-size:12px;line-height:1.8}
@@ -62,7 +62,7 @@
 <body class="programming-page">
 <header class="pa-topbar">
   <div class="pa-user-identity" aria-label="حساب الطالب"><span id="paAuthStatus" class="pa-auth-status" role="status" aria-label="حالة الاتصال" title="حالة الاتصال"></span><span id="paUserName" class="pa-user-identity-name">حساب الطالب</span></div>
-  <div class="pa-top-actions"><a class="pa-home-link" href="./programming-handbook.html" aria-label="دليل المبرمج" title="دليل المبرمج" style="margin-inline-end:8px">⌨</a><a class="pa-home-link" href="./index.html" aria-label="العودة للمنصة" title="العودة للمنصة">←</a></div>
+  <div class="pa-top-actions"><a class="pa-home-link" href="./programming-handbook.html" aria-label="دليل المبرمج" title="دليل المبرمج" style="margin-inline-end:8px">⌨</a><button type="button" class="pa-home-link pa-tool-trigger" id="paOpenTutor" aria-label="فتح المساعد التعليمي" title="المساعد التعليمي">✦</button><button type="button" class="pa-home-link pa-tool-trigger" id="paOpenBoard" aria-label="فتح الصبورة البرمجية التفاعلية" title="الصبورة البرمجية">⌘</button><a class="pa-home-link" href="./index.html" aria-label="العودة للمنصة" title="العودة للمنصة">←</a></div>
 </header>
 <main class="pa-shell">
 
@@ -99,6 +99,7 @@
     <section id="paAdminStudentReports" class="pa-admin-student-reports"><div class="pa-admin-report-heading"><div><h3>التقرير الفردي للطالب</h3><p>تقدم الدروس ونتائج الاختبارات والتطبيقات والمشاريع.</p></div><select id="paAdminStudentSelect" aria-label="اختر طالبًا"><option value="">اختر طالبًا لعرض تقريره</option></select></div><div id="paAdminStudentReportBody" class="pa-admin-student-report-body"><p class="pa-activity-lock">اختر طالبًا لعرض تقريره التفصيلي.</p></div></section>
     <div id="paAdminLearningQueue" class="pa-admin-learning-queue"></div>
   </section>
+  <section id="paToolPage" class="pa-tool-page" hidden aria-live="polite"><div class="pa-tool-page-head"><div><span class="pa-kicker">DOMA LEARNING TOOLS</span><h2 id="paToolPageTitle">المساعد التعليمي</h2><p id="paToolPageDescription">مساحة مستقلة للأدوات التعليمية.</p></div><button type="button" id="paCloseToolPage" class="pa-track-back">← العودة للدرس</button></div><div id="paToolPageBody" class="pa-tool-page-body"></div></section>
   <footer class="pa-footer"><span>DOMA ACADEMY</span><span>PROGRAMMING • LOGIC • CREATIVITY</span><a href="./index.html">العودة إلى الصفحة الرئيسية</a></footer>
 </main>
 
@@ -1055,6 +1056,43 @@ function initializeDomaProgrammingAcademy(){
       },0);
     });
   }
+  var activeStandaloneTool=null;
+  function openStandaloneTool(kind){
+    var page=$('paToolPage'),body=$('paToolPageBody'),title=$('paToolPageTitle'),description=$('paToolPageDescription');
+    if(!page||!body)return;
+    var target=null;
+    if(kind==='tutor'){
+      var reader=$('paLessonReader');
+      target=reader&&reader.querySelector('.pa-free-tutor');
+      if(!target)target=$('paGlobalTutor')&&$('paGlobalTutor').querySelector('.pa-free-tutor');
+      if(!target){toast('المساعد التعليمي غير جاهز الآن.');return}
+      title.textContent='المساعد التعليمي DOMA One';
+      description.textContent='اسأل عن الدرس أو الكود، واحصل على شرح وتلميحات في مساحة مستقلة.';
+    }else{
+      target=document.querySelector('#paLessonReader .pa-code-lab');
+      if(!target){toast('افتح أحد الدروس أولًا، ثم اضغط أيقونة الصبورة البرمجية.');return}
+      title.textContent='الصبورة البرمجية التفاعلية';
+      description.textContent='اكتب الكود وشغّله وشاهد النتيجة في مساحة مستقلة كاملة.';
+    }
+    if(activeStandaloneTool)closeStandaloneTool();
+    activeStandaloneTool={node:target,parent:target.parentNode,next:target.nextSibling};
+    body.appendChild(target);
+    page.hidden=false;
+    document.body.classList.add('pa-tool-view');
+    window.scrollTo(0,0);
+  }
+  function closeStandaloneTool(){
+    if(!activeStandaloneTool)return;
+    var saved=activeStandaloneTool,node=saved.node;
+    if(saved.parent){if(saved.next&&saved.next.parentNode===saved.parent)saved.parent.insertBefore(node,saved.next);else saved.parent.appendChild(node)}
+    activeStandaloneTool=null;
+    $('paToolPageBody').innerHTML='';
+    $('paToolPage').hidden=true;
+    document.body.classList.remove('pa-tool-view');
+  }
+  $('paOpenTutor').addEventListener('click',function(){openStandaloneTool('tutor')});
+  $('paOpenBoard').addEventListener('click',function(){openStandaloneTool('board')});
+  $('paCloseToolPage').addEventListener('click',closeStandaloneTool);
   $('paBackToTracks').addEventListener('click',showTrackOverview);
   $('paSubmitPayment').addEventListener('click',submitPayment);
   $('paAdminLearningRefresh').addEventListener('click',loadProgrammingAdminLearning);
