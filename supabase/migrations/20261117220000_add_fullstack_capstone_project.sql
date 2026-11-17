@@ -170,7 +170,7 @@ grading_mode='manual', updated_at=now();
 
 insert into public.programming_projects
 (track_id,title,brief,requirements,is_published,sort_order,starter_files,rubric,estimated_hours,difficulty)
-values (
+select
 'real-world-projects',
 'مشروع تخرج Full‑Stack: منصة تعليمية لإدارة الدروس والمهام',
 'ابنِ تطبيقًا عربيًا متكاملًا يبدأ من واجهة HTML/CSS/JavaScript، ويتصل بواجهة REST API وقاعدة SQL، مع تسجيل دخول وRLS وعزل بيانات المستخدمين واختبارات وتوثيق.',
@@ -179,5 +179,7 @@ true,2,
 '{"index.html":"هيكل HTML5 عربي دلالي مع قائمة الدروس والمهام.","styles.css":"متغيرات CSS وتخطيط متجاوب ودعم RTL.","src/app.js":"نقطة تشغيل التطبيق وربط الأحداث.","src/api/client.js":"عميل HTTP وتحليل الاستجابات والأخطاء.","src/api/tasks.js":"دوال CRUD للمهام.","database/schema.sql":"جداول وعلاقات وقيود وفهارس.","database/policies.sql":"سياسات RLS للمستخدمين.","docs/api-contract.md":"عقد API وأمثلة JSON.","tests/test-plan.md":"حالات اختبار يدوية.","README.md":"الإعداد والتشغيل والتوثيق."}'::jsonb,
 '[{"weight":15,"criterion":"Frontend","description":"واجهة دلالية متجاوبة تدعم RTL وإمكانية الوصول."},{"weight":20,"criterion":"Database","description":"جداول وعلاقات وقيود وفهارس صحيحة."},{"weight":20,"criterion":"API","description":"CRUD وعقد واضح ومعالجة أخطاء."},{"weight":20,"criterion":"JavaScript","description":"فصل الطبقات وإدارة الحالة والتحقق."},{"weight":20,"criterion":"Security","description":"مصادقة وRLS وعزل بيانات الحسابات."},{"weight":5,"criterion":"Delivery","description":"README واختبارات وتعليمات نشر."}]'::jsonb,
 12,'advanced'
-)
-on conflict (id) do nothing;
+where not exists (
+  select 1 from public.programming_projects
+  where title='مشروع تخرج Full‑Stack: منصة تعليمية لإدارة الدروس والمهام'
+);
