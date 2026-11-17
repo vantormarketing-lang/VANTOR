@@ -8,6 +8,7 @@
 <meta name="description" content="تعلم البرمجة من الصفر عبر مسارات متدرجة ومشاريع عملية في DOMA Programming Academy.">
 <link rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
 <link rel="stylesheet" href="./programming-academy.css?v=11">
+<link rel="stylesheet" href="./programming-academy-design20.css?v=1">
 <style id="pa-refined-topbar">
 .pa-topbar{min-height:70px;padding:12px max(4vw,18px);display:flex;align-items:center;justify-content:space-between;gap:14px;background:transparent!important;border:0!important;border-bottom:0!important;box-shadow:none!important}
 .pa-user-identity{display:flex;align-items:center;gap:10px;min-width:0;color:#f4e7d5;font-size:13px;font-weight:750;line-height:1.3}
@@ -65,9 +66,24 @@
   <div class="pa-top-actions"><a class="pa-home-link" href="./programming-handbook.html" aria-label="دليل المبرمج" title="دليل المبرمج" style="margin-inline-end:8px">⌨</a><button type="button" class="pa-home-link pa-tool-trigger" id="paOpenTutor" aria-label="فتح المساعد التعليمي" title="المساعد التعليمي">✦</button><button type="button" class="pa-home-link pa-tool-trigger" id="paOpenBoard" aria-label="فتح الصبورة البرمجية التفاعلية" title="الصبورة البرمجية">⌘</button><a class="pa-home-link" href="./index.html" aria-label="العودة للمنصة" title="العودة للمنصة">←</a></div>
 </header>
 <main class="pa-shell">
-
-  <section id="learning-paths" class="pa-path-section">
-    <div class="pa-section-heading"><div><h2>اختر مسارك</h2></div></div>
+  <section class="pa20-hero" aria-labelledby="pa20HeroTitle">
+    <div class="pa20-hero-copy">
+      <div class="pa20-brandline"><span class="pa20-brandmark" aria-hidden="true">⌘</span><span>DOMA Academy</span></div>
+      <p class="pa20-eyebrow">PROGRAMMING ACADEMY</p>
+      <h1 id="pa20HeroTitle" class="pa20-title">Programming Academy<span class="pa20-title-ar">أكاديمية البرمجة</span></h1>
+      <p class="pa20-tagline">Learn · Practice · Create</p>
+      <p class="pa20-tagline-ar">تعلّم · طبّق · ابتكر</p>
+      <button type="button" class="pa20-hero-cta" id="pa20ExplorePaths">Explore learning paths <span aria-hidden="true">←</span></button>
+    </div>
+    <div class="pa20-hero-art"><img src="./programming-academy-botanical.svg" alt="كتاب مفتوح تحيط به أوراق خضراء ترمز للتعلم والنمو"></div>
+  </section>
+  <section class="pa20-hub" aria-label="أقسام أكاديمية البرمجة">
+    <button type="button" class="pa20-hub-card" id="pa20OpenPaths"><span class="pa20-hub-icon" aria-hidden="true">⌘</span><span><strong>Learning Paths · المسارات</strong><small>Explore the five programming tracks · استكشف المسارات الخمسة</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+    <button type="button" class="pa20-hub-card" id="pa20OpenTutor"><span class="pa20-hub-icon" aria-hidden="true">✦</span><span><strong>AI Assistant · المساعد الذكي</strong><small>Ask, understand, and build with your AI tutor · اسأل وتعلّم مع مساعدك</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+    <button type="button" class="pa20-hub-card" id="pa20OpenBoard"><span class="pa20-hub-icon" aria-hidden="true">▤</span><span><strong>Interactive Boards · الصبورات</strong><small>Write code, experiment, and explore ideas · اكتب الأكواد وجرّب أفكارك</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+  </section>
+  <section id="learning-paths" class="pa-path-section" hidden>
+    <div class="pa20-path-head"><div><h2>Explore the five paths · استكشف المسارات الخمسة</h2><p>Choose one track to open its lessons and projects · اختر مسارًا لعرض دروسه ومشروعاته</p></div><button type="button" class="pa20-path-close" id="pa20ClosePaths">← Back to academy home</button></div>
     <div id="paTracks" class="pa-track-grid"><div class="pa-loading">سيظهر محتوى المسارات هنا بعد التحقق من حالة الاشتراك.</div></div>
     
   </section>
@@ -1093,6 +1109,19 @@ function initializeDomaProgrammingAcademy(){
   }
   $('paOpenTutor').addEventListener('click',function(){openStandaloneTool('tutor')});
   $('paOpenBoard').addEventListener('click',function(){openStandaloneTool('board')});
+  function pa20ShowPaths(){
+    var section=$('learning-paths');if(!section)return;
+    section.hidden=false;section.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function pa20HidePaths(){
+    var section=$('learning-paths');if(section)section.hidden=true;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  $('pa20ExplorePaths').addEventListener('click',pa20ShowPaths);
+  $('pa20OpenPaths').addEventListener('click',pa20ShowPaths);
+  $('pa20ClosePaths').addEventListener('click',pa20HidePaths);
+  $('pa20OpenTutor').addEventListener('click',function(){openStandaloneTool('tutor')});
+  $('pa20OpenBoard').addEventListener('click',function(){openStandaloneTool('board')});
   $('paCloseToolPage').addEventListener('click',closeStandaloneTool);
   $('paBackToTracks').addEventListener('click',showTrackOverview);
   $('paSubmitPayment').addEventListener('click',submitPayment);
