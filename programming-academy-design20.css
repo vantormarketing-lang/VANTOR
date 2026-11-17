@@ -67,3 +67,9 @@ body.programming-page .pa-form-input{color:#24432d!important;border-color:#cfe2c
 body.programming-page .pa-toast{color:#24432d!important;border-color:#d7ead4!important;background:#fff!important}
 @media(max-width:760px){.pa20-hero{grid-template-columns:1fr;min-height:0;padding:22px}.pa20-hero-art{grid-row:1;max-width:360px}.pa20-hero-copy{text-align:center}.pa20-brandline{justify-content:center}.pa20-hub{grid-template-columns:1fr;gap:11px}.pa20-hub-card{min-height:112px;padding:16px 18px}.pa20-hub-icon{width:42px;height:42px}.pa20-path-head{align-items:flex-start;flex-direction:column}.pa20-path-close{width:100%}}
 @media(min-width:761px) and (max-width:980px){.pa20-hero{grid-template-columns:1fr 1fr}.pa20-hub{gap:12px}}
+
+/* Keep the landing hub exclusive to the academy home, and respect hidden state. */
+body.programming-page .pa-path-section[hidden]{display:none!important}
+body.pa-track-view .pa20-hero,body.pa-track-view .pa20-hub,
+body.pa-lesson-page-view .pa20-hero,body.pa-lesson-page-view .pa20-hub{display:none!important}
+body.pa-tool-view .pa20-hero,body.pa-tool-view .pa20-hub{display:none!important}
