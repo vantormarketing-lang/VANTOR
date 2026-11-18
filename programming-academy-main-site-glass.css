@@ -1899,3 +1899,76 @@ html body.programming-page.pa-tutor-tool-view .pa-global-tutor .pa-free-tutor-no
     min-height:calc(100dvh - 36px)!important;
   }
 }
+
+
+/* 2026-11-18: final interactive board navigation, scrollbar and path-card contrast pass. */
+/* The academy back arrow takes the former training-badge position. */
+html body.programming-page.pa-board-tool-view .pa-lab-heading{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+}
+html body.programming-page.pa-board-tool-view .pa-board-back-arrow{
+  display:inline-flex!important;
+  flex:0 0 42px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid rgba(255,218,174,.48)!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.065)!important;
+  color:#ffe2b7!important;
+  font-family:inherit!important;
+  font-size:25px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  cursor:pointer!important;
+  box-shadow:0 8px 22px rgba(10,5,18,.22),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+html body.programming-page.pa-board-tool-view .pa-board-back-arrow:hover{
+  background:rgba(255,218,174,.16)!important;
+  border-color:rgba(255,218,174,.78)!important;
+  transform:translateY(-1px);
+}
+/* Hide the browser's left/right edge rails while keeping the workspace itself scrollable. */
+html:has(body.programming-page.pa-board-tool-view),
+html:has(body.programming-page.pa-board-tool-view) body,
+html body.programming-page.pa-board-tool-view,
+html body.programming-page.pa-board-tool-view #paToolPage,
+html body.programming-page.pa-board-tool-view #paToolPageBody,
+html body.programming-page.pa-board-tool-view #paStandaloneBoardHost,
+html body.programming-page.pa-board-tool-view #paStandaloneBoardHost *{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+}
+html:has(body.programming-page.pa-board-tool-view)::-webkit-scrollbar,
+html:has(body.programming-page.pa-board-tool-view) body::-webkit-scrollbar,
+html body.programming-page.pa-board-tool-view::-webkit-scrollbar,
+html body.programming-page.pa-board-tool-view *::-webkit-scrollbar{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  background:transparent!important;
+}
+/* Remove the glowing dot beside every path number. */
+html body.programming-page #learning-paths .pa-track-number::after{
+  content:none!important;
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  box-shadow:none!important;
+}
+/* Separate the English path title from its Arabic explanation for clearer scanning. */
+html body.programming-page #learning-paths .pa-track-content b{
+  color:#f2c98f!important;
+  -webkit-text-fill-color:#f2c98f!important;
+}
+html body.programming-page #learning-paths .pa-track-description{
+  color:#e6d9ef!important;
+  -webkit-text-fill-color:#e6d9ef!important;
+}
