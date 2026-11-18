@@ -2959,10 +2959,16 @@ window.mfKidsNavigateInPlace=function(destination){
 document.addEventListener('click',function(event){
   if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   var link=event.target&&event.target.closest?event.target.closest('#mfKidsStandaloneRoot a[href]'):null;
-  if(!link||link.hasAttribute('download')||link.matches('.mfkr-back-arrow')||(link.target&&link.target!=='_self'))return;
+  if(!link||link.hasAttribute('download')||(link.target&&link.target!=='_self'))return;
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
   if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
-  event.preventDefault();window.mfKidsNavigateInPlace(target.href);
+  event.preventDefault();
+  if(link.classList.contains('mfkr-back-arrow')){
+    var destination=target.searchParams.get('kids')||'hub';
+    kidsJourneyRenderRouteInPlace(destination,target.href,true);
+    return;
+  }
+  window.mfKidsNavigateInPlace(target.href);
 });
 window.addEventListener('popstate',function(){
   if(!document.body.classList.contains('mf-kids-route'))return;
@@ -2988,29 +2994,8 @@ journeyAttachTracker();
 journeyRenderCurrent();
 journeyInit();
 
-// Independent fail-safe navigation control for every Kids level.
-// It is deliberately outside the rendered header so later level redraws cannot remove it.
-function ensureKidsLevelBackArrow(){
-  if(!root || !document.body.classList.contains('mf-kids-route'))return;
-  if(['a1','a2','b1','b2','c1','c2'].indexOf(route)<0)return;
-  var existing=root.querySelector('#mfkrEmergencyBackArrow');
-  if(existing)return;
-  var backTo=(route==='a1'||route==='b1'||route==='c1')?'younger':'older';
-  var link=document.createElement('a');
-  link.id='mfkrEmergencyBackArrow';
-  link.className='mfkr-back-arrow';
-  link.href=url(backTo);
-  link.setAttribute('aria-label','الرجوع إلى قائمة المستويات');
-  link.setAttribute('title','الرجوع إلى قائمة المستويات');
-  link.textContent='←';
-  link.style.cssText='position:fixed!important;top:12px!important;left:12px!important;z-index:2147483647!important;display:grid!important;place-items:center!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;padding:0!important;margin:0!important;border:1px solid rgba(255,218,174,.9)!important;border-radius:13px!important;background:linear-gradient(145deg,#754f8b,#2c1d3e)!important;box-shadow:0 5px 18px rgba(0,0,0,.48)!important;color:#ffe5bd!important;font:900 30px/1 Arial,sans-serif!important;text-decoration:none!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:none!important;';
-  root.appendChild(link);
-}
-ensureKidsLevelBackArrow();
-if(window.MutationObserver){
-  var kidsArrowObserver=new MutationObserver(function(){ensureKidsLevelBackArrow();});
-  kidsArrowObserver.observe(root,{childList:true,subtree:true});
-}
+// The rendered header owns the only back arrow. Navigation is handled in-place above,
+ // so it cannot create a second floating arrow or depend on an unreliable full reload.
 // Catch any late-created academy nodes and keep them outside this page-only view.
 if (window.MutationObserver) {
   var kidsPageObserver = new MutationObserver(function(records){
