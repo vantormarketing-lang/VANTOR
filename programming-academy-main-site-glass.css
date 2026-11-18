@@ -288,3 +288,139 @@ html body.programming-page .pa-track-arrow{color:#ffe5bd!important}
   html body.programming-page .pa-track-grid{grid-template-columns:1fr!important;gap:12px!important}
   html body.programming-page .pa-track-card{min-height:112px!important;padding:16px!important}
 }
+
+
+/* DOMA Academy global glass pass — shared by every programming tool/view. */
+html,html body.programming-page{
+  color:#fff4e8!important;
+  background:
+    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
+    linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
+  background-attachment:fixed!important;
+}
+/* Keep the page canvas continuous; use the homepage How It Works card
+   language only on actual interactive/content cards. */
+html body.programming-page :is(
+  .pa-track-card,.pa20-hub-card,.pa-project-card,.pa-daily-card,.pa-side-card,
+  .pa-progress-card,.pa-activity-card,.pa-lesson-row,.pa-code-lab,.pa-free-tutor,
+  .pa-tool-page-head,.pa-achievement-panel,.pa-certificate-card,.pa-review-card,
+  .pa-project-rubric,.pa-exercise-card,.pa-exercise-hints,.pa-exercise-test-results
+){
+  color:#fff4e8!important;
+  border:1px solid rgba(225,193,233,.32)!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.09),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.44),rgba(44,29,62,.77))!important;
+  box-shadow:0 16px 38px rgba(12,5,23,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(138%)!important;
+  backdrop-filter:blur(18px) saturate(138%)!important;
+}
+html body.programming-page .pa20-hub-card{
+  min-height:112px!important;padding:17px!important;border-radius:20px!important;
+}
+html body.programming-page :is(.pa-code-lab,.pa-free-tutor){padding:clamp(15px,2.4vw,22px)!important}
+html body.programming-page .pa-tool-page{
+  background:
+    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+    linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
+  background-attachment:fixed!important;
+}
+html body.programming-page .pa-tool-page-head{border-radius:20px!important}
+html body.programming-page .pa-editor-wrap{
+  display:flex!important;align-items:stretch!important;gap:10px!important;
+  overflow:hidden!important;padding:10px 12px!important;
+  border:1px solid rgba(225,193,233,.25)!important;border-radius:16px!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.07),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.34),rgba(44,29,62,.64))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+html body.programming-page .pa-editor-wrap:focus-within{
+  border-color:rgba(255,218,174,.58)!important;
+  box-shadow:0 0 0 3px rgba(255,218,174,.07),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+html body.programming-page .pa-code-lines{
+  flex:0 0 34px!important;width:34px!important;min-width:34px!important;
+  margin:0 8px 0 0!important;padding:17px 2px 17px 0!important;
+  border:0!important;background:transparent!important;
+  color:#70e39a!important;text-align:right!important;
+  font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+}
+html body.programming-page .pa-editor-wrap .pa-code-editor,
+html body.programming-page .pa-code-editor,
+html body.programming-page .pa-editor-wrap textarea{
+  color:#fff4e8!important;background:transparent!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  caret-color:#ffe5bd!important;
+}
+html body.programming-page .pa-editor-wrap .pa-code-editor:focus{
+  border:0!important;box-shadow:none!important;outline:0!important;
+}
+html body.programming-page :is(.pa-code-output,.pa-code-input,.pa-exercise-editor){
+  color:#fff4e8!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.06),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.30),rgba(44,29,62,.60))!important;
+  border:1px solid rgba(225,193,233,.24)!important;border-radius:14px!important;
+}
+html body.programming-page .pa-code-output{color:#c9f4d5!important}
+html body.programming-page :is(.pa-code-editor,.pa-code-output,.pa-code-input,.pa-exercise-editor)::placeholder{color:#c9b6d3!important}
+html body.programming-page .pa-code-select{
+  color:#fff4e8!important;background:rgba(67,45,85,.82)!important;
+}
+html body.programming-page .pa-code-select option{background:#2b1d3b!important;color:#fff4e8!important}
+html body.programming-page .pa-lab-output-head{color:#ffe5bd!important}
+html body.programming-page .pa-lab-output-head span{color:#e4d5e8!important}
+html body.programming-page .pa-reader-content,
+html body.programming-page .pa-reader-content :is(p,li,ul,ol){color:#f4e9f3!important}
+html body.programming-page .pa-reader-content :is(h2,h3,h4){color:#ffe5bd!important}
+@media(max-width:700px){
+  html body.programming-page .pa-editor-wrap{gap:7px!important;padding:8px!important}
+  html body.programming-page .pa-code-lines{flex-basis:30px!important;width:30px!important;min-width:30px!important;margin-right:5px!important}
+  html body.programming-page .pa-code-editor{font-size:13px!important}
+}
+
+/* Standalone Programmer Guide uses the same page canvas and How It Works cards. */
+html body:has(.handbook){
+  min-height:100vh!important;color:#fff4e8!important;
+  background:
+    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
+    linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
+  background-attachment:fixed!important;
+}
+html body:has(.handbook) :is(.hero,.panel,.guide-card,.key,.terminal){
+  color:#fff4e8!important;border:1px solid rgba(225,193,233,.32)!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.09),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.44),rgba(44,29,62,.77))!important;
+  box-shadow:0 16px 38px rgba(12,5,23,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(138%)!important;
+  backdrop-filter:blur(18px) saturate(138%)!important;
+}
+html body:has(.handbook) :is(.hero p,.muted,.guide-card p,.guide-card li,.key p){color:#e4d5e8!important}
+html body:has(.handbook) .terminal{
+  color:#c9f4d5!important;direction:ltr!important;text-align:left!important;
+}
+html body:has(.handbook) .terminal-input input{
+  color:#fff4e8!important;background:rgba(44,29,62,.72)!important;
+  border:1px solid rgba(225,193,233,.32)!important;
+}
+html body:has(.handbook) .key code,
+html body:has(.handbook) .guide-card code{
+  color:#ffe5bd!important;background:rgba(255,218,174,.10)!important;
+}
+html body:has(.handbook) .steps li{
+  color:#fff4e8!important;background:rgba(117,79,139,.24)!important;
+}
+html body:has(.handbook) .steps li:before{color:#70e39a!important}
+html body:has(.handbook) :is(.handbook-topbar,.handbook-back){
+  color:#fff4e8!important;background:linear-gradient(135deg,rgba(112,77,133,.78),rgba(49,31,68,.9))!important;
+  border-color:rgba(255,218,174,.36)!important;
+}
