@@ -7,11 +7,15 @@
 <link rel="stylesheet" href="./programming-academy.css?v=10">
 <style>
 body{background:#171020;color:#f4e8d8;font-family:system-ui,sans-serif}.handbook{max-width:1100px;margin:auto;padding:18px}.hero,.panel,.guide-card{border:1px solid rgba(220,184,120,.28);border-radius:20px;background:linear-gradient(145deg,rgba(52,36,66,.92),rgba(26,21,36,.96));box-shadow:0 14px 38px rgba(0,0,0,.18);padding:20px;margin:16px 0}.hero h1{color:#e8c987;margin:8px 0}.hero p,.muted{color:#d4c4b0;line-height:1.9}.nav{display:flex;gap:9px;flex-wrap:wrap}.nav a,.chip,button{border:1px solid rgba(220,184,120,.35);border-radius:12px;padding:9px 13px;background:rgba(255,255,255,.05);color:#f7e9d4;text-decoration:none;font:inherit}.nav a:hover,button:hover{background:rgba(220,184,120,.14)}h2{color:#e8c987}h3{color:#f3dfbb}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.key{border:1px solid rgba(220,184,120,.25);border-radius:13px;padding:12px;background:rgba(0,0,0,.15)}.key code{display:inline-block;min-width:36px;text-align:center;padding:5px 8px;border-radius:7px;background:#30233b;color:#f4d79d;font-size:17px;direction:ltr}.key p{margin:7px 0 0;color:#d6c7b5;font-size:13px;line-height:1.7}.terminal{direction:ltr;text-align:left;background:#090b10;border:1px solid #51435c;border-radius:14px;padding:14px;color:#d8f2d5;min-height:170px;white-space:pre-wrap;overflow:auto;font:13px/1.8 ui-monospace,Consolas,monospace}.terminal-input{display:flex;gap:8px;margin-top:10px;direction:ltr}.terminal-input input{flex:1;min-width:0;background:#0d1017;border:1px solid #68576f;border-radius:10px;padding:11px;color:#fff;font:14px monospace}.terminal-help{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.terminal-help button{font-size:12px}.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}.guide-card{margin:0;padding:15px}.guide-card p,.guide-card li{color:#d9cbb9;line-height:1.85}.guide-card code{direction:ltr;unicode-bidi:embed;color:#f1d391}.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;margin:10px 0;padding:10px 42px 10px 12px;position:relative;background:rgba(255,255,255,.04);border-radius:10px}.steps li:before{content:counter(step);position:absolute;right:10px;color:#edca83;font-weight:800}.back{display:inline-block;color:#f2d393;margin:6px 0 14px;text-decoration:none}@media(max-width:560px){.handbook{padding:12px}.hero,.panel{padding:15px}.terminal-input{flex-direction:column}.terminal-input button{min-height:42px}}
+
+.handbook-topbar{min-height:62px;padding:10px max(4vw,18px);display:flex;align-items:center;justify-content:flex-start;background:rgba(23,16,32,.82);border-bottom:1px solid rgba(220,184,120,.18);backdrop-filter:blur(14px)}
+.handbook-back{display:grid;place-items:center;width:40px;height:40px;border:1px solid rgba(220,184,120,.35);border-radius:12px;background:rgba(255,255,255,.05);color:#f2d393;font-size:25px;line-height:1;cursor:pointer}
+.back{display:none!important}
 </style>
 </head>
 <body>
+<header class="handbook-topbar"><button type="button" id="paGlobalBack" class="handbook-back" aria-label="رجوع للصفحة السابقة" title="رجوع">←</button></header>
 <main class="handbook">
-<a class="back" href="./programming.html">← العودة إلى أكاديمية البرمجة</a>
 <section class="hero"><span class="muted">DOMA PROGRAMMING ACADEMY · HANDBOOK</span><h1>دليل المبرمج من الصفر</h1><p>مرجع عملي للوحة المفاتيح، وكتابة الكود، والملفات، وسطر الأوامر، وتشخيص الأخطاء. استخدمه بجانب الدروس وارجع إليه كلما احتجت.</p><nav class="nav"><a href="#keyboard">لوحة المفاتيح</a><a href="#shortcuts">الاختصارات</a><a href="#terminal">تدريب Terminal</a><a href="#debug">تصحيح الأخطاء</a><a href="#glossary">قاموس سريع</a></nav></section>
 <section id="keyboard" class="panel"><h2>1. لوحة المفاتيح ورموز البرمجة</h2><p class="muted">تختلف أماكن بعض الرموز حسب لغة لوحة المفاتيح وتخطيطها. غيّر بين العربية والإنجليزية من إعدادات اللغة أو اختصار النظام. عند كتابة الكود استخدم الإنجليزية غالبًا، وتأكد من ظهور الرمز الصحيح قبل تشغيله.</p>
 <div class="grid">
@@ -62,4 +66,15 @@ document.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',()
 })();
 </script>
 <script src="./programming-handbook-advanced.js?v=1" defer></script>
+
+<script id="pa-handbook-global-back">
+(function(){
+ var button=document.getElementById('paGlobalBack');
+ if(!button)return;
+ button.addEventListener('click',function(){
+   if(document.referrer&&document.referrer.indexOf('programming.html')!==-1)history.back();
+   else window.location.href='./programming.html';
+ });
+})();
+</script>
 </body></html>
