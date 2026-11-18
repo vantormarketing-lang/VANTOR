@@ -598,6 +598,7 @@ function journeyRenderMiniCard(){
   card.innerHTML='<div class="mfkj-mini-left"><span class="mfkj-kicker">MY LEARNING JOURNEY</span><h3>⭐ '+level.stars+' Stars <span lang="ar">· '+code+'</span></h3><p>'+level.wordsSeen.length+'/5 items · speaking '+level.speakingKeys.length+'/3 · best quiz '+level.finalQuizBest+'/5</p><div class="mfkj-meter"><span style="width:'+pct+'%"></span></div></div><div class="mfkj-mini-actions"><a class="mfkr-btn mfkj-mini-link" href="'+url('hub')+'">View journey · رحلتي ↗</a><a class="mfkr-btn mfkj-mini-link" href="'+url('review')+'">My Review · مراجعة الأخطاء</a></div>';
 }
 function journeyRenderCurrent(){
+ if(route==='entry'||route==='subscribe')return;
  if(route==='hub')journeyRenderDashboard();
  else if(route==='review')journeyRenderReview();
  else if(route==='map'){if(window.__mfKidsToolsAuthorized)renderCourseMap();}
