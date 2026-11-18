@@ -14,41 +14,7 @@ root.id = 'mfKidsStandaloneRoot';
 
 if (!root.parentNode) document.body.appendChild(root);
 
-// Prevent the academy's previous theme from flashing on Kids level entry.
-// Keep the course hidden until its dedicated stylesheet is ready, then reveal
-// the finished glass design and its back arrow together on the first open.
-var kidsStyleReady=false;
-var kidsStyleWaiters=[];
-function revealKidsCourse(){
-  if(kidsStyleReady)return;
-  kidsStyleReady=true;
-  document.body.style.removeProperty('background');
-  document.body.style.removeProperty('background-color');
-  document.body.style.removeProperty('color');
-  root.style.removeProperty('visibility');
-  root.style.removeProperty('opacity');
-  document.body.classList.add('mf-kids-style-ready');
-  if(typeof ensureKidsLevelBackArrow==='function')ensureKidsLevelBackArrow();
-}
-if(!inlineKidsMode){
-  document.body.style.setProperty('background','radial-gradient(ellipse at 10% 0%,rgba(128,49,93,.34),transparent 36%),radial-gradient(ellipse at 92% 22%,rgba(103,64,160,.23),transparent 34%),linear-gradient(145deg,#100b13,#1a0c17 60%,#0d0a12)','important');
-  document.body.style.setProperty('background-attachment','fixed','important');
-  document.body.style.setProperty('color','#fff7ff','important');
-  root.style.setProperty('visibility','hidden','important');
-  root.style.setProperty('opacity','0','important');
-  var kidsRuntimeStylesheet=Array.prototype.find.call(document.querySelectorAll('link[rel="stylesheet"]'),function(link){
-    return /doma-mrfluent-kids-runtime\.css(?:\?|$)/i.test(link.href||'');
-  });
-  if(kidsRuntimeStylesheet&&kidsRuntimeStylesheet.sheet){
-    revealKidsCourse();
-  }else if(kidsRuntimeStylesheet){
-    kidsRuntimeStylesheet.addEventListener('load',revealKidsCourse,{once:true});
-    kidsRuntimeStylesheet.addEventListener('error',revealKidsCourse,{once:true});
-    window.setTimeout(revealKidsCourse,10000);
-  }else{
-    revealKidsCourse();
-  }
-}
+// Kids levels now inherit the DOMA homepage theme directly; no inline theme override or delayed reveal.
 
 // Level pages render their back arrow inside header(), so it survives every page redraw.
 
