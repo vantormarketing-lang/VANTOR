@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#170f22">
 <title>Programming Academy | DOMA Academy</title>
@@ -528,7 +528,7 @@ function initializeDomaProgrammingAcademy(){
         section.style.setProperty('display','none','important');
       });
     });
-    history.replaceState({domaView:'lesson',track:activeTrack,lesson:id},'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
+    history.pushState({domaView:'lesson',track:activeTrack,lesson:id},'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
     var dailySection=$('paDailyChallenges'),shell=document.querySelector('.pa-shell'),adminLearning=$('paAdminLearning');
     if(dailySection&&shell&&dailySection.parentNode!==shell){if(adminLearning)shell.insertBefore(dailySection,adminLearning);else shell.appendChild(dailySection)}
     if(dailySection)dailySection.hidden=true;
@@ -1343,6 +1343,6 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(params.get('view')==='paths')revealPaths();
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=paths-hidden-until-click-20261118">
+<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=route-refresh-tajawal-header-20261118">
 </body>
 </html>
