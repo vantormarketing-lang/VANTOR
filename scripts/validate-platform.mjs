@@ -112,17 +112,20 @@ const coursePagesForCdn = ['MR_FLUENT_A1_COURSE.html','MR_FLUENT_A2_COURSE.html'
 for (const path of coursePagesForCdn) {
   const source = read(path);
   if (!source) continue;
-  const urls = [...source.matchAll(/@supabase\\/supabase-js@([^\\s"'<>]+)/g)].map(match => match[1]);
-  if (urls.length !== 1) {
+  const parts = source.split('@supabase/supabase-js@');
+  if (parts.length !== 2) {
     fail(path + ': expected exactly one pinned supabase-js CDN URL');
-  } else if (!/^\\d+\\.\\d+\\.\\d+$/.test(urls[0])) {
-    fail(path + ': supabase-js version must be exactly x.y.z, found ' + urls[0]);
+    continue;
   }
+  const version = parts[1].split('\"')[0];
+  const versionParts = version.split('.');
+  const validVersion = versionParts.length === 3 && versionParts.every(part => part.length > 0 && [...part].every(char => char >= '0' && char <= '9'));
+  if (!validVersion) fail(path + ': supabase-js version must be exactly x.y.z, found ' + version);
 }
 ok('Course pages: supabase-js CDN versions are pinned to a single x.y.z release');
 
 const responseHeaders = read('_headers');
-const mainCsp = responseHeaders.split('\\n').find(line => line.includes('Content-Security-Policy: default-src'));
+const mainCsp = responseHeaders.split(String.fromCharCode(10)).find(line => line.includes('Content-Security-Policy: default-src'));
 if (!mainCsp || !mainCsp.includes('frame-src') || !mainCsp.includes('https://www.youtube-nocookie.com')) {
   fail('_headers: CSP frame-src must allow https://www.youtube-nocookie.com for Kids course videos');
 } else {
