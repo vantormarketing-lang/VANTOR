@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mr-fluent-offline-student-v263';
-const BRAND_VERSION = 'doma-glass-v110';
+const CACHE_NAME = 'mr-fluent-offline-student-v264';
+const BRAND_VERSION = 'doma-glass-v111';
 // Kids curriculum tools release: refresh the app shell and keep learning routes consistent.
 const scopeUrl = new URL('./', self.registration.scope);
 const indexUrl = new URL('./index.html', self.registration.scope);
@@ -251,33 +251,13 @@ self.addEventListener('fetch', event => {
   // the main app-shell fallback when an internal link is followed.
   if (req.mode === 'navigate' && url.pathname === '/programming.html') return;
 
-  // Serve a cached app document immediately. Refresh it in the background so
-  // a slow connection never holds the installed app on a blank launch screen.
+  // Network-first app navigation: an external refresh must receive the newest
+  // HTML immediately. Cached shell is only an offline/temporary-network fallback.
   if (req.mode === 'navigate' && isShellDocument(url) && !hasSensitiveQuery(url)) {
-    const cachePromise = caches.open(CACHE_NAME);
-    const cachedPromise = cachePromise.then(cache => cache.match(normalizeShellUrl(url.href)));
-
-    const refreshPromise = cachedPromise.then(async cached => {
-      if (!cached || !cached.ok) return;
-      try {
-        const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 5000);
-        const contentType = fresh?.headers?.get('content-type') || '';
-        if (fresh && fresh.ok && /text\/html/i.test(contentType)) {
-          const cache = await cachePromise;
-          await cache.put(normalizeShellUrl(url.href), fresh.clone()).catch(() => {});
-        }
-      } catch (_) {}
-    }).catch(() => {});
-    event.waitUntil(refreshPromise);
-
     event.respondWith((async () => {
+      const cachePromise = caches.open(CACHE_NAME);
       try {
-        const cached = await cachedPromise;
-        if (cached && cached.ok) return cached;
-      } catch (_) {}
-
-      try {
-        const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 4500);
+        const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 7000);
         const contentType = fresh?.headers?.get('content-type') || '';
         if (fresh && fresh.ok && /text\/html/i.test(contentType)) {
           const cache = await cachePromise;
@@ -285,7 +265,11 @@ self.addEventListener('fetch', event => {
           return fresh;
         }
       } catch (_) {}
-
+      try {
+        const cache = await cachePromise;
+        const cached = await cache.match(normalizeShellUrl(url.href));
+        if (cached && cached.ok) return cached;
+      } catch (_) {}
       return await navigationFallback(url.href);
     })());
     return;
@@ -298,29 +282,32 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Same-origin static assets use stale-while-revalidate: cached scripts and
-  // images load immediately, while a bounded background request refreshes them.
   const cachePromise = caches.open(CACHE_NAME);
   const cachedPromise = cachePromise.then(cache => cache.match(req));
+  const isCodeAsset = /\.(?:css|m?js)$/i.test(url.pathname);
 
-  const refreshPromise = cachedPromise.then(async cached => {
-    if (!cached) return;
-    try {
-      const fresh = await fetchWithTimeout(req.clone(), {cache:'no-cache'}, 4500);
-      if (fresh && fresh.ok && fresh.type !== 'opaque') {
-        const cache = await cachePromise;
-        await cache.put(req, fresh.clone()).catch(() => {});
-      }
-    } catch (_) {}
-  }).catch(() => {});
-  event.waitUntil(refreshPromise);
-
+  // Network-first for CSS/JavaScript so the newest course design is applied
+  // on the first open. Images and other media retain fast stale-while-revalidate.
   event.respondWith((async () => {
+    if (isCodeAsset) {
+      try {
+        const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 7000);
+        if (fresh && fresh.ok && fresh.type !== 'opaque') {
+          const cache = await cachePromise;
+          await cache.put(req, fresh.clone()).catch(() => {});
+          return fresh;
+        }
+      } catch (_) {}
+      try {
+        const cache = await cachePromise;
+        return (await cache.match(req)) || Response.error();
+      } catch (_) { return Response.error(); }
+    }
+
     try {
       const cached = await cachedPromise;
       if (cached) return cached;
     } catch (_) {}
-
     try {
       const fresh = await fetchWithTimeout(req.clone(), {cache:'no-cache'}, 4500);
       if (fresh && fresh.ok && fresh.type !== 'opaque') {
@@ -334,9 +321,7 @@ self.addEventListener('fetch', event => {
       try {
         const cache = await cachePromise;
         return (await cache.match(req)) || Response.error();
-      } catch (_) {
-        return Response.error();
-      }
+      } catch (_) { return Response.error(); }
     }
   })());
 });
