@@ -1169,3 +1169,83 @@ html body.programming-page .pa20-hero-compact .pa20-hub{margin-top:12px!importan
   html body.programming-page .pa20-tagline{padding-inline-start:31px!important;font-size:8px!important}
   html body.programming-page .pa-code-hero-inline .pa-code-hero-editor{font-size:6px!important}
 }
+
+
+/* 2026-11-18: compact path cards — English title and Arabic summary only. */
+html body.programming-page #learning-paths .pa-track-grid{
+  gap:9px!important;
+}
+html body.programming-page #learning-paths .pa-track-card{
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:5px!important;
+  width:100%!important;
+  min-height:0!important;
+  padding:12px 15px 13px!important;
+  border-radius:15px!important;
+  text-align:right!important;
+  overflow:hidden!important;
+}
+html body.programming-page #learning-paths .pa-track-number{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:flex-start!important;
+  order:0!important;
+  width:27px!important;height:24px!important;
+  margin:0 0 2px!important;
+  border-radius:8px!important;
+  font-size:11px!important;line-height:1!important;
+}
+html body.programming-page #learning-paths .pa-track-number::after{
+  content:""!important;
+  position:absolute!important;
+  width:5px!important;height:5px!important;
+  border-radius:50%!important;
+  top:50%!important;
+  right:-8px!important;
+  transform:translateY(-50%)!important;
+  background:#8ce8b9!important;
+  box-shadow:0 0 7px rgba(140,232,185,.65)!important;
+}
+html body.programming-page #learning-paths .pa-track-content{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:3px!important;
+  width:100%!important;min-width:0!important;
+}
+html body.programming-page #learning-paths .pa-track-content b{
+  display:block!important;
+  margin:0!important;
+  color:#fff4e8!important;-webkit-text-fill-color:#fff4e8!important;
+  font-family:"Cairo","Segoe UI",sans-serif!important;
+  font-size:15px!important;line-height:1.45!important;font-weight:900!important;
+}
+html body.programming-page #learning-paths .pa-track-description{
+  display:block!important;
+  margin:0!important;
+  color:#eee3f2!important;-webkit-text-fill-color:#eee3f2!important;
+  font-family:"Cairo","Segoe UI",sans-serif!important;
+  font-size:11px!important;line-height:1.65!important;font-weight:600!important;
+}
+html body.programming-page #learning-paths .pa-track-content small,
+html body.programming-page #learning-paths .pa-track-meta,
+html body.programming-page #learning-paths .pa-track-arrow{
+  display:none!important;
+}
+@media(max-width:620px){
+  html body.programming-page #learning-paths .pa-track-grid{gap:8px!important}
+  html body.programming-page #learning-paths .pa-track-card{
+    min-height:0!important;padding:10px 12px 11px!important;gap:4px!important;
+  }
+  html body.programming-page #learning-paths .pa-track-number{
+    width:25px!important;height:22px!important;font-size:10px!important;
+  }
+  html body.programming-page #learning-paths .pa-track-content b{font-size:14px!important}
+  html body.programming-page #learning-paths .pa-track-description{font-size:10px!important;line-height:1.6!important}
+}
