@@ -2878,3 +2878,68 @@ html body.programming-page .pa-reader-content code{
   backdrop-filter:none!important;
   text-shadow:none!important;
 }
+
+
+/* Learning paths refinement: larger expressive titles, compact gold number tiles,
+   and clean card edges that blend into the academy's purple glass canvas. */
+html body.programming-page #learning-paths .pa-track-card{
+  grid-template-columns:20px minmax(0,1fr) 18px!important;
+  gap:13px!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:0 10px 26px rgba(13,5,24,.20),inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+html body.programming-page #learning-paths .pa-track-card:hover,
+html body.programming-page #learning-paths .pa-track-card:focus-visible{
+  border:0!important;
+  outline:0!important;
+  box-shadow:0 14px 32px rgba(13,5,24,.28),0 0 18px rgba(232,185,116,.09),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body.programming-page #learning-paths .pa-track-number{
+  display:grid!important;
+  place-items:center!important;
+  width:20px!important;
+  height:20px!important;
+  min-width:20px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  border:1px solid rgba(225,193,233,.20)!important;
+  border-radius:7px!important;
+  background:linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;
+  color:#FFE5BD!important;
+  -webkit-text-fill-color:#FFE5BD!important;
+  font-size:11px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  text-shadow:0 0 8px rgba(255,229,189,.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body.programming-page #learning-paths .pa-track-number span{
+  color:#FFE5BD!important;
+  -webkit-text-fill-color:#FFE5BD!important;
+  font-size:11px!important;
+  line-height:1!important;
+}
+html body.programming-page #learning-paths .pa-track-content>b,
+html body.programming-page #learning-paths .pa-track-content>b *,
+html body.programming-page #learning-paths .pa-track-content strong,
+html body.programming-page #learning-paths .pa-track-content .pa-track-title{
+  color:#D8B8FF!important;
+  -webkit-text-fill-color:#D8B8FF!important;
+  font-size:clamp(18px,2vw,21px)!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+  text-shadow:0 1px 10px rgba(13,5,24,.22)!important;
+}
+@media(max-width:620px){
+  html body.programming-page #learning-paths .pa-track-card{
+    grid-template-columns:20px minmax(0,1fr) 16px!important;
+    gap:11px!important;
+  }
+  html body.programming-page #learning-paths .pa-track-content>b,
+  html body.programming-page #learning-paths .pa-track-content>b *,
+  html body.programming-page #learning-paths .pa-track-content strong,
+  html body.programming-page #learning-paths .pa-track-content .pa-track-title{
+    font-size:18px!important;
+  }
+}
