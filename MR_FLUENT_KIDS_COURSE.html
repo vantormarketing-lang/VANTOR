@@ -80,6 +80,9 @@ body.kid-show-enrol #enrol{display:block!important}
 .kid-letter-card{min-width:0;padding:12px;border:1px solid #dfd2fb;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#f8f3ff 100%);box-shadow:0 8px 20px rgba(94,65,151,.09)}.kid-letter-top{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px}.kid-letter-symbol{font-size:clamp(38px,7vw,58px);font-weight:1000;line-height:1;color:#7650cf;text-align:center}.kid-letter-picture{width:76px;height:76px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:inset 0 0 0 1px #eee5ff}.kid-letter-word{font-size:18px;font-weight:900;text-align:center;margin-top:10px;overflow-wrap:anywhere}.kid-letter-translation{font-size:13px;text-align:center;color:#7458aa;margin-top:2px;direction:rtl}.kid-letter-sound{font-size:12px;color:#655486;text-align:center;margin-top:4px}.kid-letter-card .kid-audio-button{display:block;width:100%;margin-top:9px}.kid-letter-sentence{margin-top:14px;padding:12px;border-radius:14px;background:#f0eaff;text-align:center}.kid-letter-sentence .kid-word-ar{display:block;margin-top:3px}@media(max-width:420px){.kid-letter-grid{grid-template-columns:1fr}.kid-letter-top{grid-template-columns:minmax(0,1fr) 82px}.kid-letter-picture{width:82px;height:82px}}
 /* Focused single-lesson navigation: DOMA glass coffee menu */
 .kid-course-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:15px;align-items:center;margin-bottom:18px}
+.kid-course-header>.kid-level-return{justify-self:start;align-self:center;display:grid;place-items:center;width:38px;height:38px;padding:0;border:0;border-radius:50%;background:transparent!important;box-shadow:none!important;color:inherit;font:700 30px/1 Arial,sans-serif;cursor:pointer;transition:color .18s,transform .18s}
+.kid-course-header>.kid-level-return:hover{background:transparent!important;box-shadow:none!important;color:var(--accent,#d6b36a);transform:translateX(-2px)}
+.kid-course-header>.kid-level-return:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 .kid-course-header>.btn-soft{justify-self:start;align-self:start}
 .kid-course-heading{min-width:0}
 .kid-course-heading h2{margin:5px 0;font-size:clamp(24px,4vw,36px)}
@@ -259,7 +262,7 @@ body.kid-subscription-modal #enrol .request-card{position:relative;max-height:ca
 
 <section id="kidLevelWorkspace" class="kid-level-workspace" hidden><div class="wrap">
  <div class="kid-level-top kid-course-header">
-  <button class="btn btn-soft kid-level-return" type="button" onclick="closeKidLevel()" aria-label="العودة إلى صفحة المستويات">العودة إلى المستويات</button>
+  <button class="kid-level-return" type="button" onclick="closeKidLevel()" aria-label="Go back" title="Go back">←</button>
   <div class="kid-course-heading"><span class="eyebrow"><span class="dot"></span> Mr. Fluent Kids</span><h2 id="kidWorkspaceTitle">Your learning level</h2><p id="kidWorkspaceDescription">اختار درس من القائمة وابدأ التعلّم خطوة بخطوة.</p></div>
   <button id="kidMenuTrigger" class="kid-menu-trigger" type="button" onclick="openKidCourseMenu()" aria-controls="kidCourseMenuOverlay" aria-expanded="false" hidden><span class="kid-menu-trigger-icon" aria-hidden="true">☰</span><span class="kid-menu-trigger-copy"><strong>Learning menu</strong><small>قائمة الدروس والأنشطة</small></span></button>
  </div>
