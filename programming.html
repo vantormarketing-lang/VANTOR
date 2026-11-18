@@ -1138,11 +1138,12 @@ function initializeDomaProgrammingAcademy(){
       title.textContent='الصبورة البرمجية التفاعلية';
       description.textContent='مساحة مستقلة لكتابة الأكواد وتشغيلها وتجربة HTML وCSS وبقية اللغات دون فتح درس.';
     }
+    document.body.classList.toggle('pa-board-tool-view',kind==='board');
     $('paCloseToolPage').textContent='← العودة إلى الأكاديمية';
     page.hidden=false;document.body.classList.add('pa-tool-view');window.scrollTo(0,0);
   }
   function closeStandaloneTool(){
-    $('paToolPage').hidden=true;document.body.classList.remove('pa-tool-view');
+    $('paToolPage').hidden=true;document.body.classList.remove('pa-tool-view','pa-board-tool-view');
   }
   window.__domaProgrammingOpenTool=openStandaloneTool;
   if(window.__domaProgrammingPendingTool){var pendingKind=window.__domaProgrammingPendingTool;window.__domaProgrammingPendingTool='';openStandaloneTool(pendingKind);}
@@ -1375,6 +1376,6 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(params.get('view')==='paths')revealPaths();
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=tricolor-title-dots-20261118">
+<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=immersive-board-view-20261118">
 </body>
 </html>
