@@ -1,321 +1,212 @@
-/* DOMA Programming Academy — unified How It Works glass system
-   Replaces the conflicting Botanical / Glass Neon / legacy academy themes.
-   Layout and behavior remain in programming-academy.css and the page scripts. */
+/* DOMA Programming Academy — match the live main-site visual identity.
+   Palette and card language are aligned with the homepage; behavior/content stay untouched. */
 :root{
-  --pa-glass-bg:rgba(5,27,37,.88);
-  --pa-glass-surface:linear-gradient(150deg,rgba(46,223,224,.15),rgba(4,29,37,.92) 76%);
-  --pa-glass-edge:rgba(91,222,225,.48);
-  --pa-ink:#efffff;
-  --pa-muted:rgba(226,244,247,.74);
-  --pa-teal:#2edfe0;
-  --pa-blue:#43bae7;
-  --pa-mint:#69e4b7;
-  --pa-lilac:#83aeff;
+  --pa-main-bg:#140d1d;
+  --pa-main-bg-2:#21142c;
+  --pa-main-panel:rgba(76,49,94,.62);
+  --pa-main-panel-strong:rgba(54,35,70,.88);
+  --pa-main-edge:rgba(225,193,233,.30);
+  --pa-main-edge-gold:rgba(255,218,174,.42);
+  --pa-main-text:#fff4e8;
+  --pa-main-muted:#e4d5e8;
+  --pa-main-gold:#ffe5bd;
+  --pa-main-gold-2:#e8b974;
+  --pa-main-gold-3:#c98248;
+  --pa-main-purple:#b894e9;
 }
 html:has(body.programming-page),html body.programming-page{
   min-height:100%;
-  background:#061b27!important;
+  background:#140d1d!important;
 }
 html body.programming-page{
-  color:var(--pa-ink)!important;
+  color:var(--pa-main-text)!important;
   background:
-    radial-gradient(ellipse at 12% 5%,rgba(46,223,224,.15),transparent 34%),
-    radial-gradient(ellipse at 88% 18%,rgba(67,186,231,.13),transparent 32%),
-    radial-gradient(ellipse at 50% 100%,rgba(105,228,183,.09),transparent 42%),
-    linear-gradient(155deg,#061b27 0%,#081d2b 48%,#091626 100%)!important;
+    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
+    linear-gradient(145deg,#140d1d 0%,#21142c 52%,#130d1d 100%)!important;
   background-attachment:fixed!important;
 }
+html body.programming-page :is(h1,h2,h3,h4,h5,strong,b){color:var(--pa-main-text)}
+html body.programming-page :is(p,small,.pa-track-description,.pa-track-meta,.pa-reader-summary,.pa-save-note,.pa-note,.pa-free-tutor-status,.pa-free-tutor-note){color:var(--pa-main-muted)!important}
 html body.programming-page .pa-topbar{
-  background:rgba(5,24,34,.76)!important;
-  border:1px solid rgba(120,221,225,.22)!important;
+  background:linear-gradient(135deg,rgba(112,77,133,.72),rgba(49,31,68,.84))!important;
+  border:1px solid rgba(255,218,174,.24)!important;
   border-radius:0 0 18px 18px!important;
-  box-shadow:0 8px 28px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.07)!important;
-  backdrop-filter:blur(20px) saturate(130%)!important;
-  -webkit-backdrop-filter:blur(20px) saturate(130%)!important;
+  box-shadow:0 12px 34px rgba(12,5,23,.20),inset 0 1px 0 rgba(255,255,255,.10)!important;
+  backdrop-filter:blur(18px) saturate(135%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
 }
-html body.programming-page .pa-user-identity,
-html body.programming-page .pa-topbar,
-html body.programming-page .pa-topbar *{color:#efffff!important}
-html body.programming-page .pa-home-link,
-html body.programming-page .pa-global-back{
-  color:#b9f7f4!important;border-color:rgba(91,222,225,.42)!important;
-  background:rgba(46,223,224,.09)!important;border-radius:12px!important;
+html body.programming-page .pa-user-identity{color:var(--pa-main-text)!important}
+html body.programming-page :is(.pa-home-link,.pa-global-back,.pa-tool-trigger){
+  color:var(--pa-main-gold)!important;
+  border:1px solid var(--pa-main-edge-gold)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.12),rgba(106,70,133,.38))!important;
+  border-radius:12px!important;
 }
-html body.programming-page .pa-shell{max-width:1280px!important;color:var(--pa-ink)!important}
-html body.programming-page .pa20-hero,
-html body.programming-page .pa-hero{
+html body.programming-page .pa-shell{max-width:1280px!important;color:var(--pa-main-text)!important}
+html body.programming-page :is(.pa20-hero,.pa-hero){
   position:relative!important;isolation:isolate!important;overflow:hidden!important;
-  border:1px solid rgba(91,222,225,.34)!important;border-radius:24px!important;
-  background:linear-gradient(145deg,rgba(12,52,64,.83),rgba(5,24,36,.92))!important;
-  box-shadow:0 16px 42px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.09)!important;
-  backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important;
+  border:1px solid var(--pa-main-edge-gold)!important;
+  border-radius:28px!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,207,157,.16),transparent 45%),
+    radial-gradient(ellipse at 90% 100%,rgba(170,128,202,.20),transparent 48%),
+    linear-gradient(135deg,rgba(80,52,102,.62),rgba(37,24,54,.82))!important;
+  box-shadow:0 22px 60px rgba(13,5,24,.30),inset 0 1px 0 rgba(255,255,255,.15)!important;
+  backdrop-filter:blur(18px) saturate(130%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(130%)!important;
 }
-html body.programming-page .pa20-hero:before,
-html body.programming-page .pa-hero:before{
+html body.programming-page :is(.pa20-hero:before,.pa-hero:before){
   content:""!important;position:absolute!important;z-index:-1!important;
-  width:360px!important;height:360px!important;right:-150px!important;bottom:-240px!important;
-  border-radius:50%!important;background:radial-gradient(circle,rgba(46,223,224,.19),transparent 68%)!important;
+  width:420px!important;height:420px!important;right:-180px!important;bottom:-280px!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle,rgba(232,185,116,.15),transparent 68%)!important;
 }
-html body.programming-page .pa20-brandline,
-html body.programming-page .pa20-eyebrow,
-html body.programming-page .pa-kicker,
-html body.programming-page .pa20-tagline-ar{color:#83e9e4!important}
-html body.programming-page .pa20-title,
-html body.programming-page .pa20-tagline,
-html body.programming-page .pa-hero h1,
-html body.programming-page .pa-section-heading h2,
-html body.programming-page .pa-panel-heading h2,
-html body.programming-page .pa20-path-head h2{color:#efffff!important}
-html body.programming-page .pa20-title-ar,
-html body.programming-page .pa20-hero-copy p,
-html body.programming-page .pa-section-heading p,
-html body.programming-page .pa-panel-heading p,
-html body.programming-page .pa20-path-head p{color:var(--pa-muted)!important}
+html body.programming-page :is(.pa20-brandline,.pa20-eyebrow,.pa-kicker,.pa20-tagline-ar,.pa-free-tutor-label){
+  color:var(--pa-main-gold)!important;
+}
+html body.programming-page :is(.pa20-title,.pa20-tagline,.pa-hero h1,.pa-section-heading h2,.pa-panel-heading h2,.pa20-path-head h2){
+  color:var(--pa-main-text)!important;
+}
+html body.programming-page :is(.pa20-title-ar,.pa20-hero-copy p,.pa-section-heading p,.pa-panel-heading p,.pa20-path-head p){
+  color:var(--pa-main-muted)!important;
+}
 html body.programming-page .pa20-brandmark{
-  color:#eaffff!important;background:linear-gradient(145deg,#2edfe0,#147b91)!important;
-  box-shadow:0 0 18px rgba(46,223,224,.18)!important;
+  color:#4b2d46!important;
+  background:linear-gradient(135deg,#ffe5bd 0%,#e8b974 58%,#c98248 100%)!important;
+  box-shadow:0 8px 20px rgba(35,15,37,.24),0 0 18px rgba(244,190,128,.12)!important;
 }
-html body.programming-page .pa20-hero-cta,
-html body.programming-page .pa-primary-btn,
-html body.programming-page .pa-project-submit,
-html body.programming-page .pa-daily-actions button:not(.secondary),
-html body.programming-page .pa-free-tutor-send,
-html body.programming-page .pa-lab-run{
-  color:#06212a!important;border:1px solid rgba(131,244,235,.65)!important;
-  background:linear-gradient(120deg,#8af0e2,#43bae7)!important;
-  box-shadow:0 8px 20px rgba(46,223,224,.15)!important;
+html body.programming-page :is(.pa20-hero-cta,.pa-primary-btn,.pa-project-submit,.pa-daily-actions button:not(.secondary),.pa-free-tutor-send,.pa-lab-run,.pa-submit-payment){
+  color:#4b2d46!important;
+  border:1px solid rgba(255,237,207,.9)!important;
+  background:linear-gradient(135deg,#ffe5bd 0%,#e8b974 55%,#c98248 100%)!important;
+  box-shadow:0 10px 24px rgba(35,15,37,.25),inset 0 1px 0 rgba(255,255,255,.55)!important;
+}
+html body.programming-page :is(.pa20-hub-card,.pa-track-card,.pa-project-card,.pa-daily-card,.pa-side-card,.pa-progress-cards>*,.pa-student-progress,.pa-lessons-panel,.pa-lesson-reader,.pa-projects-section,.pa-daily-challenges,.pa-admin-learning,.pa-admin-student-reports,.pa-admin-learning-queue,.pa-free-tutor,.pa-global-tutor,.pa-code-lab,.pa-tool-page,.pa-modal-card){
+  color:var(--pa-main-text)!important;
+  border:1px solid var(--pa-main-edge)!important;
+  border-radius:20px!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.78))!important;
+  box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(16px) saturate(130%)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(130%)!important;
+}
+html body.programming-page :is(.pa20-hub-card,.pa-track-card,.pa-project-card,.pa-daily-card,.pa-side-card,.pa-lessons-panel,.pa-lesson-reader,.pa-code-lab,.pa-tool-page)>*{
+  position:relative;z-index:1;
 }
 html body.programming-page .pa20-hub{
-  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:12px!important;
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;
 }
-html body.programming-page .pa20-hub-card,
-html body.programming-page .pa-track-card,
-html body.programming-page .pa-project-card,
-html body.programming-page .pa-daily-card,
-html body.programming-page .pa-side-card,
-html body.programming-page .pa-progress-cards>*,
-html body.programming-page .pa-student-progress,
-html body.programming-page .pa-lessons-panel,
-html body.programming-page .pa-lesson-reader,
-html body.programming-page .pa-projects-section,
-html body.programming-page .pa-daily-challenges,
-html body.programming-page .pa-admin-learning,
-html body.programming-page .pa-admin-student-reports,
-html body.programming-page .pa-admin-learning-queue,
-html body.programming-page .pa-free-tutor,
-html body.programming-page .pa-global-tutor,
-html body.programming-page .pa-code-lab,
-html body.programming-page .pa-tool-page,
-html body.programming-page .pa-modal-card{
-  position:relative!important;isolation:isolate!important;overflow:hidden!important;
-  border:1px solid var(--pa-glass-edge)!important;border-radius:16px!important;
-  background:var(--pa-glass-surface)!important;background-color:var(--pa-glass-bg)!important;
-  color:var(--pa-ink)!important;
-  box-shadow:inset 0 1px 0 rgba(230,255,255,.07),0 10px 25px rgba(0,0,0,.17)!important;
-  backdrop-filter:blur(18px) saturate(1.12)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
-}
-html body.programming-page .pa20-hub-card:before,
-html body.programming-page .pa-track-card:before,
-html body.programming-page .pa-project-card:before,
-html body.programming-page .pa-daily-card:before,
-html body.programming-page .pa-side-card:before,
-html body.programming-page .pa-lessons-panel:before,
-html body.programming-page .pa-lesson-reader:before,
-html body.programming-page .pa-code-lab:before,
-html body.programming-page .pa-tool-page:before{
-  content:""!important;position:absolute!important;inset:0!important;z-index:0!important;
-  pointer-events:none!important;border-radius:inherit!important;
-  background:linear-gradient(118deg,rgba(255,255,255,.075),rgba(255,255,255,.012) 55%,transparent)!important;
-}
-html body.programming-page .pa20-hub-card>*,
-html body.programming-page .pa-track-card>*,
-html body.programming-page .pa-project-card>*,
-html body.programming-page .pa-daily-card>*,
-html body.programming-page .pa-side-card>*,
-html body.programming-page .pa-lessons-panel>*,
-html body.programming-page .pa-lesson-reader>*,
-html body.programming-page .pa-code-lab>*,
-html body.programming-page .pa-tool-page>*{position:relative!important;z-index:1!important}
 html body.programming-page .pa20-hub-card{
-  min-width:0!important;min-height:130px!important;padding:17px!important;
-  align-items:flex-start!important;justify-content:space-between!important;
-  text-align:start!important;cursor:pointer!important;pointer-events:auto!important;
-  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+  min-width:0!important;min-height:136px!important;padding:18px!important;
+  align-items:flex-start!important;justify-content:space-between!important;text-align:start!important;
+  cursor:pointer!important;pointer-events:auto!important;
+  transition:transform .18s,border-color .18s,box-shadow .18s!important;
 }
-html body.programming-page .pa20-hub-card strong,
-html body.programming-page .pa-track-content b,
-html body.programming-page .pa-lesson-copy b,
-html body.programming-page .pa-project-card h3,
-html body.programming-page .pa-side-card h3,
-html body.programming-page .pa-lesson-reader h2,
-html body.programming-page .pa-tool-page h2,
-html body.programming-page .pa-tool-page h3{color:#f0ffff!important}
-html body.programming-page .pa20-hub-card small,
-html body.programming-page .pa-track-description,
-html body.programming-page .pa-track-meta,
-html body.programming-page .pa-side-card p,
-html body.programming-page .pa-project-card p,
-html body.programming-page .pa-section-heading p,
-html body.programming-page .pa-panel-heading p,
-html body.programming-page .pa-reader-summary,
-html body.programming-page .pa-reader-content,
-html body.programming-page .pa-reader-content p,
-html body.programming-page .pa-reader-content li,
-html body.programming-page .pa-tool-page p{color:var(--pa-muted)!important}
-html body.programming-page .pa20-hub-card strong:before,
-html body.programming-page .pa-track-content b:before{
-  content:""!important;display:inline-block!important;width:7px!important;height:7px!important;
-  margin:0 0 2px 8px!important;border-radius:50%!important;
-  background:#2edfe0!important;box-shadow:0 0 10px rgba(46,223,224,.85)!important;
-  vertical-align:middle!important;
+html body.programming-page :is(.pa20-hub-card strong,.pa-track-content b,.pa-lesson-copy b,.pa-project-card h3,.pa-side-card h3,.pa-lesson-reader h2,.pa-tool-page h2,.pa-tool-page h3){
+  color:var(--pa-main-text)!important;
 }
-html body.programming-page .pa20-hub-card:nth-child(2) strong:before,
-html body.programming-page .pa-track-card:nth-child(4n+2) .pa-track-content b:before{background:#43bae7!important;box-shadow:0 0 10px rgba(67,186,231,.85)!important}
-html body.programming-page .pa20-hub-card:nth-child(3) strong:before,
-html body.programming-page .pa-track-card:nth-child(4n+3) .pa-track-content b:before{background:#69e4b7!important;box-shadow:0 0 10px rgba(105,228,183,.85)!important}
-html body.programming-page .pa20-hub-card:nth-child(4) strong:before,
-html body.programming-page .pa-track-card:nth-child(4n) .pa-track-content b:before{background:#83aeff!important;box-shadow:0 0 10px rgba(131,174,255,.85)!important}
-html body.programming-page .pa20-hub-icon,
-html body.programming-page .pa-track-number,
-html body.programming-page .pa-lesson-index,
-html body.programming-page .pa-side-icon{
-  color:#a9f3ef!important;border:1px solid rgba(91,222,225,.42)!important;
-  background:rgba(46,223,224,.10)!important;
+html body.programming-page :is(.pa20-hub-card small,.pa-track-description,.pa-track-meta,.pa-side-card p,.pa-project-card p,.pa-reader-summary,.pa-reader-content,.pa-reader-content p,.pa-reader-content li,.pa-tool-page p){
+  color:var(--pa-main-muted)!important;
 }
-html body.programming-page .pa20-hub-arrow,
-html body.programming-page .pa-track-arrow,
-html body.programming-page .pa-track-content small,
-html body.programming-page .pa-progress-count,
-html body.programming-page .pa-roadmap-label,
-html body.programming-page .pa-kicker,
-html body.programming-page .pa-free-tutor-label{color:#83e9e4!important}
-html body.programming-page .pa-track-grid{gap:12px!important}
+html body.programming-page :is(.pa20-hub-icon,.pa-track-number,.pa-lesson-index,.pa-side-icon,.pa-progress-count,.pa-roadmap-label){
+  color:var(--pa-main-gold)!important;
+  border:1px solid rgba(255,218,174,.38)!important;
+  background:linear-gradient(135deg,rgba(255,218,174,.13),rgba(112,76,134,.36))!important;
+}
+html body.programming-page :is(.pa20-hub-arrow,.pa-track-arrow,.pa-track-content small,.pa-progress-count,.pa-roadmap-label,.pa-free-tutor-label){
+  color:var(--pa-main-gold)!important;
+}
+html body.programming-page .pa-track-grid{gap:14px!important}
 html body.programming-page .pa-track-card{
   grid-template-columns:40px minmax(0,1fr) 20px!important;gap:13px!important;
-  padding:17px!important;text-align:start!important;cursor:pointer!important;
-  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+  padding:18px!important;text-align:start!important;cursor:pointer!important;
+  transition:transform .18s,border-color .18s,box-shadow .18s!important;
 }
-html body.programming-page .pa-track-card:nth-child(4n+2){border-color:rgba(67,186,231,.48)!important}
-html body.programming-page .pa-track-card:nth-child(4n+3){border-color:rgba(105,228,183,.48)!important}
-html body.programming-page .pa-track-card:nth-child(4n){border-color:rgba(131,174,255,.48)!important}
-html body.programming-page .pa-track-card:hover,
-html body.programming-page .pa-track-card.active,
-html body.programming-page .pa20-hub-card:hover{
-  border-color:rgba(131,244,235,.85)!important;
-  box-shadow:inset 0 1px 0 rgba(230,255,255,.10),0 0 17px rgba(46,223,224,.13),0 12px 26px rgba(0,0,0,.2)!important;
+html body.programming-page :is(.pa20-hub-card:hover,.pa-track-card:hover,.pa-track-card.active,.pa-lesson-row:hover,.pa-lesson-row.selected){
+  border-color:rgba(255,218,174,.72)!important;
+  box-shadow:0 18px 42px rgba(12,5,23,.30),0 0 20px rgba(232,185,116,.09),inset 0 1px 0 rgba(255,255,255,.15)!important;
   transform:translateY(-2px)!important;
 }
 html body.programming-page .pa-lesson-row{
-  color:#efffff!important;border:1px solid rgba(91,222,225,.24)!important;
-  background:rgba(4,24,34,.58)!important;border-radius:12px!important;
+  color:var(--pa-main-text)!important;border:1px solid rgba(225,193,233,.24)!important;
+  background:linear-gradient(145deg,rgba(68,44,87,.42),rgba(31,21,45,.72))!important;
+  border-radius:14px!important;
 }
-html body.programming-page .pa-lesson-row small,
-html body.programming-page .pa-lesson-duration{color:var(--pa-muted)!important}
-html body.programming-page .pa-lesson-row:hover,
-html body.programming-page .pa-lesson-row.selected{
-  border-color:rgba(91,222,225,.7)!important;background:rgba(46,223,224,.10)!important;
-}
+html body.programming-page :is(.pa-lesson-row small,.pa-lesson-duration){color:var(--pa-main-muted)!important}
 html body.programming-page .pa-progress-track{background:rgba(255,255,255,.10)!important}
-html body.programming-page .pa-progress-track i{background:linear-gradient(90deg,#2edfe0,#69e4b7)!important}
-html body.programming-page .pa-outline-btn,
-html body.programming-page .pa-track-back,
-html body.programming-page .pa-path-close,
-html body.programming-page .pa-lab-secondary{
-  color:#a9f3ef!important;border:1px solid rgba(91,222,225,.4)!important;
-  background:rgba(46,223,224,.07)!important;
+html body.programming-page .pa-progress-track i{background:linear-gradient(90deg,#c98248,#e8b974,#ffe5bd)!important}
+html body.programming-page :is(.pa-outline-btn,.pa-track-back,.pa-path-close,.pa-lab-secondary,.pa-daily-actions button.secondary,.pa-free-tutor-actions button){
+  color:var(--pa-main-gold)!important;
+  border:1px solid rgba(255,218,174,.40)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(82,53,104,.42))!important;
 }
-html body.programming-page .pa-empty-state,
-html body.programming-page .pa-loading{
-  color:var(--pa-muted)!important;border:1px dashed rgba(91,222,225,.38)!important;
-  background:rgba(5,27,37,.58)!important;
+html body.programming-page :is(.pa-empty-state,.pa-loading,.pa-project-status,.pa-daily-hints,.pa-daily-result,.pa-free-tutor-answer,.pa-code-output,.pa-test-output){
+  color:var(--pa-main-text)!important;border:1px solid rgba(225,193,233,.24)!important;
+  background:rgba(19,13,29,.72)!important;border-radius:14px!important;
 }
-html body.programming-page .pa-reader-content h3,
-html body.programming-page .pa-reader-content h4,
-html body.programming-page .pa-reader-content h5,
-html body.programming-page .pa-project-rubric h4{color:#8cebe4!important}
-html body.programming-page .pa-reader-content a{color:#8bd8ff!important}
+html body.programming-page .pa-reader-content{
+  color:#fff4e8!important;font-size:14px!important;line-height:2!important;
+}
+html body.programming-page .pa-reader-content :is(p,li,ul,ol){color:#f1e5f0!important}
+html body.programming-page .pa-reader-content :is(h3,h4,h5){color:var(--pa-main-gold)!important}
 html body.programming-page .pa-reader-content code{
-  color:#aaf3e8!important;background:rgba(46,223,224,.10)!important;
-  border:1px solid rgba(91,222,225,.22)!important;
+  color:#ffe5bd!important;background:rgba(255,218,174,.10)!important;border-color:rgba(255,218,174,.22)!important;
 }
-html body.programming-page .pa-reader-content pre,
-html body.programming-page .pa-reader-content pre code,
-html body.programming-page .pa-daily-editor,
-html body.programming-page .pa-code-editor,
-html body.programming-page .pa-code-output,
-html body.programming-page .pa-test-output{
-  color:#efffff!important;background:#06131e!important;border:1px solid rgba(91,222,225,.28)!important;
+html body.programming-page :is(.pa-code-editor,.pa-daily-editor,.pa-code-output,.pa-test-output,.pa-code-window,pre){
+  background:#100b17!important;color:#f6eee2!important;border-color:rgba(225,193,233,.28)!important;
 }
-html body.programming-page .pa-code-editor,
-html body.programming-page .pa-code-output,
-html body.programming-page .pa-test-output{direction:ltr!important;text-align:left!important}
-html body.programming-page .pa-code-editor:focus,
-html body.programming-page input:focus,
-html body.programming-page textarea:focus,
-html body.programming-page select:focus{
-  outline:none!important;border-color:#65dedb!important;box-shadow:0 0 0 3px rgba(46,223,224,.12)!important;
+html body.programming-page :is(.pa-free-tutor-question input,.pa-form-input,.pa-admin-learning-filters input,.pa-admin-learning-filters select,.pa-code-select){
+  color:var(--pa-main-text)!important;border:1px solid rgba(225,193,233,.38)!important;
+  background:linear-gradient(135deg,rgba(54,35,73,.72),rgba(37,25,53,.90))!important;
 }
-html body.programming-page .pa-shell input,
-html body.programming-page .pa-shell textarea,
-html body.programming-page .pa-shell select,
-html body.programming-page .pa-form-input,
-html body.programming-page .pa-code-select,
-html body.programming-page .pa-code-input{
-  color:#efffff!important;border:1px solid rgba(91,222,225,.32)!important;
-  background:rgba(4,24,34,.82)!important;border-radius:11px!important;
+html body.programming-page :is(.pa-free-tutor-question input,.pa-form-input,.pa-admin-learning-filters input,.pa-admin-learning-filters select,.pa-code-select)::placeholder{color:#d8c8e2!important}
+html body.programming-page :is(.pa-modal-backdrop){background:rgba(19,10,30,.78)!important;backdrop-filter:blur(12px)!important}
+html body.programming-page .pa-modal-card{
+  background:radial-gradient(ellipse at 35% 0%,rgba(255,202,157,.18),transparent 55%),linear-gradient(145deg,rgba(111,74,132,.96),rgba(42,28,61,.98))!important;
+  border-color:rgba(255,218,174,.48)!important;
 }
-html body.programming-page .pa-shell input::placeholder,
-html body.programming-page .pa-shell textarea::placeholder{color:rgba(226,244,247,.48)!important}
-html body.programming-page .pa-form-label,
-html body.programming-page .pa-project-form label,
-html body.programming-page .pa-input-label,
-html body.programming-page .pa-lab-toolbar label{color:#b7f2ee!important}
-html body.programming-page .pa-modal-backdrop{background:rgba(1,12,19,.76)!important;backdrop-filter:blur(10px)!important}
-html body.programming-page .pa-modal-card{color:#efffff!important;border-color:rgba(91,222,225,.42)!important}
-html body.programming-page .pa-modal-card h2{color:#efffff!important}
-html body.programming-page .pa-modal-copy,
-html body.programming-page .pa-modal-price span,
-html body.programming-page .pa-cash-number span,
-html body.programming-page .pa-cash-number small{color:var(--pa-muted)!important}
-html body.programming-page .pa-modal-price,
-html body.programming-page .pa-cash-number{border-color:rgba(91,222,225,.3)!important;background:rgba(46,223,224,.06)!important}
-html body.programming-page .pa-modal-price strong,
-html body.programming-page .pa-cash-number strong{color:#8cebe4!important}
-html body.programming-page .pa-footer{color:var(--pa-muted)!important;border-top-color:rgba(91,222,225,.2)!important}
-html body.programming-page .pa-footer span:first-child{color:#83e9e4!important}
-html body.programming-page .pa-toast{color:#efffff!important;border-color:rgba(91,222,225,.38)!important;background:#092633!important}
-html body.programming-page .pa20-path-head h2{color:#efffff!important}
-html body.programming-page .pa20-path-close{cursor:pointer!important}
-html body.programming-page .pa20-hub-card *{pointer-events:none}
-html body.programming-page .pa20-hub-card{pointer-events:auto!important;z-index:5!important}
-html body.programming-page .pa-tool-page[hidden],
-html body.programming-page #learning-paths[hidden],
-html body.programming-page .pa-path-section[hidden]{display:none!important}
+html body.programming-page :is(.pa-modal-card h2,.pa-modal-price strong,.pa-cash-number strong,.pa-form-label){color:var(--pa-main-gold)!important}
+html body.programming-page :is(.pa-modal-copy,.pa-modal-price span,.pa-cash-number span,.pa-cash-number small){color:var(--pa-main-muted)!important}
+html body.programming-page .pa-footer{color:var(--pa-main-muted)!important;border-top-color:rgba(225,193,233,.20)!important}
+html body.programming-page .pa-footer span:first-child{color:var(--pa-main-gold)!important}
+html body.programming-page .pa-tool-page{
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(155,111,188,.22),transparent 38%),
+    linear-gradient(145deg,#170f22,#241632 55%,#120c1d)!important;
+}
+html body.programming-page .pa-toast{
+  color:var(--pa-main-text)!important;border-color:var(--pa-main-edge-gold)!important;
+  background:linear-gradient(145deg,#523765,#2b1c3a)!important;
+}
 @media(max-width:900px){
- html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
-@media(max-width:760px){
- html body.programming-page .pa20-hero{grid-template-columns:1fr!important;min-height:0!important;padding:20px 15px!important}
- html body.programming-page .pa20-hero-copy{text-align:center!important}
- html body.programming-page .pa20-brandline{justify-content:center!important}
- html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
- html body.programming-page .pa20-hub-card{min-height:118px!important;padding:12px!important}
- html body.programming-page .pa20-hub-card strong{font-size:12px!important;line-height:1.4!important}
- html body.programming-page .pa20-hub-card small{font-size:9px!important}
- html body.programming-page .pa-track-grid{grid-template-columns:1fr!important}
- html body.programming-page .pa-track-card{grid-template-columns:34px minmax(0,1fr) 16px!important;padding:13px!important;gap:10px!important}
- html body.programming-page .pa-learning-layout{grid-template-columns:1fr!important}
- html body.programming-page .pa-section-heading,
- html body.programming-page .pa-panel-heading{align-items:flex-start!important;flex-direction:column!important}
+@media(max-width:700px){
+  html body.programming-page .pa20-hero,html body.programming-page .pa-hero{border-radius:22px!important}
+  html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  html body.programming-page .pa20-hub-card{min-height:116px!important;padding:14px!important}
+  html body.programming-page .pa-track-grid{grid-template-columns:1fr!important}
+  html body.programming-page .pa-track-card{padding:14px!important;grid-template-columns:34px minmax(0,1fr) 16px!important;gap:10px!important}
+  html body.programming-page .pa-projects-section,html body.programming-page .pa-daily-challenges{padding:14px!important}
 }
-@media(max-width:380px){
- html body.programming-page .pa20-hub{gap:7px!important}
- html body.programming-page .pa20-hub-card{min-height:108px!important;padding:9px!important}
- html body.programming-page .pa20-hub-card strong{font-size:10px!important}
+@media(max-width:520px){
+  html body.programming-page .pa-shell{width:92%!important;padding-top:20px!important}
+  html body.programming-page .pa20-hub-card{min-height:108px!important}
+  html body.programming-page .pa-lesson-row{grid-template-columns:30px minmax(0,1fr)!important;gap:9px!important}
+  html body.programming-page .pa-lesson-duration{grid-column:2}
+  html body.programming-page .pa-lessons-panel,html body.programming-page .pa-lesson-reader{padding:15px!important}
 }
-@media(prefers-reduced-motion:reduce){
- html body.programming-page .pa20-hub-card,
- html body.programming-page .pa-track-card{transition:none!important}
-}
+/* Preserve all existing academy visibility and interaction states. */
+html body.programming-page .pa-path-section[hidden],
+html body.programming-page .pa-tool-page[hidden],
+html body.programming-page .pa-modal[hidden]{display:none!important}
+html body.programming-page.pa-track-view .pa20-hero,
+html body.programming-page.pa-track-view .pa20-hub,
+html body.programming-page.pa-lesson-page-view .pa20-hero,
+html body.programming-page.pa-lesson-page-view .pa20-hub,
+html body.programming-page.pa-tool-view .pa20-hero,
+html body.programming-page.pa-tool-view .pa20-hub{display:none!important}
