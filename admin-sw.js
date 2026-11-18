@@ -43,6 +43,9 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
+
+  // Leave Supabase and all third-party requests completely outside this worker.
+  if (url.origin !== self.location.origin) return;
   const isAdminDocument = req.mode === 'navigate' ||
     (url.origin === self.location.origin && url.pathname.endsWith('/admin.html'));
 
