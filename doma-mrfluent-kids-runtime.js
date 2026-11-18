@@ -2795,6 +2795,7 @@ async function kidsJourneyBindAuthRefresh(){
   client.auth.onAuthStateChange(function(event){
     if(event!=='SIGNED_IN'&&event!=='SIGNED_OUT'&&event!=='TOKEN_REFRESHED')return;
     if(route==='subscribe'||route==='entry'){kidsJourneyLoadPaymentState(kidsJourneyDefinition(query.get('level')||'A1').code);return;}
+    if(route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||route==='review'){kidsJourneyHandlePreCourseRoute(route);return;}
     var item=journeyLevels.find(function(x){return x.route===route;});
     if(item)kidsJourneyRenderLevelGate(item.code,function(){kidsJourneyRenderLevel(item.code);});
   });
@@ -2834,7 +2835,7 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
     kidsJourneyBindAuthRefresh();
     return;
   }
-  if(routeName==='map'||routeName==='parents'||routeName==='lab')window.__mfKidsToolsAuthorized=false;
+  if(routeName==='map'||routeName==='parents'||routeName==='lab'||routeName==='review')window.__mfKidsToolsAuthorized=false;
   if(routeName==='parents'){await kidsJourneyHandleParentRoute();return;}
   var ctx;
   var cachedContext=window.__mfKidsJourneyAccessContext||null;
@@ -2869,7 +2870,7 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
       window.location.replace(url('hub'));return;
     }
     if(routeName==='hub'){window.__mfKidsJourneyAccessContext=ctx;renderHub();return;}
-    if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;} if(routeName==='map'){renderCourseMap();return;} if(routeName==='parents'){renderParentOverview();return;} if(routeName==='lab'){renderLearningLab();return;}
+    if(routeName==='younger'||routeName==='older'){renderLevels(routeName);return;} if(routeName==='map'){renderCourseMap();return;} if(routeName==='parents'){renderParentOverview();return;} if(routeName==='lab'){renderLearningLab();return;} if(routeName==='review'){renderReview();return;}
   }
   if(ctx.latest&&kidsJourneyIsTerminalRequest(ctx.latest))kidsJourneyClearPendingMarker(ctx.user&&ctx.user.id);
   if(ctx.pending||(kidsJourneyHasPendingMarker(ctx.user&&ctx.user.id)&&!(ctx.latest&&kidsJourneyIsTerminalRequest(ctx.latest)))){
@@ -2885,7 +2886,7 @@ async function kidsJourneyAfterAuth(){
     await kidsJourneyLoadPaymentState(kidsJourneyDefinition(query.get('level')||'A1').code);
     return;
   }
-  if(route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'){
+  if(route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||route==='review'){
     await kidsJourneyHandlePreCourseRoute(route);
     return;
   }
@@ -2902,7 +2903,7 @@ async function kidsJourneyAfterAuth(){
     window.location.replace(kidsJourneySubscribeUrl(item.code));
   }
 }
-window.__mfKidsEntryFlow=(route==='subscribe'||route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||journeyLevels.some(function(item){return item.route===route;}));
+window.__mfKidsEntryFlow=(route==='subscribe'||route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||route==='review'||journeyLevels.some(function(item){return item.route===route;}));
 window.__mfKidsAfterAuth=kidsJourneyAfterAuth;
 
 function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
@@ -2911,9 +2912,7 @@ function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
   route=next;query=new URLSearchParams(window.location.search);
   syncKidsRouteMode(route);
   if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
-  else if(route==='hub'){renderHub();}
-  else if(route==='younger'||route==='older'){renderLevels(route);}
-  else if(route==='entry'||route==='map'||route==='parents'||route==='lab'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
+  else if(route==='hub'||route==='younger'||route==='older'||route==='entry'||route==='map'||route==='parents'||route==='lab'||route==='review'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
   else{
     var item=journeyLevels.find(function(level){return level.route===route;});
     if(item){kidsJourneyBindAuthRefresh();kidsJourneyRenderLevelGate(item.code,function(){kidsJourneyRenderLevel(item.code);journeyRenderCurrent();});}
@@ -2957,7 +2956,6 @@ else if(route==='a1'||route==='a2'||route==='b1'||route==='b2'||route==='c1'||ro
   if(requestedKidsLevel){kidsJourneyRenderLevelGate(requestedKidsLevel.code,function(){kidsJourneyRenderLevel(requestedKidsLevel.code);});kidsJourneyBindAuthRefresh();}
   else renderHub();
 }
-else if(route==='review')renderReview();
 else if(route==='soon')renderSoon();
 else renderHub();
 // Apply after the Kids content is rendered so its own cards remain visible.
