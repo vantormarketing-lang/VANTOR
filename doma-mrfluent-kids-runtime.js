@@ -9,7 +9,37 @@ var inlineKidsMode=(route==='entry'||route==='subscribe');
 document.body.classList.add(inlineKidsMode?'mf-kids-inline-route':'mf-kids-route');
 var root = document.getElementById('mfKidsStandaloneRoot') || document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
+
 if (!root.parentNode) document.body.appendChild(root);
+
+// Put one clear back arrow at the top-left of every individual Kids level page.
+// The arrow returns to that level's group page; legacy text navigation is removed.
+function mfkjInstallLevelTopBack(){
+  var levelRoutes=['a1','a2','b1','b2','c1','c2'];
+  if(levelRoutes.indexOf(route)<0)return;
+  var target=(route==='a1'||route==='b1'||route==='c1')?'younger':'older';
+  var old=root.querySelector('#mfkjLevelTopBack');
+  if(!old){
+    old=document.createElement('header');
+    old.id='mfkjLevelTopBack';
+    old.className='mfkj-level-top-back';
+    old.innerHTML='<a href="'+url('GROUP_TARGET')+'" aria-label="الرجوع إلى قائمة المستويات" title="الرجوع إلى قائمة المستويات">←</a>'.replace('GROUP_TARGET',target);
+    root.insertBefore(old,root.firstChild);
+  }
+  root.querySelectorAll('a,button').forEach(function(el){
+    var label=(el.textContent||'').replace(/\\s+/g,' ').trim();
+    if(/^(العودة للقائمة الرئيسية|العودة للمستويات|العودة للمستوى|الرجوع للمستويات|الرجوع إلى قائمة المستويات|Back to course levels|Back to Kids paths|Back to levels|Back to paths|Return to main list|Return to levels)$/i.test(label)){
+      if(el.closest('#mfkjLevelTopBack'))return;
+      el.remove();
+    }
+  });
+}
+if(['a1','a2','b1','b2','c1','c2'].indexOf(route)>=0){
+  var mfkjBackObserver=new MutationObserver(function(){mfkjInstallLevelTopBack();});
+  mfkjBackObserver.observe(root,{childList:true,subtree:true});
+  mfkjInstallLevelTopBack();
+}
+
 
 // Isolate the Kids route from the academy DOM instead of relying on a list of section IDs.
 // The grade cards are nested/initialized by other page code, so hide every element outside
