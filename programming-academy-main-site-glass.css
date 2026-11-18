@@ -2076,3 +2076,29 @@ html body:has(.handbook) .handbook-back{
     right:auto!important;
   }
 }
+
+
+/* Track cards: bright mint-green English titles and absolutely no decorative dots. */
+html body.programming-page #learning-paths .pa-track-content b,
+html body.programming-page #learning-paths .pa-track-content b *,
+html body.programming-page #learning-paths .pa-track-content small{
+  color:#75f0c2!important;
+  -webkit-text-fill-color:#75f0c2!important;
+  text-shadow:0 0 12px rgba(91,235,185,.16)!important;
+}
+html body.programming-page #learning-paths .pa-track-number::before,
+html body.programming-page #learning-paths .pa-track-number::after,
+html body.programming-page #learning-paths .pa-track-number span::before,
+html body.programming-page #learning-paths .pa-track-number span::after{
+  content:none!important;
+  display:none!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  box-shadow:none!important;
+  background-image:none!important;
+}
+html body.programming-page #learning-paths .pa-track-number{
+  position:relative!important;
+  background-image:none!important;
+  box-shadow:none!important;
+}
