@@ -1318,3 +1318,53 @@ html body.programming-page .pa20-hero-compact .pa20-hub{
     margin-top:22px!important;
   }
 }
+
+
+/* 2026-11-18: editor width matches one academy hub card; retain its current height. */
+html body.programming-page .pa20-hero-header{
+  gap:12px!important;
+}
+html body.programming-page .pa20-brand-copy{
+  flex:1 1 0!important;
+  min-width:0!important;
+}
+html body.programming-page .pa-code-hero-inline{
+  flex:0 0 calc((100% - 12px)/2)!important;
+  width:calc((100% - 12px)/2)!important;
+  min-width:0!important;
+}
+html body.programming-page .pa-code-hero-inline .pa-code-hero-window{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+html body.programming-page .pa-code-hero-inline .pa-code-hero-filename{
+  display:none!important;
+}
+html body.programming-page .pa-code-hero-inline .pa-code-hero-dots{
+  gap:10px!important;
+  margin-right:3px!important;
+}
+html body.programming-page .pa-code-hero-inline .pa-code-hero-dots i{
+  width:8px!important;height:8px!important;
+}
+@media(max-width:700px){
+  html body.programming-page .pa20-hero-header{
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:16px!important;
+  }
+  html body.programming-page .pa20-brand-copy{
+    flex:0 0 auto!important;
+  }
+  html body.programming-page .pa-code-hero-inline{
+    flex:0 0 auto!important;
+    width:100%!important;
+  }
+  html body.programming-page .pa-code-hero-inline .pa-code-hero-dots{
+    gap:10px!important;
+  }
+  html body.programming-page .pa-code-hero-inline .pa-code-hero-dots i{
+    width:7px!important;height:7px!important;
+  }
+}
