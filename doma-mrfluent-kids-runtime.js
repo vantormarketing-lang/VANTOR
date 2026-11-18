@@ -2858,8 +2858,9 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
     return;
   }
   if(!ctx||!ctx.user){
-    kidsJourneyRenderEntryScreen('Create your DOMA Academy account or sign in. The full-course subscription page opens next.','is-warn');
-    if(typeof openAuth==='function')setTimeout(function(){try{openAuth('signup');}catch(error){console.warn('Kids signup form could not be opened.',error);}},100);
+    // Show the subscription screen immediately; sign-in/sign-up actions remain available there.
+    // The main academy stays isolated behind the Kids route until the user leaves it.
+    kidsJourneyRenderSubscription();
     return;
   }
   window.__mfKidsJourneyAccessContext=ctx;
