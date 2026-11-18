@@ -367,3 +367,11 @@ body.mf-kids-route #mfKidsStandaloneRoot{display:block!important;visibility:visi
 #mfKidsStandaloneRoot .mfkr-back-arrow:focus-visible{outline:2px solid #91f0db;outline-offset:3px}
 #mfKidsStandaloneRoot .mfkr-nav{justify-content:flex-start!important}
 @media(max-width:520px){#mfKidsStandaloneRoot .mfkr-brand-group{gap:9px}#mfKidsStandaloneRoot .mfkr-back-arrow{flex-basis:32px;width:32px;height:32px}}
+
+/* Kids subscription entry stays inside the main homepage, immediately after FAQ/terms. */
+body.mf-kids-inline-route{display:block!important;min-height:100vh!important;margin:0!important;padding:0!important}
+body.mf-kids-inline-route #mfKidsStandaloneRoot{display:block!important;visibility:visible!important;position:relative!important;z-index:3!important;width:calc(100% - 32px)!important;max-width:1120px!important;min-height:0!important;margin:26px auto 42px!important;padding:0!important;overflow:visible!important;background:transparent!important;color:#fff7ff!important;font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif!important}
+body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-top{position:relative!important;top:auto!important;margin-bottom:16px!important}
+body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-page{padding:12px 0 24px!important}
+body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-footer{display:none!important}
+@media(max-width:620px){body.mf-kids-inline-route #mfKidsStandaloneRoot{width:calc(100% - 24px)!important;margin:18px auto 30px!important}}
