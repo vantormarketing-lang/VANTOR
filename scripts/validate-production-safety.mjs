@@ -66,10 +66,13 @@ const admin = read('admin.html');
 
 const adminWorker = read('admin-sw.js');
 check(
-  /if\s*\(isAdminDocument\)\s*\{[\s\S]*?fetch\(req,\s*\{\s*cache:\s*['"]no-store['"]\s*\}\)/.test(adminWorker) &&
-  /SHELL\.filter\(url\s*=>\s*url\s*!==\s*ADMIN_URL\)/.test(adminWorker) &&
-  /if\s*\(SHELL\.includes\(req\.url\)\)/.test(adminWorker),
-  'Admin PWA never caches the admin HTML and only caches allowlisted shell assets'
+  /const SHELL = \[ADMIN_URL,/.test(adminWorker) &&
+  /await cache\.put\(url, response\)/.test(adminWorker) &&
+  /cache\.match\(ADMIN_URL\)/.test(adminWorker) &&
+  /event\.waitUntil\(refreshPromise/.test(adminWorker) &&
+  /if\s*\(SHELL\.includes\(req\.url\)\)/.test(adminWorker) &&
+  /url\.origin !== self\.location\.origin/.test(adminWorker),
+  'Admin PWA serves only its static allowlisted shell from cache and refreshes it in the background; authenticated Supabase data remains network-only'
 );
 const themeHref = admin.match(/<link id="doma-platform-unified-theme" rel="stylesheet" href="([^"]+)"/)?.[1];
 const workerThemeHref = adminWorker.match(/const GLASS_THEME_URL = new URL\('([^']+)'/)?.[1];
