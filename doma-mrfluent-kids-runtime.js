@@ -1015,11 +1015,11 @@ function journeyCourseCatalogHtml(){
   var young=journeyLevels.filter(function(item){return item.group==='younger';});
   var growing=journeyLevels.filter(function(item){return item.group==='older';});
   return '<style id="mfkj-course-catalog-css">'+
-    '#mfKidsStandaloneRoot .mfkj-course-catalog{max-width:920px;margin:8px auto 24px}'+
-    '#mfKidsStandaloneRoot .mfkj-course-group{margin:0 0 20px;padding:0;border:0;background:none;box-shadow:none}'+
-    '#mfKidsStandaloneRoot .mfkj-course-group-head{margin:0 0 10px;text-align:center}'+
+    '#mfKidsStandaloneRoot .mfkr-heading{margin-bottom:11px!important}'+    '#mfKidsStandaloneRoot .mfkj-course-catalog{max-width:920px;margin:0 auto 18px}'+
+    '#mfKidsStandaloneRoot .mfkj-course-group{margin:0 0 9px;padding:0;border:0;background:none;box-shadow:none}'+
+    '#mfKidsStandaloneRoot .mfkj-course-group-head{margin:0 0 7px;text-align:center}'+
     '#mfKidsStandaloneRoot .mfkj-course-group-head h2{margin:0;color:#f8e7f1;font-size:clamp(17px,2.4vw,22px);font-weight:900}'+
-    '#mfKidsStandaloneRoot .mfkj-course-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}'+
+    '#mfKidsStandaloneRoot .mfkj-course-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}'+
     '#mfKidsStandaloneRoot .mfkj-course-level-card{min-width:0;min-height:126px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;text-decoration:none;color:#fff4e8;border:1px solid rgba(225,193,233,.30);border-radius:22px;background:radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72));box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12);-webkit-backdrop-filter:blur(18px) saturate(135%);backdrop-filter:blur(18px) saturate(135%);transition:transform .18s ease,border-color .18s ease}'+
     '#mfKidsStandaloneRoot .mfkj-course-level-card:hover{transform:translateY(-2px);border-color:rgba(255,218,174,.58);box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)}'+
     '#mfKidsStandaloneRoot .mfkj-course-icon{display:grid;place-items:center;width:30px;height:30px;font-size:19px}'+
