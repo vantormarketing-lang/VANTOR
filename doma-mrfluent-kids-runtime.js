@@ -2983,6 +2983,30 @@ isolateKidsPage();
 journeyAttachTracker();
 journeyRenderCurrent();
 journeyInit();
+
+// Independent fail-safe navigation control for every Kids level.
+// It is deliberately outside the rendered header so later level redraws cannot remove it.
+function ensureKidsLevelBackArrow(){
+  if(!root || !document.body.classList.contains('mf-kids-route'))return;
+  if(['a1','a2','b1','b2','c1','c2'].indexOf(route)<0)return;
+  var existing=root.querySelector('#mfkrEmergencyBackArrow');
+  if(existing)return;
+  var backTo=(route==='a1'||route==='b1'||route==='c1')?'younger':'older';
+  var link=document.createElement('a');
+  link.id='mfkrEmergencyBackArrow';
+  link.className='mfkr-back-arrow';
+  link.href=url(backTo);
+  link.setAttribute('aria-label','الرجوع إلى قائمة المستويات');
+  link.setAttribute('title','الرجوع إلى قائمة المستويات');
+  link.textContent='←';
+  link.style.cssText='position:fixed!important;top:12px!important;left:12px!important;z-index:2147483647!important;display:grid!important;place-items:center!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;padding:0!important;margin:0!important;border:1px solid rgba(255,218,174,.9)!important;border-radius:13px!important;background:linear-gradient(145deg,#754f8b,#2c1d3e)!important;box-shadow:0 5px 18px rgba(0,0,0,.48)!important;color:#ffe5bd!important;font:900 30px/1 Arial,sans-serif!important;text-decoration:none!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:none!important;';
+  root.appendChild(link);
+}
+ensureKidsLevelBackArrow();
+if(window.MutationObserver){
+  var kidsArrowObserver=new MutationObserver(function(){ensureKidsLevelBackArrow();});
+  kidsArrowObserver.observe(root,{childList:true,subtree:true});
+}
 // Catch any late-created academy nodes and keep them outside this page-only view.
 if (window.MutationObserver) {
   var kidsPageObserver = new MutationObserver(function(records){
