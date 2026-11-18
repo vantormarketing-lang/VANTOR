@@ -764,3 +764,104 @@ html body.programming-page .pa-lesson-page :is(h1,h2,h3,h4,h5,h6){
 html body.programming-page :is(.pa-lesson-reader,.pa-reader-content) :is(h2,h3,h4,h5,h6){
   color:#ffe0ad!important;-webkit-text-fill-color:#ffe0ad!important;
 }
+
+
+/* 2026-11-18 final repair: homepage-only tiles, homepage-matched purple/orange glass, and lesson contrast. */
+html:has(body.programming-page),html body.programming-page{
+  background:#170f22!important;
+}
+html body.programming-page{
+  background:
+    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
+    linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
+  background-attachment:fixed!important;
+  min-height:100vh!important;
+}
+/* The lesson list is opt-in: it is never part of the landing page. */
+html body.programming-page:not(.pa-track-view):not(.pa-lesson-page-view) .pa-learning-layout,
+html body.programming-page:not(.pa-track-view):not(.pa-lesson-page-view) .pa-lessons-panel,
+html body.programming-page:not(.pa-track-view):not(.pa-lesson-page-view) .pa-side-column{
+  display:none!important;visibility:hidden!important;
+}
+html body.programming-page.pa-track-view .pa-learning-layout{
+  display:grid!important;visibility:visible!important;
+}
+html body.programming-page.pa-lesson-page-view .pa-learning-layout{
+  display:none!important;visibility:hidden!important;
+}
+/* Match the site's purple glass cards and add a soft orange/gold light point to every tile. */
+html body.programming-page .pa20-hub-card,
+html body.programming-page #learning-paths .pa-track-card{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  border:1px solid rgba(225,193,233,.30)!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;
+  box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+  backdrop-filter:blur(18px) saturate(135%)!important;
+}
+html body.programming-page .pa20-hub-card::after,
+html body.programming-page #learning-paths .pa-track-card::after{
+  content:""!important;position:absolute!important;top:13px!important;right:14px!important;
+  width:8px!important;height:8px!important;border-radius:50%!important;
+  background:#ffc58e!important;
+  box-shadow:0 0 6px 2px rgba(255,190,132,.78),0 0 17px 6px rgba(255,155,92,.32)!important;
+  pointer-events:none!important;z-index:2!important;
+}
+html body.programming-page #learning-paths .pa-track-card{
+  min-height:78px!important;padding:13px 18px!important;
+  grid-template-columns:38px minmax(0,1fr) 22px!important;
+}
+html body.programming-page #learning-paths .pa-track-content b{font-size:15px!important}
+html body.programming-page #learning-paths .pa-track-content small{font-size:12px!important}
+html body.programming-page #learning-paths .pa-track-description{
+  display:block!important;color:#eee5f3!important;-webkit-text-fill-color:#eee5f3!important;
+  font-size:12px!important;line-height:1.55!important;
+}
+html body.programming-page #learning-paths .pa-track-meta{
+  display:block!important;color:#aaf0d1!important;-webkit-text-fill-color:#aaf0d1!important;
+  font-size:11px!important;
+}
+/* Override legacy light-theme and mint-green lesson styles with readable light text. */
+html body.programming-page.pa-track-view .pa-lesson-row,
+html body.programming-page.pa-track-view .pa-lesson-row:hover,
+html body.programming-page.pa-track-view .pa-lesson-row.selected{
+  color:#f8f2fb!important;
+  background:linear-gradient(145deg,rgba(117,79,139,.34),rgba(36,24,51,.72))!important;
+  border-color:rgba(225,193,233,.26)!important;
+}
+html body.programming-page .pa-lesson-copy b,
+html body.programming-page .pa-lesson-row .pa-lesson-copy b{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:14px!important;font-weight:900!important;
+}
+html body.programming-page .pa-lesson-copy small,
+html body.programming-page .pa-lesson-row .pa-lesson-copy small{
+  color:#e6dced!important;-webkit-text-fill-color:#e6dced!important;
+}
+html body.programming-page .pa-lesson-duration{
+  color:#ffe0ad!important;-webkit-text-fill-color:#ffe0ad!important;
+}
+html body.programming-page .pa-lesson-index{
+  color:#ffe0ad!important;-webkit-text-fill-color:#ffe0ad!important;
+}
+html body.programming-page .pa-lesson-reader h2,
+html body.programming-page .pa-reader-content :is(h1,h2,h3,h4,h5,h6),
+html body.programming-page .pa-activities-heading h3,
+html body.programming-page .pa-activities-heading h2{
+  color:#ffe0ad!important;-webkit-text-fill-color:#ffe0ad!important;
+  font-weight:900!important;
+}
+html body.programming-page .pa-reader-content,
+html body.programming-page .pa-reader-content p,
+html body.programming-page .pa-reader-content li,
+html body.programming-page .pa-reader-content strong,
+html body.programming-page .pa-reader-content .pa-bullet{
+  color:#f3edf7!important;-webkit-text-fill-color:#f3edf7!important;
+}
+@media(max-width:620px){
+  html body.programming-page #learning-paths .pa-track-card{min-height:74px!important;padding:12px 14px!important}
+}
