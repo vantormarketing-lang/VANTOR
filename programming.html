@@ -63,7 +63,7 @@
 <body class="programming-page">
 <header class="pa-topbar">
   <div class="pa-user-identity" aria-label="حساب الطالب"><span id="paAuthStatus" class="pa-auth-status" role="status" aria-label="حالة الاتصال" title="حالة الاتصال"></span><span id="paUserName" class="pa-user-identity-name">حساب الطالب</span></div>
-  <div class="pa-top-actions"><a class="pa-home-link" href="./programming-handbook.html" aria-label="دليل المبرمج" title="دليل المبرمج" style="margin-inline-end:8px">⌨</a><button type="button" class="pa-home-link pa-tool-trigger" id="paOpenTutor" aria-label="فتح المساعد التعليمي" title="المساعد التعليمي">✦</button><button type="button" class="pa-home-link pa-tool-trigger" id="paOpenBoard" aria-label="فتح الصبورة البرمجية التفاعلية" title="الصبورة البرمجية">⌘</button><a class="pa-home-link" href="./index.html" aria-label="العودة للمنصة" title="العودة للمنصة">←</a></div>
+  <div class="pa-top-actions"><button type="button" class="pa-home-link pa-global-back" id="paGlobalBack" aria-label="رجوع للصفحة السابقة" title="رجوع">←</button></div>
 </header>
 <main class="pa-shell">
   <section class="pa20-hero" aria-labelledby="pa20HeroTitle">
@@ -78,6 +78,7 @@
     <button type="button" class="pa20-hub-card" id="pa20OpenPaths"><span class="pa20-hub-icon" aria-hidden="true">⌘</span><span><strong>Paths · المسارات</strong><small>5 tracks</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
     <button type="button" class="pa20-hub-card" id="pa20OpenTutor"><span class="pa20-hub-icon" aria-hidden="true">✦</span><span><strong>AI Assistant</strong><small>Your smart tutor</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
     <button type="button" class="pa20-hub-card" id="pa20OpenBoard"><span class="pa20-hub-icon" aria-hidden="true">▤</span><span><strong>Interactive Boards</strong><small>Code & experiment</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+    <button type="button" class="pa20-hub-card" id="pa20OpenHandbook"><span class="pa20-hub-icon" aria-hidden="true">⌨</span><span><strong>Developer Guide</strong><small>دليل المبرمج</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
   </section>
     </div>
     <div class="pa20-hero-art"><img src="./programming-academy-botanical.svg" alt="كتاب مفتوح تحيط به أوراق خضراء ترمز للتعلم والنمو"></div>
@@ -117,7 +118,7 @@
     <div id="paAdminLearningQueue" class="pa-admin-learning-queue"></div>
   </section>
   <section id="paToolPage" class="pa-tool-page" hidden aria-live="polite"><div class="pa-tool-page-head"><div><span class="pa-kicker">DOMA LEARNING TOOLS</span><h2 id="paToolPageTitle">المساعد التعليمي</h2><p id="paToolPageDescription">مساحة مستقلة للأدوات التعليمية.</p></div><button type="button" id="paCloseToolPage" class="pa-track-back">← العودة للدرس</button></div><div id="paToolPageBody" class="pa-tool-page-body"></div></section>
-  <footer class="pa-footer"><span>DOMA ACADEMY</span><span>PROGRAMMING • LOGIC • CREATIVITY</span><a href="./index.html">العودة إلى الصفحة الرئيسية</a></footer>
+  <footer class="pa-footer"><span>DOMA ACADEMY</span><span>PROGRAMMING • LOGIC • CREATIVITY</span></footer>
 </main>
 
 <div id="paSubscribeModal" class="pa-modal" hidden>
@@ -158,21 +159,8 @@ function initializeDomaProgrammingAcademy(){
   var $=function(id){return document.getElementById(id)};
   /* Reliable delegated navigation for the three academy home tiles.
      Register immediately so an unrelated later initializer cannot leave them inert. */
-  if(!window.__pa20HomeTilesBound){
-    window.__pa20HomeTilesBound=true;
-    document.addEventListener('click',function(event){
-      var tile=event.target&&event.target.closest?event.target.closest('#pa20OpenPaths,#pa20OpenTutor,#pa20OpenBoard,#pa20ExplorePaths'):null;
-      if(!tile)return;
-      event.preventDefault();
-      if(tile.id==='pa20OpenPaths'||tile.id==='pa20ExplorePaths'){
-        var paths=document.getElementById('learning-paths');
-        if(paths){paths.hidden=false;paths.removeAttribute('aria-hidden');paths.style.removeProperty('display');paths.scrollIntoView({behavior:'smooth',block:'start'});}
-      }else{
-        var kind=tile.id==='pa20OpenTutor'?'tutor':'board';
-        try{openStandaloneTool(kind);}catch(error){console.error('Academy tool open failed:',error);var page=document.getElementById('paToolPage');if(page){page.hidden=false;document.body.classList.add('pa-tool-view');var tutor=document.getElementById('paStandaloneTutorHost'),board=document.getElementById('paStandaloneBoardHost');if(tutor)tutor.hidden=kind!=='tutor';if(board)board.hidden=kind!=='board';var title=document.getElementById('paToolPageTitle');if(title)title.textContent=kind==='tutor'?'المساعد التعليمي DOMA One':'الصبورة البرمجية التفاعلية';}}
-      }
-    },true);
-  }
+  /* Home navigation is installed at document level after this initializer, so it remains
+     available even while Supabase is still loading. */
 
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
@@ -536,7 +524,7 @@ function initializeDomaProgrammingAcademy(){
         section.style.setProperty('display','none','important');
       });
     });
-    history.replaceState(null,'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
+    history.pushState({domaView:'lesson',track:activeTrack,lesson:id},'','./programming.html?track='+encodeURIComponent(activeTrack)+'&lesson='+encodeURIComponent(id));
     var dailySection=$('paDailyChallenges'),shell=document.querySelector('.pa-shell'),adminLearning=$('paAdminLearning');
     if(dailySection&&shell&&dailySection.parentNode!==shell){if(adminLearning)shell.insertBefore(dailySection,adminLearning);else shell.appendChild(dailySection)}
     if(dailySection)dailySection.hidden=true;
@@ -546,7 +534,7 @@ function initializeDomaProgrammingAcademy(){
     $('paLessonPage').hidden=false;$('paLessonPage').appendChild(reader);
     var trackModules=modules.filter(function(module){return module.track_id===activeTrack}),trackLessons=lessons.filter(function(item){return trackModules.some(function(module){return module.id===item.module_id})}),lessonPosition=trackLessons.findIndex(function(item){return item.id===id})+1;
     if(dailySection&&lessonPosition>0&&lessonPosition%2===1){reader.appendChild(dailySection);dailySection.hidden=false;loadDailyChallenges()}
-    $('paReaderBack').addEventListener('click',function(){window.location.href='./programming.html?track='+encodeURIComponent(activeTrack)});$('paCompleteBtn').addEventListener('click',function(){toggleComplete(id)});
+    $('paReaderBack').addEventListener('click',function(){if(document.referrer&&document.referrer.indexOf('track=')!==-1)history.back();else window.location.href='./programming.html?track='+encodeURIComponent(activeTrack)});$('paCompleteBtn').addEventListener('click',function(){toggleComplete(id)});
     var content=await db.rpc('programming_get_lesson_content',{p_lesson_id:id});
     if(content.error){$('paReaderContent').innerHTML='<p>تعذر تحميل الدرس. تأكد من أن اشتراكك نشط ثم حاول مرة أخرى.</p>';toast(content.error.message);return}
     $('paReaderContent').innerHTML=markdown(content.data||'سيتم إضافة محتوى هذا الدرس قريبًا.');
@@ -1175,6 +1163,7 @@ body.programming-page #learning-paths[aria-hidden="true"]{
     standaloneToolsReady=true;
   }
   function openStandaloneTool(kind){
+    window.__domaProgrammingOpenTool=openStandaloneTool;
     var page=$('paToolPage'),title=$('paToolPageTitle'),description=$('paToolPageDescription');
     if(!page)return;
     try{ensureStandaloneTools()}catch(error){console.error('DOMA standalone tools initialization failed:',error);toast('تعذر فتح الأداة الآن. حدّث الصفحة وحاول مرة أخرى.');return}
@@ -1193,8 +1182,8 @@ body.programming-page #learning-paths[aria-hidden="true"]{
   function closeStandaloneTool(){
     $('paToolPage').hidden=true;document.body.classList.remove('pa-tool-view');
   }
-  $('paOpenTutor').addEventListener('click',function(){openStandaloneTool('tutor')});
-  $('paOpenBoard').addEventListener('click',function(){openStandaloneTool('board')});
+  window.__domaProgrammingOpenTool=openStandaloneTool;
+  if(window.__domaProgrammingPendingTool){var pendingKind=window.__domaProgrammingPendingTool;window.__domaProgrammingPendingTool='';openStandaloneTool(pendingKind);}
   function pa20ShowPaths(){
     var section=$('learning-paths');if(!section)return;
     section.hidden=false;
@@ -1210,11 +1199,6 @@ body.programming-page #learning-paths[aria-hidden="true"]{
     }
     window.scrollTo({top:0,behavior:'smooth'});
   }
-  $('pa20ExplorePaths').addEventListener('click',pa20ShowPaths);
-  $('pa20OpenPaths').addEventListener('click',pa20ShowPaths);
-  $('pa20ClosePaths').addEventListener('click',pa20HidePaths);
-  $('pa20OpenTutor').addEventListener('click',function(){openStandaloneTool('tutor')});
-  $('pa20OpenBoard').addEventListener('click',function(){openStandaloneTool('board')});
   $('paCloseToolPage').addEventListener('click',closeStandaloneTool);
   $('paBackToTracks').addEventListener('click',showTrackOverview);
   $('paSubmitPayment').addEventListener('click',submitPayment);
@@ -1360,5 +1344,62 @@ body.programming-page .pa20-hub-card strong{color:#173d2b!important}
 body.programming-page .pa20-hub-card small{color:#405b48!important}
 body.programming-page .pa-tool-page[hidden]{display:none!important}
 </style>
+
+<script id="pa-academy-global-navigation">
+(function(){
+  if(window.__paAcademyGlobalNavigationInstalled)return;
+  window.__paAcademyGlobalNavigationInstalled=true;
+  var byId=function(id){return document.getElementById(id)};
+  function revealPaths(){
+    var paths=byId('learning-paths');
+    if(!paths)return;
+    paths.hidden=false;paths.removeAttribute('aria-hidden');paths.style.removeProperty('display');
+    document.body.classList.remove('pa-track-view','pa-lesson-page-view','pa-tool-view');
+    var layout=document.querySelector('.pa-learning-layout');
+    if(layout){layout.hidden=true;layout.setAttribute('aria-hidden','true');layout.style.setProperty('display','none','important');}
+    var reader=byId('paLessonReader');if(reader)reader.remove();
+    var lessonPage=byId('paLessonPage');if(lessonPage)lessonPage.hidden=true;
+    paths.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function goBack(){
+    var q=new URLSearchParams(window.location.search);
+    var lesson=q.get('lesson'),track=q.get('track'),view=q.get('view');
+    if(lesson){
+      if(document.referrer&&document.referrer.indexOf('track=')!==-1)history.back();
+      else window.location.href='./programming.html?track='+encodeURIComponent(track||'computer-science');
+      return;
+    }
+    if(track){
+      if(document.referrer&&document.referrer.indexOf('view=paths')!==-1)history.back();
+      else window.location.href='./programming.html?view=paths';
+      return;
+    }
+    if(view==='paths'){window.location.href='./programming.html';return;}
+    if(document.body.classList.contains('pa-tool-view')){
+      var page=byId('paToolPage');if(page)page.hidden=true;
+      document.body.classList.remove('pa-tool-view');return;
+    }
+    window.location.href='./index.html';
+  }
+  document.addEventListener('click',function(event){
+    var back=event.target&&event.target.closest?event.target.closest('#paGlobalBack'):null;
+    if(back){event.preventDefault();goBack();return;}
+    var tile=event.target&&event.target.closest?event.target.closest('#pa20OpenPaths,#pa20ExplorePaths,#pa20OpenTutor,#pa20OpenBoard,#pa20OpenHandbook'):null;
+    if(!tile)return;
+    event.preventDefault();
+    if(tile.id==='pa20OpenPaths'||tile.id==='pa20ExplorePaths'){
+      var next=new URL('./programming.html?view=paths',window.location.href);
+      if(window.location.search.indexOf('view=paths')===-1)history.pushState({domaView:'paths'},'',next.pathname+next.search);
+      revealPaths();return;
+    }
+    if(tile.id==='pa20OpenHandbook'){window.location.href='./programming-handbook.html';return;}
+    var kind=tile.id==='pa20OpenTutor'?'tutor':'board';
+    if(typeof window.__domaProgrammingOpenTool==='function')window.__domaProgrammingOpenTool(kind);
+    else {window.__domaProgrammingPendingTool=kind;var wait=byId('paMembershipError');if(wait)wait.textContent='جاري تجهيز الأداة التعليمية…';}
+  },true);
+  var params=new URLSearchParams(window.location.search);
+  if(params.get('view')==='paths')revealPaths();
+})();
+</script>
 </body>
 </html>
