@@ -5,14 +5,16 @@ var query = new URLSearchParams(window.location.search);
 var route = (query.get('kids') || '').toLowerCase();
 if (!route) return;
 
-document.body.classList.add('mf-kids-route');
+var inlineKidsMode=(route==='entry'||route==='subscribe');
+document.body.classList.add(inlineKidsMode?'mf-kids-inline-route':'mf-kids-route');
 var root = document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
-document.body.appendChild(root);
+if(inlineKidsMode){var inlineAnchor=document.getElementById('faq');if(inlineAnchor&&inlineAnchor.parentNode)inlineAnchor.parentNode.insertBefore(root,inlineAnchor.nextSibling);else document.body.appendChild(root);}else document.body.appendChild(root);
 // Isolate the Kids route from the academy DOM instead of relying on a list of section IDs.
 // The grade cards are nested/initialized by other page code, so hide every element outside
 // this route root while preserving the page's stylesheets and scripts.
 function isolateKidsPage(){
+  if(inlineKidsMode)return;
   // Remove any orphaned text nodes left directly under <body> by the academy shell.
   // These can leak tiny fragments (for example, literal newline markers) above the Kids header.
   Array.prototype.slice.call(document.body.childNodes).forEach(function(node){
@@ -30,7 +32,7 @@ function isolateKidsPage(){
 var L = [["A","a","Apple","تفاحة","🍎"],["B","b","Ball","كرة","⚽"],["C","c","Cat","قطة","🐱"],["D","d","Dog","كلب","🐶"],["E","e","Egg","بيضة","🥚"],["F","f","Fish","سمكة","🐟"],["G","g","Grapes","عنب","🍇"],["H","h","Hat","قبعة","🧢"],["I","i","Ice cream","آيس كريم","🍦"],["J","j","Juice","عصير","🧃"],["K","k","Kite","طائرة ورقية","🪁"],["L","l","Lion","أسد","🦁"],["M","m","Moon","قمر","🌙"],["N","n","Nest","عش","🪺"],["O","o","Orange","برتقالة","🍊"],["P","p","Pen","قلم","🖊️"],["Q","q","Queen","ملكة","👑"],["R","r","Rabbit","أرنب","🐰"],["S","s","Sun","شمس","☀️"],["T","t","Tiger","نمر","🐯"],["U","u","Umbrella","مظلة","☂️"],["V","v","Van","سيارة صغيرة","🚐"],["W","w","Watermelon","بطيخ","🍉"],["X","x","Xylophone","آلة إكسليفون","🎼"],["Y","y","Yo-yo","يويو","🪀"],["Z","z","Zebra","حمار وحشي","🦓"]];
 function esc(value){return String(value == null ? '' : value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function url(page, extra){return './?kids=' + encodeURIComponent(page) + (extra || '');}
-function header(){var back=route==='subscribe'||route==='hub'?'./':(route==='younger'||route==='older'?url('hub'):(['a1','b1','c1'].indexOf(route)>=0?url('younger'):(['a2','b2','c2'].indexOf(route)>=0?url('older'):url('hub'))));return '<header class="mfkr-top"><div class="mfkr-wrap mfkr-nav"><div class="mfkr-brand-group"><a class="mfkr-back-arrow" href="'+back+'" aria-label="رجوع" title="رجوع">←</a><a class="mfkr-brand" href="./?kids=hub"><span class="mfkr-brand-icon">✦</span><span>Mr. Fluent Kids<small>LEARN · PLAY · GROW</small></span></a></div></div></header>';}
+function header(){var back=inlineKidsMode?'./#faq':(route==='subscribe'||route==='hub'?'./':(route==='younger'||route==='older'?url('hub'):(['a1','b1','c1'].indexOf(route)>=0?url('younger'):(['a2','b2','c2'].indexOf(route)>=0?url('older'):url('hub')))));var brand=inlineKidsMode?'./#faq':'./?kids=hub';return '<header class="mfkr-top"><div class="mfkr-wrap mfkr-nav"><div class="mfkr-brand-group"><a class="mfkr-back-arrow" href="'+back+'" aria-label="رجوع" title="رجوع">←</a><a class="mfkr-brand" href="'+brand+'"><span class="mfkr-brand-icon">✦</span><span>Mr. Fluent Kids<small>LEARN · PLAY · GROW</small></span></a></div></div></header>';}
 function footer(){return '<footer class="mfkr-footer"><div class="mfkr-wrap">Mr. Fluent Kids · Learn a little every day.</div></footer>';}
 function shell(kicker,title,ar,description,content){return header() + '<section class="mfkr-page"><div class="mfkr-wrap"><div class="mfkr-heading"><div class="mfkr-eyebrow"><span class="mfkr-dot"></span>' + kicker + '</div><h1>' + title + '</h1><div class="mfkr-ar" lang="ar">' + ar + '</div>' + (description ? '<p>' + description + '</p>' : '') + '</div>' + content + '</div></section>' + footer();}
 function backButtons(href,label){return '';}
@@ -2960,7 +2962,7 @@ journeyAttachTracker();
 journeyRenderCurrent();
 journeyInit();
 // Catch any late-created academy nodes and keep them outside this page-only view.
-if (window.MutationObserver) {
+if (!inlineKidsMode && window.MutationObserver) {
   var kidsPageObserver = new MutationObserver(function(records){
     var outsideAdded = records.some(function(record){
       return Array.prototype.some.call(record.addedNodes,function(node){
