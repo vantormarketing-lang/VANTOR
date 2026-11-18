@@ -8,6 +8,12 @@ if (!route) return;
 var inlineKidsMode=(route==='entry'||route==='subscribe');
 document.body.classList.add(inlineKidsMode?'mf-kids-inline-route':'mf-kids-route');
 
+
+var root = document.getElementById('mfKidsStandaloneRoot') || document.createElement('main');
+root.id = 'mfKidsStandaloneRoot';
+
+if (!root.parentNode) document.body.appendChild(root);
+
 // Prevent the academy's previous theme from flashing on Kids level entry.
 // Keep the course hidden until its dedicated stylesheet is ready, then reveal
 // the finished glass design and its back arrow together on the first open.
@@ -43,10 +49,6 @@ if(!inlineKidsMode){
     revealKidsCourse();
   }
 }
-var root = document.getElementById('mfKidsStandaloneRoot') || document.createElement('main');
-root.id = 'mfKidsStandaloneRoot';
-
-if (!root.parentNode) document.body.appendChild(root);
 
 // Level pages render their back arrow inside header(), so it survives every page redraw.
 
