@@ -10,6 +10,17 @@ document.body.classList.add(inlineKidsMode?'mf-kids-inline-route':'mf-kids-route
 var root = document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
 if(inlineKidsMode){var inlineAnchor=document.getElementById('faq');if(inlineAnchor&&inlineAnchor.parentNode)inlineAnchor.parentNode.insertBefore(root,inlineAnchor.nextSibling);else document.body.appendChild(root);}else document.body.appendChild(root);
+if(inlineKidsMode&&window.MutationObserver&&root.scrollIntoView){
+  root.style.scrollMarginTop='18px';
+  var inlineKidsScrollObserver=new MutationObserver(function(){
+    if(!root.children.length)return;
+    window.requestAnimationFrame(function(){
+      root.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    inlineKidsScrollObserver.disconnect();
+  });
+  inlineKidsScrollObserver.observe(root,{childList:true,subtree:true});
+}
 // Isolate the Kids route from the academy DOM instead of relying on a list of section IDs.
 // The grade cards are nested/initialized by other page code, so hide every element outside
 // this route root while preserving the page's stylesheets and scripts.
