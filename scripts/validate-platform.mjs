@@ -182,6 +182,29 @@ for (const forbidden of ['slice(0,10)', 'if(mfkrLookIndex>=mfkrLookDeck.length)'
   if (a1Render.includes(forbidden)) fail('doma-mrfluent-kids-runtime.js: finite question limit remains in active A1 route: ' + forbidden);
 }
 ok('doma-mrfluent-kids-runtime.js: active Kids A1 route has endless Look & Choose and Listen & Choose activities');
+
+const requiredKidsLevels = ["A1:a1","B1:b1","C1:c1","A2:a2","B2:b2","C2:c2"];
+for (const level of requiredKidsLevels) {
+  const [code, route] = level.split(":");
+  if (!kidsRuntime.includes("{code:'" + code + "',route:'" + route + "'")) {
+    fail("Kids course: missing journey level mapping " + level);
+  }
+}
+if (!kidsRuntime.includes("kidsJourneyRenderLevelGate(item.code") ||
+    !kidsRuntime.includes("if(ctx&&ctx.active){") ||
+    !kidsRuntime.includes("mrfluent_create_kids_enrollment_request") ||
+    !kidsRuntime.includes("client.storage.from('payment-proofs').upload") ||
+    !kidsRuntime.includes("file.size>5*1024*1024")) {
+  fail("Kids course: level access, receipt upload, or enrollment request safeguards are incomplete");
+}
+const kidsAuthRefreshGuard = "if(route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||route==='review'){kidsJourneyHandlePreCourseRoute(route);return;}";
+if (!kidsRuntime.includes(kidsAuthRefreshGuard) ||
+    !kidsRuntime.includes("if(routeName==='review'){renderReview();return;}") ||
+    !kidsRuntime.includes("route==='review'||journeyLevels.some")) {
+  fail("Kids course: membership must be rechecked for protected routes after auth changes and navigation");
+}
+ok("Kids course: six level routes, subscription receipt flow, and protected-route auth refresh are guarded");
+
 const student = read('index.html');
 
 if (!student.includes('body.mf-kids-route.mf-kids-auth-modal-open #mfKidsStandaloneRoot') ||
