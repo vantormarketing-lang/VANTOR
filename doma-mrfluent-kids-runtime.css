@@ -390,3 +390,31 @@ body.mf-kids-inline-route>#modal.show .modalbox,body.mf-kids-inline-route>#modal
 #mfKidsStandaloneRoot a[href*="kids=lab"]{display:none!important}
 #mfKidsStandaloneRoot .mfkj-course-level-card{border-radius:22px!important;border:1px solid rgba(225,193,233,.30)!important;background:radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;-webkit-backdrop-filter:blur(18px) saturate(135%)!important;backdrop-filter:blur(18px) saturate(135%)!important}
 #mfKidsStandaloneRoot .mfkj-course-level-card:hover{border-color:rgba(255,218,174,.58)!important;box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)!important}
+
+
+/* Make the back arrow clearly visible inside every Kids level page. */
+#mfKidsStandaloneRoot .mfkr-back-arrow{
+  width:42px!important;
+  height:42px!important;
+  flex-basis:42px!important;
+  border:1px solid rgba(255,218,174,.62)!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,rgba(117,79,139,.62),rgba(44,29,62,.82))!important;
+  box-shadow:0 5px 16px rgba(12,5,23,.30),inset 0 1px 0 rgba(255,255,255,.18),0 0 14px rgba(255,218,174,.10)!important;
+  color:#ffe5bd!important;
+  font-size:27px!important;
+  font-weight:900!important;
+}
+#mfKidsStandaloneRoot .mfkr-back-arrow:hover{
+  background:linear-gradient(145deg,rgba(145,101,166,.78),rgba(58,37,78,.92))!important;
+  border-color:rgba(255,229,189,.88)!important;
+  box-shadow:0 7px 20px rgba(12,5,23,.36),0 0 18px rgba(255,218,174,.20)!important;
+  transform:translateX(-2px);
+}
+#mfKidsStandaloneRoot .mfkr-back-arrow:focus-visible{
+  outline:2px solid #ffe5bd!important;
+  outline-offset:3px!important;
+}
+@media(max-width:520px){
+  #mfKidsStandaloneRoot .mfkr-back-arrow{width:40px!important;height:40px!important;flex-basis:40px!important}
+}
