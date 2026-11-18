@@ -2955,7 +2955,7 @@ window.mfKidsNavigateInPlace=function(destination){
 document.addEventListener('click',function(event){
   if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   var link=event.target&&event.target.closest?event.target.closest('#mfKidsStandaloneRoot a[href]'):null;
-  if(!link||link.hasAttribute('download')||(link.target&&link.target!=='_self'))return;
+  if(!link||link.hasAttribute('download')||link.matches('.mfkr-back-arrow')||(link.target&&link.target!=='_self'))return;
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
   if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
   event.preventDefault();window.mfKidsNavigateInPlace(target.href);
