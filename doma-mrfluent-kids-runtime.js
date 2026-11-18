@@ -2728,7 +2728,16 @@ async function kidsJourneyLoadPaymentState(code){
   }
   if(ctx.current){
     kidsJourneyClearPendingMarker(currentUserId);
-    kidsJourneyStatus(status,'Your complete Kids course access is active until '+kidsJourneyDate(ctx.current.expires_at)+'. A successful renewal extends access to all six levels A1–C2 for '+String(ctx.track&&ctx.track.duration_days||30)+' days.','is-ok');
+    kidsJourneyDisablePayment(true);
+    kidsJourneyStatus(status,'Your Kids course is active until '+kidsJourneyDate(ctx.current.expires_at)+'. Opening all six levels A1–C2…','is-ok');
+    // An already-active full-course member must never remain on the payment form.
+    // Open the protected A1 course route; its access gate verifies the live subscription.
+    window.setTimeout(function(){
+      if(route==='subscribe'||route==='entry'){
+        kidsJourneyRenderRouteInPlace('a1',url('a1'),true);
+      }
+    },450);
+    return;
   }else if(ctx.latest&&String(ctx.latest.status).toLowerCase()==='rejected'){
     kidsJourneyClearPendingMarker(currentUserId);
     kidsJourneyStatus(status,'Your earlier full-course request was not approved. Review the note, then you may submit a new receipt. '+(ctx.latest.admin_note||''),'is-warn');
