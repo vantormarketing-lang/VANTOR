@@ -12,34 +12,7 @@ root.id = 'mfKidsStandaloneRoot';
 
 if (!root.parentNode) document.body.appendChild(root);
 
-// Put one clear back arrow at the top-left of every individual Kids level page.
-// The arrow returns to that level's group page; legacy text navigation is removed.
-function mfkjInstallLevelTopBack(){
-  var levelRoutes=['a1','a2','b1','b2','c1','c2'];
-  if(levelRoutes.indexOf(route)<0)return;
-  var target=(route==='a1'||route==='b1'||route==='c1')?'younger':'older';
-  var old=root.querySelector('#mfkjLevelTopBack');
-  if(!old){
-    old=document.createElement('header');
-    old.id='mfkjLevelTopBack';
-    old.className='mfkj-level-top-back';
-    old.innerHTML='<a href="'+url('GROUP_TARGET')+'" aria-label="الرجوع إلى قائمة المستويات" title="الرجوع إلى قائمة المستويات">←</a>'.replace('GROUP_TARGET',target);
-    root.insertBefore(old,root.firstChild);
-  }
-  root.querySelectorAll('a,button').forEach(function(el){
-    var label=(el.textContent||'').replace(/\\s+/g,' ').trim();
-    if(/^(العودة للقائمة الرئيسية|العودة للمستويات|العودة للمستوى|الرجوع للمستويات|الرجوع إلى قائمة المستويات|Back to course levels|Back to Kids paths|Back to levels|Back to paths|Return to main list|Return to levels)$/i.test(label)){
-      if(el.closest('#mfkjLevelTopBack'))return;
-      el.remove();
-    }
-  });
-}
-if(['a1','a2','b1','b2','c1','c2'].indexOf(route)>=0){
-  var mfkjBackObserver=new MutationObserver(function(){mfkjInstallLevelTopBack();});
-  mfkjBackObserver.observe(root,{childList:true,subtree:true});
-  mfkjInstallLevelTopBack();
-}
-
+// Level pages render their back arrow inside header(), so it survives every page redraw.
 
 // Isolate the Kids route from the academy DOM instead of relying on a list of section IDs.
 // The grade cards are nested/initialized by other page code, so hide every element outside
@@ -63,7 +36,7 @@ function isolateKidsPage(){
 var L = [["A","a","Apple","تفاحة","🍎"],["B","b","Ball","كرة","⚽"],["C","c","Cat","قطة","🐱"],["D","d","Dog","كلب","🐶"],["E","e","Egg","بيضة","🥚"],["F","f","Fish","سمكة","🐟"],["G","g","Grapes","عنب","🍇"],["H","h","Hat","قبعة","🧢"],["I","i","Ice cream","آيس كريم","🍦"],["J","j","Juice","عصير","🧃"],["K","k","Kite","طائرة ورقية","🪁"],["L","l","Lion","أسد","🦁"],["M","m","Moon","قمر","🌙"],["N","n","Nest","عش","🪺"],["O","o","Orange","برتقالة","🍊"],["P","p","Pen","قلم","🖊️"],["Q","q","Queen","ملكة","👑"],["R","r","Rabbit","أرنب","🐰"],["S","s","Sun","شمس","☀️"],["T","t","Tiger","نمر","🐯"],["U","u","Umbrella","مظلة","☂️"],["V","v","Van","سيارة صغيرة","🚐"],["W","w","Watermelon","بطيخ","🍉"],["X","x","Xylophone","آلة إكسليفون","🎼"],["Y","y","Yo-yo","يويو","🪀"],["Z","z","Zebra","حمار وحشي","🦓"]];
 function esc(value){return String(value == null ? '' : value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function url(page, extra){return './?kids=' + encodeURIComponent(page) + (extra || '');}
-function header(){var back=inlineKidsMode?'./#faq':(route==='subscribe'?'./#faq':url('hub'));return '<header class="mfkr-top"><div class="mfkr-wrap mfkr-nav"><div class="mfkr-brand-group"><a class="mfkr-back-arrow" href="'+back+'" aria-label="رجوع" title="رجوع">←</a></div></div></header>';}
+function header(){var levelRoute=['a1','a2','b1','b2','c1','c2'].indexOf(route)>=0;var back=inlineKidsMode?'./#faq':(levelRoute?url((route==='a1'||route==='b1'||route==='c1')?'younger':'older'):(route==='subscribe'?'./#faq':url('hub')));return '<header class="mfkr-top"><div class="mfkr-wrap mfkr-nav"><div class="mfkr-brand-group"><a class="mfkr-back-arrow" href="'+back+'" aria-label="الرجوع إلى قائمة المستويات" title="الرجوع إلى قائمة المستويات">←</a></div></div></header>';}
 function footer(){return '<footer class="mfkr-footer"><div class="mfkr-wrap">Mr. Fluent Kids · Learn a little every day.</div></footer>';}
 function shell(kicker,title,ar,description,content){return header() + '<section class="mfkr-page"><div class="mfkr-wrap"><div class="mfkr-heading"><div class="mfkr-eyebrow"><span class="mfkr-dot"></span>' + kicker + '</div><h1>' + title + '</h1><div class="mfkr-ar" lang="ar">' + ar + '</div>' + (description ? '<p>' + description + '</p>' : '') + '</div>' + content + '</div></section>' + footer();}
 function backButtons(href,label){return '';}
