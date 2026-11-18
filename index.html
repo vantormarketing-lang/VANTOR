@@ -13409,7 +13409,43 @@ if (!route) {
     function continueToCourse() {
       if (navigated) return;
       navigated = true;
-      window.location.assign(destination);
+      // Keep the user on the academy document: show the subscription form first,
+      // then hydrate the existing Kids payment workflow in the background.
+      try { window.history.pushState({mfKidsRoute:true}, '', destination); } catch (_) {}
+      document.title = 'Kids Course Subscription | Mr. Fluent';
+      document.body.classList.add('mf-kids-inline-route');
+      var fastRoot = document.getElementById('mfKidsStandaloneRoot');
+      if (!fastRoot) {
+        fastRoot = document.createElement('main');
+        fastRoot.id = 'mfKidsStandaloneRoot';
+        document.body.appendChild(fastRoot);
+      }
+      fastRoot.innerHTML = '<style id="mfkj-fast-subscription-shell-css">#mfKidsStandaloneRoot{position:relative;z-index:99999;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px 12px;color:#f5edff;font-family:Tahoma,Segoe UI,sans-serif}#mfKidsStandaloneRoot .mfkj-fast-card{width:min(100%,650px);padding:15px;border:1px solid rgba(205,164,255,.28);border-radius:19px;background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035));box-shadow:0 18px 48px rgba(0,0,0,.25);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}#mfKidsStandaloneRoot .mfkj-fast-title{text-align:center;font-size:17px;font-weight:800;margin:0 0 12px}#mfKidsStandaloneRoot .mfkj-fast-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}#mfKidsStandaloneRoot .mfkj-fast-cell{min-width:0;padding:10px;border:1px solid rgba(205,164,255,.22);border-radius:13px;background:rgba(255,255,255,.045);display:flex;flex-direction:column;justify-content:center;gap:4px}#mfKidsStandaloneRoot .mfkj-fast-cell small{font-size:10px;color:#c9b6e3;font-weight:700}#mfKidsStandaloneRoot .mfkj-fast-cell strong{font-size:20px;color:#f4eaff}#mfKidsStandaloneRoot .mfkj-fast-cell input{width:100%;min-width:0;min-height:36px;padding:8px;border:1px solid rgba(205,164,255,.22);border-radius:9px;background:rgba(9,7,15,.42);color:#fff;font-size:11px}#mfKidsStandaloneRoot .mfkj-fast-submit{width:100%;min-height:41px;margin-top:10px;border:1px solid rgba(240,221,174,.82);border-radius:10px;background:linear-gradient(135deg,#ead9a8,#c7aa70);color:#302516;font-weight:850}@media(max-width:360px){#mfKidsStandaloneRoot .mfkj-fast-grid{grid-template-columns:1fr}}</style><section class="mfkj-fast-card"><div class="mfkj-fast-title" lang="ar">اشتراك Mr. Fluent Kids</div><div class="mfkj-fast-grid"><div class="mfkj-fast-cell"><small>سعر الاشتراك</small><strong>100 جنيه</strong><small>لمدة 30 يومًا</small></div><div class="mfkj-fast-cell"><small>رقم التحويل</small><strong dir="ltr">01006525147</strong></div></div><div class="mfkj-fast-grid"><label class="mfkj-fast-cell"><small>رقم الهاتف المُحوِّل</small><input type="tel" placeholder="رقم الهاتف" disabled></label><label class="mfkj-fast-cell"><small>رفع إيصال الدفع</small><input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" disabled></label></div><button class="mfkj-fast-submit" type="button" disabled>إرسال طلب الاشتراك</button></section>';
+      var cssReady = false, runtimeReady = false, hydrated = false;
+      function finishFastKidsLoad() {
+        if (!cssReady || !runtimeReady || hydrated) return;
+        hydrated = true;
+        var experiences = document.createElement('script');
+        experiences.async = true;
+        experiences.src = './mf-kids-learning-experiences.js?v=kids-hide-lab-entry-20261118';
+        document.body.appendChild(experiences);
+      }
+      var runtimeScript = document.createElement('script');
+      runtimeScript.src = './doma-mrfluent-kids-runtime.js?v=kids-subscription-fast-open-20261118';
+      runtimeScript.onload = function() { runtimeReady = true; finishFastKidsLoad(); };
+      runtimeScript.onerror = function() {
+        var status = document.createElement('p');
+        status.textContent = 'تعذر تحميل وظائف الاشتراك. أعد المحاولة بعد التأكد من الاتصال.';
+        status.style.cssText = 'text-align:center;color:#f5d7a0;font-size:12px';
+        fastRoot.appendChild(status);
+      };
+      var kidsStylesheet = document.createElement('link');
+      kidsStylesheet.rel = 'stylesheet';
+      kidsStylesheet.href = './doma-mrfluent-kids-runtime.css?v=kids-overlay-fullscreen-20261118';
+      kidsStylesheet.onload = function() { cssReady = true; finishFastKidsLoad(); };
+      kidsStylesheet.onerror = function() { cssReady = true; finishFastKidsLoad(); };
+      document.head.appendChild(kidsStylesheet);
+      document.body.appendChild(runtimeScript);
     }
     function showPending() {
       kidsHomeRememberPendingMarker(userIdForFallback);

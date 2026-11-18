@@ -7,9 +7,9 @@ if (!route) return;
 
 var inlineKidsMode=(route==='entry'||route==='subscribe');
 document.body.classList.add(inlineKidsMode?'mf-kids-inline-route':'mf-kids-route');
-var root = document.createElement('main');
+var root = document.getElementById('mfKidsStandaloneRoot') || document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
-document.body.appendChild(root);
+if (!root.parentNode) document.body.appendChild(root);
 
 // Isolate the Kids route from the academy DOM instead of relying on a list of section IDs.
 // The grade cards are nested/initialized by other page code, so hide every element outside
