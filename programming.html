@@ -1290,6 +1290,17 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(window.__paAcademyGlobalNavigationInstalled)return;
   window.__paAcademyGlobalNavigationInstalled=true;
   var byId=function(id){return document.getElementById(id)};
+  /* Default state is always the academy landing page: close the path directory unless explicitly requested. */
+  var initialParams=new URLSearchParams(window.location.search);
+  var initialPaths=byId('learning-paths');
+  if(initialParams.get('view')!=='paths'){
+    document.body.classList.remove('pa-paths-open');
+    if(initialPaths){
+      initialPaths.hidden=true;
+      initialPaths.setAttribute('aria-hidden','true');
+      initialPaths.style.setProperty('display','none','important');
+    }
+  }
   function revealPaths(){
     var paths=byId('learning-paths');
     if(!paths)return;
