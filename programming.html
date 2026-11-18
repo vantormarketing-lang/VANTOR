@@ -272,7 +272,7 @@ function initializeDomaProgrammingAcademy(){
       var ls=lessons.filter(function(l){return ms.some(function(m){return m.id===l.module_id})});
       var done=ls.filter(function(l){return completed[l.id]}).length;
       var active=t.id===activeTrack,available=ls.length>0;
-      return '<button type="button" class="pa-track-card '+(active?'active':'')+'" data-track="'+esc(t.id)+'" aria-pressed="'+(active?'true':'false')+'"><span class="pa-track-number">'+String(i+1).padStart(2,'0')+'</span><span class="pa-track-content"><b>'+esc(t.title)+'</b><small>'+esc(t.subtitle)+'</small><span class="pa-track-description">'+esc(t.description)+'</span><span class="pa-track-meta">'+(available?(ls.length+' دروس منشورة · '+done+' مكتمل'):'المحتوى قيد الإعداد')+'</span></span><span class="pa-track-arrow">'+(available?(hasAccess()?'←':'🔒'):'◌')+'</span></button>';
+      return '<button type="button" class="pa-track-card '+(active?'active':'')+'" data-track="'+esc(t.id)+'" aria-pressed="'+(active?'true':'false')+'"><span class="pa-track-number">'+String(i+1).padStart(2,'0')+'</span><span class="pa-track-content"><b>'+esc(t.title)+'</b><span class="pa-track-description">'+esc(t.description)+'</span></span></button>';
     }).join('');
     // Delegate clicks from the grid so the cards remain interactive after every re-render.
     host.onclick=function(event){
@@ -1375,6 +1375,6 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(params.get('view')==='paths')revealPaths();
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=academy-brand-editor-header-20261118">
+<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=compact-path-cards-20261118">
 </body>
 </html>
