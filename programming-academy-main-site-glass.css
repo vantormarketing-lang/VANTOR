@@ -2943,3 +2943,34 @@ html body.programming-page #learning-paths .pa-track-content .pa-track-title{
     font-size:18px!important;
   }
 }
+
+
+/* Premium programming-academy canvas — outer page background only.
+   Cards, panels, lesson surfaces, editors and all inner backgrounds remain untouched. */
+html:has(body.programming-page){
+  background:#0b1020!important;
+  background-color:#0b1020!important;
+}
+html body.programming-page{
+  background-color:#0b1020!important;
+  background-image:
+    radial-gradient(ellipse 820px 560px at 8% 4%,rgba(92,74,170,.28),transparent 70%),
+    radial-gradient(ellipse 760px 520px at 96% 22%,rgba(22,126,142,.20),transparent 72%),
+    radial-gradient(ellipse 900px 620px at 48% 104%,rgba(112,65,143,.22),transparent 72%),
+    linear-gradient(rgba(143,164,211,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(143,164,211,.045) 1px,transparent 1px),
+    linear-gradient(145deg,#0b1020 0%,#11172a 48%,#0a1020 100%)!important;
+  background-size:
+    auto,auto,auto,
+    56px 56px,
+    56px 56px,
+    auto!important;
+  background-position:center,center,center,center,center,center!important;
+  background-attachment:fixed!important;
+}
+@media(max-width:760px){
+  html body.programming-page{
+    background-attachment:scroll!important;
+    background-size:auto,auto,auto,44px 44px,44px 44px,auto!important;
+  }
+}
