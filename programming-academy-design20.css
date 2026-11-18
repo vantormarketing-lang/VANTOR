@@ -137,3 +137,180 @@ body.programming-page .pa-footer a{display:none!important}
  body.programming-page .pa20-hub-card strong{font-size:8px!important}
  body.programming-page .pa20-hub-card small{font-size:7px!important}
 }
+
+/* GLASS NEON ACADEMY — faithful visual system based on the approved reference */
+:root{
+ --pa20-ink:#f7f8ff;--pa20-green:#00e66f;--pa20-green2:#2cff9a;
+ --pa20-mint:#062b37;--pa20-edge:rgba(255,255,255,.34);--pa20-muted:#d4d9f5;
+ --pa-glass:rgba(12,22,62,.54);--pa-glass-edge:rgba(255,255,255,.32);
+ --pa-blue:#08baff;--pa-violet:#bd22ff;--pa-gold:#ffb400;--pa-green:#00df62;
+}
+html:has(body.programming-page),body.programming-page{
+ background:#081331!important;color:#f8f7ff!important;
+}
+body.programming-page{
+ background-image:linear-gradient(180deg,rgba(3,10,35,.22),rgba(6,8,34,.46)),url('./programming-academy-neon-library.svg')!important;
+ background-size:cover!important;background-position:center top!important;background-attachment:fixed!important;
+}
+body.programming-page .pa-topbar{
+ position:relative!important;z-index:10!important;min-height:74px!important;
+ background:rgba(9,14,52,.48)!important;border:1px solid rgba(255,255,255,.22)!important;
+ border-radius:0 0 22px 22px!important;backdrop-filter:blur(22px) saturate(165%)!important;
+ box-shadow:0 8px 30px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.18)!important;
+}
+body.programming-page .pa-user-identity{color:#fff!important;text-shadow:0 2px 10px #10143a}
+body.programming-page .pa-home-link{
+ color:#fff!important;border:2px solid #ffcf38!important;border-radius:50%!important;
+ background:linear-gradient(145deg,#ffc72e,#f28b00)!important;box-shadow:0 0 20px #ffb00088!important;
+}
+body.programming-page .pa-shell{max-width:1280px!important;color:#fff!important}
+body.programming-page .pa20-hero{
+ display:block!important;position:relative!important;isolation:isolate!important;overflow:hidden!important;
+ min-height:450px!important;margin:18px 0 22px!important;padding:clamp(28px,5vw,60px)!important;
+ text-align:center!important;border:1px solid rgba(255,255,255,.24)!important;border-radius:32px!important;
+ background:linear-gradient(120deg,rgba(5,17,57,.78),rgba(11,25,78,.58),rgba(42,12,75,.48))!important;
+ box-shadow:0 24px 65px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.24)!important;
+ backdrop-filter:blur(18px) saturate(155%)!important;
+}
+body.programming-page .pa20-hero:before{
+ content:"";position:absolute;z-index:-1;inset:0;
+ background:radial-gradient(ellipse at 50% 0%,rgba(13,153,255,.27),transparent 58%),
+ radial-gradient(ellipse at 90% 80%,rgba(188,25,255,.2),transparent 40%);
+}
+body.programming-page .pa20-hero-copy{max-width:1100px;margin:auto;display:flex;align-items:center;flex-direction:column}
+body.programming-page .pa20-brandline{display:none!important}
+body.programming-page .pa20-eyebrow{color:#ffd43b!important;letter-spacing:3px!important;text-shadow:0 0 14px #ffbf36}
+body.programming-page .pa20-title{color:#fff!important;font-size:clamp(34px,5vw,66px)!important;font-weight:950!important;text-shadow:0 5px 25px rgba(0,0,0,.45)!important}
+body.programming-page .pa20-title:before{content:"🎓";display:block;margin:0 auto 12px;font-size:clamp(42px,6vw,68px);filter:drop-shadow(0 0 14px #ffc533)}
+body.programming-page .pa20-title-ar{color:#fff!important;text-shadow:0 3px 15px #000!important}
+body.programming-page .pa20-tagline{color:#fff!important;font-size:clamp(20px,2.6vw,30px)!important}
+body.programming-page .pa20-tagline-ar{color:#ffd52e!important;font-size:clamp(13px,1.7vw,18px)!important}
+body.programming-page .pa20-hero-art{display:none!important}
+body.programming-page .pa20-hero-cta{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ min-width:min(420px,90%)!important;margin:22px auto 0!important;padding:16px 28px!important;
+ color:#25122c!important;border:2px solid #fff2a1!important;border-radius:999px!important;
+ background:linear-gradient(110deg,#ffe34d,#ff9f00)!important;
+ box-shadow:0 0 0 3px rgba(255,190,0,.15),0 0 28px rgba(255,176,0,.62),inset 0 2px 5px #fff9!important;
+ font-size:clamp(17px,2vw,23px)!important;font-weight:950!important;
+}
+body.programming-page .pa20-hub{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:16px!important;width:100%!important;margin:22px 0 8px!important;
+}
+body.programming-page .pa20-hub-card{
+ position:relative!important;display:flex!important;min-width:0!important;min-height:220px!important;
+ flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:12px!important;
+ padding:20px 12px!important;border:2px solid rgba(255,255,255,.55)!important;border-radius:27px!important;
+ color:#fff!important;text-align:center!important;overflow:hidden!important;
+ backdrop-filter:blur(22px) saturate(170%)!important;
+ box-shadow:0 18px 38px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.42),inset 0 -16px 32px rgba(0,0,0,.16)!important;
+ transition:transform .22s,box-shadow .22s!important;
+}
+body.programming-page .pa20-hub-card:before{
+ content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+ background:linear-gradient(145deg,rgba(255,255,255,.32),transparent 42%,rgba(255,255,255,.08));
+}
+body.programming-page .pa20-hub-card:nth-child(1){background:linear-gradient(145deg,rgba(0,255,87,.88),rgba(0,105,57,.86))!important;box-shadow:0 0 30px #00ff6a77,inset 0 1px #ffffff88!important}
+body.programming-page .pa20-hub-card:nth-child(2){background:linear-gradient(145deg,rgba(0,187,255,.9),rgba(0,49,173,.88))!important;box-shadow:0 0 30px #00baff77,inset 0 1px #ffffff88!important}
+body.programming-page .pa20-hub-card:nth-child(3){background:linear-gradient(145deg,rgba(210,0,255,.9),rgba(78,0,156,.9))!important;box-shadow:0 0 30px #d000ff77,inset 0 1px #ffffff88!important}
+body.programming-page .pa20-hub-card:nth-child(4){background:linear-gradient(145deg,rgba(255,190,0,.94),rgba(214,71,0,.9))!important;box-shadow:0 0 30px #ff9b0077,inset 0 1px #ffffff88!important}
+body.programming-page .pa20-hub-card:hover{transform:translateY(-7px)!important;box-shadow:0 22px 46px rgba(0,0,0,.36),0 0 34px rgba(255,255,255,.2)!important}
+body.programming-page .pa20-hub-icon{
+ position:relative;z-index:1;display:grid!important;place-items:center!important;
+ width:82px!important;height:82px!important;border:1px solid rgba(255,255,255,.62)!important;
+ border-radius:22px!important;background:rgba(255,255,255,.18)!important;
+ color:#fff!important;font-size:44px!important;text-shadow:0 3px 12px rgba(0,0,0,.28)!important;
+ box-shadow:inset 0 1px 12px rgba(255,255,255,.24),0 10px 20px rgba(0,0,0,.18)!important;
+}
+body.programming-page #pa20OpenPaths .pa20-hub-icon{font-size:0!important}
+body.programming-page #pa20OpenPaths .pa20-hub-icon:before{content:"📂";font-size:44px}
+body.programming-page #pa20OpenTutor .pa20-hub-icon{font-size:0!important}
+body.programming-page #pa20OpenTutor .pa20-hub-icon:before{content:"🤖";font-size:46px}
+body.programming-page #pa20OpenBoard .pa20-hub-icon{font-size:0!important}
+body.programming-page #pa20OpenBoard .pa20-hub-icon:before{content:"🖥️";font-size:44px}
+body.programming-page #pa20OpenHandbook .pa20-hub-icon{font-size:0!important}
+body.programming-page #pa20OpenHandbook .pa20-hub-icon:before{content:"📖";font-size:44px}
+body.programming-page .pa20-hub-card>span{position:relative;z-index:1}
+body.programming-page .pa20-hub-card strong{display:block!important;color:#fff!important;font-size:clamp(16px,1.8vw,23px)!important;font-weight:950!important;text-shadow:0 2px 8px rgba(0,0,0,.3)!important}
+body.programming-page .pa20-hub-card small{display:block!important;color:#fff!important;font-size:12px!important}
+body.programming-page .pa20-hub-arrow{top:12px!important;inset-inline-end:14px!important;color:#fff!important}
+body.programming-page .pa20-path-head h2,body.programming-page .pa20-path-head p{color:#fff!important}
+body.programming-page .pa20-path-close{color:#fff!important;border:1px solid #ffffff66!important;background:#172b66aa!important;backdrop-filter:blur(15px)!important}
+body.programming-page .pa-track-card,body.programming-page .pa-lessons-panel,
+body.programming-page .pa-lesson-reader,body.programming-page .pa-side-card,
+body.programming-page .pa-projects-section,body.programming-page .pa-project-card,
+body.programming-page .pa-daily-challenges,body.programming-page .pa-daily-card,
+body.programming-page .pa-free-tutor,body.programming-page .pa-global-tutor,
+body.programming-page .pa-tool-page-head,body.programming-page .pa-modal-card,
+body.programming-page .pa-subscription-compact{
+ color:#f8f8ff!important;border:1px solid rgba(255,255,255,.28)!important;
+ background:linear-gradient(145deg,rgba(12,27,72,.78),rgba(29,15,74,.68))!important;
+ box-shadow:0 15px 38px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.15)!important;
+ backdrop-filter:blur(20px) saturate(155%)!important;
+}
+body.programming-page .pa-section-heading h2,body.programming-page .pa-panel-heading h2,
+body.programming-page .pa-lesson-reader h2,body.programming-page .pa-side-card h3,
+body.programming-page .pa-project-card h3,body.programming-page .pa-free-tutor-head h3,
+body.programming-page .pa-tool-page-head h2{color:#ffe17a!important}
+body.programming-page .pa-section-heading p,body.programming-page .pa-panel-heading p,
+body.programming-page .pa-track-description,body.programming-page .pa-track-meta,
+body.programming-page .pa-side-card p,body.programming-page .pa-reader-summary,
+body.programming-page .pa-reader-content,body.programming-page .pa-free-tutor-head p,
+body.programming-page .pa-free-tutor-status,body.programming-page .pa-free-tutor-note,
+body.programming-page .pa-tool-page-head p{color:#e5e9ff!important}
+body.programming-page .pa-free-tutor-question input,body.programming-page .pa-form-input,
+body.programming-page .pa-project-form input,body.programming-page .pa-project-form textarea,
+body.programming-page .pa-admin-learning-filters input,body.programming-page .pa-admin-learning-filters select{
+ color:#fff!important;border:1px solid rgba(255,255,255,.35)!important;
+ background:rgba(3,10,37,.62)!important;backdrop-filter:blur(12px)!important;
+}
+body.programming-page .pa-free-tutor-answer,body.programming-page .pa-project-status,
+body.programming-page .pa-daily-hints,body.programming-page .pa-daily-result{
+ color:#f2f4ff!important;border:1px solid rgba(255,255,255,.25)!important;background:rgba(3,12,42,.55)!important;
+}
+body.programming-page .pa-free-tutor-send,body.programming-page .pa-project-submit,
+body.programming-page .pa-daily-actions button:not(.secondary){
+ color:#24142b!important;border:1px solid #fff2a2!important;background:linear-gradient(110deg,#ffe44e,#ff9900)!important;
+ box-shadow:0 0 18px #ffb00055!important;
+}
+body.programming-page .pa-code-editor,body.programming-page .pa-daily-editor,
+body.programming-page .pa-code-output,body.programming-page .pa-test-output,
+body.programming-page .pa-reader-content pre,body.programming-page .terminal{
+ color:#e9f5ff!important;background:rgba(2,8,25,.88)!important;border:1px solid #25bfff88!important;
+}
+body.programming-page .pa-track-number,body.programming-page .pa-side-icon,
+body.programming-page .pa-progress-count,body.programming-page .pa-roadmap-label{
+ color:#fff!important;border:1px solid #35caff66!important;background:rgba(0,153,255,.18)!important;
+}
+body.programming-page .pa-footer{color:#e5eaff!important;border-top-color:#ffffff44!important}
+body.programming-page .pa-modal-backdrop{background:rgba(2,5,22,.72)!important;backdrop-filter:blur(12px)!important}
+body.programming-page .pa-modal-copy,body.programming-page .pa-modal-price span,
+body.programming-page .pa-cash-number span,body.programming-page .pa-cash-number small{color:#e7eaff!important}
+body.programming-page .pa-modal-price,body.programming-page .pa-cash-number{border-color:#ffffff44!important;background:rgba(4,13,44,.58)!important}
+body.programming-page .pa-modal-price strong,body.programming-page .pa-cash-number strong{color:#ffe17a!important}
+body.programming-page .pa-form-label{color:#fff!important}
+body.programming-page .pa-tool-page{background:linear-gradient(145deg,rgba(4,10,36,.88),rgba(31,9,67,.88))!important;backdrop-filter:blur(20px)!important}
+body.programming-page .pa-tool-page-head{border-radius:20px!important}
+body.programming-page .pa-track-card:hover{border-color:#20c8ff!important;box-shadow:0 0 25px #00baff33!important}
+body.programming-page .pa-track-card *{color:inherit}
+body.programming-page .pa-reader-content h3,body.programming-page .pa-reader-content h4,
+body.programming-page .pa-reader-content strong{color:#ffdc70!important}
+body.programming-page .pa-reader-content p,body.programming-page .pa-reader-content li{color:#edf0ff!important}
+body.programming-page .pa-reader-content a{color:#55d9ff!important}
+body.programming-page .pa-reader-content blockquote,body.programming-page .pa-reader-content table{
+ color:#edf0ff!important;background:rgba(3,12,40,.6)!important;border-color:#ffffff33!important;
+}
+body.programming-page .pa-reader-content th{color:#fff!important;background:rgba(0,155,255,.2)!important}
+body.programming-page .pa-reader-content td{color:#edf0ff!important;border-color:#ffffff22!important}
+body.programming-page .pa-reader-content code{color:#65e8ff!important;background:rgba(0,150,255,.15)!important}
+body.programming-page .pa-reader-content pre,body.programming-page .pa-reader-content pre code{color:#eaf6ff!important;background:#071022!important}
+@media(max-width:760px){
+ body.programming-page{background-attachment:scroll!important}
+ body.programming-page .pa20-hero{min-height:0!important;padding:24px 13px!important}
+ body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ body.programming-page .pa20-hub-card{min-height:155px!important;padding:14px 8px!important;border-radius:20px!important}
+ body.programming-page .pa20-hub-icon{width:62px!important;height:62px!important;font-size:34px!important}
+ body.programming-page .pa20-hub-card strong{font-size:14px!important}
+}
+@media(max-width:380px){body.programming-page .pa20-hub-card{min-height:138px!important}body.programming-page .pa20-hub-icon{width:54px!important;height:54px!important}}
