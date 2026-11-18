@@ -404,3 +404,97 @@ html body.programming-page #learning-paths { display:none!important; }
 html body.programming-page.pa-paths-open #learning-paths {
   display:block!important;
 }
+
+
+/* Compact academy identity: refined mint / turquoise / white branding. */
+html body.programming-page .pa-topbar{
+  min-height:48px!important;
+  padding:8px max(4vw,18px)!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page .pa-user-identity{
+  display:flex!important;align-items:center!important;gap:11px!important;
+  color:#f5fff9!important;font-family:"Tajawal","Segoe UI",sans-serif!important;
+  font-size:14px!important;font-weight:800!important;letter-spacing:.15px!important;
+}
+html body.programming-page .pa-user-identity-name{
+  color:#eafff4!important;
+  text-shadow:0 1px 12px rgba(75,222,180,.18)!important;
+}
+html body.programming-page .pa-auth-status.is-connected{
+  background:#68e6a4!important;
+  box-shadow:0 0 0 4px rgba(104,230,164,.12),0 0 15px rgba(104,230,164,.72)!important;
+}
+html body.programming-page .pa-home-link,
+html body.programming-page #paGlobalBack{
+  width:36px!important;height:36px!important;
+  border:0!important;border-radius:50%!important;
+  background:transparent!important;box-shadow:none!important;
+  color:#d9fff1!important;
+}
+html body.programming-page .pa-home-link:hover,
+html body.programming-page #paGlobalBack:hover{
+  border:0!important;background:rgba(112,227,190,.08)!important;
+}
+html body.programming-page .pa20-hero{
+  min-height:0!important;
+  padding:clamp(14px,2.3vw,25px)!important;
+  margin:6px 0 22px!important;
+  gap:18px!important;
+  border-radius:24px!important;
+}
+html body.programming-page .pa20-hero-copy{gap:5px!important}
+html body.programming-page .pa20-brandline{
+  display:flex!important;align-items:center!important;gap:9px!important;
+  margin:0 0 3px!important;
+  color:#f5fff9!important;
+  font-family:"Tajawal","Segoe UI",sans-serif!important;
+  font-size:14px!important;font-weight:900!important;letter-spacing:.2px!important;
+}
+html body.programming-page .pa20-brandmark{
+  display:grid!important;place-items:center!important;
+  width:31px!important;height:31px!important;flex:0 0 31px!important;
+  border:1px solid rgba(119,235,197,.34)!important;border-radius:10px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(76,215,174,.12))!important;
+  color:#9af4ce!important;font-size:19px!important;
+  box-shadow:0 5px 16px rgba(40,197,153,.12)!important;
+}
+html body.programming-page .pa20-eyebrow{
+  margin:0!important;font-size:9px!important;font-weight:800!important;
+  letter-spacing:2px!important;color:#9debd0!important;
+}
+html body.programming-page .pa20-title{
+  margin:1px 0!important;
+  font-family:"Tajawal","Segoe UI",sans-serif!important;
+  font-size:clamp(17px,2.1vw,23px)!important;
+  line-height:1.35!important;font-weight:900!important;letter-spacing:0!important;
+  background:linear-gradient(100deg,#ffffff 0%,#baf8ed 46%,#78e5b1 100%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important;
+  text-shadow:none!important;
+}
+html body.programming-page .pa20-title .pa20-title-ar{
+  display:inline-block!important;margin-inline-start:9px!important;
+  font-size:.82em!important;font-weight:800!important;
+  background:linear-gradient(100deg,#f5fffb,#9cebd7,#73dfa8)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important;
+}
+html body.programming-page .pa20-tagline,
+html body.programming-page .pa20-tagline-ar{
+  margin:1px 0!important;font-size:11px!important;line-height:1.5!important;
+  color:#d9f6ed!important;
+}
+html body.programming-page .pa20-hero-cta{
+  align-self:flex-start!important;margin-top:8px!important;
+}
+@media(max-width:620px){
+  html body.programming-page .pa-topbar{min-height:42px!important;padding:6px 14px!important}
+  html body.programming-page .pa20-hero{padding:14px!important;margin-top:4px!important}
+  html body.programming-page .pa20-title{font-size:18px!important}
+  html body.programming-page .pa20-title .pa20-title-ar{display:block!important;margin:1px 0 0!important}
+}
