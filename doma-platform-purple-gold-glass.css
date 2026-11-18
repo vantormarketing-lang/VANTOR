@@ -2247,3 +2247,88 @@ html body:has(.course-hero) footer{color:#d9c9e2!important;border-top-color:rgba
   html body:has(.course-hero) .course-hero-stats{gap:7px!important}
   html body:has(.course-hero) .course-hero-stats div{padding:10px!important}
 }
+
+
+/* KIDS COURSE — inherit the exact shared DOMA homepage components; no separate Kids palette. */
+html body :is(.mfkr-top){
+  color:var(--dpg-text)!important;
+  background:linear-gradient(135deg,rgba(112,77,133,.78),rgba(49,31,68,.9))!important;
+  border-color:var(--dpg-edge-gold)!important;
+  box-shadow:0 14px 38px rgba(12,5,23,.22),inset 0 1px 0 rgba(255,255,255,.14)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+}
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-choice,.mfkr-level,.mfkr-letter-card,.mfkr-word-card,.mfkr-topic-panel,
+  .mfkr-quiz-panel,.mfkr-a2-story-card,.mfkr-c1-story-line,.mfkr-b2-connector-sentence,
+  .mfkr-a2-match-prompt,.mfkr-c1-output,.mfkr-c2-writing-area,
+  .mfkj-course-practice-panel,.mfkj-model-reply,.mfkj-mini-card,.mfkj-pay-gate,
+  .mfkj-payment-unified,.mfkj-notice-card,.mfkj-t-card,.mfkj-t-note,.mfkj-t-wrap,
+  .mfkj-pay-card,.mfkj-pay-price,.mfkj-pay-receiver,.mfkj-pay-field,
+  .mfkj-membership-item,.mfkj-dash-panel,.mfkj-daily-question,
+  .mfkj-course-level-card,.mfkj-daily-complete,.mfkj-daily-built,
+  .mfkj-membership-state,.mfkj-t-stat
+){
+  color:var(--dpg-text)!important;
+  border:1px solid rgba(225,193,233,.30)!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;
+  box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+  backdrop-filter:blur(18px) saturate(135%)!important;
+}
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-choice:hover,.mfkr-level:hover,.mfkr-letter-card:hover,.mfkr-word-card:hover,
+  .mfkr-topic-panel:hover,.mfkr-quiz-panel:hover,.mfkr-a2-story-card:hover,
+  .mfkr-c1-story-line:hover,.mfkj-course-level-card:hover,.mfkj-membership-item:hover
+){
+  border-color:rgba(255,218,174,.58)!important;
+  box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-heading h1,.mfkr-choice h2,.mfkr-level h2,.mfkr-topic-heading h2,
+  .mfkr-quiz-intro h2,.mfkj-pay-card h2,.mfkj-membership-item h4,
+  .mfkj-dash-panel h3,.mfkj-course-group-head h2,.mfkj-t-card h2,.mfkj-t-card h3
+){color:var(--dpg-text)!important}
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-heading p,.mfkr-desc,.mfkr-level p,.mfkr-quiz-intro p,.mfkr-footer,
+  .mfkr-ar,.mfkr-meaning,.mfkr-example-ar,.mfkr-audio-status,.mfkr-quiz-feedback,
+  .mfkr-note,.mfkj-pay-muted,.mfkj-membership-info,.mfkj-dash-panel p,
+  .mfkj-t-card p,.mfkj-t-card li,.mfkj-course-ar
+){color:var(--dpg-muted)!important}
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-eyebrow,.mfkr-card-foot,.mfkr-code,.mfkr-count,.mfkr-quiz-badge,
+  .mfkj-pay-kicker,.mfkj-membership-code,.mfkj-course-code,.mfkj-t-kicker
+){color:var(--dpg-gold)!important}
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-btn,.mfkr-sound,.mfkr-topic,.mfkr-quiz-option,.mfkr-c1-chip,
+  .mfkr-a2-line-sound,.mfkr-back-arrow,.mfkj-lab-btn,.mfkj-lab-entry,
+  .mfkj-pay-submit,.mfkj-membership-action,.mfkj-daily-listen,
+  .mfkj-daily-option,.mfkj-daily-clear,.mfkj-t-link,.mfkj-t-nav a,
+  .mfkj-pay-auth-actions button
+){
+  color:var(--dpg-gold)!important;
+  border:1px solid rgba(255,218,174,.42)!important;
+  border-radius:13px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(82,53,104,.48))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 20px rgba(12,5,23,.16)!important;
+}
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-btn-primary,.mfkj-primary,.mfkj-pay-submit,
+  .mfkj-lab-btn:not(.secondary),.mfkj-fast-submit
+){
+  color:#4b2d46!important;-webkit-text-fill-color:#4b2d46!important;
+  border:1px solid rgba(255,237,207,.92)!important;
+  background:linear-gradient(135deg,#ffe5bd 0%,#e8b974 55%,#c98248 100%)!important;
+  box-shadow:0 10px 24px rgba(35,15,37,.29),inset 0 1px 0 rgba(255,255,255,.62),0 0 20px rgba(244,190,128,.14)!important;
+}
+html body #mfKidsStandaloneRoot :is(.mfkr-btn:hover,.mfkr-topic:hover,.mfkr-quiz-option:hover,.mfkj-lab-btn:hover,.mfkj-lab-entry:hover){
+  transform:translateY(-1px)!important;border-color:rgba(255,237,207,.88)!important;
+}
+html body #mfKidsStandaloneRoot :is(input,textarea,select,.mfkj-field,.mfkj-t-select,.mfkj-t-area){
+  color:var(--dpg-text)!important;
+}
+html body #mfKidsStandaloneRoot :is(input,textarea,.mfkj-t-area)::placeholder{
+  color:rgba(241,221,240,.70)!important;opacity:1!important;
+}
