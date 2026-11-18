@@ -1370,27 +1370,23 @@ html body.programming-page .pa-code-hero-inline .pa-code-hero-dots i{
 }
 
 
-/* 2026-11-18: replace the single large hub-title marker with three tiny colored dots. */
+/* 2026-11-18: two tiny glowing circular markers beside each hub title. */
 html body.programming-page .pa20-hub-card strong{
   gap:8px!important;
 }
 html body.programming-page .pa20-hub-card strong::before{
   content:""!important;
   display:inline-block!important;
-  width:13px!important;
-  min-width:13px!important;
-  height:4px!important;
+  width:12px!important;
+  min-width:12px!important;
+  height:6px!important;
   border-radius:0!important;
-  background:linear-gradient(90deg,
-    #ff7777 0 3px,
-    transparent 3px 5px,
-    #ffc96b 5px 8px,
-    transparent 8px 10px,
-    #65dfb0 10px 13px
-  )!important;
+  background:
+    radial-gradient(circle at 3px 3px,#ff7777 0 2px,transparent 2.5px),
+    radial-gradient(circle at 9px 3px,#65dfb0 0 2px,transparent 2.5px)!important;
   box-shadow:none!important;
-  filter:drop-shadow(0 0 2px rgba(255,255,255,.24))!important;
-  flex:0 0 13px!important;
+  filter:drop-shadow(0 0 2px rgba(255,119,119,.95)) drop-shadow(0 0 3px rgba(101,223,176,.8))!important;
+  flex:0 0 12px!important;
 }
 
 
