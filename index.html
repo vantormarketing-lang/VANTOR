@@ -1967,6 +1967,11 @@ body{min-height:100vh;min-height:100dvh}
 .doma-forced-password .doma-v115-create{width:100%;margin-top:10px}
 .doma-forced-signout{display:block;margin:14px auto 0;border:0;background:none;color:#c7b5d0;font-size:11px;text-decoration:underline}
 </style>
+
+<!-- Kids authentication modal visibility guard; behavior only, no visual styling. -->
+<style id="mf-kids-auth-modal-visibility-v2">
+body.mf-kids-route.mf-kids-auth-modal-open #mfKidsStandaloneRoot{display:none!important;visibility:hidden!important}
+</style>
 </head>
 <body>
 <nav class="nav">
