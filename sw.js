@@ -255,26 +255,23 @@ self.addEventListener('fetch', event => {
   // app document immediately, then refresh its cache in the background.
   // Sensitive/query-bearing routes never enter this branch or the document cache.
   if (req.mode === 'navigate' && isShellDocument(url) && !hasSensitiveQuery(url)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cacheKey = normalizeShellUrl(url.href);
-      const cached = await cache.match(cacheKey).catch(() => null);
-      const refresh = async () => {
-        const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 7000);
-        const contentType = fresh?.headers?.get('content-type') || '';
-        if (fresh && fresh.ok && /text\/html/i.test(contentType)) {
-          await cache.put(cacheKey, fresh.clone()).catch(() => {});
-          return fresh;
-        }
-        throw new Error('App shell refresh returned a non-HTML response.');
-      };
-      if (cached && cached.ok) {
-        event.waitUntil(refresh().catch(() => {}));
-        return cached;
+    const cachePromise = caches.open(CACHE_NAME);
+    const cacheKey = normalizeShellUrl(url.href);
+    const refreshPromise = cachePromise.then(async cache => {
+      const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 7000);
+      const contentType = fresh?.headers?.get('content-type') || '';
+      if (fresh && fresh.ok && /text\/html/i.test(contentType)) {
+        await cache.put(cacheKey, fresh.clone()).catch(() => {});
+        return fresh;
       }
-      try { return await refresh(); }
-      catch (_) { return await navigationFallback(url.href); }
-    })());
+      throw new Error('App shell refresh returned a non-HTML response.');
+    });
+    // Extend the worker lifetime for the background refresh; do this synchronously.
+    event.waitUntil(refreshPromise.then(() => undefined).catch(() => undefined));
+    event.respondWith(cachePromise.then(cache => cache.match(cacheKey)).then(cached => {
+      if (cached && cached.ok) return cached;
+      return refreshPromise.catch(() => navigationFallback(url.href));
+    }));
     return;
   }
 
@@ -292,22 +289,17 @@ self.addEventListener('fetch', event => {
   // Cache-first with background refresh for static same-origin assets.
   // Deployments must bump asset query versions when changing a file; this keeps
   // versioned CSS/JS fast while allowing the next visit to receive fresh bytes.
-  event.respondWith((async () => {
-    const cached = await cachedPromise.catch(() => null);
-    const refresh = async () => {
-      const fresh = await fetchWithTimeout(req.clone(), {cache:'no-store'}, 7000);
-      if (fresh && fresh.ok && fresh.type !== 'opaque') {
-        const cache = await cachePromise;
-        await cache.put(req, fresh.clone()).catch(() => {});
-        return fresh;
-      }
-      throw new Error('Static asset refresh failed.');
-    };
-    if (cached) {
-      event.waitUntil(refresh().catch(() => {}));
-      return cached;
+  const refreshPromise = fetchWithTimeout(req.clone(), {cache:'no-store'}, 7000).then(async fresh => {
+    if (fresh && fresh.ok && fresh.type !== 'opaque') {
+      const cache = await cachePromise;
+      await cache.put(req, fresh.clone()).catch(() => {});
+      return fresh;
     }
-    try { return await refresh(); }
-    catch (_) { return Response.error(); }
-  })());
+    throw new Error('Static asset refresh failed.');
+  });
+  event.waitUntil(refreshPromise.then(() => undefined).catch(() => undefined));
+  event.respondWith(cachedPromise.then(cached => {
+    if (cached) return cached;
+    return refreshPromise.catch(() => Response.error());
+  }));
 });
