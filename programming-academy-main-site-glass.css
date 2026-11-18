@@ -1520,3 +1520,110 @@ html body.programming-page.pa-board-tool-view .pa-code-input{
     margin-bottom:12px!important;
   }
 }
+
+
+/* 2026-11-18: give DOMA One the same immersive, edge-to-edge glass workspace as the coding board. */
+html body.programming-page.pa-tutor-tool-view{
+  overflow:hidden!important;
+  background:#170f22!important;
+}
+html body.programming-page.pa-tutor-tool-view .pa-topbar,
+html body.programming-page.pa-tutor-tool-view .pa-tool-page-head{
+  display:none!important;
+}
+html body.programming-page.pa-tutor-tool-view #paToolPage{
+  position:fixed!important;
+  z-index:9999!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100dvh!important;
+  max-height:100dvh!important;
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  padding:clamp(16px,3vw,34px) clamp(14px,4vw,48px)!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:
+    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
+    rgba(23,15,34,.84)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(125%)!important;
+  backdrop-filter:blur(24px) saturate(125%)!important;
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+}
+html body.programming-page.pa-tutor-tool-view #paToolPage::-webkit-scrollbar,
+html body.programming-page.pa-tutor-tool-view #paToolPageBody::-webkit-scrollbar,
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost::-webkit-scrollbar{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+}
+html body.programming-page.pa-tutor-tool-view #paToolPageBody,
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost{
+  width:100%!important;
+  max-width:none!important;
+  min-height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  scrollbar-width:none!important;
+}
+/* Remove only the outer tutor shell; keep the answer, prompt, and action controls as distinct surfaces. */
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost>.pa-free-tutor{
+  width:100%!important;
+  max-width:none!important;
+  min-height:calc(100dvh - 68px)!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page.pa-tutor-tool-view .pa-free-tutor-head{
+  margin:0 0 18px!important;
+  padding:0 0 14px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html body.programming-page.pa-tutor-tool-view .pa-free-tutor-head h3{
+  margin:0 0 4px!important;
+  color:#f4d9ae!important;
+  font-size:clamp(22px,3vw,30px)!important;
+}
+html body.programming-page.pa-tutor-tool-view .pa-free-tutor-head p{
+  margin:0!important;
+  color:#e4d7eb!important;
+}
+html body.programming-page.pa-tutor-tool-view .pa-free-tutor-answer{
+  border:1px solid rgba(225,193,233,.22)!important;
+  border-radius:12px!important;
+  background:rgba(20,13,30,.56)!important;
+  box-shadow:0 12px 32px rgba(5,2,12,.16)!important;
+}
+html body.programming-page.pa-tutor-tool-view .pa-free-tutor-question input{
+  border:1px solid rgba(225,193,233,.24)!important;
+  border-radius:12px!important;
+  background:rgba(20,13,30,.52)!important;
+}
+@media(max-width:700px){
+  html body.programming-page.pa-tutor-tool-view #paToolPage{
+    padding:14px 12px 22px!important;
+  }
+  html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost>.pa-free-tutor{
+    min-height:calc(100dvh - 36px)!important;
+  }
+  html body.programming-page.pa-tutor-tool-view .pa-free-tutor-head{
+    align-items:flex-start!important;
+    margin-bottom:12px!important;
+  }
+}
