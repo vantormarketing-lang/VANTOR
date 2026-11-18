@@ -2458,3 +2458,115 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
 html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view) .pa-shell{
   position:relative!important;z-index:1!important;
 }
+
+
+/* DOMA One correction: the tutor answer panel must use the exact question-field surface. */
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAnswer,
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost .pa-free-tutor-answer {
+  color:#f4e8f7!important;
+  -webkit-text-fill-color:#f4e8f7!important;
+  border:1px solid rgba(225,193,233,.24)!important;
+  border-radius:12px!important;
+  background:rgba(20,13,30,.52)!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAnswer a {
+  color:var(--pa-main-gold)!important;
+  -webkit-text-fill-color:var(--pa-main-gold)!important;
+}
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAnswer code {
+  color:var(--pa-main-gold)!important;
+  -webkit-text-fill-color:var(--pa-main-gold)!important;
+  background:rgba(255,218,174,.10)!important;
+}
+
+/* Remove every visible scroll rail on the five-path directory and lesson reader,
+   while keeping normal mouse-wheel, touch and keyboard scrolling available. */
+html:has(body.programming-page.pa-paths-open),
+html:has(body.programming-page.pa-paths-open) *,
+html:has(body.programming-page.pa-lesson-page-view),
+html:has(body.programming-page.pa-lesson-page-view) * {
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+  scrollbar-color:transparent transparent!important;
+}
+html:has(body.programming-page.pa-paths-open)::-webkit-scrollbar,
+html:has(body.programming-page.pa-paths-open) *::-webkit-scrollbar,
+html:has(body.programming-page.pa-lesson-page-view)::-webkit-scrollbar,
+html:has(body.programming-page.pa-lesson-page-view) *::-webkit-scrollbar {
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  background:transparent!important;
+}
+
+/* Lesson view: remove the enclosing card and extend its glass-plum surface
+   across the viewport. Keep individual lesson headings and content intact. */
+html:has(body.programming-page.pa-lesson-page-view),
+html:has(body.programming-page.pa-lesson-page-view) body {
+  min-height:100%!important;
+  background-color:#170f22!important;
+  background-image:
+    radial-gradient(ellipse at 12% 8%,rgba(255,208,157,.10),transparent 48%),
+    linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;
+  background-attachment:fixed!important;
+}
+html body.programming-page.pa-lesson-page-view .pa-shell {
+  width:100%!important;
+  max-width:none!important;
+  min-height:100vh!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+}
+html body.programming-page.pa-lesson-page-view #paLessonPage {
+  display:block!important;
+  width:100%!important;
+  min-height:100vh!important;
+  margin:0!important;
+  padding:clamp(16px,3vw,38px)!important;
+  box-sizing:border-box!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+html body.programming-page.pa-lesson-page-view #paLessonReader,
+html body.programming-page.pa-lesson-page-view .pa-lesson-reader {
+  width:100%!important;
+  max-width:1180px!important;
+  min-height:calc(100vh - 32px)!important;
+  margin:0 auto!important;
+  padding:clamp(16px,2.6vw,32px)!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page.pa-lesson-page-view .pa-reader-content {
+  width:100%!important;
+  max-width:none!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+html body.programming-page.pa-lesson-page-view .pa-reader-top,
+html body.programming-page.pa-lesson-page-view .pa-activities,
+html body.programming-page.pa-lesson-page-view .pa-activity-content {
+  background:transparent!important;
+}
+@media(max-width:620px) {
+  html body.programming-page.pa-lesson-page-view #paLessonPage {
+    padding:10px!important;
+  }
+  html body.programming-page.pa-lesson-page-view #paLessonReader,
+  html body.programming-page.pa-lesson-page-view .pa-lesson-reader {
+    padding:12px!important;
+  }
+}
