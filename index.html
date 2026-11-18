@@ -13470,10 +13470,11 @@ if (!route) {
   });
   return;
 }
-document.body.classList.add('mf-kids-route', 'mf-kids-route-loading');
+var kidsInlineRequested=['entry','subscribe'].indexOf((new URLSearchParams(window.location.search).get('kids')||'').toLowerCase())>=0;
+document.body.classList.add(kidsInlineRequested?'mf-kids-inline-route':'mf-kids-route', 'mf-kids-route-loading');
 var loadingStyle = document.createElement('style');
 loadingStyle.id = 'doma-kids-route-loading-v1';
-loadingStyle.textContent = 'body.mf-kids-route-loading>*{visibility:hidden!important}';
+loadingStyle.textContent = 'body.mf-kids-route-loading:not(.mf-kids-inline-route)>*{visibility:hidden!important}';
 document.head.appendChild(loadingStyle);
 
 var kidsCssReady = false;
@@ -13492,7 +13493,7 @@ function finishKidsLoad() {
 }
 
 var runtimeScript = document.createElement('script');
-runtimeScript.src = './doma-mrfluent-kids-runtime.js?v=kids-entry-direct-subscribe-20261118';
+runtimeScript.src = './doma-mrfluent-kids-runtime.js?v=kids-inline-below-faq-20261118';
 runtimeScript.onload = function() {
   kidsRuntimeReady = true;
   finishKidsLoad();
@@ -13510,7 +13511,7 @@ document.body.appendChild(runtimeScript);
 
 var kidsStylesheet = document.createElement('link');
 kidsStylesheet.rel = 'stylesheet';
-kidsStylesheet.href = './doma-mrfluent-kids-runtime.css?v=kids-subscribe-direct-nav-20261118';
+kidsStylesheet.href = './doma-mrfluent-kids-runtime.css?v=kids-inline-below-faq-20261118';
 kidsStylesheet.onload = function() {
   kidsCssReady = true;
   finishKidsLoad();
