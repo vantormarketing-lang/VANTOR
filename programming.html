@@ -70,22 +70,16 @@
   <div class="pa-top-actions"><button type="button" class="pa-home-link pa-global-back" id="paGlobalBack" aria-label="رجوع للصفحة السابقة" title="رجوع">←</button></div>
 </header>
 <main class="pa-shell">
-  <section class="pa20-hero" aria-labelledby="pa20HeroTitle">
-    <div class="pa20-hero-copy">
-      <div class="pa20-brandline"><span class="pa20-brandmark" aria-hidden="true">&lt;/&gt;</span><span>DOMA Academy</span></div>
-      <p class="pa20-eyebrow">PROGRAMMING ACADEMY</p>
-      <h1 id="pa20HeroTitle" class="pa20-title">Programming Academy<span class="pa20-title-ar">أكاديمية البرمجة</span></h1>
-      <p class="pa20-tagline">Learn · Practice · Create</p>
-      <p class="pa20-tagline-ar">تعلّم · طبّق · ابتكر</p>
-      
-  <section class="pa20-hub" aria-label="أقسام أكاديمية البرمجة">
-    <button type="button" class="pa20-hub-card" id="pa20OpenPaths"><span class="pa20-hub-icon" aria-hidden="true">⌘</span><span><strong>Paths · المسارات</strong><small>5 tracks</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
-    <button type="button" class="pa20-hub-card" id="pa20OpenTutor"><span class="pa20-hub-icon" aria-hidden="true">✦</span><span><strong>AI Assistant</strong><small>المساعد الذكي</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
-    <button type="button" class="pa20-hub-card" id="pa20OpenBoard"><span class="pa20-hub-icon" aria-hidden="true">▤</span><span><strong>Interactive Boards</strong><small>لوحات البرمجة التفاعلية</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
-    <button type="button" class="pa20-hub-card" id="pa20OpenHandbook"><span class="pa20-hub-icon" aria-hidden="true">⌨</span><span><strong>Developer Guide</strong><small>دليل المبرمج</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
-  </section>
-    </div>
-    <div class="pa20-hero-art pa-code-hero-visual" role="img" aria-label="واجهة برمجة تفاعلية تعرض HTML وCSS وJavaScript">
+  <section class="pa20-hero pa20-hero-compact" aria-label="DOMA Academy">
+    <div class="pa20-hero-header">
+      <div class="pa20-brand-copy">
+        <div class="pa20-brandline">
+          <span class="pa20-brandmark pa20-mini-editor" aria-hidden="true"><i></i><i></i><i></i><b></b><b></b></span>
+          <span>DOMA Academy</span>
+        </div>
+        <p class="pa20-tagline">Learn · Practice · Create</p>
+      </div>
+      <div class="pa-code-hero-visual pa-code-hero-inline" role="img" aria-label="نافذة محرر أكواد">
         <div class="pa-code-hero-window" aria-hidden="true">
           <div class="pa-code-hero-windowbar" dir="ltr">
             <span class="pa-code-hero-dots"><i></i><i></i><i></i></span>
@@ -102,14 +96,14 @@
           </div>
           <div class="pa-code-hero-footer"><span>● READY TO BUILD</span><span>HTML · CSS · JS</span></div>
         </div>
-        <div class="pa-code-hero-stack" dir="ltr" aria-hidden="true">
-          <span class="pa-code-chip pa-code-chip-html"><b>&lt;/&gt;</b><small>HTML</small></span>
-          <span class="pa-code-chip pa-code-chip-css"><b>#</b><small>CSS</small></span>
-          <span class="pa-code-chip pa-code-chip-js"><b>JS</b><small>JavaScript</small></span>
-        </div>
-        <span class="pa-code-hero-spark pa-code-hero-spark-one" aria-hidden="true">✦</span>
-        <span class="pa-code-hero-spark pa-code-hero-spark-two" aria-hidden="true">✧</span>
       </div>
+    </div>
+    <section class="pa20-hub" aria-label="أقسام أكاديمية البرمجة">
+      <button type="button" class="pa20-hub-card" id="pa20OpenPaths"><span class="pa20-hub-icon" aria-hidden="true">⌘</span><span><strong>Paths · المسارات</strong><small>5 tracks</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="pa20-hub-card" id="pa20OpenTutor"><span class="pa20-hub-icon" aria-hidden="true">✦</span><span><strong>AI Assistant</strong><small>المساعد الذكي</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="pa20-hub-card" id="pa20OpenBoard"><span class="pa20-hub-icon" aria-hidden="true">▤</span><span><strong>Interactive Boards</strong><small>لوحات البرمجة التفاعلية</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="pa20-hub-card" id="pa20OpenHandbook"><span class="pa20-hub-icon" aria-hidden="true">⌨</span><span><strong>Developer Guide</strong><small>دليل المبرمج</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+    </section>
   </section>
 
   <section id="learning-paths" class="pa-path-section" hidden aria-hidden="true" style="display:none!important">
@@ -1381,6 +1375,6 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(params.get('view')==='paths')revealPaths();
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=progress-glass-lesson-index-20261118">
+<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=academy-brand-editor-header-20261118">
 </body>
 </html>
