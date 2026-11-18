@@ -1108,6 +1108,7 @@ body.programming-page #learning-paths[aria-hidden="true"]{
       setAcademyLocked(false);
       syncEmbeddedView();
       await loadCurriculum();
+      if(new URLSearchParams(window.location.search).get('view')==='paths'&&typeof window.__paRevealPaths==='function')window.__paRevealPaths();
       
       await loadStudentProgress();
       await loadProgrammingProjects();
@@ -1361,6 +1362,7 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
     var lessonPage=byId('paLessonPage');if(lessonPage)lessonPage.hidden=true;
     paths.scrollIntoView({behavior:'smooth',block:'start'});
   }
+  window.__paRevealPaths=revealPaths;
   function goBack(){
     var q=new URLSearchParams(window.location.search);
     var lesson=q.get('lesson'),track=q.get('track'),view=q.get('view');
