@@ -1140,7 +1140,7 @@ function initializeDomaProgrammingAcademy(){
     }
     document.body.classList.toggle('pa-board-tool-view',kind==='board');
     document.body.classList.toggle('pa-tutor-tool-view',kind==='tutor');
-    $('paCloseToolPage').textContent='← العودة إلى الأكاديمية';
+    $('paCloseToolPage').textContent='←';$('paCloseToolPage').setAttribute('aria-label','العودة إلى أكاديمية البرمجة');$('paCloseToolPage').title='العودة إلى أكاديمية البرمجة';
     page.hidden=false;document.body.classList.add('pa-tool-view');window.scrollTo(0,0);
   }
   function closeStandaloneTool(){
@@ -1354,7 +1354,7 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
     if(view==='paths'){window.location.href='./programming.html';return;}
     if(document.body.classList.contains('pa-tool-view')){
       var page=byId('paToolPage');if(page)page.hidden=true;
-      document.body.classList.remove('pa-tool-view');return;
+      document.body.classList.remove('pa-tool-view','pa-board-tool-view','pa-tutor-tool-view');return;
     }
     window.location.href='./index.html';
   }
