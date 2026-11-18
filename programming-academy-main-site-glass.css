@@ -396,3 +396,11 @@ html body:has(.handbook) .guide-card {
     line-height:1.9!important;
   }
 }
+
+
+/* Keep the learning-path directory completely closed on the academy landing page. */
+html body.programming-page [hidden] { display:none!important; }
+html body.programming-page #learning-paths { display:none!important; }
+html body.programming-page.pa-paths-open #learning-paths {
+  display:block!important;
+}
