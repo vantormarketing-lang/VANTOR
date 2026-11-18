@@ -2589,3 +2589,64 @@ html body.programming-page #learning-paths .pa-track-number span {
   -webkit-text-fill-color:#c9788b!important;
   text-shadow:0 0 10px rgba(201,120,139,.20)!important;
 }
+
+
+/* DOMA One: visible signature programming backdrop — final landing-page override. */
+html:has(body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)){
+  background:#211624!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view){
+  position:relative!important;
+  isolation:isolate!important;
+  min-height:100vh!important;
+  background:
+    radial-gradient(ellipse 48% 42% at 12% 14%,rgba(239,143,91,.24),transparent 76%),
+    radial-gradient(ellipse 44% 46% at 88% 24%,rgba(195,145,183,.22),transparent 74%),
+    radial-gradient(ellipse 52% 40% at 58% 96%,rgba(222,173,126,.13),transparent 75%),
+    linear-gradient(135deg,#211624 0%,#302033 48%,#211724 100%)!important;
+  background-attachment:fixed!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)::before{
+  content:""!important;
+  display:block!important;
+  position:fixed!important;
+  inset:-9%!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  opacity:.9!important;
+  background:
+    radial-gradient(ellipse at 15% 20%,rgba(255,154,91,.48) 0%,rgba(255,154,91,.18) 13%,transparent 34%),
+    radial-gradient(ellipse at 82% 18%,rgba(255,213,165,.30) 0%,rgba(255,213,165,.10) 16%,transparent 36%),
+    radial-gradient(ellipse at 76% 78%,rgba(172,121,184,.32) 0%,transparent 33%),
+    radial-gradient(ellipse at 24% 86%,rgba(211,127,99,.25) 0%,transparent 32%),
+    radial-gradient(ellipse at 50% 48%,rgba(108,75,129,.20) 0%,transparent 43%)!important;
+  filter:blur(46px)!important;
+  transform:translateZ(0)!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)::after{
+  content:""!important;
+  display:block!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  opacity:.56!important;
+  background-image:
+    radial-gradient(circle at 13% 23%,rgba(255,209,165,.78) 0 2px,transparent 3px),
+    radial-gradient(circle at 13% 23%,transparent 0 30px,rgba(255,177,125,.22) 31px 32px,transparent 33px),
+    radial-gradient(circle at 84% 25%,rgba(255,209,165,.70) 0 2px,transparent 3px),
+    radial-gradient(circle at 84% 25%,transparent 0 43px,rgba(255,177,125,.18) 44px 45px,transparent 46px),
+    radial-gradient(circle at 76% 78%,rgba(198,157,217,.62) 0 2px,transparent 3px),
+    radial-gradient(circle at 76% 78%,transparent 0 35px,rgba(198,157,217,.16) 36px 37px,transparent 38px),
+    linear-gradient(28deg,transparent 0 18%,rgba(255,183,130,.14) 18.08% 18.18%,transparent 18.28% 100%),
+    linear-gradient(152deg,transparent 0 39%,rgba(255,183,130,.12) 39.08% 39.18%,transparent 39.28% 100%),
+    repeating-linear-gradient(90deg,transparent 0 95px,rgba(255,210,174,.045) 96px,transparent 97px 190px),
+    repeating-linear-gradient(0deg,transparent 0 95px,rgba(255,210,174,.035) 96px,transparent 97px 190px);
+  background-size:100% 100%!important;
+  filter:blur(.65px)!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view) .pa-shell{
+  position:relative!important;
+  z-index:1!important;
+  background:transparent!important;
+}
