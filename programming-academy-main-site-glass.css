@@ -1,0 +1,216 @@
+/* DOMA Programming Academy — exact How It Works glass identity */
+:root{
+  --pa-main-bg:#08070d;
+  --pa-glass-deep:rgba(10,12,25,.84);
+  --pa-glass-edge:rgba(120,190,255,.42);
+  --pa-text:#f3f5ff;
+  --pa-muted:#c2c9dc;
+}
+html,body,body.programming-page{
+  min-height:100%;
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(111,66,166,.19),transparent 31%),
+    radial-gradient(ellipse at 88% 18%,rgba(117,34,63,.17),transparent 32%),
+    radial-gradient(ellipse at 52% 100%,rgba(45,128,165,.10),transparent 42%),
+    linear-gradient(180deg,#08070d 0%,#0b0912 52%,#08070d 100%)!important;
+  background-attachment:fixed!important;
+  color:var(--pa-text)!important;
+}
+.programming-page .pa-shell{position:relative;isolation:isolate}
+.programming-page .pa-shell:before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 18% 22%,rgba(112,91,230,.07),transparent 26%),radial-gradient(circle at 82% 72%,rgba(47,205,202,.055),transparent 27%);
+}
+.programming-page .pa-hero,
+.programming-page .pa-track-card,
+.programming-page .pa20-hub-card,
+.programming-page .pa-project-card,
+.programming-page .pa-side-card,
+.programming-page .pa-lessons-panel,
+.programming-page .pa-progress-card,
+.programming-page .pa-activity-card,
+.programming-page .pa-review-card,
+.programming-page .pa-certificate-card,
+.programming-page .pa-achievement-panel,
+.programming-page .pa-daily-card,
+.programming-page .pa-modal-card,
+.programming-page .pa-tool-page,
+.programming-page .pa-path-section,
+.programming-page .pa-admin-panel,
+.programming-page .pa-admin-learning,
+.programming-page .pa-admin-student-report-body,
+.programming-page .pa-empty-state,
+.programming-page .pa-lesson-reader,
+.programming-page .pa-code-editor,
+.programming-page .pa-exercise-editor,
+.programming-page .pa-test-output,
+.programming-page .pa-quiz-question{
+  --step-rgb:46,223,224;
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden;
+  border:1px solid rgba(var(--step-rgb),.48)!important;
+  border-radius:14px!important;
+  background:linear-gradient(150deg,rgba(var(--step-rgb),.15),rgba(4,15,29,.88) 76%)!important;
+  background-color:rgba(4,15,29,.88)!important;
+  color:#f1ffff!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.075),0 8px 18px rgba(0,0,0,.18)!important;
+  backdrop-filter:blur(18px) saturate(1.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+.programming-page .pa-hero{--step-rgb:131,174,255;padding:clamp(24px,5vw,58px)!important}
+.programming-page .pa-track-card:nth-child(4n+1),
+.programming-page .pa20-hub-card:nth-child(4n+1),
+.programming-page .pa-project-card:nth-child(4n+1),
+.programming-page .pa-activity-card:nth-child(4n+1){--step-rgb:46,223,224}
+.programming-page .pa-track-card:nth-child(4n+2),
+.programming-page .pa20-hub-card:nth-child(4n+2),
+.programming-page .pa-project-card:nth-child(4n+2),
+.programming-page .pa-activity-card:nth-child(4n+2){--step-rgb:67,186,231}
+.programming-page .pa-track-card:nth-child(4n+3),
+.programming-page .pa20-hub-card:nth-child(4n+3),
+.programming-page .pa-project-card:nth-child(4n+3),
+.programming-page .pa-activity-card:nth-child(4n+3){--step-rgb:105,228,183}
+.programming-page .pa-track-card:nth-child(4n),
+.programming-page .pa20-hub-card:nth-child(4n),
+.programming-page .pa-project-card:nth-child(4n),
+.programming-page .pa-activity-card:nth-child(4n){--step-rgb:131,174,255}
+.programming-page .pa-track-card:before,
+.programming-page .pa20-hub-card:before,
+.programming-page .pa-project-card:before,
+.programming-page .pa-side-card:before,
+.programming-page .pa-progress-card:before,
+.programming-page .pa-activity-card:before,
+.programming-page .pa-review-card:before,
+.programming-page .pa-certificate-card:before,
+.programming-page .pa-daily-card:before,
+.programming-page .pa-modal-card:before,
+.programming-page .pa-tool-page:before,
+.programming-page .pa-hero:before,
+.programming-page .pa-lessons-panel:before,
+.programming-page .pa-lesson-reader:before,
+.programming-page .pa-code-editor:before,
+.programming-page .pa-exercise-editor:before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(118deg,rgba(255,255,255,.105) 0%,rgba(255,255,255,.025) 48%,rgba(255,255,255,.01) 100%);
+}
+.programming-page .pa-track-card:after,
+.programming-page .pa20-hub-card:after,
+.programming-page .pa-project-card:after,
+.programming-page .pa-side-card:after,
+.programming-page .pa-progress-card:after,
+.programming-page .pa-activity-card:after,
+.programming-page .pa-review-card:after,
+.programming-page .pa-certificate-card:after,
+.programming-page .pa-daily-card:after{
+  content:"";position:absolute;top:13px;right:14px;width:6px;height:6px;border-radius:50%;
+  background:#e6ffff;box-shadow:0 0 5px 2px rgba(var(--step-rgb),.85),0 0 13px 5px rgba(123,110,255,.48),0 0 20px 6px rgba(225,100,255,.2);
+  animation:domaAcademyGlassDot 1.8s ease-in-out infinite;pointer-events:none;z-index:2;
+}
+@keyframes domaAcademyGlassDot{0%,100%{opacity:.62;transform:scale(.82)}50%{opacity:1;transform:scale(1.16)}}
+.programming-page .pa-track-card>*,
+.programming-page .pa20-hub-card>*,
+.programming-page .pa-project-card>*,
+.programming-page .pa-side-card>*,
+.programming-page .pa-progress-card>*,
+.programming-page .pa-activity-card>*,
+.programming-page .pa-review-card>*,
+.programming-page .pa-certificate-card>*,
+.programming-page .pa-daily-card>*,
+.programming-page .pa-modal-card>*,
+.programming-page .pa-tool-page>*,
+.programming-page .pa-hero>*,
+.programming-page .pa-lessons-panel>*,
+.programming-page .pa-lesson-reader>*,
+.programming-page .pa-code-editor>*,
+.programming-page .pa-exercise-editor>*{position:relative;z-index:1}
+.programming-page .pa-track-card,
+.programming-page .pa20-hub-card,
+.programming-page .pa-project-card,
+.programming-page .pa-activity-card{color:#f1ffff!important}
+.programming-page .pa-track-card:hover,
+.programming-page .pa-track-card.active,
+.programming-page .pa20-hub-card:hover,
+.programming-page .pa-project-card:hover,
+.programming-page .pa-activity-card:hover,
+.programming-page .pa-review-card:hover{
+  border-color:rgba(var(--step-rgb),.88)!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.10),0 0 16px rgba(var(--step-rgb),.14),0 10px 23px rgba(0,0,0,.2)!important;
+  transform:translateY(-2px)!important;
+}
+.programming-page .pa-track-number,
+.programming-page .pa-lesson-index,
+.programming-page .pa-side-icon,
+.programming-page .pa-activity-tag,
+.programming-page .pa-project-status,
+.programming-page .pa-progress-count{
+  border-color:rgba(var(--step-rgb),.52)!important;
+  background:rgba(3,22,29,.55)!important;
+  color:rgb(var(--step-rgb))!important;
+}
+.programming-page .pa-track-content b,
+.programming-page .pa-section-heading h2,
+.programming-page .pa-panel-heading h2,
+.programming-page .pa-tool-page-head h1,
+.programming-page .pa-lesson-reader h2{color:#f2f7ff!important}
+.programming-page .pa-track-content small,
+.programming-page .pa-track-arrow,
+.programming-page .pa-side-card h3,
+.programming-page .pa-reader-content h3{color:#9feaff!important}
+.programming-page .pa-track-description,
+.programming-page .pa-track-meta,
+.programming-page .pa-side-card p,
+.programming-page .pa-lesson-copy small,
+.programming-page .pa-reader-summary,
+.programming-page .pa-reader-content,
+.programming-page .pa-save-note{color:#d0dced!important}
+.programming-page .pa-topbar{background:rgba(8,7,13,.72)!important;border-bottom:1px solid rgba(126,183,255,.18)!important;backdrop-filter:blur(20px)!important}
+.programming-page .pa-home-link,
+.programming-page .pa-primary-btn,
+.programming-page .pa-outline-btn,
+.programming-page .pa-lab-run,
+.programming-page .pa-lab-secondary,
+.programming-page .pa-test-next,
+.programming-page .pa-submit-payment,
+.programming-page .pa-project-submit{
+  border-color:rgba(126,205,238,.48)!important;
+  border-radius:12px!important;
+  box-shadow:0 7px 20px rgba(34,178,208,.12)!important;
+}
+.programming-page input,
+.programming-page textarea,
+.programming-page select,
+.programming-page .pa-code-input{
+  border-color:rgba(126,183,255,.34)!important;
+  background:rgba(5,12,25,.72)!important;
+  color:#f3f7ff!important;
+}
+.programming-page .pa-code-window,
+.programming-page .pa-test-output,
+.programming-page .pa-terminal,
+.programming-page pre{border-color:rgba(126,183,255,.3)!important}
+@media(max-width:900px){
+ .programming-page .pa-track-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:700px){
+ .programming-page .pa-hero{padding:18px!important;border-radius:18px!important}
+ .programming-page .pa-track-card,.programming-page .pa20-hub-card,.programming-page .pa-project-card,.programming-page .pa-side-card,.programming-page .pa-activity-card,.programming-page .pa-review-card{border-radius:13px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .programming-page .pa-track-card:after,.programming-page .pa20-hub-card:after,.programming-page .pa-project-card:after,.programming-page .pa-side-card:after,.programming-page .pa-progress-card:after,.programming-page .pa-activity-card:after,.programming-page .pa-review-card:after,.programming-page .pa-certificate-card:after,.programming-page .pa-daily-card:after{animation:none;opacity:1}
+ .programming-page .pa-track-card,.programming-page .pa20-hub-card,.programming-page .pa-project-card,.programming-page .pa-activity-card{transition:none!important}
+}
+/* The Programmer Guide shares the academy glass palette without changing its content. */
+body:has(.handbook){
+ background:radial-gradient(ellipse at 12% 8%,rgba(111,66,166,.19),transparent 31%),radial-gradient(ellipse at 88% 18%,rgba(117,34,63,.17),transparent 32%),linear-gradient(180deg,#08070d 0%,#0b0912 52%,#08070d 100%)!important;
+ color:#f1ffff!important;
+}
+body:has(.handbook) .hero,body:has(.handbook) .panel,body:has(.handbook) .guide-card,body:has(.handbook) .key,body:has(.handbook) .terminal{
+ border:1px solid rgba(67,186,231,.42)!important;border-radius:14px!important;
+ background:linear-gradient(150deg,rgba(67,186,231,.14),rgba(4,15,29,.88) 76%)!important;
+ color:#f1ffff!important;backdrop-filter:blur(18px) saturate(1.12)!important;
+ box-shadow:inset 0 1px 0 rgba(230,255,255,.075),0 8px 18px rgba(0,0,0,.18)!important;
+}
+body:has(.handbook) h1,body:has(.handbook) h2,body:has(.handbook) h3{color:#f2f7ff!important}
+body:has(.handbook) p,body:has(.handbook) li,body:has(.handbook) .muted{color:#d0dced!important}
