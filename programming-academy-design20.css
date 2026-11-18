@@ -107,3 +107,33 @@ body.programming-page .pa-shell :is(.pa-form-label,.pa-project-form label){color
 body.programming-page .pa-shell :is(input,textarea,select){color:#193b28!important}
 body.programming-page .pa-shell :is(input,textarea,select)::placeholder{color:#718477!important}
 body.programming-page .pa-shell .pa-free-tutor-answer,body.programming-page .pa-shell .pa-reader-content blockquote,body.programming-page .pa-shell .pa-reader-content .pa-callout{color:#294b35!important}
+
+
+/* Four compact academy actions: Paths, AI tutor, interactive board, developer guide. */
+body.programming-page .pa-topbar{direction:ltr!important;justify-content:space-between!important}
+body.programming-page .pa-user-identity{direction:rtl!important}
+body.programming-page .pa-top-actions{direction:ltr!important;margin-inline-start:auto!important}
+body.programming-page .pa-global-back{display:grid!important;place-items:center!important;width:40px!important;height:40px!important;font-size:25px!important;font-weight:900!important;cursor:pointer!important;color:#176b37!important}
+body.programming-page .pa20-hub{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important}
+body.programming-page .pa20-hub-card{min-height:112px!important;padding:12px 7px!important}
+body.programming-page .pa20-hub-card strong{font-size:clamp(9px,1.15vw,13px)!important;line-height:1.35!important}
+body.programming-page .pa20-hub-icon{width:36px!important;height:36px!important;flex-basis:36px!important}
+body.programming-page .pa20-hub-card small{display:block!important;font-size:10px!important;line-height:1.35!important}
+body.programming-page .pa20-path-close,
+body.programming-page #paBackToTracks,
+body.programming-page #paReaderBack,
+body.programming-page #paCloseToolPage,
+body.programming-page .pa-footer a{display:none!important}
+@media(max-width:760px){
+ body.programming-page .pa20-hub{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+ body.programming-page .pa20-hub-card{min-height:91px!important;padding:8px 3px!important;gap:5px!important}
+ body.programming-page .pa20-hub-card strong{font-size:9px!important;line-height:1.25!important}
+ body.programming-page .pa20-hub-card small{display:block!important;font-size:8px!important;line-height:1.2!important}
+ body.programming-page .pa20-hub-icon{width:28px!important;height:28px!important;flex-basis:28px!important;font-size:15px!important}
+ body.programming-page .pa20-hub-arrow{display:none!important}
+ body.programming-page .pa-global-back{width:36px!important;height:36px!important}
+}
+@media(max-width:350px){
+ body.programming-page .pa20-hub-card strong{font-size:8px!important}
+ body.programming-page .pa20-hub-card small{font-size:7px!important}
+}
