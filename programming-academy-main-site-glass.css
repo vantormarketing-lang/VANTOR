@@ -2730,3 +2730,71 @@ html body.programming-page.pa-track-view #paLessons{
   background:transparent!important;
   border:0!important;border-radius:0!important;box-shadow:none!important;
 }
+
+
+/* DOMA One: remove only outer challenge/practice frames; preserve inner cards and controls. */
+/* Daily challenge: keep the three individual challenge cards, remove their shared outer box. */
+html body.programming-page .pa-daily-challenges{
+  padding:0!important;
+  margin:22px 0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page .pa-daily-challenges::before,
+html body.programming-page .pa-daily-challenges::after{
+  content:none!important;display:none!important;
+}
+html body.programming-page .pa-daily-challenge-grid{
+  background:transparent!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  padding:0!important;
+}
+html body.programming-page .pa-daily-challenge-grid>.pa-daily-card{
+  border:1px solid rgba(205,170,111,.22)!important;
+  border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(117,79,139,.34),rgba(36,24,51,.76))!important;
+  box-shadow:0 10px 26px rgba(12,5,23,.20),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+/* Practice/checkpoint: remove the large frame around the heading and its two activity areas. */
+html body.programming-page .pa-activities{
+  margin:26px 0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page .pa-activities::before,
+html body.programming-page .pa-activities::after{
+  content:none!important;display:none!important;
+}
+html body.programming-page .pa-activities-heading,
+html body.programming-page .pa-activity-content{
+  background:transparent!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+}
+/* Keep individual quiz / practical-exercise cards as separate visible surfaces. */
+html body.programming-page .pa-activity-content :is(.pa-quiz-card,.pa-exercise-card,.pa-activity-card,.pa-project-card){
+  border:1px solid rgba(225,193,233,.24)!important;
+  background:linear-gradient(145deg,rgba(117,79,139,.34),rgba(36,24,51,.76))!important;
+}
+/* Bayes and all other lesson code examples: clear light-green code text. */
+html body.programming-page .pa-reader-content :is(pre,pre code,code){
+  color:#9AF2B8!important;
+  -webkit-text-fill-color:#9AF2B8!important;
+  text-shadow:0 0 8px rgba(112,227,154,.16)!important;
+}
+html body.programming-page .pa-reader-content pre{
+  border-color:rgba(112,227,154,.28)!important;
+  background:rgba(12,27,22,.72)!important;
+}
+html body.programming-page .pa-reader-content pre *{
+  color:#9AF2B8!important;
+  -webkit-text-fill-color:#9AF2B8!important;
+}
