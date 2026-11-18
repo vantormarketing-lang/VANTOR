@@ -1312,13 +1312,6 @@ function mfkjA1InstallLessonMenu(){
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="sound"><span aria-hidden="true">🔎</span><span>Sound Detective · اكتشف الصوت</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="look"><span aria-hidden="true">🖼️</span><span>Look &amp; Choose · اختار اسم الصورة</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="listen"><span aria-hidden="true">🎧</span><span>Listen &amp; Choose · اسمع واختار</span></button>'+
- '<div class="mfkj-a1-menu-group">Learning Lab · مساحة التعلّم</div>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=overview"><span aria-hidden="true">🌱</span><span>Learning Lab · البداية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=missions"><span aria-hidden="true">🏡</span><span>Home Missions · مهمات البيت</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=maker"><span aria-hidden="true">🧩</span><span>Maker Projects · مشروعات عملية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=review"><span aria-hidden="true">🧠</span><span>Smart Review · مراجعة ذكية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=writing"><span aria-hidden="true">✍️</span><span>Writing Studio · تدريب الكتابة</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=portfolio"><span aria-hidden="true">📒</span><span>Achievement Portfolio · ملف الإنجاز</span></a>'+
  '<div class="mfkj-a1-menu-group">أدوات المستوى</div>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="speaking"><span aria-hidden="true">💬</span><span>Speaking Studio</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="final"><span aria-hidden="true">🏆</span><span>Final Challenge</span></button>'+
@@ -1554,13 +1547,6 @@ function mfkjInstallCourseLevelMenu(code){
  overlay.innerHTML='<aside class="mfkj-a1-dialog" role="dialog" aria-modal="true" aria-label="قائمة دروس وأنشطة المستوى">'+
  '<header class="mfkj-a1-dialog-head"><div><span class="mfkj-a1-kicker">MR. FLUENT KIDS · LEVEL '+code+'</span><h2>'+levelTitles[code]+'</h2></div><button type="button" class="mfkj-a1-close" data-mfkj-a1-menu-close>إغلاق القائمة</button></header>'+
  '<nav class="mfkj-a1-menu-list" aria-label="دروس وأنشطة المستوى"><div class="mfkj-a1-menu-group">دروس وأنشطة المستوى</div>'+groupButtons+
- '<div class="mfkj-a1-menu-group">Learning Lab · مساحة التعلّم</div>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=overview"><span aria-hidden="true">🌱</span><span>Learning Lab · البداية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=missions"><span aria-hidden="true">🏡</span><span>Home Missions · مهمات البيت</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=maker"><span aria-hidden="true">🧩</span><span>Maker Projects · مشروعات عملية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=review"><span aria-hidden="true">🧠</span><span>Smart Review · مراجعة ذكية</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=writing"><span aria-hidden="true">✍️</span><span>Writing Studio · تدريب الكتابة</span></a>'+
- '<a class="mfkj-a1-menu-item" href="./?kids=lab&amp;kidsTab=portfolio"><span aria-hidden="true">📒</span><span>Achievement Portfolio · ملف الإنجاز</span></a>'+
  '<div class="mfkj-a1-menu-group">أدوات المستوى</div>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="speaking"><span aria-hidden="true">💬</span><span>Speaking Studio</span></button>'+
  '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="final"><span aria-hidden="true">🏆</span><span>Final Challenge</span></button>'+
