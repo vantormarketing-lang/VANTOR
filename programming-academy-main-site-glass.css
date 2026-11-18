@@ -1249,3 +1249,72 @@ html body.programming-page #learning-paths .pa-track-arrow{
   html body.programming-page #learning-paths .pa-track-content b{font-size:14px!important}
   html body.programming-page #learning-paths .pa-track-description{font-size:10px!important;line-height:1.6!important}
 }
+
+
+/* 2026-11-18: lift the academy brand/editor row and separate it from the four hub cards. */
+html body.programming-page .pa20-hero-compact{
+  padding-top:0!important;
+  margin-top:-10px!important;
+}
+html body.programming-page .pa20-hero-header{
+  direction:ltr!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  gap:clamp(22px,5vw,64px)!important;
+  margin:0 auto 38px!important;
+  transform:translateY(-8px)!important;
+}
+html body.programming-page .pa20-brand-copy{
+  direction:ltr!important;
+  text-align:left!important;
+  align-items:flex-start!important;
+  flex:0 1 38%!important;
+}
+html body.programming-page .pa20-brandline{
+  direction:ltr!important;
+  justify-content:flex-start!important;
+}
+html body.programming-page .pa20-tagline{
+  direction:ltr!important;
+  padding-inline-start:41px!important;
+  text-align:left!important;
+}
+html body.programming-page .pa-code-hero-inline{
+  direction:ltr!important;
+  flex:1 1 62%!important;
+  justify-content:flex-end!important;
+}
+html body.programming-page .pa-code-hero-inline .pa-code-hero-window{
+  margin-left:auto!important;
+}
+html body.programming-page .pa20-hero-compact .pa20-hub{
+  margin-top:30px!important;
+}
+@media(max-width:700px){
+  html body.programming-page .pa20-hero-compact{margin-top:-5px!important}
+  html body.programming-page .pa20-hero-header{
+    direction:ltr!important;
+    gap:10px!important;
+    margin-bottom:24px!important;
+    transform:translateY(-5px)!important;
+  }
+  html body.programming-page .pa20-brand-copy{
+    direction:ltr!important;
+    flex:0 0 auto!important;
+    align-items:flex-start!important;
+  }
+  html body.programming-page .pa20-brandline{direction:ltr!important}
+  html body.programming-page .pa20-tagline{
+    direction:ltr!important;
+    padding-inline-start:34px!important;
+    text-align:left!important;
+  }
+  html body.programming-page .pa-code-hero-inline{
+    direction:ltr!important;
+    flex:1 1 auto!important;
+    justify-content:flex-end!important;
+  }
+  html body.programming-page .pa20-hero-compact .pa20-hub{
+    margin-top:22px!important;
+  }
+}
