@@ -1674,3 +1674,128 @@ html body.programming-page.pa-board-tool-view .pa-lab-live{
   text-shadow:0 0 10px rgba(255,190,120,.38)!important;
   box-shadow:0 0 16px rgba(255,190,120,.10),inset 0 1px 0 rgba(255,255,255,.08)!important;
 }
+
+
+/* 2026-11-18: compact arrow-only return control for the board and DOMA One workspaces. */
+html body.programming-page.pa-board-tool-view .pa-tool-page-head,
+html body.programming-page.pa-tutor-tool-view .pa-tool-page-head{
+  display:block!important;
+  position:fixed!important;
+  z-index:10002!important;
+  top:12px!important;
+  right:18px!important;
+  width:auto!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+}
+html body.programming-page.pa-board-tool-view .pa-tool-page-head>div,
+html body.programming-page.pa-tutor-tool-view .pa-tool-page-head>div{
+  display:none!important;
+}
+html body.programming-page.pa-board-tool-view #paCloseToolPage,
+html body.programming-page.pa-tutor-tool-view #paCloseToolPage{
+  display:grid!important;
+  place-items:center!important;
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid rgba(255,218,174,.42)!important;
+  border-radius:12px!important;
+  background:rgba(70,48,88,.48)!important;
+  color:#ffe2b8!important;
+  font-size:25px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  box-shadow:0 8px 22px rgba(5,2,12,.22),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(16px)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
+  pointer-events:auto!important;
+}
+html body.programming-page.pa-board-tool-view #paCloseToolPage:hover,
+html body.programming-page.pa-tutor-tool-view #paCloseToolPage:hover{
+  background:rgba(117,79,139,.68)!important;
+  border-color:rgba(255,218,174,.72)!important;
+}
+
+/* Handbook: keep one clean arrow tile, remove the large header strip and hide scrollbar rails. */
+html body:has(.handbook){
+  overflow-y:auto!important;
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+}
+html body:has(.handbook)::-webkit-scrollbar,
+html body:has(.handbook) *::-webkit-scrollbar{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  background:transparent!important;
+}
+html body:has(.handbook) .handbook-topbar{
+  min-height:54px!important;
+  height:54px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  padding:6px max(4vw,18px)!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+html body:has(.handbook) .handbook-back{
+  display:grid!important;
+  place-items:center!important;
+  width:42px!important;
+  height:42px!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid rgba(255,218,174,.38)!important;
+  border-radius:12px!important;
+  background:rgba(117,79,139,.28)!important;
+  color:#ffe2b8!important;
+  font-size:25px!important;
+  line-height:1!important;
+  box-shadow:0 8px 22px rgba(12,5,23,.18),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body:has(.handbook) .handbook{
+  max-width:1100px!important;
+  margin:0 auto!important;
+  padding:10px 18px 28px!important;
+  background:transparent!important;
+}
+html body:has(.handbook) :is(.panel,.guide-card,.key,.terminal){
+  border:1px solid var(--pa-main-card-border)!important;
+  border-radius:20px!important;
+  background:var(--pa-main-card-bg)!important;
+  box-shadow:var(--pa-main-card-shadow)!important;
+  color:var(--pa-main-text)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+  backdrop-filter:blur(18px) saturate(135%)!important;
+}
+html body:has(.handbook) .panel{
+  margin:14px 0!important;
+  padding:20px!important;
+}
+html body:has(.handbook) .guide-card{
+  margin:0!important;
+  padding:15px!important;
+}
+html body:has(.handbook) .key{
+  background:var(--pa-main-card-bg)!important;
+}
+@media(max-width:560px){
+  html body:has(.handbook) .handbook-topbar{padding-inline:12px!important}
+  html body:has(.handbook) .handbook{padding:8px 12px 22px!important}
+  html body:has(.handbook) .panel{padding:15px!important}
+}
