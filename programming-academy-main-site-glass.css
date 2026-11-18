@@ -214,3 +214,108 @@ body:has(.handbook) .hero,body:has(.handbook) .panel,body:has(.handbook) .guide-
 }
 body:has(.handbook) h1,body:has(.handbook) h2,body:has(.handbook) h3{color:#f2f7ff!important}
 body:has(.handbook) p,body:has(.handbook) li,body:has(.handbook) .muted{color:#d0dced!important}
+
+/* Cascade correction: override legacy academy styles with stronger selectors. */
+html body.programming-page{
+ background:
+  radial-gradient(ellipse at 12% 8%,rgba(111,66,166,.19),transparent 31%),
+  radial-gradient(ellipse at 88% 18%,rgba(117,34,63,.17),transparent 32%),
+  radial-gradient(ellipse at 52% 100%,rgba(45,128,165,.10),transparent 42%),
+  linear-gradient(180deg,#08070d 0%,#0b0912 52%,#08070d 100%)!important;
+ background-attachment:fixed!important;color:#f3f5ff!important;
+}
+html body.programming-page .pa-hero,
+html body.programming-page .pa-track-card,
+html body.programming-page .pa20-hub-card,
+html body.programming-page .pa-project-card,
+html body.programming-page .pa-side-card,
+html body.programming-page .pa-lessons-panel,
+html body.programming-page .pa-progress-card,
+html body.programming-page .pa-progress-cards>div,
+html body.programming-page .pa-stats>div,
+html body.programming-page .pa-activity-card,
+html body.programming-page .pa-review-card,
+html body.programming-page .pa-certificate-card,
+html body.programming-page .pa-achievement-panel,
+html body.programming-page .pa-daily-card,
+html body.programming-page .pa-modal-card,
+html body.programming-page .pa-tool-page,
+html body.programming-page .pa-path-section,
+html body.programming-page .pa-admin-panel,
+html body.programming-page .pa-admin-learning,
+html body.programming-page .pa-admin-student-reports,
+html body.programming-page .pa-admin-learning-queue,
+html body.programming-page .pa-empty-state,
+html body.programming-page .pa-lesson-reader,
+html body.programming-page .pa-code-editor,
+html body.programming-page .pa-exercise-editor,
+html body.programming-page .pa-test-output,
+html body.programming-page .pa-quiz-question{
+ --step-rgb:46,223,224!important;
+ border:1px solid rgba(var(--step-rgb),.53)!important;
+ border-radius:14px!important;
+ background:linear-gradient(150deg,rgba(var(--step-rgb),.16),rgba(4,15,29,.90) 76%)!important;
+ background-color:rgba(4,15,29,.90)!important;
+ color:#f1ffff!important;
+ box-shadow:inset 0 1px 0 rgba(230,255,255,.07),0 8px 18px rgba(0,0,0,.18)!important;
+ backdrop-filter:blur(18px) saturate(1.12)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+}
+html body.programming-page .pa-track-card:nth-child(4n+1),
+html body.programming-page .pa20-hub-card:nth-child(4n+1),
+html body.programming-page .pa-project-card:nth-child(4n+1),
+html body.programming-page .pa-activity-card:nth-child(4n+1){--step-rgb:46,223,224!important}
+html body.programming-page .pa-track-card:nth-child(4n+2),
+html body.programming-page .pa20-hub-card:nth-child(4n+2),
+html body.programming-page .pa-project-card:nth-child(4n+2),
+html body.programming-page .pa-activity-card:nth-child(4n+2){--step-rgb:67,186,231!important}
+html body.programming-page .pa-track-card:nth-child(4n+3),
+html body.programming-page .pa20-hub-card:nth-child(4n+3),
+html body.programming-page .pa-project-card:nth-child(4n+3),
+html body.programming-page .pa-activity-card:nth-child(4n+3){--step-rgb:105,228,183!important}
+html body.programming-page .pa-track-card:nth-child(4n),
+html body.programming-page .pa20-hub-card:nth-child(4n),
+html body.programming-page .pa-project-card:nth-child(4n),
+html body.programming-page .pa-activity-card:nth-child(4n){--step-rgb:131,174,255!important}
+html body.programming-page .pa-track-card:hover,
+html body.programming-page .pa-track-card.active,
+html body.programming-page .pa20-hub-card:hover,
+html body.programming-page .pa-project-card:hover,
+html body.programming-page .pa-activity-card:hover,
+html body.programming-page .pa-review-card:hover{
+ border-color:rgba(var(--step-rgb),.9)!important;
+ background:linear-gradient(150deg,rgba(var(--step-rgb),.23),rgba(4,15,29,.94) 76%)!important;
+ box-shadow:inset 0 1px 0 rgba(230,255,255,.1),0 0 16px rgba(var(--step-rgb),.14),0 10px 23px rgba(0,0,0,.2)!important;
+ transform:translateY(-2px)!important;
+}
+html body.programming-page .pa-track-content b,
+html body.programming-page .pa-section-heading h2,
+html body.programming-page .pa-panel-heading h2,
+html body.programming-page .pa-tool-page-head h1,
+html body.programming-page .pa-lesson-reader h2{color:#f2f7ff!important}
+html body.programming-page .pa-track-description,
+html body.programming-page .pa-track-meta,
+html body.programming-page .pa-side-card p,
+html body.programming-page .pa-lesson-copy small,
+html body.programming-page .pa-reader-summary,
+html body.programming-page .pa-reader-content{color:#d0dced!important}
+html body.programming-page .pa-topbar{background:rgba(8,7,13,.78)!important;border-color:rgba(126,183,255,.2)!important}
+html body.programming-page .pa-track-card:after,
+html body.programming-page .pa20-hub-card:after,
+html body.programming-page .pa-project-card:after,
+html body.programming-page .pa-side-card:after,
+html body.programming-page .pa-progress-card:after,
+html body.programming-page .pa-activity-card:after,
+html body.programming-page .pa-review-card:after,
+html body.programming-page .pa-certificate-card:after,
+html body.programming-page .pa-daily-card:after{
+ content:""!important;position:absolute!important;top:13px!important;right:14px!important;
+ width:6px!important;height:6px!important;border-radius:50%!important;
+ background:#e6ffff!important;box-shadow:0 0 5px 2px rgba(var(--step-rgb),.85),0 0 13px 5px rgba(123,110,255,.48),0 0 20px 6px rgba(225,100,255,.2)!important;
+ animation:domaAcademyGlassDot 1.8s ease-in-out infinite!important;pointer-events:none!important;z-index:3!important;
+}
+html body.programming-page .pa-track-card>*,
+html body.programming-page .pa20-hub-card>*,
+html body.programming-page .pa-project-card>*,
+html body.programming-page .pa-side-card>*,
+html body.programming-page .pa-activity-card>*{position:relative;z-index:2}
