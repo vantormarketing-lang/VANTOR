@@ -2198,3 +2198,44 @@ html body.programming-page.pa-tutor-tool-view #paToolPage::-webkit-scrollbar-thu
   background:transparent!important;
   border:0!important;
 }
+
+
+/* Final path-card sizing and decoration cleanup: slightly roomier cards, no glowing markers. */
+html body.programming-page #learning-paths .pa-track-card{
+  min-height:88px!important;
+  padding:14px 16px!important;
+  gap:7px!important;
+  overflow:hidden!important;
+}
+html body.programming-page #learning-paths .pa-track-number,
+html body.programming-page #learning-paths .pa-track-number::before,
+html body.programming-page #learning-paths .pa-track-number::after,
+html body.programming-page #learning-paths .pa-track-number span,
+html body.programming-page #learning-paths .pa-track-number span::before,
+html body.programming-page #learning-paths .pa-track-number span::after{
+  background:none!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body.programming-page #learning-paths .pa-track-number::before,
+html body.programming-page #learning-paths .pa-track-number::after,
+html body.programming-page #learning-paths .pa-track-card::before,
+html body.programming-page #learning-paths .pa-track-card::after,
+html body.programming-page #learning-paths .pa-track-content::before,
+html body.programming-page #learning-paths .pa-track-content::after{
+  content:none!important;
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  opacity:0!important;
+  visibility:hidden!important;
+}
+@media(max-width:620px){
+  html body.programming-page #learning-paths .pa-track-card{
+    min-height:82px!important;
+    padding:12px 14px!important;
+    gap:6px!important;
+  }
+}
