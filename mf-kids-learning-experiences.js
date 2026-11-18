@@ -139,7 +139,55 @@ var s=document.createElement('style');s.id='mfkj-learning-lab-css';s.textContent
 '#mfKidsStandaloneRoot .mfkj-writing-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:13px}#mfKidsStandaloneRoot .mfkj-trace-box{position:relative;min-height:225px;overflow:hidden;border-radius:15px;border:1px dashed rgba(220,173,192,.32);background:linear-gradient(145deg,rgba(11,8,15,.72),rgba(50,26,46,.43));touch-action:none}#mfKidsStandaloneRoot .mfkj-trace-guide{position:absolute;inset:0;display:grid;place-items:center;color:rgba(231,175,205,.24);font-size:clamp(74px,15vw,130px);font-weight:950;pointer-events:none;user-select:none}#mfKidsStandaloneRoot .mfkj-trace-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}#mfKidsStandaloneRoot .mfkj-field{display:block;width:100%;margin:7px 0;padding:10px 12px;border:1px solid rgba(216,171,189,.22);border-radius:10px;background:#160f18;color:#fff2f6;font:inherit;font-size:11px}#mfKidsStandaloneRoot .mfkj-lab-small{color:#b9a6b5;font-size:9px;line-height:1.8}#mfKidsStandaloneRoot .mfkj-lab-footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:13px;border-top:1px solid rgba(215,175,190,.12);color:#a994a5;font-size:9px}',
 '#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-generator{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:0 0 13px;padding:16px;border:1px solid rgba(210,166,177,.25);border-radius:16px;background:linear-gradient(125deg,rgba(92,43,62,.38),rgba(39,28,53,.52));box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-generator h3{margin:5px 0;font-size:16px;color:#fff2f5}#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-generator p{max-width:650px;margin:4px 0;color:#d0bdcb;font-size:10px;line-height:1.9}#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-library{margin-top:16px;padding:12px 14px;border:1px solid rgba(210,166,177,.18);border-radius:14px;background:rgba(255,255,255,.025)}#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-library>summary{cursor:pointer;color:#e9c7d2;font-weight:850;font-size:11px}#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-generator .mfkj-lab-actions{margin-top:2px}#mfKidsStandaloneRoot #mfkjLearningLab details.mfkj-review-answer summary{cursor:pointer;color:#f0bfd0;font-weight:800}#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-review-answer p{margin-top:8px}#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-generator .mfkj-lab-tag{margin-top:8px}',
 '@media(max-width:680px){#mfKidsStandaloneRoot .mfkj-lab-grid{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-writing-workspace{grid-template-columns:1fr}#mfKidsStandaloneRoot .mfkj-lab-card{padding:13px}#mfKidsStandaloneRoot #mfkjLearningLab{width:96%;padding:12px;border-radius:18px}}'
-].join('');document.head.appendChild(s);}
+
+s.textContent+=String.raw`/* DOMA shared theme bridge: Learning Lab and analysis views */
+#mfKidsStandaloneRoot #mfkjLearningLab{
+ color:var(--dpg-text,#fff4e8)!important;
+ border:1px solid rgba(225,193,233,.30)!important;border-radius:24px!important;
+ background:linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.82))!important;
+ box-shadow:0 24px 68px rgba(13,5,24,.38),inset 0 1px 0 rgba(255,255,255,.12)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(135%)!important;backdrop-filter:blur(18px) saturate(135%)!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab :is(.mfkj-lab-card,.mfkj-lab-stat,.mfkj-lab-generator,.mfkj-lab-library,.mfkj-review-answer){
+ color:var(--dpg-text,#fff4e8)!important;border:1px solid rgba(225,193,233,.30)!important;
+ background:radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;
+ box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(135%)!important;backdrop-filter:blur(18px) saturate(135%)!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab :is(.mfkj-lab-eyebrow,.mfkj-lab-tag,.mfkj-lab-stat b,.mfkj-lab-library>summary,.mfkj-review-answer strong){color:var(--dpg-gold,#ffe5bd)!important}
+#mfKidsStandaloneRoot #mfkjLearningLab :is(h1,h2,h3,p,.mfkj-lab-ar,.mfkj-lab-steps,.mfkj-lab-small,.mfkj-lab-footer,.mfkj-lab-stat span){color:var(--dpg-text,#fff4e8)!important}
+#mfKidsStandaloneRoot #mfkjLearningLab :is(.mfkj-lab-btn,.mfkj-lab-entry){
+ color:var(--dpg-gold,#ffe5bd)!important;border:1px solid rgba(255,218,174,.42)!important;border-radius:13px!important;
+ background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(82,53,104,.48))!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 20px rgba(12,5,23,.16)!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab :is(.mfkj-lab-tab,.mfkj-lab-btn.secondary){
+ color:var(--dpg-gold,#ffe5bd)!important;border-color:rgba(255,218,174,.32)!important;
+ background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(82,53,104,.34))!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-tab[aria-selected="true"]{
+ color:#4b2d46!important;border-color:rgba(255,237,207,.92)!important;
+ background:linear-gradient(135deg,#ffe5bd,#e8b974 55%,#c98248)!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-trace-box{
+ border:1px dashed rgba(255,218,174,.42)!important;border-radius:15px!important;
+ background:rgba(20,13,33,.78)!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-trace-guide{color:rgba(255,229,189,.28)!important}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-field{
+ color:var(--dpg-text,#fff4e8)!important;border:1px solid rgba(225,193,233,.32)!important;
+ border-radius:13px!important;background:rgba(20,13,33,.78)!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-status{
+ color:var(--dpg-muted,#e4d5e8)!important;border-color:rgba(225,193,233,.25)!important;
+ background:rgba(255,255,255,.045)!important;
+}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-status.is-success{border-color:rgba(145,210,170,.42)!important;background:rgba(65,130,95,.16)!important;color:#c9f0d6!important}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-status.is-error{border-color:rgba(255,145,157,.42)!important;background:rgba(168,75,90,.16)!important;color:#ffd6dc!important}
+#mfKidsStandaloneRoot #mfkjLearningLab .mfkj-lab-status.is-warn{border-color:rgba(255,218,174,.42)!important;background:rgba(232,185,116,.12)!important;color:#ffe5bd!important}
+@media(max-width:680px){#mfKidsStandaloneRoot #mfkjLearningLab{width:94%;padding:14px;border-radius:19px!important}}
+`;
+document.head.appendChild(s);}
 function say(t){if(!t||!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;try{window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(String(t));u.lang='en-US';u.rate=.82;window.speechSynthesis.speak(u);}catch(_){}}
 function get(type,key){return rows.find(function(r){return r.activity_type===type&&r.activity_key===key;})||null;}
 function done(type,key){var r=get(type,key);return!!r&&r.status==='completed';}
