@@ -513,3 +513,110 @@ html body.programming-page.pa-lesson-page-view .pa-shell,
 html body.programming-page.pa-tool-view .pa-shell{
   padding-top:12px!important;
 }
+
+
+/* 2026-11-18: explicit focused-page routing and final Cairo typography.
+   Keep each academy destination visually isolated; never leave the home dashboard underneath. */
+html body.programming-page,
+html body.programming-page :where(*){
+  font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif!important;
+}
+html body.programming-page :is(.pa-code-editor,.pa-code-output,.pa-daily-editor,.pa-exercise-editor,.pa-code-window,.terminal,pre,code){
+  font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace!important;
+}
+
+/* Track directory */
+html body.programming-page.pa-paths-open .pa-learning-layout,
+html body.programming-page.pa-paths-open #paLessonPage,
+html body.programming-page.pa-paths-open #paToolPage,
+html body.programming-page.pa-paths-open .pa-footer{
+  display:none!important;
+}
+html body.programming-page.pa-paths-open #learning-paths{
+  display:block!important;visibility:visible!important;
+}
+
+/* A selected track is its own screen. */
+html body.programming-page.pa-track-view .pa20-hero,
+html body.programming-page.pa-track-view #learning-paths,
+html body.programming-page.pa-track-view #paLessonPage,
+html body.programming-page.pa-track-view #paToolPage,
+html body.programming-page.pa-track-view .pa-footer{
+  display:none!important;
+}
+html body.programming-page.pa-track-view .pa-learning-layout{
+  display:grid!important;visibility:visible!important;
+}
+
+/* A lesson reader is the only main content on the lesson screen. */
+html body.programming-page.pa-lesson-page-view .pa20-hero,
+html body.programming-page.pa-lesson-page-view #learning-paths,
+html body.programming-page.pa-lesson-page-view .pa-learning-layout,
+html body.programming-page.pa-lesson-page-view #paToolPage,
+html body.programming-page.pa-lesson-page-view .pa-footer{
+  display:none!important;
+}
+html body.programming-page.pa-lesson-page-view #paLessonPage{
+  display:block!important;visibility:visible!important;
+}
+
+/* The tutor and coding board each get a clean, separate focused view. */
+html body.programming-page.pa-tool-view .pa20-hero,
+html body.programming-page.pa-tool-view #learning-paths,
+html body.programming-page.pa-tool-view .pa-learning-layout,
+html body.programming-page.pa-tool-view #paLessonPage,
+html body.programming-page.pa-tool-view .pa-footer{
+  display:none!important;
+}
+html body.programming-page.pa-tool-view #paToolPage{
+  display:block!important;visibility:visible!important;
+}
+
+/* Compact, unboxed identity row and a small premium academy title. */
+html body.programming-page .pa-topbar{
+  min-height:42px!important;padding:5px clamp(14px,4vw,42px)!important;
+  background:transparent!important;border:0!important;box-shadow:none!important;
+}
+html body.programming-page .pa-top-actions,
+html body.programming-page .pa-user-identity{background:transparent!important;border:0!important;box-shadow:none!important}
+html body.programming-page .pa-user-identity{
+  gap:10px!important;font-family:"Cairo",sans-serif!important;
+  font-size:13px!important;font-weight:800!important;color:#f4fff9!important;
+}
+html body.programming-page .pa-user-identity-name{
+  color:#f4fff9!important;font-size:13px!important;font-weight:800!important;
+  text-shadow:0 1px 12px rgba(75,222,180,.22)!important;
+}
+html body.programming-page #paGlobalBack,
+html body.programming-page .pa-home-link{
+  width:32px!important;height:32px!important;min-width:32px!important;
+  padding:0!important;border:0!important;border-radius:50%!important;
+  background:transparent!important;box-shadow:none!important;color:#d9fff1!important;
+}
+html body.programming-page #paGlobalBack:hover,
+html body.programming-page .pa-home-link:hover{background:transparent!important}
+html body.programming-page .pa20-hero{
+  padding:12px clamp(14px,2vw,22px)!important;margin:3px 0 18px!important;
+  border:0!important;box-shadow:none!important;background:transparent!important;
+}
+html body.programming-page .pa20-brandline{font-size:12px!important;gap:8px!important}
+html body.programming-page .pa20-brandmark{
+  width:27px!important;height:27px!important;flex-basis:27px!important;
+  border-radius:9px!important;font-family:ui-monospace,monospace!important;
+  font-size:13px!important;font-weight:900!important;
+}
+html body.programming-page .pa20-eyebrow{
+  font-size:8px!important;letter-spacing:1.7px!important;margin:0!important;
+}
+html body.programming-page .pa20-title{
+  font-family:"Cairo",sans-serif!important;
+  font-size:clamp(14px,1.55vw,18px)!important;
+  line-height:1.35!important;font-weight:900!important;margin:0!important;
+}
+html body.programming-page .pa20-title .pa20-title-ar{font-size:.88em!important}
+html body.programming-page .pa20-tagline,
+html body.programming-page .pa20-tagline-ar{font-size:10px!important;line-height:1.45!important}
+@media(max-width:620px){
+  html body.programming-page .pa20-title{font-size:15px!important}
+  html body.programming-page .pa-topbar{min-height:38px!important;padding:4px 12px!important}
+}
