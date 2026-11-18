@@ -2941,7 +2941,9 @@ function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
   if(pushHistory&&href){try{window.history.pushState({mfKidsRoute:true},'',href)}catch(error){console.warn('Kids route history update failed.',error)}}
   route=next;query=new URLSearchParams(window.location.search);
   if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
-  else if(route==='entry'||route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
+  else if(route==='hub'){renderHub();}
+  else if(route==='younger'||route==='older'){renderLevels(route);}
+  else if(route==='entry'||route==='map'||route==='parents'||route==='lab'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
   else{
     var item=journeyLevels.find(function(level){return level.route===route;});
     if(item){kidsJourneyBindAuthRefresh();kidsJourneyRenderLevelGate(item.code,function(){kidsJourneyRenderLevel(item.code);journeyRenderCurrent();});}
@@ -2994,8 +2996,39 @@ journeyAttachTracker();
 journeyRenderCurrent();
 journeyInit();
 
-// The rendered header owns the only back arrow. Navigation is handled in-place above,
- // so it cannot create a second floating arrow or depend on an unreliable full reload.
+// Ensure one persistent back arrow exists at the top of every level route.
+// The normal header renders it; this guard repairs it if a later view redraw omits it.
+function ensureKidsLevelBackArrow(){
+  if(!root||['a1','a2','b1','b2','c1','c2'].indexOf(route)<0)return;
+  var headerNode=root.querySelector('.mfkr-top');
+  if(!headerNode){
+    headerNode=document.createElement('header');
+    headerNode.className='mfkr-top';
+    var wrapNode=document.createElement('div');wrapNode.className='mfkr-wrap mfkr-nav';
+    var groupNode=document.createElement('div');groupNode.className='mfkr-brand-group';
+    wrapNode.appendChild(groupNode);headerNode.appendChild(wrapNode);root.insertBefore(headerNode,root.firstChild);
+  }
+  var group=headerNode.querySelector('.mfkr-brand-group');
+  if(!group){group=document.createElement('div');group.className='mfkr-brand-group';var nav=headerNode.querySelector('.mfkr-nav')||headerNode;nav.insertBefore(group,nav.firstChild);}
+  var link=group.querySelector('.mfkr-back-arrow');
+  if(!link){
+    link=document.createElement('a');link.className='mfkr-back-arrow';link.textContent='←';
+    link.setAttribute('aria-label','الرجوع إلى قائمة المستويات');
+    link.setAttribute('title','الرجوع إلى قائمة المستويات');
+    group.insertBefore(link,group.firstChild);
+  }
+  var backTo=(route==='a1'||route==='b1'||route==='c1')?'younger':'older';
+  link.href=url(backTo);
+  link.style.setProperty('display','grid','important');
+  link.style.setProperty('visibility','visible','important');
+  link.style.setProperty('opacity','1','important');
+  link.style.setProperty('pointer-events','auto','important');
+}
+ensureKidsLevelBackArrow();
+if(window.MutationObserver){
+  var kidsLevelArrowObserver=new MutationObserver(function(){ensureKidsLevelBackArrow();});
+  kidsLevelArrowObserver.observe(root,{childList:true,subtree:true});
+}
 // Catch any late-created academy nodes and keep them outside this page-only view.
 if (window.MutationObserver) {
   var kidsPageObserver = new MutationObserver(function(records){
