@@ -210,3 +210,81 @@ html body.programming-page.pa-lesson-page-view .pa20-hero,
 html body.programming-page.pa-lesson-page-view .pa20-hub,
 html body.programming-page.pa-tool-view .pa20-hero,
 html body.programming-page.pa-tool-view .pa20-hub{display:none!important}
+
+/* FINAL LAYOUT CORRECTION: one continuous homepage background.
+   Only the four programming-track choices remain as How It Works-style cards. */
+html,html body.programming-page{
+  min-height:100%!important;
+  color:#fff5e9!important;
+  background:
+    radial-gradient(ellipse 560px 420px at 9% 0%,rgba(168,119,196,.22),transparent 72%),
+    radial-gradient(ellipse 510px 430px at 100% 14%,rgba(255,205,157,.095),transparent 72%),
+    radial-gradient(ellipse 650px 470px at 52% 100%,rgba(125,82,157,.17),transparent 72%),
+    linear-gradient(145deg,#140d1d 0%,#21142c 53%,#110b19 100%)!important;
+  background-attachment:fixed!important;
+}
+html body.programming-page :is(.pa-shell,.pa-path-section,.pa-section-heading,.pa-panel-heading,.pa-progress-cards,.pa-projects-section,.pa-daily-challenges,.pa-student-progress,.pa-activities,.pa-admin-learning,.pa-admin-student-reports,.pa-admin-learning-queue,.pa-free-tutor,.pa-global-tutor,.pa-code-lab,.pa-lessons-panel,.pa-lesson-reader,.pa-tool-page,.pa-achievement-panel,.pa-footer,.pa20-hub,.pa20-hero,.pa-hero){
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page :is(.pa20-hero,.pa-hero){
+  padding:clamp(22px,4vw,46px) 0!important;
+  border-radius:0!important;
+}
+html body.programming-page :is(.pa20-hub-card,.pa-project-card,.pa-daily-card,.pa-side-card,.pa-progress-card,.pa-student-badge,.pa-certificate-card,.pa-review-card,.pa-achievement-panel,.pa-activity-card,.pa-lesson-row,.pa-empty-state,.pa-loading,.pa-project-status,.pa-daily-hints,.pa-daily-result,.pa-free-tutor-answer,.pa-code-output,.pa-test-output){
+  border-color:transparent!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.programming-page .pa20-hub-card{
+  padding:12px 0!important;
+  min-height:0!important;
+  border-radius:0!important;
+}
+html body.programming-page .pa-track-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+}
+html body.programming-page .pa-track-card{
+  min-height:132px!important;
+  padding:20px!important;
+  border:1px solid rgba(225,193,233,.32)!important;
+  border-radius:22px!important;
+  color:#fff5e9!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.09),transparent 54%),
+    linear-gradient(145deg,rgba(117,79,139,.44),rgba(44,29,62,.77))!important;
+  box-shadow:0 16px 38px rgba(12,5,23,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(138%)!important;
+  backdrop-filter:blur(18px) saturate(138%)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+html body.programming-page .pa-track-card:hover,
+html body.programming-page .pa-track-card.active{
+  border-color:rgba(255,218,174,.58)!important;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.13),transparent 54%),
+    linear-gradient(145deg,rgba(128,87,151,.52),rgba(54,36,73,.84))!important;
+  box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)!important;
+  transform:translateY(-2px)!important;
+}
+html body.programming-page .pa-track-number{
+  border:1px solid rgba(255,218,174,.38)!important;
+  border-radius:12px!important;
+  background:linear-gradient(145deg,rgba(255,219,174,.18),rgba(116,78,143,.42))!important;
+  color:#ffe5bd!important;
+}
+html body.programming-page .pa-track-content b{color:#fff5e9!important}
+html body.programming-page :is(.pa-track-description,.pa-track-meta){color:#e4d5e8!important}
+html body.programming-page .pa-track-arrow{color:#ffe5bd!important}
+@media(max-width:700px){
+  html body.programming-page .pa-track-grid{grid-template-columns:1fr!important;gap:12px!important}
+  html body.programming-page .pa-track-card{min-height:112px!important;padding:16px!important}
+}
