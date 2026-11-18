@@ -50,46 +50,36 @@ self.addEventListener('fetch', event => {
   // background. Authenticated Supabase data/API calls are cross-origin and bypass
   // this worker, so no student or payment records are stored in this cache.
   if (isAdminDocument) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(ADMIN_URL).catch(() => null);
-      const refresh = async () => {
-        const response = await fetch(req, {cache:'no-store'});
-        const type = response.headers.get('content-type') || '';
-        if (!response.ok || !/text\/html/i.test(type)) throw new Error('Admin document refresh failed.');
-        await cache.put(ADMIN_URL, response.clone()).catch(() => {});
-        return response;
-      };
-      if (cached && cached.ok) {
-        event.waitUntil(refresh().catch(() => {}));
-        return cached;
-      }
-      try { return await refresh(); }
-      catch (_) {
-        return new Response(
-          '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Admin offline</title><body style="font-family:Arial;background:#100b0d;color:#fff;padding:24px"><h2>DOMA Admin is offline</h2><p>Reconnect to the internet and refresh this page to load the latest admin version.</p></body></html>',
-          {headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}}
-        );
-      }
-    })());
+    const cachePromise = caches.open(CACHE_NAME);
+    const refreshPromise = cachePromise.then(async cache => {
+      const response = await fetch(req, {cache:'no-store'});
+      const type = response.headers.get('content-type') || '';
+      if (!response.ok || !/text\/html/i.test(type)) throw new Error('Admin document refresh failed.');
+      await cache.put(ADMIN_URL, response.clone()).catch(() => {});
+      return response;
+    });
+    event.waitUntil(refreshPromise.then(() => undefined).catch(() => undefined));
+    event.respondWith(cachePromise.then(cache => cache.match(ADMIN_URL)).then(cached => {
+      if (cached && cached.ok) return cached;
+      return refreshPromise.catch(() => new Response(
+        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Admin offline</title><body style="font-family:Arial;background:#100b0d;color:#fff;padding:24px"><h2>DOMA Admin is offline</h2><p>Reconnect to the internet and refresh this page to load the latest admin version.</p></body></html>',
+        {headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}}
+      ));
+    }));
     return;
   }
 
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(req).catch(() => null);
-    const refresh = async () => {
-      const response = await fetch(req, {cache:'no-store'});
-      if (response && (response.ok || response.type === 'opaque') && SHELL.includes(req.url)) {
-        await cache.put(req, response.clone()).catch(() => {});
-      }
-      return response;
-    };
-    if (cached) {
-      event.waitUntil(refresh().catch(() => {}));
-      return cached;
+  const cachePromise = caches.open(CACHE_NAME);
+  const refreshPromise = cachePromise.then(async cache => {
+    const response = await fetch(req, {cache:'no-store'});
+    if (response && (response.ok || response.type === 'opaque') && SHELL.includes(req.url)) {
+      await cache.put(req, response.clone()).catch(() => {});
     }
-    try { return await refresh(); }
-    catch (_) { return Response.error(); }
-  })());
+    return response;
+  });
+  event.waitUntil(refreshPromise.then(() => undefined).catch(() => undefined));
+  event.respondWith(cachePromise.then(cache => cache.match(req)).then(cached => {
+    if (cached) return cached;
+    return refreshPromise.catch(() => Response.error());
+  }));
 });
