@@ -400,25 +400,42 @@ function openKidLevel(code){
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function closeKidLevel(){
- const workspace=$('kidLevelWorkspace'),studentAccess=$('studentAccess');
- const levelsPage=$('tracks');
- closeKidCourseMenu();
- const menuTrigger=$('kidMenuTrigger');if(menuTrigger){menuTrigger.hidden=true;menuTrigger.setAttribute('aria-expanded','false');}
- document.body.classList.remove('kid-level-open');
- if(workspace)workspace.hidden=true;
+ const workspace=$('kidLevelWorkspace'),studentAccess=$('studentAccess'),levelsPage=$('tracks'),grid=$('trackGrid');
+ try{closeKidCourseMenu();}catch(error){console.warn('Kids menu close:',error);}
+ const menuTrigger=$('kidMenuTrigger');
+ if(menuTrigger){menuTrigger.hidden=true;menuTrigger.setAttribute('aria-expanded','false');}
+ document.body.classList.remove('kid-level-open','kid-show-enrol','kid-subscription-modal');
+ document.body.style.overflow='';
+ if(workspace){workspace.hidden=true;workspace.setAttribute('hidden','');workspace.style.removeProperty('display');}
  if(studentAccess&&kidLevelOriginalParent){
   if(kidLevelOriginalNext&&kidLevelOriginalNext.parentNode===kidLevelOriginalParent)kidLevelOriginalParent.insertBefore(studentAccess,kidLevelOriginalNext);
   else if(studentAccess.parentNode!==kidLevelOriginalParent)kidLevelOriginalParent.appendChild(studentAccess);
   studentAccess.hidden=false;
  }
  ['tracks','placement','sample','myKidsCourse','enrol'].forEach(function(id){
-  const section=$(id);if(section){section.hidden=false;section.style.removeProperty('display');}
+  const section=$(id);
+  if(section){section.hidden=false;section.removeAttribute('hidden');section.style.removeProperty('display');}
  });
  if(levelsPage){
-  window.scrollTo({top:Math.max(0,levelsPage.getBoundingClientRect().top+window.pageYOffset-12),behavior:'auto'});
- }else{
-  window.scrollTo({top:0,behavior:'auto'});
+  levelsPage.hidden=false;
+  levelsPage.removeAttribute('hidden');
+  levelsPage.style.setProperty('display','block','important');
+  levelsPage.style.setProperty('visibility','visible','important');
  }
+ if(grid){
+  grid.hidden=false;
+  grid.removeAttribute('hidden');
+  grid.style.setProperty('display','grid','important');
+ }
+ try{if(typeof renderTrackMetadata==='function'&&levels.length)renderTrackMetadata();}catch(error){console.warn('Kids levels refresh:',error);}
+ const showLevels=()=>{
+  if(levelsPage){
+   levelsPage.hidden=false;
+   levelsPage.style.setProperty('display','block','important');
+   window.scrollTo({top:Math.max(0,levelsPage.getBoundingClientRect().top+window.pageYOffset-12),behavior:'auto'});
+  }else{window.scrollTo({top:0,behavior:'auto'});}
+ };
+ if(typeof requestAnimationFrame==='function')requestAnimationFrame(showLevels);else setTimeout(showLevels,0);
 }
 function goKidSubscription(){
  const lvl=byLevelCode(selectedLevelCode);
