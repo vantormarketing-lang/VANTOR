@@ -124,8 +124,8 @@ for (const path of coursePagesForCdn) {
 }
 ok('Course pages: supabase-js CDN versions are pinned to a single x.y.z release');
 
-const responseHeaders = read('_headers');
-const mainCsp = responseHeaders.split(String.fromCharCode(10)).find(line => line.includes('Content-Security-Policy: default-src'));
+const cspHeaderFile = read('_headers');
+const mainCsp = cspHeaderFile.split(String.fromCharCode(10)).find(line => line.includes('Content-Security-Policy: default-src'));
 if (!mainCsp || !mainCsp.includes('frame-src') || !mainCsp.includes('https://www.youtube-nocookie.com')) {
   fail('_headers: CSP frame-src must allow https://www.youtube-nocookie.com for Kids course videos');
 } else {
