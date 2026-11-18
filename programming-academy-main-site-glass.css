@@ -1,321 +1,321 @@
-/* DOMA Programming Academy — exact How It Works glass identity */
+/* DOMA Programming Academy — unified How It Works glass system
+   Replaces the conflicting Botanical / Glass Neon / legacy academy themes.
+   Layout and behavior remain in programming-academy.css and the page scripts. */
 :root{
-  --pa-main-bg:#08070d;
-  --pa-glass-deep:rgba(10,12,25,.84);
-  --pa-glass-edge:rgba(120,190,255,.42);
-  --pa-text:#f3f5ff;
-  --pa-muted:#c2c9dc;
+  --pa-glass-bg:rgba(5,27,37,.88);
+  --pa-glass-surface:linear-gradient(150deg,rgba(46,223,224,.15),rgba(4,29,37,.92) 76%);
+  --pa-glass-edge:rgba(91,222,225,.48);
+  --pa-ink:#efffff;
+  --pa-muted:rgba(226,244,247,.74);
+  --pa-teal:#2edfe0;
+  --pa-blue:#43bae7;
+  --pa-mint:#69e4b7;
+  --pa-lilac:#83aeff;
 }
-html,body,body.programming-page{
+html:has(body.programming-page),html body.programming-page{
   min-height:100%;
-  background:
-    radial-gradient(ellipse at 12% 8%,rgba(111,66,166,.19),transparent 31%),
-    radial-gradient(ellipse at 88% 18%,rgba(117,34,63,.17),transparent 32%),
-    radial-gradient(ellipse at 52% 100%,rgba(45,128,165,.10),transparent 42%),
-    linear-gradient(180deg,#08070d 0%,#0b0912 52%,#08070d 100%)!important;
-  background-attachment:fixed!important;
-  color:var(--pa-text)!important;
+  background:#061b27!important;
 }
-.programming-page .pa-shell{position:relative;isolation:isolate}
-.programming-page .pa-shell:before{
-  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(circle at 18% 22%,rgba(112,91,230,.07),transparent 26%),radial-gradient(circle at 82% 72%,rgba(47,205,202,.055),transparent 27%);
-}
-.programming-page .pa-hero,
-.programming-page .pa-track-card,
-.programming-page .pa20-hub-card,
-.programming-page .pa-project-card,
-.programming-page .pa-side-card,
-.programming-page .pa-lessons-panel,
-.programming-page .pa-progress-card,
-.programming-page .pa-activity-card,
-.programming-page .pa-review-card,
-.programming-page .pa-certificate-card,
-.programming-page .pa-achievement-panel,
-.programming-page .pa-daily-card,
-.programming-page .pa-modal-card,
-.programming-page .pa-tool-page,
-.programming-page .pa-path-section,
-.programming-page .pa-admin-panel,
-.programming-page .pa-admin-learning,
-.programming-page .pa-admin-student-report-body,
-.programming-page .pa-empty-state,
-.programming-page .pa-lesson-reader,
-.programming-page .pa-code-editor,
-.programming-page .pa-exercise-editor,
-.programming-page .pa-test-output,
-.programming-page .pa-quiz-question{
-  --step-rgb:46,223,224;
-  position:relative!important;
-  isolation:isolate!important;
-  overflow:hidden;
-  border:1px solid rgba(var(--step-rgb),.48)!important;
-  border-radius:14px!important;
-  background:linear-gradient(150deg,rgba(var(--step-rgb),.15),rgba(4,15,29,.88) 76%)!important;
-  background-color:rgba(4,15,29,.88)!important;
-  color:#f1ffff!important;
-  box-shadow:inset 0 1px 0 rgba(230,255,255,.075),0 8px 18px rgba(0,0,0,.18)!important;
-  backdrop-filter:blur(18px) saturate(1.12)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
-  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
-}
-.programming-page .pa-hero{--step-rgb:131,174,255;padding:clamp(24px,5vw,58px)!important}
-.programming-page .pa-track-card:nth-child(4n+1),
-.programming-page .pa20-hub-card:nth-child(4n+1),
-.programming-page .pa-project-card:nth-child(4n+1),
-.programming-page .pa-activity-card:nth-child(4n+1){--step-rgb:46,223,224}
-.programming-page .pa-track-card:nth-child(4n+2),
-.programming-page .pa20-hub-card:nth-child(4n+2),
-.programming-page .pa-project-card:nth-child(4n+2),
-.programming-page .pa-activity-card:nth-child(4n+2){--step-rgb:67,186,231}
-.programming-page .pa-track-card:nth-child(4n+3),
-.programming-page .pa20-hub-card:nth-child(4n+3),
-.programming-page .pa-project-card:nth-child(4n+3),
-.programming-page .pa-activity-card:nth-child(4n+3){--step-rgb:105,228,183}
-.programming-page .pa-track-card:nth-child(4n),
-.programming-page .pa20-hub-card:nth-child(4n),
-.programming-page .pa-project-card:nth-child(4n),
-.programming-page .pa-activity-card:nth-child(4n){--step-rgb:131,174,255}
-.programming-page .pa-track-card:before,
-.programming-page .pa20-hub-card:before,
-.programming-page .pa-project-card:before,
-.programming-page .pa-side-card:before,
-.programming-page .pa-progress-card:before,
-.programming-page .pa-activity-card:before,
-.programming-page .pa-review-card:before,
-.programming-page .pa-certificate-card:before,
-.programming-page .pa-daily-card:before,
-.programming-page .pa-modal-card:before,
-.programming-page .pa-tool-page:before,
-.programming-page .pa-hero:before,
-.programming-page .pa-lessons-panel:before,
-.programming-page .pa-lesson-reader:before,
-.programming-page .pa-code-editor:before,
-.programming-page .pa-exercise-editor:before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(118deg,rgba(255,255,255,.105) 0%,rgba(255,255,255,.025) 48%,rgba(255,255,255,.01) 100%);
-}
-.programming-page .pa-track-card:after,
-.programming-page .pa20-hub-card:after,
-.programming-page .pa-project-card:after,
-.programming-page .pa-side-card:after,
-.programming-page .pa-progress-card:after,
-.programming-page .pa-activity-card:after,
-.programming-page .pa-review-card:after,
-.programming-page .pa-certificate-card:after,
-.programming-page .pa-daily-card:after{
-  content:"";position:absolute;top:13px;right:14px;width:6px;height:6px;border-radius:50%;
-  background:#e6ffff;box-shadow:0 0 5px 2px rgba(var(--step-rgb),.85),0 0 13px 5px rgba(123,110,255,.48),0 0 20px 6px rgba(225,100,255,.2);
-  animation:domaAcademyGlassDot 1.8s ease-in-out infinite;pointer-events:none;z-index:2;
-}
-@keyframes domaAcademyGlassDot{0%,100%{opacity:.62;transform:scale(.82)}50%{opacity:1;transform:scale(1.16)}}
-.programming-page .pa-track-card>*,
-.programming-page .pa20-hub-card>*,
-.programming-page .pa-project-card>*,
-.programming-page .pa-side-card>*,
-.programming-page .pa-progress-card>*,
-.programming-page .pa-activity-card>*,
-.programming-page .pa-review-card>*,
-.programming-page .pa-certificate-card>*,
-.programming-page .pa-daily-card>*,
-.programming-page .pa-modal-card>*,
-.programming-page .pa-tool-page>*,
-.programming-page .pa-hero>*,
-.programming-page .pa-lessons-panel>*,
-.programming-page .pa-lesson-reader>*,
-.programming-page .pa-code-editor>*,
-.programming-page .pa-exercise-editor>*{position:relative;z-index:1}
-.programming-page .pa-track-card,
-.programming-page .pa20-hub-card,
-.programming-page .pa-project-card,
-.programming-page .pa-activity-card{color:#f1ffff!important}
-.programming-page .pa-track-card:hover,
-.programming-page .pa-track-card.active,
-.programming-page .pa20-hub-card:hover,
-.programming-page .pa-project-card:hover,
-.programming-page .pa-activity-card:hover,
-.programming-page .pa-review-card:hover{
-  border-color:rgba(var(--step-rgb),.88)!important;
-  box-shadow:inset 0 1px 0 rgba(230,255,255,.10),0 0 16px rgba(var(--step-rgb),.14),0 10px 23px rgba(0,0,0,.2)!important;
-  transform:translateY(-2px)!important;
-}
-.programming-page .pa-track-number,
-.programming-page .pa-lesson-index,
-.programming-page .pa-side-icon,
-.programming-page .pa-activity-tag,
-.programming-page .pa-project-status,
-.programming-page .pa-progress-count{
-  border-color:rgba(var(--step-rgb),.52)!important;
-  background:rgba(3,22,29,.55)!important;
-  color:rgb(var(--step-rgb))!important;
-}
-.programming-page .pa-track-content b,
-.programming-page .pa-section-heading h2,
-.programming-page .pa-panel-heading h2,
-.programming-page .pa-tool-page-head h1,
-.programming-page .pa-lesson-reader h2{color:#f2f7ff!important}
-.programming-page .pa-track-content small,
-.programming-page .pa-track-arrow,
-.programming-page .pa-side-card h3,
-.programming-page .pa-reader-content h3{color:#9feaff!important}
-.programming-page .pa-track-description,
-.programming-page .pa-track-meta,
-.programming-page .pa-side-card p,
-.programming-page .pa-lesson-copy small,
-.programming-page .pa-reader-summary,
-.programming-page .pa-reader-content,
-.programming-page .pa-save-note{color:#d0dced!important}
-.programming-page .pa-topbar{background:rgba(8,7,13,.72)!important;border-bottom:1px solid rgba(126,183,255,.18)!important;backdrop-filter:blur(20px)!important}
-.programming-page .pa-home-link,
-.programming-page .pa-primary-btn,
-.programming-page .pa-outline-btn,
-.programming-page .pa-lab-run,
-.programming-page .pa-lab-secondary,
-.programming-page .pa-test-next,
-.programming-page .pa-submit-payment,
-.programming-page .pa-project-submit{
-  border-color:rgba(126,205,238,.48)!important;
-  border-radius:12px!important;
-  box-shadow:0 7px 20px rgba(34,178,208,.12)!important;
-}
-.programming-page input,
-.programming-page textarea,
-.programming-page select,
-.programming-page .pa-code-input{
-  border-color:rgba(126,183,255,.34)!important;
-  background:rgba(5,12,25,.72)!important;
-  color:#f3f7ff!important;
-}
-.programming-page .pa-code-window,
-.programming-page .pa-test-output,
-.programming-page .pa-terminal,
-.programming-page pre{border-color:rgba(126,183,255,.3)!important}
-@media(max-width:900px){
- .programming-page .pa-track-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
-@media(max-width:700px){
- .programming-page .pa-hero{padding:18px!important;border-radius:18px!important}
- .programming-page .pa-track-card,.programming-page .pa20-hub-card,.programming-page .pa-project-card,.programming-page .pa-side-card,.programming-page .pa-activity-card,.programming-page .pa-review-card{border-radius:13px!important}
-}
-@media(prefers-reduced-motion:reduce){
- .programming-page .pa-track-card:after,.programming-page .pa20-hub-card:after,.programming-page .pa-project-card:after,.programming-page .pa-side-card:after,.programming-page .pa-progress-card:after,.programming-page .pa-activity-card:after,.programming-page .pa-review-card:after,.programming-page .pa-certificate-card:after,.programming-page .pa-daily-card:after{animation:none;opacity:1}
- .programming-page .pa-track-card,.programming-page .pa20-hub-card,.programming-page .pa-project-card,.programming-page .pa-activity-card{transition:none!important}
-}
-/* The Programmer Guide shares the academy glass palette without changing its content. */
-body:has(.handbook){
- background:radial-gradient(ellipse at 12% 8%,rgba(111,66,166,.19),transparent 31%),radial-gradient(ellipse at 88% 18%,rgba(117,34,63,.17),transparent 32%),linear-gradient(180deg,#08070d 0%,#0b0912 52%,#08070d 100%)!important;
- color:#f1ffff!important;
-}
-body:has(.handbook) .hero,body:has(.handbook) .panel,body:has(.handbook) .guide-card,body:has(.handbook) .key,body:has(.handbook) .terminal{
- border:1px solid rgba(67,186,231,.42)!important;border-radius:14px!important;
- background:linear-gradient(150deg,rgba(67,186,231,.14),rgba(4,15,29,.88) 76%)!important;
- color:#f1ffff!important;backdrop-filter:blur(18px) saturate(1.12)!important;
- box-shadow:inset 0 1px 0 rgba(230,255,255,.075),0 8px 18px rgba(0,0,0,.18)!important;
-}
-body:has(.handbook) h1,body:has(.handbook) h2,body:has(.handbook) h3{color:#f2f7ff!important}
-body:has(.handbook) p,body:has(.handbook) li,body:has(.handbook) .muted{color:#d0dced!important}
-
-/* Cascade correction: override legacy academy styles with stronger selectors. */
 html body.programming-page{
- background:
-  radial-gradient(ellipse at 12% 8%,rgba(111,66,166,.19),transparent 31%),
-  radial-gradient(ellipse at 88% 18%,rgba(117,34,63,.17),transparent 32%),
-  radial-gradient(ellipse at 52% 100%,rgba(45,128,165,.10),transparent 42%),
-  linear-gradient(180deg,#08070d 0%,#0b0912 52%,#08070d 100%)!important;
- background-attachment:fixed!important;color:#f3f5ff!important;
+  color:var(--pa-ink)!important;
+  background:
+    radial-gradient(ellipse at 12% 5%,rgba(46,223,224,.15),transparent 34%),
+    radial-gradient(ellipse at 88% 18%,rgba(67,186,231,.13),transparent 32%),
+    radial-gradient(ellipse at 50% 100%,rgba(105,228,183,.09),transparent 42%),
+    linear-gradient(155deg,#061b27 0%,#081d2b 48%,#091626 100%)!important;
+  background-attachment:fixed!important;
 }
-html body.programming-page .pa-hero,
-html body.programming-page .pa-track-card,
+html body.programming-page .pa-topbar{
+  background:rgba(5,24,34,.76)!important;
+  border:1px solid rgba(120,221,225,.22)!important;
+  border-radius:0 0 18px 18px!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.07)!important;
+  backdrop-filter:blur(20px) saturate(130%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(130%)!important;
+}
+html body.programming-page .pa-user-identity,
+html body.programming-page .pa-topbar,
+html body.programming-page .pa-topbar *{color:#efffff!important}
+html body.programming-page .pa-home-link,
+html body.programming-page .pa-global-back{
+  color:#b9f7f4!important;border-color:rgba(91,222,225,.42)!important;
+  background:rgba(46,223,224,.09)!important;border-radius:12px!important;
+}
+html body.programming-page .pa-shell{max-width:1280px!important;color:var(--pa-ink)!important}
+html body.programming-page .pa20-hero,
+html body.programming-page .pa-hero{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  border:1px solid rgba(91,222,225,.34)!important;border-radius:24px!important;
+  background:linear-gradient(145deg,rgba(12,52,64,.83),rgba(5,24,36,.92))!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.09)!important;
+  backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important;
+}
+html body.programming-page .pa20-hero:before,
+html body.programming-page .pa-hero:before{
+  content:""!important;position:absolute!important;z-index:-1!important;
+  width:360px!important;height:360px!important;right:-150px!important;bottom:-240px!important;
+  border-radius:50%!important;background:radial-gradient(circle,rgba(46,223,224,.19),transparent 68%)!important;
+}
+html body.programming-page .pa20-brandline,
+html body.programming-page .pa20-eyebrow,
+html body.programming-page .pa-kicker,
+html body.programming-page .pa20-tagline-ar{color:#83e9e4!important}
+html body.programming-page .pa20-title,
+html body.programming-page .pa20-tagline,
+html body.programming-page .pa-hero h1,
+html body.programming-page .pa-section-heading h2,
+html body.programming-page .pa-panel-heading h2,
+html body.programming-page .pa20-path-head h2{color:#efffff!important}
+html body.programming-page .pa20-title-ar,
+html body.programming-page .pa20-hero-copy p,
+html body.programming-page .pa-section-heading p,
+html body.programming-page .pa-panel-heading p,
+html body.programming-page .pa20-path-head p{color:var(--pa-muted)!important}
+html body.programming-page .pa20-brandmark{
+  color:#eaffff!important;background:linear-gradient(145deg,#2edfe0,#147b91)!important;
+  box-shadow:0 0 18px rgba(46,223,224,.18)!important;
+}
+html body.programming-page .pa20-hero-cta,
+html body.programming-page .pa-primary-btn,
+html body.programming-page .pa-project-submit,
+html body.programming-page .pa-daily-actions button:not(.secondary),
+html body.programming-page .pa-free-tutor-send,
+html body.programming-page .pa-lab-run{
+  color:#06212a!important;border:1px solid rgba(131,244,235,.65)!important;
+  background:linear-gradient(120deg,#8af0e2,#43bae7)!important;
+  box-shadow:0 8px 20px rgba(46,223,224,.15)!important;
+}
+html body.programming-page .pa20-hub{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:12px!important;
+}
 html body.programming-page .pa20-hub-card,
+html body.programming-page .pa-track-card,
 html body.programming-page .pa-project-card,
-html body.programming-page .pa-side-card,
-html body.programming-page .pa-lessons-panel,
-html body.programming-page .pa-progress-card,
-html body.programming-page .pa-progress-cards>div,
-html body.programming-page .pa-stats>div,
-html body.programming-page .pa-activity-card,
-html body.programming-page .pa-review-card,
-html body.programming-page .pa-certificate-card,
-html body.programming-page .pa-achievement-panel,
 html body.programming-page .pa-daily-card,
-html body.programming-page .pa-modal-card,
-html body.programming-page .pa-tool-page,
-html body.programming-page .pa-path-section,
-html body.programming-page .pa-admin-panel,
+html body.programming-page .pa-side-card,
+html body.programming-page .pa-progress-cards>*,
+html body.programming-page .pa-student-progress,
+html body.programming-page .pa-lessons-panel,
+html body.programming-page .pa-lesson-reader,
+html body.programming-page .pa-projects-section,
+html body.programming-page .pa-daily-challenges,
 html body.programming-page .pa-admin-learning,
 html body.programming-page .pa-admin-student-reports,
 html body.programming-page .pa-admin-learning-queue,
-html body.programming-page .pa-empty-state,
-html body.programming-page .pa-lesson-reader,
-html body.programming-page .pa-code-editor,
-html body.programming-page .pa-exercise-editor,
-html body.programming-page .pa-test-output,
-html body.programming-page .pa-quiz-question{
- --step-rgb:46,223,224!important;
- border:1px solid rgba(var(--step-rgb),.53)!important;
- border-radius:14px!important;
- background:linear-gradient(150deg,rgba(var(--step-rgb),.16),rgba(4,15,29,.90) 76%)!important;
- background-color:rgba(4,15,29,.90)!important;
- color:#f1ffff!important;
- box-shadow:inset 0 1px 0 rgba(230,255,255,.07),0 8px 18px rgba(0,0,0,.18)!important;
- backdrop-filter:blur(18px) saturate(1.12)!important;
- -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+html body.programming-page .pa-free-tutor,
+html body.programming-page .pa-global-tutor,
+html body.programming-page .pa-code-lab,
+html body.programming-page .pa-tool-page,
+html body.programming-page .pa-modal-card{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  border:1px solid var(--pa-glass-edge)!important;border-radius:16px!important;
+  background:var(--pa-glass-surface)!important;background-color:var(--pa-glass-bg)!important;
+  color:var(--pa-ink)!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.07),0 10px 25px rgba(0,0,0,.17)!important;
+  backdrop-filter:blur(18px) saturate(1.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
 }
-html body.programming-page .pa-track-card:nth-child(4n+1),
-html body.programming-page .pa20-hub-card:nth-child(4n+1),
-html body.programming-page .pa-project-card:nth-child(4n+1),
-html body.programming-page .pa-activity-card:nth-child(4n+1){--step-rgb:46,223,224!important}
-html body.programming-page .pa-track-card:nth-child(4n+2),
-html body.programming-page .pa20-hub-card:nth-child(4n+2),
-html body.programming-page .pa-project-card:nth-child(4n+2),
-html body.programming-page .pa-activity-card:nth-child(4n+2){--step-rgb:67,186,231!important}
-html body.programming-page .pa-track-card:nth-child(4n+3),
-html body.programming-page .pa20-hub-card:nth-child(4n+3),
-html body.programming-page .pa-project-card:nth-child(4n+3),
-html body.programming-page .pa-activity-card:nth-child(4n+3){--step-rgb:105,228,183!important}
-html body.programming-page .pa-track-card:nth-child(4n),
-html body.programming-page .pa20-hub-card:nth-child(4n),
-html body.programming-page .pa-project-card:nth-child(4n),
-html body.programming-page .pa-activity-card:nth-child(4n){--step-rgb:131,174,255!important}
-html body.programming-page .pa-track-card:hover,
-html body.programming-page .pa-track-card.active,
-html body.programming-page .pa20-hub-card:hover,
-html body.programming-page .pa-project-card:hover,
-html body.programming-page .pa-activity-card:hover,
-html body.programming-page .pa-review-card:hover{
- border-color:rgba(var(--step-rgb),.9)!important;
- background:linear-gradient(150deg,rgba(var(--step-rgb),.23),rgba(4,15,29,.94) 76%)!important;
- box-shadow:inset 0 1px 0 rgba(230,255,255,.1),0 0 16px rgba(var(--step-rgb),.14),0 10px 23px rgba(0,0,0,.2)!important;
- transform:translateY(-2px)!important;
+html body.programming-page .pa20-hub-card:before,
+html body.programming-page .pa-track-card:before,
+html body.programming-page .pa-project-card:before,
+html body.programming-page .pa-daily-card:before,
+html body.programming-page .pa-side-card:before,
+html body.programming-page .pa-lessons-panel:before,
+html body.programming-page .pa-lesson-reader:before,
+html body.programming-page .pa-code-lab:before,
+html body.programming-page .pa-tool-page:before{
+  content:""!important;position:absolute!important;inset:0!important;z-index:0!important;
+  pointer-events:none!important;border-radius:inherit!important;
+  background:linear-gradient(118deg,rgba(255,255,255,.075),rgba(255,255,255,.012) 55%,transparent)!important;
 }
+html body.programming-page .pa20-hub-card>*,
+html body.programming-page .pa-track-card>*,
+html body.programming-page .pa-project-card>*,
+html body.programming-page .pa-daily-card>*,
+html body.programming-page .pa-side-card>*,
+html body.programming-page .pa-lessons-panel>*,
+html body.programming-page .pa-lesson-reader>*,
+html body.programming-page .pa-code-lab>*,
+html body.programming-page .pa-tool-page>*{position:relative!important;z-index:1!important}
+html body.programming-page .pa20-hub-card{
+  min-width:0!important;min-height:130px!important;padding:17px!important;
+  align-items:flex-start!important;justify-content:space-between!important;
+  text-align:start!important;cursor:pointer!important;pointer-events:auto!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+html body.programming-page .pa20-hub-card strong,
 html body.programming-page .pa-track-content b,
-html body.programming-page .pa-section-heading h2,
-html body.programming-page .pa-panel-heading h2,
-html body.programming-page .pa-tool-page-head h1,
-html body.programming-page .pa-lesson-reader h2{color:#f2f7ff!important}
+html body.programming-page .pa-lesson-copy b,
+html body.programming-page .pa-project-card h3,
+html body.programming-page .pa-side-card h3,
+html body.programming-page .pa-lesson-reader h2,
+html body.programming-page .pa-tool-page h2,
+html body.programming-page .pa-tool-page h3{color:#f0ffff!important}
+html body.programming-page .pa20-hub-card small,
 html body.programming-page .pa-track-description,
 html body.programming-page .pa-track-meta,
 html body.programming-page .pa-side-card p,
-html body.programming-page .pa-lesson-copy small,
+html body.programming-page .pa-project-card p,
+html body.programming-page .pa-section-heading p,
+html body.programming-page .pa-panel-heading p,
 html body.programming-page .pa-reader-summary,
-html body.programming-page .pa-reader-content{color:#d0dced!important}
-html body.programming-page .pa-topbar{background:rgba(8,7,13,.78)!important;border-color:rgba(126,183,255,.2)!important}
-html body.programming-page .pa-track-card:after,
-html body.programming-page .pa20-hub-card:after,
-html body.programming-page .pa-project-card:after,
-html body.programming-page .pa-side-card:after,
-html body.programming-page .pa-progress-card:after,
-html body.programming-page .pa-activity-card:after,
-html body.programming-page .pa-review-card:after,
-html body.programming-page .pa-certificate-card:after,
-html body.programming-page .pa-daily-card:after{
- content:""!important;position:absolute!important;top:13px!important;right:14px!important;
- width:6px!important;height:6px!important;border-radius:50%!important;
- background:#e6ffff!important;box-shadow:0 0 5px 2px rgba(var(--step-rgb),.85),0 0 13px 5px rgba(123,110,255,.48),0 0 20px 6px rgba(225,100,255,.2)!important;
- animation:domaAcademyGlassDot 1.8s ease-in-out infinite!important;pointer-events:none!important;z-index:3!important;
+html body.programming-page .pa-reader-content,
+html body.programming-page .pa-reader-content p,
+html body.programming-page .pa-reader-content li,
+html body.programming-page .pa-tool-page p{color:var(--pa-muted)!important}
+html body.programming-page .pa20-hub-card strong:before,
+html body.programming-page .pa-track-content b:before{
+  content:""!important;display:inline-block!important;width:7px!important;height:7px!important;
+  margin:0 0 2px 8px!important;border-radius:50%!important;
+  background:#2edfe0!important;box-shadow:0 0 10px rgba(46,223,224,.85)!important;
+  vertical-align:middle!important;
 }
-html body.programming-page .pa-track-card>*,
-html body.programming-page .pa20-hub-card>*,
-html body.programming-page .pa-project-card>*,
-html body.programming-page .pa-side-card>*,
-html body.programming-page .pa-activity-card>*{position:relative;z-index:2}
+html body.programming-page .pa20-hub-card:nth-child(2) strong:before,
+html body.programming-page .pa-track-card:nth-child(4n+2) .pa-track-content b:before{background:#43bae7!important;box-shadow:0 0 10px rgba(67,186,231,.85)!important}
+html body.programming-page .pa20-hub-card:nth-child(3) strong:before,
+html body.programming-page .pa-track-card:nth-child(4n+3) .pa-track-content b:before{background:#69e4b7!important;box-shadow:0 0 10px rgba(105,228,183,.85)!important}
+html body.programming-page .pa20-hub-card:nth-child(4) strong:before,
+html body.programming-page .pa-track-card:nth-child(4n) .pa-track-content b:before{background:#83aeff!important;box-shadow:0 0 10px rgba(131,174,255,.85)!important}
+html body.programming-page .pa20-hub-icon,
+html body.programming-page .pa-track-number,
+html body.programming-page .pa-lesson-index,
+html body.programming-page .pa-side-icon{
+  color:#a9f3ef!important;border:1px solid rgba(91,222,225,.42)!important;
+  background:rgba(46,223,224,.10)!important;
+}
+html body.programming-page .pa20-hub-arrow,
+html body.programming-page .pa-track-arrow,
+html body.programming-page .pa-track-content small,
+html body.programming-page .pa-progress-count,
+html body.programming-page .pa-roadmap-label,
+html body.programming-page .pa-kicker,
+html body.programming-page .pa-free-tutor-label{color:#83e9e4!important}
+html body.programming-page .pa-track-grid{gap:12px!important}
+html body.programming-page .pa-track-card{
+  grid-template-columns:40px minmax(0,1fr) 20px!important;gap:13px!important;
+  padding:17px!important;text-align:start!important;cursor:pointer!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+html body.programming-page .pa-track-card:nth-child(4n+2){border-color:rgba(67,186,231,.48)!important}
+html body.programming-page .pa-track-card:nth-child(4n+3){border-color:rgba(105,228,183,.48)!important}
+html body.programming-page .pa-track-card:nth-child(4n){border-color:rgba(131,174,255,.48)!important}
+html body.programming-page .pa-track-card:hover,
+html body.programming-page .pa-track-card.active,
+html body.programming-page .pa20-hub-card:hover{
+  border-color:rgba(131,244,235,.85)!important;
+  box-shadow:inset 0 1px 0 rgba(230,255,255,.10),0 0 17px rgba(46,223,224,.13),0 12px 26px rgba(0,0,0,.2)!important;
+  transform:translateY(-2px)!important;
+}
+html body.programming-page .pa-lesson-row{
+  color:#efffff!important;border:1px solid rgba(91,222,225,.24)!important;
+  background:rgba(4,24,34,.58)!important;border-radius:12px!important;
+}
+html body.programming-page .pa-lesson-row small,
+html body.programming-page .pa-lesson-duration{color:var(--pa-muted)!important}
+html body.programming-page .pa-lesson-row:hover,
+html body.programming-page .pa-lesson-row.selected{
+  border-color:rgba(91,222,225,.7)!important;background:rgba(46,223,224,.10)!important;
+}
+html body.programming-page .pa-progress-track{background:rgba(255,255,255,.10)!important}
+html body.programming-page .pa-progress-track i{background:linear-gradient(90deg,#2edfe0,#69e4b7)!important}
+html body.programming-page .pa-outline-btn,
+html body.programming-page .pa-track-back,
+html body.programming-page .pa-path-close,
+html body.programming-page .pa-lab-secondary{
+  color:#a9f3ef!important;border:1px solid rgba(91,222,225,.4)!important;
+  background:rgba(46,223,224,.07)!important;
+}
+html body.programming-page .pa-empty-state,
+html body.programming-page .pa-loading{
+  color:var(--pa-muted)!important;border:1px dashed rgba(91,222,225,.38)!important;
+  background:rgba(5,27,37,.58)!important;
+}
+html body.programming-page .pa-reader-content h3,
+html body.programming-page .pa-reader-content h4,
+html body.programming-page .pa-reader-content h5,
+html body.programming-page .pa-project-rubric h4{color:#8cebe4!important}
+html body.programming-page .pa-reader-content a{color:#8bd8ff!important}
+html body.programming-page .pa-reader-content code{
+  color:#aaf3e8!important;background:rgba(46,223,224,.10)!important;
+  border:1px solid rgba(91,222,225,.22)!important;
+}
+html body.programming-page .pa-reader-content pre,
+html body.programming-page .pa-reader-content pre code,
+html body.programming-page .pa-daily-editor,
+html body.programming-page .pa-code-editor,
+html body.programming-page .pa-code-output,
+html body.programming-page .pa-test-output{
+  color:#efffff!important;background:#06131e!important;border:1px solid rgba(91,222,225,.28)!important;
+}
+html body.programming-page .pa-code-editor,
+html body.programming-page .pa-code-output,
+html body.programming-page .pa-test-output{direction:ltr!important;text-align:left!important}
+html body.programming-page .pa-code-editor:focus,
+html body.programming-page input:focus,
+html body.programming-page textarea:focus,
+html body.programming-page select:focus{
+  outline:none!important;border-color:#65dedb!important;box-shadow:0 0 0 3px rgba(46,223,224,.12)!important;
+}
+html body.programming-page .pa-shell input,
+html body.programming-page .pa-shell textarea,
+html body.programming-page .pa-shell select,
+html body.programming-page .pa-form-input,
+html body.programming-page .pa-code-select,
+html body.programming-page .pa-code-input{
+  color:#efffff!important;border:1px solid rgba(91,222,225,.32)!important;
+  background:rgba(4,24,34,.82)!important;border-radius:11px!important;
+}
+html body.programming-page .pa-shell input::placeholder,
+html body.programming-page .pa-shell textarea::placeholder{color:rgba(226,244,247,.48)!important}
+html body.programming-page .pa-form-label,
+html body.programming-page .pa-project-form label,
+html body.programming-page .pa-input-label,
+html body.programming-page .pa-lab-toolbar label{color:#b7f2ee!important}
+html body.programming-page .pa-modal-backdrop{background:rgba(1,12,19,.76)!important;backdrop-filter:blur(10px)!important}
+html body.programming-page .pa-modal-card{color:#efffff!important;border-color:rgba(91,222,225,.42)!important}
+html body.programming-page .pa-modal-card h2{color:#efffff!important}
+html body.programming-page .pa-modal-copy,
+html body.programming-page .pa-modal-price span,
+html body.programming-page .pa-cash-number span,
+html body.programming-page .pa-cash-number small{color:var(--pa-muted)!important}
+html body.programming-page .pa-modal-price,
+html body.programming-page .pa-cash-number{border-color:rgba(91,222,225,.3)!important;background:rgba(46,223,224,.06)!important}
+html body.programming-page .pa-modal-price strong,
+html body.programming-page .pa-cash-number strong{color:#8cebe4!important}
+html body.programming-page .pa-footer{color:var(--pa-muted)!important;border-top-color:rgba(91,222,225,.2)!important}
+html body.programming-page .pa-footer span:first-child{color:#83e9e4!important}
+html body.programming-page .pa-toast{color:#efffff!important;border-color:rgba(91,222,225,.38)!important;background:#092633!important}
+html body.programming-page .pa20-path-head h2{color:#efffff!important}
+html body.programming-page .pa20-path-close{cursor:pointer!important}
+html body.programming-page .pa20-hub-card *{pointer-events:none}
+html body.programming-page .pa20-hub-card{pointer-events:auto!important;z-index:5!important}
+html body.programming-page .pa-tool-page[hidden],
+html body.programming-page #learning-paths[hidden],
+html body.programming-page .pa-path-section[hidden]{display:none!important}
+@media(max-width:900px){
+ html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+ html body.programming-page .pa20-hero{grid-template-columns:1fr!important;min-height:0!important;padding:20px 15px!important}
+ html body.programming-page .pa20-hero-copy{text-align:center!important}
+ html body.programming-page .pa20-brandline{justify-content:center!important}
+ html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ html body.programming-page .pa20-hub-card{min-height:118px!important;padding:12px!important}
+ html body.programming-page .pa20-hub-card strong{font-size:12px!important;line-height:1.4!important}
+ html body.programming-page .pa20-hub-card small{font-size:9px!important}
+ html body.programming-page .pa-track-grid{grid-template-columns:1fr!important}
+ html body.programming-page .pa-track-card{grid-template-columns:34px minmax(0,1fr) 16px!important;padding:13px!important;gap:10px!important}
+ html body.programming-page .pa-learning-layout{grid-template-columns:1fr!important}
+ html body.programming-page .pa-section-heading,
+ html body.programming-page .pa-panel-heading{align-items:flex-start!important;flex-direction:column!important}
+}
+@media(max-width:380px){
+ html body.programming-page .pa20-hub{gap:7px!important}
+ html body.programming-page .pa20-hub-card{min-height:108px!important;padding:9px!important}
+ html body.programming-page .pa20-hub-card strong{font-size:10px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.programming-page .pa20-hub-card,
+ html body.programming-page .pa-track-card{transition:none!important}
+}
