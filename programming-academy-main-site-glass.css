@@ -2415,3 +2415,46 @@ html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAns
   color:#ffe1b2!important;-webkit-text-fill-color:#ffe1b2!important;
   background:rgba(255,177,112,.13)!important;
 }
+
+
+/* DOMA Programming Academy signature backdrop: softly blurred code-lab atmosphere. */
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view){
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(255,139,68,.30) 0%,rgba(255,139,68,.12) 19%,transparent 42%),
+    radial-gradient(ellipse at 88% 23%,rgba(229,157,102,.24) 0%,rgba(229,157,102,.08) 24%,transparent 46%),
+    radial-gradient(ellipse at 70% 82%,rgba(147,105,167,.25) 0%,transparent 39%),
+    radial-gradient(ellipse at 28% 72%,rgba(188,105,78,.16) 0%,transparent 35%),
+    linear-gradient(128deg,#35242d 0%,#2b2030 46%,#38262d 100%)!important;
+  background-attachment:fixed!important;
+}
+/* Defocused warm light blooms behind the content. */
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)::before{
+  opacity:.82!important;
+  background:
+    radial-gradient(ellipse at 12% 22%,rgba(255,145,75,.48) 0%,rgba(255,145,75,.20) 14%,transparent 34%),
+    radial-gradient(ellipse at 83% 18%,rgba(255,194,130,.34) 0%,rgba(255,194,130,.12) 17%,transparent 36%),
+    radial-gradient(ellipse at 78% 76%,rgba(206,123,91,.30) 0%,transparent 32%),
+    radial-gradient(ellipse at 26% 88%,rgba(164,119,190,.28) 0%,transparent 34%),
+    radial-gradient(ellipse at 50% 48%,rgba(94,65,112,.18) 0%,transparent 42%)!important;
+  filter:blur(54px)!important;
+}
+/* Very subtle circuit-board traces and code-like geometry, kept deliberately out of focus. */
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)::after{
+  opacity:.38!important;
+  background-image:
+    radial-gradient(circle at 17% 27%,rgba(255,194,135,.34) 0 2px,transparent 3px),
+    radial-gradient(circle at 17% 27%,transparent 0 34px,rgba(255,174,111,.12) 35px 36px,transparent 37px),
+    radial-gradient(circle at 81% 66%,rgba(255,185,124,.26) 0 2px,transparent 3px),
+    radial-gradient(circle at 81% 66%,transparent 0 52px,rgba(255,174,111,.10) 53px 54px,transparent 55px),
+    linear-gradient(90deg,transparent 0 11%,rgba(255,178,117,.10) 11.05% 11.12%,transparent 11.2% 100%),
+    linear-gradient(0deg,transparent 0 28%,rgba(255,178,117,.08) 28.05% 28.12%,transparent 28.2% 100%),
+    repeating-linear-gradient(90deg,transparent 0 79px,rgba(255,190,139,.035) 80px,transparent 81px 160px),
+    repeating-linear-gradient(0deg,transparent 0 79px,rgba(255,190,139,.03) 80px,transparent 81px 160px),
+    linear-gradient(115deg,rgba(255,188,133,.045),transparent 42%,rgba(255,151,82,.06))!important;
+  background-size:100% 100%!important;
+  filter:blur(1.3px)!important;
+}
+/* Keep the academy interface crisp and visually above the atmospheric background. */
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view) .pa-shell{
+  position:relative!important;z-index:1!important;
+}
