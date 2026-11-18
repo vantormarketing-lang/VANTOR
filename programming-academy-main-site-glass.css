@@ -2971,3 +2971,29 @@ html body.programming-page{
     background-size:auto,auto,auto,46px 46px,46px 46px,auto!important;
   }
 }
+
+
+/* FINAL PRIORITY FIX — the landing-page legacy selector was overriding the
+   Obsidian Tech canvas with background-image:none. Match its specificity and
+   restore the new outer canvas without touching any inner surfaces. */
+html:has(body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)),
+html:has(body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)) body{
+  background-color:#101116!important;
+  background-image:
+    radial-gradient(ellipse 900px 620px at 8% 8%,rgba(81,90,112,.34),transparent 69%),
+    radial-gradient(ellipse 760px 560px at 94% 24%,rgba(40,127,131,.25),transparent 70%),
+    radial-gradient(ellipse 860px 620px at 52% 105%,rgba(89,105,124,.20),transparent 72%),
+    linear-gradient(rgba(155,177,190,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(155,177,190,.035) 1px,transparent 1px),
+    linear-gradient(145deg,#101116 0%,#171C23 48%,#0C1117 100%)!important;
+  background-size:auto,auto,auto,58px 58px,58px 58px,auto!important;
+  background-position:center,center,center,center,center,center!important;
+  background-attachment:fixed!important;
+}
+@media(max-width:760px){
+  html:has(body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)),
+  html:has(body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)) body{
+    background-attachment:scroll!important;
+    background-size:auto,auto,auto,46px 46px,46px 46px,auto!important;
+  }
+}
