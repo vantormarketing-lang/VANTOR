@@ -1627,3 +1627,50 @@ html body.programming-page.pa-tutor-tool-view .pa-free-tutor-question input{
     margin-bottom:12px!important;
   }
 }
+
+
+/* 2026-11-18: remove the stray, non-functional page scrollbar in immersive board mode. */
+html body.programming-page.pa-board-tool-view,
+html body.programming-page.pa-board-tool-view #paToolPage,
+html body.programming-page.pa-board-tool-view #paToolPageBody,
+html body.programming-page.pa-board-tool-view #paStandaloneBoardHost,
+html body.programming-page.pa-board-tool-view #paStandaloneBoardHost>.pa-code-lab{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+}
+html body.programming-page.pa-board-tool-view::-webkit-scrollbar,
+html body.programming-page.pa-board-tool-view *::-webkit-scrollbar{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  background:transparent!important;
+}
+html body.programming-page.pa-board-tool-view #paToolPage{
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:none!important;
+}
+html body.programming-page.pa-board-tool-view .pa-lab-heading{
+  width:100%!important;
+  box-sizing:border-box!important;
+  overflow:visible!important;
+}
+html body.programming-page.pa-board-tool-view .pa-lab-live{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 auto!important;
+  margin-inline-start:auto!important;
+  margin-inline-end:4px!important;
+  padding:7px 12px!important;
+  border:1px solid rgba(255,205,139,.48)!important;
+  border-radius:999px!important;
+  background:rgba(255,190,120,.12)!important;
+  color:#ffe0b6!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1.4!important;
+  white-space:nowrap!important;
+  text-shadow:0 0 10px rgba(255,190,120,.38)!important;
+  box-shadow:0 0 16px rgba(255,190,120,.10),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
