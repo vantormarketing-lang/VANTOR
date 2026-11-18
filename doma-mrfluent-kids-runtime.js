@@ -6,7 +6,12 @@ var route = (query.get('kids') || '').toLowerCase();
 if (!route) return;
 
 var inlineKidsMode=(route==='entry'||route==='subscribe');
-document.body.classList.add(inlineKidsMode?'mf-kids-inline-route':'mf-kids-route');
+function syncKidsRouteMode(nextRoute){
+  inlineKidsMode=(nextRoute==='entry'||nextRoute==='subscribe');
+  document.body.classList.toggle('mf-kids-inline-route',inlineKidsMode);
+  document.body.classList.toggle('mf-kids-route',!inlineKidsMode);
+}
+syncKidsRouteMode(route);
 
 
 var root = document.getElementById('mfKidsStandaloneRoot') || document.createElement('main');
@@ -2940,6 +2945,7 @@ function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
   var next=String(nextRoute||'hub').toLowerCase();
   if(pushHistory&&href){try{window.history.pushState({mfKidsRoute:true},'',href)}catch(error){console.warn('Kids route history update failed.',error)}}
   route=next;query=new URLSearchParams(window.location.search);
+  syncKidsRouteMode(route);
   if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
   else if(route==='hub'){renderHub();}
   else if(route==='younger'||route==='older'){renderLevels(route);}
@@ -2973,7 +2979,7 @@ document.addEventListener('click',function(event){
   window.mfKidsNavigateInPlace(target.href);
 });
 window.addEventListener('popstate',function(){
-  if(!document.body.classList.contains('mf-kids-route'))return;
+  if(!document.body.classList.contains('mf-kids-route')&&!document.body.classList.contains('mf-kids-inline-route'))return;
   kidsJourneyRenderRouteInPlace(new URLSearchParams(window.location.search).get('kids')||'hub',window.location.href,false);
 });
 
