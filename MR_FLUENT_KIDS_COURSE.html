@@ -259,7 +259,7 @@ body.kid-subscription-modal #enrol .request-card{position:relative;max-height:ca
 
 <section id="kidLevelWorkspace" class="kid-level-workspace" hidden><div class="wrap">
  <div class="kid-level-top kid-course-header">
-  <button class="btn btn-soft" type="button" onclick="closeKidLevel()">← All levels</button>
+  <button class="btn btn-soft kid-level-return" type="button" onclick="closeKidLevel()" aria-label="العودة إلى صفحة المستويات">العودة إلى المستويات</button>
   <div class="kid-course-heading"><span class="eyebrow"><span class="dot"></span> Mr. Fluent Kids</span><h2 id="kidWorkspaceTitle">Your learning level</h2><p id="kidWorkspaceDescription">اختار درس من القائمة وابدأ التعلّم خطوة بخطوة.</p></div>
   <button id="kidMenuTrigger" class="kid-menu-trigger" type="button" onclick="openKidCourseMenu()" aria-controls="kidCourseMenuOverlay" aria-expanded="false" hidden><span class="kid-menu-trigger-icon" aria-hidden="true">☰</span><span class="kid-menu-trigger-copy"><strong>Learning menu</strong><small>قائمة الدروس والأنشطة</small></span></button>
  </div>
@@ -398,14 +398,23 @@ function openKidLevel(code){
 }
 function closeKidLevel(){
  const workspace=$('kidLevelWorkspace'),studentAccess=$('studentAccess');
+ const levelsPage=$('tracks');
  closeKidCourseMenu();
- const menuTrigger=$('kidMenuTrigger');if(menuTrigger)menuTrigger.hidden=true;
+ const menuTrigger=$('kidMenuTrigger');if(menuTrigger){menuTrigger.hidden=true;menuTrigger.setAttribute('aria-expanded','false');}
  document.body.classList.remove('kid-level-open');
  if(workspace)workspace.hidden=true;
  if(studentAccess&&kidLevelOriginalParent){
-  studentAccess.hidden=false;
   if(kidLevelOriginalNext&&kidLevelOriginalNext.parentNode===kidLevelOriginalParent)kidLevelOriginalParent.insertBefore(studentAccess,kidLevelOriginalNext);
-  else kidLevelOriginalParent.appendChild(studentAccess);
+  else if(studentAccess.parentNode!==kidLevelOriginalParent)kidLevelOriginalParent.appendChild(studentAccess);
+  studentAccess.hidden=false;
+ }
+ ['tracks','placement','sample','myKidsCourse','enrol'].forEach(function(id){
+  const section=$(id);if(section){section.hidden=false;section.style.removeProperty('display');}
+ });
+ if(levelsPage){
+  window.scrollTo({top:Math.max(0,levelsPage.getBoundingClientRect().top+window.pageYOffset-12),behavior:'auto'});
+ }else{
+  window.scrollTo({top:0,behavior:'auto'});
  }
 }
 function goKidSubscription(){
