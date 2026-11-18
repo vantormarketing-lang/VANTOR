@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doma-admin-offline-v71';
+const CACHE_NAME = 'doma-admin-offline-v72';
 const ADMIN_URL = new URL('./admin.html', self.registration.scope).href;
 const MANIFEST_URL = new URL('./admin-manifest.webmanifest?v=doma-admin-glass-v11', self.registration.scope).href;
 const APP_ICON_URL = new URL('./doma-admin-app-icon.svg?v=doma-admin-glass-v6', self.registration.scope).href;
@@ -12,11 +12,15 @@ self.addEventListener('message', event => {
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
-    // Cache only offline-support assets. The HTML shell is intentionally never cached.
-    await Promise.all(SHELL.filter(url => url !== ADMIN_URL).map(async url => {
+    // Cache the static admin shell and its offline assets. The document contains
+    // application code only; authenticated records are fetched separately from Supabase.
+    await Promise.all(SHELL.map(async url => {
       try {
         const response = await fetch(url, {cache:'no-store'});
-        if (response.ok) await cache.put(url, response);
+        const type = response.headers.get('content-type') || '';
+        if (response.ok && (url !== ADMIN_URL || /text\/html/i.test(type))) {
+          await cache.put(url, response);
+        }
       } catch (_) {}
     }));
     await self.skipWaiting();
@@ -42,33 +46,50 @@ self.addEventListener('fetch', event => {
   const isAdminDocument = req.mode === 'navigate' ||
     (url.origin === self.location.origin && url.pathname.endsWith('/admin.html'));
 
-  // Always fetch the admin document from the server, including on ordinary refresh.
-  // Never allow a cached HTML response to hide the latest deployed admin changes.
+  // Serve the last verified admin shell immediately, while refreshing it in the
+  // background. Authenticated Supabase data/API calls are cross-origin and bypass
+  // this worker, so no student or payment records are stored in this cache.
   if (isAdminDocument) {
-    event.respondWith(fetch(req, {cache:'no-store'}).catch(async () => {
-      return new Response(
-        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Admin offline</title><body style="font-family:Arial;background:#100b0d;color:#fff;padding:24px"><h2>DOMA Admin is offline</h2><p>Reconnect to the internet and refresh this page to load the latest admin version.</p></body></html>',
-        {headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}}
-      );
-    }));
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(ADMIN_URL).catch(() => null);
+      const refresh = async () => {
+        const response = await fetch(req, {cache:'no-store'});
+        const type = response.headers.get('content-type') || '';
+        if (!response.ok || !/text\/html/i.test(type)) throw new Error('Admin document refresh failed.');
+        await cache.put(ADMIN_URL, response.clone()).catch(() => {});
+        return response;
+      };
+      if (cached && cached.ok) {
+        event.waitUntil(refresh().catch(() => {}));
+        return cached;
+      }
+      try { return await refresh(); }
+      catch (_) {
+        return new Response(
+          '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOMA Admin offline</title><body style="font-family:Arial;background:#100b0d;color:#fff;padding:24px"><h2>DOMA Admin is offline</h2><p>Reconnect to the internet and refresh this page to load the latest admin version.</p></body></html>',
+          {headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}}
+        );
+      }
+    })());
     return;
   }
 
   event.respondWith((async () => {
-    const cached = await caches.match(req);
-    if (cached) return cached;
-    try {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(req).catch(() => null);
+    const refresh = async () => {
       const response = await fetch(req, {cache:'no-store'});
-      if (response && (response.ok || response.type === 'opaque')) {
-        // Cache only the known offline shell assets, never arbitrary app responses.
-        if (SHELL.includes(req.url)) {
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(req, response.clone()).catch(() => {});
-        }
+      if (response && (response.ok || response.type === 'opaque') && SHELL.includes(req.url)) {
+        await cache.put(req, response.clone()).catch(() => {});
       }
       return response;
-    } catch (_) {
-      return cached || Response.error();
+    };
+    if (cached) {
+      event.waitUntil(refresh().catch(() => {}));
+      return cached;
     }
+    try { return await refresh(); }
+    catch (_) { return Response.error(); }
   })());
 });
