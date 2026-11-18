@@ -2997,3 +2997,39 @@ html:has(body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-l
     background-size:auto,auto,auto,46px 46px,46px 46px,auto!important;
   }
 }
+
+
+/* Paired red/green micro-status lights beside the student name. */
+html body.programming-page .pa-user-identity #paAuthStatus{
+  position:relative!important;
+  display:inline-block!important;
+  flex:0 0 13px!important;
+  width:13px!important;
+  min-width:13px!important;
+  height:7px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  font-size:0!important;
+}
+html body.programming-page .pa-user-identity #paAuthStatus::before,
+html body.programming-page .pa-user-identity #paAuthStatus::after{
+  content:""!important;
+  position:absolute!important;
+  top:1px!important;
+  width:5px!important;
+  height:5px!important;
+  border-radius:50%!important;
+}
+html body.programming-page .pa-user-identity #paAuthStatus::before{
+  left:0!important;
+  background:#FF525D!important;
+  box-shadow:0 0 4px rgba(255,82,93,.95),0 0 9px rgba(255,82,93,.65)!important;
+}
+html body.programming-page .pa-user-identity #paAuthStatus::after{
+  right:0!important;
+  background:#55E69A!important;
+  box-shadow:0 0 4px rgba(85,230,154,.95),0 0 9px rgba(85,230,154,.65)!important;
+}
