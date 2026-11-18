@@ -145,21 +145,17 @@
 
 <div id="paSubscribeModal" class="pa-modal" hidden>
   <div class="pa-modal-backdrop" data-pa-close></div>
-  <section class="pa-modal-card" role="dialog" aria-modal="true" aria-labelledby="paModalTitle">
-    <button type="button" class="pa-modal-close" data-pa-close aria-label="إغلاق">×</button>
-    <span class="pa-kicker">DOMA PROGRAMMING ACADEMY</span>
-    <h2 id="paModalTitle">اشتراك أكاديمية البرمجة</h2>
-    <div class="pa-modal-price"><strong>100 جنيه</strong><span>لمدة 30 يومًا</span></div>
-    <p class="pa-modal-copy">الاشتراك مستقل عن اشتراك الصفوف وكورسات الإنجليزي والأطفال. بعد تحويل المبلغ ورفع الإيصال، يراجع فريق الإدارة الطلب ويفعّل الأكاديمية.</p>
+  <section class="pa-modal-card pa-course-payment-card" role="dialog" aria-modal="true" aria-label="نموذج الاشتراك">
+    <button type="button" class="pa-modal-close" data-pa-close aria-label="إغلاق" title="إغلاق">×</button>
     <div id="paPendingNotice" class="pa-pending-notice" hidden>طلبك قيد مراجعة الإدارة. لا تحتاج إلى إرسال طلب آخر.</div>
     <div id="paMembershipError" class="pa-payment-status error" role="alert" hidden>تعذر التحقق من حالة الاشتراك. حدّث الصفحة بعد قليل أو تواصل مع الإدارة.</div>
     <div id="paPaymentForm">
-      <div class="pa-cash-number"><span>رقم التحويل عبر Mobile Cash</span><strong dir="ltr">01006525147</strong><small>حوّل 100 جنيه إلى الرقم الموضح ثم ارفع صورة الإيصال.</small></div>
-      <label class="pa-form-label" for="paSenderPhone">رقم الهاتف المُحوِّل</label>
-      <input id="paSenderPhone" class="pa-form-input" type="tel" autocomplete="tel" placeholder="رقم محفظة التحويل">
-      <label class="pa-form-label" for="paReceiptFile">إيصال الدفع</label>
-      <input id="paReceiptFile" class="pa-form-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif">
-      <p class="pa-file-hint">JPEG أو PNG أو WebP أو GIF أو HEIC · الحد الأقصى 5 MB</p>
+      <div class="pa-course-pay-grid">
+        <div class="pa-course-pay-cell"><span>سعر الاشتراك</span><strong>100 جنيه</strong><small>لمدة 30 يومًا</small></div>
+        <div class="pa-course-pay-cell"><span>رقم التحويل</span><strong dir="ltr">01006525147</strong><small>Mobile Cash</small></div>
+        <label class="pa-course-pay-cell" for="paSenderPhone"><span>رقم الهاتف المُحوِّل</span><input id="paSenderPhone" class="pa-form-input" type="tel" autocomplete="tel" placeholder="رقم الهاتف"></label>
+        <label class="pa-course-pay-cell" for="paReceiptFile"><span>إيصال الدفع</span><input id="paReceiptFile" class="pa-form-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"><small>صورة الإيصال · حتى 5 MB</small></label>
+      </div>
       <div id="paPaymentStatus" class="pa-payment-status" role="status"></div>
       <button id="paSubmitPayment" type="button" class="pa-primary-btn pa-submit-payment">إرسال طلب الاشتراك</button>
     </div>
@@ -568,7 +564,24 @@ function initializeDomaProgrammingAcademy(){
   var codeSamples={
     python:'name = "DOMA Student"\nprint("Hello, " + name)\n\n# جرّب تغيير الاسم ثم شغّل البرنامج',
     javascript:'const name = "DOMA Student";\nconsole.log("Hello, " + name);\n\n// جرّب تغيير الاسم ثم شغّل البرنامج',
-    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n</body>\n</html>',
+    html:'<!doctype html>\n<html lang="ar">\n<head>\n  <meta charset="utf-8">\n  <style>body{font-family:Arial;padding:24px;background:#21152f;color:#f4d9ad}</style>\n</head>\n<body>\n  <h1>مرحبًا بك في DOMA!</h1>\n  <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>\n
+<style id="pa-course-payment-glass-override">
+body.programming-page .pa-modal-card.pa-course-payment-card{width:min(620px,100%);max-height:min(88vh,760px);overflow:auto;padding:16px;border:1px solid rgba(205,164,255,.28)!important;border-radius:20px;background:linear-gradient(145deg,rgba(35,22,52,.94),rgba(17,13,27,.94))!important;box-shadow:0 22px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.12)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#f5edff!important}
+body.programming-page .pa-course-payment-card .pa-modal-close{top:12px;right:13px;left:auto;width:32px;height:32px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(255,255,255,.07);color:#fff;font-size:23px;line-height:1}
+body.programming-page .pa-course-pay-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+body.programming-page .pa-course-pay-cell{display:flex;flex-direction:column;justify-content:center;gap:5px;min-width:0;min-height:88px;padding:11px;border:1px solid rgba(205,164,255,.22);border-radius:13px;background:rgba(255,255,255,.045);color:#f5edff!important}
+body.programming-page .pa-course-pay-cell>span{font-size:10px;font-weight:800;color:#c9b6e3!important}
+body.programming-page .pa-course-pay-cell>strong{font-size:21px;color:#f1dba8!important;overflow-wrap:anywhere}
+body.programming-page .pa-course-pay-cell>small{font-size:10px;color:#c9b6e3!important}
+body.programming-page .pa-course-pay-cell .pa-form-input{width:100%;min-width:0;min-height:36px;padding:7px;border:1px solid rgba(205,164,255,.22)!important;border-radius:9px;background:rgba(9,7,15,.42)!important;color:#fff!important;font:inherit;font-size:11px}
+body.programming-page .pa-course-pay-cell .pa-form-input[type=file]{font-size:10px}
+body.programming-page .pa-course-payment-card .pa-payment-status{min-height:18px;margin:9px 2px 4px;color:#e8dff1!important;font-size:11px;line-height:1.6}
+body.programming-page .pa-course-payment-card .pa-submit-payment{display:block;width:100%;min-height:42px;margin-top:8px;border:1px solid rgba(240,221,174,.82)!important;border-radius:11px;background:linear-gradient(135deg,#ead9a8,#c7aa70)!important;color:#302516!important;font-weight:900;font-size:13px;cursor:pointer}
+body.programming-page .pa-course-payment-card .pa-submit-payment:disabled{opacity:.55;cursor:wait}
+body.programming-page .pa-course-payment-card .pa-pending-notice,body.programming-page .pa-course-payment-card #paMembershipError{margin:40px 0 10px}
+@media(max-width:360px){body.programming-page .pa-modal-card.pa-course-payment-card{padding:12px}body.programming-page .pa-course-pay-grid{grid-template-columns:1fr}}
+</style>
+</body>\n</html>',
     c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, DOMA!\\n");\n    return 0;\n}',
     cpp:'#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, DOMA!" << endl;\n    return 0;\n}',
     java:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, DOMA!");\n    }\n}',
