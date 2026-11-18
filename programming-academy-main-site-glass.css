@@ -865,3 +865,152 @@ html body.programming-page .pa-reader-content .pa-bullet{
 @media(max-width:620px){
   html body.programming-page #learning-paths .pa-track-card{min-height:74px!important;padding:12px 14px!important}
 }
+
+ 
+/* 2026-11-18: title-adjacent glow markers and a premium code-editor hero. */
+html body.programming-page .pa20-hub-card::after{
+  content:none!important;
+  display:none!important;
+}
+html body.programming-page .pa20-hub-card strong{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:9px!important;
+}
+html body.programming-page .pa20-hub-card strong::before{
+  content:""!important;
+  display:inline-block!important;
+  width:8px!important;height:8px!important;min-width:8px!important;
+  border-radius:50%!important;
+  background:#ffc58e!important;
+  box-shadow:0 0 6px 2px rgba(255,190,132,.78),0 0 17px 6px rgba(255,155,92,.32)!important;
+  flex:0 0 8px!important;
+}
+html body.programming-page .pa20-hub-card small{
+  display:block!important;
+  margin-top:4px!important;
+  color:#eaddec!important;
+  -webkit-text-fill-color:#eaddec!important;
+  font-size:11px!important;
+  font-weight:750!important;
+  line-height:1.55!important;
+}
+html body.programming-page .pa-code-hero-visual{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:250px!important;
+  padding:18px 10px!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+html body.programming-page .pa-code-hero-window{
+  position:relative!important;
+  z-index:1!important;
+  width:min(100%,440px)!important;
+  overflow:hidden!important;
+  border:1px solid rgba(230,205,242,.34)!important;
+  border-radius:19px!important;
+  background:linear-gradient(145deg,rgba(34,25,47,.96),rgba(19,15,29,.96))!important;
+  box-shadow:0 24px 58px rgba(7,3,14,.42),0 0 34px rgba(166,112,205,.17),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  transform:perspective(900px) rotateY(-5deg) rotateX(2deg)!important;
+  backdrop-filter:blur(18px)!important;
+}
+html body.programming-page .pa-code-hero-windowbar{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  min-height:43px!important;
+  padding:0 14px!important;
+  border-bottom:1px solid rgba(231,211,244,.12)!important;
+  background:rgba(255,255,255,.035)!important;
+  color:#d9c9e5!important;
+  font:11px/1 ui-monospace,Consolas,monospace!important;
+}
+html body.programming-page .pa-code-hero-dots{
+  display:flex!important;align-items:center!important;gap:5px!important;flex:0 0 auto!important;
+}
+html body.programming-page .pa-code-hero-dots i{
+  display:block!important;width:9px!important;height:9px!important;border-radius:50%!important;
+  background:#ff6b68!important;box-shadow:0 0 9px rgba(255,107,104,.35)!important;
+}
+html body.programming-page .pa-code-hero-dots i:nth-child(2){background:#ffc45f!important;box-shadow:0 0 9px rgba(255,196,95,.35)!important}
+html body.programming-page .pa-code-hero-dots i:nth-child(3){background:#55d69a!important;box-shadow:0 0 9px rgba(85,214,154,.35)!important}
+html body.programming-page .pa-code-hero-filename{flex:1!important;text-align:center!important;color:#c9b8d7!important}
+html body.programming-page .pa-code-hero-live{
+  padding:5px 7px!important;border:1px solid rgba(91,220,159,.28)!important;border-radius:6px!important;
+  color:#83e6b5!important;font-size:9px!important;font-weight:900!important;letter-spacing:1px!important;
+}
+html body.programming-page .pa-code-hero-editor{
+  display:grid!important;gap:10px!important;padding:20px 18px 16px!important;
+  color:#e9e0f0!important;text-align:left!important;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+}
+html body.programming-page .pa-code-hero-editor>div{
+  display:flex!important;align-items:baseline!important;gap:17px!important;white-space:pre!important;
+}
+html body.programming-page .pa-code-hero-editor>div>i{
+  width:17px!important;flex:0 0 17px!important;color:#887a99!important;
+  font-style:normal!important;text-align:right!important;font-size:10px!important;
+}
+html body.programming-page .pa-code-hero-editor code{
+  color:#e8e0ee!important;background:transparent!important;font:inherit!important;
+}
+html body.programming-page .pa-code-hero-editor code b{color:#d6a6ff!important;font-weight:800!important}
+html body.programming-page .pa-code-hero-editor code em{color:#f4c982!important;font-style:normal!important}
+html body.programming-page .pa-code-hero-editor code strong{color:#78dcb4!important;font-weight:800!important}
+html body.programming-page .pa-code-hero-cursor::after{
+  content:""!important;display:inline-block!important;width:6px!important;height:13px!important;
+  margin-inline-start:5px!important;vertical-align:-2px!important;background:#e8c18a!important;
+  animation:paHeroCursorBlink 1.05s steps(2,start) infinite!important;
+}
+@keyframes paHeroCursorBlink{to{visibility:hidden}}
+html body.programming-page .pa-code-hero-footer{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;
+  padding:10px 15px!important;border-top:1px solid rgba(231,211,244,.1)!important;
+  color:#bdaecb!important;font:9px/1.4 ui-monospace,Consolas,monospace!important;letter-spacing:.5px!important;
+}
+html body.programming-page .pa-code-hero-footer span:first-child{color:#8ce4b8!important}
+html body.programming-page .pa-code-hero-stack{
+  position:absolute!important;z-index:3!important;left:0!important;top:50%!important;
+  display:grid!important;gap:9px!important;transform:translateY(-50%)!important;
+}
+html body.programming-page .pa-code-chip{
+  display:flex!important;align-items:center!important;gap:8px!important;min-width:78px!important;
+  padding:9px 11px!important;border:1px solid rgba(229,207,241,.28)!important;border-radius:12px!important;
+  background:rgba(39,28,53,.88)!important;box-shadow:0 10px 24px rgba(8,4,16,.25)!important;
+  backdrop-filter:blur(14px)!important;color:#f4eafa!important;
+}
+html body.programming-page .pa-code-chip b{
+  display:grid!important;place-items:center!important;width:24px!important;height:24px!important;
+  border-radius:7px!important;background:rgba(255,255,255,.08)!important;font:900 11px/1 ui-monospace,monospace!important;
+}
+html body.programming-page .pa-code-chip small{font:800 9px/1 ui-monospace,monospace!important;color:#e9ddec!important}
+html body.programming-page .pa-code-chip-html b{color:#ffad8b!important}
+html body.programming-page .pa-code-chip-css b{color:#9bc8ff!important}
+html body.programming-page .pa-code-chip-js b{color:#f7d17d!important}
+html body.programming-page .pa-code-hero-spark{
+  position:absolute!important;z-index:2!important;color:#f2c88e!important;
+  text-shadow:0 0 14px rgba(255,195,128,.65)!important;
+}
+html body.programming-page .pa-code-hero-spark-one{right:7%!important;top:7%!important;font-size:24px!important}
+html body.programming-page .pa-code-hero-spark-two{right:14%!important;bottom:7%!important;font-size:17px!important}
+@media(max-width:700px){
+  html body.programming-page .pa-code-hero-visual{min-height:205px!important;padding:12px 8px 18px!important}
+  html body.programming-page .pa-code-hero-window{width:min(92%,390px)!important;transform:perspective(900px) rotateY(-2deg)!important}
+  html body.programming-page .pa-code-hero-editor{gap:7px!important;padding:15px 12px!important;font-size:10px!important}
+  html body.programming-page .pa-code-hero-editor>div{gap:10px!important}
+  html body.programming-page .pa-code-hero-stack{left:-2px!important;gap:6px!important}
+  html body.programming-page .pa-code-chip{min-width:62px!important;padding:6px 7px!important;gap:5px!important}
+  html body.programming-page .pa-code-chip b{width:20px!important;height:20px!important}
+  html body.programming-page .pa-code-chip small{font-size:8px!important}
+}
+@media(max-width:430px){
+  html body.programming-page .pa-code-hero-stack{left:-5px!important}
+  html body.programming-page .pa-code-chip{min-width:54px!important;padding:5px!important}
+  html body.programming-page .pa-code-chip small{font-size:7px!important}
+  html body.programming-page .pa-code-hero-windowbar{min-height:38px!important;padding:0 10px!important}
+  html body.programming-page .pa-code-hero-filename{font-size:9px!important}
+}
