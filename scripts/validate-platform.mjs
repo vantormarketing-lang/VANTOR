@@ -115,14 +115,14 @@ for (const path of coursePagesForCdn) {
   const urls = [...source.matchAll(/https:\\/\\/cdn\\.jsdelivr\\.net\\/npm\\/@supabase\\/supabase-js@([^\\s"'<>]+)/g)].map(match => match[1]);
   if (urls.length !== 1) {
     fail(path + ': expected exactly one pinned supabase-js CDN URL');
-  } else if (!/^\\d+\\.\\d+\\.\\d+$/.test(urls[0])) {
+  } else if (!/^\d+\.\d+\.\d+$/.test(urls[0])) {
     fail(path + ': supabase-js version must be exactly x.y.z, found ' + urls[0]);
   }
 }
 ok('Course pages: supabase-js CDN versions are pinned to a single x.y.z release');
 
 const responseHeaders = read('_headers');
-if (!/frame-src[^\\n]*https:\\/\\/www\\.youtube-nocookie\\.com/i.test(responseHeaders)) {
+if (!/frame-src[^\n]*https:\/\/www\.youtube-nocookie\.com/i.test(responseHeaders)) {
   fail('_headers: CSP frame-src must allow https://www.youtube-nocookie.com for Kids course videos');
 } else {
   ok('_headers: CSP frame-src allows privacy-enhanced YouTube embeds');
