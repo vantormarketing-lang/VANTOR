@@ -1139,11 +1139,12 @@ function initializeDomaProgrammingAcademy(){
       description.textContent='مساحة مستقلة لكتابة الأكواد وتشغيلها وتجربة HTML وCSS وبقية اللغات دون فتح درس.';
     }
     document.body.classList.toggle('pa-board-tool-view',kind==='board');
+    document.body.classList.toggle('pa-tutor-tool-view',kind==='tutor');
     $('paCloseToolPage').textContent='← العودة إلى الأكاديمية';
     page.hidden=false;document.body.classList.add('pa-tool-view');window.scrollTo(0,0);
   }
   function closeStandaloneTool(){
-    $('paToolPage').hidden=true;document.body.classList.remove('pa-tool-view','pa-board-tool-view');
+    $('paToolPage').hidden=true;document.body.classList.remove('pa-tool-view','pa-board-tool-view','pa-tutor-tool-view');
   }
   window.__domaProgrammingOpenTool=openStandaloneTool;
   if(window.__domaProgrammingPendingTool){var pendingKind=window.__domaProgrammingPendingTool;window.__domaProgrammingPendingTool='';openStandaloneTool(pendingKind);}
@@ -1376,6 +1377,6 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(params.get('view')==='paths')revealPaths();
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=two-glowing-title-dots-20261118">
+<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=immersive-tutor-view-20261118">
 </body>
 </html>
