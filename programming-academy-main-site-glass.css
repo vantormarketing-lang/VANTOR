@@ -620,3 +620,19 @@ html body.programming-page .pa20-tagline-ar{font-size:10px!important;line-height
   html body.programming-page .pa20-title{font-size:15px!important}
   html body.programming-page .pa-topbar{min-height:38px!important;padding:4px 12px!important}
 }
+
+
+/* Final safeguard: path directory is never part of the academy home screen. */
+html body.programming-page:not(.pa-paths-open) #learning-paths,
+html body.programming-page:not(.pa-paths-open) #learning-paths *,
+html body.programming-page:not(.pa-paths-open) .pa-path-section{
+  display:none!important;
+  visibility:hidden!important;
+}
+html body.programming-page.pa-paths-open #learning-paths{
+  display:block!important;
+  visibility:visible!important;
+}
+html body.programming-page.pa-paths-open #learning-paths *{
+  visibility:visible;
+}
