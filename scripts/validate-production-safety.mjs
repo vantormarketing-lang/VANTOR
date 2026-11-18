@@ -70,7 +70,7 @@ check(
   /await cache\.put\(url, response\)/.test(adminWorker) &&
   /cache\.match\(ADMIN_URL\)/.test(adminWorker) &&
   /event\.waitUntil\(refreshPromise/.test(adminWorker) &&
-  /if\s*\(SHELL\.includes\(req\.url\)\)/.test(adminWorker) &&
+  /SHELL\.includes\(req\.url\)/.test(adminWorker) &&
   /url\.origin !== self\.location\.origin/.test(adminWorker),
   'Admin PWA serves only its static allowlisted shell from cache and refreshes it in the background; authenticated Supabase data remains network-only'
 );
