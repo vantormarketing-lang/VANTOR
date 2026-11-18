@@ -2162,3 +2162,39 @@ html body.programming-page #learning-paths .pa-track-description::first-letter{
   color:#ffbd78!important;
   -webkit-text-fill-color:#ffbd78!important;
 }
+
+
+/* DOMA One: make the answer panel match the question input's background exactly. */
+html body.programming-page.pa-tutor-tool-view .pa-free-tutor-answer,
+html body.programming-page.pa-tutor-tool-view .pa-global-tutor .pa-free-tutor-answer{
+  background:rgba(20,13,30,.52)!important;
+  border-color:rgba(225,193,233,.24)!important;
+  box-shadow:none!important;
+}
+/* Hide the left-side vertical scroll rail in the standalone tutor while retaining scrolling. */
+html body.programming-page.pa-tutor-tool-view,
+html body.programming-page.pa-tutor-tool-view *,
+html body.programming-page.pa-tutor-tool-view #paToolPage,
+html body.programming-page.pa-tutor-tool-view #paToolPageBody,
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+  scrollbar-color:transparent transparent!important;
+}
+html body.programming-page.pa-tutor-tool-view::-webkit-scrollbar,
+html body.programming-page.pa-tutor-tool-view *::-webkit-scrollbar,
+html body.programming-page.pa-tutor-tool-view #paToolPage::-webkit-scrollbar,
+html body.programming-page.pa-tutor-tool-view #paToolPageBody::-webkit-scrollbar,
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost::-webkit-scrollbar{
+  width:0!important;
+  height:0!important;
+  display:none!important;
+  background:transparent!important;
+}
+html body.programming-page.pa-tutor-tool-view #paToolPage::-webkit-scrollbar-track,
+html body.programming-page.pa-tutor-tool-view #paToolPage::-webkit-scrollbar-thumb{
+  width:0!important;
+  height:0!important;
+  background:transparent!important;
+  border:0!important;
+}
