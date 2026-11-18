@@ -2844,3 +2844,37 @@ html body.programming-page #learning-paths .pa-track-number span{
   color:#C9788B!important;
   -webkit-text-fill-color:#C9788B!important;
 }
+
+
+/* Lesson examples: retain a plain near-black code panel; only code glyphs are green.
+   Remove the extra highlighted/blurred inner code surface and all syntax backgrounds. */
+html body.programming-page.pa-lesson-page-view .pa-reader-content pre,
+html body.programming-page .pa-reader-content pre{
+  color:#9AF2B8!important;
+  -webkit-text-fill-color:#9AF2B8!important;
+  background:#100D12!important;
+  background-image:none!important;
+  border:0!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+  filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  text-shadow:none!important;
+}
+html body.programming-page .pa-reader-content pre code,
+html body.programming-page .pa-reader-content pre span,
+html body.programming-page .pa-reader-content code{
+  color:#9AF2B8!important;
+  -webkit-text-fill-color:#9AF2B8!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  text-shadow:none!important;
+}
