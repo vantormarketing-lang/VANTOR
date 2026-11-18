@@ -13397,6 +13397,8 @@ if (!route) {
     try { target = new URL(link.href, window.location.href); } catch (_) { return; }
     if (target.origin !== window.location.origin || String(target.searchParams.get('kids') || '').toLowerCase() !== 'entry') return;
     event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
     if (kidsHomePendingCheckBusy) return;
     kidsHomePendingCheckBusy = true;
     var destination = target.href;
@@ -13467,7 +13469,7 @@ if (!route) {
       }
     }catch(_){}
     continueToCourse();
-  });
+  }, true);
   return;
 }
 var kidsInlineRequested=['entry','subscribe'].indexOf((new URLSearchParams(window.location.search).get('kids')||'').toLowerCase())>=0;
