@@ -112,17 +112,18 @@ const coursePagesForCdn = ['MR_FLUENT_A1_COURSE.html','MR_FLUENT_A2_COURSE.html'
 for (const path of coursePagesForCdn) {
   const source = read(path);
   if (!source) continue;
-  const urls = [...source.matchAll(/https:\\/\\/cdn\\.jsdelivr\\.net\\/npm\\/@supabase\\/supabase-js@([^\\s"'<>]+)/g)].map(match => match[1]);
+  const urls = [...source.matchAll(/@supabase\\/supabase-js@([^\\s"'<>]+)/g)].map(match => match[1]);
   if (urls.length !== 1) {
     fail(path + ': expected exactly one pinned supabase-js CDN URL');
-  } else if (!/^\d+\.\d+\.\d+$/.test(urls[0])) {
+  } else if (!/^\\d+\\.\\d+\\.\\d+$/.test(urls[0])) {
     fail(path + ': supabase-js version must be exactly x.y.z, found ' + urls[0]);
   }
 }
 ok('Course pages: supabase-js CDN versions are pinned to a single x.y.z release');
 
 const responseHeaders = read('_headers');
-if (!/frame-src[^\n]*https:\/\/www\.youtube-nocookie\.com/i.test(responseHeaders)) {
+const mainCsp = responseHeaders.split('\\n').find(line => line.includes('Content-Security-Policy: default-src'));
+if (!mainCsp || !mainCsp.includes('frame-src') || !mainCsp.includes('https://www.youtube-nocookie.com')) {
   fail('_headers: CSP frame-src must allow https://www.youtube-nocookie.com for Kids course videos');
 } else {
   ok('_headers: CSP frame-src allows privacy-enhanced YouTube embeds');
