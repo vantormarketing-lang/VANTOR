@@ -354,3 +354,45 @@ html body.programming-page .pa-side-column{min-width:0!important;width:auto!impo
     gap:10px!important;
   }
 }
+
+
+/* Typography refresh: clear Arabic/Latin text with a consistent Cairo family. */
+html body.programming-page,
+html body.programming-page :where(*),
+html body:has(.handbook),
+html body:has(.handbook) :where(*) {
+  font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif!important;
+  font-synthesis:none;
+  text-rendering:optimizeLegibility;
+}
+html body.programming-page :is(h1,h2,h3,h4,h5,h6),
+html body:has(.handbook) :is(h1,h2,h3,h4,h5,h6) {
+  font-weight:800!important;
+  letter-spacing:normal!important;
+  line-height:1.45!important;
+}
+html body.programming-page :is(p,li,label,button,a,small,strong,span),
+html body:has(.handbook) :is(p,li,label,button,a,small,strong,span) {
+  text-rendering:optimizeLegibility;
+}
+html body.programming-page :is(.pa-code-editor,.pa-code-output,.pa-daily-editor,.pa-exercise-editor,.pa-code-window,.terminal,pre,code),
+html body:has(.handbook) :is(pre,code,.terminal) {
+  font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace!important;
+  letter-spacing:0!important;
+}
+html body.programming-page .pa-reader-content,
+html body.programming-page .pa-reader-content p,
+html body.programming-page .pa-reader-content li,
+html body:has(.handbook) .guide-card {
+  font-size:15px!important;
+  line-height:1.95!important;
+}
+@media(max-width:600px){
+  html body.programming-page .pa-reader-content,
+  html body.programming-page .pa-reader-content p,
+  html body.programming-page .pa-reader-content li,
+  html body:has(.handbook) .guide-card {
+    font-size:14px!important;
+    line-height:1.9!important;
+  }
+}
