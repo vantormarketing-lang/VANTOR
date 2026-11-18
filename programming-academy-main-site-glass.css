@@ -1,426 +1,209 @@
-/* DOMA Programming Academy — match the live main-site visual identity.
-   Palette and card language are aligned with the homepage; behavior/content stay untouched. */
+
+/* DOMA Programming Academy — SINGLE MASTER THEME
+   One palette, one page canvas, and one shared homepage glass-card language.
+   This file intentionally replaces all accumulated academy theme overrides. */
 :root{
-  --pa-main-bg:#140d1d;
-  --pa-main-bg-2:#21142c;
-  --pa-main-panel:rgba(76,49,94,.62);
-  --pa-main-panel-strong:rgba(54,35,70,.88);
-  --pa-main-edge:rgba(225,193,233,.30);
-  --pa-main-edge-gold:rgba(255,218,174,.42);
+  color-scheme:dark;
+  --pa-main-bg:#170f22;
+  --pa-main-bg-2:#241632;
   --pa-main-text:#fff4e8;
   --pa-main-muted:#e4d5e8;
+  --pa-main-muted-2:#c9b6d3;
   --pa-main-gold:#ffe5bd;
   --pa-main-gold-2:#e8b974;
-  --pa-main-gold-3:#c98248;
   --pa-main-purple:#b894e9;
+  --pa-main-green:#70e39a;
+  --pa-main-card-border:rgba(225,193,233,.30);
+  --pa-main-card-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12);
+  --pa-main-card-bg:radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72));
 }
-html:has(body.programming-page),html body.programming-page{
-  min-height:100%;
-  background:#140d1d!important;
-}
-html body.programming-page{
+html:has(body.programming-page),html:has(body:has(.handbook)){background:#170f22!important}
+html body.programming-page,html body:has(.handbook){
+  min-height:100vh!important;
   color:var(--pa-main-text)!important;
-  background:
-    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
-    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
-    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
-    linear-gradient(145deg,#140d1d 0%,#21142c 52%,#130d1d 100%)!important;
-  background-attachment:fixed!important;
-}
-html body.programming-page :is(h1,h2,h3,h4,h5,strong,b){color:var(--pa-main-text)}
-html body.programming-page :is(p,small,.pa-track-description,.pa-track-meta,.pa-reader-summary,.pa-save-note,.pa-note,.pa-free-tutor-status,.pa-free-tutor-note){color:var(--pa-main-muted)!important}
-html body.programming-page .pa-topbar{
-  background:linear-gradient(135deg,rgba(112,77,133,.72),rgba(49,31,68,.84))!important;
-  border:1px solid rgba(255,218,174,.24)!important;
-  border-radius:0 0 18px 18px!important;
-  box-shadow:0 12px 34px rgba(12,5,23,.20),inset 0 1px 0 rgba(255,255,255,.10)!important;
-  backdrop-filter:blur(18px) saturate(135%)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
-}
-html body.programming-page .pa-user-identity{color:var(--pa-main-text)!important}
-html body.programming-page :is(.pa-home-link,.pa-global-back,.pa-tool-trigger){
-  color:var(--pa-main-gold)!important;
-  border:1px solid var(--pa-main-edge-gold)!important;
-  background:linear-gradient(135deg,rgba(255,218,174,.12),rgba(106,70,133,.38))!important;
-  border-radius:12px!important;
-}
-html body.programming-page .pa-shell{max-width:1280px!important;color:var(--pa-main-text)!important}
-html body.programming-page :is(.pa20-hero,.pa-hero){
-  position:relative!important;isolation:isolate!important;overflow:hidden!important;
-  border:1px solid var(--pa-main-edge-gold)!important;
-  border-radius:28px!important;
-  background:
-    radial-gradient(ellipse at 12% 0%,rgba(255,207,157,.16),transparent 45%),
-    radial-gradient(ellipse at 90% 100%,rgba(170,128,202,.20),transparent 48%),
-    linear-gradient(135deg,rgba(80,52,102,.62),rgba(37,24,54,.82))!important;
-  box-shadow:0 22px 60px rgba(13,5,24,.30),inset 0 1px 0 rgba(255,255,255,.15)!important;
-  backdrop-filter:blur(18px) saturate(130%)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(130%)!important;
-}
-html body.programming-page :is(.pa20-hero:before,.pa-hero:before){
-  content:""!important;position:absolute!important;z-index:-1!important;
-  width:420px!important;height:420px!important;right:-180px!important;bottom:-280px!important;
-  border-radius:50%!important;
-  background:radial-gradient(circle,rgba(232,185,116,.15),transparent 68%)!important;
-}
-html body.programming-page :is(.pa20-brandline,.pa20-eyebrow,.pa-kicker,.pa20-tagline-ar,.pa-free-tutor-label){
-  color:var(--pa-main-gold)!important;
-}
-html body.programming-page :is(.pa20-title,.pa20-tagline,.pa-hero h1,.pa-section-heading h2,.pa-panel-heading h2,.pa20-path-head h2){
-  color:var(--pa-main-text)!important;
-}
-html body.programming-page :is(.pa20-title-ar,.pa20-hero-copy p,.pa-section-heading p,.pa-panel-heading p,.pa20-path-head p){
-  color:var(--pa-main-muted)!important;
-}
-html body.programming-page .pa20-brandmark{
-  color:#4b2d46!important;
-  background:linear-gradient(135deg,#ffe5bd 0%,#e8b974 58%,#c98248 100%)!important;
-  box-shadow:0 8px 20px rgba(35,15,37,.24),0 0 18px rgba(244,190,128,.12)!important;
-}
-html body.programming-page :is(.pa20-hero-cta,.pa-primary-btn,.pa-project-submit,.pa-daily-actions button:not(.secondary),.pa-free-tutor-send,.pa-lab-run,.pa-submit-payment){
-  color:#4b2d46!important;
-  border:1px solid rgba(255,237,207,.9)!important;
-  background:linear-gradient(135deg,#ffe5bd 0%,#e8b974 55%,#c98248 100%)!important;
-  box-shadow:0 10px 24px rgba(35,15,37,.25),inset 0 1px 0 rgba(255,255,255,.55)!important;
-}
-html body.programming-page :is(.pa20-hub-card,.pa-track-card,.pa-project-card,.pa-daily-card,.pa-side-card,.pa-progress-cards>*,.pa-student-progress,.pa-lessons-panel,.pa-lesson-reader,.pa-projects-section,.pa-daily-challenges,.pa-admin-learning,.pa-admin-student-reports,.pa-admin-learning-queue,.pa-free-tutor,.pa-global-tutor,.pa-code-lab,.pa-tool-page,.pa-modal-card){
-  color:var(--pa-main-text)!important;
-  border:1px solid var(--pa-main-edge)!important;
-  border-radius:20px!important;
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),
-    linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.78))!important;
-  box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;
-  backdrop-filter:blur(16px) saturate(130%)!important;
-  -webkit-backdrop-filter:blur(16px) saturate(130%)!important;
-}
-html body.programming-page :is(.pa20-hub-card,.pa-track-card,.pa-project-card,.pa-daily-card,.pa-side-card,.pa-lessons-panel,.pa-lesson-reader,.pa-code-lab,.pa-tool-page)>*{
-  position:relative;z-index:1;
-}
-html body.programming-page .pa20-hub{
-  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;
-}
-html body.programming-page .pa20-hub-card{
-  min-width:0!important;min-height:136px!important;padding:18px!important;
-  align-items:flex-start!important;justify-content:space-between!important;text-align:start!important;
-  cursor:pointer!important;pointer-events:auto!important;
-  transition:transform .18s,border-color .18s,box-shadow .18s!important;
-}
-html body.programming-page :is(.pa20-hub-card strong,.pa-track-content b,.pa-lesson-copy b,.pa-project-card h3,.pa-side-card h3,.pa-lesson-reader h2,.pa-tool-page h2,.pa-tool-page h3){
-  color:var(--pa-main-text)!important;
-}
-html body.programming-page :is(.pa20-hub-card small,.pa-track-description,.pa-track-meta,.pa-side-card p,.pa-project-card p,.pa-reader-summary,.pa-reader-content,.pa-reader-content p,.pa-reader-content li,.pa-tool-page p){
-  color:var(--pa-main-muted)!important;
-}
-html body.programming-page :is(.pa20-hub-icon,.pa-track-number,.pa-lesson-index,.pa-side-icon,.pa-progress-count,.pa-roadmap-label){
-  color:var(--pa-main-gold)!important;
-  border:1px solid rgba(255,218,174,.38)!important;
-  background:linear-gradient(135deg,rgba(255,218,174,.13),rgba(112,76,134,.36))!important;
-}
-html body.programming-page :is(.pa20-hub-arrow,.pa-track-arrow,.pa-track-content small,.pa-progress-count,.pa-roadmap-label,.pa-free-tutor-label){
-  color:var(--pa-main-gold)!important;
-}
-html body.programming-page .pa-track-grid{gap:14px!important}
-html body.programming-page .pa-track-card{
-  grid-template-columns:40px minmax(0,1fr) 20px!important;gap:13px!important;
-  padding:18px!important;text-align:start!important;cursor:pointer!important;
-  transition:transform .18s,border-color .18s,box-shadow .18s!important;
-}
-html body.programming-page :is(.pa20-hub-card:hover,.pa-track-card:hover,.pa-track-card.active,.pa-lesson-row:hover,.pa-lesson-row.selected){
-  border-color:rgba(255,218,174,.72)!important;
-  box-shadow:0 18px 42px rgba(12,5,23,.30),0 0 20px rgba(232,185,116,.09),inset 0 1px 0 rgba(255,255,255,.15)!important;
-  transform:translateY(-2px)!important;
-}
-html body.programming-page .pa-lesson-row{
-  color:var(--pa-main-text)!important;border:1px solid rgba(225,193,233,.24)!important;
-  background:linear-gradient(145deg,rgba(68,44,87,.42),rgba(31,21,45,.72))!important;
-  border-radius:14px!important;
-}
-html body.programming-page :is(.pa-lesson-row small,.pa-lesson-duration){color:var(--pa-main-muted)!important}
-html body.programming-page .pa-progress-track{background:rgba(255,255,255,.10)!important}
-html body.programming-page .pa-progress-track i{background:linear-gradient(90deg,#c98248,#e8b974,#ffe5bd)!important}
-html body.programming-page :is(.pa-outline-btn,.pa-track-back,.pa-path-close,.pa-lab-secondary,.pa-daily-actions button.secondary,.pa-free-tutor-actions button){
-  color:var(--pa-main-gold)!important;
-  border:1px solid rgba(255,218,174,.40)!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(82,53,104,.42))!important;
-}
-html body.programming-page :is(.pa-empty-state,.pa-loading,.pa-project-status,.pa-daily-hints,.pa-daily-result,.pa-free-tutor-answer,.pa-code-output,.pa-test-output){
-  color:var(--pa-main-text)!important;border:1px solid rgba(225,193,233,.24)!important;
-  background:rgba(19,13,29,.72)!important;border-radius:14px!important;
-}
-html body.programming-page .pa-reader-content{
-  color:#fff4e8!important;font-size:14px!important;line-height:2!important;
-}
-html body.programming-page .pa-reader-content :is(p,li,ul,ol){color:#f1e5f0!important}
-html body.programming-page .pa-reader-content :is(h3,h4,h5){color:var(--pa-main-gold)!important}
-html body.programming-page .pa-reader-content code{
-  color:#ffe5bd!important;background:rgba(255,218,174,.10)!important;border-color:rgba(255,218,174,.22)!important;
-}
-html body.programming-page :is(.pa-code-editor,.pa-daily-editor,.pa-code-output,.pa-test-output,.pa-code-window,pre){
-  background:#100b17!important;color:#f6eee2!important;border-color:rgba(225,193,233,.28)!important;
-}
-html body.programming-page :is(.pa-free-tutor-question input,.pa-form-input,.pa-admin-learning-filters input,.pa-admin-learning-filters select,.pa-code-select){
-  color:var(--pa-main-text)!important;border:1px solid rgba(225,193,233,.38)!important;
-  background:linear-gradient(135deg,rgba(54,35,73,.72),rgba(37,25,53,.90))!important;
-}
-html body.programming-page :is(.pa-free-tutor-question input,.pa-form-input,.pa-admin-learning-filters input,.pa-admin-learning-filters select,.pa-code-select)::placeholder{color:#d8c8e2!important}
-html body.programming-page :is(.pa-modal-backdrop){background:rgba(19,10,30,.78)!important;backdrop-filter:blur(12px)!important}
-html body.programming-page .pa-modal-card{
-  background:radial-gradient(ellipse at 35% 0%,rgba(255,202,157,.18),transparent 55%),linear-gradient(145deg,rgba(111,74,132,.96),rgba(42,28,61,.98))!important;
-  border-color:rgba(255,218,174,.48)!important;
-}
-html body.programming-page :is(.pa-modal-card h2,.pa-modal-price strong,.pa-cash-number strong,.pa-form-label){color:var(--pa-main-gold)!important}
-html body.programming-page :is(.pa-modal-copy,.pa-modal-price span,.pa-cash-number span,.pa-cash-number small){color:var(--pa-main-muted)!important}
-html body.programming-page .pa-footer{color:var(--pa-main-muted)!important;border-top-color:rgba(225,193,233,.20)!important}
-html body.programming-page .pa-footer span:first-child{color:var(--pa-main-gold)!important}
-html body.programming-page .pa-tool-page{
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(155,111,188,.22),transparent 38%),
-    linear-gradient(145deg,#170f22,#241632 55%,#120c1d)!important;
-}
-html body.programming-page .pa-toast{
-  color:var(--pa-main-text)!important;border-color:var(--pa-main-edge-gold)!important;
-  background:linear-gradient(145deg,#523765,#2b1c3a)!important;
-}
-@media(max-width:900px){
-  html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
-@media(max-width:700px){
-  html body.programming-page .pa20-hero,html body.programming-page .pa-hero{border-radius:22px!important}
-  html body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-  html body.programming-page .pa20-hub-card{min-height:116px!important;padding:14px!important}
-  html body.programming-page .pa-track-grid{grid-template-columns:1fr!important}
-  html body.programming-page .pa-track-card{padding:14px!important;grid-template-columns:34px minmax(0,1fr) 16px!important;gap:10px!important}
-  html body.programming-page .pa-projects-section,html body.programming-page .pa-daily-challenges{padding:14px!important}
-}
-@media(max-width:520px){
-  html body.programming-page .pa-shell{width:92%!important;padding-top:20px!important}
-  html body.programming-page .pa20-hub-card{min-height:108px!important}
-  html body.programming-page .pa-lesson-row{grid-template-columns:30px minmax(0,1fr)!important;gap:9px!important}
-  html body.programming-page .pa-lesson-duration{grid-column:2}
-  html body.programming-page .pa-lessons-panel,html body.programming-page .pa-lesson-reader{padding:15px!important}
-}
-/* Preserve all existing academy visibility and interaction states. */
-html body.programming-page .pa-path-section[hidden],
-html body.programming-page .pa-tool-page[hidden],
-html body.programming-page .pa-modal[hidden]{display:none!important}
-html body.programming-page.pa-track-view .pa20-hero,
-html body.programming-page.pa-track-view .pa20-hub,
-html body.programming-page.pa-lesson-page-view .pa20-hero,
-html body.programming-page.pa-lesson-page-view .pa20-hub,
-html body.programming-page.pa-tool-view .pa20-hero,
-html body.programming-page.pa-tool-view .pa20-hub{display:none!important}
-
-/* FINAL LAYOUT CORRECTION: one continuous homepage background.
-   Only the four programming-track choices remain as How It Works-style cards. */
-html,html body.programming-page{
-  min-height:100%!important;
-  color:#fff5e9!important;
-  background:
-    radial-gradient(ellipse 560px 420px at 9% 0%,rgba(168,119,196,.22),transparent 72%),
-    radial-gradient(ellipse 510px 430px at 100% 14%,rgba(255,205,157,.095),transparent 72%),
-    radial-gradient(ellipse 650px 470px at 52% 100%,rgba(125,82,157,.17),transparent 72%),
-    linear-gradient(145deg,#140d1d 0%,#21142c 53%,#110b19 100%)!important;
-  background-attachment:fixed!important;
-}
-html body.programming-page :is(.pa-shell,.pa-path-section,.pa-section-heading,.pa-panel-heading,.pa-progress-cards,.pa-projects-section,.pa-daily-challenges,.pa-student-progress,.pa-activities,.pa-admin-learning,.pa-admin-student-reports,.pa-admin-learning-queue,.pa-free-tutor,.pa-global-tutor,.pa-code-lab,.pa-lessons-panel,.pa-lesson-reader,.pa-tool-page,.pa-achievement-panel,.pa-footer,.pa20-hub,.pa20-hero,.pa-hero){
-  border:0!important;
-  outline:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  -webkit-backdrop-filter:none!important;
-  backdrop-filter:none!important;
-}
-html body.programming-page :is(.pa20-hero,.pa-hero){
-  padding:clamp(22px,4vw,46px) 0!important;
-  border-radius:0!important;
-}
-html body.programming-page :is(.pa20-hub-card,.pa-project-card,.pa-daily-card,.pa-side-card,.pa-progress-card,.pa-student-badge,.pa-certificate-card,.pa-review-card,.pa-achievement-panel,.pa-activity-card,.pa-lesson-row,.pa-empty-state,.pa-loading,.pa-project-status,.pa-daily-hints,.pa-daily-result,.pa-free-tutor-answer,.pa-code-output,.pa-test-output){
-  border-color:transparent!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  -webkit-backdrop-filter:none!important;
-  backdrop-filter:none!important;
-}
-html body.programming-page .pa20-hub-card{
-  padding:12px 0!important;
-  min-height:0!important;
-  border-radius:0!important;
-}
-html body.programming-page .pa-track-grid{
-  display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:16px!important;
-}
-html body.programming-page .pa-track-card{
-  min-height:132px!important;
-  padding:20px!important;
-  border:1px solid rgba(225,193,233,.32)!important;
-  border-radius:22px!important;
-  color:#fff5e9!important;
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.09),transparent 54%),
-    linear-gradient(145deg,rgba(117,79,139,.44),rgba(44,29,62,.77))!important;
-  box-shadow:0 16px 38px rgba(12,5,23,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(138%)!important;
-  backdrop-filter:blur(18px) saturate(138%)!important;
-  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
-}
-html body.programming-page .pa-track-card:hover,
-html body.programming-page .pa-track-card.active{
-  border-color:rgba(255,218,174,.58)!important;
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.13),transparent 54%),
-    linear-gradient(145deg,rgba(128,87,151,.52),rgba(54,36,73,.84))!important;
-  box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)!important;
-  transform:translateY(-2px)!important;
-}
-html body.programming-page .pa-track-number{
-  border:1px solid rgba(255,218,174,.38)!important;
-  border-radius:12px!important;
-  background:linear-gradient(145deg,rgba(255,219,174,.18),rgba(116,78,143,.42))!important;
-  color:#ffe5bd!important;
-}
-html body.programming-page .pa-track-content b{color:#fff5e9!important}
-html body.programming-page :is(.pa-track-description,.pa-track-meta){color:#e4d5e8!important}
-html body.programming-page .pa-track-arrow{color:#ffe5bd!important}
-@media(max-width:700px){
-  html body.programming-page .pa-track-grid{grid-template-columns:1fr!important;gap:12px!important}
-  html body.programming-page .pa-track-card{min-height:112px!important;padding:16px!important}
-}
-
-
-/* DOMA Academy global glass pass — shared by every programming tool/view. */
-html,html body.programming-page{
-  color:#fff4e8!important;
   background:
     radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
     radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
     radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
     linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
+  background-color:#170f22!important;
   background-attachment:fixed!important;
 }
-/* Keep the page canvas continuous; use the homepage How It Works card
-   language only on actual interactive/content cards. */
+html body.programming-page :is(h1,h2,h3,h4,h5,h6),
+html body:has(.handbook) :is(h1,h2,h3,h4,h5,h6){color:var(--pa-main-text)!important}
+html body.programming-page :is(p,li,label,.muted,.small,.desc,.pa-track-description,.pa-track-meta,.pa-reader-summary,.pa-free-tutor-status,.pa-free-tutor-note,.pa-tool-page-head p),
+html body:has(.handbook) :is(p,li,.muted){color:var(--pa-main-muted)!important}
+html body.programming-page a,html body:has(.handbook) a{color:var(--pa-main-gold)!important}
+html body.programming-page a:hover,html body:has(.handbook) a:hover{color:#fff!important}
+
+/* The same glass treatment used by the main site's How It Works cards. */
 html body.programming-page :is(
-  .pa-track-card,.pa20-hub-card,.pa-project-card,.pa-daily-card,.pa-side-card,
-  .pa-progress-card,.pa-activity-card,.pa-lesson-row,.pa-code-lab,.pa-free-tutor,
-  .pa-tool-page-head,.pa-achievement-panel,.pa-certificate-card,.pa-review-card,
-  .pa-project-rubric,.pa-exercise-card,.pa-exercise-hints,.pa-exercise-test-results
-){
-  color:#fff4e8!important;
-  border:1px solid rgba(225,193,233,.32)!important;
-  border-radius:22px!important;
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.09),transparent 54%),
-    linear-gradient(145deg,rgba(117,79,139,.44),rgba(44,29,62,.77))!important;
-  box-shadow:0 16px 38px rgba(12,5,23,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(138%)!important;
-  backdrop-filter:blur(18px) saturate(138%)!important;
+ .pa-track-card,.pa20-hub-card,.pa-project-card,.pa-daily-card,.pa-side-card,
+ .pa-progress-cards>div,.pa-stats>div,.pa-lessons-panel,.pa-lesson-reader,
+ .pa-code-lab,.pa-free-tutor,.pa-global-tutor,.pa-tool-page-head,
+ .pa-modal-card,.pa-subscription-compact,.pa-achievement-panel,
+ .pa-certificate-card,.pa-review-card,.pa-exercise-card,.pa-activity-card,
+ .pa-project-rubric,.pa-daily-challenges,.pa-student-progress,
+ .pa-projects-section,.pa-activities,.pa-admin-learning,
+ .pa20-path-card,.pa20-topic-card,.pa20-course-card
+),
+html body:has(.handbook) :is(.hero,.panel,.guide-card,.key,.terminal){
+ color:var(--pa-main-text)!important;
+ border:1px solid var(--pa-main-card-border)!important;
+ border-radius:22px!important;
+ background:var(--pa-main-card-bg)!important;
+ box-shadow:var(--pa-main-card-shadow)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+ backdrop-filter:blur(18px) saturate(135%)!important;
 }
-html body.programming-page .pa20-hub-card{
-  min-height:112px!important;padding:17px!important;border-radius:20px!important;
+html body.programming-page :is(.pa-track-card,.pa20-hub-card,.pa-project-card,.pa-daily-card,.pa-side-card,.pa-progress-cards>div,.pa-stats>div,.pa-lessons-panel,.pa-lesson-reader,.pa-code-lab,.pa-free-tutor,.pa-global-tutor,.pa-tool-page-head,.pa-modal-card,.pa-subscription-compact,.pa-achievement-panel,.pa-certificate-card,.pa-review-card,.pa-exercise-card,.pa-activity-card,.pa-project-rubric,.pa-daily-challenges,.pa-student-progress,.pa-projects-section,.pa-activities,.pa-admin-learning,.pa20-path-card,.pa20-topic-card,.pa20-course-card):hover,
+html body:has(.handbook) :is(.hero,.panel,.guide-card,.key):hover{
+ border-color:rgba(255,218,174,.58)!important;
+ box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)!important;
 }
-html body.programming-page :is(.pa-code-lab,.pa-free-tutor){padding:clamp(15px,2.4vw,22px)!important}
-html body.programming-page .pa-tool-page{
-  background:
-    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
-    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
-    linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
-  background-attachment:fixed!important;
+html body.programming-page .pa-track-card,
+html body.programming-page .pa20-hub-card{border-radius:22px!important}
+html body.programming-page :is(.pa-hero,.pa20-hero,.pa-home-hero,.pa-tool-page){
+ color:var(--pa-main-text)!important;
+ background:transparent!important;
+ border:0!important;
+ box-shadow:none!important;
 }
-html body.programming-page .pa-tool-page-head{border-radius:20px!important}
+html body.programming-page :is(.pa-topbar,.pa20-topbar,.pa-nav,.pa-tool-nav),
+html body:has(.handbook) .handbook-topbar{
+ color:var(--pa-main-text)!important;
+ background:linear-gradient(135deg,rgba(112,77,133,.78),rgba(49,31,68,.90))!important;
+ border:1px solid rgba(255,218,174,.24)!important;
+ box-shadow:0 14px 38px rgba(12,5,23,.22),inset 0 1px 0 rgba(255,255,255,.14)!important;
+ -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+ backdrop-filter:blur(22px) saturate(145%)!important;
+}
+html body.programming-page :is(.pa-section,.pa-section-wrap,.pa-content-section,.pa-track-section,.pa-footer),
+html body:has(.handbook) .handbook{background:transparent!important}
+html body.programming-page .pa-footer{color:var(--pa-main-muted)!important;border-top-color:rgba(255,218,174,.18)!important}
+
+/* Controls: champagne-gold actions, glass fields, consistent contrast. */
+html body.programming-page :is(button,.pa-button,.pa-lab-secondary,.pa-code-select),
+html body:has(.handbook) :is(button,.nav a,.chip){
+ color:var(--pa-main-gold)!important;
+ border:1px solid rgba(255,218,174,.34)!important;
+ border-radius:12px!important;
+ background:rgba(255,255,255,.055)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+html body.programming-page :is(.pa-lab-run,.pa-primary-button,.pa-project-submit,.pa-free-tutor-send,.pa-activity-submit),
+html body:has(.handbook) .primary{
+ color:#2b1b35!important;
+ border:1px solid rgba(255,218,174,.55)!important;
+ background:linear-gradient(120deg,#ffe5bd,#e8b974)!important;
+ box-shadow:0 10px 24px rgba(12,5,23,.2)!important;
+}
+html body.programming-page :is(input,select,textarea,.pa-form-input,.pa-code-input,.pa-free-tutor-question input),
+html body:has(.handbook) input{
+ color:var(--pa-main-text)!important;
+ border:1px solid rgba(225,193,233,.28)!important;
+ border-radius:12px!important;
+ background:rgba(67,45,85,.48)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+html body.programming-page :is(input,textarea)::placeholder,
+html body:has(.handbook) input::placeholder{color:#c9b6d3!important}
+html body.programming-page select option{color:#fff4e8!important;background:#2b1d3b!important}
+
+/* Interactive board: one continuous glass surface, no black gutter or divider.
+   Green line numbers sit slightly apart from the code. */
 html body.programming-page .pa-editor-wrap{
-  display:flex!important;align-items:stretch!important;gap:10px!important;
-  overflow:hidden!important;padding:10px 12px!important;
-  border:1px solid rgba(225,193,233,.25)!important;border-radius:16px!important;
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.07),transparent 54%),
-    linear-gradient(145deg,rgba(117,79,139,.34),rgba(44,29,62,.64))!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+ display:flex!important;direction:ltr!important;align-items:stretch!important;
+ gap:10px!important;overflow:hidden!important;
+ padding:10px 12px!important;
+ border:1px solid rgba(225,193,233,.30)!important;
+ border-radius:18px!important;
+ background:var(--pa-main-card-bg)!important;
+ box-shadow:var(--pa-main-card-shadow)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+ backdrop-filter:blur(18px) saturate(135%)!important;
 }
 html body.programming-page .pa-editor-wrap:focus-within{
-  border-color:rgba(255,218,174,.58)!important;
-  box-shadow:0 0 0 3px rgba(255,218,174,.07),inset 0 1px 0 rgba(255,255,255,.08)!important;
+ border-color:rgba(255,218,174,.62)!important;
+ box-shadow:0 0 0 3px rgba(255,218,174,.08),var(--pa-main-card-shadow)!important;
 }
 html body.programming-page .pa-code-lines{
-  flex:0 0 34px!important;width:34px!important;min-width:34px!important;
-  margin:0 8px 0 0!important;padding:17px 2px 17px 0!important;
-  border:0!important;background:transparent!important;
-  color:#70e39a!important;text-align:right!important;
-  font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+ flex:0 0 34px!important;width:34px!important;min-width:34px!important;
+ margin:0 8px 0 0!important;padding:17px 2px 17px 0!important;
+ border:0!important;border-right:0!important;
+ background:transparent!important;
+ color:var(--pa-main-green)!important;
+ text-align:right!important;white-space:pre!important;
+ font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+ user-select:none!important;
 }
 html body.programming-page .pa-editor-wrap .pa-code-editor,
 html body.programming-page .pa-code-editor,
 html body.programming-page .pa-editor-wrap textarea{
-  color:#fff4e8!important;background:transparent!important;
-  border:0!important;border-radius:0!important;box-shadow:none!important;
-  caret-color:#ffe5bd!important;
+ flex:1!important;min-width:0!important;min-height:250px!important;
+ max-height:430px!important;resize:vertical!important;
+ margin:0!important;padding:17px 4px!important;
+ border:0!important;border-radius:0!important;
+ color:#fff4e8!important;background:transparent!important;
+ box-shadow:none!important;outline:0!important;
+ direction:ltr!important;text-align:left!important;
+ tab-size:4!important;white-space:pre!important;overflow:auto!important;
+ caret-color:#ffe5bd!important;
+ font:14px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace!important;
 }
 html body.programming-page .pa-editor-wrap .pa-code-editor:focus{
-  border:0!important;box-shadow:none!important;outline:0!important;
+ border:0!important;box-shadow:none!important;outline:0!important;
 }
-html body.programming-page :is(.pa-code-output,.pa-code-input,.pa-exercise-editor){
-  color:#fff4e8!important;
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.06),transparent 54%),
-    linear-gradient(145deg,rgba(117,79,139,.30),rgba(44,29,62,.60))!important;
-  border:1px solid rgba(225,193,233,.24)!important;border-radius:14px!important;
+html body.programming-page :is(.pa-code-output,.pa-test-output,.pa-daily-editor,.pa-exercise-editor,.pa-reader-content pre,.terminal){
+ color:#d9f7e2!important;
+ border:1px solid rgba(225,193,233,.28)!important;
+ border-radius:16px!important;
+ background:var(--pa-main-card-bg)!important;
+ box-shadow:var(--pa-main-card-shadow)!important;
+ direction:ltr!important;text-align:left!important;
 }
-html body.programming-page .pa-code-output{color:#c9f4d5!important}
-html body.programming-page :is(.pa-code-editor,.pa-code-output,.pa-code-input,.pa-exercise-editor)::placeholder{color:#c9b6d3!important}
-html body.programming-page .pa-code-select{
-  color:#fff4e8!important;background:rgba(67,45,85,.82)!important;
+html body.programming-page .pa-code-output{padding:15px!important;white-space:pre-wrap!important}
+html body.programming-page :is(.pa-reader-content,.pa-reader-content p,.pa-reader-content li,.pa-reader-content ul,.pa-reader-content ol){color:var(--pa-main-muted)!important}
+html body.programming-page :is(.pa-reader-content h2,.pa-reader-content h3,.pa-reader-content h4,.pa-reader-content strong){color:var(--pa-main-gold)!important}
+html body.programming-page .pa-reader-content a{color:var(--pa-main-gold)!important}
+html body.programming-page .pa-reader-content :is(blockquote,table,th,td){
+ color:var(--pa-main-text)!important;background:rgba(117,79,139,.20)!important;border-color:rgba(225,193,233,.22)!important;
 }
-html body.programming-page .pa-code-select option{background:#2b1d3b!important;color:#fff4e8!important}
-html body.programming-page .pa-lab-output-head{color:#ffe5bd!important}
-html body.programming-page .pa-lab-output-head span{color:#e4d5e8!important}
-html body.programming-page .pa-reader-content,
-html body.programming-page .pa-reader-content :is(p,li,ul,ol){color:#f4e9f3!important}
-html body.programming-page .pa-reader-content :is(h2,h3,h4){color:#ffe5bd!important}
-@media(max-width:700px){
-  html body.programming-page .pa-editor-wrap{gap:7px!important;padding:8px!important}
-  html body.programming-page .pa-code-lines{flex-basis:30px!important;width:30px!important;min-width:30px!important;margin-right:5px!important}
-  html body.programming-page .pa-code-editor{font-size:13px!important}
-}
+html body.programming-page .pa-reader-content code{color:#b9f0cb!important;background:rgba(112,227,154,.10)!important}
 
-/* Standalone Programmer Guide uses the same page canvas and How It Works cards. */
-html body:has(.handbook){
-  min-height:100vh!important;color:#fff4e8!important;
-  background:
-    radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
-    radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
-    radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
-    linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
-  background-attachment:fixed!important;
+/* Tutor answers, progress, labels and status colors. */
+html body.programming-page :is(.pa-free-tutor-head h3,.pa-tool-page-head h2,.pa-section-heading h2,.pa-panel-heading h2,.pa-lesson-reader h2,.pa-side-card h3,.pa-project-card h3,.pa-daily-card h3){color:var(--pa-main-gold)!important}
+html body.programming-page :is(.pa-track-number,.pa-progress-count,.pa-roadmap-label,.pa-side-icon){
+ color:var(--pa-main-green)!important;border:1px solid rgba(112,227,154,.24)!important;background:rgba(112,227,154,.08)!important;
 }
-html body:has(.handbook) :is(.hero,.panel,.guide-card,.key,.terminal){
-  color:#fff4e8!important;border:1px solid rgba(225,193,233,.32)!important;
-  border-radius:22px!important;
-  background:
-    radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.09),transparent 54%),
-    linear-gradient(145deg,rgba(117,79,139,.44),rgba(44,29,62,.77))!important;
-  box-shadow:0 16px 38px rgba(12,5,23,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(138%)!important;
-  backdrop-filter:blur(18px) saturate(138%)!important;
+html body.programming-page :is(.pa-free-tutor-answer,.pa-project-status,.pa-daily-hints,.pa-daily-result,.pa-exercise-hints,.pa-exercise-test-results){
+ color:var(--pa-main-text)!important;border:1px solid rgba(225,193,233,.25)!important;border-radius:16px!important;background:rgba(117,79,139,.25)!important;
 }
-html body:has(.handbook) :is(.hero p,.muted,.guide-card p,.guide-card li,.key p){color:#e4d5e8!important}
-html body:has(.handbook) .terminal{
-  color:#c9f4d5!important;direction:ltr!important;text-align:left!important;
-}
-html body:has(.handbook) .terminal-input input{
-  color:#fff4e8!important;background:rgba(44,29,62,.72)!important;
-  border:1px solid rgba(225,193,233,.32)!important;
-}
-html body:has(.handbook) .key code,
-html body:has(.handbook) .guide-card code{
-  color:#ffe5bd!important;background:rgba(255,218,174,.10)!important;
+html body.programming-page :is(.pa-modal-backdrop,.pa-overlay){background:rgba(12,7,19,.72)!important;backdrop-filter:blur(12px)!important}
+html body.programming-page :is(.pa-modal-price,.pa-cash-number){color:var(--pa-main-text)!important;background:rgba(117,79,139,.25)!important;border-color:rgba(225,193,233,.25)!important}
+html body.programming-page :is(.pa-modal-price strong,.pa-cash-number strong){color:var(--pa-main-gold)!important}
+
+/* Standalone Programmer Guide — no green/blue/black legacy theme. */
+html body:has(.handbook) :is(.handbook,.hero,.panel,.guide-card,.key,.terminal){color:var(--pa-main-text)!important}
+html body:has(.handbook) .handbook{max-width:1100px!important;margin:auto!important;padding:18px!important}
+html body:has(.handbook) .hero h1{color:var(--pa-main-gold)!important}
+html body:has(.handbook) .guide-card :is(p,li){color:var(--pa-main-muted)!important}
+html body:has(.handbook) .key code,html body:has(.handbook) .guide-card code{
+ color:var(--pa-main-gold)!important;background:rgba(255,218,174,.10)!important;
 }
 html body:has(.handbook) .steps li{
-  color:#fff4e8!important;background:rgba(117,79,139,.24)!important;
+ color:var(--pa-main-text)!important;background:rgba(117,79,139,.22)!important;
+ border:1px solid rgba(225,193,233,.16)!important;border-radius:12px!important;
 }
-html body:has(.handbook) .steps li:before{color:#70e39a!important}
-html body:has(.handbook) :is(.handbook-topbar,.handbook-back){
-  color:#fff4e8!important;background:linear-gradient(135deg,rgba(112,77,133,.78),rgba(49,31,68,.9))!important;
-  border-color:rgba(255,218,174,.36)!important;
+html body:has(.handbook) .steps li:before{color:var(--pa-main-green)!important}
+html body:has(.handbook) .terminal{color:#d9f7e2!important}
+html body:has(.handbook) .handbook-back{color:var(--pa-main-gold)!important}
+
+@media(max-width:760px){
+ html body.programming-page{background-attachment:scroll!important}
+ html body.programming-page .pa-editor-wrap{gap:7px!important;padding:8px!important}
+ html body.programming-page .pa-code-lines{flex-basis:30px!important;width:30px!important;min-width:30px!important;margin-right:5px!important}
+ html body.programming-page .pa-code-editor{font-size:13px!important}
+ html body.programming-page :is(.pa-track-card,.pa20-hub-card){border-radius:19px!important}
+ html body:has(.handbook) .handbook{padding:12px!important}
 }
