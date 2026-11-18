@@ -2269,3 +2269,49 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
 html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view) .pa20-hub{
   background:transparent!important;background-image:none!important;box-shadow:none!important;
 }
+
+
+/* Academy landing refresh: lighter plum canvas with isolated, softly blurred orange/champagne light. */
+html:has(body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)){
+  background:#261b27!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view){
+  position:relative!important;
+  isolation:isolate!important;
+  background:
+    radial-gradient(ellipse at 13% 16%,rgba(255,145,74,.25) 0%,rgba(255,145,74,.10) 20%,transparent 43%),
+    radial-gradient(ellipse at 88% 27%,rgba(222,139,91,.20) 0%,rgba(222,139,91,.08) 24%,transparent 46%),
+    radial-gradient(ellipse at 53% 100%,rgba(164,111,151,.22) 0%,transparent 48%),
+    linear-gradient(135deg,#30222d 0%,#281e2c 48%,#35242b 100%)!important;
+  background-attachment:fixed!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)::before{
+  content:""!important;
+  display:block!important;
+  position:fixed!important;
+  inset:-12%!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  opacity:.72!important;
+  background:
+    radial-gradient(circle at 16% 23%,rgba(255,151,82,.42) 0%,rgba(255,151,82,.16) 13%,transparent 31%),
+    radial-gradient(circle at 82% 20%,rgba(255,188,123,.27) 0%,rgba(255,188,123,.10) 15%,transparent 34%),
+    radial-gradient(circle at 72% 82%,rgba(203,128,105,.25) 0%,transparent 30%),
+    radial-gradient(circle at 30% 86%,rgba(163,118,174,.22) 0%,transparent 32%)!important;
+  filter:blur(42px)!important;
+  transform:translateZ(0)!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view)::after{
+  content:""!important;
+  display:block!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(115deg,rgba(255,188,133,.035),transparent 42%,rgba(255,151,82,.045))!important;
+}
+html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view) .pa-shell{
+  position:relative!important;
+  z-index:1!important;
+  background:transparent!important;
+}
