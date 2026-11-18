@@ -636,3 +636,79 @@ html body.programming-page.pa-paths-open #learning-paths{
 html body.programming-page.pa-paths-open #learning-paths *{
   visibility:visible;
 }
+
+
+/* 2026-11-18: learning paths as full-width horizontal rows, stacked vertically. */
+html body.programming-page #learning-paths .pa-track-grid{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:12px!important;
+  width:100%!important;
+}
+html body.programming-page #learning-paths .pa-track-card{
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr) 28px!important;
+  grid-template-rows:auto!important;
+  align-items:center!important;
+  gap:14px!important;
+  width:100%!important;
+  min-height:104px!important;
+  padding:17px 20px!important;
+  text-align:right!important;
+  border-radius:18px!important;
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(255,218,174,.13),transparent 55%),
+    linear-gradient(115deg,rgba(117,79,139,.55),rgba(44,29,62,.88))!important;
+  border:1px solid rgba(225,193,233,.38)!important;
+  box-shadow:0 12px 28px rgba(10,5,20,.22),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+html body.programming-page #learning-paths .pa-track-number{
+  width:44px!important;height:44px!important;
+  display:grid!important;place-items:center!important;
+  border-radius:13px!important;
+  color:#9af0c9!important;
+  background:rgba(110,224,179,.12)!important;
+  border:1px solid rgba(142,235,198,.48)!important;
+  font-size:14px!important;font-weight:900!important;
+}
+html body.programming-page #learning-paths .pa-track-content{
+  display:flex!important;flex-direction:column!important;
+  align-items:flex-start!important;gap:5px!important;min-width:0!important;
+}
+html body.programming-page #learning-paths .pa-track-content b{
+  display:block!important;color:#fff!important;
+  font-family:"Cairo","Segoe UI",sans-serif!important;
+  font-size:17px!important;line-height:1.55!important;font-weight:900!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html body.programming-page #learning-paths .pa-track-content small{
+  color:#ffe0ad!important;-webkit-text-fill-color:#ffe0ad!important;
+  font-size:13px!important;line-height:1.6!important;font-weight:800!important;
+}
+html body.programming-page #learning-paths .pa-track-description{
+  color:#f0eaf5!important;-webkit-text-fill-color:#f0eaf5!important;
+  font-size:13px!important;line-height:1.85!important;font-weight:600!important;
+}
+html body.programming-page #learning-paths .pa-track-meta{
+  color:#aaf0d1!important;-webkit-text-fill-color:#aaf0d1!important;
+  font-size:12px!important;line-height:1.6!important;font-weight:700!important;
+}
+html body.programming-page #learning-paths .pa-track-arrow{
+  color:#ffe0ad!important;-webkit-text-fill-color:#ffe0ad!important;
+  font-size:23px!important;font-weight:900!important;
+}
+@media(max-width:620px){
+  html body.programming-page #learning-paths .pa-track-grid{gap:10px!important}
+  html body.programming-page #learning-paths .pa-track-card{
+    grid-template-columns:40px minmax(0,1fr) 20px!important;
+    gap:10px!important;min-height:96px!important;padding:14px!important;
+  }
+  html body.programming-page #learning-paths .pa-track-number{
+    width:38px!important;height:38px!important;font-size:12px!important;
+  }
+  html body.programming-page #learning-paths .pa-track-content b{font-size:15px!important}
+  html body.programming-page #learning-paths .pa-track-content small{font-size:12px!important}
+  html body.programming-page #learning-paths .pa-track-description{font-size:12px!important}
+  html body.programming-page #learning-paths .pa-track-meta{font-size:11px!important}
+}
