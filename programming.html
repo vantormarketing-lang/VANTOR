@@ -1331,8 +1331,7 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
     event.preventDefault();
     if(tile.id==='pa20OpenPaths'||tile.id==='pa20ExplorePaths'){
       var next=new URL('./programming.html?view=paths',window.location.href);
-      if(window.location.search.indexOf('view=paths')===-1)history.pushState({domaView:'paths'},'',next.pathname+next.search);
-      revealPaths();return;
+      window.location.assign(next.href);return;
     }
     if(tile.id==='pa20OpenHandbook'){window.location.href='./programming-handbook.html';return;}
     var kind=tile.id==='pa20OpenTutor'?'tutor':'board';
