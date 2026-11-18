@@ -1293,7 +1293,7 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   function revealPaths(){
     var paths=byId('learning-paths');
     if(!paths)return;
-    paths.hidden=false;paths.removeAttribute('aria-hidden');paths.style.removeProperty('display');
+    paths.hidden=false;paths.removeAttribute('aria-hidden');paths.style.removeProperty('display');document.body.classList.add('pa-paths-open');
     document.body.classList.remove('pa-track-view','pa-lesson-page-view','pa-tool-view');
     var layout=document.querySelector('.pa-learning-layout');
     if(layout){layout.hidden=true;layout.setAttribute('aria-hidden','true');layout.style.setProperty('display','none','important');}
@@ -1301,6 +1301,7 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
     var lessonPage=byId('paLessonPage');if(lessonPage)lessonPage.hidden=true;
     paths.scrollIntoView({behavior:'smooth',block:'start'});
   }
+  document.body.classList.remove('pa-paths-open');
   window.__paRevealPaths=revealPaths;
   function goBack(){
     var q=new URLSearchParams(window.location.search);
@@ -1342,6 +1343,6 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(params.get('view')==='paths')revealPaths();
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=typography-cairo-20261118">
+<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=paths-hidden-until-click-20261118">
 </body>
 </html>
