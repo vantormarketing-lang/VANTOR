@@ -3207,3 +3207,174 @@ body.mf-kids-inline-route>#modal.show{display:flex!important;visibility:visible!
 @media(max-width:520px){#mfKidsStandaloneRoot .mfkj-subscribe-only{padding:14px 10px}#mfKidsStandaloneRoot .mfkj-payment-unified{padding:11px}#mfKidsStandaloneRoot .mfkj-payment-unified .mfkj-pay-layout,#mfKidsStandaloneRoot .mfkj-payment-unified .mfkj-pay-fields{gap:7px}#mfKidsStandaloneRoot .mfkj-payment-unified .mfkj-pay-price,#mfKidsStandaloneRoot .mfkj-payment-unified .mfkj-pay-receiver,#mfKidsStandaloneRoot .mfkj-payment-unified .mfkj-pay-field{padding:8px}}
 @media(max-width:480px){#mfKidsStandaloneRoot .mfkj-course-card-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}#mfKidsStandaloneRoot .mfkj-course-level-card{min-height:108px;padding:9px 4px}#mfKidsStandaloneRoot .mfkj-course-icon{width:24px;height:24px}}
 @media(max-width:360px){#mfKidsStandaloneRoot .mfkj-payment-unified .mfkj-pay-layout,#mfKidsStandaloneRoot .mfkj-payment-unified .mfkj-pay-fields{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   MR. FLUENT KIDS — PRIMARY PURPLE / MAUVE GLASS DESIGN
+   Visual system matched to the approved DOMA homepage reference.
+   Applies to every Kids route: entry, subscription, hub, paths,
+   six levels, lessons, practice, review, parent tools and lab.
+   ========================================================= */
+:root{
+  --mfk-bg:#28172f;
+  --mfk-plum:#39213f;
+  --mfk-card:rgba(183,139,174,.48);
+  --mfk-card-2:rgba(151,111,157,.40);
+  --mfk-edge:rgba(225,190,224,.52);
+  --mfk-text:#fff5f2;
+  --mfk-muted:#ead9e9;
+  --mfk-gold:#f4c879;
+  --mfk-cyan:#82d5e4;
+}
+html:has(body.mf-kids-route),html:has(body.mf-kids-inline-route){
+  background:var(--mfk-bg)!important;
+}
+body.mf-kids-route,body.mf-kids-inline-route{
+  color:var(--mfk-text)!important;
+  background:
+    radial-gradient(ellipse 300px 255px at 96% 76%,rgba(255,211,151,.88) 0%,rgba(218,151,91,.48) 24%,rgba(173,108,89,.16) 48%,transparent 74%),
+    radial-gradient(ellipse 680px 430px at 12% 0%,rgba(137,83,158,.30),transparent 72%),
+    radial-gradient(ellipse 560px 430px at 52% 104%,rgba(105,61,124,.22),transparent 72%),
+    linear-gradient(115deg,#24152e 0%,#39213f 52%,#28172f 100%)!important;
+  background-attachment:fixed!important;
+  font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif!important;
+}
+body.mf-kids-route #mfKidsStandaloneRoot,
+body.mf-kids-inline-route #mfKidsStandaloneRoot{
+  color:var(--mfk-text)!important;
+  background:transparent!important;
+  font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif!important;
+}
+#mfKidsStandaloneRoot :is(h1,h2,h3,h4,h5,strong,b){color:var(--mfk-text)!important}
+#mfKidsStandaloneRoot :is(p,small,.mfkr-ar,.mfkr-desc,.mfkr-note,.mfkr-footer,.mfkj-course-ar,.mfkj-pay-muted,.mfkj-membership-info,.mfkj-t-card p,.mfkj-t-card li){
+  color:var(--mfk-muted)!important;
+}
+#mfKidsStandaloneRoot .mfkr-page{position:relative;z-index:1}
+#mfKidsStandaloneRoot .mfkr-heading{margin-bottom:28px}
+#mfKidsStandaloneRoot .mfkr-heading h1{
+  color:#fff5f2!important;
+  font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif!important;
+  font-weight:950!important;
+  letter-spacing:-.035em!important;
+  text-shadow:0 3px 24px rgba(21,8,29,.28)!important;
+}
+#mfKidsStandaloneRoot .mfkr-eyebrow,
+#mfKidsStandaloneRoot :is(.mfkj-pay-kicker,.mfkj-t-kicker,.mfkj-course-code){
+  color:var(--mfk-gold)!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  letter-spacing:.22em!important;
+  text-transform:uppercase!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-dot,.mfkr-eyebrow .mfkr-dot,.mfkj-notice-icon){
+  background:var(--mfk-cyan)!important;
+  box-shadow:0 0 12px rgba(130,213,228,.72),0 0 0 4px rgba(130,213,228,.12)!important;
+}
+#mfKidsStandaloneRoot .mfkr-top{
+  position:sticky!important;
+  top:0!important;
+  z-index:40!important;
+  border-bottom:1px solid rgba(225,190,224,.38)!important;
+  background:linear-gradient(105deg,rgba(56,32,65,.94),rgba(92,57,101,.90),rgba(53,31,63,.95))!important;
+  box-shadow:0 12px 34px rgba(17,7,24,.22)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+}
+#mfKidsStandaloneRoot .mfkr-nav{min-height:68px!important}
+#mfKidsStandaloneRoot .mfkr-back-arrow{
+  width:42px!important;height:42px!important;min-width:42px!important;
+  color:var(--mfk-gold)!important;
+  border:1px solid var(--mfk-edge)!important;
+  border-radius:50%!important;
+  background:linear-gradient(145deg,rgba(193,151,190,.32),rgba(66,42,80,.72))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 7px 18px rgba(15,6,22,.18)!important;
+  font-size:24px!important;font-weight:900!important;
+}
+#mfKidsStandaloneRoot :is(
+  .mfkr-choice,.mfkr-level,.mfkr-letter-card,.mfkr-word-card,.mfkr-topic-panel,
+  .mfkr-quiz-panel,.mfkr-a2-story-card,.mfkr-c1-story-line,.mfkr-b2-connector-sentence,
+  .mfkr-a2-match-prompt,.mfkr-c1-output,.mfkr-c2-writing-area,
+  .mfkj-course-practice-panel,.mfkj-model-reply,.mfkj-mini-card,.mfkj-pay-gate,
+  .mfkj-payment-unified,.mfkj-notice-card,.mfkj-t-card,.mfkj-t-note,.mfkj-t-wrap,
+  .mfkj-pay-card,.mfkj-pay-price,.mfkj-pay-receiver,.mfkj-pay-field,
+  .mfkj-membership-item,.mfkj-dash-panel,.mfkj-daily-question,
+  .mfkj-course-level-card,.mfkj-daily-complete,.mfkj-daily-built,
+  .mfkj-membership-state,.mfkj-t-stat,.mfkj-review-card,.mfkj-lab-card,
+  .mfkj-parent-card,.mfkj-lesson-card,.mfkj-activity-card
+){
+  color:var(--mfk-text)!important;
+  border:1.5px solid var(--mfk-edge)!important;
+  border-radius:25px!important;
+  background:
+    linear-gradient(135deg,rgba(211,170,202,.43) 0%,rgba(154,112,161,.42) 54%,rgba(100,67,112,.48) 100%)!important;
+  box-shadow:0 17px 38px rgba(18,7,25,.24),inset 0 1px 0 rgba(255,255,255,.20)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(125%)!important;
+  backdrop-filter:blur(16px) saturate(125%)!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-choice,.mfkr-level,.mfkj-course-level-card){
+  padding:clamp(16px,2.2vw,24px)!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-choice,.mfkr-level,.mfkj-course-level-card):before{
+  content:none!important;display:none!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-choice:hover,.mfkr-level:hover,.mfkj-course-level-card:hover){
+  transform:none!important;
+  border-color:var(--mfk-edge)!important;
+  box-shadow:0 17px 38px rgba(18,7,25,.24),inset 0 1px 0 rgba(255,255,255,.20)!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-choice h2,.mfkr-level h2,.mfkj-course-level-card h3,.mfkj-dash-panel h3,.mfkj-t-card h2,.mfkj-t-card h3){
+  color:#fff5f2!important;font-weight:950!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-card-foot,.mfkr-code,.mfkr-tag,.mfkj-membership-code,.mfkj-pay-price strong,.mfkj-t-stat strong){
+  color:var(--mfk-gold)!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-tag,.mfkj-membership-pill,.mfkj-t-badge,.mfkj-pay-kicker){
+  border:1px solid rgba(244,200,121,.42)!important;
+  border-radius:999px!important;
+  background:rgba(244,200,121,.10)!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-btn,.mfkr-sound,.mfkr-topic,.mfkr-quiz-option,.mfkr-a2-line-sound,.mfkj-lab-btn,.mfkj-lab-entry,.mfkj-membership-action,.mfkj-daily-listen,.mfkj-daily-option,.mfkj-daily-clear,.mfkj-t-link,.mfkj-t-nav a,.mfkj-pay-auth-actions button){
+  color:#fff5f2!important;
+  border:1px solid rgba(225,190,224,.55)!important;
+  border-radius:999px!important;
+  background:linear-gradient(135deg,rgba(195,154,194,.35),rgba(76,49,91,.74))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 7px 18px rgba(17,7,24,.16)!important;
+  font-weight:850!important;
+}
+#mfKidsStandaloneRoot :is(.mfkr-btn-primary,.mfkj-primary,.mfkj-pay-submit,.mfkj-fast-submit,.mfkj-lab-btn:not(.secondary)){
+  color:#4b2d46!important;-webkit-text-fill-color:#4b2d46!important;
+  border:1px solid rgba(255,239,211,.96)!important;
+  border-radius:999px!important;
+  background:linear-gradient(135deg,#ffe8c3 0%,#f2c77f 58%,#d99a54 100%)!important;
+  box-shadow:0 9px 22px rgba(25,10,29,.26),inset 0 1px 0 rgba(255,255,255,.72)!important;
+}
+#mfKidsStandaloneRoot :is(input,textarea,select,.mfkj-field,.mfkj-t-select,.mfkj-t-area){
+  color:#fff5f2!important;
+  border:1px solid rgba(225,190,224,.55)!important;
+  border-radius:13px!important;
+  background:rgba(47,29,57,.56)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+#mfKidsStandaloneRoot :is(input,textarea,.mfkj-t-area)::placeholder{color:rgba(234,217,233,.72)!important;opacity:1!important}
+#mfKidsStandaloneRoot :is(.mfkr-footer,.mfkj-footer){color:var(--mfk-muted)!important;border-color:rgba(225,190,224,.20)!important}
+#mfKidsStandaloneRoot .mfkj-subscribe-close{
+  color:#fff5f2!important;border:1px solid var(--mfk-edge)!important;border-radius:50%!important;
+  background:rgba(68,43,80,.86)!important;
+}
+body.mf-kids-inline-route #modal{
+  color:var(--mfk-text)!important;
+  background:rgba(38,22,47,.72)!important;
+  -webkit-backdrop-filter:blur(18px)!important;backdrop-filter:blur(18px)!important;
+}
+body.mf-kids-inline-route #modal :is(.modal-card,.modal-content,.wrap,.card){
+  color:var(--mfk-text)!important;border:1.5px solid var(--mfk-edge)!important;border-radius:24px!important;
+  background:linear-gradient(140deg,rgba(185,141,178,.94),rgba(68,43,82,.97))!important;
+}
+@media(max-width:700px){
+  body.mf-kids-route,body.mf-kids-inline-route{background-attachment:scroll!important}
+  #mfKidsStandaloneRoot .mfkr-top{position:sticky!important}
+  #mfKidsStandaloneRoot .mfkr-heading{margin-bottom:20px!important}
+  #mfKidsStandaloneRoot :is(.mfkr-choice,.mfkr-level,.mfkj-course-level-card,.mfkj-pay-card,.mfkj-payment-unified,.mfkj-dash-panel){
+    border-radius:21px!important;
+  }
+}
