@@ -2371,3 +2371,47 @@ html body.programming-page #learning-paths .pa-track-card:nth-child(5n+5) .pa-tr
  html body.programming-page #learning-paths .pa-track-content small,
  html body.programming-page #learning-paths .pa-track-content p{font-size:10px!important}
 }
+
+
+/* DOMA One standalone tutor: hide every viewport/inner scroll rail without disabling scroll. */
+html:has(body.programming-page.pa-tutor-tool-view),
+html:has(body.programming-page.pa-tutor-tool-view) body,
+html:has(body.programming-page.pa-tutor-tool-view) #paToolPage,
+html:has(body.programming-page.pa-tutor-tool-view) #paToolPageBody,
+html:has(body.programming-page.pa-tutor-tool-view) #paStandaloneTutorHost,
+html:has(body.programming-page.pa-tutor-tool-view) #paStandaloneTutorHost *{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+  scrollbar-color:transparent transparent!important;
+}
+html:has(body.programming-page.pa-tutor-tool-view)::-webkit-scrollbar,
+html:has(body.programming-page.pa-tutor-tool-view) body::-webkit-scrollbar,
+html:has(body.programming-page.pa-tutor-tool-view) #paToolPage::-webkit-scrollbar,
+html:has(body.programming-page.pa-tutor-tool-view) #paToolPageBody::-webkit-scrollbar,
+html:has(body.programming-page.pa-tutor-tool-view) #paStandaloneTutorHost::-webkit-scrollbar,
+html:has(body.programming-page.pa-tutor-tool-view) #paStandaloneTutorHost *::-webkit-scrollbar{
+  display:none!important;width:0!important;height:0!important;background:transparent!important;
+}
+/* Target the actual generated answer panel in the standalone DOMA One host. */
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAnswer,
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost .pa-free-tutor-answer{
+  background:
+    linear-gradient(125deg,rgba(255,151,82,.19),rgba(196,111,91,.13) 52%,rgba(255,199,143,.12)),
+    rgba(42,27,29,.76)!important;
+  border:1px solid rgba(255,184,127,.42)!important;
+  color:#fff3e9!important;
+  -webkit-text-fill-color:#fff3e9!important;
+  box-shadow:inset 0 1px 0 rgba(255,232,210,.10),0 10px 26px rgba(12,7,8,.18)!important;
+  backdrop-filter:blur(16px)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
+}
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAnswer *:not(a):not(code):not(pre){
+  color:#fff3e9!important;-webkit-text-fill-color:#fff3e9!important;
+}
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAnswer a{
+  color:#ffd09f!important;-webkit-text-fill-color:#ffd09f!important;
+}
+html body.programming-page.pa-tutor-tool-view #paStandaloneTutorHost #paTutorAnswer code{
+  color:#ffe1b2!important;-webkit-text-fill-color:#ffe1b2!important;
+  background:rgba(255,177,112,.13)!important;
+}
