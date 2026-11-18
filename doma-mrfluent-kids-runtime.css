@@ -368,10 +368,13 @@ body.mf-kids-route #mfKidsStandaloneRoot{display:block!important;visibility:visi
 #mfKidsStandaloneRoot .mfkr-nav{justify-content:flex-start!important}
 @media(max-width:520px){#mfKidsStandaloneRoot .mfkr-brand-group{gap:9px}#mfKidsStandaloneRoot .mfkr-back-arrow{flex-basis:32px;width:32px;height:32px}}
 
-/* Kids subscription entry stays inside the main homepage, immediately after FAQ/terms. */
-body.mf-kids-inline-route{display:block!important;min-height:100vh!important;margin:0!important;padding:0!important}
-body.mf-kids-inline-route #mfKidsStandaloneRoot{display:block!important;visibility:visible!important;position:relative!important;z-index:3!important;width:calc(100% - 32px)!important;max-width:1120px!important;min-height:0!important;margin:26px auto 42px!important;padding:0!important;overflow:visible!important;background:transparent!important;color:#fff7ff!important;font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif!important}
-body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-top{position:relative!important;top:auto!important;margin-bottom:16px!important}
-body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-page{padding:12px 0 24px!important}
+/* Kids entry/subscription is a focused full-screen view: hide the academy page behind it. */
+body.mf-kids-inline-route{display:block!important;position:relative!important;min-height:100vh!important;min-height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;background:radial-gradient(ellipse at 12% 0%,rgba(128,49,93,.3),transparent 38%),radial-gradient(ellipse at 92% 18%,rgba(103,64,160,.22),transparent 36%),linear-gradient(145deg,#100b13,#1a0c17 60%,#0d0a12)!important;color:#fff7ff!important}
+body.mf-kids-inline-route>*:not(#mfKidsStandaloneRoot):not(#modal){display:none!important;visibility:hidden!important}
+body.mf-kids-inline-route #mfKidsStandaloneRoot{display:block!important;visibility:visible!important;position:fixed!important;inset:0!important;z-index:2147483000!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;min-height:100vh!important;min-height:100dvh!important;margin:0!important;padding:0!important;overflow-x:hidden!important;overflow-y:auto!important;background:transparent!important;color:#fff7ff!important;font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif!important}
+body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-top{position:sticky!important;top:0!important;margin:0!important}
+body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-page{min-height:calc(100vh - 70px)!important;padding:18px 0 30px!important}
 body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-footer{display:none!important}
-@media(max-width:620px){body.mf-kids-inline-route #mfKidsStandaloneRoot{width:calc(100% - 24px)!important;margin:18px auto 30px!important}}
+body.mf-kids-inline-route>#modal.show{display:flex!important;visibility:visible!important;z-index:2147483600!important}
+body.mf-kids-inline-route>#modal.show .modalbox,body.mf-kids-inline-route>#modal.show .modalhead,body.mf-kids-inline-route>#modal.show #modalBody{visibility:visible!important}
+@media(max-width:620px){body.mf-kids-inline-route #mfKidsStandaloneRoot .mfkr-page{padding:12px 0 24px!important}}
