@@ -94,7 +94,7 @@
     
   </section>
   <section id="paLessonPage" class="pa-lesson-page" hidden></section>
-  <section class="pa-learning-layout">
+  <section class="pa-learning-layout" hidden aria-hidden="true" style="display:none!important">
     <div class="pa-lessons-panel">
       <button type="button" id="paBackToTracks" class="pa-track-back">← العودة إلى المسارات</button>
       <div class="pa-panel-heading"><div><span class="pa-kicker">TRACK LESSONS</span><h2 id="paTrackTitle">Computer Science Fundamentals</h2><p id="paTrackDescription">ابدأ بفهم البرمجة قبل كتابة الأكواد.</p></div><span id="paTrackProgress" class="pa-progress-count">0 / 0</span></div>
@@ -269,6 +269,8 @@ function initializeDomaProgrammingAcademy(){
     activeTrack=track.id;
     $('paTrackTitle').textContent=track.title;$('paTrackDescription').textContent=track.description;
     document.body.classList.add('pa-track-view');
+    var trackLayout=document.querySelector('.pa-learning-layout');
+    if(trackLayout){trackLayout.hidden=false;trackLayout.removeAttribute('aria-hidden');trackLayout.style.removeProperty('display');}
     renderTracks();renderLessons();
     var progressSection=$('paStudentProgress');if(progressSection)progressSection.hidden=false;
     loadStudentProgress();
@@ -974,6 +976,8 @@ function initializeDomaProgrammingAcademy(){
       if(!tracks.some(function(t){return String(t.id)===String(activeTrack)})&&tracks.length)activeTrack=tracks[0].id;
       selectTrack(activeTrack);
       document.body.classList.remove('pa-track-view');
+      var homeLayout=document.querySelector('.pa-learning-layout');
+      if(homeLayout){homeLayout.hidden=true;homeLayout.setAttribute('aria-hidden','true');homeLayout.style.setProperty('display','none','important');}
     }
     if(requestedLesson&&lessons.some(function(l){return l.id===requestedLesson})){var target=lessons.find(function(l){return l.id===requestedLesson});var parent=modules.find(function(m){return m.id===target.module_id});if(parent&&parent.track_id===activeTrack)await openLesson(requestedLesson)}
   }
@@ -1353,6 +1357,6 @@ body.programming-page .pa-tool-page[hidden]{display:none!important}
   if(params.get('view')==='paths')revealPaths();
 })();
 </script>
-<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=paths-compact-clear-headings-20261118">
+<link rel="stylesheet" href="./programming-academy-main-site-glass.css?v=homepage-bg-glow-dots-route-lesson-contrast-20261118">
 </body>
 </html>
