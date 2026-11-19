@@ -42,6 +42,29 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
 });
 
 const clip = (value, maxLength) => String(value == null ? "" : value).slice(0, maxLength);
+async function refundAssistantQuota(context) {
+  if (!context) return false;
+  try {
+    const response = await fetch(context.supabaseOrigin + "/rest/v1/rpc/doma_refund_assistant_quota", {
+      method: "POST",
+      headers: { ...context.adminHeaders, "content-type": "application/json" },
+      body: JSON.stringify({ p_user_id: context.userId }),
+      cache: "no-store"
+    });
+    if (!response.ok) {
+      console.error("[assistant] quota refund failed", { status: response.status });
+      return false;
+    }
+    const refunded = await response.json().catch(() => false);
+    return refunded === true;
+  } catch (error) {
+    console.error("[assistant] quota refund request failed", {
+      name: error && error.name ? String(error.name).slice(0, 80) : "Error"
+    });
+    return false;
+  }
+}
+
 
 // Public, read-only health probe. It reveals only whether the Pages AI binding
 // exists; it never invokes a model, reads account data, or consumes student quota.
@@ -53,6 +76,7 @@ export async function onRequestGet({ env }) {
 }
 
 export async function onRequestPost({ request, env }) {
+  let quotaRefundContext = null;
   try {
     const requestOrigin = new URL(request.url).origin;
     const origin = request.headers.get("Origin");
@@ -180,6 +204,11 @@ export async function onRequestPost({ request, env }) {
         remainingGlobal: Number(quota.remaining_global || 0)
       }, 429);
     }
+    quotaRefundContext = {
+      supabaseOrigin,
+      adminHeaders,
+      userId: authUser.id
+    };
 
     const contextParts = [];
     if (lesson.title) contextParts.push("عنوان الدرس: " + lesson.title);
@@ -233,9 +262,12 @@ export async function onRequestPost({ request, env }) {
       console.error("[assistant] all Workers AI models failed", {
         attempts: modelFailures.map(item => ({ model: item.model, reason: item.reason || item.code || item.status || item.name }))
       });
-      return json({ error: "assistant_temporarily_unavailable", quotaConsumed: true }, 503);
+      const refunded = await refundAssistantQuota(quotaRefundContext);
+      quotaRefundContext = null;
+      return json({ error: "assistant_temporarily_unavailable", quotaConsumed: !refunded }, 503);
     }
 
+    quotaRefundContext = null;
     return json({
       answer,
       remainingUser: Number(quota.remaining_user || 0),
@@ -243,6 +275,10 @@ export async function onRequestPost({ request, env }) {
       model: usedModel
     });
   } catch (error) {
+    if (quotaRefundContext) {
+      await refundAssistantQuota(quotaRefundContext);
+      quotaRefundContext = null;
+    }
     console.error("[assistant] unexpected request failure", { name: error && error.name ? error.name : "Error" });
     return json({ error: "assistant_request_failed" }, 500);
   }
