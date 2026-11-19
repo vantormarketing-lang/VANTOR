@@ -1120,5 +1120,59 @@ html body.mfh-page :is(.btn,.game-option,.level-card,.lesson-link,.kid-menu-trig
 }
 @media(prefers-reduced-motion:reduce){html body.mfh-page *{transition:none!important;scroll-behavior:auto!important}}
 </style>
+
+<style id="kids-levels-match-home-how-cards-v2">
+/* Match the public homepage How it works cards and shared page canvas exactly. */
+html body.mfh-page{
+ color:#fff4e8!important;
+ background:
+  radial-gradient(ellipse 540px 390px at 9% 0%,rgba(167,118,196,.24),transparent 72%),
+  radial-gradient(ellipse 500px 400px at 100% 16%,rgba(255,203,153,.10),transparent 72%),
+  radial-gradient(ellipse 620px 430px at 50% 100%,rgba(127,83,159,.18),transparent 72%),
+  linear-gradient(145deg,#170f22 0%,#21142e 52%,#130d1d 100%)!important;
+ background-attachment:fixed!important;
+}
+html body.mfh-page #tracks,
+html body.mfh-page #tracks>.wrap{background:transparent!important}
+html body.mfh-page #tracks .track-grid>.level-card{
+ position:relative!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:flex-start!important;
+ text-align:center!important;
+ min-width:0!important;
+ min-height:250px!important;
+ padding:18px!important;
+ color:#fff4e8!important;
+ border:1px solid rgba(225,193,233,.30)!important;
+ border-radius:14px!important;
+ background:
+  radial-gradient(ellipse at 10% 0%,rgba(255,208,157,.10),transparent 54%),
+  linear-gradient(145deg,rgba(117,79,139,.42),rgba(44,29,62,.72))!important;
+ box-shadow:0 16px 38px rgba(12,5,23,.25),inset 0 1px 0 rgba(255,255,255,.12)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+ backdrop-filter:blur(18px) saturate(135%)!important;
+}
+html body.mfh-page #tracks .track-grid>.level-card:hover{
+ border-color:rgba(255,218,174,.58)!important;
+ box-shadow:0 20px 44px rgba(12,5,23,.31),0 0 22px rgba(232,185,116,.08),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+html body.mfh-page #tracks .track-grid>.level-card :is(h3,h4,strong,b){
+ color:#fff4e8!important;
+}
+html body.mfh-page #tracks .track-grid>.level-card p,
+html body.mfh-page #tracks .track-grid>.level-card .level-card-bottom{
+ color:#e4d5e8!important;
+}
+html body.mfh-page #tracks .track-grid>.level-card .level-code,
+html body.mfh-page #tracks .track-grid>.level-card .pill{
+ color:#ffe5bd!important;
+}
+@media(max-width:700px){
+ html body.mfh-page #tracks .track-grid>.level-card{min-height:205px!important;padding:14px!important}
+}
+</style>
+
 </body>
 </html>
