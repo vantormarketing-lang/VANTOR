@@ -7,6 +7,7 @@ const appStartUrl = new URL('./?doma-app=student&launch=v266', self.registration
 const versioned = (path) => new URL(path + '?v=' + BRAND_VERSION, self.registration.scope).href;
 const kidsHubUrl = new URL('./MR_FLUENT_KIDS_HUB.html', self.registration.scope);
 const programmingAcademyUrl = new URL('./programming.html', self.registration.scope);
+const programmingHandbookUrl = new URL('./programming-handbook.html', self.registration.scope);
 const programmingAcademyCssUrl = new URL('./programming-academy.css?v=8', self.registration.scope);
 const kidsYoungerUrl = new URL('./MR_FLUENT_KIDS_YOUNGER.html', self.registration.scope);
 const kidsOlderUrl = new URL('./MR_FLUENT_KIDS_OLDER.html', self.registration.scope);
@@ -37,6 +38,7 @@ const SHELL = [
   indexUrl.href,
   appStartUrl.href,
   programmingAcademyUrl.href,
+  programmingHandbookUrl.href,
   programmingAcademyCssUrl.href,
   kidsHubUrl.href,
   kidsYoungerUrl.href,
