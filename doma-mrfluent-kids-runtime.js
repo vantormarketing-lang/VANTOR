@@ -2936,9 +2936,10 @@ document.addEventListener('click',function(event){
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
   if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
   if(link.classList.contains('mfkr-back-arrow')){
-    // Keep back navigation in the current tab/window (including PWA launches).
+    // Return to the six-level hub instantly without a full page reload.
     event.preventDefault();
-    window.location.replace(target.href);
+    try{window.history.replaceState({mfKidsRoute:true},'',target.href);}catch(_){ }
+    kidsJourneyRenderRouteInPlace('hub',target.href,false);
     return;
   }
   event.preventDefault();
