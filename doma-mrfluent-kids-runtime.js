@@ -1081,6 +1081,13 @@ host.addEventListener('change',function(e){if(!e.target||e.target.id!=='mfkjLabL
 
 function renderHub(){
   document.title='Mr. Fluent Kids · All Six Levels';
+  // Ensure the standalone root is visible when returning from a level.
+  root.style.setProperty('display','block','important');
+  root.style.setProperty('visibility','visible','important');
+  root.setAttribute('aria-hidden','false');
+  document.body.classList.add('mf-kids-route');
+  document.body.classList.remove('mf-kids-inline-route');
+  ['mf-kids-level-a1','mf-kids-level-a2','mf-kids-level-b1','mf-kids-level-b2','mf-kids-level-c1','mf-kids-level-c2'].forEach(function(cls){document.body.classList.remove(cls);});
   // Keep this landing page focused on the two age-based level groups only.
   root.innerHTML=header()+'<section class="mfkr-page"><div class="mfkr-wrap"><div class="mfkr-heading"><h1>Choose Your Level</h1><div class="mfkr-ar" lang="ar">اختار المستوى اللي عايز تبدأ منه</div></div>'+journeyCourseCatalogHtml()+'</div></section>';
 }
@@ -2939,8 +2946,9 @@ document.addEventListener('click',function(event){
     // Force exit from the hub to the homepage in the same tab, even if a global target=_blank was applied.
     event.preventDefault();
     if(target.searchParams.get('kids')){
-      // Back from any level: render the six-level hub immediately, without waiting for access checks/network.
-      try{window.history.replaceState({mfKidsRoute:true},'',target.href);}catch(_){ }
+      // Normalize the back target to the exact six-level route, then force a visible hub render.
+      var hubHref=url('hub');
+      try{window.history.replaceState({mfKidsRoute:true},'',hubHref);}catch(_){ }
       route='hub';query=new URLSearchParams(window.location.search);syncKidsRouteMode('hub');
       renderHub();try{window.scrollTo(0,0);}catch(_){}
     }else{
