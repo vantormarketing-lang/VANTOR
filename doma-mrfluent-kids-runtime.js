@@ -2944,7 +2944,8 @@ function kidsJourneyRenderRouteInPlace(nextRoute,href,pushHistory){
   route=next;query=new URLSearchParams(window.location.search);
   syncKidsRouteMode(route);
   if(route==='subscribe'){kidsJourneyRenderSubscription();kidsJourneyBindAuthRefresh();}
-  else if(route==='hub'||route==='younger'||route==='older'||route==='entry'||route==='map'||route==='parents'||route==='lab'||route==='review'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
+  else if(route==='hub'){renderHub();}
+  else if(route==='younger'||route==='older'||route==='entry'||route==='map'||route==='parents'||route==='lab'||route==='review'){kidsJourneyBindAuthRefresh();kidsJourneyHandlePreCourseRoute(route);}
   else{
     var item=journeyLevels.find(function(level){return level.route===route;});
     if(item){kidsJourneyBindAuthRefresh();kidsJourneyRenderLevelGate(item.code,function(){kidsJourneyRenderLevel(item.code);journeyRenderCurrent();});}
