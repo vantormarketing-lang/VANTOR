@@ -6,6 +6,11 @@ var route = (query.get('kids') || '').toLowerCase();
 if (!route) return;
 
 var inlineKidsMode=(route==='entry'||route==='subscribe');
+// Cache a successful whole-course access check during this Kids-course SPA session.
+var kidsActiveAccessCache={userId:'',verifiedAt:0};
+function kidsHasCachedActiveAccess(){return !!kidsActiveAccessCache.userId&&(Date.now()-kidsActiveAccessCache.verifiedAt)<30*60*1000;}
+function kidsRememberActiveAccess(user){if(user&&user.id){kidsActiveAccessCache={userId:String(user.id),verifiedAt:Date.now()};}}
+function kidsClearActiveAccess(){kidsActiveAccessCache={userId:'',verifiedAt:0};}
 function syncKidsRouteMode(nextRoute){
   inlineKidsMode=(nextRoute==='entry'||nextRoute==='subscribe');
   document.body.classList.toggle('mf-kids-inline-route',inlineKidsMode);
@@ -2651,10 +2656,21 @@ function kidsJourneyRenderGateMessage(code,ctx){
 async function kidsJourneyRenderLevelGate(code,renderer){
   var def=kidsJourneyDefinition(code);
   document.title=def.code+' · Kids Course Access | Mr. Fluent Kids';
+  // Once a whole-course subscription has been verified, level-to-level navigation
+  // reuses that result and skips the repeated membership screen/network checks.
+  if(kidsHasCachedActiveAccess()){
+    renderer();
+    journeyRenderCurrent();
+    if(def.code==='A1')mfkjA1SyncWorkspace();
+    else mfkjInstallCourseLevelMenu(def.code);
+    mfkjA1SyncWorkspace();
+    return;
+  }
   root.innerHTML=shell('KIDS COURSE ACCESS','Unlock all six Kids levels.','اشتراك واحد يفتح الكورس كله.','A single 30-day Kids course subscription covers A1–C2. School-grade access and the separate English Course remain independent.','<div class="mfkj-pay-gate"><div class="mfkj-pay-kicker"><span class="mfkr-dot"></span> MEMBERSHIP CHECK</div><h2>'+esc(def.code)+' · '+esc(def.title)+'</h2><div class="mfkj-pay-price"><strong>100</strong><span>EGP / 30 days</span></div><div data-mfj-kids-gate-status class="mfkj-pay-status">Checking your Kids subscription…</div><div class="mfkr-back-row" data-mfj-kids-gate-actions><a class="mfkr-btn" href="'+url('hub')+'">Back to Kids paths</a></div></div>'+backButtons(url(def.group),'← Back to levels'));
   var ctx;
   try{ctx=await kidsJourneyLoadContext(def.code);}catch(e){ctx={error:e&&e.message||'Could not verify Kids access.'};}
   if(ctx&&ctx.active){
+    kidsRememberActiveAccess(ctx.user);
     renderer();
     journeyRenderCurrent();
     if(def.code==='A1')mfkjA1SyncWorkspace();
@@ -2802,6 +2818,7 @@ async function kidsJourneyBindAuthRefresh(){
   if(kidsJourneyAuthBound||!client.auth||!client.auth.onAuthStateChange)return;
   kidsJourneyAuthBound=true;
   client.auth.onAuthStateChange(function(event){
+    if(event==='SIGNED_OUT')kidsClearActiveAccess();
     if(event!=='SIGNED_IN'&&event!=='SIGNED_OUT'&&event!=='TOKEN_REFRESHED')return;
     if(route==='subscribe'||route==='entry'){kidsJourneyLoadPaymentState(kidsJourneyDefinition(query.get('level')||'A1').code);return;}
     if(route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||route==='review'){kidsJourneyHandlePreCourseRoute(route);return;}
