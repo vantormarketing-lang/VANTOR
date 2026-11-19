@@ -3672,3 +3672,31 @@ html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level-grid > .mfkr-level:foc
 @media(prefers-reduced-motion:reduce){
   html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level-grid > .mfkr-level{transition:none!important}
 }
+
+
+/* KIDS HUB — borderless transparent glass, matching the homepage cards */
+html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level-grid > .mfkr-level{
+  border:0!important;
+  outline:0!important;
+  background:linear-gradient(150deg,rgba(var(--kids-glass-rgb,46,223,224),.14),rgba(4,29,37,.54) 76%)!important;
+  background-color:rgba(4,29,37,.48)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.13)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+  backdrop-filter:blur(18px) saturate(1.12)!important;
+}
+html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level-grid > .mfkr-level:before{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  background:linear-gradient(118deg,rgba(255,255,255,.085) 0%,rgba(255,255,255,.018) 48%,transparent 100%)!important;
+}
+html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level-grid > .mfkr-level:hover{
+  border:0!important;
+  outline:0!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.18)!important;
+}
+html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level-grid > .mfkr-level .mfkr-code{
+  border:0!important;
+  box-shadow:none!important;
+  background:rgba(85,155,255,.10)!important;
+}
