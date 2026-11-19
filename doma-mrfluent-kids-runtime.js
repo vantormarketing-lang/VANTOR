@@ -2932,16 +2932,21 @@ window.mfKidsNavigateInPlace=function(destination){
 document.addEventListener('click',function(event){
   if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   var link=event.target&&event.target.closest?event.target.closest('#mfKidsStandaloneRoot a[href]'):null;
-  if(!link||link.hasAttribute('download')||(link.target&&link.target!=='_self'))return;
+  if(!link||link.hasAttribute('download'))return;
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
-  if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
+  if(target.origin!==window.location.origin)return;
   if(link.classList.contains('mfkr-back-arrow')){
-    // Return to the six-level hub instantly without a full page reload.
+    // Force exit from the hub to the homepage in the same tab, even if a global target=_blank was applied.
     event.preventDefault();
-    try{window.history.replaceState({mfKidsRoute:true},'',target.href);}catch(_){ }
-    kidsJourneyRenderRouteInPlace('hub',target.href,false);
+    if(target.searchParams.get('kids')){
+      try{window.history.replaceState({mfKidsRoute:true},'',target.href);}catch(_){ }
+      kidsJourneyRenderRouteInPlace('hub',target.href,false);
+    }else{
+      window.location.replace(target.href);
+    }
     return;
   }
+  if((link.target&&link.target!=='_self')||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
   event.preventDefault();
   window.mfKidsNavigateInPlace(target.href);
 });
