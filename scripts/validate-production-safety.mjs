@@ -129,6 +129,30 @@ for (const level of ['A1','A2','B1','B2','C1','C2']) {
   }
 }
 
+const passwordReset = read('functions/api/student/request-password-reset.js');
+const phoneLimitMigration = read('supabase/migrations/20261119010000_rate_limit_password_reset_by_phone_digest.sql');
+check(
+  passwordReset.includes('crypto.subtle.digest("SHA-256", bytes)') &&
+  passwordReset.includes('/rpc/doma_allow_password_reset_phone') &&
+  passwordReset.includes('if(phoneAllowed!==true) return json({ok:true})') &&
+  !passwordReset.includes('password_reset_requests?"+new URLSearchParams') &&
+  phoneLimitMigration.includes('private.password_reset_phone_limits') &&
+  phoneLimitMigration.includes('return v_count <= 3') &&
+  phoneLimitMigration.includes('interval \'15 minutes\'') &&
+  phoneLimitMigration.includes('grant execute on function public.doma_allow_password_reset_phone(text)') &&
+  !/grant\s+.*password_reset_phone_limits\s+to\s+(?:anon|authenticated)/i.test(phoneLimitMigration),
+  'Password reset limits every valid phone by a private SHA-256 digest before profile lookup and returns the same public success response for limited/unknown numbers'
+);
+
+const assistant = read('functions/api/assistant.js');
+check(
+  assistant.includes('const role = item.role === "user" ? "user" : "";') &&
+  assistant.includes('return json({ configured: Boolean(env.AI && typeof env.AI.run === "function") }, 200)') === false &&
+  assistant.includes('configured: Boolean(env.AI && typeof env.AI.run === "function")') &&
+  !/missing.*(?:SUPABASE|AI)|SUPABASE_(?:URL|ANON_KEY|SERVICE_ROLE_KEY).*configured/i.test(assistant.slice(0, 1800)),
+  'Assistant health endpoint reveals only a configured boolean and client history accepts user messages only'
+);
+
 const headers = read('_headers');
 const globalHeaderBlock = headers.startsWith('/*\n')
   ? headers.slice(3, headers.indexOf('/*-v*') >= 0 ? headers.indexOf('/*-v*') : undefined)
