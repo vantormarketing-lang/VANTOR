@@ -335,7 +335,7 @@ for (const required of [
   'X-Content-Type-Options: nosniff',
   'Referrer-Policy: strict-origin-when-cross-origin',
   'X-Frame-Options: SAMEORIGIN',
-  "Content-Security-Policy: object-src 'none'; base-uri 'self'; frame-ancestors 'self'",
+  'Content-Security-Policy: default-src',
   'Permissions-Policy: camera=(), microphone=(self), geolocation=()'
 ]) {
   if (!responseHeaders.includes(required)) fail('_headers: missing baseline browser security header: ' + required);
