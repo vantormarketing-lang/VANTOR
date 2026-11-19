@@ -2556,3 +2556,9 @@ html body:has(.course-hero) .student-content :is(.unit,.unit-header,.unit-title,
 html body:has(.course-hero) .student-content :is(.unit,.unit-header,.unit-title,.unit-heading,.unit-intro,.unit-banner,.unit-head) :is(p,span,strong,b,h2,h3,h4){color:#493927!important;-webkit-text-fill-color:#493927!important;}
 html body:has(.course-hero) .student-content :is(.box,.video-card,.lab-card,.unit-card,.lesson-card,.practice-card,.content-card){background:transparent!important;background-color:transparent!important;background-image:none!important;border-color:transparent!important;box-shadow:none!important;}
 html body:has(.course-hero) .student-content :is(.video-card,.real-video-practice){display:none!important;}
+
+/* v78: remove course-menu scroll indicators and the purple full-width top control band. */
+html body:has(.course-hero) .student-sidebar{scrollbar-width:none!important;-ms-overflow-style:none!important;}
+html body:has(.course-hero) .student-sidebar::-webkit-scrollbar,
+html body:has(.course-hero) .student-sidebar *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
+html body:has(.course-hero) .course-top-controls{background:#f4e7d5!important;background-color:#f4e7d5!important;background-image:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
