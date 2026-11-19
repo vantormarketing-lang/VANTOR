@@ -2983,8 +2983,8 @@ document.addEventListener('click',function(event){
         root.style.setProperty('display','block','important');
         root.style.setProperty('visibility','visible','important');
         root.setAttribute('aria-hidden','false');
-        var hubContent=root.querySelector('.mfkj-course-catalog .mfkr-level');
-        if(!hubContent){window.location.replace(hubHref);return;}
+        var hubCards=root.querySelectorAll('.mfkj-course-catalog .mfkj-course-level-card');
+        if(!hubCards||hubCards.length!==6){window.location.replace(hubHref);return;}
         try{window.scrollTo(0,0);}catch(_){}
       }catch(error){
         console.warn('Kids hub restore failed; loading hub route.',error);
