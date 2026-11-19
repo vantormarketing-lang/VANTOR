@@ -2933,12 +2933,14 @@ document.addEventListener('click',function(event){
   if(!link||link.hasAttribute('download')||(link.target&&link.target!=='_self'))return;
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
   if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
-  event.preventDefault();
   if(link.classList.contains('mfkr-back-arrow')){
-    var destination=target.searchParams.get('kids')||'hub';
-    kidsJourneyRenderRouteInPlace(destination,target.href,true);
+    // Back navigation must perform a clean document load. The in-place route
+    // renderer can leave the isolated Kids root blank after a level transition.
+    event.preventDefault();
+    window.location.assign(target.href);
     return;
   }
+  event.preventDefault();
   window.mfKidsNavigateInPlace(target.href);
 });
 window.addEventListener('popstate',function(){
