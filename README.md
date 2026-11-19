@@ -44,7 +44,7 @@ Cloudflare Pages setup (Production and Preview environments as needed):
 
 The Function also reads **SUPABASE_URL**, **SUPABASE_ANON_KEY**, and **SUPABASE_SERVICE_ROLE_KEY** from server-side Pages environment variables. The service-role key must remain server-side and must never be added to browser code.
 
-The initial model is **@cf/zai-org/glm-4.7-flash**. The database-backed quota is 10 requests per student per UTC day and 150 requests across the platform per UTC day. Only authenticated students with an active Programming Academy subscription and DOMA staff can use the endpoint. The local rule-based tutor remains available as a fallback.
+The model fallback order in `functions/api/assistant.js` is **@cf/google/gemma-4-26b-a4b-it**, then **@cf/zai-org/glm-4.7-flash**, then **@cf/qwen/qwen3.8-27b**. These model IDs are listed in Cloudflare's Workers AI catalog; verify actual inference, account availability, and quota behavior in a Preview/Staging environment before relying on the fallback chain in production. The database-backed quota is 10 requests per student per UTC day and 150 requests across the platform per UTC day. Only authenticated students with an active Programming Academy subscription and DOMA staff can use the endpoint. The local rule-based tutor remains available as a fallback.
 
 The student is informed before sending that the question and a short lesson excerpt are processed by Cloudflare; code is included only when the student selects code explanation or debugging. The Function does not log question or code content. A quota reservation is consumed before inference to protect the platform cap, so an inference-provider failure after reservation can still count as one request.
 
