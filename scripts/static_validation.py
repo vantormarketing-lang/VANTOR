@@ -211,17 +211,16 @@ def validate_page(page: Path) -> bool:
         print(f"FAIL: no inline JavaScript was checked in {page.name}")
         return False
 
-    if True:
-        seen: set[str] = set()
-        duplicates: set[str] = set()
-        for name in global_function_names:
-            if name in seen:
-                duplicates.add(name)
-            seen.add(name)
-        if duplicates:
-            names = ", ".join(sorted(duplicates))
-            print(f"FAIL: {page.name} has duplicate top-level function declarations: {names}")
-            return False
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for name in global_function_names:
+        if name in seen:
+            duplicates.add(name)
+        seen.add(name)
+    if duplicates:
+        names = ", ".join(sorted(duplicates))
+        print(f"FAIL: {page.name} has duplicate top-level function declarations: {names}")
+        return False
 
     if page.name == "admin.html":
         for marker in ('id="section-dashboard"', 'id="studentsTable"', 'id="salesTable"'):
