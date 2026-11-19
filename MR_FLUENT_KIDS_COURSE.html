@@ -211,7 +211,7 @@ body.kid-subscription-modal #enrol .request-card{position:relative;max-height:ca
 @media(max-width:560px){body.kid-subscription-modal #enrol{padding:10px}body.kid-subscription-modal #enrol>.wrap{max-height:calc(100dvh - 20px)}body.kid-subscription-modal #enrol .request-card{max-height:calc(100dvh - 20px);padding:54px 14px 16px}}
 </style>
 </head>
-<body>
+<body class="mfh-page">
 <div class="topbar"><div class="wrap nav">
   <a class="brand" href="./index.html" aria-label="Back to DOMA Academy"><span class="brand-mark">✦</span><span>Mr. Fluent Kids<small>LEARN • PLAY • GROW</small></span></a>
   <div class="nav-actions"><a class="btn btn-soft" href="./index.html">← DOMA Academy</a><a class="btn btn-primary" href="./index.html#home">Log in</a></div>
@@ -983,6 +983,142 @@ document.addEventListener('DOMContentLoaded',initKids);
 .kid-course-header>a.kid-level-return:active{display:grid!important;place-items:center!important;flex:0 0 40px!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;outline:0!important;color:#d8b56d!important;-webkit-text-fill-color:#d8b56d!important;font:700 34px/1 Arial,sans-serif!important;text-decoration:none!important;cursor:pointer!important;transform:none!important;z-index:101!important}
 .kid-course-header>a.kid-level-return:before,.kid-course-header>a.kid-level-return:after{content:none!important;display:none!important}
 @media(max-width:560px){.kids-levels-nav a.kids-home-return,.kid-course-header>a.kid-level-return{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;font-size:32px!important}}
+</style>
+
+<style id="kids-approved-purple-gold-theme">
+/* Approved adaptation of the supplied Mr. Fluent Kids reference design.
+   Scoped to this page; preserves existing HTML, navigation and course scripts. */
+html{min-height:100%;background:#170f22!important}
+html body.mfh-page{
+ color:#fff4e8!important;
+ background:
+  radial-gradient(560px 420px at 9% 0%,rgba(168,119,196,.22),transparent 72%),
+  radial-gradient(510px 430px at 100% 14%,rgba(255,205,157,.094),transparent 72%),
+  radial-gradient(650px 470px at 52% 100%,rgba(125,82,157,.17),transparent 72%),
+  linear-gradient(145deg,#140d1d 0%,#211430 53%,#110b19 100%)!important;
+ background-attachment:fixed!important;
+}
+html body.mfh-page :is(h1,h2,h3,h4,h5){color:#fff4e8!important}
+html body.mfh-page :is(p,.small-print,.muted,.small,.field-help){color:#ead9e8}
+html body.mfh-page a{color:#f4c987}
+html body.mfh-page ::selection{background:rgba(232,185,116,.42);color:#fff}
+/* Keep the page's real topbar/nav markup; no replacement navigation is introduced. */
+html body.mfh-page .topbar{
+ position:sticky;top:0;z-index:1000;
+ color:#fff3e7!important;
+ background:linear-gradient(115deg,rgba(137,91,153,.78),rgba(74,47,91,.84) 55%,rgba(49,31,67,.92))!important;
+ border:0!important;border-bottom:1px solid rgba(224,190,236,.35)!important;
+ border-radius:0 0 22px 22px;
+ box-shadow:0 14px 34px rgba(22,10,31,.28),inset 0 1px 0 rgba(255,255,255,.22),0 0 28px rgba(227,164,112,.1)!important;
+ -webkit-backdrop-filter:blur(24px) saturate(145%);backdrop-filter:blur(24px) saturate(145%);
+}
+html body.mfh-page .topbar .nav{min-height:68px}
+html body.mfh-page .topbar .brand{color:#fff0e4!important;text-decoration:none}
+html body.mfh-page .brand-mark{
+ color:#ffe9d2!important;background:linear-gradient(145deg,rgba(179,126,177,.42),rgba(84,55,105,.56))!important;
+ border:1px solid rgba(232,194,158,.48);border-radius:12px;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 20px rgba(20,9,29,.22)
+}
+html body.mfh-page .nav-actions{gap:9px}
+html body.mfh-page .hero{
+ color:#fff4e8!important;
+ background:linear-gradient(135deg,rgba(80,52,102,.40),rgba(37,24,54,.54))!important;
+ border:1px solid rgba(220,188,233,.25);border-radius:28px;
+ box-shadow:0 20px 48px rgba(12,5,23,.18),inset 0 1px 0 rgba(255,255,255,.08);
+}
+html body.mfh-page .hero h1{color:#fff1e4!important;text-shadow:0 3px 24px rgba(38,16,44,.28)}
+html body.mfh-page .gradient{color:#efc98f!important;-webkit-text-fill-color:#efc98f!important;background:none!important}
+html body.mfh-page :is(.section-head h2,.kids-levels-heading h2){
+ color:#d2bbff!important;-webkit-text-fill-color:#d2bbff!important;
+ letter-spacing:3px;text-transform:uppercase
+}
+html body.mfh-page .eyebrow{color:#f2c98d!important;-webkit-text-fill-color:#f2c98d!important}
+html body.mfh-page .eyebrow .dot{background:#e8b974!important;box-shadow:0 0 9px rgba(232,185,116,.48)}
+/* Main learning cards and level cards */
+html body.mfh-page :is(.track-card,.level-card,.kid-area,.quiz-shell,.request-card,.demo-game,.demo-lesson,
+ .mascot-stage,.kid-course-start-card,.kid-video-card,.kid-student-sidebar,.kid-practice-card,
+ .kid-letter-card,.unit-card,.kids-payment-instructions,.kid-request-summary,.kid-course-header,
+ .kid-menu-unit,.kid-menu-empty){
+ color:#fff1e7!important;
+ background-color:rgba(89,55,108,.48)!important;
+ background-image:
+  radial-gradient(ellipse 180px 105px at 43% 0%,rgba(255,190,148,.20),transparent 100%),
+  radial-gradient(ellipse 125px 135px at 100% 48%,rgba(255,203,153,.18),transparent 100%),
+  linear-gradient(135deg,rgba(164,118,181,.48),rgba(89,56,108,.62) 54%,rgba(55,34,76,.72))!important;
+ border:1px solid rgba(220,188,233,.34)!important;border-radius:24px!important;
+ box-shadow:0 23px 54px rgba(18,7,27,.30),inset 0 1px 0 rgba(255,255,255,.20),0 0 24px rgba(235,170,112,.09)!important;
+ -webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);
+}
+html body.mfh-page :is(.track-card,.level-card,.kid-area,.quiz-shell,.request-card,.demo-game,.demo-lesson):hover{
+ border-color:rgba(255,218,170,.66)!important;
+ box-shadow:0 25px 58px rgba(18,7,27,.38),inset 0 1px 0 rgba(255,255,255,.25),0 0 26px rgba(238,173,114,.16)!important;
+}
+html body.mfh-page :is(.track-card,.level-card) :is(h3,h4){color:#fff4e8!important}
+html body.mfh-page :is(.track-card,.level-card) p,
+html body.mfh-page .level-card-bottom{color:#ead9e8!important}
+html body.mfh-page .level-open-arrow{color:#ffd99b!important}
+html body.mfh-page :is(.track-emoji,.request-icon,.kid-course-start-icon,.kid-menu-trigger-icon){
+ background:linear-gradient(145deg,rgba(179,126,177,.42),rgba(84,55,105,.56))!important;
+ border:1px solid rgba(232,194,158,.48)!important;color:#ffe9d2!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 22px rgba(22,9,31,.2)!important
+}
+html body.mfh-page :is(.kid-content-tile,.kid-vocab-item,.kid-menu-item,.kid-preview-word,.kid-request-facts,
+ .recommend-row,.lesson-link,.q-card,.result-box:not(:empty),.notice,.kid-level-notice,.info,.kid-menu-summary){
+ color:#fff1e7!important;background:rgba(109,73,126,.34)!important;
+ border:1px solid rgba(221,188,235,.34)!important;border-radius:17px!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.1)!important;
+ -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)
+}
+html body.mfh-page :is(.kid-menu-item,.lesson-link,.kid-vocab-item):hover,
+html body.mfh-page :is(.lesson-link,.kid-menu-item).active{
+ border-color:rgba(255,218,170,.66)!important;background:rgba(226,176,112,.14)!important
+}
+/* Champagne-gold primary actions, purple-glass secondary actions. */
+html body.mfh-page :is(.btn-primary,.kid-menu-footer-primary,.kid-course-start-button){
+ color:#422744!important;-webkit-text-fill-color:#422744!important;
+ background:linear-gradient(135deg,#ffe4b4 0%,#e7b66d 54%,#c98243 100%)!important;
+ border:1px solid rgba(255,233,196,.86)!important;border-radius:15px!important;
+ box-shadow:0 10px 25px rgba(35,15,37,.28),inset 0 1px 0 rgba(255,255,255,.58),0 0 19px rgba(246,189,117,.19)!important
+}
+html body.mfh-page :is(.btn-soft,.btn-mint,.kid-menu-footer-secondary,.kid-audio-button,.kid-menu-trigger,
+ .game-option,.kids-subscription-close,.kid-menu-close){
+ color:#fff0e6!important;-webkit-text-fill-color:#fff0e6!important;
+ background:linear-gradient(135deg,rgba(154,111,172,.43),rgba(75,48,94,.65))!important;
+ border:1px solid rgba(220,188,235,.4)!important;border-radius:15px!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 20px rgba(20,9,29,.22)!important
+}
+html body.mfh-page :is(.pill,.tag,.level-chip,.request-status,.q-number,.kid-menu-item-number,.kid-menu-unit-number){
+ color:#ffe3b4!important;-webkit-text-fill-color:#ffe3b4!important;
+ background:rgba(226,176,112,.12)!important;border:1px solid rgba(237,196,144,.34)!important;border-radius:999px!important
+}
+/* Inputs and subscription form */
+html body.mfh-page :is(input,select,textarea,.field){
+ color:#fff1e7!important;background:rgba(62,39,79,.62)!important;
+ border:1px solid rgba(220,188,235,.34)!important;border-radius:14px!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.1)!important
+}
+html body.mfh-page :is(input,textarea)::placeholder{color:rgba(241,221,240,.6)!important}
+html body.mfh-page select option{background:#3f274c;color:#fff1e7}
+html body.mfh-page :is(input,select,textarea,.field):focus{outline:2px solid #ffd99e;outline-offset:2px;border-color:rgba(255,218,170,.7)!important}
+html body.mfh-page :is(.kid-menu-overlay,#kidCourseMenuOverlay){background:rgba(20,10,30,.70)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+html body.mfh-page .kid-menu-dialog{
+ background:linear-gradient(135deg,rgba(164,118,181,.72),rgba(55,34,76,.94))!important;
+ border:1px solid rgba(220,188,233,.43)!important;border-radius:26px!important;
+ box-shadow:0 28px 75px rgba(13,5,24,.52),inset 0 1px 0 rgba(255,255,255,.24)!important;
+ -webkit-backdrop-filter:blur(26px) saturate(145%);backdrop-filter:blur(26px) saturate(145%)
+}
+html body.mfh-page :is(.kid-menu-eyebrow,.kid-menu-tools-heading){color:#f2c98d!important}
+html body.mfh-page .kid-menu-dialog :is(h3,h4,strong){color:#fff4e8!important}
+html body.mfh-page .kid-menu-dialog :is(p,small){color:#ead9e8!important}
+html body.mfh-page .footer{background:transparent!important;color:#ead9e8!important}
+html body.mfh-page :is(.btn,.game-option,.level-card,.lesson-link,.kid-menu-trigger):focus-visible{outline:2px solid #ffd99e;outline-offset:3px}
+@media(max-width:700px){
+ html body.mfh-page .topbar .nav{min-height:58px}
+ html body.mfh-page :is(.track-card,.kid-area,.quiz-shell,.request-card,.demo-game,.demo-lesson,.kid-menu-unit){border-radius:19px!important}
+ html body.mfh-page .level-card{border-radius:18px!important}
+ html body.mfh-page .hero{border-radius:21px!important}
+}
+@media(prefers-reduced-motion:reduce){html body.mfh-page *{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </body>
 </html>
