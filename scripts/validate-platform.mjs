@@ -129,7 +129,7 @@ const studentIcon512 = JSON.parse(read('manifest.webmanifest')).icons.find(icon 
 if (!studentIcon512) {
   fail('manifest.webmanifest: student PWA requires a 512x512 PNG icon with purpose any');
 } else {
-  const iconPath = join(root, String(studentIcon512.src).split('?')[0].replace(/^\\.\\//, ''));
+  const iconPath = join(root, String(studentIcon512.src).split('?')[0].replace('./', ''));
   const png = readFileSync(iconPath);
   const validPng = png.length >= 24 && png.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
   const width = validPng ? png.readUInt32BE(16) : 0;
