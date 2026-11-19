@@ -8,7 +8,7 @@ if (!route) return;
 var inlineKidsMode=(route==='entry'||route==='subscribe');
 // Cache a successful whole-course access check during this Kids-course SPA session.
 var kidsActiveAccessCache={userId:'',verifiedAt:0};
-function kidsHasCachedActiveAccess(){return !!kidsActiveAccessCache.userId&&(Date.now()-kidsActiveAccessCache.verifiedAt)<30*60*1000;}
+function kidsHasCachedActiveAccess(){var currentUserId=typeof sessionUser!=='undefined'&&sessionUser&&sessionUser.id?String(sessionUser.id):'';if(currentUserId&&kidsActiveAccessCache.userId&&currentUserId!==kidsActiveAccessCache.userId)kidsClearActiveAccess();return !!kidsActiveAccessCache.userId&&(Date.now()-kidsActiveAccessCache.verifiedAt)<30*60*1000;}
 function kidsRememberActiveAccess(user){if(user&&user.id){kidsActiveAccessCache={userId:String(user.id),verifiedAt:Date.now()};}}
 function kidsClearActiveAccess(){kidsActiveAccessCache={userId:'',verifiedAt:0};}
 function syncKidsRouteMode(nextRoute){
@@ -2817,8 +2817,9 @@ async function kidsJourneyBindAuthRefresh(){
   catch(error){console.warn('Kids auth listener could not be started.',error);return;}
   if(kidsJourneyAuthBound||!client.auth||!client.auth.onAuthStateChange)return;
   kidsJourneyAuthBound=true;
-  client.auth.onAuthStateChange(function(event){
+  client.auth.onAuthStateChange(function(event,session){
     if(event==='SIGNED_OUT')kidsClearActiveAccess();
+    if(event==='SIGNED_IN'&&kidsActiveAccessCache.userId&&session&&session.user&&String(session.user.id)!==kidsActiveAccessCache.userId)kidsClearActiveAccess();
     if(event!=='SIGNED_IN'&&event!=='SIGNED_OUT'&&event!=='TOKEN_REFRESHED')return;
     if(route==='subscribe'||route==='entry'){kidsJourneyLoadPaymentState(kidsJourneyDefinition(query.get('level')||'A1').code);return;}
     if(route==='hub'||route==='younger'||route==='older'||route==='map'||route==='parents'||route==='lab'||route==='review'){kidsJourneyHandlePreCourseRoute(route);return;}
@@ -2890,6 +2891,9 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
   window.__mfKidsJourneyAccessContext=ctx;
   window.__mfKidsJourneyAccessContextAt=Date.now();
   if(ctx.current){
+    // The hub already completed the whole-course subscription check. Reuse this
+    // verified access for direct level clicks instead of showing the gate again.
+    kidsRememberActiveAccess(ctx.user);
     if(routeName==='map'||routeName==='parents'||routeName==='lab')window.__mfKidsToolsAuthorized=true;
     kidsJourneyClearPendingMarker(ctx.user&&ctx.user.id);
     if(routeName==='entry'){
