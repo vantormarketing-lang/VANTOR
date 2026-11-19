@@ -125,7 +125,7 @@ for (const path of coursePagesForCdn) {
 ok('Course pages: supabase-js CDN versions are pinned to a single x.y.z release');
 
 const cspHeaderFile = read('_headers');
-const globalHeaderBlock = cspHeaderFile.startsWith('/*\\n')
+const globalHeaderBlock = cspHeaderFile.startsWith('/*\n')
   ? cspHeaderFile.slice(3, cspHeaderFile.indexOf('/*-v*') >= 0 ? cspHeaderFile.indexOf('/*-v*') : undefined)
   : '';
 const globalCsp = globalHeaderBlock.split(String.fromCharCode(10)).find(line => line.includes('Content-Security-Policy:'));
