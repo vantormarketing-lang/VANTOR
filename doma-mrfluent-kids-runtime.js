@@ -2970,26 +2970,9 @@ document.addEventListener('click',function(event){
     event.preventDefault();
     if(event.stopImmediatePropagation)event.stopImmediatePropagation();
     if(target.searchParams.get('kids')){
-      // Centralized Kids-level return: restore the six-level hub and verify
-      // its content is present; navigate to a fresh hub route if rendering fails.
-      var hubHref=url('hub');
-      try{
-        route='hub';
-        query=new URLSearchParams(window.location.search);
-        query.set('kids','hub');
-        window.history.replaceState({mfKidsRoute:true},'',hubHref);
-        syncKidsRouteMode('hub');
-        renderHub();
-        root.style.setProperty('display','block','important');
-        root.style.setProperty('visibility','visible','important');
-        root.setAttribute('aria-hidden','false');
-        var hubCards=root.querySelectorAll('.mfkj-course-catalog .mfkj-course-level-card');
-        if(!hubCards||hubCards.length!==6){window.location.replace(hubHref);return;}
-        try{window.scrollTo(0,0);}catch(_){}
-      }catch(error){
-        console.warn('Kids hub restore failed; loading hub route.',error);
-        window.location.replace(hubHref);
-      }
+      // Use a fresh hub-page load instead of re-rendering inside the broken level DOM.
+      // This avoids stale hidden DOM/route state and lets the normal hub startup run.
+      window.location.replace(url('hub'));
     }else{
       window.location.replace(target.href);
     }
