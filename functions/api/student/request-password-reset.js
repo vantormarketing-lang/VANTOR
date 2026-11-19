@@ -20,6 +20,11 @@ function normalizePhone(value) {
   if(!digits.startsWith("20")) digits="20"+digits;
   return /^20\d{10}$/.test(digits)?digits:null;
 }
+async function hashPhone(phone) {
+  const bytes = new TextEncoder().encode(phone);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2,"0")).join("");
+}
 export async function onRequestPost({request,env}) {
   if(request.headers.get("origin") && request.headers.get("origin")!==new URL(request.url).origin)
     return json({error:"Cross-origin request rejected"},403);
@@ -47,17 +52,20 @@ export async function onRequestPost({request,env}) {
     if(ipAllowed!==true)
       return json({error:"Too many requests from this connection. Please wait 15 minutes and try again."},429);
 
-    const since=new Date(Date.now()-15*60*1000).toISOString();
-    const recentUrl=cfg.url+"/rest/v1/password_reset_requests?"+new URLSearchParams({
-      select:"id",phone:"eq."+phone,created_at:"gte."+since,order:"created_at.desc",limit:"3"
-    }).toString();
-    const recentResponse=await fetch(recentUrl,{
-      headers:{apikey:cfg.key,authorization:"Bearer "+cfg.key}
+    // Hash every valid phone before looking up a profile. The private limiter stores
+    // only the SHA-256 digest and returns the same public response when its limit is hit.
+    const phoneHash=await hashPhone(phone);
+    const phoneLimit=await fetch(cfg.url+"/rest/v1/rpc/doma_allow_password_reset_phone",{
+      method:"POST",
+      headers:{apikey:cfg.key,authorization:"Bearer "+cfg.key,"content-type":"application/json"},
+      body:JSON.stringify({p_phone_hash:phoneHash})
     });
-    const recent=await readJson(recentResponse);
-    if(!recentResponse.ok) throw new Error("Could not check request rate limit");
-    if(Array.isArray(recent)&&recent.length>=3)
-      return json({error:"A request was already received recently. Please wait a few minutes."},429);
+    if(!phoneLimit.ok) {
+      console.error("[password-reset-request] phone rate-limit check failed", {status:phoneLimit.status});
+      return json({error:"Password recovery is temporarily unavailable. Please try again later."},503);
+    }
+    const phoneAllowed=await readJson(phoneLimit);
+    if(phoneAllowed!==true) return json({ok:true});
 
     const local="0"+phone.slice(2);
     const lookupParams=new URLSearchParams({
@@ -71,8 +79,8 @@ export async function onRequestPost({request,env}) {
     const matches=await readJson(lookup);
     if(!lookup.ok||!Array.isArray(matches)) throw new Error("Could not process the request");
 
-    // Keep the public response identical for unknown numbers, but do not create
-    // orphaned admin-queue rows that cannot be tied to a student account.
+    // Unknown and known numbers always receive the same response. Unknown numbers
+    // do not create orphaned admin-queue rows.
     if(matches.length===0) return json({ok:true});
 
     const insert=await fetch(cfg.url+"/rest/v1/password_reset_requests",{
