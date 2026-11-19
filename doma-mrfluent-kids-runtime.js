@@ -2958,7 +2958,8 @@ window.mfKidsNavigateInPlace=function(destination){
   kidsJourneyRenderRouteInPlace(target.searchParams.get('kids'),target.href,true);return true;
 };
 document.addEventListener('click',function(event){
-  if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  // Capture the Kids back-arrow before academy/global click routers can cancel it.
+  if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   var link=event.target&&event.target.closest?event.target.closest('#mfKidsStandaloneRoot a[href]'):null;
   if(!link||link.hasAttribute('download'))return;
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
@@ -2977,10 +2978,11 @@ document.addEventListener('click',function(event){
     }
     return;
   }
+  if(event.defaultPrevented)return;
   if((link.target&&link.target!=='_self')||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
   event.preventDefault();
   window.mfKidsNavigateInPlace(target.href);
-});
+},true);
 window.addEventListener('popstate',function(){
   if(!document.body.classList.contains('mf-kids-route')&&!document.body.classList.contains('mf-kids-inline-route'))return;
   kidsJourneyRenderRouteInPlace(new URLSearchParams(window.location.search).get('kids')||'hub',window.location.href,false);
