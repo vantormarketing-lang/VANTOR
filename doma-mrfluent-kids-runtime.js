@@ -1275,7 +1275,7 @@ function mfkjA1InstallLessonMenu(){
  if(!root.querySelector('#mfkjA1MenuTrigger')){
   var trigger=document.createElement('button');trigger.type='button';trigger.id='mfkjA1MenuTrigger';trigger.className='mfkj-a1-menu-trigger';
   trigger.setAttribute('aria-label','فتح قائمة الدروس والأنشطة');trigger.setAttribute('aria-controls','mfkjA1LessonMenu');trigger.setAttribute('aria-expanded','false');
-  trigger.innerHTML='<span aria-hidden="true">☰</span><span>القائمة</span>';trigger.addEventListener('click',mfkjA1OpenLessonMenu);root.appendChild(trigger);
+  trigger.innerHTML='<span aria-hidden="true">☰</span>';trigger.addEventListener('click',mfkjA1OpenLessonMenu);root.appendChild(trigger);
  }
  var old=root.querySelector('#mfkjA1LessonMenu');if(old)old.remove();
  var overlay=document.createElement('div');overlay.id='mfkjA1LessonMenu';overlay.className='mfkj-a1-overlay';overlay.hidden=true;overlay.setAttribute('aria-hidden','true');
@@ -1517,7 +1517,7 @@ function mfkjInstallCourseLevelMenu(code){
  var levelTitles={A2:'Word Explorers',B1:'My First Words',B2:'Reading Builders',C1:'My First Sentences',C2:'Confident English'};
  var trigger=document.createElement('button');trigger.type='button';trigger.id='mfkjA1MenuTrigger';trigger.className='mfkj-a1-menu-trigger';
  trigger.setAttribute('aria-label','فتح قائمة الدروس والأنشطة');trigger.setAttribute('aria-controls','mfkjA1LessonMenu');trigger.setAttribute('aria-expanded','false');
- trigger.innerHTML='<span aria-hidden="true">☰</span><span>القائمة</span>';trigger.addEventListener('click',mfkjA1OpenLessonMenu);root.appendChild(trigger);
+ trigger.innerHTML='<span aria-hidden="true">☰</span>';trigger.addEventListener('click',mfkjA1OpenLessonMenu);root.appendChild(trigger);
  var groupButtons=groups.map(function(group){return '<button type="button" class="mfkj-a1-menu-item" data-mfkj-a1-target="'+group.key+'"><span aria-hidden="true">'+({'vocab':'🔤','words':'🧸','reading':'📚','story':'🌷','stories':'📖','builder':'🧩','matching':'🎧','challenge':'🏆','grammar':'✏️','writing':'📝','progress':'⭐','sequence':'🔢','connectors':'🔗','summary':'🧠','inference':'🔎','speaking-practice':'💬','trace-extra':'✍️','visual-extra':'🖼️','listen-extra':'🎧','detective-extra':'🔍'}[group.key]||'✦')+'</span><span>'+group.label+'</span></button>';}).join('');
  var overlay=document.createElement('div');overlay.id='mfkjA1LessonMenu';overlay.className='mfkj-a1-overlay';overlay.hidden=true;overlay.setAttribute('aria-hidden','true');
  overlay.innerHTML='<aside class="mfkj-a1-dialog" role="dialog" aria-modal="true" aria-label="قائمة دروس وأنشطة المستوى">'+
