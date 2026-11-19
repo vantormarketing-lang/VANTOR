@@ -20,9 +20,12 @@ function normalizePhone(value) {
   if(!digits.startsWith("20")) digits="20"+digits;
   return /^20\d{10}$/.test(digits)?digits:null;
 }
-async function hashPhone(phone) {
-  const bytes = new TextEncoder().encode(phone);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
+async function hashPhone(phone, secret) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const digest = await crypto.subtle.sign("HMAC", key, encoder.encode(phone));
   return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2,"0")).join("");
 }
 export async function onRequestPost({request,env}) {
@@ -54,7 +57,7 @@ export async function onRequestPost({request,env}) {
 
     // Hash every valid phone before looking up a profile. The private limiter stores
     // only the SHA-256 digest and returns the same public response when its limit is hit.
-    const phoneHash=await hashPhone(phone);
+    const phoneHash=await hashPhone(phone,cfg.key);
     const phoneLimit=await fetch(cfg.url+"/rest/v1/rpc/doma_allow_password_reset_phone",{
       method:"POST",
       headers:{apikey:cfg.key,authorization:"Bearer "+cfg.key,"content-type":"application/json"},
