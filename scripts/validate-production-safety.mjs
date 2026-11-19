@@ -129,7 +129,7 @@ for (const level of ['A1','A2','B1','B2','C1','C2']) {
 }
 
 const headers = read('_headers');
-const globalHeaderBlock = headers.startsWith('/*\\n')
+const globalHeaderBlock = headers.startsWith('/*\n')
   ? headers.slice(3, headers.indexOf('/*-v*') >= 0 ? headers.indexOf('/*-v*') : undefined)
   : '';
 check(
