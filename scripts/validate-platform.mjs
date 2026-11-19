@@ -122,6 +122,22 @@ for (const path of coursePagesForCdn) {
   const validVersion = versionParts.length === 3 && versionParts.every(part => part.length > 0 && [...part].every(char => char >= '0' && char <= '9'));
   if (!validVersion) fail(path + ': supabase-js version must be exactly x.y.z, found ' + version);
 }
+const studentIcon512 = JSON.parse(read('manifest.webmanifest')).icons.find(icon =>
+  icon.sizes === '512x512' && String(icon.type).toLowerCase() === 'image/png' &&
+  String(icon.purpose || '').split(/\\s+/).includes('any')
+);
+if (!studentIcon512) {
+  fail('manifest.webmanifest: student PWA requires a 512x512 PNG icon with purpose any');
+} else {
+  const iconPath = join(root, String(studentIcon512.src).split('?')[0].replace(/^\\.\\//, ''));
+  const png = readFileSync(iconPath);
+  const validPng = png.length >= 24 && png.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
+  const width = validPng ? png.readUInt32BE(16) : 0;
+  const height = validPng ? png.readUInt32BE(20) : 0;
+  if (width !== 512 || height !== 512) fail('manifest.webmanifest: 512x512 any-purpose PNG must have real 512x512 pixel dimensions');
+  else ok('manifest.webmanifest: real 512x512 PNG is registered for purpose any');
+}
+
 ok('Course pages: supabase-js CDN versions are pinned to a single x.y.z release');
 
 const cspHeaderFile = read('_headers');
