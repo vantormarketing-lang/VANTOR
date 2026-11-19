@@ -1,54 +1,65 @@
-# Production database and migration audit — 2026-11-19
+# Production database and migration reconciliation — 2026-11-19
 
-## Snapshot created
-- Production project: `dtptxhkcogpoleftguas`
-- PostgreSQL: 17.6
-- Inventory: `supabase/baselines/production-schema-inventory-2026-11-19.json`
-- Snapshot contains schema metadata only (no student/payment data): tables/columns/defaults/constraints/indexes, RLS flags, policies, function signatures and definition hashes, and migration history.
-- Snapshot totals: 92 tables, 202 policies, 88 functions, 99 recorded migrations.
+## Current production snapshot
+- Project: `dtptxhkcogpoleftguas`
+- PostgreSQL: 17.6.1.166
+- Latest inventory: `supabase/baselines/production-schema-inventory-2026-11-19-after-reconciliation.json`
+- Snapshot is metadata-only: columns, defaults, constraints, indexes, RLS flags, policies, function signatures/hashes, and migration history. It contains no student/payment rows.
+- Snapshot totals: 93 tables, 202 policies, 90 functions, 117 migration versions.
 
-## Migration history drift
-- Repository currently contains 163 migration files.
-- Production records 99 migration versions.
-- 77 repository migrations are not recorded in production.
-- 13 production migration versions have no matching file in the repository:
-  - 20261112141258
-  - 20261112215442
-  - 20261112215507
-  - 20261116020333
-  - 20261116174028
-  - 20261116174219
-  - 20261116174654
-  - 20261116175109
-  - 20261116180440
-  - 20261116181406
-  - 20261116182317
-  - 20261116183050
-  - 20261116193607
-- Do not run the 77 pending files as a batch or rewrite the historical migrations until this drift is reconciled. Some pending changes appear to already exist in the live schema, so blindly rerunning them could overwrite live curriculum content or fail on pre-existing objects.
-- Exact duplicate migration blobs: none detected. This does not rule out semantic overlap between different lesson-content migrations.
+## Migration ledger reconciliation
+- Repository contains 176 migration files.
+- Production migration history contains 117 versions.
+- No production-only migration versions remain without a source file in the repository.
+- 59 repository migration files remain unrecorded in production. All 59 are dated 2026-11-17 and are curriculum/content updates.
+- The 13 production-only migration records found in the first audit were recovered from `supabase_migrations.schema_migrations.statements` and restored as exact SQL files under `supabase/migrations/`.
+- Exact/semantic duplicate groups identified and retained as immutable history:
+  - `20261112215442` and `20261112170000` — exact same SQL.
+  - `20261112215507` and `20261112170500` — exact same SQL.
+  - `20261116020333` and `20261116010000` — exact same SQL.
+  - `20261116174028` and `20261116000000` — exact same SQL.
+  - `20261116174219` and `20261116000001` — exact same SQL.
+  - `20261116174654` and `20261116000002` — exact same SQL.
+  - `20261116175109` and `20261116000003` — exact same SQL.
+  - `20261112141258` and `20261112161500` — same GRANT operation; later file adds explanatory comments.
+- Historical files and migration rows were not deleted. Rewriting or deleting already-applied migrations would make future reconciliation less reliable.
 
-## Verified live-schema facts
-- `public.profiles.is_suspended` already exists; no new migration is needed for that column.
-- `private.doma_assistant_usage` and `public.doma_consume_assistant_quota(uuid)` exist.
-- `public.doma_refund_assistant_quota(uuid)` does not exist yet.
-- `private.password_reset_phone_limits` and `public.doma_allow_password_reset_phone(text)` do not exist yet.
-- `private.password_reset_ip_limits` exists with RLS disabled. The repository has a pending migration `20261113000200_enable_rls_password_reset_ip_limits.sql`, but it was not applied during this audit. Supabase's security guidance says not to enable RLS blindly without checking the table's access path and policies.
-- Programming curriculum currently has 13 track rows and 18 module rows. The five canonical tracks and 17 canonical modules expected by the reorganization migration are already present; one additional module, `cs-daily-challenges`, also exists.
+## Versions reconciled after live-state verification
+The following 18 local migration versions were added to the production migration ledger without replaying their SQL, because their exact statements or resulting live state were verified:
+- `20261112161500`, `20261112170000`, `20261112170500`, `20261113000100`
+- `20261116000000`, `20261116000001`, `20261116000002`, `20261116000003`, `20261116010000`
+- `20261117090000`, `20261117090100`, `20261117090200`, `20261117090300`, `20261117090400`, `20261117090500`
+- `20261113000200`, `20261119010000`, `20261119020000`
 
-## Old-file cleanup review
-- Still present: `auth-photo-v95/`, `auth-photo-v96/`, `doma-leaf-book-icon.svg`, `mr-fluent-growth-chart-glass.svg`, `programming-academy-design20.css`, `programming-academy-neon-library.svg`, `programming-academy-botanical.svg`.
-- `doma-m-a-selected-icon.png` is absent from the current repository tree.
-- No files were deleted. A complete reference scan is still required before removing the remaining assets.
+The migration-history inserts use `created_by` markers such as `verified_live_schema_reconciliation`; this documents that the existing live state was checked instead of re-running the migration. The original SQL is stored in the `statements` column.
 
-## Deployment verification
-- This audit did not verify a live Cloudflare deployment.
-- GitHub commits and GitHub Actions validation do not prove that `https://doma1.pages.dev/` has received the changes.
+## Security migrations applied and verified
+- `20261113000200`: enabled RLS on `private.password_reset_ip_limits` and revoked direct table privileges from public/anon/authenticated. The existing IP limiter is SECURITY DEFINER, owned by postgres, and continues to manage the private table.
+- `20261119010000`: created the phone-digest rate-limit table and service-role-only RPC `public.doma_allow_password_reset_phone(text)`. RLS is enabled; direct API-role table access is revoked.
+- `20261119020000`: created service-role-only `public.doma_refund_assistant_quota(uuid)`, sharing the consume RPC's UTC-day advisory lock.
+- Verification confirmed both new RPCs exist and their EXECUTE grants are limited to postgres/service_role.
 
-## Safe next sequence
-1. Reconcile the 13 remote-only migration versions and 77 local-only versions against the live schema inventory.
-2. Resolve the RLS-disabled password-reset table with an access-path review, then apply the intended hardening migration.
-3. Confirm the two November 19 migrations against the live RPC definitions, then apply and verify them in chronological order.
-4. Consolidate only genuinely overlapping, unapplied curriculum changes; preserve every migration already recorded in production.
-5. Complete a repository-wide reference scan before deleting any legacy assets.
-6. Run the Cloudflare production smoke test separately from GitHub Actions.
+## Programming curriculum merge — verified live state
+- 5 canonical tracks are published: Computer Science, Programming Languages, Web Development, Databases/Backend, and Projects/AI/Modern Technology.
+- 17 canonical modules are assigned to those tracks, plus a separate `cs-daily-challenges` module.
+- 21 daily-challenge lessons are assigned to that separate module, which is unpublished in the normal module list.
+- The graduation capstone lesson is assigned to `project-foundations`.
+- 8 legacy track rows remain in the database but are unpublished; they were not deleted.
+- Current totals: 13 track rows, 18 modules, 146 lessons (125 published), 146 exercises, 114 quizzes, and 566 quiz questions.
+- The live database shows all 146 lessons and 106 exercises updated during 2026-11-17. This is strong evidence that the remaining curriculum content batch was applied manually, but it is not sufficient by itself to mark every remaining migration as applied. Those 59 files still need a content-by-content comparison before their history can be repaired.
+
+## Remaining migration work
+- 59 curriculum migrations dated 2026-11-17 remain unrecorded. Do not replay them as a batch: many update lesson/exercise text and could overwrite newer live content.
+- Compare each migration's target rows and expected final content with the live rows; only then record the exact version as already applied or apply a genuinely missing change.
+- The 59-file set starts at `20261117090600_restore_original_seeded_lesson_content.sql` and ends at `20261117220000_add_fullstack_capstone_project.sql`.
+
+## Security advisor findings after the security migrations
+- The new phone limiter and quota refund RPCs are not flagged for anon/authenticated execution.
+- Supabase still reports an anon-executable SECURITY DEFINER function: `public.doma_guard_temp_password()`. It is intentionally granted to API roles by a migration, but its body and intended public call path should be reviewed before changing that grant.
+- Supabase also reports 69 authenticated-executable SECURITY DEFINER functions, 9 RLS-enabled tables with no policies, and leaked-password protection disabled. These need separate function-by-function and table-access review; do not apply a blanket revoke/policy.
+- RLS-enabled private tables without policies may be intentional when no API roles have table privileges. Verify grants before changing them.
+
+## Not completed
+- No legacy assets were deleted; a complete reference scan and review is still required.
+- This inventory is a schema metadata snapshot, not a full SQL dump or a restore-tested baseline.
+- No live Cloudflare browser smoke test was performed. GitHub commits do not prove `https://doma1.pages.dev/` is updated.
