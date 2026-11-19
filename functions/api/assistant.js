@@ -46,16 +46,9 @@ const clip = (value, maxLength) => String(value == null ? "" : value).slice(0, m
 // Public, read-only health probe. It reveals only whether the Pages AI binding
 // exists; it never invokes a model, reads account data, or consumes student quota.
 export async function onRequestGet({ env }) {
-  const configured = Boolean(env.AI && typeof env.AI.run === "function");
-  const missingAuthSettings = [
-    !env.SUPABASE_URL && "SUPABASE_URL",
-    !env.SUPABASE_ANON_KEY && "SUPABASE_ANON_KEY",
-    !env.SUPABASE_SERVICE_ROLE_KEY && "SUPABASE_SERVICE_ROLE_KEY"
-  ].filter(Boolean);
+  // Public health response intentionally reveals no environment variable names.
   return json({
-    configured,
-    authConfigured: missingAuthSettings.length === 0,
-    missingAuthSettings
+    configured: Boolean(env.AI && typeof env.AI.run === "function")
   }, 200);
 }
 
@@ -158,7 +151,7 @@ export async function onRequestPost({ request, env }) {
     const code = clip(body.code, 2000);
     const history = Array.isArray(body.history) ? body.history.slice(-6).map(item => {
       if (!item || typeof item !== "object") return null;
-      const role = item.role === "assistant" ? "assistant" : item.role === "user" ? "user" : "";
+      const role = item.role === "user" ? "user" : "";
       const content = clip(item.content, 700).trim();
       return role && content ? { role, content } : null;
     }).filter(Boolean) : [];
