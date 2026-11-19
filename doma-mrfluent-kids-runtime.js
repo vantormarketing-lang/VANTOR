@@ -1090,17 +1090,17 @@ host.addEventListener('change',function(e){if(!e.target||e.target.id!=='mfkjLabL
 
 function renderHub(){
   document.title='Mr. Fluent Kids · All Six Levels';
-  // Ensure the standalone root is visible when returning from a level.
+  // Clear any level-specific workspace state before rendering the catalog.
+  root.classList.remove('mfkj-a1-workspace');
+  root.removeAttribute('data-kids-level');
   root.style.setProperty('display','block','important');
   root.style.setProperty('visibility','visible','important');
   root.setAttribute('aria-hidden','false');
   document.body.classList.add('mf-kids-route');
   document.body.classList.remove('mf-kids-inline-route');
   ['mf-kids-level-a1','mf-kids-level-a2','mf-kids-level-b1','mf-kids-level-b2','mf-kids-level-c1','mf-kids-level-c2'].forEach(function(cls){document.body.classList.remove(cls);});
-  // Keep this landing page focused on the two age-based level groups only.
-  root.innerHTML=header()+'<section class="mfkr-page"><div class="mfkr-wrap"><div class="mfkr-heading"><h1>Choose Your Level</h1><div class="mfkr-ar" lang="ar">اختار المستوى اللي عايز تبدأ منه</div></div>'+journeyCourseCatalogHtml()+'</div></section>';
+  root.innerHTML=header()+'<section class="mfkr-page"><div class="mfkr-wrap"><div class="mfkr-heading"><h1>Choose Your Level</h1><div class="mfkr-ar" lang="ar">اختار المستوى اللي عايز تبدأ منه</div></div>'+journeyCourseCatalogHtml()+'</section>';
 }
-
 function renderLevels(group){var young=group==='younger';var arr=young?[['A1','My First ABC','الحروف الكبيرة والصغيرة، صورة، كلمة، ترجمة عربية وزرّان للصوت.'],['B1','My First Words','كلمات يومية جديدة مع الاستماع والصور والألعاب.'],['C1','My First Sentences','كوّن جملًا بسيطة وابدأ فهم القصص المصورة.']]:[['A2','Word Explorers','وسّع حصيلة الكلمات واربطها بموضوعات قريبة من الطفل.'],['B2','Reading Builders','تدرّب على القراءة والفهم واستخدام الكلمات في سياقها.'],['C2','Confident English','قوّي الجمل والمحادثات القصيرة والفهم.']];var cards=arr.map(function(item){return levelCard(item[0],item[1],item[2],group);}).join('');document.title=(young?'Little Learners':'Growing Learners')+' | Mr. Fluent Kids';root.innerHTML=shell(young?'LITTLE LEARNERS':'GROWING LEARNERS',young?'Little Learners':'Growing Learners',young?'مسار الأطفال الأصغر سنًا':'مسار الأطفال الأكبر شوية','Select a level to start your next learning adventure.','<div class="mfkr-level-grid">'+cards+'</div>'+backButtons(url('hub'),'← Back to paths')+(young?'<div class="mfkr-note">المستويات A1 وB1 وC1 متاحة الآن. افتح C1 لتكوين الجمل وقراءة قصة قصيرة والتدرّب على الفهم والنطق.</div>':'<div class="mfkr-note">المستويات A2 وB2 وC2 متاحة الآن. استكشف الكلمات في A2، وطوّر القراءة في B2، ثم أتقن المهارات المتقدمة الشاملة في C2.</div>'));}
 
 function renderC1(){root.setAttribute('data-kids-level','C1');
