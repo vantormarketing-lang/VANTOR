@@ -124,7 +124,7 @@ for (const path of coursePagesForCdn) {
 }
 const studentIcon512 = JSON.parse(read('manifest.webmanifest')).icons.find(icon =>
   icon.sizes === '512x512' && String(icon.type).toLowerCase() === 'image/png' &&
-  String(icon.purpose || '').split(/\\s+/).includes('any')
+  String(icon.purpose || '').includes('any')
 );
 if (!studentIcon512) {
   fail('manifest.webmanifest: student PWA requires a 512x512 PNG icon with purpose any');
