@@ -114,6 +114,7 @@ check(
   'Programming performance migration adds two FK indexes and optimizes four RLS policies without deleting data or indexes'
 );
 
+const assistant = read('functions/api/assistant.js');
 const assistantRefundMigration = read('supabase/migrations/20261119020000_refund_assistant_quota_on_provider_failure.sql');
 check(
   assistant.includes('async function refundAssistantQuota(context)') &&
@@ -157,7 +158,6 @@ check(
   'Password reset limits every valid phone by a private SHA-256 digest before profile lookup and returns the same public success response for limited/unknown numbers'
 );
 
-const assistant = read('functions/api/assistant.js');
 check(
   assistant.includes('const role = item.role === "user" ? "user" : "";') &&
   assistant.includes('configured: Boolean(env.AI && typeof env.AI.run === "function")') &&
