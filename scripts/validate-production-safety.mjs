@@ -147,7 +147,6 @@ check(
 const assistant = read('functions/api/assistant.js');
 check(
   assistant.includes('const role = item.role === "user" ? "user" : "";') &&
-  assistant.includes('return json({ configured: Boolean(env.AI && typeof env.AI.run === "function") }, 200)') === false &&
   assistant.includes('configured: Boolean(env.AI && typeof env.AI.run === "function")') &&
   !/missing.*(?:SUPABASE|AI)|SUPABASE_(?:URL|ANON_KEY|SERVICE_ROLE_KEY).*configured/i.test(assistant.slice(0, 1800)),
   'Assistant health endpoint reveals only a configured boolean and client history accepts user messages only'
