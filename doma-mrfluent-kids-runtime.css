@@ -3415,3 +3415,44 @@ body.mf-kids-route #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:befor
 body.mf-kids-route #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:after{
   content:none!important;display:none!important;
 }
+
+
+/* Apply the clean arrow treatment to BOTH standalone and inline Kids routes.
+   The homepage query (?kids=a1) uses mf-kids-inline-route. */
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top{
+  display:block!important;position:relative!important;top:auto!important;
+  width:100%!important;height:46px!important;min-height:46px!important;
+  margin:0!important;padding:0!important;overflow:visible!important;
+  border:0!important;border-bottom:0!important;background:transparent!important;
+  background-image:none!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top .mfkr-nav{
+  display:flex!important;justify-content:flex-start!important;align-items:center!important;
+  width:min(1120px,94%)!important;height:46px!important;min-height:46px!important;
+  margin:0 auto!important;padding:0!important;overflow:visible!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top .mfkr-brand-group{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;
+  margin:0!important;padding:0!important;border:0!important;background:transparent!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:link,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:visited,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:hover,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:active{
+  display:grid!important;place-items:center!important;position:relative!important;
+  flex:0 0 38px!important;width:38px!important;height:38px!important;
+  min-width:38px!important;min-height:38px!important;margin:0!important;padding:0!important;
+  border:0!important;border-radius:0!important;outline:0!important;
+  background:transparent!important;background-image:none!important;box-shadow:none!important;
+  color:#d8b56d!important;-webkit-text-fill-color:#d8b56d!important;
+  font:700 34px/1 Arial,sans-serif!important;text-decoration:none!important;
+  cursor:pointer!important;pointer-events:auto!important;transform:none!important;
+  z-index:2147483002!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:before,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:after{
+  content:none!important;display:none!important;
+}
