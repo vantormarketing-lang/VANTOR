@@ -2477,3 +2477,21 @@ html body:has(.a1-level) .student-sidebar nav button:hover,html body:has(.a1-lev
 html body:has(.a1-level) .student-sidebar nav button.active{box-shadow:inset 3px 0 #b88645!important}
 html body:has(.a1-level) .student-sidebar .menu-icon{filter:none!important;opacity:.82!important}
 html body:has(.a1-level) .mobile-menu-backdrop{background:rgba(70,49,29,.28)!important;backdrop-filter:blur(3px)!important}
+
+/* Mr Fluent A1-C2: question text visibility + remove nested unit header cards.
+   Keep actual question/answer surfaces; make the unit wrapper/title unboxed. */
+html body:has(.course-hero) .student-content :is(.question,.quiz-question,.question-text,.quiz-question-text,.prompt,.question-prompt,.quiz-prompt,.assessment-question,.quiz-mini-question){
+  color:#493927!important;-webkit-text-fill-color:#493927!important;
+}
+html body:has(.course-hero) .student-content :is(.question,.quiz-question,.question-text,.quiz-question-text,.prompt,.question-prompt,.quiz-prompt,.assessment-question,.quiz-mini-question) :is(p,span,strong,b,label,h2,h3,h4){
+  color:#493927!important;-webkit-text-fill-color:#493927!important;
+}
+html body:has(.course-hero) .student-content :is(.unit,.unit-header,.unit-title,.unit-heading,.unit-intro,.unit-banner,.unit-head,.unit h2,.unit h3){
+  border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;background-image:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+html body:has(.course-hero) .student-content :is(.unit,.unit-header,.unit-title,.unit-heading,.unit-intro,.unit-banner,.unit-head,.unit h2,.unit h3){
+  color:#493927!important;-webkit-text-fill-color:#493927!important;
+}
+html body:has(.course-hero) .student-content :is(.unit,.unit-header,.unit-title,.unit-heading,.unit-intro,.unit-banner,.unit-head) :is(p,span,strong,b,h2,h3,h4){
+  color:#493927!important;-webkit-text-fill-color:#493927!important;
+}
