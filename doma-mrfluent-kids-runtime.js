@@ -2970,11 +2970,10 @@ document.addEventListener('click',function(event){
     // Force exit from the hub to the homepage in the same tab, even if a global target=_blank was applied.
     event.preventDefault();
     if(target.searchParams.get('kids')){
-      // Normalize the back target to the exact six-level route, then force a visible hub render.
+      // Full navigation resets any hidden DOM state left by level-page isolation/rendering.
+      // Re-enter the hub through its normal route so the six cards are rebuilt from a clean page.
       var hubHref=url('hub');
-      try{window.history.replaceState({mfKidsRoute:true},'',hubHref);}catch(_){ }
-      route='hub';query=new URLSearchParams(window.location.search);syncKidsRouteMode('hub');
-      renderHub();try{window.scrollTo(0,0);}catch(_){}
+      window.location.replace(hubHref);
     }else{
       window.location.replace(target.href);
     }
