@@ -3765,3 +3765,30 @@ html body.mf-kids-route #mfKidsStandaloneRoot .mfkj-course-ar{color:#d9c9f3!impo
 
 /* HUB ONLY: hide the level-page hamburger on the Choose Your Level catalog. */
 html body.mf-kids-route:has(#mfKidsStandaloneRoot .mfkj-course-catalog) #mfKidsStandaloneRoot .mfkj-a1-menu-trigger{display:none!important;}
+
+
+/* KIDS MENU REDESIGN — side glass drawer with clearer item contrast */
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu:not([hidden]){
+  background:rgba(16,9,27,.42)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(140%)!important;
+  backdrop-filter:blur(16px) saturate(140%)!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-dialog{
+  width:min(380px,88vw)!important;
+  border-left:1px solid rgba(216,181,109,.28)!important;
+  background:radial-gradient(ellipse 270px 220px at 100% 100%,rgba(205,145,86,.19),transparent 76%),linear-gradient(150deg,rgba(43,24,63,.82),rgba(26,14,43,.78))!important;
+  box-shadow:-22px 0 55px rgba(4,2,12,.38)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(155%)!important;
+  backdrop-filter:blur(28px) saturate(155%)!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-dialog-head{border-bottom:1px solid rgba(222,190,255,.17)!important;}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-dialog-head h2{color:#f7f0ff!important;text-shadow:0 1px 10px rgba(0,0,0,.24)!important;}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-group{color:#e9c87d!important;}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item:hover,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item:focus-visible{color:#f3eaff!important;border-bottom:1px solid rgba(213,183,246,.13)!important;transition:background .18s ease,color .18s ease!important;}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item:hover,
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item:focus-visible{background:rgba(177,126,239,.12)!important;}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item>span:first-child{color:#e7bd68!important;text-shadow:0 0 12px rgba(231,189,104,.20)!important;}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item>span:last-child{color:#f4edff!important;}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-close{color:#e8c46e!important;}
