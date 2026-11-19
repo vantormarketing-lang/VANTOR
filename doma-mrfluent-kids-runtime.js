@@ -24,7 +24,9 @@ syncKidsRouteMode(route);
 var root = document.getElementById('mfKidsStandaloneRoot') || document.createElement('main');
 root.id = 'mfKidsStandaloneRoot';
 
-if (!root.parentNode) document.body.appendChild(root);
+// Keep the Kids runtime root directly under <body> so isolation never hides it
+// inside a parent container when navigating back from a level to the hub.
+if (root.parentNode !== document.body) document.body.appendChild(root);
 
 // Kids levels now inherit the DOMA homepage theme directly; no inline theme override or delayed reveal.
 
