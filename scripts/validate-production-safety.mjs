@@ -146,7 +146,7 @@ for (const level of ['A1','A2','B1','B2','C1','C2']) {
 const passwordReset = read('functions/api/student/request-password-reset.js');
 const phoneLimitMigration = read('supabase/migrations/20261119010000_rate_limit_password_reset_by_phone_digest.sql');
 check(
-  passwordReset.includes('crypto.subtle.digest("SHA-256", bytes)') &&
+  passwordReset.includes('crypto.subtle.sign("HMAC", key, encoder.encode(phone))') &&
   passwordReset.includes('/rpc/doma_allow_password_reset_phone') &&
   passwordReset.includes('if(phoneAllowed!==true) return json({ok:true})') &&
   !passwordReset.includes('password_reset_requests?"+new URLSearchParams') &&
