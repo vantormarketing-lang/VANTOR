@@ -66,12 +66,13 @@ const admin = read('admin.html');
 
 const adminWorker = read('admin-sw.js');
 check(
-  /const SHELL = \\[ADMIN_URL,/.test(adminWorker) &&
-  /await fetch\\(req, \\{cache:'no-store'\\}\\)/.test(adminWorker) &&
-  /catch \\(_\\) \\{[\\s\\S]*?cache\\.match\\(ADMIN_URL\\)/.test(adminWorker) &&
-  /SHELL\\.includes\\(req\\.url\\)/.test(adminWorker) &&
-  /url\\.origin !== self\\.location\\.origin/.test(adminWorker) &&
-  !/respondWith\\(cachePromise\\.then\\(cache => cache\\.match\\(ADMIN_URL\\)\\)/.test(adminWorker),
+  adminWorker.includes('const SHELL = [ADMIN_URL,') &&
+  adminWorker.includes("await fetch(req, {cache:'no-store'})") &&
+  adminWorker.includes('const cached = await cache.match(ADMIN_URL)') &&
+  adminWorker.includes('if (cached && cached.ok) return cached;') &&
+  adminWorker.includes('SHELL.includes(req.url)') &&
+  adminWorker.includes('url.origin !== self.location.origin') &&
+  !adminWorker.includes('cache.match(ADMIN_URL)).then(cached =>'),
   'Admin PWA fetches HTML network-first and uses cached shell only after network failure; authenticated Supabase data remains network-only'
 );
 const themeHref = admin.match(/<link id="doma-platform-unified-theme" rel="stylesheet" href="([^"]+)"/)?.[1];
