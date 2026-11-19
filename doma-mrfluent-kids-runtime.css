@@ -3456,3 +3456,142 @@ html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.
 html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot header.mfkr-top a.mfkr-back-arrow:after{
   content:none!important;display:none!important;
 }
+
+
+/* =========================================================
+   KIDS COURSE — UNIFIED DOMA BACKGROUND + CLEAN MENU
+   - Blur the active lesson behind the menu.
+   - Keep menu labels visible without individual button boxes.
+   - Remove decorative nested card frames across all levels.
+   ========================================================= */
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu:not([hidden]){
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483647!important;
+  display:flex!important;
+  justify-content:flex-end!important;
+  align-items:stretch!important;
+  padding:0!important;
+  background:rgba(31,18,39,.34)!important;
+  -webkit-backdrop-filter:blur(13px) saturate(115%)!important;
+  backdrop-filter:blur(13px) saturate(115%)!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-dialog{
+  width:min(390px,88vw)!important;
+  height:100%!important;
+  max-height:100dvh!important;
+  margin:0!important;
+  overflow:hidden!important;
+  color:var(--mfk-text)!important;
+  border:0!important;
+  border-left:1px solid rgba(225,190,224,.18)!important;
+  border-radius:0!important;
+  background:
+    radial-gradient(ellipse 250px 210px at 100% 100%,rgba(218,151,91,.20),transparent 75%),
+    linear-gradient(145deg,rgba(57,33,63,.97),rgba(40,23,47,.97))!important;
+  box-shadow:-18px 0 48px rgba(13,6,20,.20)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(135%)!important;
+  backdrop-filter:blur(22px) saturate(135%)!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-dialog-head{
+  flex:none!important;
+  border:0!important;
+  border-bottom:1px solid rgba(225,190,224,.16)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-kicker{
+  color:var(--mfk-gold)!important;
+  letter-spacing:.16em!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-dialog-head h2{
+  color:var(--mfk-text)!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-list{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-group{
+  padding:16px 3px 7px!important;
+  color:var(--mfk-gold)!important;
+  font-size:10px!important;
+  font-weight:900!important;
+  letter-spacing:.04em!important;
+  border:0!important;
+  background:transparent!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item,
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item:hover,
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item:focus-visible{
+  display:flex!important;
+  width:100%!important;
+  min-height:45px!important;
+  margin:0!important;
+  padding:10px 3px!important;
+  color:var(--mfk-text)!important;
+  border:0!important;
+  border-bottom:1px solid rgba(225,190,224,.10)!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  text-decoration:none!important;
+  transform:none!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item>span:first-child{
+  color:var(--mfk-gold)!important;
+  background:transparent!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item>span:last-child{
+  color:var(--mfk-text)!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-close{
+  min-height:34px!important;
+  padding:7px 10px!important;
+  color:var(--mfk-gold)!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  font-weight:900!important;
+}
+html body #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-close:hover{
+  background:rgba(244,200,121,.08)!important;
+}
+
+/* The learning tiles remain in their original grid and keep all content.
+   Their surfaces now blend into the DOMA page background instead of
+   drawing another glass frame around every block. */
+html body #mfKidsStandaloneRoot :is(
+  .mfkr-choice,.mfkr-level,.mfkr-letter-card,.mfkr-word-card,
+  .mfkr-topic-panel,.mfkr-quiz-panel,.mfkr-a2-story-card,
+  .mfkr-c1-story-line,.mfkr-b2-connector-sentence,
+  .mfkr-a2-match-prompt,.mfkr-c1-output,.mfkr-c2-writing-area,
+  .mfkj-course-practice-panel,.mfkj-model-reply,.mfkj-mini-card,
+  .mfkj-pay-gate,.mfkj-payment-unified,.mfkj-notice-card,
+  .mfkj-t-card,.mfkj-t-note,.mfkj-t-wrap,.mfkj-pay-card,
+  .mfkj-pay-price,.mfkj-pay-receiver,.mfkj-pay-field,
+  .mfkj-membership-item,.mfkj-dash-panel,.mfkj-daily-question,
+  .mfkj-course-level-card,.mfkj-daily-complete,.mfkj-daily-built,
+  .mfkj-membership-state,.mfkj-t-stat,.mfkj-review-card,
+  .mfkj-lab-card,.mfkj-parent-card,.mfkj-lesson-card,
+  .mfkj-activity-card,.mfkr-letter-card:before,.mfkr-word-card:before
+){
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html body #mfKidsStandaloneRoot :is(.mfkr-choice,.mfkr-level,.mfkr-letter-card,.mfkr-word-card,.mfkj-course-level-card){
+  border-radius:0!important;
+}
+html body #mfKidsStandaloneRoot :is(.mfkr-choice,.mfkr-level,.mfkr-letter-card,.mfkr-word-card,.mfkj-course-level-card):before,
+html body #mfKidsStandaloneRoot :is(.mfkr-letter-card,.mfkr-word-card):after{
+  content:none!important;
+  display:none!important;
+}
