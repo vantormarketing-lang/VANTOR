@@ -38,6 +38,7 @@ The migration-history inserts use `created_by` markers such as `verified_live_sc
 - `20261119010000`: created the phone-digest rate-limit table and service-role-only RPC `public.doma_allow_password_reset_phone(text)`. RLS is enabled; direct API-role table access is revoked.
 - `20261119020000`: created service-role-only `public.doma_refund_assistant_quota(uuid)`, sharing the consume RPC's UTC-day advisory lock.
 - Verification confirmed both new RPCs exist and their EXECUTE grants are limited to postgres/service_role.
+- Transactional smoke test passed: the phone limiter returned `true, true, true, false` for four calls in one 15-minute window; the test transaction was rolled back, so no test digest was retained. The refund RPC safely returned `false` for a nonexistent user ID.
 
 ## Programming curriculum merge — verified live state
 - 5 canonical tracks are published: Computer Science, Programming Languages, Web Development, Databases/Backend, and Projects/AI/Modern Technology.
