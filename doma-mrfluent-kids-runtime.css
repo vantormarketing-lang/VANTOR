@@ -3792,3 +3792,21 @@ html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1
 html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item>span:first-child{color:#e7bd68!important;text-shadow:0 0 12px rgba(231,189,104,.20)!important;}
 html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-menu-item>span:last-child{color:#f4edff!important;}
 html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot #mfkjA1LessonMenu .mfkj-a1-close{color:#e8c46e!important;}
+
+/* FIX — keep the level menu opener clearly visible on every Kids level */
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot .mfkj-a1-menu-trigger{
+  width:46px!important;height:46px!important;min-height:46px!important;
+  top:12px!important;right:12px!important;padding:0!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  border:1px solid rgba(231,196,123,.78)!important;border-radius:14px!important;
+  background:linear-gradient(145deg,rgba(105,67,153,.52),rgba(35,19,60,.88))!important;
+  box-shadow:0 4px 20px rgba(4,2,13,.42),0 0 13px rgba(219,179,101,.17)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(150%)!important;backdrop-filter:blur(14px) saturate(150%)!important;
+  color:#f3d68e!important;-webkit-text-fill-color:#f3d68e!important;
+  opacity:1!important;visibility:visible!important;pointer-events:auto!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot .mfkj-a1-menu-trigger span:first-child{
+  display:block!important;color:#f6dc9e!important;-webkit-text-fill-color:#f6dc9e!important;
+  font-size:25px!important;font-weight:900!important;line-height:1!important;
+  text-shadow:0 1px 8px rgba(0,0,0,.4)!important;opacity:1!important;visibility:visible!important;
+}
