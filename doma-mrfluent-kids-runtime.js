@@ -10,6 +10,8 @@ function syncKidsRouteMode(nextRoute){
   inlineKidsMode=(nextRoute==='entry'||nextRoute==='subscribe');
   document.body.classList.toggle('mf-kids-inline-route',inlineKidsMode);
   document.body.classList.toggle('mf-kids-route',!inlineKidsMode);
+  document.body.classList.toggle('mf-kids-level-a1',nextRoute==='a1');
+  document.body.classList.toggle('mf-kids-level-a2',nextRoute==='a2');
 }
 syncKidsRouteMode(route);
 
