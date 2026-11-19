@@ -56,7 +56,7 @@ self.addEventListener('fetch', event => {
       try {
         const response = await fetch(req, {cache:'no-store'});
         const type = response.headers.get('content-type') || '';
-        if (!response.ok || !/text\\/html/i.test(type)) {
+        if (!response.ok || !type.toLowerCase().includes('text/html')) {
           throw new Error('Admin document refresh failed.');
         }
         const cache = await cachePromise;
