@@ -66,13 +66,13 @@ const admin = read('admin.html');
 
 const adminWorker = read('admin-sw.js');
 check(
-  /const SHELL = \[ADMIN_URL,/.test(adminWorker) &&
-  /await cache\.put\(url, response\)/.test(adminWorker) &&
-  /cache\.match\(ADMIN_URL\)/.test(adminWorker) &&
-  /event\.waitUntil\(refreshPromise/.test(adminWorker) &&
-  /SHELL\.includes\(req\.url\)/.test(adminWorker) &&
-  /url\.origin !== self\.location\.origin/.test(adminWorker),
-  'Admin PWA serves only its static allowlisted shell from cache and refreshes it in the background; authenticated Supabase data remains network-only'
+  /const SHELL = \\[ADMIN_URL,/.test(adminWorker) &&
+  /await fetch\\(req, \\{cache:'no-store'\\}\\)/.test(adminWorker) &&
+  /catch \\(_\\) \\{[\\s\\S]*?cache\\.match\\(ADMIN_URL\\)/.test(adminWorker) &&
+  /SHELL\\.includes\\(req\\.url\\)/.test(adminWorker) &&
+  /url\\.origin !== self\\.location\\.origin/.test(adminWorker) &&
+  !/respondWith\\(cachePromise\\.then\\(cache => cache\\.match\\(ADMIN_URL\\)\\)/.test(adminWorker),
+  'Admin PWA fetches HTML network-first and uses cached shell only after network failure; authenticated Supabase data remains network-only'
 );
 const themeHref = admin.match(/<link id="doma-platform-unified-theme" rel="stylesheet" href="([^"]+)"/)?.[1];
 const workerThemeHref = adminWorker.match(/const GLASS_THEME_URL = new URL\('([^']+)'/)?.[1];
@@ -129,13 +129,19 @@ for (const level of ['A1','A2','B1','B2','C1','C2']) {
 }
 
 const headers = read('_headers');
+const globalHeaderBlock = headers.startsWith('/*\\n')
+  ? headers.slice(3, headers.indexOf('/*-v*') >= 0 ? headers.indexOf('/*-v*') : undefined)
+  : '';
 check(
   ['X-Content-Type-Options: nosniff',
    'Referrer-Policy: strict-origin-when-cross-origin',
    'X-Frame-Options: SAMEORIGIN',
+   'Content-Security-Policy: default-src',
+   'https://www.youtube-nocookie.com',
    'Permissions-Policy: camera=(), microphone=(self), geolocation=()']
-    .every(value => headers.includes(value)),
-  'Baseline browser security response headers are present'
+    .every(value => globalHeaderBlock.includes(value)) &&
+  (headers.match(/Content-Security-Policy:/g) || []).length === 1,
+  'Global /* headers contain one active CSP and baseline security headers'
 );
 
 for (const message of checks) console.log('PASS', message);
