@@ -125,11 +125,15 @@ for (const path of coursePagesForCdn) {
 ok('Course pages: supabase-js CDN versions are pinned to a single x.y.z release');
 
 const cspHeaderFile = read('_headers');
-const mainCsp = cspHeaderFile.split(String.fromCharCode(10)).find(line => line.includes('Content-Security-Policy: default-src'));
-if (!mainCsp || !mainCsp.includes('frame-src') || !mainCsp.includes('https://www.youtube-nocookie.com')) {
-  fail('_headers: CSP frame-src must allow https://www.youtube-nocookie.com for Kids course videos');
+const globalHeaderBlock = cspHeaderFile.startsWith('/*\\n')
+  ? cspHeaderFile.slice(3, cspHeaderFile.indexOf('/*-v*') >= 0 ? cspHeaderFile.indexOf('/*-v*') : undefined)
+  : '';
+const globalCsp = globalHeaderBlock.split(String.fromCharCode(10)).find(line => line.includes('Content-Security-Policy:'));
+if (!globalCsp || !globalCsp.includes('frame-src') || !globalCsp.includes('https://www.youtube-nocookie.com') ||
+    (cspHeaderFile.match(/Content-Security-Policy:/g) || []).length !== 1) {
+  fail('_headers: exactly one CSP must be active under /* and allow youtube-nocookie');
 } else {
-  ok('_headers: CSP frame-src allows privacy-enhanced YouTube embeds');
+  ok('_headers: one global /* CSP allows privacy-enhanced YouTube embeds');
 }
 
 for (const level of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
