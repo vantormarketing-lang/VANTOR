@@ -3878,3 +3878,54 @@ html body:is(.mf-kids-route,.mf-kids-inline-route):is(.mf-kids-level-a1,.mf-kids
 @media(max-width:620px){
  html body:is(.mf-kids-route,.mf-kids-inline-route):is(.mf-kids-level-a1,.mf-kids-level-a2,.mf-kids-level-b1,.mf-kids-level-b2,.mf-kids-level-c1,.mf-kids-level-c2) #mfKidsStandaloneRoot .mfkr-page :is(.mfkr-letter-card,.mfkr-word-card,.mfkr-a2-story-card,.mfkr-c1-story-line,.mfkr-b2-connector-sentence,.mfkr-a2-match-prompt,.mfkr-c1-output,.mfkr-c2-writing-area,.mfkj-course-practice-panel,.mfkj-model-reply,.mfkj-mini-card,.mfkj-lesson-card,.mfkj-activity-card,.mfkj-review-card,.mfkj-daily-question,.mfkj-daily-built,.mfkj-daily-complete,.mfkj-t-card,.mfkj-t-note,.mfkj-t-stat,.mfkr-quiz-option,.mfkr-sound,.mfkr-topic,.mfkr-word-actions){border-radius:16px!important;}
 }
+
+/* Unified Kids level cards: modern main-site glass tiles, no nested framed panels */
+#mfKidsStandaloneRoot .mfkr-topic-panel,
+#mfKidsStandaloneRoot .mfkr-quiz-panel,
+#mfKidsStandaloneRoot .mfkr-a2-story-card,
+#mfKidsStandaloneRoot .mfkr-c1-finish,
+#mfKidsStandaloneRoot .mfkr-quiz-intro,
+#mfKidsStandaloneRoot .mfkr-a2-story-grid,
+#mfKidsStandaloneRoot .mfkr-c1-story-panel {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  padding-inline: 0 !important;
+  border-radius: 0 !important;
+}
+#mfKidsStandaloneRoot .mfkr-topic-heading,
+#mfKidsStandaloneRoot .mfkr-quiz-intro h2,
+#mfKidsStandaloneRoot .mfkr-heading,
+#mfKidsStandaloneRoot .mfkr-topic-panel h2 {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#mfKidsStandaloneRoot .mfkr-word-card,
+#mfKidsStandaloneRoot .mfkr-letter-card,
+#mfKidsStandaloneRoot .mfkr-quiz-option,
+#mfKidsStandaloneRoot .mfkr-a2-story-card,
+#mfKidsStandaloneRoot .mfkr-c1-chip {
+  border: 1px solid rgba(198, 164, 255, .17) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(145deg, rgba(76, 43, 119, .30), rgba(26, 18, 43, .44)) !important;
+  box-shadow: 0 8px 22px rgba(8, 5, 20, .18), inset 0 1px 0 rgba(255, 255, 255, .035) !important;
+}
+#mfKidsStandaloneRoot .mfkr-word-card:before,
+#mfKidsStandaloneRoot .mfkr-letter-card:before {
+  content: none !important;
+}
+@media (max-width: 560px) {
+  #mfKidsStandaloneRoot .mfkr-topic-panel,
+  #mfKidsStandaloneRoot .mfkr-quiz-panel,
+  #mfKidsStandaloneRoot .mfkr-a2-story-grid {
+    padding-inline: 0 !important;
+  }
+  #mfKidsStandaloneRoot .mfkr-word-card,
+  #mfKidsStandaloneRoot .mfkr-letter-card,
+  #mfKidsStandaloneRoot .mfkr-quiz-option,
+  #mfKidsStandaloneRoot .mfkr-a2-story-card {
+    border-radius: 12px !important;
+  }
+}
