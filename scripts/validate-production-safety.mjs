@@ -114,6 +114,19 @@ check(
   'Programming performance migration adds two FK indexes and optimizes four RLS policies without deleting data or indexes'
 );
 
+const assistantRefundMigration = read('supabase/migrations/20261119020000_refund_assistant_quota_on_provider_failure.sql');
+check(
+  assistant.includes('async function refundAssistantQuota(context)') &&
+  assistant.includes('doma_refund_assistant_quota') &&
+  assistant.includes('const refunded = await refundAssistantQuota(quotaRefundContext)') &&
+  assistant.includes('quotaConsumed: !refunded') &&
+  assistantRefundMigration.includes('update private.doma_assistant_usage') &&
+  assistantRefundMigration.includes('uses = uses - 1') &&
+  assistantRefundMigration.includes('grant execute on function public.doma_refund_assistant_quota(uuid)') &&
+  assistantRefundMigration.includes('pg_advisory_xact_lock'),
+  'Assistant quota reservations are refunded once after complete inference failure using a service-role-only UTC-day locked RPC'
+);
+
 const workspace = read('mrfluent-course-workspace.js');
 check(
   ['function addLessonLinks()', 'function applyStandaloneLesson()', 'function createWhiteboard(id)',
