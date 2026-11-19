@@ -2968,20 +2968,28 @@ document.addEventListener('click',function(event){
   if(target.origin!==window.location.origin)return;
   if(link.classList.contains('mfkr-back-arrow')){
     event.preventDefault();
+    if(event.stopImmediatePropagation)event.stopImmediatePropagation();
     if(target.searchParams.get('kids')){
-      // Return directly to the six-level hub in this same runtime. Avoid a full
-      // reload and subscription re-check that can leave the isolated root empty.
-      route='hub';
-      query=new URLSearchParams(window.location.search);
-      query.set('kids','hub');
+      // Centralized Kids-level return: restore the six-level hub and verify
+      // its content is present; navigate to a fresh hub route if rendering fails.
       var hubHref=url('hub');
-      try{window.history.replaceState({mfKidsRoute:true},'',hubHref);}catch(error){console.warn('Kids hub history update failed.',error);}
-      syncKidsRouteMode('hub');
-      renderHub();
-      root.style.setProperty('display','block','important');
-      root.style.setProperty('visibility','visible','important');
-      root.setAttribute('aria-hidden','false');
-      try{window.scrollTo(0,0);}catch(_){}
+      try{
+        route='hub';
+        query=new URLSearchParams(window.location.search);
+        query.set('kids','hub');
+        window.history.replaceState({mfKidsRoute:true},'',hubHref);
+        syncKidsRouteMode('hub');
+        renderHub();
+        root.style.setProperty('display','block','important');
+        root.style.setProperty('visibility','visible','important');
+        root.setAttribute('aria-hidden','false');
+        var hubContent=root.querySelector('.mfkj-course-catalog .mfkr-level');
+        if(!hubContent){window.location.replace(hubHref);return;}
+        try{window.scrollTo(0,0);}catch(_){}
+      }catch(error){
+        console.warn('Kids hub restore failed; loading hub route.',error);
+        window.location.replace(hubHref);
+      }
     }else{
       window.location.replace(target.href);
     }
