@@ -3722,3 +3722,19 @@ html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level-grid > .mfkr-level:hov
   box-shadow:0 12px 28px rgba(0,0,0,.16)!important;
   transform:translateY(-1px)!important;
 }
+
+
+/* Kids level menu: compact hamburger opposite the back arrow, consistent on every level. */
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot .mfkj-a1-menu-trigger{
+ position:fixed!important;top:5px!important;right:3%!important;z-index:2147483645!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:42px!important;height:42px!important;min-height:42px!important;padding:0!important;
+ margin:0!important;background:transparent!important;background-image:none!important;
+ border:0!important;border-radius:0!important;box-shadow:none!important;
+ color:#d8b56d!important;-webkit-text-fill-color:#d8b56d!important;
+ font-size:27px!important;line-height:1!important;cursor:pointer!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot .mfkj-a1-menu-trigger span:first-child{
+ color:#d8b56d!important;-webkit-text-fill-color:#d8b56d!important;font-size:27px!important;line-height:1!important;
+}
+html body:is(.mf-kids-route,.mf-kids-inline-route) #mfKidsStandaloneRoot .mfkj-a1-menu-trigger span:last-child{display:none!important;}
