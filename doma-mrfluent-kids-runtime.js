@@ -15,8 +15,10 @@ function syncKidsRouteMode(nextRoute){
   inlineKidsMode=(nextRoute==='entry'||nextRoute==='subscribe');
   document.body.classList.toggle('mf-kids-inline-route',inlineKidsMode);
   document.body.classList.toggle('mf-kids-route',!inlineKidsMode);
-  document.body.classList.toggle('mf-kids-level-a1',nextRoute==='a1');
-  document.body.classList.toggle('mf-kids-level-a2',nextRoute==='a2');
+  // Always clear/update every level class on route changes to prevent stale level CSS from hiding the hub.
+  ['a1','a2','b1','b2','c1','c2'].forEach(function(level){
+    document.body.classList.toggle('mf-kids-level-'+level,nextRoute===level);
+  });
 }
 syncKidsRouteMode(route);
 
