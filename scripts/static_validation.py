@@ -10,7 +10,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ("index.html", "admin.html")
+PAGES = ("index.html", "admin.html", "MR_FLUENT_KIDS_COURSE.html")
 SKIP_SCRIPT_TYPES = {
     "application/json",
     "application/ld+json",
@@ -211,7 +211,7 @@ def validate_page(page: Path) -> bool:
         print(f"FAIL: no inline JavaScript was checked in {page.name}")
         return False
 
-    if page.name in ("admin.html", "index.html"):
+    if True:
         seen: set[str] = set()
         duplicates: set[str] = set()
         for name in global_function_names:
