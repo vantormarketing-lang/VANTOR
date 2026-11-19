@@ -2970,9 +2970,8 @@ document.addEventListener('click',function(event){
     event.preventDefault();
     if(event.stopImmediatePropagation)event.stopImmediatePropagation();
     if(target.searchParams.get('kids')){
-      // Use a fresh hub-page load instead of re-rendering inside the broken level DOM.
-      // This avoids stale hidden DOM/route state and lets the normal hub startup run.
-      window.location.replace(url('hub'));
+      // Return directly to the Kids six-level catalog without reloading the main academy router.
+      kidsJourneyRenderRouteInPlace('hub',url('hub'),true);
     }else{
       window.location.replace(target.href);
     }
