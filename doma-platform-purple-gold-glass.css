@@ -2532,3 +2532,19 @@ html body:has(.course-hero) .student-content :is(.quiz-mini,.quiz-shell,.assessm
 html body:has(.course-hero) .student-content :is(.quiz-mini,.quiz-shell,.assessment-box,.choices,.question,.quiz-question,.question-text,.quiz-question-text,.prompt,.question-prompt,.quiz-prompt,.assessment-question,.quiz-mini-question) button{
   color:#fffaf1!important;-webkit-text-fill-color:#fffaf1!important;
 }
+
+/* v76: Remove purple tile behind the menu logo; beige scrollbar thumb. */
+html body:has(.course-hero) #mobileCourseMenu .sidebar-mark{
+  background:transparent!important;background-color:transparent!important;background-image:none!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;color:#8b602d!important;
+}
+html body:has(.course-hero) #mobileCourseMenu{
+  scrollbar-color:#c9a879 #f0e2cd!important;
+}
+html body:has(.course-hero) #mobileCourseMenu::-webkit-scrollbar-track{
+  background:#f0e2cd!important;border-radius:99px!important;
+}
+html body:has(.course-hero) #mobileCourseMenu::-webkit-scrollbar-thumb{
+  background:#c9a879!important;border:2px solid #f0e2cd!important;border-radius:99px!important;
+}
+html body:has(.course-hero) #mobileCourseMenu::-webkit-scrollbar-thumb:hover{background:#b88645!important}
