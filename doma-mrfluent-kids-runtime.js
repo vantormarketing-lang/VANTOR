@@ -2936,10 +2936,9 @@ document.addEventListener('click',function(event){
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
   if(target.origin!==window.location.origin||target.pathname!==window.location.pathname||!target.searchParams.get('kids'))return;
   if(link.classList.contains('mfkr-back-arrow')){
-    // Back navigation must perform a clean document load. The in-place route
-    // renderer can leave the isolated Kids root blank after a level transition.
+    // Keep back navigation in the current tab/window (including PWA launches).
     event.preventDefault();
-    window.location.assign(target.href);
+    window.location.replace(target.href);
     return;
   }
   event.preventDefault();
