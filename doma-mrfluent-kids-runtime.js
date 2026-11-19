@@ -2967,13 +2967,21 @@ document.addEventListener('click',function(event){
   var target;try{target=new URL(link.href,window.location.href)}catch(_){return}
   if(target.origin!==window.location.origin)return;
   if(link.classList.contains('mfkr-back-arrow')){
-    // Force exit from the hub to the homepage in the same tab, even if a global target=_blank was applied.
     event.preventDefault();
     if(target.searchParams.get('kids')){
-      // Full navigation resets any hidden DOM state left by level-page isolation/rendering.
-      // Re-enter the hub through its normal route so the six cards are rebuilt from a clean page.
+      // Return directly to the six-level hub in this same runtime. Avoid a full
+      // reload and subscription re-check that can leave the isolated root empty.
+      route='hub';
+      query=new URLSearchParams(window.location.search);
+      query.set('kids','hub');
       var hubHref=url('hub');
-      window.location.replace(hubHref);
+      try{window.history.replaceState({mfKidsRoute:true},'',hubHref);}catch(error){console.warn('Kids hub history update failed.',error);}
+      syncKidsRouteMode('hub');
+      renderHub();
+      root.style.setProperty('display','block','important');
+      root.style.setProperty('visibility','visible','important');
+      root.setAttribute('aria-hidden','false');
+      try{window.scrollTo(0,0);}catch(_){}
     }else{
       window.location.replace(target.href);
     }
