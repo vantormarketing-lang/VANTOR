@@ -2353,3 +2353,50 @@ html body #mfKidsStandaloneRoot .mfkr-level:hover{
   box-shadow:0 18px 38px rgba(12,5,23,.28),inset 0 1px 0 rgba(255,255,255,.15)!important;
   transform:none!important;
 }
+
+/* FIX: Grade subscription modal — isolated layout and reliable mobile scrolling. */
+html body #gradeModal.modal{
+  position:fixed!important;inset:0!important;z-index:9000!important;
+  display:none!important;align-items:flex-start!important;justify-content:center!important;
+  overflow-y:auto!important;overscroll-behavior:contain!important;
+  padding:12px!important;background:rgba(15,8,24,.96)!important;
+}
+html body #gradeModal.modal.show{display:flex!important}
+html body #gradeModal .modalbox{
+  position:relative!important;box-sizing:border-box!important;
+  width:min(560px,calc(100vw - 24px))!important;
+  max-width:calc(100vw - 24px)!important;
+  max-height:calc(100dvh - 24px)!important;height:auto!important;
+  margin:auto!important;overflow-x:hidden!important;overflow-y:auto!important;
+  overscroll-behavior:contain!important;touch-action:pan-y!important;
+  padding:clamp(12px,3vw,20px)!important;
+}
+html body #gradeModal #gradeModalBody .formgrid{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:10px!important;min-width:0!important;
+}
+html body #gradeModal #gradeModalBody .formgrid>*{
+  grid-column:1/-1!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;max-width:100%!important;
+}
+html body #gradeModal #gradeModalBody .formgrid .card.feature{
+  margin:0!important;overflow-wrap:anywhere!important;
+}
+html body #gradeModal #gradeModalBody input.field{
+  display:block!important;min-height:44px!important;padding:10px 12px!important;
+}
+html body #gradeModal #gradeModalBody input[type=file].field{
+  padding:8px!important;font-size:13px!important;
+}
+html body #gradeModal #gradeModalBody .account-actions{
+  display:flex!important;flex-wrap:wrap!important;gap:10px!important;width:100%!important;margin-top:12px!important;
+}
+html body #gradeModal #gradeModalBody .account-actions button{
+  flex:1 1 130px!important;min-width:0!important;max-width:100%!important;
+}
+html body #gradeModal #subStatus{width:100%!important;box-sizing:border-box!important;overflow-wrap:anywhere!important}
+@media(max-width:480px){
+  html body #gradeModal.modal{padding:8px!important}
+  html body #gradeModal .modalbox{width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important;max-height:calc(100dvh - 16px)!important;padding:12px!important;border-radius:18px!important}
+  html body #gradeModal #gradeModalBody #domaSenderPhone,
+  html body #gradeModal #gradeModalBody #domaReceipt{font-size:14px!important}
+}
