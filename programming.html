@@ -194,6 +194,7 @@ function initializeDomaProgrammingAcademy(){
     var status=$('paMembershipStatus'),button=$('paSubscribeBtn');
     if(status){
       if(subscription)status.textContent='اشتراكك نشط حتى '+new Date(subscription.expires_at).toLocaleDateString('ar-EG');
+      else if(trialRemaining()>0)status.textContent='تجربة مجانية · متبقي '+Math.floor(trialRemaining()/60)+' دقيقة '+(trialRemaining()%60)+' ثانية';
       else if(pendingRequest)status.textContent='طلب الاشتراك قيد مراجعة الإدارة';
       else status.textContent='100 جنيه · 30 يومًا';
     }
