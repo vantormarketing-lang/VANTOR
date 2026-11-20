@@ -163,7 +163,7 @@ function initializeDomaProgrammingAcademy(){
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
   function toast(message){var el=$('paToast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2600)}
-  function trialRemaining(){if(!trialStatus||!trialStatus.active)return 0;return Math.max(0,Number(trialStatus.remaining_seconds||0)-Math.floor((Date.now()-(trialStatus._cachedAt||Date.now()))/1000))}\n  function hasAccess(){return !!(subscription||isStaff||trialRemaining()>0)}
+  function trialRemaining(){if(!trialStatus||!trialStatus.active)return 0;return Math.max(0,Number(trialStatus.remaining_seconds||0)-Math.floor((Date.now()-(trialStatus._cachedAt||Date.now()))/1000)))}\n  function hasAccess(){return !!(subscription||isStaff||trialRemaining()>0)}
   function renderUserIdentity(){
     var name='زائر';
     if(user){
