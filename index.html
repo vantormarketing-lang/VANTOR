@@ -2563,6 +2563,11 @@ async function addGlobalTrialGradeAccess(subs){
     const trialResult=await sb.rpc('doma_get_my_trial_status');
     const trial=trialResult&&!trialResult.error?trialResult.data:null;
     if(!trial||!trial.active||!trial.expires_at||new Date(trial.expires_at)<=new Date())return subs;
+    const trialExpiresAt=new Date(trial.expires_at).getTime();
+    let trialBadge=document.getElementById('domaGlobalTrialCountdown');
+    if(!trialBadge){trialBadge=document.createElement('div');trialBadge.id='domaGlobalTrialCountdown';trialBadge.style.cssText='position:fixed;z-index:10050;top:12px;left:12px;padding:10px 15px;border:1px solid rgba(207,174,255,.38);border-radius:16px;background:rgba(36,20,53,.84);color:#f7eaff;backdrop-filter:blur(14px);box-shadow:0 8px 30px rgba(20,8,35,.25);font:600 13px system-ui;direction:rtl';document.body.appendChild(trialBadge);}
+    const tickTrialBadge=()=>{const remaining=Math.max(0,Math.floor((trialExpiresAt-Date.now())/1000));trialBadge.textContent='التجربة المجانية · '+Math.floor(remaining/60)+':'+String(remaining%60).padStart(2,'0');if(!remaining){trialBadge.remove();if(!(subs||[]).some(x=>!x.is_trial&&x.status==='active'&&new Date(x.expires_at)>new Date())){try{if(typeof closeDrawer==='function')closeDrawer();if(typeof showToast==='function')showToast('انتهت التجربة المجانية. اشترك لمتابعة الدروس.');}catch(_){}}}};
+    tickTrialBadge();if(!window.domaTrialCountdownTimer)window.domaTrialCountdownTimer=setInterval(tickTrialBadge,1000);
     const trialGrades=(grades||[]).map(g=>({id:null,student_id:sessionUser.id,grade_id:g.id,plan:'global_free_trial',amount:0,starts_at:trial.started_at,expires_at:trial.expires_at,status:'active',is_trial:true,trial_expires_at:trial.expires_at,grades:{name:g.name||''}}));
     return subs.concat(trialGrades);
   }catch(error){console.warn('Global free trial status check failed.',error);return subs;}
