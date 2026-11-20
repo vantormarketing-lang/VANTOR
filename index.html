@@ -2558,30 +2558,36 @@ function updateNav(){
 }
 
 async function getProfile(){if(!sessionUser)return null;const r=await sb.from('profiles').select('id,full_name,email,phone,role,grade_id,created_at').eq('id',sessionUser.id).maybeSingle();if(r.error){console.warn(r.error);return await ensureProfile(sessionUser)}return r.data||await ensureProfile(sessionUser)}
+async function addGlobalTrialGradeAccess(subs){
+  try{
+    const trialResult=await sb.rpc('doma_get_my_trial_status');
+    const trial=trialResult&&!trialResult.error?trialResult.data:null;
+    if(!trial||!trial.active||!trial.expires_at||new Date(trial.expires_at)<=new Date())return subs;
+    const trialGrades=(grades||[]).map(g=>({id:null,student_id:sessionUser.id,grade_id:g.id,plan:'global_free_trial',amount:0,starts_at:trial.started_at,expires_at:trial.expires_at,status:'active',is_trial:true,trial_expires_at:trial.expires_at,grades:{name:g.name||''}}));
+    return subs.concat(trialGrades);
+  }catch(error){console.warn('Global free trial status check failed.',error);return subs;}
+}
 async function getActiveSubscriptions(){
   if(!sessionUser)return [];
-  // Read paid access through the secure Supabase RPC first. This avoids
-  // student-side RLS/cache mismatches after an Admin approves a request.
   try{
     const rpc=await sb.rpc('doma_get_my_active_subscriptions');
     if(!rpc.error){
-      return (rpc.data||[])
+      const paid=(rpc.data||[])
         .filter(x=>String(x.status||'').trim().toLowerCase()==='active' && (!x.expires_at || new Date(x.expires_at)>new Date()))
         .map(x=>({...x,grades:{name:x.grade_name||grades.find(g=>String(g.id)===String(x.grade_id))?.name||''}}));
+      return await addGlobalTrialGradeAccess(paid);
     }
     console.warn('Active subscription RPC failed; using direct fallback.',rpc.error);
   }catch(e){console.warn('Active subscription RPC unavailable; using direct fallback.',e)}
-
-  // Backward-compatible fallback for deployments where the RPC has not been
-  // installed yet. Keep the same normalized status/date checks.
   const r=await sb.from('subscriptions')
     .select('id,student_id,grade_id,plan,amount,starts_at,expires_at,status,request_id,created_at')
     .eq('student_id',sessionUser.id)
     .order('expires_at',{ascending:false});
   if(r.error){console.warn(r.error);return []}
-  return (r.data||[])
+  const paid=(r.data||[])
     .filter(x=>String(x.status||'').trim().toLowerCase()==='active' && (!x.expires_at || new Date(x.expires_at)>new Date()))
     .map(x=>({...x,grades:{name:grades.find(g=>String(g.id)===String(x.grade_id))?.name||''}}));
+  return await addGlobalTrialGradeAccess(paid);
 }
 async function getRequests(){
   if(!sessionUser)return [];
