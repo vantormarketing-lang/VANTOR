@@ -10,7 +10,7 @@
 <title>Programming Academy | DOMA Academy</title>
 <meta name="description" content="تعلم البرمجة من الصفر عبر مسارات متدرجة ومشاريع عملية في DOMA Programming Academy.">
 <link rel="stylesheet" href="./doma-platform-purple-gold-glass.css?v=doma-glass-v85">
-<link rel="stylesheet" href="./programming-academy.css?v=11">
+<link rel="stylesheet" href="./programming-academy.css?v=12">
 
 
 <style id="pa-refined-topbar">
@@ -50,7 +50,33 @@
 .pa-daily-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pa-daily-actions button{border:0;border-radius:9px;padding:9px 12px;background:linear-gradient(120deg,#b58a4e,#e0c07b);color:#21172a;font-weight:800;cursor:pointer}.pa-daily-actions button.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(205,170,111,.22);color:#ead9bd}.pa-daily-actions button:disabled{opacity:.55;cursor:wait}
 .pa-daily-hints,.pa-daily-result{margin-top:9px;padding:10px;border-radius:10px;background:rgba(0,0,0,.2);font-size:12px;line-height:1.8;white-space:pre-wrap}.pa-daily-result .pass{color:#9cdbad}.pa-daily-result .fail{color:#f0a4a4}
 @media(max-width:900px){.pa-daily-challenge-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.pa-daily-challenges{padding:14px}.pa-daily-challenge-grid{grid-template-columns:1fr}}
-</style><style id="pa-standalone-learning-tools">.pa-top-actions{gap:8px!important}.pa-tool-trigger{appearance:none;cursor:pointer;color:#f2d2a0!important;font:800 19px/1 system-ui!important;padding:0}.pa-tool-trigger:hover{background:rgba(242,210,160,.16)!important;border-color:rgba(242,210,160,.7)!important}.pa-tool-page[hidden]{display:none!important}.pa-tool-page{position:fixed;z-index:45;inset:70px 0 0;overflow:auto;padding:clamp(14px,3vw,30px);background:radial-gradient(ellipse at 10% 0%,rgba(155,111,188,.22),transparent 38%),linear-gradient(145deg,#170f22,#241632 55%,#120c1d);color:#fff4e8}.pa-tool-page-head{width:min(1120px,100%);margin:0 auto 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 18px;border:1px solid rgba(232,197,151,.28);border-radius:18px;background:rgba(40,28,54,.72);backdrop-filter:blur(18px)}.pa-tool-page-head h2{margin:5px 0;color:#f4d9ae;font-size:clamp(21px,3vw,30px)}.pa-tool-page-head p{margin:0;color:#d4c4dd;font-size:12px}.pa-tool-page-body{width:min(1120px,100%);margin:0 auto}.pa-tool-page-body>.pa-free-tutor,.pa-tool-page-body>.pa-code-lab{margin:0!important;width:100%;box-sizing:border-box}.pa-tool-page-body>.pa-code-lab{max-height:calc(100vh - 175px);overflow:auto}.pa-tool-page-body .pa-extra-labs{display:none!important}body.pa-tool-view{overflow:hidden}body.pa-tool-view .pa-tool-page{display:block!important}@media(max-width:600px){.pa-tool-page{inset:62px 0 0;padding:12px}.pa-tool-page-head{align-items:flex-start;flex-direction:column;padding:13px}.pa-tool-page-head>button{width:100%}.pa-tool-page-body>.pa-code-lab{max-height:calc(100vh - 190px)}} </style></head>
+</style><style id="pa-standalone-learning-tools">.pa-top-actions{gap:8px!important}.pa-tool-trigger{appearance:none;cursor:pointer;color:#f2d2a0!important;font:800 19px/1 system-ui!important;padding:0}.pa-tool-trigger:hover{background:rgba(242,210,160,.16)!important;border-color:rgba(242,210,160,.7)!important}.pa-tool-page[hidden]{display:none!important}.pa-tool-page{position:fixed;z-index:45;inset:70px 0 0;overflow:auto;padding:clamp(14px,3vw,30px);background:radial-gradient(ellipse at 10% 0%,rgba(155,111,188,.22),transparent 38%),linear-gradient(145deg,#170f22,#241632 55%,#120c1d);color:#fff4e8}.pa-tool-page-head{width:min(1120px,100%);margin:0 auto 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 18px;border:1px solid rgba(232,197,151,.28);border-radius:18px;background:rgba(40,28,54,.72);backdrop-filter:blur(18px)}.pa-tool-page-head h2{margin:5px 0;color:#f4d9ae;font-size:clamp(21px,3vw,30px)}.pa-tool-page-head p{margin:0;color:#d4c4dd;font-size:12px}.pa-tool-page-body{width:min(1120px,100%);margin:0 auto}.pa-tool-page-body>.pa-free-tutor,.pa-tool-page-body>.pa-code-lab{margin:0!important;width:100%;box-sizing:border-box}.pa-tool-page-body>.pa-code-lab{max-height:calc(100vh - 175px);overflow:auto}.pa-tool-page-body .pa-extra-labs{display:none!important}body.pa-tool-view{overflow:hidden}body.pa-tool-view .pa-tool-page{display:block!important}@media(max-width:600px){.pa-tool-page{inset:62px 0 0;padding:12px}.pa-tool-page-head{align-items:flex-start;flex-direction:column;padding:13px}.pa-tool-page-head>button{width:100%}.pa-tool-page-body>.pa-code-lab{max-height:calc(100vh - 190px)}} </style>
+<style id="pa-home-cream-reference-design-v1">
+/* Homepage-only: match the beige/cream Mr Fluent course reference. */
+html:has(body.programming-page),body.programming-page{background:#f4e7d5!important;background-color:#f4e7d5!important;background-image:none!important;color:#493927!important;}
+body.programming-page .pa-topbar{background:transparent!important;background-color:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+body.programming-page .pa-user-identity{color:#68482c!important;}
+body.programming-page .pa-home-link{color:#865b30!important;border:1px solid #dfc19b!important;background:#f1dfc5!important;box-shadow:none!important;}
+body.programming-page .pa-shell{color:#493927!important;}
+body.programming-page .pa20-hero{min-height:0!important;display:block!important;margin:10px 0 24px!important;padding:clamp(20px,4vw,36px)!important;border:1px solid #dfc19b!important;border-radius:28px!important;background:linear-gradient(145deg,#fbf0df,#f0dfc5)!important;box-shadow:0 18px 42px rgba(111,75,39,.10),inset 0 1px 0 #fff8ee!important;color:#493927!important;}
+body.programming-page .pa20-hero:before{display:none!important;}
+body.programming-page .pa20-hero-header{display:block!important;}
+body.programming-page .pa20-brandline{color:#76532f!important;}
+body.programming-page .pa20-brandmark{background:linear-gradient(145deg,#b47a3d,#895526)!important;color:#fff8eb!important;box-shadow:none!important;}
+body.programming-page .pa20-tagline{color:#493927!important;}
+body.programming-page .pa20-tagline-ar{color:#876b4e!important;}
+body.programming-page .pa-code-hero-visual{display:none!important;}
+body.programming-page .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;margin:24px 0 0!important;}
+body.programming-page .pa20-hub-card{min-height:128px!important;padding:18px!important;border:1px solid #dfc19b!important;border-radius:20px!important;background:linear-gradient(145deg,#fff7eb,#f4e6d3)!important;color:#493927!important;box-shadow:0 8px 24px rgba(111,75,39,.07),inset 0 1px 0 #fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+body.programming-page .pa20-hub-card:hover{transform:translateY(-2px)!important;border-color:#c99d68!important;box-shadow:0 12px 28px rgba(111,75,39,.11)!important;}
+body.programming-page .pa20-hub-icon{border:1px solid #dfc19b!important;border-radius:14px!important;background:#f1dfc5!important;color:#97642f!important;}
+body.programming-page .pa20-hub-card strong{color:#493927!important;}
+body.programming-page .pa20-hub-card small{color:#98734d!important;}
+body.programming-page .pa20-hub-arrow{color:#a67540!important;}
+@media(max-width:600px){body.programming-page .pa20-hero{padding:18px!important;border-radius:22px!important;}body.programming-page .pa20-hub{gap:10px!important;}body.programming-page .pa20-hub-card{min-height:115px!important;padding:14px!important;}}
+</style>
+
+</head>
 <style id="pa-free-tutor-style">
 .pa-free-tutor{margin:18px 0;padding:18px;border:1px solid rgba(214,177,111,.36);border-radius:20px;background:linear-gradient(145deg,rgba(45,31,58,.92),rgba(25,20,35,.94));box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06)}
 .pa-free-tutor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.pa-free-tutor-head h3{margin:4px 0;color:#f6e8d2;font-size:19px}.pa-free-tutor-head p{margin:5px 0;color:#d5c6b2;font-size:12px;line-height:1.8}
