@@ -8,7 +8,7 @@ style.textContent=`
 #doma-handbook-advanced .guide-card{position:relative}
 #doma-handbook-advanced pre{direction:ltr;text-align:left;white-space:pre-wrap;overflow:auto;padding:13px;border-radius:12px;background:#090b10;border:1px solid rgba(220,184,120,.2);color:#e8d7b9;font:13px/1.75 ui-monospace,Consolas,monospace}
 #doma-handbook-advanced .check-answer{margin-top:8px;cursor:pointer}
-#doma-handbook-advanced .answer{display:none;margin-top:9px;padding:10px;border-radius:10px;background:rgba(75,210,139,.08);border:1px solid rgba(75,210,139,.22);color:#d9edda;line-height:1.8}
+#doma-handbook-advanced .answer{display:none;margin-top:9px;padding:10px;border-radius:10px;background:rgba(75,210,139,.08);border:1px solid rgba(75,210,139,.22);color:#7a5f3d;line-height:1.8}
 #doma-handbook-advanced .answer.show{display:block}
 #doma-handbook-advanced .roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
 #doma-handbook-advanced .roadmap>div{padding:13px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(220,184,120,.2)}
@@ -84,8 +84,9 @@ git log --oneline</pre>
 <div class="guide-card"><h3>السؤال 3: ما فائدة Git commit؟</h3><button class="check-answer" type="button" data-answer="a3">إظهار الإجابة</button><div class="answer" id="a3">يسجل لقطة من التغييرات مع رسالة، فتستطيع مراجعة تاريخ المشروع وفهم كيف تطور.</div></div>
 <div class="guide-card"><h3>السؤال 4: ما دور HTML وCSS وJavaScript؟</h3><button class="check-answer" type="button" data-answer="a4">إظهار الإجابة</button><div class="answer" id="a4">HTML للهيكل والمحتوى، CSS للمظهر والتخطيط، وJavaScript للتفاعل والسلوك.</div></div>
 </section>`;
-var footer=document.querySelector('main.handbook footer');
-if(footer)footer.parentNode.insertBefore(host,footer);else document.querySelector('main.handbook').appendChild(host);
+var handbook=document.querySelector('main.handbook');if(!handbook)return;
+var footer=handbook.querySelector('footer');
+if(footer)footer.parentNode.insertBefore(host,footer);else handbook.appendChild(host);
 host.addEventListener('click',function(e){var b=e.target.closest('[data-answer]');if(!b)return;var a=document.getElementById(b.getAttribute('data-answer'));if(!a)return;var show=!a.classList.contains('show');a.classList.toggle('show',show);b.textContent=show?'إخفاء الإجابة':'إظهار الإجابة';});
 var nav=document.querySelector('.hero .nav');if(nav){[['roadmap','خريطة التعلّم'],['web-basics','الويب'],['python-cpp','Python وC++'],['git-basics','Git'],['testing','الاختبار'],['project-method','المشاريع'],['self-check','اختبر نفسك']].forEach(function(x){var a=document.createElement('a');a.href='#'+x[0];a.textContent=x[1];nav.appendChild(a);});}
 })();
