@@ -343,3 +343,32 @@ body.programming-page .pa-free-tutor-answer{
  body.programming-page .pa-free-tutor-question{flex-direction:column!important}
  body.programming-page .pa-free-tutor-question .pa-free-tutor-send{width:100%!important}
 }
+
+/* Clean board-only screen and dedicated training terminal */
+body.programming-page.pa-board-tool-view .pa-lab-heading,
+body.programming-page.pa-board-tool-view .pa-editor-tools,
+body.programming-page.pa-board-tool-view .pa-input-label,
+body.programming-page.pa-board-tool-view .pa-code-input,
+body.programming-page.pa-board-tool-view .pa-lab-footnote,
+body.programming-page.pa-board-tool-view #paCopyCode{display:none!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar{grid-area:toolbar!important;display:flex!important;flex-direction:column!important;gap:8px!important;padding:0!important;background:transparent!important;border:0!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar label{display:none!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar :is(.pa-code-select,#paRunCode,#paResetCode,#paClearCode){width:100%!important;min-height:42px!important;box-sizing:border-box!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar #paClearCode{display:block!important}
+body.programming-page.pa-board-tool-view .pa-code-lab{grid-template-columns:minmax(0,1fr) 140px!important;grid-template-areas:"editor toolbar" "output-head toolbar" "output toolbar"!important}
+body.programming-page.pa-board-tool-view .pa-code-output{grid-area:output!important;margin:0!important}
+body.programming-page.pa-board-tool-view .pa-lab-output-head{grid-area:output-head!important;margin:0!important}
+body.programming-page #paStandaloneTerminalHost[hidden]{display:none!important}
+body.programming-page .pa-training-terminal{width:100%;box-sizing:border-box;background:#000;border:1px solid #444;border-radius:16px;overflow:hidden;color:#48d17d;font-family:ui-monospace,Consolas,monospace}
+body.programming-page .pa-training-terminal header{display:flex;justify-content:space-between;gap:12px;padding:12px 15px;background:#262626;color:#f2f2f2;font:700 14px system-ui;border-bottom:1px solid #444}
+body.programming-page .pa-training-terminal header span{color:#a8c8a8;font-size:12px}
+body.programming-page .pa-terminal-output{min-height:210px;max-height:48vh;overflow:auto;white-space:pre-wrap;padding:16px;margin:0;color:#48d17d;background:#000;line-height:1.7}
+body.programming-page #paTerminalForm{display:flex;align-items:center;gap:8px;padding:12px;border-top:1px solid #3c3c3c;background:#000}
+body.programming-page .pa-terminal-prompt{color:#64db8d;font-weight:900}
+body.programming-page #paTerminalInput{flex:1;min-width:0;border:1px solid #4a4a4a;border-radius:8px;background:#000;color:#fff;padding:10px;font:inherit}
+body.programming-page #paTerminalForm button{border:1px solid #56bf72;border-radius:9px;padding:9px 15px;background:#3a9d56;color:#fff;font-weight:900}
+@media(max-width:760px){
+ body.programming-page.pa-board-tool-view .pa-code-lab{grid-template-columns:1fr!important;grid-template-areas:"toolbar" "editor" "output-head" "output"!important}
+ body.programming-page.pa-board-tool-view .pa-lab-toolbar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body.programming-page.pa-board-tool-view .pa-lab-toolbar .pa-code-select{grid-column:1/-1!important}
+}
