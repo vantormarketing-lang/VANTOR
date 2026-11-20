@@ -712,7 +712,7 @@ puts "Hello, #{name}"`,
     if(!source.trim()){output.textContent='اكتب بعض الكود أولًا.';return}
     if(source.length>16000){output.textContent='الكود طويل جدًا. الحد الأقصى 16,000 حرف.';return}
     // Recover automatically when an old saved JavaScript draft contains HTML.
-    var looksLikeHtml=/^\\s*(?:<!doctype\\s+html|<html\\b|<head\\b|<body\\b|<main\\b|<section\\b|<div\\b|<h[1-6]\\b)/i.test(source);
+    var looksLikeHtml=/^\s*(?:<!doctype\s+html|<html\b|<head\b|<body\b|<main\b|<section\b|<div\b|<h[1-6]\b)/i.test(source);
     if(lang==='html'||looksLikeHtml){
       if(looksLikeHtml&&lang!=='html'){
         lang='html';
@@ -1130,6 +1130,7 @@ puts "Hello, #{name}"`,
       await loadStudentProgress();
       await loadProgrammingProjects();
     }
+    if(isStaff)await loadProgrammingAdminLearning();
     syncEmbeddedView();
     db.auth.onAuthStateChange(function(event,session){
       // INITIAL_SESSION is already handled by boot(); never call auth APIs
