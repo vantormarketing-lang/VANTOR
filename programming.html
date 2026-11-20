@@ -80,6 +80,7 @@
       <button type="button" class="pa20-hub-card" id="pa20OpenTutor"><span class="pa20-hub-icon" aria-hidden="true">♟</span><span><strong>Doma Study Assistant</strong><small>Your AI learning buddy</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="pa20-hub-card" id="pa20OpenBoard"><span class="pa20-hub-icon" aria-hidden="true">▣</span><span><strong>Interactive Whiteboard</strong><small>Learn by doing</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="pa20-hub-card" id="pa20OpenHandbook"><span class="pa20-hub-icon" aria-hidden="true">▤</span><span><strong>Developer Guide</strong><small>Complete reference</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="pa20-hub-card" id="pa20OpenTerminal"><span class="pa20-hub-icon" aria-hidden="true">⌁</span><span><strong>Terminal Simulator</strong><small>Practice commands</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
     </section>
   </section>
 
@@ -1158,16 +1159,16 @@ puts "Hello, #{name}"`,
   var standaloneToolsReady=false;
   function ensureStandaloneTools(){
     if(standaloneToolsReady)return;
-    var body=$('paToolPageBody'),tutorHost=document.createElement('div'),boardHost=document.createElement('div'),boardWrap=document.createElement('div');
-    tutorHost.id='paStandaloneTutorHost';boardHost.id='paStandaloneBoardHost';boardHost.hidden=true;
+    var body=$('paToolPageBody'),tutorHost=document.createElement('div'),boardHost=document.createElement('div'),terminalHost=document.createElement('div'),boardWrap=document.createElement('div');
+    tutorHost.id='paStandaloneTutorHost';boardHost.id='paStandaloneBoardHost';boardHost.hidden=true;terminalHost.id='paStandaloneTerminalHost';terminalHost.hidden=true;terminalHost.innerHTML='<section class="pa-training-terminal"><header><b>Terminal Simulator</b><span>Command practice</span></header><pre class="pa-terminal-output" id="paTerminalOutput">DOMA Training Terminal\nType help to see commands.</pre><form id="paTerminalForm"><span class="pa-terminal-prompt">$</span><input id="paTerminalInput" autocomplete="off" spellcheck="false" placeholder="Type a command…"><button type="submit">Run</button></form></section>';
     boardWrap.innerHTML="<section class=\"pa-code-lab\" aria-label=\"سبورة البرمجة التفاعلية\"><div class=\"pa-lab-heading\"><div><span class=\"pa-kicker\">DOMA CODE LAB</span><h3>السبورة البرمجية</h3><p>اكتب الكود، شغّله، وشاهد النتيجة بنفسك.</p></div></div><div class=\"pa-lab-toolbar\"><label for=\"paCodeLanguage\">لغة البرمجة</label><select id=\"paCodeLanguage\" class=\"pa-code-select\"><option value=\"python\">Python</option><option value=\"javascript\">JavaScript</option><option value=\"html\">HTML / CSS</option><option value=\"c\">C</option><option value=\"cpp\">C++</option><option value=\"java\">Java</option><option value=\"csharp\">C#</option><option value=\"php\">PHP</option><option value=\"go\">Go</option><option value=\"ruby\">Ruby</option><option value=\"rust\">Rust</option><option value=\"kotlin\">Kotlin</option><option value=\"swift\">Swift</option><option value=\"dart\">Dart</option></select><button type=\"button\" id=\"paResetCode\" class=\"pa-lab-secondary\">استعادة المثال</button><button type=\"button\" id=\"paRunCode\" class=\"pa-lab-run\">▶ تشغيل الكود</button></div><div class=\"pa-editor-tools\"><button type=\"button\" id=\"paCopyCode\" class=\"pa-lab-secondary\">نسخ الكود</button><button type=\"button\" id=\"paClearCode\" class=\"pa-lab-secondary\">مسح المحرر</button><span>Tab للإزاحة · Ctrl + Enter للتشغيل</span></div><div class=\"pa-editor-wrap\"><pre id=\"paCodeLines\" class=\"pa-code-lines\">1</pre><textarea id=\"paCodeEditor\" class=\"pa-code-editor\" spellcheck=\"false\" autocapitalize=\"off\" autocomplete=\"off\" autocorrect=\"off\" aria-label=\"محرر الكود\"></textarea></div><div class=\"pa-lab-output-head\"><b>النتيجة</b><span id=\"paRunState\">جاهز للتشغيل</span></div><pre id=\"paCodeOutput\" class=\"pa-code-output\" aria-live=\"polite\">اكتب الكود ثم اضغط «تشغيل الكود».</pre><iframe id=\"paCodePreview\" class=\"pa-code-preview\" title=\"معاينة صفحة HTML\" sandbox=\"allow-scripts\" hidden></iframe><label class=\"pa-input-label\" for=\"paCodeInput\">إدخال البرنامج (اختياري)</label><textarea id=\"paCodeInput\" class=\"pa-code-input\" rows=\"2\" placeholder=\"اكتب بيانات الإدخال هنا إذا طلب البرنامج ذلك…\"></textarea><p class=\"pa-lab-footnote\">يتم تشغيل الأكواد البرمجية داخل بيئة معزولة بحدود زمنية وموارد محددة. لا تضع كلمات مرور أو بيانات شخصية في محرر التدريب.</p></section>";
     var board=boardWrap.firstElementChild;
     if(!board)throw new Error('تعذر إنشاء الصبورة البرمجية المستقلة.');
-    boardHost.appendChild(board);body.appendChild(tutorHost);body.appendChild(boardHost);
+    boardHost.appendChild(board);body.appendChild(tutorHost);body.appendChild(boardHost);body.appendChild(terminalHost);
     mountFreeTutor(standaloneTutorContext.lesson,standaloneTutorContext.content,tutorHost);
     setupCodeLab({id:'standalone',title:'الصبورة البرمجية المستقلة'},'');
     var boardBack=board.querySelector('#paBoardBackToAcademy');if(boardBack)boardBack.addEventListener('click',closeStandaloneTool);
-    standaloneToolsReady=true;
+    var tf=terminalHost.querySelector('#paTerminalForm'),ti=terminalHost.querySelector('#paTerminalInput'),to=terminalHost.querySelector('#paTerminalOutput');if(tf)tf.addEventListener('submit',function(e){e.preventDefault();var cmd=(ti.value||'').trim(),parts=cmd.split(/\\s+/),name=parts[0].toLowerCase(),arg=parts.slice(1).join(' '),res={help:'Commands: help, ls, pwd, whoami, echo <text>, date, clear',ls:'academy  lessons  projects  practice',pwd:'/home/student/doma',whoami:'student',date:'Simulated training date',echo:arg}[name];if(!cmd)return;if(name==='clear')to.textContent='';else{to.textContent+='\\n$ '+cmd+'\\n'+(res!==undefined?res:'Command not found. Type help.');}ti.value='';to.scrollTop=to.scrollHeight;});standaloneToolsReady=true;
   }
   function openStandaloneTool(kind){
     window.__domaProgrammingOpenTool=openStandaloneTool;
@@ -1360,7 +1361,7 @@ body.pa-embedded-subscription-only .pa-modal-card{max-height:min(88vh,820px);box
   document.addEventListener('click',function(event){
     var back=event.target&&event.target.closest?event.target.closest('#paGlobalBack'):null;
     if(back){event.preventDefault();goBack();return;}
-    var tile=event.target&&event.target.closest?event.target.closest('#pa20OpenPaths,#pa20ExplorePaths,#pa20OpenTutor,#pa20OpenBoard,#pa20OpenHandbook'):null;
+    var tile=event.target&&event.target.closest?event.target.closest('#pa20OpenPaths,#pa20ExplorePaths,#pa20OpenTutor,#pa20OpenBoard,#pa20OpenHandbook,#pa20OpenTerminal'):null;
     if(!tile)return;
     event.preventDefault();
     if(tile.id==='pa20OpenPaths'||tile.id==='pa20ExplorePaths'){
@@ -1368,7 +1369,7 @@ body.pa-embedded-subscription-only .pa-modal-card{max-height:min(88vh,820px);box
       window.location.assign(next.href);return;
     }
     if(tile.id==='pa20OpenHandbook'){window.location.href='./programming-handbook.html';return;}
-    var kind=tile.id==='pa20OpenTutor'?'tutor':'board';
+    var kind=tile.id==='pa20OpenTutor'?'tutor':(tile.id==='pa20OpenTerminal'?'terminal':'board');
     if(typeof window.__domaProgrammingOpenTool==='function')window.__domaProgrammingOpenTool(kind);
     else {window.__domaProgrammingPendingTool=kind;var wait=byId('paMembershipError');if(wait)wait.textContent='جاري تجهيز الأداة التعليمية…';}
   },true);
