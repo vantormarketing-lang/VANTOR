@@ -246,8 +246,23 @@ function initializeDomaProgrammingAcademy(){
       button.textContent=subscription?'الاشتراك نشط ✓':(pendingRequest?'عرض حالة الطلب':'اشترك الآن ←');
     }
   }
-  async function refreshMembership(){
+  async function refreshMembership(force){
     subscription=null;pendingRequest=null;isStaff=false;membershipCheckError=null;
+    // Reuse the first membership verification during same-tab navigation
+    // (paths, lessons, tools); only refresh explicitly after auth/payment changes.
+    var cacheKey='doma-programming-membership-v1:'+String(user&&user.id||'guest');
+    if(!force&&user){
+      try{
+        var cached=JSON.parse(sessionStorage.getItem(cacheKey)||'null');
+        if(cached&&Date.now()-cached.savedAt<10*60*1000){
+          subscription=cached.subscription||null;
+          pendingRequest=cached.pendingRequest||null;
+          isStaff=!!cached.isStaff;
+          renderMembership();renderTracks();renderLessons();
+          return;
+        }
+      }catch(cacheReadError){}
+    }
     if(user){
       // Verify the JWT before protected membership reads. A stale/missing auth token
       // can make PostgREST execute as anon and return 42501 despite valid RLS grants.
@@ -283,6 +298,10 @@ function initializeDomaProgrammingAcademy(){
       }
     }
     renderMembership();
+    // Save successful membership status so same-tab page navigation won't re-query.
+    if(user&&!membershipCheckError){
+      try{sessionStorage.setItem(cacheKey,JSON.stringify({savedAt:Date.now(),subscription:subscription,pendingRequest:pendingRequest,isStaff:isStaff}));}catch(cacheWriteError){}
+    }
     // Repaint track and lesson lock indicators after the subscription lookup completes.
     renderTracks();
     renderLessons();
@@ -1100,7 +1119,9 @@ function initializeDomaProgrammingAcademy(){
     db.auth.onAuthStateChange(function(event,session){
       // INITIAL_SESSION is already handled by boot(); never call auth APIs
       // while the supabase-js auth callback holds its internal lock.
-      if(event==='INITIAL_SESSION')return;
+      if(event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED')return;
+      // Clear the cached membership only when authentication identity/state changes.
+      try{if(session&&session.user)sessionStorage.removeItem('doma-programming-membership-v1:'+session.user.id);}catch(cacheClearError){}
       setTimeout(async function(){
         try{
           user=session&&session.user?session.user:null;
