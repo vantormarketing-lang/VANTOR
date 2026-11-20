@@ -2927,6 +2927,7 @@ async function kidsJourneyHandlePreCourseRoute(routeName){
 }
 async function kidsJourneyAfterAuth(){
   if(route==='subscribe'||route==='entry'){
+    if(sessionUser){try{var trialCheck=await sb.rpc('doma_get_my_trial_status');if(trialCheck&&!trialCheck.error&&trialCheck.data&&trialCheck.data.active){window.location.replace(url('hub'));return;}}catch(_){/* payment flow remains available if trial check fails */}}
     await kidsJourneyLoadPaymentState(kidsJourneyDefinition(query.get('level')||'A1').code);
     return;
   }
