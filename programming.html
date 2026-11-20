@@ -189,6 +189,7 @@ function initializeDomaProgrammingAcademy(){
       window.parent.postMessage({type:'DOMA_PROGRAMMING_CLOSE'},window.location.origin);
     }
   }
+  if(!window.domaProgrammingTrialTicker){window.domaProgrammingTrialTicker=setInterval(function(){if(trialStatus&&trialStatus.active){renderMembership();if(trialRemaining()<=0&&!subscription&&!isStaff){trialStatus.active=false;setAcademyLocked(true);renderTracks();renderLessons();showModal();}}},1000);}
   function renderMembership(){
     var status=$('paMembershipStatus'),button=$('paSubscribeBtn');
     if(status){
