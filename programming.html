@@ -212,6 +212,7 @@ function initializeDomaProgrammingAcademy(){
         if(cached&&Date.now()-cached.savedAt<10*60*1000){
           subscription=cached.subscription||null;
           pendingRequest=cached.pendingRequest||null;
+          trialStatus=cached.trial||null;if(trialStatus)trialStatus._cachedAt=cached.savedAt;
           isStaff=!!cached.isStaff;
           renderMembership();renderTracks();renderLessons();
           return;
@@ -240,6 +241,7 @@ function initializeDomaProgrammingAcademy(){
         var membershipData=membership.data||{};
         subscription=membershipData.subscription||null;
         pendingRequest=membershipData.pending_request||null;
+        trialStatus=membershipData.trial||null;if(trialStatus)trialStatus._cachedAt=Date.now();
       }
       // Never infer staff access from whether an admin RPC happens to be callable.
       // Read the signed-in user's own profile role and grant staff access only explicitly.
