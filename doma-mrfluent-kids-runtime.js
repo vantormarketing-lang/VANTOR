@@ -2591,7 +2591,9 @@ async function kidsJourneyLoadContext(code){
   var wholeCourse=String(trackResult.data.code||'').toUpperCase()==='KIDS_JOURNEY';
   var active=(subsResult.data||[]).find(function(s){return wholeCourse||String(s.level_id)===String(level.id);})||null;
   var latest=wholeCourse?(pending||requests[0]||null):(requests.find(function(r){return String(r.requested_level_id)===String(level.id);})||null);
-  return {user:user,track:trackResult.data,levels:levels,level:level,subscriptions:subsResult.data||[],current:current,active:active,pending:pending,latest:latest,requests:requests};
+  var trialStatus=null;
+  if(!current&&!active){try{var trialResult=await client.rpc('doma_get_my_trial_status');if(trialResult&&!trialResult.error&&trialResult.data&&trialResult.data.active){trialStatus=trialResult.data;var trialAccess={id:null,user_id:user.id,track_id:trackResult.data.id,level_id:level.id,status:'active',starts_at:trialStatus.started_at,expires_at:trialStatus.expires_at,price_egp:0,is_trial:true};current=trialAccess;active=trialAccess;}}catch(trialError){console.warn('Global free trial check for Kids failed:',trialError);}}
+  return {user:user,track:trackResult.data,levels:levels,level:level,subscriptions:subsResult.data||[],current:current,active:active,pending:pending,latest:latest,requests:requests,trial:trialStatus};
 }
 function kidsJourneyStatus(element,message,kind){
   if(!element)return;
