@@ -1175,15 +1175,10 @@ puts "Hello, #{name}"`,
     var page=$('paToolPage'),title=$('paToolPageTitle'),description=$('paToolPageDescription');
     if(!page)return;
     try{ensureStandaloneTools()}catch(error){console.error('DOMA standalone tools initialization failed:',error);toast('تعذر فتح الأداة الآن. حدّث الصفحة وحاول مرة أخرى.');return}
-    if(kind==='tutor'){
-      $('paStandaloneTutorHost').hidden=false;$('paStandaloneBoardHost').hidden=true;
-      title.textContent='Doma Study Assistant';
-      description.textContent='';
-    }else{
-      $('paStandaloneTutorHost').hidden=true;$('paStandaloneBoardHost').hidden=false;
-      title.textContent='الصبورة البرمجية التفاعلية';
-      description.textContent='مساحة مستقلة لكتابة الأكواد وتشغيلها وتجربة HTML وCSS وبقية اللغات دون فتح درس.';
-    }
+    $('paStandaloneTutorHost').hidden=kind!=='tutor';$('paStandaloneBoardHost').hidden=kind!=='board';$('paStandaloneTerminalHost').hidden=kind!=='terminal';
+    if(kind==='tutor'){title.textContent='Doma Study Assistant';description.textContent='';}
+    else if(kind==='terminal'){title.textContent='Terminal Simulator';description.textContent='';}
+    else{title.textContent='الصبورة البرمجية التفاعلية';description.textContent='';}
     document.body.classList.toggle('pa-board-tool-view',kind==='board');
     document.body.classList.toggle('pa-tutor-tool-view',kind==='tutor');
     $('paCloseToolPage').textContent='←';$('paCloseToolPage').setAttribute('aria-label','العودة إلى أكاديمية البرمجة');$('paCloseToolPage').title='العودة إلى أكاديمية البرمجة';
