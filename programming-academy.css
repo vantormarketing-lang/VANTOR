@@ -418,3 +418,23 @@ body.programming-page .pa-terminal-output{min-height:280px!important;max-height:
 body.programming-page.pa-paths-open .pa20-hero{display:none!important}
 body.programming-page.pa-paths-open #learning-paths{display:block!important;margin-top:0!important}
 body.programming-page.pa-paths-open .pa-shell{padding-top:12px!important}
+
+/* Learning paths — concept #1 cream/gold compact icon cards */
+body.programming-page #learning-paths{background:linear-gradient(145deg,#fff7e8 0%,#f4e2c5 100%)!important;border:1px solid #e5c58e!important;border-radius:22px!important;padding:20px!important;box-shadow:0 10px 30px rgba(121,79,34,.10)!important}
+body.programming-page #learning-paths .pa20-path-head{ text-align:center!important; }
+body.programming-page #learning-paths .pa20-path-head h2{font-size:clamp(23px,4vw,34px)!important;font-weight:900!important;color:#362719!important;letter-spacing:.1px!important;margin:4px 0 2px!important}
+body.programming-page #learning-paths .pa-track-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;margin-top:18px!important}
+body.programming-page #learning-paths .pa-track-card{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px!important;position:relative!important;min-height:128px!important;padding:14px 10px!important;background:linear-gradient(180deg,#fffaf1,#f6e6ce)!important;border:1px solid #e7c89a!important;border-radius:18px!important;box-shadow:0 4px 0 #d5b17c,0 8px 15px rgba(104,68,29,.12)!important;text-align:center!important;transition:transform .18s ease,box-shadow .18s ease!important;color:#452e19!important}
+body.programming-page #learning-paths .pa-track-card:hover{transform:translateY(-3px)!important;box-shadow:0 5px 0 #c69a5e,0 12px 18px rgba(104,68,29,.16)!important}
+body.programming-page #learning-paths .pa-track-number{position:absolute!important;top:7px!important;left:8px!important;font-size:10px!important;color:#b78b4d!important;font-weight:900!important}
+body.programming-page #learning-paths .pa-track-content{display:contents!important}
+body.programming-page #learning-paths .pa-track-content b{order:2!important;margin-top:1px!important;color:#4b321b!important;font-size:14px!important;line-height:1.3!important;font-weight:900!important}
+body.programming-page #learning-paths .pa-track-description{display:none!important}
+body.programming-page #learning-paths .pa-track-card:before{content:"";order:1!important;display:flex!important;align-items:center!important;justify-content:center!important;width:54px!important;height:54px!important;font-size:34px!important;line-height:1!important}
+body.programming-page #learning-paths .pa-track-card:nth-child(1):before{content:"🐍"!important}
+body.programming-page #learning-paths .pa-track-card:nth-child(2):before{content:"💻"!important}
+body.programming-page #learning-paths .pa-track-card:nth-child(3):before{content:"📊"!important}
+body.programming-page #learning-paths .pa-track-card:nth-child(4):before{content:"🧠"!important}
+body.programming-page #learning-paths .pa-track-card:nth-child(5):before{content:"🛡️"!important}
+@media(max-width:900px){body.programming-page #learning-paths .pa-track-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:600px){body.programming-page #learning-paths{padding:13px!important;border-radius:16px!important}body.programming-page #learning-paths .pa-track-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:14px!important}body.programming-page #learning-paths .pa-track-card{min-height:116px!important;padding:12px 8px!important;border-radius:15px!important}body.programming-page #learning-paths .pa-track-content b{font-size:13px!important}}
