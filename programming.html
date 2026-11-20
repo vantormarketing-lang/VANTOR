@@ -823,7 +823,7 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
       if(!source){status.textContent='اكتب الحل قبل الإرسال.';return}
       if(source.length>16000){status.textContent='الحل أطول من الحد المسموح.';return}
       var button=exerciseForm.querySelector('button[type="submit"]');button.disabled=true;status.textContent='جارٍ حفظ الحل…';
-      var saved=await db.rpc('programming_submit_exercise',{p_exercise_id:exercise.id,p_language:$('paExerciseLanguage').value,p_source_code:source,p_notes:$('paExerciseNotes').value.trim()});
+      var saved;try{saved=await db.rpc('programming_submit_exercise',{p_exercise_id:exercise.id,p_language:$('paExerciseLanguage').value,p_source_code:source,p_notes:$('paExerciseNotes').value.trim()})}catch(saveError){button.disabled=false;status.textContent='تعذر حفظ الحل بسبب مشكلة اتصال. حاول مرة أخرى.';return}
       button.disabled=false;
       if(saved.error){status.textContent='تعذر حفظ الحل: '+saved.error.message;return}
       toast('تم إرسال التطبيق العملي للمراجعة.');await loadLessonActivities(lesson);await loadStudentProgress();
@@ -834,7 +834,7 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
       (quiz.questions||[]).forEach(function(question){var selected=quizForm.querySelector('input[name="paq-'+question.id+'"]:checked');if(!selected)complete=false;else answers[question.id]=Number(selected.value)});
       var status=$('paQuizStatus');if(!complete){status.textContent='أجب عن كل الأسئلة أولًا.';return}
       var button=quizForm.querySelector('button[type="submit"]');button.disabled=true;status.textContent='جارٍ تصحيح إجاباتك…';
-      var graded=await db.rpc('programming_submit_quiz',{p_quiz_id:quiz.id,p_answers:answers});button.disabled=false;
+      var graded;try{graded=await db.rpc('programming_submit_quiz',{p_quiz_id:quiz.id,p_answers:answers})}catch(gradeError){button.disabled=false;status.textContent='تعذر تصحيح الاختبار بسبب مشكلة اتصال. حاول مرة أخرى.';return}button.disabled=false;
       if(graded.error){status.textContent='تعذر تصحيح الاختبار: '+graded.error.message;return}
       var result=graded.data||{};status.textContent='نتيجتك '+result.score+'/100 · '+result.correct+' من '+result.total+' إجابة صحيحة · '+(result.passed?'اجتزت الاختبار بنجاح ✓':'راجع الدرس وحاول مرة أخرى.');
       var feedbackHost=$('paQuizFeedback');if(feedbackHost&&Array.isArray(result.feedback)){feedbackHost.innerHTML=result.feedback.map(function(item,index){return '<div class="pa-quiz-feedback-item '+(item.is_correct?'is-correct':'is-wrong')+'"><b>'+(index+1)+'. '+(item.is_correct?'إجابة صحيحة ✓':'إجابة تحتاج مراجعة')+'</b><p>'+esc(item.prompt)+'</p><small>'+esc(item.explanation||'راجع شرح الدرس ثم حاول مرة أخرى.')+'</small></div>'}).join('')}
@@ -877,7 +877,7 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
       if(!repo&&!demo&&!notes){status.textContent='أضف رابطًا واحدًا على الأقل أو اكتب وصفًا للمشروع.';return}
       if(repo&&!/^https:\/\//i.test(repo)||demo&&!/^https:\/\//i.test(demo)){status.textContent='استخدم روابط تبدأ بـ https://';return}
       button.disabled=true;status.textContent='جارٍ إرسال المشروع…';
-      var saved=await db.rpc('programming_submit_project',{p_project_id:form.dataset.projectForm,p_repository_url:repo,p_demo_url:demo,p_notes:notes});
+      var saved;try{saved=await db.rpc('programming_submit_project',{p_project_id:form.dataset.projectForm,p_repository_url:repo,p_demo_url:demo,p_notes:notes})}catch(submitError){button.disabled=false;status.textContent='تعذر إرسال المشروع بسبب مشكلة اتصال. حاول مرة أخرى.';return}
       button.disabled=false;
       if(saved.error){status.textContent='تعذر إرسال المشروع: '+saved.error.message;return}
       toast('تم إرسال المشروع للمراجعة بنجاح.');await loadProgrammingProjects();await loadStudentProgress();
@@ -923,7 +923,7 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
       card.querySelector('[data-daily-submit]').addEventListener('click',async function(event){
         var button=event.currentTarget,source=editor.value.trim();if(!source){resultHost.textContent='اكتب الحل قبل الحفظ.';return}
         button.disabled=true;
-        var saved=await db.rpc('programming_submit_exercise',{p_exercise_id:challenge.id,p_language:'python',p_source_code:source,p_notes:lastScore===null?'محاولة تحدي يومي لم يتم اختبارها بعد.':'نتيجة الاختبارات: '+lastScore+'/100'});
+        var saved;try{saved=await db.rpc('programming_submit_exercise',{p_exercise_id:challenge.id,p_language:'python',p_source_code:source,p_notes:lastScore===null?'محاولة تحدي يومي لم يتم اختبارها بعد.':'نتيجة الاختبارات: '+lastScore+'/100'})}catch(dailySubmitError){button.disabled=false;resultHost.textContent='تعذر حفظ المحاولة بسبب مشكلة اتصال. حاول مرة أخرى.';return}
         button.disabled=false;if(saved.error){resultHost.textContent='تعذر حفظ المحاولة: '+saved.error.message;return}
         toast('تم حفظ محاولة التحدي اليومي.');resultHost.textContent='تم حفظ محاولتك بنجاح'+(lastScore===null?'، شغّل الاختبارات لمعرفة نتيجتك.':' · نتيجة آخر اختبار '+lastScore+'/100');await loadStudentProgress();
       });
@@ -1007,7 +1007,7 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
         var card=button.closest('[data-review-id]'),scoreText=card.querySelector('[data-review-score]').value,score=scoreText===''?null:Number(scoreText);
         if(score!==null&&(!Number.isInteger(score)||score<0||score>100)){toast('اكتب درجة صحيحة من 0 إلى 100.');return}
         button.disabled=true;
-        var saved=await db.rpc('programming_admin_review_submission',{p_kind:card.dataset.reviewKind,p_submission_id:card.dataset.reviewId,p_status:button.dataset.reviewAction,p_score:score,p_feedback:card.querySelector('[data-review-feedback]').value});
+        var saved;try{saved=await db.rpc('programming_admin_review_submission',{p_kind:card.dataset.reviewKind,p_submission_id:card.dataset.reviewId,p_status:button.dataset.reviewAction,p_score:score,p_feedback:card.querySelector('[data-review-feedback]').value})}catch(reviewError){button.disabled=false;toast('تعذر حفظ التقييم بسبب مشكلة اتصال.');return}
         button.disabled=false;if(saved.error){toast('تعذر حفظ التقييم: '+saved.error.message);return}
         toast('تم حفظ مراجعة الطالب.');await loadProgrammingAdminLearning();
       })});
