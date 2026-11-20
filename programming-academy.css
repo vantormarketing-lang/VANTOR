@@ -443,3 +443,30 @@ body.programming-page #learning-paths .pa-track-card:nth-child(5):before{content
 body.programming-page.pa-board-tool-view #paStandaloneBoardHost > :not(.pa-code-lab){display:none!important}
 body.programming-page.pa-board-tool-view #paStandaloneBoardHost .pa-code-lab > :not(.pa-lab-toolbar):not(.pa-editor-wrap):not(.pa-lab-output-head):not(.pa-code-output):not(#paCodePreview){display:none!important}
 body.programming-page.pa-board-tool-view #paStandaloneBoardHost #paCodePreview{display:none!important}
+
+/* Standalone track directory and lesson reader routes */
+body.programming-page.pa-track-view .pa20-hero,body.programming-page.pa-track-view .pa20-hub,body.programming-page.pa-track-view .pa-footer{display:none!important}
+body.programming-page.pa-track-view #learning-paths{display:none!important}
+body.programming-page.pa-track-view .pa-learning-layout{display:block!important;visibility:visible!important;opacity:1!important;margin-top:0!important}
+body.programming-page.pa-track-view .pa-shell{padding-top:10px!important}
+body.programming-page.pa-lesson-page-view .pa20-hero,body.programming-page.pa-lesson-page-view .pa20-hub,body.programming-page.pa-lesson-page-view #learning-paths,body.programming-page.pa-lesson-page-view .pa-learning-layout,body.programming-page.pa-lesson-page-view .pa-footer{display:none!important}
+body.programming-page.pa-lesson-page-view #paLessonPage{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important}
+body.programming-page.pa-lesson-page-view .pa-shell{padding-top:8px!important}
+/* Hide scrollbars at screen edges, but retain scrolling */
+body.programming-page,body.programming-page *{scrollbar-width:none!important;-ms-overflow-style:none!important}
+body.programming-page::-webkit-scrollbar,body.programming-page *::-webkit-scrollbar{width:0!important;height:0!important;display:none!important}
+/* Quiz answers in vertical stacks with distinct question/answer colors */
+body.programming-page .pa-quiz-question{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:9px!important;margin:12px 0!important;padding:14px!important;background:#fff1dc!important;border:1px solid #d9bd8f!important;border-radius:14px!important;overflow:hidden!important;box-sizing:border-box!important}
+body.programming-page .pa-quiz-question legend{display:block!important;width:100%!important;float:none!important;margin:0 0 8px!important;padding:0!important;color:#3b2818!important;font-weight:900!important;font-size:15px!important;line-height:1.65!important}
+body.programming-page .pa-quiz-option{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;width:100%!important;box-sizing:border-box!important;margin:0!important;padding:11px 13px!important;border-radius:11px!important;background:#f3e4ce!important;border:1px solid #ddc19a!important;color:#5b4329!important;text-align:right!important;line-height:1.5!important}
+body.programming-page .pa-quiz-option span{display:block!important;flex:1!important;color:#5b4329!important;font-weight:700!important}
+body.programming-page .pa-quiz-option input{flex:0 0 auto!important;margin:0!important;accent-color:#4a9a63!important}
+body.programming-page .pa-quiz-option:has(input:checked){background:#e3f0e5!important;border-color:#5ca875!important;box-shadow:0 0 0 2px rgba(72,150,94,.13)!important}
+/* Lesson coding areas: black surfaces, green code text */
+body.programming-page .pa-lesson-reader pre,body.programming-page .pa-lesson-reader code,body.programming-page .pa-lesson-reader .pa-code-input,body.programming-page .pa-lesson-reader textarea,body.programming-page .pa-lesson-reader .pa-exercise-code{background:#050705!important;color:#4bdd80!important;border:1px solid #264632!important;border-radius:11px!important;box-sizing:border-box!important;max-width:100%!important}
+body.programming-page .pa-lesson-reader pre{padding:14px!important;overflow-x:auto!important;white-space:pre!important}
+body.programming-page .pa-lesson-reader textarea,body.programming-page .pa-lesson-reader .pa-code-input{width:100%!important;display:block!important;padding:12px!important;min-height:110px!important;resize:vertical!important;direction:ltr!important;text-align:left!important;font-family:ui-monospace,Consolas,monospace!important;line-height:1.6!important;overflow:auto!important}
+body.programming-page .pa-lesson-reader .pa-code-input::placeholder,body.programming-page .pa-lesson-reader textarea::placeholder{color:#86b896!important}
+body.programming-page .pa-lesson-reader .pa-activity-card{padding:14px!important;box-sizing:border-box!important;overflow:hidden!important}
+body.programming-page .pa-lesson-reader .pa-activity-card :is(h3,h4,p,legend){color:#4a321f!important}
+@media(max-width:700px){body.programming-page .pa-quiz-question{padding:11px!important}body.programming-page .pa-quiz-option{padding:10px!important}}
