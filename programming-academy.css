@@ -471,6 +471,7 @@ body.programming-page .pa-lesson-reader .pa-activity-card{padding:14px!important
 body.programming-page .pa-lesson-reader .pa-activity-card :is(h3,h4,p,legend){color:#4a321f!important}
 @media(max-width:700px){body.programming-page .pa-quiz-question{padding:11px!important}body.programming-page .pa-quiz-option{padding:10px!important}}
 
-/* Compact three glowing window dots: left aligned, red/yellow/green */
-body.programming-page.pa-board-tool-view .pa-editor-wrap:before{content:"●"!important;color:#ff5b58!important;text-shadow:12px 0 5px rgba(255,190,67,.35),12px 0 0 #ffc94d,24px 0 5px rgba(54,208,116,.3),24px 0 0 #36c875!important;letter-spacing:0!important;padding-left:14px!important;text-align:left!important;justify-content:flex-start!important}
+/* Correct editor window dots: exactly yellow, red, green at the LEFT */
+body.programming-page.pa-board-tool-view .pa-editor-wrap{position:relative!important}
+body.programming-page.pa-board-tool-view .pa-editor-wrap:before{content:""!important;position:absolute!important;left:12px!important;right:auto!important;top:12px!important;width:38px!important;height:12px!important;padding:0!important;margin:0!important;display:block!important;background:radial-gradient(circle at 6px 6px,#ffd24a 0 4px,transparent 4.5px),radial-gradient(circle at 19px 6px,#ff514b 0 4px,transparent 4.5px),radial-gradient(circle at 32px 6px,#36cf79 0 4px,transparent 4.5px)!important;filter:drop-shadow(0 0 3px rgba(255,190,60,.45))!important;text-shadow:none!important;letter-spacing:0!important;text-align:left!important;justify-content:flex-start!important}
 body.programming-page.pa-board-tool-view .pa-code-lab:before{content:none!important}
