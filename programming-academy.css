@@ -278,3 +278,36 @@ body.programming-page .pa20-hero-compact:after{content:"";position:absolute;bott
  body.programming-page .pa20-brandline{font-size:27px!important}
  body.programming-page .pa20-hub-card{min-height:91px!important}
 }
+
+/* Final selected board layout: pure black editor/gutter, compact controls, output underneath */
+body.programming-page.pa-board-tool-view .pa-code-lab{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 132px!important;
+ grid-template-rows:auto auto auto!important;
+ grid-template-areas:"editor toolbar" "output-head tools" "output tools"!important;
+ gap:9px 12px!important;padding:12px!important;
+}
+body.programming-page.pa-board-tool-view .pa-editor-wrap{grid-area:editor!important;background:#000!important;min-height:310px!important}
+body.programming-page.pa-board-tool-view .pa-code-lines,
+body.programming-page.pa-board-tool-view .pa-code-editor{background:#000!important}
+body.programming-page.pa-board-tool-view .pa-code-lines{color:#42c76c!important;border-right:1px solid #292929!important}
+body.programming-page.pa-board-tool-view .pa-code-editor{color:#f5f5f5!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar{grid-area:toolbar!important;display:flex!important;flex-direction:column!important;gap:9px!important;padding:0!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar label{display:none!important}
+body.programming-page.pa-board-tool-view .pa-code-select{width:100%!important;min-height:40px!important}
+body.programming-page.pa-board-tool-view #paRunCode{width:100%!important;min-height:40px!important}
+body.programming-page.pa-board-tool-view #paResetCode{width:100%!important}
+body.programming-page.pa-board-tool-view .pa-editor-tools{grid-area:tools!important;display:flex!important;flex-direction:column!important;gap:9px!important}
+body.programming-page.pa-board-tool-view #paCopyCode{display:none!important}
+body.programming-page.pa-board-tool-view #paClearCode{width:100%!important}
+body.programming-page.pa-board-tool-view .pa-lab-output-head{grid-area:output-head!important;margin:0!important;padding:8px 12px!important;border-radius:12px 12px 0 0!important}
+body.programming-page.pa-board-tool-view .pa-code-output{grid-area:output!important;margin:0!important;min-height:115px!important;border-radius:0 0 12px 12px!important;border-top:0!important}
+body.programming-page.pa-board-tool-view .pa-code-preview{grid-area:output!important}
+body.programming-page.pa-board-tool-view .pa-input-label,
+body.programming-page.pa-board-tool-view .pa-code-input,
+body.programming-page.pa-board-tool-view .pa-lab-footnote{display:none!important}
+@media(max-width:760px){
+ body.programming-page.pa-board-tool-view .pa-code-lab{grid-template-columns:1fr!important;grid-template-rows:auto auto auto auto!important;grid-template-areas:"toolbar" "editor" "tools" "output-head" "output"!important}
+ body.programming-page.pa-board-tool-view .pa-lab-toolbar{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+ body.programming-page.pa-board-tool-view .pa-lab-toolbar #paResetCode{grid-column:1/-1}
+ body.programming-page.pa-board-tool-view .pa-editor-tools{display:grid!important;grid-template-columns:1fr!important}
+}
