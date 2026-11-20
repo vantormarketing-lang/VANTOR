@@ -153,7 +153,7 @@ function initializeDomaProgrammingAcademy(){
   var authOptions={persistSession:true,autoRefreshToken:true,detectSessionInUrl:true};
   if(isAdminLearningView)authOptions.storageKey='doma-admin-auth';
   var db=window.supabase.createClient(SUPABASE_URL,KEY,{auth:authOptions,global:{fetch:boundedFetch}});
-  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[],activeTutorEditor='lab';
+  var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,trialStatus=null,isStaff=false,membershipCheckError=null,activeTutorHints=[],activeTutorEditor='lab';
   var $=function(id){return document.getElementById(id)};
   /* Reliable delegated navigation for the three academy home tiles.
      Register immediately so an unrelated later initializer cannot leave them inert. */
@@ -163,7 +163,7 @@ function initializeDomaProgrammingAcademy(){
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
   function toast(message){var el=$('paToast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2600)}
-  function hasAccess(){return !!(subscription||isStaff)}
+  function trialRemaining(){if(!trialStatus||!trialStatus.active)return 0;return Math.max(0,Number(trialStatus.remaining_seconds||0)-Math.floor((Date.now()-(trialStatus._cachedAt||Date.now()))/1000))}\n  function hasAccess(){return !!(subscription||isStaff||trialRemaining()>0)}
   function renderUserIdentity(){
     var name='زائر';
     if(user){
@@ -197,11 +197,11 @@ function initializeDomaProgrammingAcademy(){
       else status.textContent='100 جنيه · 30 يومًا';
     }
     if(button){
-      button.textContent=subscription?'الاشتراك نشط ✓':(pendingRequest?'عرض حالة الطلب':'اشترك الآن ←');
+      button.textContent=subscription?'الاشتراك نشط ✓':(trialRemaining()>0?'التجربة المجانية نشطة ✓':(pendingRequest?'عرض حالة الطلب':'اشترك الآن ←'));
     }
   }
   async function refreshMembership(force){
-    subscription=null;pendingRequest=null;isStaff=false;membershipCheckError=null;
+    subscription=null;pendingRequest=null;trialStatus=null;isStaff=false;membershipCheckError=null;
     // Reuse the first membership verification during same-tab navigation
     // (paths, lessons, tools); only refresh explicitly after auth/payment changes.
     var cacheKey='doma-programming-membership-v1:'+String(user&&user.id||'guest');
@@ -254,7 +254,7 @@ function initializeDomaProgrammingAcademy(){
     renderMembership();
     // Save successful membership status so same-tab page navigation won't re-query.
     if(user&&!membershipCheckError){
-      try{sessionStorage.setItem(cacheKey,JSON.stringify({savedAt:Date.now(),subscription:subscription,pendingRequest:pendingRequest,isStaff:isStaff}));}catch(cacheWriteError){}
+      try{sessionStorage.setItem(cacheKey,JSON.stringify({savedAt:Date.now(),subscription:subscription,pendingRequest:pendingRequest,trial:trialStatus,isStaff:isStaff}));}catch(cacheWriteError){}
     }
     // Repaint track and lesson lock indicators after the subscription lookup completes.
     renderTracks();
