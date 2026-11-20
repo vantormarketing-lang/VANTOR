@@ -621,6 +621,18 @@ html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesso
 html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view) .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
 @media(max-width:620px){html body.programming-page:not(.pa-paths-open):not(.pa-track-view):not(.pa-lesson-page-view):not(.pa-tool-view):not(.pa-tutor-tool-view):not(.pa-board-tool-view) .pa20-hub{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
 </style>
+
+<style id="programming-paths-cream-gold-readable-v1">
+/* Track selection: five path cards inherit the homepage cream-and-gold look, with high-contrast text. */
+html:has(body.programming-page.pa-paths-open),html body.programming-page.pa-paths-open{background:#f4e7d5!important;background-color:#f4e7d5!important;background-image:none!important;color:#493927!important;}
+html body.programming-page.pa-paths-open :is(.pa-shell,.pa-topbar,.pa-nav,.pa-path-section,.pa-track-grid,.pa20-path-head){background:transparent!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-color:transparent!important;color:#493927!important;}
+html body.programming-page.pa-paths-open .pa20-path-head h2{color:#5a4023!important;-webkit-text-fill-color:#5a4023!important;}
+html body.programming-page.pa-paths-open .pa-track-card{background:linear-gradient(145deg,#fff8ed,#f1dfc5)!important;background-color:#f3e3ce!important;border:1px solid #d6b681!important;border-radius:18px!important;box-shadow:0 8px 22px rgba(118,82,40,.09),inset 0 1px 0 #fff!important;color:#493927!important;}
+html body.programming-page.pa-paths-open .pa-track-card :is(.pa-track-content,b,.pa-track-content strong,.pa-track-description){color:#493927!important;-webkit-text-fill-color:#493927!important;opacity:1!important;}
+html body.programming-page.pa-paths-open .pa-track-number{background:#ead5b2!important;border:1px solid #caa46c!important;color:#6a481f!important;-webkit-text-fill-color:#6a481f!important;}
+html body.programming-page.pa-paths-open .pa-track-card.active{border-color:#b88a48!important;box-shadow:0 0 0 2px rgba(184,138,72,.16),0 8px 22px rgba(118,82,40,.10)!important;}
+html body.programming-page.pa-paths-open :is(.pa-track-back,button){color:#65451e!important;}
+</style>
 </body>\n</html>',
     c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, DOMA!\\n");\n    return 0;\n}',
     cpp:'#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, DOMA!" << endl;\n    return 0;\n}',
