@@ -497,6 +497,21 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
 
   function showGate(message) {
     body.classList.remove('mf-course-runtime-pending');
+    // Global three-hour trial banner; paid members are never locked by trial expiry.
+    (async function(){
+      try{
+        const paid=await client.rpc('mrfluent_english_has_paid_subscription');
+        if(paid.error||paid.data===true)return;
+        const trialCheck=await client.rpc('doma_get_my_trial_status');
+        const trial=trialCheck&&!trialCheck.error?trialCheck.data:null;
+        if(!trial||!trial.active||!trial.expires_at)return;
+        const expiry=new Date(trial.expires_at).getTime();
+        let badge=document.getElementById('mfEnglishGlobalTrialCountdown');
+        if(!badge){badge=document.createElement('div');badge.id='mfEnglishGlobalTrialCountdown';badge.style.cssText='position:fixed;z-index:10020;top:12px;right:12px;padding:9px 13px;border-radius:14px;border:1px solid rgba(196,166,244,.45);background:rgba(32,20,51,.86);backdrop-filter:blur(12px);color:#f4eaff;font:600 13px system-ui';document.body.appendChild(badge);}
+        const tick=()=>{const sec=Math.max(0,Math.floor((expiry-Date.now())/1000));badge.textContent='Free trial · '+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');if(sec<=0){if(window.mfEnglishTrialTicker)clearInterval(window.mfEnglishTrialTicker);badge.remove();const runtime=document.getElementById('mfAuthorizedCourseRuntime');if(runtime)runtime.remove();showGate('Your 3-hour free trial has ended. Return to the main platform to subscribe and continue.');}};
+        tick();if(!window.mfEnglishTrialTicker)window.mfEnglishTrialTicker=setInterval(tick,1000);
+      }catch(trialTimerError){console.warn('Global trial countdown check failed:',trialTimerError);}
+    })();
     body.classList.add('mf-course-runtime-denied');
     const previous = document.getElementById('mfCourseRuntimeGate');
     if (previous) previous.remove();
