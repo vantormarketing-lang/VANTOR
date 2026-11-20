@@ -399,3 +399,17 @@ body.programming-page.pa-board-tool-view .pa-code-output{grid-area:output!import
  body.programming-page.pa-board-tool-view .pa-editor-wrap{grid-template-columns:34px minmax(0,1fr)!important}
  body.programming-page.pa-board-tool-view .pa-code-lines,body.programming-page.pa-board-tool-view .pa-code-editor{font-size:12px!important}
 }
+
+/* terminal makeover */
+body.programming-page .pa-training-terminal{background:#08090d!important;border:1px solid #28303f!important;border-radius:18px!important;overflow:hidden!important;box-shadow:0 18px 45px rgba(5,9,18,.14)!important;color:#dce8f8!important}
+body.programming-page .pa-training-terminal header{position:relative;padding:16px 18px 16px 84px!important;background:#f5ead9!important;color:#3b2a1d!important;border:0!important;border-bottom:1px solid #d7c4a8!important;min-height:54px;box-sizing:border-box}
+body.programming-page .pa-training-terminal header:before{content:'';position:absolute;left:18px;top:50%;transform:translateY(-50%);width:12px;height:12px;border-radius:50%;background:#ff625b;box-shadow:0 0 12px rgba(255,98,91,.6),20px 0 0 #f6c64d,20px 0 12px rgba(246,198,77,.55),40px 0 0 #43d17d,40px 0 12px rgba(67,209,125,.6)}
+body.programming-page .pa-training-terminal header span{color:#8b6a3c!important;font-size:11px!important;letter-spacing:1.4px!important;font-weight:800!important}
+body.programming-page #paTerminalForm{display:flex!important;align-items:center;gap:10px!important;padding:14px 16px!important;background:#10141d!important;border:0!important;border-bottom:1px solid #26354b!important}
+body.programming-page .pa-terminal-prompt{color:#65dba3!important;font-weight:900!important;font-size:17px!important}
+body.programming-page #paTerminalInput{flex:1;min-width:0;border:1px solid #304259!important;border-radius:10px!important;background:#05070b!important;color:#e5bc70!important;padding:12px 14px!important;font:600 14px ui-monospace,Consolas,monospace!important;outline:none!important;direction:ltr!important;text-align:left!important}
+body.programming-page #paTerminalInput::placeholder{color:#76869b!important}
+body.programming-page #paTerminalInput:focus{border-color:#408dd8!important;box-shadow:0 0 0 3px rgba(64,141,216,.16)!important}
+body.programming-page #paTerminalForm button{border:1px solid #4698e5!important;border-radius:10px!important;padding:11px 18px!important;background:linear-gradient(135deg,#2678c8,#155ba5)!important;color:#fff!important;font-weight:900!important;box-shadow:0 0 14px rgba(42,130,211,.2)!important}
+body.programming-page .pa-terminal-output{min-height:280px!important;max-height:58vh!important;overflow:auto!important;margin:0!important;padding:20px 22px!important;background:#030509!important;color:#63aef8!important;border:0!important;line-height:1.8!important;font:500 14px/1.8 ui-monospace,Consolas,monospace!important;direction:ltr!important;text-align:left!important;white-space:pre-wrap!important}
+@media(max-width:600px){body.programming-page .pa-training-terminal header{padding-left:80px!important}body.programming-page #paTerminalForm{gap:7px!important;padding:10px!important}body.programming-page #paTerminalForm button{padding:10px 12px!important}body.programming-page .pa-terminal-output{min-height:220px!important;padding:14px!important}}
