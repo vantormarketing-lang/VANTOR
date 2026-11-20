@@ -438,3 +438,8 @@ body.programming-page #learning-paths .pa-track-card:nth-child(4):before{content
 body.programming-page #learning-paths .pa-track-card:nth-child(5):before{content:"🛡️"!important}
 @media(max-width:900px){body.programming-page #learning-paths .pa-track-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 @media(max-width:600px){body.programming-page #learning-paths{padding:13px!important;border-radius:16px!important}body.programming-page #learning-paths .pa-track-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:14px!important}body.programming-page #learning-paths .pa-track-card{min-height:116px!important;padding:12px 8px!important;border-radius:15px!important}body.programming-page #learning-paths .pa-track-content b{font-size:13px!important}}
+
+/* Interactive whiteboard: show only the code editor and result panel */
+body.programming-page.pa-board-tool-view #paStandaloneBoardHost > :not(.pa-code-lab){display:none!important}
+body.programming-page.pa-board-tool-view #paStandaloneBoardHost .pa-code-lab > :not(.pa-lab-toolbar):not(.pa-editor-wrap):not(.pa-lab-output-head):not(.pa-code-output):not(#paCodePreview){display:none!important}
+body.programming-page.pa-board-tool-view #paStandaloneBoardHost #paCodePreview{display:none!important}
