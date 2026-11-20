@@ -311,3 +311,35 @@ body.programming-page.pa-board-tool-view .pa-lab-footnote{display:none!important
  body.programming-page.pa-board-tool-view .pa-lab-toolbar #paResetCode{grid-column:1/-1}
  body.programming-page.pa-board-tool-view .pa-editor-tools{display:grid!important;grid-template-columns:1fr!important}
 }
+
+/* Study assistant compact black question panel styled to match interactive board */
+body.programming-page .pa-free-tutor,
+body.programming-page .pa-global-tutor{
+ background:#fff0d9!important;background-image:none!important;border:1px solid #e7bd8a!important;border-radius:22px!important;
+ padding:14px!important;color:#57341f!important;box-shadow:0 7px 20px rgba(103,58,23,.1)!important
+}
+body.programming-page .pa-free-tutor-head{padding:0!important;margin:0 0 9px!important;background:transparent!important;border:0!important}
+body.programming-page .pa-free-tutor-head h3{margin:0!important;font-size:18px!important;font-weight:900!important;color:#60351e!important}
+body.programming-page .pa-free-tutor-head p,
+body.programming-page .pa-free-tutor-label,
+body.programming-page .pa-free-tutor-local,
+body.programming-page .pa-free-tutor-actions,
+body.programming-page .pa-free-tutor-note{display:none!important}
+body.programming-page .pa-free-tutor-question{display:flex!important;flex-direction:row!important;align-items:stretch!important;gap:9px!important;margin:0 0 10px!important}
+body.programming-page .pa-free-tutor-question input{
+ flex:1!important;min-width:0!important;min-height:52px!important;background:#000!important;color:#38c879!important;
+ border:1px solid #414141!important;border-radius:12px!important;padding:12px 15px!important;font-size:15px!important
+}
+body.programming-page .pa-free-tutor-question input::placeholder{color:#81b99a!important;opacity:1!important}
+body.programming-page .pa-free-tutor-question .pa-free-tutor-send{
+ width:auto!important;min-width:90px!important;background:#3a9d56!important;color:#fff!important;border:1px solid #56bf72!important;border-radius:12px!important;font-weight:900!important
+}
+body.programming-page .pa-free-tutor-status{display:none!important}
+body.programming-page .pa-free-tutor-answer{
+ min-height:88px!important;background:#000!important;color:#52d889!important;-webkit-text-fill-color:#52d889!important;
+ border:1px solid #3b3b3b!important;border-radius:13px!important;padding:14px!important;line-height:1.8!important
+}
+@media(max-width:620px){
+ body.programming-page .pa-free-tutor-question{flex-direction:column!important}
+ body.programming-page .pa-free-tutor-question .pa-free-tutor-send{width:100%!important}
+}
