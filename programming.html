@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#170f22">
+<meta name="theme-color" content="#f5ead9">
 <title>Programming Academy | DOMA Academy</title>
 <meta name="description" content="تعلم البرمجة من الصفر عبر مسارات متدرجة ومشاريع عملية في DOMA Programming Academy.">
 <link rel="stylesheet" href="./programming-academy.css?v=cream-rebuild-20261120">
@@ -158,13 +158,13 @@
 <script>
 function initializeDomaProgrammingAcademy(){
   'use strict';
-  var URL='https://dtptxhkcogpoleftguas.supabase.co';
+  var SUPABASE_URL='https://dtptxhkcogpoleftguas.supabase.co';
   var KEY='sb_publishable_uAwbJjn1AZuTJKTQzlD1-g__DJkZFyL';
-  var boundedFetch=function(input,init){var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},15000);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
+  var boundedFetch=function(input,init){var urlText=typeof input==='string'?input:(input&&input.url||'');var timeout=urlText.indexOf('/storage/')>=0?90000:15000;var controller=new AbortController();var timer=setTimeout(function(){controller.abort();},timeout);var options=Object.assign({},init||{},{signal:controller.signal});return fetch(input,options).finally(function(){clearTimeout(timer)});};
   var isAdminLearningView=new URLSearchParams(window.location.search).get('learning-admin')==='1';
   var authOptions={persistSession:true,autoRefreshToken:true,detectSessionInUrl:true};
   if(isAdminLearningView)authOptions.storageKey='doma-admin-auth';
-  var db=window.supabase.createClient(URL,KEY,{auth:authOptions,global:{fetch:boundedFetch}});
+  var db=window.supabase.createClient(SUPABASE_URL,KEY,{auth:authOptions,global:{fetch:boundedFetch}});
   var tracks=[],modules=[],lessons=[],completed={},activeTrack='computer-science',activeLesson=null,user=null,subscription=null,pendingRequest=null,isStaff=false,membershipCheckError=null,activeTutorHints=[],activeTutorEditor='lab';
   var $=function(id){return document.getElementById(id)};
   /* Reliable delegated navigation for the three academy home tiles.
@@ -801,9 +801,9 @@ puts "Hello, #{name}"`,
         var response=await runExercise(token);
         if(response.status===401){var refreshedAgain=await db.auth.refreshSession(),fresh=refreshedAgain.data&&refreshedAgain.data.session;if(fresh&&fresh.access_token)response=await runExercise(fresh.access_token)}
         var result=await response.json();if(!response.ok)throw new Error(result.error||'تعذر تشغيل الكود.');
-        var output=[result.stdout,result.stderr,result.compile_output].filter(Boolean).join('\\n');
+        var output=[result.stdout,result.stderr,result.compile_output].filter(Boolean).join('\n');
         var checks=Array.isArray(result.test_results)?result.test_results:[];
-        var allPassed=result.all_tests_passed===true&&checks.length===cases.length;
+        var allPassed=result.all_tests_passed===true&&checks.length>0;
         panel.innerHTML='<div class="pa-test-summary '+(allPassed?'is-correct':'is-wrong')+'">'+(allPassed?'نجحت كل الفحوصات ✓':'بعض الفحوصات لم تنجح بعد')+'</div>'+checks.map(function(item){return '<p class="'+(item.passed?'is-correct':'is-wrong')+'">'+(item.passed?'✓ ':'✕ ')+esc(item.label)+'</p>'}).join('')+(output?'<pre class="pa-test-output">'+esc(output)+'</pre>':'');
         if(allPassed)panel.innerHTML+='<p class="pa-test-next">ممتاز! يمكنك الآن إرسال الحل للمراجعة.</p>';
       }catch(error){panel.textContent=error.message||'حدث خطأ أثناء اختبار الحل.'}
@@ -1020,7 +1020,7 @@ puts "Hello, #{name}"`,
       var ins=await db.from('programming_lesson_progress').insert({user_id:user.id,lesson_id:id});
       if(ins.error&&ins.error.code!=='23505'){toast('تعذر حفظ التقدم. حاول مرة أخرى.');return}completed[id]=true;
     }
-    renderTracks();renderLessons();openLesson(id);await loadStudentProgress();toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
+    renderTracks();renderLessons();await loadStudentProgress();toast(completed[id]?'تم حفظ إنجاز الدرس.':'تم تحديث تقدمك.');
   }
   async function loadCurriculum(){
     var results=await Promise.all([db.from('programming_tracks').select('*').eq('published',true).order('sort_order'),db.from('programming_modules').select('*').eq('published',true).order('sort_order'),db.from('programming_lessons').select('id,module_id,title,summary,duration_minutes,sort_order,published').eq('published',true).order('sort_order')]);
@@ -1074,7 +1074,7 @@ puts "Hello, #{name}"`,
     if(result.error){await db.storage.from('payment-proofs').remove([path]);$('paSubmitPayment').disabled=false;setPaymentStatus('تعذر إرسال الطلب: '+result.error.message,'error');return}
     pendingRequest={id:result.data,status:'pending'};renderMembership();$('paPaymentForm').hidden=true;$('paPendingNotice').hidden=false;setAcademyLocked(true);syncEmbeddedView();toast('تم إرسال طلب اشتراك أكاديمية البرمجة.');
     // A pending request must never trigger curriculum loading.
-    refreshMembership().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(isAdminLearningView){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
+    (function(){try{if(user)sessionStorage.removeItem('doma-programming-membership-v1:'+user.id)}catch(e){}return refreshMembership(true)})().then(function(){return loadStudentProgress()}).catch(function(error){console.warn('Membership status could not be refreshed:',error)});if(isStaff)await loadProgrammingAdminLearning();if(isAdminLearningView){if(isStaff){document.body.classList.add('pa-admin-only');$('paAdminLearning').scrollIntoView({behavior:'smooth'});}else{toast('هذه الصفحة مخصصة للإدارة والمعلمين.');}}
   }
   async function renderAdminRequests(rows){
     var panel=$('paAdminPanel'),host=$('paAdminRequests');panel.hidden=false;
@@ -1134,7 +1134,7 @@ puts "Hello, #{name}"`,
     db.auth.onAuthStateChange(function(event,session){
       // INITIAL_SESSION is already handled by boot(); never call auth APIs
       // while the supabase-js auth callback holds its internal lock.
-      if(event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED')return;
+      if(event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED')return;if(event==='SIGNED_IN'&&user&&session&&session.user&&session.user.id===user.id)return;
       // Clear the cached membership only when authentication identity/state changes.
       try{if(session&&session.user)sessionStorage.removeItem('doma-programming-membership-v1:'+session.user.id);}catch(cacheClearError){}
       setTimeout(async function(){
@@ -1273,7 +1273,7 @@ puts "Hello, #{name}"`,
   var indicator=document.getElementById('paPullRefresh');
   if(!indicator)return;
   var startY=0,pulling=false,armed=false,reloading=false,threshold=88;
-  function blocked(target){return !!(target&&target.closest&&target.closest('textarea,input,select,button,a,iframe,[contenteditable="true"],.pa-code-editor,.pa-code-output,.pa-code-input,.pa-reader-content pre,.pa-table-wrap,.pa-modal-card'))}
+  function blocked(target){return !!(target&&target.closest&&target.closest('textarea,input,select,button,a,iframe,[contenteditable="true"],.pa-code-editor,.pa-code-output,.pa-code-input,.pa-reader-content pre,.pa-table-wrap,.pa-modal-card,.pa-tool-page'))}
   function hide(){pulling=false;armed=false;indicator.classList.remove('is-visible','is-refreshing')}
   document.addEventListener('touchstart',function(event){if(reloading||event.touches.length!==1||window.scrollY>2||blocked(event.target))return;startY=event.touches[0].clientY;pulling=true;armed=false},{passive:true});
   document.addEventListener('touchmove',function(event){
@@ -1302,7 +1302,7 @@ puts "Hello, #{name}"`,
 @media(max-width:600px){.pa-exercise-tools>*{flex:1 1 100%}}
 </style>
 <style id="pa-homepage-subscription-overlay">
-html,body{background:transparent!important}
+body.pa-embedded-subscription-only{background:transparent!important}
 body.pa-embedded-subscription-only{background:transparent!important;overflow:hidden!important}
 body.pa-embedded-subscription-only>.pa-topbar,
 body.pa-embedded-subscription-only>.pa-shell,
