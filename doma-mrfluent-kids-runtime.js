@@ -2516,7 +2516,7 @@ function kidsStartGlobalTrialTicker(trial){
   var expiresAt=new Date(trial.expires_at).getTime();
   var badge=document.getElementById('mfKidsGlobalTrialCountdown');
   if(!badge){badge=document.createElement('div');badge.id='mfKidsGlobalTrialCountdown';badge.style.cssText='position:fixed;z-index:10060;top:10px;right:10px;padding:9px 13px;border-radius:14px;border:1px solid rgba(194,165,245,.45);background:rgba(36,20,53,.88);backdrop-filter:blur(12px);color:#f4eaff;font:600 13px system-ui;';document.body.appendChild(badge);}
-  var tick=function(){var seconds=Math.max(0,Math.floor((expiresAt-Date.now())/1000));badge.textContent='Free trial · '+Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');if(seconds<=0){if(window.mfKidsGlobalTrialTicker)clearInterval(window.mfKidsGlobalTrialTicker);badge.remove();window.location.replace(kidsJourneySubscribeUrl('A1'));}};
+  var tick=function(){var seconds=Math.max(0,Math.floor((expiresAt-Date.now())/1000));badge.textContent='Free trial · '+Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');if(seconds<=0){if(window.mfKidsGlobalTrialTicker)clearInterval(window.mfKidsGlobalTrialTicker);badge.remove();(async function(){try{var fresh=await kidsJourneyLoadContext('A1');if(fresh&&fresh.current&&!fresh.current.is_trial){window.location.replace(url('hub'));return;}}catch(_){}window.location.replace(kidsJourneySubscribeUrl('A1'));})();}};
   tick();if(!window.mfKidsGlobalTrialTicker)window.mfKidsGlobalTrialTicker=setInterval(tick,1000);
 }
 async function kidsJourneyLoadContext(code){
