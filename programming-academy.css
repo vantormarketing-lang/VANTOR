@@ -210,3 +210,42 @@ body.programming-page .pa-board-tool-view .pa-code-lab:before{content:'●  ● 
 body.programming-page .pa-board-tool-view .pa-code-lab{background:#2c2118!important}
 body.programming-page .pa-board-tool-view .pa-code-output{color:#f5ead9!important}
 body.programming-page .pa-daily-tool-view #paDailyChallenges{display:block!important}
+
+/* Interactive board: standalone cream + cocoa editor redesign */
+body.programming-page.pa-board-tool-view #paToolPageTitle{display:none!important}
+body.programming-page.pa-board-tool-view #paToolPageDescription{display:none!important}
+body.programming-page.pa-board-tool-view .pa-tool-page-head{background:transparent!important;border:0!important;box-shadow:none!important;padding:4px 6px!important}
+body.programming-page.pa-board-tool-view .pa-tool-page-body{padding:0!important}
+body.programming-page.pa-board-tool-view .pa-code-lab{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 190px;grid-template-rows:auto auto auto auto;
+  grid-template-areas:"editor toolbar" "output tools" "input input" "footer footer";
+  gap:12px!important;padding:16px!important;border:1px solid #e7bd8a!important;border-radius:24px!important;
+  background:#fff0d9!important;background-image:none!important;box-shadow:0 8px 22px rgba(103,58,23,.12)!important;
+  color:#5a321b!important;max-height:none!important;overflow:visible!important
+}
+body.programming-page.pa-board-tool-view .pa-lab-heading{display:none!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar{grid-area:toolbar;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;padding:12px!important;border:0!important;border-radius:0!important;background:transparent!important}
+body.programming-page.pa-board-tool-view .pa-lab-toolbar label{font-weight:800;color:#65391d!important}
+body.programming-page.pa-board-tool-view .pa-code-select{min-height:44px;background:#ffefd7!important;border:1px solid #e1b77f!important;border-radius:12px!important;color:#5a321b!important}
+body.programming-page.pa-board-tool-view .pa-lab-run{background:#5b2d16!important;color:#fff4e5!important;border:1px solid #8e542a!important;border-radius:14px!important;min-height:48px;font-weight:900}
+body.programming-page.pa-board-tool-view .pa-lab-secondary{background:#f5dfbd!important;color:#5a321b!important;border:1px solid #e0b67c!important;border-radius:12px!important}
+body.programming-page.pa-board-tool-view .pa-editor-tools{grid-area:tools;display:flex!important;flex-direction:column!important;gap:9px!important;background:transparent!important;border:0!important;padding:0!important;align-items:stretch!important}
+body.programming-page.pa-board-tool-view .pa-editor-tools span{display:none!important}
+body.programming-page.pa-board-tool-view .pa-editor-wrap{grid-area:editor;position:relative!important;border:1px solid #985c2d!important;border-radius:17px!important;background:#2b1c12!important;overflow:hidden!important;min-height:330px!important;box-shadow:0 3px 0 #b37b42!important}
+body.programming-page.pa-board-tool-view .pa-editor-wrap:before{content:"●  ●  ●";display:block;height:36px;padding:7px 14px;box-sizing:border-box;background:#442918;color:#9b65d6;font-size:13px;letter-spacing:5px;border-bottom:1px solid #7b4d27}
+body.programming-page.pa-board-tool-view .pa-editor-wrap:before{ text-shadow:14px 0 #f1bd4e,28px 0 #40b86b}
+body.programming-page.pa-board-tool-view .pa-code-lines{background:#2b1c12!important;color:#48c978!important;border:0!important;border-right:1px solid #4b3422!important;border-radius:0!important}
+body.programming-page.pa-board-tool-view .pa-code-editor{background:#2b1c12!important;color:#fff3e5!important;border:0!important;caret-color:#f3c65c!important}
+body.programming-page.pa-board-tool-view .pa-lab-output-head{grid-area:output;display:flex!important;align-items:center!important;gap:12px!important;border:1px solid #9c602f!important;border-radius:14px 14px 0 0!important;background:#4b2a17!important;color:#fff1df!important;padding:12px 16px!important}
+body.programming-page.pa-board-tool-view .pa-code-output{grid-area:output;align-self:stretch;margin-top:47px!important;min-height:110px!important;background:#2b1c12!important;color:#45ce78!important;border:1px solid #9c602f!important;border-top:0!important;border-radius:0 0 14px 14px!important}
+body.programming-page.pa-board-tool-view .pa-code-preview{grid-area:output}
+body.programming-page.pa-board-tool-view .pa-input-label{grid-area:input;color:#673a20!important;font-weight:800}
+body.programming-page.pa-board-tool-view .pa-code-input{grid-area:input;margin-top:25px!important;background:#fff1dc!important;color:#5a321b!important;border:1px solid #dfb67e!important;border-radius:14px!important;min-height:76px!important}
+body.programming-page.pa-board-tool-view .pa-lab-footnote{grid-area:footer;color:#8a6848!important;font-size:11px!important}
+body.programming-page.pa-board-tool-view #paRunState{color:#48c978!important}
+@media(max-width:760px){
+ body.programming-page.pa-board-tool-view .pa-code-lab{grid-template-columns:1fr!important;grid-template-areas:"toolbar" "editor" "tools" "output" "input" "footer"!important;padding:10px!important}
+ body.programming-page.pa-board-tool-view .pa-lab-toolbar{flex-direction:row!important;flex-wrap:wrap!important}
+ body.programming-page.pa-board-tool-view .pa-editor-tools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body.programming-page.pa-board-tool-view .pa-editor-wrap{min-height:260px!important}
+}
