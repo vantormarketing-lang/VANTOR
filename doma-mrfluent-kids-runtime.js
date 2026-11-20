@@ -2511,6 +2511,14 @@ function kidsJourneyWaitForClient(){
 }
 function kidsJourneyDefinition(code){return journeyLevels.find(function(item){return item.code===String(code||'').toUpperCase();})||journeyLevels[0];}
 function kidsJourneyDate(value){if(!value)return '—';var d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});}
+function kidsStartGlobalTrialTicker(trial){
+  if(!trial||!trial.expires_at)return;
+  var expiresAt=new Date(trial.expires_at).getTime();
+  var badge=document.getElementById('mfKidsGlobalTrialCountdown');
+  if(!badge){badge=document.createElement('div');badge.id='mfKidsGlobalTrialCountdown';badge.style.cssText='position:fixed;z-index:10060;top:10px;right:10px;padding:9px 13px;border-radius:14px;border:1px solid rgba(194,165,245,.45);background:rgba(36,20,53,.88);backdrop-filter:blur(12px);color:#f4eaff;font:600 13px system-ui;';document.body.appendChild(badge);}
+  var tick=function(){var seconds=Math.max(0,Math.floor((expiresAt-Date.now())/1000));badge.textContent='Free trial · '+Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');if(seconds<=0){if(window.mfKidsGlobalTrialTicker)clearInterval(window.mfKidsGlobalTrialTicker);badge.remove();window.location.replace(kidsJourneySubscribeUrl('A1'));}};
+  tick();if(!window.mfKidsGlobalTrialTicker)window.mfKidsGlobalTrialTicker=setInterval(tick,1000);
+}
 async function kidsJourneyLoadContext(code){
   var client;
   try{client=await kidsJourneyWaitForClient();}
@@ -2592,7 +2600,7 @@ async function kidsJourneyLoadContext(code){
   var active=(subsResult.data||[]).find(function(s){return wholeCourse||String(s.level_id)===String(level.id);})||null;
   var latest=wholeCourse?(pending||requests[0]||null):(requests.find(function(r){return String(r.requested_level_id)===String(level.id);})||null);
   var trialStatus=null;
-  if(!current&&!active){try{var trialResult=await client.rpc('doma_get_my_trial_status');if(trialResult&&!trialResult.error&&trialResult.data&&trialResult.data.active){trialStatus=trialResult.data;var trialAccess={id:null,user_id:user.id,track_id:trackResult.data.id,level_id:level.id,status:'active',starts_at:trialStatus.started_at,expires_at:trialStatus.expires_at,price_egp:0,is_trial:true};current=trialAccess;active=trialAccess;}}catch(trialError){console.warn('Global free trial check for Kids failed:',trialError);}}
+  if(!current&&!active){try{var trialResult=await client.rpc('doma_get_my_trial_status');if(trialResult&&!trialResult.error&&trialResult.data&&trialResult.data.active){trialStatus=trialResult.data;kidsStartGlobalTrialTicker(trialStatus);var trialAccess={id:null,user_id:user.id,track_id:trackResult.data.id,level_id:level.id,status:'active',starts_at:trialStatus.started_at,expires_at:trialStatus.expires_at,price_egp:0,is_trial:true};current=trialAccess;active=trialAccess;}}catch(trialError){console.warn('Global free trial check for Kids failed:',trialError);}}
   return {user:user,track:trackResult.data,levels:levels,level:level,subscriptions:subsResult.data||[],current:current,active:active,pending:pending,latest:latest,requests:requests,trial:trialStatus};
 }
 function kidsJourneyStatus(element,message,kind){
