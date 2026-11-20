@@ -3,20 +3,20 @@
   var style = document.createElement('style');
   style.textContent = [
     '.pa-extra-labs{display:grid;gap:14px;margin:16px 0 22px}',
-    '.pa-extra-card{padding:16px;border:1px solid rgba(205,170,111,.28);border-radius:18px;background:linear-gradient(145deg,rgba(43,31,55,.92),rgba(24,20,34,.96));color:#f1e5d4}',
-    '.pa-extra-card h3{margin:0 0 7px;color:#e5c47e;font-size:17px}',
-    '.pa-extra-card p{margin:0 0 12px;color:#cdbfae;font-size:12px;line-height:1.8}',
+    '.pa-extra-card{padding:16px;border:1px solid rgba(205,170,111,.28);border-radius:18px;background:#fff8ed;color:#563d25}',
+    '.pa-extra-card h3{margin:0 0 7px;color:#986e37;font-size:17px}',
+    '.pa-extra-card p{margin:0 0 12px;color:#856743;font-size:12px;line-height:1.8}',
     '.pa-symbol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}',
     '.pa-symbol-item{padding:10px;border:1px solid rgba(205,170,111,.18);border-radius:11px;background:rgba(255,255,255,.035);display:grid;grid-template-columns:38px 1fr;align-items:center;gap:8px}',
-    '.pa-symbol-item code{direction:ltr;text-align:center;font-size:19px;color:#f1cf88;font-weight:800}',
-    '.pa-symbol-item span{font-size:11px;line-height:1.5;color:#e6d8c5}',
+    '.pa-symbol-item code{direction:ltr;text-align:center;font-size:19px;color:#986e37;font-weight:800}',
+    '.pa-symbol-item span{font-size:11px;line-height:1.5;color:#856743}',
     '.pa-terminal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}',
     '.pa-terminal-badge{font-size:10px;color:#a9d8b5;border:1px solid rgba(100,190,130,.3);padding:4px 8px;border-radius:99px}',
-    '.pa-terminal-screen{min-height:145px;max-height:260px;overflow:auto;white-space:pre-wrap;direction:ltr;text-align:left;padding:12px;border-radius:12px;background:#100d17;color:#e8e2d8;font:12px/1.75 ui-monospace,Consolas,monospace}',
+    '.pa-terminal-screen{min-height:145px;max-height:260px;overflow:auto;white-space:pre-wrap;direction:ltr;text-align:left;padding:12px;border-radius:12px;background:#2a2119;color:#fff5e8;font:12px/1.75 ui-monospace,Consolas,monospace}',
     '.pa-terminal-form{display:flex;gap:8px;margin-top:10px;direction:ltr}',
-    '.pa-terminal-form input{min-width:0;flex:1;padding:11px;border-radius:10px;border:1px solid rgba(205,170,111,.28);background:#171321;color:#fff;font:13px ui-monospace,Consolas,monospace}',
+    '.pa-terminal-form input{min-width:0;flex:1;padding:11px;border-radius:10px;border:1px solid rgba(205,170,111,.28);background:#2a2119;color:#fff5e8;font:13px ui-monospace,Consolas,monospace}',
     '.pa-terminal-form button,.pa-terminal-reset{border:0;border-radius:10px;padding:10px 14px;background:linear-gradient(120deg,#b58a4e,#e0c07b);color:#21172a;font-weight:800;cursor:pointer}',
-    '.pa-terminal-reset{margin-top:9px;background:rgba(255,255,255,.08);border:1px solid rgba(205,170,111,.22);color:#e8d6b8;font-size:11px}',
+    '.pa-terminal-reset{margin-top:9px;background:rgba(255,255,255,.08);border:1px solid rgba(205,170,111,.22);color:#856743;font-size:11px}',
     '@media(max-width:520px){.pa-terminal-form{flex-wrap:wrap}.pa-terminal-form input{flex-basis:100%}.pa-terminal-form button{flex:1}}'
   ].join('');
   document.head.appendChild(style);
@@ -36,7 +36,7 @@
           '<div class="pa-symbol-item"><code>{ }</code><span>القواميس أو كتل الكود</span></div>'+
           '<div class="pa-symbol-item"><code>:</code><span>بداية كتلة في Python</span></div>'+
           '<div class="pa-symbol-item"><code>;</code><span>نهاية تعليمة في C++ وJavaScript</span></div>'+
-          '<div class="pa-symbol-item"><code>' \"</code><span>علامات إحاطة النصوص</span></div>'+
+          '<div class="pa-symbol-item"><code>&quot; &#39;</code><span>علامات إحاطة النصوص</span></div>'+
           '<div class="pa-symbol-item"><code>=</code><span>إسناد قيمة</span></div>'+
           '<div class="pa-symbol-item"><code>==</code><span>مقارنة التساوي</span></div>'+
           '<div class="pa-symbol-item"><code>_</code><span>فاصل داخل أسماء المتغيرات</span></div>'+
@@ -136,8 +136,8 @@
     });
   }
   function scan(){
-    document.querySelectorAll('.pa-code-lab').forEach(mount);
+    document.querySelectorAll('.pa-tool-page .pa-code-lab').forEach(mount);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',scan);else scan();
-  new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});
+  var toolRoot=document.querySelector('.pa-tool-page');if(toolRoot)new MutationObserver(scan).observe(toolRoot,{childList:true,subtree:true});
 })();
