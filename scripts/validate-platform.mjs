@@ -535,6 +535,17 @@ if (!autoGraderWorkerSource.includes('doma_get_programming_exercise_tests') ||
   fail('Programming auto-grader: hidden exact-output tests and restricted database access must remain enabled');
 } else {
   ok('Programming auto-grader: tests are private, output matching is exact, and only prepared exercises expose automatic testing');
+
+const programmingLessonTrialMigration = read('supabase/migrations/20261121175855_allow_programming_lesson_content_global_trial.sql');
+if (!programmingLessonTrialMigration.includes('public.programming_course_subscriptions') ||
+    !programmingLessonTrialMigration.includes('public.doma_global_trials') ||
+    !programmingLessonTrialMigration.includes('t.expires_at > now()') ||
+    !programmingLessonTrialMigration.includes('auth.uid()')) {
+  fail('Programming lesson content: subscription and active global-trial access must both be enforced server-side');
+} else {
+  ok('Programming lesson content: authenticated active subscriptions or global trials are permitted server-side');
+}
+
 }
 
 
