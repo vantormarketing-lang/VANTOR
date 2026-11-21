@@ -164,7 +164,7 @@ function initializeDomaProgrammingAcademy(){
   var toastTimer;
   function toast(message){var el=$('paToast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2600)}
   function trialRemaining(){if(!trialStatus||!trialStatus.active)return 0;return Math.max(0,Number(trialStatus.remaining_seconds||0)-Math.floor((Date.now()-(trialStatus._cachedAt||Date.now()))/1000))}
-  function hasAccess(){return !!(subscription||isStaff||trialRemaining()>0)}
+  function hasAccess(){return true}
   function renderUserIdentity(){
     var name='زائر';
     if(user){
