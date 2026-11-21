@@ -270,6 +270,10 @@ function initializeDomaProgrammingAcademy(){
         pendingRequest=membershipData.pending_request||null;
         trialStatus=membershipData.trial||null;if(trialStatus)trialStatus._cachedAt=Date.now();
       }
+      // If the programming membership RPC omits the shared 3-hour trial, read the global trial status directly.
+      if(!trialStatus){
+        try{var globalTrial=await db.rpc('doma_get_my_trial_status');if(globalTrial&&!globalTrial.error&&globalTrial.data){trialStatus=globalTrial.data;trialStatus._cachedAt=Date.now();}}catch(trialFallbackError){console.warn('Programming trial status fallback failed:',trialFallbackError);}
+      }
       // Never infer staff access from whether an admin RPC happens to be callable.
       // Read the signed-in user's own profile role and grant staff access only explicitly.
       var profile=await db.from('profiles').select('role').eq('id',user.id).maybeSingle();
