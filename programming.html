@@ -163,7 +163,7 @@ function initializeDomaProgrammingAcademy(){
   var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var toastTimer;
   function toast(message){var el=$('paToast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show')},2600)}
-  function trialRemaining(){if(!trialStatus||!trialStatus.active)return 0;return Math.max(0,Number(trialStatus.remaining_seconds||0)-Math.floor((Date.now()-(trialStatus._cachedAt||Date.now()))/1000)))}\n  function hasAccess(){return !!(subscription||isStaff||trialRemaining()>0)}
+  function trialRemaining(){return 0;}\n  function hasAccess(){return !!(subscription||isStaff)}
   function renderUserIdentity(){
     var name='زائر';
     if(user){
@@ -189,17 +189,17 @@ function initializeDomaProgrammingAcademy(){
       window.parent.postMessage({type:'DOMA_PROGRAMMING_CLOSE'},window.location.origin);
     }
   }
-  if(!window.domaProgrammingTrialTicker){window.domaProgrammingTrialTicker=setInterval(function(){if(trialStatus&&trialStatus.active){renderMembership();if(trialRemaining()<=0&&!subscription&&!isStaff){trialStatus.active=false;(async function(){try{var latest=await db.rpc('programming_get_my_membership_status');if(!latest.error&&latest.data&&latest.data.subscription){subscription=latest.data.subscription;renderMembership();renderTracks();renderLessons();return;}}catch(_){}setAcademyLocked(true);renderTracks();renderLessons();showModal();})();}}},1000);}
+
   function renderMembership(){
     var status=$('paMembershipStatus'),button=$('paSubscribeBtn');
     if(status){
       if(subscription)status.textContent='اشتراكك نشط حتى '+new Date(subscription.expires_at).toLocaleDateString('ar-EG');
-      else if(trialRemaining()>0)status.textContent='تجربة مجانية · متبقي '+Math.floor(trialRemaining()/60)+' دقيقة '+(trialRemaining()%60)+' ثانية';
+      
       else if(pendingRequest)status.textContent='طلب الاشتراك قيد مراجعة الإدارة';
       else status.textContent='100 جنيه · 30 يومًا';
     }
     if(button){
-      button.textContent=subscription?'الاشتراك نشط ✓':(trialRemaining()>0?'التجربة المجانية نشطة ✓':(pendingRequest?'عرض حالة الطلب':'اشترك الآن ←'));
+      button.textContent=subscription?'الاشتراك نشط ✓':(pendingRequest?'عرض حالة الطلب':'اشترك أولاً ←');
     }
   }
   async function refreshMembership(force){
