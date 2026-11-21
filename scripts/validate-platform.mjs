@@ -538,6 +538,13 @@ if (!autoGraderWorkerSource.includes('doma_get_programming_exercise_tests') ||
 } else {
   ok('Programming auto-grader: tests are private, output matching is exact, and only prepared exercises expose automatic testing');
 
+const englishRuntimeGrantMigration = read('supabase/migrations/20261121190000_grant_english_course_runtime_payload_read_access.sql');
+if (!englishRuntimeGrantMigration.includes('grant select on public.mrfluent_course_runtime_payloads to authenticated')) {
+  fail('English Course levels: authenticated students must be granted SELECT so RLS can allow active trial/paid levels');
+} else {
+  ok('English Course levels: authenticated SELECT is granted and RLS remains responsible for trial/subscription access');
+}
+
 const programmingLessonTrialMigration = read('supabase/migrations/20261121175855_allow_programming_lesson_content_global_trial.sql');
 if (!programmingLessonTrialMigration.includes('public.programming_course_subscriptions') ||
     !programmingLessonTrialMigration.includes('public.doma_global_trials') ||
