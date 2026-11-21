@@ -137,25 +137,7 @@ export async function onRequestPost({ request, env }) {
     if (profile.is_suspended === true) return json({ error: "account_suspended" }, 403);
     const isStaff = profile.role === "admin" || profile.role === "teacher";
 
-    let hasActiveSubscription = false;
-    if (!isStaff) {
-      const now = new Date().toISOString();
-      const subscriptionUrl = new URL(supabaseOrigin + "/rest/v1/programming_course_subscriptions");
-      subscriptionUrl.searchParams.set("student_id", "eq." + authUser.id);
-      subscriptionUrl.searchParams.set("status", "eq.active");
-      subscriptionUrl.searchParams.set("starts_at", "lte." + now);
-      subscriptionUrl.searchParams.set("expires_at", "gt." + now);
-      subscriptionUrl.searchParams.set("select", "id");
-      subscriptionUrl.searchParams.set("limit", "1");
-      const subscriptionResponse = await fetch(subscriptionUrl, { headers: adminHeaders, cache: "no-store" });
-      if (!subscriptionResponse.ok) {
-        console.error("[assistant] subscription lookup failed", { status: subscriptionResponse.status });
-        return json({ error: "membership_check_unavailable" }, 503);
-      }
-      const subscriptions = await subscriptionResponse.json().catch(() => []);
-      hasActiveSubscription = Array.isArray(subscriptions) && subscriptions.length > 0;
-    }
-    if (!isStaff && !hasActiveSubscription) return json({ error: "active_programming_subscription_required" }, 403);
+    // Free academy accounts can use the programming tutor; authentication and existing quotas remain enforced.
 
     const rawBody = await request.text();
     if (rawBody.length > 18000) return json({ error: "request_too_large" }, 413);
