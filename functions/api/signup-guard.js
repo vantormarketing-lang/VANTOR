@@ -57,7 +57,7 @@ export async function onRequestPost({ request, env }) {
     if (!verifyResponse.ok) return json({ error: "Verification service unavailable." }, 503);
     const verification = await verifyResponse.json();
     if (!verification?.success ||
-        (verification.action && verification.action !== "signup") ||
+        (verification.action !== "signup") ||
         !allowedHostnames.includes(String(verification.hostname || "").toLowerCase())) {
       return json({ error: "Verification failed. Please try again." }, 403);
     }
