@@ -498,7 +498,7 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
   async function startEnglishTrialCountdown(client){
     try{
       const paid=await client.rpc('mrfluent_english_has_paid_subscription');
-      if(paid.error||paid.data===true)return;
+      if(!paid.error&&paid.data===true)return;
       const trialCheck=await client.rpc('doma_get_my_trial_status');
       const trial=trialCheck&&!trialCheck.error?trialCheck.data:null;
       if(!trial||!trial.active||!trial.expires_at)return;
