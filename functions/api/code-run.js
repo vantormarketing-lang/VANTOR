@@ -94,7 +94,21 @@ export async function onRequestPost({ request, env }) {
       const subscriptions = subscriptionResponse.ok ? await subscriptionResponse.json() : [];
       hasActiveSubscription = Array.isArray(subscriptions) && subscriptions.length > 0;
     }
-    if (!isStaff && !hasActiveSubscription) return json({ error: "تشغيل الأكواد متاح لأصحاب الاشتراك النشط في أكاديمية البرمجة." }, 403);
+    let hasActiveGlobalTrial = false;
+    if (!isStaff && !hasActiveSubscription) {
+      const trialUrl = new URL(supabaseOrigin + "/rest/v1/doma_global_trials");
+      trialUrl.searchParams.set("user_id", "eq." + authUser.id);
+      trialUrl.searchParams.set("started_at", "lte." + new Date().toISOString());
+      trialUrl.searchParams.set("expires_at", "gt." + new Date().toISOString());
+      trialUrl.searchParams.set("select", "user_id");
+      trialUrl.searchParams.set("limit", "1");
+      const trialResponse = await fetch(trialUrl, { headers: adminHeaders });
+      const trials = trialResponse.ok ? await trialResponse.json().catch(() => []) : [];
+      hasActiveGlobalTrial = Array.isArray(trials) && trials.length > 0;
+    }
+    if (!isStaff && !hasActiveSubscription && !hasActiveGlobalTrial) {
+      return json({ error: "تشغيل الأكواد متاح خلال التجربة المجانية أو لأصحاب الاشتراك النشط في أكاديمية البرمجة." }, 403);
+    }
 
     let body;
     try {
