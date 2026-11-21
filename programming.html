@@ -179,7 +179,7 @@ function initializeDomaProgrammingAcademy(){
       if(sec<=0){
         if(window.paProgrammingTrialTicker){clearInterval(window.paProgrammingTrialTicker);window.paProgrammingTrialTicker=null;}
         badge.remove();
-        try{sessionStorage.removeItem('doma-programming-membership-v1:'+String(user&&user.id||'guest')}catch(e){}
+        try{sessionStorage.removeItem('doma-programming-membership-v1:'+String(user&&user.id||'guest'))}catch(e){}
         refreshMembership(true).then(function(){
           if(!hasAccess()){renderLockedTracks();setAcademyLocked(true);showModal();}
           else{setAcademyLocked(false);renderTracks();renderLessons();}
