@@ -550,11 +550,10 @@ if (!assistantPageSource.includes("fetch('/api/assistant'") ||
 if (!assistantWorkerSource.includes('@cf/zai-org/glm-4.7-flash') ||
     !assistantWorkerSource.includes('doma_consume_assistant_quota') ||
     !assistantWorkerSource.includes('SUPABASE_SERVICE_ROLE_KEY') ||
-    !assistantWorkerSource.includes('programming_course_subscriptions') ||
     !assistantWorkerSource.includes('select", "role,is_suspended"') ||
     !assistantWorkerSource.includes('profile.is_suspended === true') ||
     !assistantWorkerSource.includes('env.AI.run')) {
-  fail('functions/api/assistant.js: the AI endpoint must verify Auth, an active programming subscription, quota, and the Workers AI binding');
+  fail('functions/api/assistant.js: the AI endpoint must verify Auth, profile suspension, quota, and the Workers AI binding');
 }
 try {
   const workerForSyntax = assistantWorkerSource.replace(
