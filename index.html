@@ -2788,6 +2788,7 @@ async function domaSubmitSubscription(){
 
 /* Mr. Fluent: independent English Course membership (100 EGP / 30 days). */
 let mrFluentEnglishLevels=[],mrFluentEnglishSubscription=null,mrFluentEnglishPendingRequest=null,mrFluentEnglishAccessError='';
+let mrFluentEnglishTrialActive=false,mrFluentEnglishTrialExpiresAt=null;
 const MR_FLUENT_ENGLISH_PENDING_MARKER_KEY='mrfluent-english-pending-request-user-v1';
 function mrfluentHasLocalEnglishPending(userId){if(!userId)return false;try{return localStorage.getItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY)===String(userId)}catch(_){return false}}
 function mrfluentSetLocalEnglishPending(userId,pending){if(!userId)return;try{if(pending)localStorage.setItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY,String(userId));else if(localStorage.getItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY)===String(userId))localStorage.removeItem(MR_FLUENT_ENGLISH_PENDING_MARKER_KEY)}catch(_){}}
@@ -2802,10 +2803,11 @@ let mrFluentPlacementStage=0;
 let mrFluentPlacementStartedForUser=null;
 function mrfluentRenderPlacement(){
  const host=$('mrfluentEnglishPlacement'); if(!host)return;
- if(!sessionUser||!mrFluentEnglishSubscription){
+ if(!sessionUser||(!mrFluentEnglishSubscription&&!mrfluentEnglishTrialActive)){
    host.innerHTML='<div class="mf-placement-title-row"><h3>Placement Test</h3><button class="btn secondary mf-placement-back-button" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentRouteBack()"><span aria-hidden="true">←</span></button></div><p>The test is required before levels can open. First subscribe for <b>100 EGP / 30 days</b> and wait for admin approval.</p>';
    $('mrfluentEnglishLevels')?.setAttribute('hidden','');return;
  }
+ if(mrfluentEnglishTrialActive){host.innerHTML='<div class="mf-placement-title-row"><h3>Free Trial · All Levels Open</h3><button class="btn secondary mf-placement-back-button" type="button" aria-label="Back to platform" title="Back" onclick="mrfluentRouteBack()"><span aria-hidden="true">←</span></button></div><p>All English Course levels are open during your active free trial.</p>'; $('mrfluentEnglishLevels')?.removeAttribute('hidden');return;}
  const codes={A1:'A1 · Beginner',A2:'A2 · Elementary',B1:'B1 · Intermediate',B2:'B2 · Upper-Intermediate',C1:'C1 · Advanced',C2:'C2 · Proficiency'};
  if(mrFluentEnglishPlacement && Number(mrFluentEnglishPlacement.total_questions||0)>=20){
    const total=Number(mrFluentEnglishPlacement.total_questions||20);
@@ -2856,6 +2858,7 @@ function mrfluentStartPlacementTest(){
 function mrfluentRenderEnglishLevelCards(){
  const host=$('mrfluentEnglishLevels');if(!host)return;
  const descriptors={A1:'Beginner · Essential foundations',A2:'Elementary · Everyday communication',B1:'Intermediate · Independent English',B2:'Upper-intermediate · Confident fluency',C1:'Advanced · Academic and professional',C2:'Proficiency · Precision and mastery'};
+ if(mrfluentEnglishTrialActive){host.innerHTML=mrFluentEnglishLevels.length?mrFluentEnglishLevels.map(l=>'<article class="mf-course-level"><span class="pill">'+esc(l.code)+'</span><h3>'+esc(l.title)+'</h3><p>'+esc(l.description||descriptors[l.code]||'English learning level')+'</p><span class="pill">Free Trial · Open</span><button class="btn primary" type="button" onclick="mrfluentOpenEnglishLevel(\''+esc(l.id)+'\')">Open level</button></article>').join(''):'<div class="empty">No published levels. Publish levels from Admin → English Course.</div>';return}
  if(!mrFluentEnglishSubscription||!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){host.innerHTML='';return}
  const order=['A1','A2','B1','B2','C1','C2'];const assigned=order.indexOf(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code);
  host.innerHTML=mrFluentEnglishLevels.length?mrFluentEnglishLevels.map(l=>{const canOpen=order.indexOf(l.code)===assigned;return '<article class="mf-course-level" '+(!canOpen?'aria-disabled="true"':'')+'><span class="pill">'+esc(l.code)+'</span><h3>'+esc(l.title)+'</h3><p>'+esc(l.description||descriptors[l.code]||'English learning level')+'</p><span class="pill">'+(canOpen?'Current level':'🔒 Locked')+'</span><button class="btn '+(canOpen?'primary':'secondary')+'" type="button" '+(!canOpen?'disabled':'')+' onclick="mrfluentOpenEnglishLevel(\''+esc(l.id)+'\')">'+(canOpen?'Start this level':'Locked for now')+'</button></article>'}).join(''):'<div class="empty">No published levels. Publish levels from Admin → English Course.</div>';
@@ -2869,9 +2872,13 @@ async function mrfluentRefreshEnglishCourseInternal(){
   try{levelsResult=await sb.from('mrfluent_english_levels').select('id,code,title,description,sort_order,is_published').eq('is_published',true).order('sort_order',{ascending:true})}catch(e){levelsResult={error:e}}
   if(levelsResult.error){levelsHost.innerHTML='<div class="empty">English Course setup is not installed yet. The admin must run <b>MR_FLUENT_ENGLISH_COURSE_SETUP.sql</b> in Supabase, then refresh this page.</div>';statusHost.innerHTML='<span class="pill warn">Setup needed</span> English Course is configured independently from school-grade access.';return}
   mrFluentEnglishLevels=levelsResult.data||[];
-  mrFluentEnglishSubscription=null;mrFluentEnglishPendingRequest=null;mrFluentEnglishAccessError='';mrFluentEnglishPlacement=null;
+  mrFluentEnglishSubscription=null;mrFluentEnglishPendingRequest=null;mrFluentEnglishAccessError='';mrFluentEnglishPlacement=null;mrfluentEnglishTrialActive=false;mrfluentEnglishTrialExpiresAt=null;
   if(sessionUser){
     try{
+      const trialCheck=await sb.rpc('doma_get_my_trial_status');
+      const trialData=trialCheck&&!trialCheck.error?trialCheck.data:null;
+      mrfluentEnglishTrialActive=!!(trialData&&trialData.active&&trialData.expires_at&&new Date(trialData.expires_at).getTime()>Date.now());
+      mrfluentEnglishTrialExpiresAt=mrfluentEnglishTrialActive?trialData.expires_at:null;
       // Read only the current user's active membership through a SECURITY DEFINER RPC.
       // This avoids silently treating a subscriptions-table/RLS error as an unpaid account.
       const sr=await sb.rpc('mrfluent_get_my_english_course_subscription');
@@ -2903,20 +2910,21 @@ async function mrfluentRefreshEnglishCourseInternal(){
   }
   if(!sessionUser){statusHost.innerHTML='<span class="pill">Guest</span> Create an account or log in to subscribe to the English Course.'}
   else if(mrFluentEnglishAccessError){statusHost.innerHTML='<span class="pill warn">Access check failed</span> We could not verify your English Course membership. Tap Refresh Course Status; if this continues, contact the admin. <small>'+esc(mrFluentEnglishAccessError)+'</small>'}
+  else if(mrfluentEnglishTrialActive){statusHost.innerHTML='<span class="pill ok">Free Trial Active</span> All English levels are open until <b>'+esc(fmtDate(mrfluentEnglishTrialExpiresAt))+'</b>.'}
   else if(mrFluentEnglishSubscription){statusHost.innerHTML='<span class="pill ok">English Course active</span> Membership active until <b>'+esc(fmtDate(mrFluentEnglishSubscription.expires_at))+'</b>.'}
   else if(mrFluentEnglishPendingRequest){statusHost.innerHTML='<span class="pill warn">Payment pending</span> Your separate English Course request is waiting for admin approval.'}
   else{statusHost.innerHTML='<span class="pill">Locked</span> All levels are included in one separate monthly membership: <b>100 EGP / 30 days</b>. Your school-grade subscription is unaffected.'}
   const subscribeBtn=$('mrfluentEnglishSubscribeBtn');
   const openBtn=$('mrfluentEnglishOpenBtn');
   if(subscribeBtn){
-    subscribeBtn.hidden=!!mrFluentEnglishSubscription;
-    subscribeBtn.textContent=mrFluentEnglishAccessError?'Check membership':mrFluentEnglishPendingRequest?'Payment pending':sessionUser?'Explore Course →':'Log in to explore course';
+    subscribeBtn.hidden=!!mrFluentEnglishSubscription||mrfluentEnglishTrialActive;
+    subscribeBtn.textContent=mrFluentEnglishAccessError?'Check membership':mrFluentEnglishTrialActive?'Trial Active':mrFluentEnglishPendingRequest?'Payment pending':sessionUser?'Explore Course →':'Log in to explore course';
     subscribeBtn.disabled=!!mrFluentEnglishPendingRequest||!!mrFluentEnglishAccessError;
   }
-  if(openBtn)openBtn.hidden=!mrFluentEnglishSubscription;
+  if(openBtn)openBtn.hidden=!(mrFluentEnglishSubscription||mrfluentEnglishTrialActive);
   mrfluentRenderPlacement();
   mrfluentRenderEnglishLevelCards();
-  if(!sessionUser||!mrFluentEnglishSubscription){$('mrfluentEnglishLevelContent').innerHTML='<div class="empty">'+(mrFluentEnglishPendingRequest?'Your course remains locked until the admin approves the receipt.':'Subscribe for 100 EGP per 30 days and wait for approval. The required placement test unlocks the assigned starting level.')+'</div>'}
+  if(!sessionUser||(!mrFluentEnglishSubscription&&!mrfluentEnglishTrialActive)){$('mrfluentEnglishLevelContent').innerHTML='<div class="empty">'+(mrFluentEnglishPendingRequest?'Your course remains locked until the admin approves the receipt.':'Subscribe for 100 EGP per 30 days and wait for approval. The required placement test unlocks the assigned starting level.')+'</div>'}else if(mrfluentEnglishTrialActive){$('mrfluentEnglishLevelContent').innerHTML='<div class="empty">Free trial active. All six English levels are available to open.</div>'}
 
 }
 let mrFluentEnglishRefreshInFlight=null;
@@ -2942,7 +2950,7 @@ function mrfluentRouteBack(){
 }
 function mrfluentOpenCourseWorkspace(){
   if(!sessionUser){openAuth('login');return}
-  if(!mrFluentEnglishSubscription){showToast('English Course is locked until your payment is approved.');return}
+  if(!mrFluentEnglishSubscription&&!mrfluentEnglishTrialActive){showToast('English Course is locked until your payment is approved.');return}
   const workspace=$('mrfluentEnglishWorkspace');if(!workspace)return;
   workspace.hidden=false;
   document.body.classList.add('mf-course-route','mf-course-list-route');
@@ -3001,19 +3009,19 @@ async function mrfluentOpenEnglishLevel(levelId){
   if(!sessionUser){openAuth('login');return}
   await mrfluentRefreshEnglishCourse();
   if(mrFluentEnglishAccessError){showToast('Could not verify your English Course membership. Refresh the page or contact the admin.');return}
-  if(!mrFluentEnglishSubscription){await mrfluentStartEnglishSubscription();return}
+  if(!mrFluentEnglishSubscription&&!mrfluentEnglishTrialActive){await mrfluentStartEnglishSubscription();return}
 
-  const level=mrFluentEnglishLevels.find(l=>String(l.id)===String(levelId));
+  const level=mrfluentEnglishLevels.find(l=>String(l.id)===String(levelId));
   if(!level){showToast('Course level is unavailable.');return}
-  if(!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){
+  if(!mrfluentEnglishTrialActive&&(!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20)){
     showToast('Complete the required placement test first.');
     mrfluentRenderPlacement();
     return;
   }
 
   const code=String(level.code||'').trim().toUpperCase();
-  const assignedCode=String(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code||'').trim().toUpperCase();
-  if(code!==assignedCode){
+  const assignedCode=String(mrFluentEnglishPlacement?.current_level_code||mrFluentEnglishPlacement?.level_code||'').trim().toUpperCase();
+  if(!mrfluentEnglishTrialActive&&code!==assignedCode){
     showToast('Start with your assigned level. Other levels are locked for now.');
     return;
   }
@@ -8190,6 +8198,19 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
       const expiry=s?.expires_at?new Date(s.expires_at).getTime():null;
       return status==='active'&&(expiry===null||(!Number.isNaN(expiry)&&expiry>now));
     });
+
+    // Explicitly validate the shared 3-hour trial. Trial users can access all student tools and grades.
+    if(!validSubs.some(s=>s.is_trial===true||String(s.plan||'').toLowerCase()==='global_free_trial')){
+      try{
+        const globalTrial=await sb.rpc('doma_get_my_trial_status');
+        const trial=globalTrial&&!globalTrial.error?globalTrial.data:null;
+        if(trial&&trial.active&&trial.expires_at&&new Date(trial.expires_at).getTime()>now){
+          const selected=(typeof currentGrade!=='undefined'&&currentGrade)?currentGrade:(Array.isArray(grades)?grades[0]:null);
+          const trialMembership={id:null,student_id:sessionUser.id,grade_id:selected?.id||null,plan:'global_free_trial',amount:0,starts_at:trial.started_at,expires_at:trial.expires_at,status:'active',is_trial:true,trial_expires_at:trial.expires_at,grades:{name:selected?.name||'Free Trial'}};
+          validSubs.push(trialMembership);
+        }
+      }catch(trialGateError){console.warn('Global trial access fallback failed.',trialGateError)}
+    }
 
     // Preserve the explicitly opened grade; never replace it with subs[0].
     // This prevents navigation from showing another grade's lessons to the student.
