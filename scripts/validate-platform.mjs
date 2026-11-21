@@ -526,6 +526,8 @@ const autoGraderPageSource = read('programming.html');
 const autoGraderWorkerSource = read('functions/api/code-run.js');
 const autoGraderMigrationSource = read('supabase/migrations/20261112035346_hide_programming_tests_and_add_private_exact_grading.sql');
 if (!autoGraderWorkerSource.includes('doma_get_programming_exercise_tests') ||
+    !autoGraderWorkerSource.includes('doma_global_trials') ||
+    !autoGraderWorkerSource.includes('hasActiveGlobalTrial') ||
     !autoGraderWorkerSource.includes('normalizeOutput(stdout) === normalizeOutput(test.expected_output)') ||
     autoGraderWorkerSource.includes('stdout.includes') ||
     !autoGraderPageSource.includes('exercise.has_auto_test===true') ||
