@@ -96,15 +96,20 @@ export async function onRequestPost({ request, env }) {
     }
     let hasActiveGlobalTrial = false;
     if (!isStaff && !hasActiveSubscription) {
-      const trialUrl = new URL(supabaseOrigin + "/rest/v1/doma_global_trials");
-      trialUrl.searchParams.set("user_id", "eq." + authUser.id);
-      trialUrl.searchParams.set("started_at", "lte." + new Date().toISOString());
-      trialUrl.searchParams.set("expires_at", "gt." + new Date().toISOString());
-      trialUrl.searchParams.set("select", "user_id");
-      trialUrl.searchParams.set("limit", "1");
-      const trialResponse = await fetch(trialUrl, { headers: adminHeaders });
-      const trials = trialResponse.ok ? await trialResponse.json().catch(() => []) : [];
-      hasActiveGlobalTrial = Array.isArray(trials) && trials.length > 0;
+      // Ensure the trial row is created/checked through the authenticated RPC
+      // (new accounts may not have a row until this function is called).
+      const trialStatusResponse = await fetch(supabaseOrigin + "/rest/v1/rpc/doma_get_my_trial_status", {
+        method: "POST",
+        headers: { apikey: anonKey, Authorization: "Bearer " + accessToken, "content-type": "application/json" },
+        body: "{}"
+      });
+      if (trialStatusResponse.ok) {
+        const trialStatus = await trialStatusResponse.json().catch(() => null);
+        hasActiveGlobalTrial = !!(trialStatus && trialStatus.active === true && trialStatus.expires_at &&
+          new Date(trialStatus.expires_at).getTime() > Date.now());
+      } else {
+        console.error("[code-run] global trial status RPC failed", { status: trialStatusResponse.status });
+      }
     }
     if (!isStaff && !hasActiveSubscription && !hasActiveGlobalTrial) {
       return json({ error: "تشغيل الأكواد متاح خلال التجربة المجانية أو لأصحاب الاشتراك النشط في أكاديمية البرمجة." }, 403);
