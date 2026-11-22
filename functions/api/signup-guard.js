@@ -1,80 +1,18 @@
-const DOMA_TURNSTILE_SITE_KEY = "0x4AAAAAAGNDTdw2eFVxVWz-";
-const DOMA_TURNSTILE_HOSTNAMES = ["doma-academy.pages.dev"];
-
-export async function onRequestGet({ request, env }) {
-  const allowedHostnames = String(env.TURNSTILE_HOSTNAMES || DOMA_TURNSTILE_HOSTNAMES.join(",")).split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
-  const hostname = new URL(request.url).hostname.toLowerCase();
-  const siteKey = env.TURNSTILE_SITE_KEY || DOMA_TURNSTILE_SITE_KEY;
-  if (!allowedHostnames.includes(hostname) || !siteKey) {
-    return new Response(JSON.stringify({ error: "Signup verification is unavailable." }), { status: 503, headers: { "content-type": "application/json", "cache-control": "no-store" } });
-  }
-  return new Response(JSON.stringify({ siteKey }), { status: 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
-}
-
-export async function onRequestPost({ request, env }) {
-  const json = (body, status = 200) => new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
-  });
-
-  try {
-    const configuredUrl = env.SUPABASE_URL;
-    const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
-    const secret = env.TURNSTILE_SECRET;
-    const allowedHostnames = String(env.TURNSTILE_HOSTNAMES || DOMA_TURNSTILE_HOSTNAMES.join(","))
-      .split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
-
-    if (!configuredUrl || !serviceKey || !secret || !allowedHostnames.length) {
-      return json({ error: "Signup protection is not configured yet." }, 503);
-    }
-
-    const origin = request.headers.get("Origin");
-    const requestUrl = new URL(request.url);
-    if (origin && new URL(origin).host.toLowerCase() !== requestUrl.host.toLowerCase()) {
-      return json({ error: "Origin not allowed." }, 403);
-    }
-    if (!allowedHostnames.includes(requestUrl.hostname.toLowerCase())) {
-      return json({ error: "Host not allowed." }, 403);
-    }
-
-    const ip = request.headers.get("CF-Connecting-IP") || "";
-    if (!ip) return json({ error: "Could not validate request source." }, 403);
-    const ipHashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(ip));
-    const ipHash = [...new Uint8Array(ipHashBuffer)].map(b => b.toString(16).padStart(2, "0")).join("");
-
-    const supabaseBase = configuredUrl.replace(/\/+$/, "");
-    const limitResponse = await fetch(`${supabaseBase}/rest/v1/rpc/doma_allow_signup_ip`, {
-      method: "POST",
-      headers: {
-        apikey: serviceKey,
-        Authorization: `Bearer ${serviceKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ p_ip_hash: ipHash })
-    });
-    if (!limitResponse.ok) return json({ error: "Signup protection temporarily unavailable." }, 503);
-    const allowed = await limitResponse.json();
-    if (allowed !== true) return json({ error: "Too many signup attempts. Please wait and try again later." }, 429);
-
-    const body = await request.json().catch(() => null);
-    const token = typeof body?.token === "string" ? body.token.trim() : "";
-    if (!token || token.length > 2048) return json({ error: "Complete the verification first." }, 400);
-
-    const verifyResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ secret, response: token, remoteip: ip })
-    });
-    if (!verifyResponse.ok) return json({ error: "Verification service unavailable." }, 503);
-    const verification = await verifyResponse.json();
-    if (!verification?.success ||
-        (verification.action !== "signup") ||
-        !allowedHostnames.includes(String(verification.hostname || "").toLowerCase())) {
-      return json({ error: "Verification failed. Please try again." }, 403);
-    }
-
-    return json({ ok: true });
-  } catch (error) {
-    return json({ error: "Signup protection temporarily unavailable." }, 503);
-  }
-}
+const DOMA_TURNSTILE_SITE_KEY="0x4AAAAAAGNDTdw2eFVxVWz-";
+const DOMA_TURNSTILE_HOSTNAMES=["doma-academy.pages.dev"];
+const MIN_PASSWORD=6,MAX_PASSWORD=72;
+function json(body,status=200){return new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store"}});}
+function getAllowedHostnames(env){return String(env.TURNSTILE_HOSTNAMES||DOMA_TURNSTILE_HOSTNAMES.join(",")).split(",").map(x=>x.trim().toLowerCase()).filter(Boolean);}
+function normalizeEgyptianPhone(raw){let d=String(raw||"").replace(/\D/g,"");if(d.startsWith("00"))d=d.slice(2);if(/^2001[0125]\d{8}$/.test(d))d=d.slice(2);if(/^01[0125]\d{8}$/.test(d))return{e164:"+20"+d.slice(1),local:d};if(/^201[0125]\d{8}$/.test(d))return{e164:"+"+d,local:"0"+d.slice(2)};return null;}
+function ipRateKey(ip){if(!ip.includes(":")||ip.includes("."))return ip;const[head,tail]=ip.split("::"),h=head?head.split(":"):[],t=tail?tail.split(":"):[],full=tail===undefined?h:[...h,...Array(Math.max(0,8-h.length-t.length)).fill("0"),...t];return full.slice(0,4).map(g=>g.padStart(4,"0")).join(":")+"::/64";}
+async function hmacHex(secret,message){const e=new TextEncoder(),k=await crypto.subtle.importKey("raw",e.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]),sig=await crypto.subtle.sign("HMAC",k,e.encode(message));return[...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join("");}
+export async function onRequestGet({request,env}){const hosts=getAllowedHostnames(env),host=new URL(request.url).hostname.toLowerCase(),siteKey=env.TURNSTILE_SITE_KEY||DOMA_TURNSTILE_SITE_KEY;if(!hosts.includes(host)||!siteKey)return json({error:"Signup verification is unavailable."},503);return json({siteKey});}
+export async function onRequestPost({request,env}){try{const supa=env.SUPABASE_URL,key=env.SUPABASE_SERVICE_ROLE_KEY,secret=env.TURNSTILE_SECRET,ipSecret=env.IP_HASH_SECRET,hosts=getAllowedHostnames(env);if(!supa||!key||!secret||!ipSecret||!hosts.length)return json({error:"Signup protection is not configured yet."},503);
+const u=new URL(request.url),origin=request.headers.get("Origin");if(!origin)return json({error:"Origin not allowed."},403);let oh="";try{oh=new URL(origin).host.toLowerCase();}catch{return json({error:"Origin not allowed."},403);}if(oh!==u.host.toLowerCase()||!hosts.includes(u.hostname.toLowerCase()))return json({error:"Origin not allowed."},403);
+const ip=request.headers.get("CF-Connecting-IP")||"";if(!ip)return json({error:"Could not validate request source."},403);
+const body=await request.json().catch(()=>null),token=typeof body?.token==="string"?body.token.trim():"";if(!token||token.length>2048)return json({error:"Complete the verification first."},400);
+const name=typeof body?.name==="string"?body.name.trim():"",password=typeof body?.password==="string"?body.password:"",favoritePlayer=typeof body?.favoritePlayer==="string"?body.favoritePlayer.trim().slice(0,60):"",phone=normalizeEgyptianPhone(body?.phone);
+if(!name||name.length>100)return json({error:"Enter a valid name."},400);if(!phone)return json({error:"Enter a valid Egyptian mobile number, e.g. 01012345678."},400);if(password.length<MIN_PASSWORD||password.length>MAX_PASSWORD)return json({error:"Password must be between 6 and 72 characters."},400);if(body?.termsAccepted!==true)return json({error:"Please agree to the Terms & Conditions to continue."},400);
+const vr=await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({secret,response:token,remoteip:ip})});if(!vr.ok)return json({error:"Verification service unavailable."},503);const v=await vr.json();if(!v?.success||v.action!=="signup"||!hosts.includes(String(v.hostname||"").toLowerCase()))return json({error:"Verification failed. Please try again."},403);
+const hash=await hmacHex(ipSecret,ipRateKey(ip)),base=supa.replace(/\/+$/,""),lr=await fetch(base+"/rest/v1/rpc/doma_allow_signup_ip",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({p_ip_hash:hash})});if(!lr.ok)return json({error:"Signup protection temporarily unavailable."},503);if(await lr.json()!==true)return json({error:"Too many signup attempts. Please wait and try again later."},429);
+const email="student"+phone.local+"@mrfluent.invalid",team=favoritePlayer==="Lionel Messi"?"Barcelona":favoritePlayer==="Cristiano Ronaldo"?"Real Madrid":"";const cr=await fetch(base+"/auth/v1/admin/users",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({email,password,email_confirm:true,user_metadata:{full_name:name,phone:phone.local,login_method:"phone_alias",favorite_team:team,favorite_player:favoritePlayer,mr_fluent_welcome:true}})});if(!cr.ok){const er=await cr.json().catch(()=>null),cd=String(er?.error_code||er?.code||""),msg=String(er?.msg||er?.message||"");if(cd==="email_exists"||cd==="user_already_exists"||/already (been )?registered|already exists/i.test(msg))return json({error:"An account may already exist for this number. Try logging in instead."},409);if(cd==="weak_password")return json({error:"Password is too weak. Choose a stronger one."},400);return json({error:"Could not create your account. Please try again."},502);}return json({ok:true,email});}catch{return json({error:"Signup protection temporarily unavailable."},503);}}
