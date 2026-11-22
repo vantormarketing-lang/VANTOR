@@ -2323,11 +2323,14 @@ function domaLoadTurnstile(){
   if(domaTurnstileLoaderPromise)return domaTurnstileLoaderPromise;
   domaTurnstileLoaderPromise=new Promise((resolve,reject)=>{
     let script=document.getElementById('doma-turnstile-script');
-    if(!script){script=document.createElement('script');script.id='doma-turnstile-script';script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.async=true;script.defer=true;document.head.appendChild(script);}
+    if(script&&!script.dataset.domaLoading){script.remove();script=null;}
+    if(!script){script=document.createElement('script');script.id='doma-turnstile-script';script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.async=true;script.defer=true;script.dataset.domaLoading='1';}
     let finished=false;
-    const timer=setTimeout(()=>{if(!finished){finished=true;reject(new Error('Turnstile load timeout'));}},12000);
-    script.addEventListener('load',()=>{if(!finished){finished=true;clearTimeout(timer);window.turnstile?resolve(window.turnstile):reject(new Error('Turnstile API missing'));}},{once:true});
-    script.addEventListener('error',()=>{if(!finished){finished=true;clearTimeout(timer);reject(new Error('Turnstile script failed'));}},{once:true});
+    const timer=setTimeout(()=>finish(new Error('Turnstile load timeout')),20000);
+    const finish=(err)=>{if(finished)return;finished=true;clearTimeout(timer);script.dataset.domaLoading='';if(err){script.remove();reject(err);}else if(window.turnstile)resolve(window.turnstile);else{script.remove();reject(new Error('Turnstile API missing'));}};
+    script.addEventListener('load',()=>finish(null),{once:true});
+    script.addEventListener('error',()=>finish(new Error('Turnstile script failed')),{once:true});
+    if(!script.isConnected)document.head.appendChild(script);
   }).catch(err=>{domaTurnstileLoaderPromise=null;throw err;});
   return domaTurnstileLoaderPromise;
 }
