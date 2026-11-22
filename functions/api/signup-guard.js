@@ -1,10 +1,14 @@
+const DOMA_TURNSTILE_SITE_KEY = "0x4AAAAAAGNDTdw2eFVxVWz-";
+const DOMA_TURNSTILE_HOSTNAMES = ["doma-academy.pages.dev"];
+
 export async function onRequestGet({ request, env }) {
-  const allowedHostnames = String(env.TURNSTILE_HOSTNAMES || "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
+  const allowedHostnames = String(env.TURNSTILE_HOSTNAMES || DOMA_TURNSTILE_HOSTNAMES.join(",")).split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
   const hostname = new URL(request.url).hostname.toLowerCase();
-  if (!allowedHostnames.includes(hostname) || !env.TURNSTILE_SITE_KEY) {
+  const siteKey = env.TURNSTILE_SITE_KEY || DOMA_TURNSTILE_SITE_KEY;
+  if (!allowedHostnames.includes(hostname) || !siteKey) {
     return new Response(JSON.stringify({ error: "Signup verification is unavailable." }), { status: 503, headers: { "content-type": "application/json", "cache-control": "no-store" } });
   }
-  return new Response(JSON.stringify({ siteKey: env.TURNSTILE_SITE_KEY }), { status: 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
+  return new Response(JSON.stringify({ siteKey }), { status: 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -15,14 +19,12 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const configuredUrl = env.SUPABASE_URL;
-    const anonKey = env.SUPABASE_ANON_KEY;
     const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
     const secret = env.TURNSTILE_SECRET;
-    const siteKey = env.TURNSTILE_SITE_KEY;
-    const allowedHostnames = String(env.TURNSTILE_HOSTNAMES || "")
+    const allowedHostnames = String(env.TURNSTILE_HOSTNAMES || DOMA_TURNSTILE_HOSTNAMES.join(","))
       .split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
 
-    if (!configuredUrl || !anonKey || !serviceKey || !secret || !siteKey || !allowedHostnames.length) {
+    if (!configuredUrl || !serviceKey || !secret || !allowedHostnames.length) {
       return json({ error: "Signup protection is not configured yet." }, 503);
     }
 
