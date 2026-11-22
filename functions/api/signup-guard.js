@@ -1,3 +1,12 @@
+export async function onRequestGet({ request, env }) {
+  const allowedHostnames = String(env.TURNSTILE_HOSTNAMES || "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
+  const hostname = new URL(request.url).hostname.toLowerCase();
+  if (!allowedHostnames.includes(hostname) || !env.TURNSTILE_SITE_KEY) {
+    return new Response(JSON.stringify({ error: "Signup verification is unavailable." }), { status: 503, headers: { "content-type": "application/json", "cache-control": "no-store" } });
+  }
+  return new Response(JSON.stringify({ siteKey: env.TURNSTILE_SITE_KEY }), { status: 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
+}
+
 export async function onRequestPost({ request, env }) {
   const json = (body, status = 200) => new Response(JSON.stringify(body), {
     status,
