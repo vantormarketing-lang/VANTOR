@@ -2316,6 +2316,162 @@ function openAuth(type){
   $('modal').classList.add('show');
   if(type==='signup')domaRenderSignupTurnstile();
 }
+
+// DOMA auth helpers used by the current signup/login modal.
+function normalizeEgyptianPhone(raw){
+  let digits=String(raw||'').replace(/\D/g,'');
+  if(digits.startsWith('00'))digits=digits.slice(2);
+  if(/^2001[0125]\d{8}$/.test(digits))digits=digits.slice(2);
+  if(/^01[0125]\d{8}$/.test(digits))return {e164:'+20'+digits.slice(1),local:digits};
+  if(/^201[0125]\d{8}$/.test(digits))return {e164:'+'+digits,local:'0'+digits.slice(2)};
+  return null;
+}
+function phoneLoginEmail(value){
+  const normalized=(value&&typeof value==='object'&&value.local)
+    ? value
+    : normalizeEgyptianPhone(value);
+  return normalized ? 'student'+normalized.local+'@mrfluent.invalid' : '';
+}
+function isPhoneAliasEmail(value){
+  return /^student\d+@mrfluent\.invalid$/i.test(String(value||'').trim());
+}
+function toggleSignupPassword(inputId,button){
+  const field=document.getElementById(inputId);
+  if(!field)return false;
+  const reveal=field.type==='password';
+  field.type=reveal?'text':'password';
+  if(button){
+    button.setAttribute('aria-label',reveal?'Hide password':'Show password');
+    button.setAttribute('aria-pressed',reveal?'true':'false');
+    button.classList.toggle('is-visible',reveal);
+  }
+  return false;
+}
+function domaClosePlayerPicker(){
+  const choices=$('signupPlayerChoices');
+  const trigger=$('signupPlayerTrigger');
+  if(choices)choices.style.display='none';
+  if(trigger)trigger.setAttribute('aria-expanded','false');
+}
+window.domaClosePlayerPicker=domaClosePlayerPicker;
+window.domaToggleFavoritePlayers=function(trigger){
+  const choices=$('signupPlayerChoices');
+  if(!choices)return false;
+  const isOpen=choices.style.display!=='none'&&choices.style.display!=='';
+  choices.style.display=isOpen?'none':'grid';
+  if(trigger)trigger.setAttribute('aria-expanded',isOpen?'false':'true');
+  return false;
+};
+window.domaSelectFavoritePlayer=function(player){
+  const allowed=['Lionel Messi','Cristiano Ronaldo'];
+  if(!allowed.includes(player))return false;
+  const input=$('signupPlayer');
+  const value=$('signupPlayerValue');
+  const trigger=$('signupPlayerTrigger');
+  const choices=$('signupPlayerChoices');
+  if(input)input.value=player;
+  if(value)value.textContent=player;
+  if(trigger){
+    trigger.classList.add('is-selected');
+    trigger.setAttribute('aria-expanded','false');
+  }
+  if(choices){
+    choices.style.display='none';
+    choices.querySelectorAll('[role="option"]').forEach(option=>{
+      option.setAttribute('aria-selected',option.getAttribute('aria-label')==='Choose '+player?'true':'false');
+    });
+  }
+  return false;
+};
+async function ensureProfile(user,fullName,phone){
+  if(!sb||!user?.id)throw new Error('Student profile service is unavailable.');
+  const selectProfile=()=>sb.from('profiles')
+    .select('id,full_name,email,phone,role,grade_id,created_at,is_suspended,favorite_team')
+    .eq('id',user.id).maybeSingle();
+  const existing=await selectProfile();
+  if(existing.error)throw existing.error;
+  if(existing.data)return existing.data;
+  const metadata=user.user_metadata||{};
+  const normalized=normalizeEgyptianPhone(phone||metadata.phone||'');
+  const localPhone=normalized?.local||null;
+  const preferredTeam=['Barcelona','Real Madrid'].includes(metadata.favorite_team)
+    ? metadata.favorite_team : null;
+  const payload={
+    id:user.id,
+    full_name:String(fullName||metadata.full_name||metadata.name||'Student').trim().slice(0,100)||'Student',
+    email:user.email||null,
+    phone:localPhone
+  };
+  if(preferredTeam)payload.favorite_team=preferredTeam;
+  const inserted=await sb.from('profiles').insert(payload)
+    .select('id,full_name,email,phone,role,grade_id,created_at,is_suspended,favorite_team')
+    .maybeSingle();
+  if(!inserted.error)return inserted.data;
+  // A trigger or parallel auth callback may have created the row first.
+  const raced=await selectProfile();
+  if(!raced.error&&raced.data)return raced.data;
+  throw inserted.error;
+}
+let domaLoginBusy=false;
+async function domaLogin(){
+  if(domaLoginBusy)return;
+  const identifier=String($('loginPhone')?.value||'').trim();
+  const password=$('loginPass')?.value||'';
+  if(!identifier||!password)return showStatus('authStatus','Enter your mobile number or email and password.','error');
+  if(password.length>72)return showStatus('authStatus','Password is not valid. Please check it and try again.','error');
+  let loginEmail='';
+  if(identifier.includes('@')){
+    loginEmail=identifier.toLowerCase();
+  }else{
+    const normalized=normalizeEgyptianPhone(identifier);
+    if(!normalized)return showStatus('authStatus','Enter a valid Egyptian mobile number or your account email.','error');
+    loginEmail=phoneLoginEmail(normalized.local);
+  }
+  if(!sb?.auth)return showStatus('authStatus','Sign-in service is not ready. Refresh the page and try again.','error');
+  const button=document.querySelector('#modalBody .doma-v115-create');
+  domaLoginBusy=true;
+  if(button)button.disabled=true;
+  try{
+    showStatus('authStatus','Signing you in…');
+    const {data,error}=await sb.auth.signInWithPassword({email:loginEmail,password});
+    if(error){
+      const code=String(error.code||'');
+      const message=(code==='invalid_credentials'||error.status===400)
+        ? 'Mobile number/email or password is incorrect.'
+        : 'Could not sign in right now. Please try again.';
+      return showStatus('authStatus',message,'error');
+    }
+    const user=data?.user;
+    if(!user||!data?.session)return showStatus('authStatus','Sign-in did not return an active session. Please try again.','error');
+    sessionUser=user;
+    try{
+      await ensureProfile(user,user.user_metadata?.full_name||user.user_metadata?.name, user.user_metadata?.phone);
+    }catch(profileError){
+      console.warn('Student profile could not be checked after sign-in.',profileError);
+      return showStatus('authStatus','You are signed in, but your student profile could not be loaded. Please contact support.','error');
+    }
+    closeModal();
+    updateNav();
+    showToast('Welcome back!');
+    if(user.app_metadata?.must_change_password===true){
+      setTimeout(()=>{
+        if(typeof domaShowForcedPasswordChange==='function'){
+          openAuth('login');
+          domaShowForcedPasswordChange();
+        }
+      },0);
+    }
+  }catch(error){
+    console.warn('Student sign-in failed.',error);
+    showStatus('authStatus','Sign-in service is temporarily unavailable. Please try again.','error');
+  }finally{
+    domaLoginBusy=false;
+    if(button)button.disabled=false;
+  }
+}
+window.domaLogin=domaLogin;
+window.toggleSignupPassword=toggleSignupPassword;
+
 let domaTurnstileWidgetId=null;
 let domaTurnstileLoaderPromise=null;
 function domaLoadTurnstile(){
@@ -2608,7 +2764,7 @@ async function domaOpenGrade(name){
 }
 
 // Explicitly expose grade/account actions for the resilient backup grade cards.
-window.domaOpenGrade=domaOpenGrade;
+window.domaLogin=domaLogin;window.toggleSignupPassword=toggleSignupPassword;window.domaToggleFavoritePlayers=window.domaToggleFavoritePlayers;window.domaSelectFavoritePlayer=window.domaSelectFavoritePlayer;window.domaClosePlayerPicker=domaClosePlayerPicker;window.domaOpenGrade=domaOpenGrade;
 window.showGradeInfo=showGradeInfo;
 window.openAuth=openAuth;
 async function domaStartSubscription(name,plan){
