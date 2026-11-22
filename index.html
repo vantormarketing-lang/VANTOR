@@ -2336,7 +2336,13 @@ function domaLoadTurnstile(){
 }
 async function domaRenderSignupTurnstile(forceRetry=false){
   const slot=document.getElementById('domaSignupTurnstile');
-  if(!slot||domaTurnstileWidgetId!==null||slot.dataset.loading==='1')return;
+  if(!slot||slot.dataset.loading==='1')return;
+  // A modal reopen creates a new empty slot; remove the stale widget ID before rendering.
+  if(domaTurnstileWidgetId!==null){
+    if(!forceRetry&&slot.childElementCount>0)return;
+    try{window.turnstile?.remove(domaTurnstileWidgetId);}catch(e){}
+    domaTurnstileWidgetId=null;
+  }
   if(forceRetry){slot.innerHTML='';domaTurnstileLoaderPromise=null;}
   slot.dataset.loading='1';
   try{
@@ -2347,6 +2353,7 @@ async function domaRenderSignupTurnstile(forceRetry=false){
     slot.innerHTML='';
     domaTurnstileWidgetId=window.turnstile.render(slot,{sitekey:config.siteKey,action:'signup',theme:'dark'});
   }catch(e){
+    domaTurnstileWidgetId=null;
     slot.innerHTML='<span class="doma-turnstile-error">Security verification failed to load.</span> <button type="button" class="doma-turnstile-retry" onclick="domaRenderSignupTurnstile(true)">Retry</button>';
   }finally{delete slot.dataset.loading;}
 }
