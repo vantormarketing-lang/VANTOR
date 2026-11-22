@@ -1,8 +1,8 @@
 const DOMA_TURNSTILE_SITE_KEY="0x4AAAAAAGNDTdw2eFVxVWz-";
-const DOMA_TURNSTILE_HOSTNAMES=["doma-academy.pages.dev"];
+const DOMA_TURNSTILE_HOSTNAMES=["doma1.pages.dev","doma-academy.pages.dev"];
 const MIN_PASSWORD=6,MAX_PASSWORD=72;
 function json(body,status=200){return new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store"}});}
-function getAllowedHostnames(env){return String(env.TURNSTILE_HOSTNAMES||DOMA_TURNSTILE_HOSTNAMES.join(",")).split(",").map(x=>x.trim().toLowerCase()).filter(Boolean);}
+function getAllowedHostnames(env){const configured=String(env.TURNSTILE_HOSTNAMES||"").split(",");return [...new Set([...DOMA_TURNSTILE_HOSTNAMES,...configured].map(x=>x.trim().toLowerCase()).filter(Boolean))];}
 function normalizeEgyptianPhone(raw){let d=String(raw||"").replace(/\D/g,"");if(d.startsWith("00"))d=d.slice(2);if(/^2001[0125]\d{8}$/.test(d))d=d.slice(2);if(/^01[0125]\d{8}$/.test(d))return{e164:"+20"+d.slice(1),local:d};if(/^201[0125]\d{8}$/.test(d))return{e164:"+"+d,local:"0"+d.slice(2)};return null;}
 function ipRateKey(ip){if(!ip.includes(":")||ip.includes("."))return ip;const[head,tail]=ip.split("::"),h=head?head.split(":"):[],t=tail?tail.split(":"):[],full=tail===undefined?h:[...h,...Array(Math.max(0,8-h.length-t.length)).fill("0"),...t];return full.slice(0,4).map(g=>g.padStart(4,"0")).join(":")+"::/64";}
 async function hmacHex(secret,message){const e=new TextEncoder(),k=await crypto.subtle.importKey("raw",e.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]),sig=await crypto.subtle.sign("HMAC",k,e.encode(message));return[...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join("");}
