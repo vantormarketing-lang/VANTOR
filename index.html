@@ -13835,6 +13835,89 @@ body.doma-programming-embedded-open{overflow:hidden!important}
 #gradeModal.mf-course-payment-modal .mf-course-pay-submit{display:block;width:100%;min-height:42px;margin-top:8px;border:1px solid rgba(240,221,174,.82);border-radius:11px;background:linear-gradient(135deg,#ead9a8,#c7aa70);color:#302516;font-weight:900;font-size:13px;cursor:pointer}
 @media(max-width:360px){#gradeModal.mf-course-payment-modal .modalbox{padding:12px}#gradeModal.mf-course-payment-modal .mf-course-pay-grid{grid-template-columns:1fr}}
 </style>
+<script>
+/* DOMA experimental email-OTP signup layer; leaves login flow untouched. */
+(function(){
+  const originalOpenAuth=window.openAuth;
+  let stage=0,email='',fullName='',favoritePlayer='',termsAccepted=false;
+  let otpNode=null,passwordNode=null;
+  function setButtonLabel(label){const b=document.querySelector('#modal .doma-v115-create span');if(b)b.textContent=label;}
+  function status(msg,type){if(typeof showStatus==='function')showStatus('authStatus',msg,type||'');}
+  function makeInput(id,placeholder,type,autocomplete){
+    const label=document.createElement('label');label.className='doma-v115-field';
+    const input=document.createElement('input');input.id=id;input.type=type;input.className='field';input.placeholder=placeholder;input.setAttribute('aria-label',placeholder);input.autocomplete=autocomplete;input.required=true;input.style.cssText='width:100%;min-height:24px;background:transparent;color:#fff;border:0;outline:0;';
+    label.appendChild(input);return label;
+  }
+  function prepareSignup(){
+    stage=0;email='';fullName='';favoritePlayer='';termsAccepted=false;otpNode=null;passwordNode=null;
+    const fields=document.querySelector('#modal .doma-v115-fields');if(!fields)return;
+    const phone=document.querySelector('#signupPhone');if(phone&&phone.closest('label'))phone.closest('label').remove();
+    const oldEmail=document.querySelector('#signupEmail');if(oldEmail&&oldEmail.closest('label'))oldEmail.closest('label').remove();
+    const name=document.querySelector('#signupName');if(name){name.value='';}
+    const pass=document.querySelector('#signupPass');if(pass&&pass.closest('label'))pass.closest('label').remove();
+    const emailLabel=makeInput('signupEmail','Email Address','email','email');fields.appendChild(emailLabel);
+    const player=document.querySelector('#modal .doma-v115-player-wrap');if(player)player.style.display='';
+    const terms=document.querySelector('#signupTerms');if(terms){terms.checked=false;terms.closest('label').style.display='';}
+    const button=document.querySelector('#modal .doma-v115-create');if(button){button.disabled=false;}
+    setButtonLabel('Send Verification Code');
+    const extra=document.querySelector('#domaSignupStageExtras');if(extra)extra.remove();
+  }
+  function setStageExtras(node){
+    let holder=document.querySelector('#domaSignupStageExtras');
+    if(!holder){holder=document.createElement('div');holder.id='domaSignupStageExtras';holder.className='doma-v115-fields';const btn=document.querySelector('#modal .doma-v115-create');if(btn&&btn.parentNode)btn.parentNode.insertBefore(holder,btn);}
+    holder.replaceChildren(node);
+  }
+  window.openAuth=function(type){
+    originalOpenAuth.apply(this,arguments);
+    if(type==='signup')prepareSignup();
+  };
+  window.domaSignup=async function(){
+    if(window.domaSignupBusy)return;
+    const button=document.querySelector('#modal .doma-v115-create');if(button)button.disabled=true;
+    try{
+      if(stage===0){
+        fullName=(document.querySelector('#signupName')?.value||'').trim();
+        email=(document.querySelector('#signupEmail')?.value||'').trim().toLowerCase();
+        favoritePlayer=document.querySelector('#signupPlayer')?.value||'';
+        termsAccepted=!!document.querySelector('#signupTerms')?.checked;
+        if(!fullName||!email||!favoritePlayer){status('Please complete your name, email and favorite player.','error');return;}
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){status('Enter a valid email address.','error');return;}
+        if(!termsAccepted){status('Please agree to the Terms & Conditions to continue.','error');return;}
+        const token=typeof domaGetSignupToken==='function'?domaGetSignupToken():'';if(!token){status('Complete the security verification first.','error');return;}
+        window.domaSignupBusy=true;status('Sending your verification code…');
+        let response,result;try{response=await fetch('/api/signup-email-otp',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({token,name:fullName,email,favoritePlayer,termsAccepted})});result=await response.json().catch(()=>null);}catch(e){status('Signup protection temporarily unavailable. Please try again.','error');return;}
+        if(!response.ok||!result?.ok){status(result?.error||'Could not send the verification code. Please try again.','error');return;}
+        stage=1;
+        document.querySelector('#modal .doma-v115-fields').style.display='none';
+        const player=document.querySelector('#modal .doma-v115-player-wrap');if(player)player.style.display='none';
+        const terms=document.querySelector('#signupTerms');if(terms&&terms.closest('label'))terms.closest('label').style.display='none';
+        otpNode=makeInput('signupOtp','6-digit email code','text','one-time-code');otpNode.querySelector('input').inputMode='numeric';otpNode.querySelector('input').maxLength=6;
+        setStageExtras(otpNode);setButtonLabel('Verify Code');status('Verification code sent. Check your inbox.','success');
+      }else if(stage===1){
+        const otp=(document.querySelector('#signupOtp')?.value||'').trim();
+        if(!/^\d{6}$/.test(otp)){status('Enter the 6-digit code sent to your email.','error');return;}
+        window.domaSignupBusy=true;status('Verifying your email…');
+        const verified=await sb.auth.verifyOtp({email,token:otp,type:'email'});
+        if(verified.error||!verified.data?.user){status(verified.error?.message||'Code is invalid or expired. Try again.','error');return;}
+        window.domaEmailOtpUser=verified.data.user;stage=2;
+        passwordNode=makeInput('signupNewPassword','Create Password','password','new-password');passwordNode.querySelector('input').minLength=6;passwordNode.querySelector('input').maxLength=72;
+        setStageExtras(passwordNode);setButtonLabel('Finish Account');status('Email verified. Create your password.','success');
+      }else{
+        const password=document.querySelector('#signupNewPassword')?.value||'';
+        if(password.length<6||password.length>72){status('Password must be between 6 and 72 characters.','error');return;}
+        window.domaSignupBusy=true;status('Finishing your account…');
+        const updated=await sb.auth.updateUser({password,data:{full_name:fullName,favorite_player:favoritePlayer,favorite_team:favoritePlayer,login_method:'email_otp'}});
+        if(updated.error){status(updated.error.message||'Could not save password. Please try again.','error');return;}
+        const user=updated.data?.user||window.domaEmailOtpUser;if(!user){status('Account setup needs another login step. Please try logging in.','error');return;}
+        sessionUser=user;await ensureProfile(user,fullName,null);
+        closeModal();showToast('Account created successfully. Welcome to Mr. Fluent!');
+        const homeUrl=new URL('./',window.location.href);['auth','kids','level','english-course','english-level'].forEach(key=>homeUrl.searchParams.delete(key));homeUrl.hash='';window.location.assign(homeUrl.href);
+      }
+    }catch(e){status(e?.message||'Something went wrong. Please try again.','error');}
+    finally{window.domaSignupBusy=false;domaResetTurnstile();if(button)button.disabled=false;}
+  };
+})();
+</script>
 </body>
 </html>
 
