@@ -2510,7 +2510,7 @@ async function domaRenderSignupTurnstile(forceRetry=false){
     domaTurnstileWidgetId=window.turnstile.render(slot,{sitekey:config.siteKey,action:'signup',theme:'dark'});
   }catch(e){
     domaTurnstileWidgetId=null;
-    slot.innerHTML='<span class="doma-turnstile-error">Security verification failed to load.</span> <button type="button" class="doma-turnstile-retry" onclick="domaRenderSignupTurnstile(true)">Retry</button>';
+    slot.innerHTML='<span class="doma-turnstile-error">Security verification failed to load.</span> <button type="button" class="doma-turnstile-retry" onclick="window.domaRenderSignupTurnstile?.(true)">Retry</button>';
   }finally{delete slot.dataset.loading;}
 }
 let domaSignupBusy=false;
@@ -2538,6 +2538,7 @@ async function domaSignup(){
     const homeUrl=new URL('./',window.location.href);['auth','kids','level','english-course','english-level'].forEach(key=>homeUrl.searchParams.delete(key));homeUrl.hash='';window.location.assign(homeUrl.href);
   }finally{domaResetTurnstile();domaSignupBusy=false;}
 }
+window.domaSignup=domaSignup;window.domaRenderSignupTurnstile=domaRenderSignupTurnstile;
 async function domaLogout(){if(sb)await sb.auth.signOut();sessionUser=null;currentGrade=null;currentSubscription=null;window.currentGrade=null;window.currentSubscription=null;window.domaSelectedGradeId=null;window.currentLessons=[];window.domaStudentProfile=null;closeDrawer();updateNav();renderDashboardLoggedOut();showToast('You have been logged out.')}
 function navActionMarkup(label,loggedOutAction){
   const icon=loggedOutAction
