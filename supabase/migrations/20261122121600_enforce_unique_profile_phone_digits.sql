@@ -1,0 +1,1 @@
+create unique index if not exists profiles_phone_digits_unique on public.profiles (regexp_replace(phone, '\\D', '', 'g')) where phone is not null and btrim(phone) <> ''; 
