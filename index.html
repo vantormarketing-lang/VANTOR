@@ -33,7 +33,41 @@
 </script>
 
 <script id="doma-turnstile-loader-placeholder"></script>
-<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0" onload="window.__domaSupabaseLoaded=true;window.dispatchEvent(new Event('doma:supabase-ready'))"></script>
+<script id="doma-supabase-loader">
+(function(){
+  const sources=[
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0',
+    'https://unpkg.com/@supabase/supabase-js@2.118.0/dist/umd/supabase.js'
+  ];
+  let index=0;
+  function ready(){
+    return !!(window.supabase&&typeof window.supabase.createClient==='function');
+  }
+  function loadNext(){
+    if(ready()){
+      window.__domaSupabaseLoaded=true;
+      window.dispatchEvent(new Event('doma:supabase-ready'));
+      return;
+    }
+    if(index>=sources.length){
+      window.dispatchEvent(new Event('doma:supabase-load-failed'));
+      return;
+    }
+    const script=document.createElement('script');
+    script.async=true;
+    script.src=sources[index++];
+    script.onload=function(){
+      if(ready()){
+        window.__domaSupabaseLoaded=true;
+        window.dispatchEvent(new Event('doma:supabase-ready'));
+      }else loadNext();
+    };
+    script.onerror=loadNext;
+    document.head.appendChild(script);
+  }
+  loadNext();
+})();
+</script>
 <style>
 :root{--bg:#080808;--bg2:#0d090b;--card:#120b0e;--card2:#171014;--line:#2d181f;--burg:#762337;--burg2:#9d304a;--burg3:#c05269;--text:#f5f2f3;--muted:#9b9396;--green:#5fc99a;--gold:#d7ad61;--shadow:0 22px 60px rgba(0,0,0,.35)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}button{cursor:pointer}.container{width:min(1180px,92%);margin:auto}
@@ -3109,14 +3143,17 @@ async function refreshStudentState(){
   }catch(e){console.warn('English Course refresh timed out; grade dashboard remains available.',e)}
 }
 function renderDashboardLoggedOut(){
-  if(!$('dashboardGradeProgress'))return;
-  $('dashboardGradeProgress').innerHTML='<div class="student-progress-hero"><div class="progress-ring" style="--p:0"><div class="ring-inner"><strong>0%</strong><span>Progress</span></div></div><div><h3 style="font-size:20px">Start your English journey</h3><p style="font-size:10px;color:#7d7477;margin-top:6px;line-height:1.7">Create your student account, choose your grade and activate access to unlock lessons, videos, quizzes and homework.</p><div class="account-actions"><button class="btn primary" onclick="openAuth(\'signup\')">Create Account →</button><button class="btn secondary" onclick="openAuth(\'login\')">Log In</button></div></div></div>';
-  $('dashGradeLabel').textContent='Log in to load your active grade.';
-  $('dashAccessPill').textContent='Student';
-  $('dashLessons').textContent='—';$('dashQuizzes').textContent='—';$('dashCerts').textContent='—';
-  $('dashBreakdown').innerHTML='<div class="empty">Your lesson, quiz and homework breakdown appears after login.</div>';
-  $('dashActivity').innerHTML='<div class="empty">Recent activity appears after login.</div>';
-  $('dashNotice').textContent='Create an account, choose your grade and activate access to use the student dashboard.';
+  const progress=$('dashboardGradeProgress');
+  if(progress)progress.innerHTML='<div class="student-progress-hero"><div class="progress-ring" style="--p:0"><div class="ring-inner"><strong>0%</strong><span>Progress</span></div></div><div><h3 style="font-size:20px">Start your English journey</h3><p style="font-size:10px;color:#7d7477;margin-top:6px;line-height:1.7">Create your student account, choose your grade and activate access to unlock lessons, videos, quizzes and homework.</p><div class="account-actions"><button class="btn primary" onclick="openAuth(\'signup\')">Create Account →</button><button class="btn secondary" onclick="openAuth(\'login\')">Log In</button></div></div></div>';
+  const setText=(id,value)=>{const el=$(id);if(el)el.textContent=value;};
+  const setHtml=(id,value)=>{const el=$(id);if(el)el.innerHTML=value;};
+  setText('dashGradeLabel','Log in to load your active grade.');
+  setText('dashAccessPill','Student');
+  setText('dashLessons','—');setText('dashQuizzes','—');setText('dashCerts','—');
+  setHtml('dashBreakdown','<div class="empty">Your lesson, quiz and homework breakdown appears after login.</div>');
+  // dashActivity was removed from the current public dashboard markup; do not assume it exists.
+  setHtml('dashActivity','<div class="empty">Recent activity appears after login.</div>');
+  setText('dashNotice','Create an account, choose your grade and activate access to use the student dashboard.');
 }
 async function getGradeProgress(gradeId){if(!sessionUser||!gradeId)return {total:0,completed:0,percent:0};const [l,p]=await Promise.all([sb.from('lessons').select('id').eq('grade_id',gradeId).eq('is_published',true),sb.from('lesson_progress').select('lesson_id,completed').eq('student_id',sessionUser.id).eq('completed',true)]);if(l.error)return {total:0,completed:0,percent:0};const ids=new Set((l.data||[]).map(x=>x.id));const completed=(p.data||[]).filter(x=>ids.has(x.lesson_id)).length,total=(l.data||[]).length;return {total,completed,percent:total?Math.round(completed/total*100):0}}
 async function getOverviewCounts(){const [a,b,c]=await Promise.all([sb.from('lesson_progress').select('id',{count:'exact',head:true}).eq('student_id',sessionUser.id).eq('completed',true),sb.from('quiz_attempts').select('id',{count:'exact',head:true}).eq('student_id',sessionUser.id),sb.from('certificates').select('id',{count:'exact',head:true}).eq('student_id',sessionUser.id)]);return {lessons:a.count||0,quizzes:b.count||0,certs:c.count||0}}
@@ -3747,16 +3784,19 @@ async function mrfluentHandleEnglishCourseRoute(){
 
 let domaBootInProgress=false,domaBootFinishedWithoutSupabase=false,domaBootRetryRequested=false;
 function waitForDomaSupabase(timeoutMs){
-  if(window.supabase)return Promise.resolve(true);
+  const ready=()=>!!(window.supabase&&typeof window.supabase.createClient==='function');
+  if(ready())return Promise.resolve(true);
   return new Promise(resolve=>{
     let settled=false;
     const done=()=>{
       if(settled)return;
       settled=true;
       window.removeEventListener('doma:supabase-ready',done);
-      resolve(!!window.supabase);
+      window.removeEventListener('doma:supabase-load-failed',done);
+      resolve(ready());
     };
     window.addEventListener('doma:supabase-ready',done,{once:true});
+    window.addEventListener('doma:supabase-load-failed',done,{once:true});
     setTimeout(done,timeoutMs);
   });
 }
@@ -3773,8 +3813,8 @@ async function boot(){
   domaBootInProgress=true;
   let supabaseWasMissing=false;
   try{
-    if(typeof window.supabase==='undefined')await waitForDomaSupabase(1800);
-    if(typeof window.supabase==='undefined'){
+    if(typeof window.supabase==='undefined')await waitForDomaSupabase(10000);
+    if(!window.supabase||typeof window.supabase.createClient!=='function'){
       supabaseWasMissing=true;
       throw new Error('Supabase library did not load before the startup deadline.');
     }
