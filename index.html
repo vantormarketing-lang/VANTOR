@@ -32,7 +32,7 @@
 }
 </script>
 
-<script async src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+<script id="doma-turnstile-loader-placeholder"></script>
 <script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0" onload="window.__domaSupabaseLoaded=true;window.dispatchEvent(new Event('doma:supabase-ready'))"></script>
 <style>
 :root{--bg:#080808;--bg2:#0d090b;--card:#120b0e;--card2:#171014;--line:#2d181f;--burg:#762337;--burg2:#9d304a;--burg3:#c05269;--text:#f5f2f3;--muted:#9b9396;--green:#5fc99a;--gold:#d7ad61;--shadow:0 22px 60px rgba(0,0,0,.35)}
@@ -2317,19 +2317,35 @@ function openAuth(type){
   if(type==='signup')domaRenderSignupTurnstile();
 }
 let domaTurnstileWidgetId=null;
-async function domaRenderSignupTurnstile(){
+let domaTurnstileLoaderPromise=null;
+function domaLoadTurnstile(){
+  if(window.turnstile)return Promise.resolve(window.turnstile);
+  if(domaTurnstileLoaderPromise)return domaTurnstileLoaderPromise;
+  domaTurnstileLoaderPromise=new Promise((resolve,reject)=>{
+    let script=document.getElementById('doma-turnstile-script');
+    if(!script){script=document.createElement('script');script.id='doma-turnstile-script';script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.async=true;script.defer=true;document.head.appendChild(script);}
+    let finished=false;
+    const timer=setTimeout(()=>{if(!finished){finished=true;reject(new Error('Turnstile load timeout'));}},12000);
+    script.addEventListener('load',()=>{if(!finished){finished=true;clearTimeout(timer);window.turnstile?resolve(window.turnstile):reject(new Error('Turnstile API missing'));}},{once:true});
+    script.addEventListener('error',()=>{if(!finished){finished=true;clearTimeout(timer);reject(new Error('Turnstile script failed'));}},{once:true});
+  }).catch(err=>{domaTurnstileLoaderPromise=null;throw err;});
+  return domaTurnstileLoaderPromise;
+}
+async function domaRenderSignupTurnstile(forceRetry=false){
   const slot=document.getElementById('domaSignupTurnstile');
   if(!slot||domaTurnstileWidgetId!==null||slot.dataset.loading==='1')return;
+  if(forceRetry){slot.innerHTML='';domaTurnstileLoaderPromise=null;}
   slot.dataset.loading='1';
   try{
-    for(let i=0;i<24&&!window.turnstile;i++)await new Promise(r=>setTimeout(r,250));
-    if(!window.turnstile){slot.textContent='Verification could not load. Please refresh and try again.';return;}
+    await domaLoadTurnstile();
     const configResponse=await fetch('/api/signup-guard',{method:'GET',credentials:'same-origin',cache:'no-store'});
     const config=await configResponse.json().catch(()=>null);
-    if(!configResponse.ok||!config?.siteKey){slot.textContent='Signup verification is unavailable right now.';return;}
+    if(!configResponse.ok||!config?.siteKey)throw new Error('Signup verification config unavailable');
+    slot.innerHTML='';
     domaTurnstileWidgetId=window.turnstile.render(slot,{sitekey:config.siteKey,action:'signup',theme:'dark'});
-  }catch(e){slot.textContent='Signup verification is unavailable right now.';}
-  finally{delete slot.dataset.loading;}
+  }catch(e){
+    slot.innerHTML='<span class="doma-turnstile-error">Security verification failed to load.</span> <button type="button" class="doma-turnstile-retry" onclick="domaRenderSignupTurnstile(true)">Retry</button>';
+  }finally{delete slot.dataset.loading;}
 }
 async function domaCheckSignupProtection(){
   if(!window.turnstile||domaTurnstileWidgetId===null)return false;
