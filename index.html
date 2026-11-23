@@ -3103,7 +3103,7 @@ async function mrfluentOpenEnglishLevel(levelId){
   if(mrFluentEnglishAccessError){showToast('Could not verify your English Course membership. Refresh the page or contact the admin.');return}
   if(!mrFluentEnglishSubscription&&!mrfluentEnglishTrialActive){await mrfluentStartEnglishSubscription();return}
 
-  const level=mrfluentEnglishLevels.find(l=>String(l.id)===String(levelId));
+  const level=mrFluentEnglishLevels.find(l=>String(l.id)===String(levelId));
   if(!level){showToast('Course level is unavailable.');return}
   if(!mrfluentEnglishTrialActive&&(!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20)){
     showToast('Complete the required placement test first.');
