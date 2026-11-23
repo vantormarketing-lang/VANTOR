@@ -2916,12 +2916,12 @@ function mrfluentRenderEnglishLevelCards(){
  const order=['A1','A2','B1','B2','C1','C2'];
  const descriptors={A1:'Beginner',A2:'Elementary',B1:'Intermediate',B2:'Upper Intermediate',C1:'Advanced',C2:'Proficiency'};
  const photos={
-  A1:'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=85',
-  A2:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=85',
-  B1:'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=85',
-  B2:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1000&q=85',
-  C1:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1000&q=85',
-  C2:'https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=1000&q=85'
+  A1:'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=90',
+  A2:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=90',
+  B1:'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1400&q=90',
+  B2:'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1400&q=90',
+  C1:'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=90',
+  C2:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=90'
  };
  const assignedCode=String(mrFluentEnglishPlacement?.current_level_code||mrFluentEnglishPlacement?.level_code||'').toUpperCase();
  const canAccessAll=!!mrfluentEnglishTrialActive;
@@ -2947,7 +2947,7 @@ function mrfluentRenderEnglishLevelCards(){
  cards.forEach((l,i)=>{
   const code=String(l.code).toUpperCase(),allowed=canAccessAll||code===assignedCode;
   const card=document.createElement('button');card.type='button';card.className='mf3d-level '+(!allowed?'mf3d-locked':'');card.setAttribute('aria-label','Open '+code+' level '+String(l.title||descriptors[code]||''));
-  card.innerHTML='<img class="mf3d-level-photo" loading="lazy" alt="'+esc(descriptors[code])+' English learning" src="'+photos[code]+'"><span class="mf3d-level-shade"></span><span class="mf3d-level-code">'+esc(code)+'</span><span class="mf3d-level-name">'+esc(l.title||descriptors[code])+'</span>';
+  card.innerHTML='<img class="mf3d-level-photo" loading="lazy" alt="'+esc(code)+' level cover" src="'+photos[code]+'"><span class="mf3d-level-shade"></span><span class="mf3d-level-code">'+esc(code)+'</span>';
   card.addEventListener('click',()=>mrfluentOpenEnglishLevel(l.id));
   ring.appendChild(card);
  });
@@ -3733,7 +3733,14 @@ html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-title{top:18px!
 html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-ring{inset:0!important;height:100%!important;position:absolute!important;touch-action:none!important;overflow:visible!important;}
 html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level{top:0!important;margin:0!important;left:50%!important;touch-action:none!important;}
 @media(max-width:600px){html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels{height:600px!important;min-height:600px!important;}}
-</style></body></html>`);
+</style><style id="mf-english-level-full-photo-covers-v6">
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level{background:#1b2014!important;overflow:hidden!important;border:1px solid rgba(246,233,193,.34)!important;border-radius:22px!important}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level-photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;object-position:center!important}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level-shade{position:absolute!important;inset:0!important;background:linear-gradient(180deg,rgba(10,12,8,.46) 0%,rgba(10,12,8,.08) 35%,rgba(10,12,8,.3) 100%)!important}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level-code{top:16px!important;left:50%!important;transform:translateX(-50%)!important;min-width:66px!important;text-align:center!important;padding:9px 15px!important;border-radius:14px!important;background:rgba(22,26,16,.58)!important;color:#fff!important;font-size:20px!important;font-weight:900!important;letter-spacing:1px!important;border:1px solid rgba(255,255,255,.24)!important;backdrop-filter:blur(10px)!important;box-shadow:0 8px 24px rgba(0,0,0,.2)!important}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level-name{display:none!important}
+</style>
+</body></html>`);
   w.document.close();
   w.print();
 }
