@@ -202,6 +202,18 @@ body.kid-show-enrol #enrol{display:block!important}
 .kids-level-carousel-controls button{width:42px;height:42px;border-radius:14px;border:1px solid rgba(132,97,223,.3);background:linear-gradient(145deg,rgba(165,123,255,.12),rgba(255,255,255,.35));color:#7050c2;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(67,49,92,.08)}
 .kids-level-carousel-controls span{font-size:10px;color:#78668f;font-weight:850;letter-spacing:.08em}
 @media(max-width:650px){#trackGrid.kids-levels-carousel{gap:12px!important;padding:18px 8vw 24px!important}#trackGrid.kids-levels-carousel .level-card{flex-basis:82vw!important;min-height:205px!important;padding:16px!important;border-radius:19px!important}.kids-level-carousel-controls{gap:13px}}
+
+/* Kids levels: centered 3D cover-flow carousel */
+#trackGrid.kids-levels-carousel{gap:14px!important;padding:26px calc(50% - 112px) 30px!important;align-items:center!important;scroll-snap-type:x mandatory!important;perspective:900px!important;overflow-x:auto!important;overflow-y:visible!important;scrollbar-width:none!important;background:radial-gradient(ellipse at center,rgba(151,119,226,.13),transparent 68%)!important}
+#trackGrid.kids-levels-carousel::-webkit-scrollbar{display:none!important}
+#trackGrid.kids-levels-carousel .level-card{flex:0 0 224px!important;width:224px!important;min-height:195px!important;scroll-snap-align:center!important;transform:scale(.78) rotateY(22deg)!important;filter:blur(2.2px)!important;opacity:.5!important;transition:transform .35s ease,filter .35s ease,opacity .35s ease,box-shadow .35s ease!important;transform-origin:center center!important}
+#trackGrid.kids-levels-carousel .level-card.kids-carousel-center{transform:scale(1.08) rotateY(0)!important;filter:none!important;opacity:1!important;z-index:3!important;box-shadow:0 24px 55px rgba(12,5,23,.35),0 0 35px rgba(186,145,255,.18)!important}
+#trackGrid.kids-levels-carousel .level-card.kids-carousel-left{transform:scale(.78) rotateY(-28deg)!important;filter:blur(2px)!important;opacity:.52!important}
+#trackGrid.kids-levels-carousel .level-card.kids-carousel-right{transform:scale(.78) rotateY(28deg)!important;filter:blur(2px)!important;opacity:.52!important}
+.kids-level-carousel-controls span{display:none!important}
+.kids-level-carousel-controls{margin-top:4px!important;gap:18px!important}
+.kids-level-carousel-controls button{border-radius:12px!important;background:rgba(36,20,54,.72)!important;border-color:rgba(195,160,255,.3)!important;color:#e4d1ff!important}
+@media(max-width:650px){#trackGrid.kids-levels-carousel{gap:10px!important;padding:24px calc(50% - 92px) 26px!important}#trackGrid.kids-levels-carousel .level-card{flex-basis:184px!important;width:184px!important;min-height:188px!important;padding:12px!important}#trackGrid.kids-levels-carousel .level-card.kids-carousel-center{transform:scale(1.05)!important}#trackGrid.kids-levels-carousel .level-card.kids-carousel-left{transform:scale(.78) rotateY(-24deg)!important}#trackGrid.kids-levels-carousel .level-card.kids-carousel-right{transform:scale(.78) rotateY(24deg)!important}}
 </style>
 <style id="kids-payment-proof-form">
 .kids-payment-instructions{margin-top:14px;padding:14px 16px;border:1px solid rgba(149,105,215,.23);border-radius:15px;background:linear-gradient(135deg,rgba(113,73,162,.11),rgba(255,154,207,.06));color:#6f647e;font-size:12px;line-height:1.7}
@@ -262,7 +274,7 @@ body.kid-subscription-modal #enrol .request-card{position:relative;max-height:ca
   <div class="kids-levels-nav"><a class="kids-home-return" href="./index.html" aria-label="Back to DOMA Academy" title="Back to DOMA Academy">←</a></div>
   <div class="section-head kids-levels-heading"><h2><span class="gradient">Choose Your Level</span></h2><p>اختار المستوى المناسب وابدأ رحلتك في الإنجليزي</p></div>
 
-  <div class="kids-level-carousel-controls" aria-label="Level carousel controls"><button type="button" id="kidsLevelPrev" aria-label="Previous level">‹</button><span>SWIPE TO EXPLORE</span><button type="button" id="kidsLevelNext" aria-label="Next level">›</button></div>
+  <div class="kids-level-carousel-controls" aria-label="Level carousel controls"><button type="button" id="kidsLevelPrev" aria-label="Previous level">‹</button><button type="button" id="kidsLevelNext" aria-label="Next level">›</button></div>
   <div class="track-grid kids-levels-carousel" id="trackGrid" tabindex="0" aria-label="Swipe horizontally through learning levels">
     <article class="track-card zero"><div class="track-top"><div class="track-emoji">🦊</div><span class="pill">6 levels</span></div><h3>Start from Zero</h3><p>Hear sounds, meet the alphabet, build little words, read sentences and discover stories.</p><div class="track-meta"><span class="pill">🔊 Sounds</span><span class="pill">🔤 Phonics</span><span class="pill">📚 Stories</span></div><div class="level-chips"><span class="level-chip">K0 Little Ears</span><span class="level-chip">K1 ABC Friends</span><span class="level-chip">K2 Tiny Words</span><span class="level-chip">K3–K5 More adventures</span></div><div class="path-controls"><button class="btn btn-primary" onclick="chooseTrack('START_ZERO')">Choose this path →</button><button class="btn btn-soft" onclick="beginPlacement('START_ZERO')">Find my level</button></div></article>
     <article class="track-card primary"><div class="track-top"><div class="track-emoji">🎒</div><span class="pill">3 level groups</span></div><h3>Primary School Support</h3><p>Strengthen school English with vocabulary, reading, grammar, listening and guided writing.</p><div class="track-meta"><span class="pill">🧩 Vocabulary</span><span class="pill">📖 Reading</span><span class="pill">✍️ Writing</span></div><div class="level-chips"><span class="level-chip">Primary 1–2</span><span class="level-chip">Primary 3–4</span><span class="level-chip">Primary 5–6</span></div><div class="path-controls"><button class="btn btn-mint" onclick="chooseTrack('PRIMARY_SUPPORT')">Choose this path →</button><button class="btn btn-soft" onclick="beginPlacement('PRIMARY_SUPPORT')">Find my level</button></div></article>
@@ -1188,7 +1200,24 @@ html body.mfh-page #tracks .track-grid>.level-card .pill{
 
 
 <script>
-(function(){const grid=document.getElementById('trackGrid');if(!grid)return;const scrollStep=()=>Math.max(260,grid.clientWidth*.72);document.getElementById('kidsLevelPrev')?.addEventListener('click',()=>grid.scrollBy({left:-scrollStep(),behavior:'smooth'}));document.getElementById('kidsLevelNext')?.addEventListener('click',()=>grid.scrollBy({left:scrollStep(),behavior:'smooth'}));})();
+(function(){
+ const grid=document.getElementById('trackGrid');if(!grid)return;
+ const prev=document.getElementById('kidsLevelPrev'),next=document.getElementById('kidsLevelNext');
+ const step=()=>Math.max(210,grid.clientWidth*.55);
+ const cards=()=>[...grid.querySelectorAll('.level-card')];
+ function update(){
+  const arr=cards();if(!arr.length)return;
+  const mid=grid.getBoundingClientRect().left+grid.clientWidth/2;let idx=0,best=Infinity;
+  arr.forEach((card,i)=>{const r=card.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<best){best=d;idx=i}});
+  arr.forEach((card,i)=>{card.classList.toggle('kids-carousel-center',i===idx);card.classList.toggle('kids-carousel-left',i===idx-1);card.classList.toggle('kids-carousel-right',i===idx+1);});
+ }
+ prev?.addEventListener('click',()=>grid.scrollBy({left:-step(),behavior:'smooth'}));
+ next?.addEventListener('click',()=>grid.scrollBy({left:step(),behavior:'smooth'}));
+ grid.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});
+ new MutationObserver(()=>requestAnimationFrame(update)).observe(grid,{childList:true});
+ window.addEventListener('resize',update);
+ requestAnimationFrame(update);
+})();
 </script>
 </body>
 </html>
