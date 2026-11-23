@@ -252,7 +252,7 @@ def validate_external_script(script: Path) -> bool:
 
 
 def main() -> int:
-    failures = [page.name for page in PAGES if not validate_page(ROOT / page)]
+    failures = [page for page in PAGES if not validate_page(ROOT / page)]
     for script_name in ("doma-mrfluent-kids-runtime.js", "mf-kids-learning-experiences.js"):
         if not validate_external_script(ROOT / script_name):
             failures.append(script_name)
