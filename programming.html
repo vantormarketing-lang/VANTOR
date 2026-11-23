@@ -1772,3 +1772,26 @@ html body.programming-page #paTracks .pa-track-card> *:not(.pa-track-content){di
 html body.programming-page #paTracks .pa-track-card svg,html body.programming-page #paTracks .pa-track-card img,html body.programming-page #paTracks .pa-track-card [class*="icon"],html body.programming-page #paTracks .pa-track-card [class*="Icon"],html body.programming-page #paTracks .pa-track-card [aria-hidden="true"]{display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important}
 html body.programming-page #paTracks .pa-track-content b,html body.programming-page #paTracks .pa-track-description{filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 </style>
+
+<!-- Final redesign: clean text, hard icon removal, olive glow dots 20261123 -->
+<style id="programming-paths-clean-typography-dots-20261123">
+html body.programming-page #paTracks .pa-track-number,
+html body.programming-page #paTracks .pa-track-icon,
+html body.programming-page #paTracks .pa-track-card svg,
+html body.programming-page #paTracks .pa-track-card img,
+html body.programming-page #paTracks .pa-track-card [class*="icon"],
+html body.programming-page #paTracks .pa-track-card [class*="Icon"],
+html body.programming-page #paTracks .pa-track-card [aria-hidden="true"]{
+display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;margin:0!important;padding:0!important}
+html body.programming-page #paTracks .pa-track-content,
+html body.programming-page #paTracks .pa-track-content b,
+html body.programming-page #paTracks .pa-track-description{
+background:transparent!important;background-color:transparent!important;box-shadow:none!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:0!important;border-radius:0!important
+}
+html body.programming-page #paTracks .pa-track-content{gap:10px!important;position:relative!important;z-index:2!important}
+html body.programming-page #paTracks .pa-track-content b{color:#b8c7a0!important;font-family:inherit!important;font-size:clamp(18px,1.7vw,21px)!important;font-weight:700!important;line-height:1.4!important;text-shadow:none!important;padding:0!important}
+html body.programming-page #paTracks .pa-track-description{color:#f8f8f5!important;font-family:inherit!important;font-size:13px!important;font-weight:400!important;line-height:1.75!important;text-shadow:none!important;padding:0!important}
+html body.programming-page #paTracks .pa-track-card::after{content:""!important;position:absolute!important;inset:0!important;pointer-events:none!important;border-radius:inherit!important;background:radial-gradient(circle at 18px 18px,rgba(184,199,160,.98) 0 2.5px,rgba(184,199,160,.28) 3px,transparent 7px),radial-gradient(circle at 31px 18px,rgba(224,231,195,.95) 0 2.2px,rgba(224,231,195,.24) 3px,transparent 7px),radial-gradient(circle at 44px 18px,rgba(139,166,110,.95) 0 2.2px,rgba(139,166,110,.22) 3px,transparent 7px)!important;opacity:.9!important}
+html body.programming-page #paTracks .pa-track-card::before{z-index:0!important}
+@media(max-width:650px){html body.programming-page #paTracks .pa-track-content b{font-size:18px!important}html body.programming-page #paTracks .pa-track-description{font-size:12px!important}}
+</style>
