@@ -752,6 +752,15 @@ console.log("Hello, " + name);
 
 
 
+
+<style id="pa20-hub-coverflow-mobile-cleanup">
+@media(max-width:650px){
+  .pa20-hub-carousel-controls{display:none!important}
+  #pa20HubCarousel{overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain!important}
+  #pa20HubCarousel .pa20-hub-card.pa20-left{transform:scale(.72) rotateY(24deg)!important}
+  #pa20HubCarousel .pa20-hub-card.pa20-right{transform:scale(.72) rotateY(-24deg)!important}
+}
+</style>
 </body>
 </html>`,
     c:`#include <stdio.h>
