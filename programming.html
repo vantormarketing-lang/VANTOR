@@ -1635,3 +1635,17 @@ body.pa-embedded-subscription-only .pa-modal-card{max-height:min(88vh,820px);box
  #pa20HubCarousel .pa20-hub-card{flex:0 0 76vw!important;width:76vw!important;height:76vw!important;max-width:300px!important;max-height:300px!important;min-height:0!important;box-sizing:border-box!important}
 }
 </style>
+
+<style id="pa20-header-fixed-and-carousel-layout-v5">
+/* Stable academy heading and full-width carousel layout */
+body.programming-page{width:100%!important;max-width:none!important;overflow-x:hidden!important}
+body.programming-page .pa-topbar{position:sticky!important;top:0!important;z-index:1000!important;width:100%!important;box-sizing:border-box!important}
+body.programming-page .pa-shell{width:100%!important;max-width:none!important;box-sizing:border-box!important;margin-inline:0!important}
+body.programming-page .pa20-hub-carousel{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+body.programming-page #pa20HubCarousel{width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important;margin-inline:0!important}
+@media(max-width:650px){
+ body.programming-page .pa20-shell,body.programming-page .pa-shell{width:100%!important;max-width:none!important;margin:0!important;padding-inline:0!important}
+ body.programming-page .pa20-hub-carousel{width:100vw!important;margin-inline:calc(50% - 50vw)!important}
+ body.programming-page #pa20HubCarousel{width:100vw!important;min-width:100vw!important;margin-inline:0!important;padding-inline:calc(50vw - 38vw)!important;box-sizing:border-box!important}
+}
+</style>
