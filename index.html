@@ -2915,36 +2915,29 @@ function mrfluentRenderEnglishLevelCards(){
  const levels=Array.isArray(mrFluentEnglishLevels)?mrFluentEnglishLevels:[];
  const order=['A1','A2','B1','B2','C1','C2'];
  const descriptors={A1:'Beginner',A2:'Elementary',B1:'Intermediate',B2:'Upper Intermediate',C1:'Advanced',C2:'Proficiency'};
- const photos={
-  A1:'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=90',
-  A2:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=90',
-  B1:'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1400&q=90',
-  B2:'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1400&q=90',
-  C1:'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=90',
-  C2:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=90'
- };
  const assignedCode=String(mrFluentEnglishPlacement?.current_level_code||mrFluentEnglishPlacement?.level_code||'').toUpperCase();
  const canAccessAll=!!mrfluentEnglishTrialActive;
  const cards=levels.filter(l=>order.includes(String(l.code||'').toUpperCase())).sort((a,b)=>order.indexOf(String(a.code).toUpperCase())-order.indexOf(String(b.code).toUpperCase()));
- const title='<div class="mf3d-title">Choose Your Level</div>';
- const styleId='mf-english-3d-levels-v2';
+ const styleId='mf-english-level-horizontal-coverflow-v8';
  if(!document.getElementById(styleId)){const st=document.createElement('style');st.id=styleId;st.textContent=`
- #mrfluentEnglishLevels{position:relative!important;display:block!important;overflow:visible!important;max-width:100%!important;height:clamp(390px,55vw,520px)!important;padding:48px 0 22px!important;perspective:1250px!important;touch-action:pan-y!important;user-select:none!important}
- .mf3d-title{position:relative;display:block;margin:0 0 12px;padding:0;background:none;border:0;border-radius:0;text-align:center;color:#52602f;font-size:clamp(18px,2vw,24px);font-weight:900;box-shadow:none;backdrop-filter:none}
- .mf3d-ring{position:absolute;inset:58px 0 0;transform-style:preserve-3d;will-change:transform}
- .mf3d-level{position:absolute;left:50%;top:50%;width:clamp(190px,27vw,255px);height:clamp(250px,36vw,320px);margin:-160px 0 0 -127px;padding:0;border:1px solid rgba(255,255,255,.22);border-radius:22px;overflow:hidden;backface-visibility:hidden;box-shadow:0 18px 44px rgba(0,0,0,.35);background:#21182d;cursor:pointer;transition:filter .25s,transform .25s;outline:none}
- .mf3d-level:hover,.mf3d-level:focus{filter:brightness(1.1);border-color:rgba(255,255,255,.55)}
- .mf3d-level-photo{display:block;width:100%;height:calc(100% - 55px);object-fit:cover}
- .mf3d-level-shade{position:absolute;inset:0 0 55px;background:linear-gradient(0deg,rgba(13,10,20,.6),transparent 65%);pointer-events:none}
- .mf3d-level-name{position:absolute;bottom:0;left:0;right:0;height:55px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;color:#4f5c2a;font-size:19px;font-weight:850;background:linear-gradient(130deg,#f3ead3,#e2d9b9)}
- .mf3d-level-code{position:absolute;top:10px;left:10px;padding:5px 9px;border-radius:999px;background:rgba(12,10,20,.6);color:#fff;font-size:12px;font-weight:800;backdrop-filter:blur(8px)}
- .mf3d-level.mf3d-locked{opacity:.88}
- @media(max-width:600px){#mrfluentEnglishLevels{height:390px!important}.mf3d-level{width:210px;height:275px;margin:-137px 0 0 -105px}.mf3d-level-name{font-size:17px}}
- @media(prefers-reduced-motion:reduce){.mf3d-level{transition:none!important}}
+ #mrfluentEnglishLevels{position:relative!important;display:block!important;overflow:visible!important;max-width:100%!important;height:auto!important;min-height:0!important;padding:18px 0 16px!important;perspective:1000px!important;user-select:none!important}
+ #mrfluentEnglishLevels .mf3d-title{position:relative!important;display:block!important;margin:0 0 14px!important;padding:0!important;text-align:center!important;color:#52602f!important;font-size:clamp(18px,2vw,24px)!important;font-weight:900!important;background:none!important;border:0!important}
+ #mrfluentEnglishLevels .mf3d-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 8px}
+ #mrfluentEnglishLevels .mf3d-controls button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(82,96,47,.28);background:#efe4ca;color:#586532;font-size:24px;font-weight:800;cursor:pointer}
+ #mrfluentEnglishLevels .mf3d-ring{position:relative!important;display:flex!important;align-items:center!important;gap:16px!important;width:100%!important;box-sizing:border-box!important;overflow-x:auto!important;overflow-y:hidden!important;padding:24px max(7vw,26px) 28px!important;scroll-snap-type:x mandatory!important;scroll-behavior:smooth!important;scrollbar-width:none!important;perspective:1000px!important;overscroll-behavior-inline:contain!important;touch-action:pan-x!important;-webkit-overflow-scrolling:touch!important}
+ #mrfluentEnglishLevels .mf3d-ring::-webkit-scrollbar{display:none!important}
+ #mrfluentEnglishLevels .mf3d-level{position:relative!important;left:auto!important;top:auto!important;flex:0 0 clamp(148px,22vw,174px)!important;width:clamp(148px,22vw,174px)!important;height:clamp(172px,25vw,205px)!important;margin:0!important;scroll-snap-align:center!important;scroll-snap-stop:always!important;transform:scale(.84)!important;transition:transform .32s ease,opacity .32s ease,filter .32s ease!important;opacity:.68!important;filter:brightness(.86)!important;z-index:1!important;backface-visibility:visible!important;border-radius:20px!important;background:linear-gradient(145deg,#f3ead5,#e4d8b8)!important;border:1px solid rgba(75,87,45,.42)!important;box-shadow:0 14px 34px rgba(28,33,18,.28)!important;overflow:hidden!important}
+ #mrfluentEnglishLevels .mf3d-level.mf3d-cf-center{transform:scale(1)!important;opacity:1!important;filter:none!important;z-index:4!important}
+ #mrfluentEnglishLevels .mf3d-level.mf3d-cf-left{transform:scale(.72) rotateY(22deg)!important;opacity:.68!important;filter:brightness(.86)!important}
+ #mrfluentEnglishLevels .mf3d-level.mf3d-cf-right{transform:scale(.72) rotateY(-22deg)!important;opacity:.68!important;filter:brightness(.86)!important}
+ #mrfluentEnglishLevels .mf3d-level-code{position:absolute!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;padding:0!important;min-width:0!important;height:auto!important;background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;color:#46532b!important;font-size:clamp(24px,4vw,34px)!important;font-weight:950!important;letter-spacing:1.5px!important;text-align:center!important}
+ #mrfluentEnglishLevels .mf3d-level-name,#mrfluentEnglishLevels .mf3d-level-photo,#mrfluentEnglishLevels .mf3d-level-shade{display:none!important}
+ @media(max-width:600px){#mrfluentEnglishLevels .mf3d-ring{padding:18px calc(50vw - 74px) 22px!important;gap:10px!important}#mrfluentEnglishLevels .mf3d-level{flex-basis:148px!important;width:148px!important;height:172px!important}}
+ @media(prefers-reduced-motion:reduce){#mrfluentEnglishLevels .mf3d-level{transition:none!important}}
  `;document.head.appendChild(st)}
- host.innerHTML=title+'<div class="mf3d-ring" id="mfEnglish3dRing"></div>';
+ host.innerHTML='<div class="mf3d-title">Choose Your Level</div><div class="mf3d-controls" aria-label="Level carousel controls"><button type="button" id="mfEnglishLevelPrev" aria-label="Previous level">‹</button><button type="button" id="mfEnglishLevelNext" aria-label="Next level">›</button></div><div class="mf3d-ring" id="mfEnglish3dRing"></div>';
  const ring=host.querySelector('#mfEnglish3dRing');if(!ring)return;
- cards.forEach((l,i)=>{
+ cards.forEach(l=>{
   const code=String(l.code).toUpperCase(),allowed=canAccessAll||code===assignedCode;
   const card=document.createElement('button');card.type='button';card.className='mf3d-level '+(!allowed?'mf3d-locked':'');card.setAttribute('aria-label','Open '+code+' level '+String(l.title||descriptors[code]||''));
   card.innerHTML='<span class="mf3d-level-code">'+esc(code)+'</span>';
@@ -2952,44 +2945,18 @@ function mrfluentRenderEnglishLevelCards(){
   ring.appendChild(card);
  });
  if(cards.length!==6){host.insertAdjacentHTML('beforeend','<p class="empty">Six English levels are not available yet.</p>');return;}
- // Match the kids/programming course coverflow: horizontal swipe/scroll, centered active card, neighbors tilted.
- const carouselHost=host;
- carouselHost.style.overflowX='auto';
- carouselHost.style.overflowY='hidden';
- carouselHost.style.scrollSnapType='x mandatory';
- carouselHost.style.scrollBehavior='smooth';
- carouselHost.style.touchAction='pan-x pan-y';
- carouselHost.style.webkitOverflowScrolling='touch';
- carouselHost.style.perspective='none';
- ring.style.position='relative';
- ring.style.inset='auto';
- ring.style.height='auto';
- ring.style.width='100%';
- ring.style.display='flex';
- ring.style.alignItems='center';
- ring.style.justifyContent='flex-start';
- ring.style.gap='18px';
- ring.style.padding='40px max(10vw,28px) 30px';
- ring.style.boxSizing='border-box';
- ring.style.transform='none';
- ring.style.transformStyle='flat';
- ring.style.overflowX='auto';
- ring.style.overflowY='hidden';
- ring.style.scrollSnapType='x mandatory';
- ring.style.scrollBehavior='smooth';
- ring.style.touchAction='pan-x';
- ring.style.webkitOverflowScrolling='touch';
- cards.forEach((level,i)=>{const card=ring.children[i];card.style.position='relative';card.style.left='auto';card.style.top='auto';card.style.margin='0';card.style.flex='0 0 clamp(150px,22vw,178px)';card.style.width='clamp(150px,22vw,178px)';card.style.height='clamp(170px,25vw,205px)';card.style.scrollSnapAlign='center';card.style.transform='scale(.86)';card.style.transition='transform .32s ease,opacity .32s ease,filter .32s ease';card.style.opacity='.7';card.style.filter='brightness(.88)';card.style.zIndex='1';});
- function cardsList(){return Array.from(ring.children);}
- function nearestCard(){const list=cardsList();if(!list.length)return null;const center=ring.getBoundingClientRect().left+ring.clientWidth/2;let nearest=list[0],dist=Infinity;list.forEach(el=>{const r=el.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-center);if(d<dist){dist=d;nearest=el;}});return nearest;}
- function refreshCoverflow(){const list=cardsList(),active=nearestCard(),index=list.indexOf(active);list.forEach((el,i)=>{el.classList.remove('mf3d-cf-center','mf3d-cf-left','mf3d-cf-right');el.classList.toggle('mf3d-cf-center',i===index);el.classList.toggle('mf3d-cf-left',i===index-1);el.classList.toggle('mf3d-cf-right',i===index+1);el.style.transform=i===index?'scale(1)':'scale(.84) rotateY('+(i<index?'16deg':i>index?'-16deg':'0deg')+')';el.style.opacity=i===index?'1':'.68';el.style.filter=i===index?'brightness(1)':'brightness(.86)';el.style.zIndex=i===index?'3':'1';});}
- let raf=0,settleTimer=0;
- ring.addEventListener('scroll',()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;refreshCoverflow();});clearTimeout(settleTimer);settleTimer=setTimeout(()=>{const active=nearestCard();if(active)ring.scrollTo({left:ring.scrollLeft+active.getBoundingClientRect().left+active.offsetWidth/2-(ring.getBoundingClientRect().left+ring.clientWidth/2),behavior:'smooth'});},160);},{passive:true});
- window.addEventListener('resize',refreshCoverflow);
- requestAnimationFrame(()=>{const first=cardsList()[0];if(first)ring.scrollTo({left:first.offsetLeft-first.offsetWidth*.08,behavior:'auto'});refreshCoverflow();});
-
+ function list(){return Array.from(ring.children);}
+ function center(card,behavior){if(!card)return;const hr=ring.getBoundingClientRect(),cr=card.getBoundingClientRect();ring.scrollTo({left:ring.scrollLeft+cr.left+cr.width/2-(hr.left+hr.width/2),behavior:behavior||'smooth'});}
+ function nearest(){const items=list();if(!items.length)return null;const mid=ring.getBoundingClientRect().left+ring.clientWidth/2;let best=items[0],dist=Infinity;items.forEach(el=>{const r=el.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<dist){dist=d;best=el;}});return best;}
+ function update(){const items=list(),active=nearest(),i=items.indexOf(active);items.forEach((el,n)=>{el.classList.remove('mf3d-cf-center','mf3d-cf-left','mf3d-cf-right');el.classList.toggle('mf3d-cf-center',n===i);el.classList.toggle('mf3d-cf-left',n===i-1);el.classList.toggle('mf3d-cf-right',n===i+1);});}
+ let raf=0,settle=0,last=ring.scrollLeft,direction=0,wrapping=false;
+ function move(step){const items=list(),active=nearest();if(!active||!items.length)return;let i=items.indexOf(active),target=i+step;if(target<0){ring.insertBefore(items[items.length-1],items[0]);target=0;}else if(target>=items.length){ring.appendChild(items[0]);target=items.length-1;}center(list()[target]);}
+ function wrap(){if(wrapping)return;const items=list(),active=nearest();if(!active||items.length<2)return;const i=items.indexOf(active);if(direction<0&&i===0){wrapping=true;ring.insertBefore(items[items.length-1],items[0]);center(list()[0],'auto');wrapping=false;}else if(direction>0&&i===items.length-1){wrapping=true;ring.appendChild(items[0]);center(list()[items.length-1],'auto');wrapping=false;}update();}
+ ring.addEventListener('scroll',()=>{direction=ring.scrollLeft-last;last=ring.scrollLeft;if(raf)return;raf=requestAnimationFrame(()=>{raf=0;update();});clearTimeout(settle);settle=setTimeout(wrap,180);},{passive:true});
+ const prev=host.querySelector('#mfEnglishLevelPrev'),next=host.querySelector('#mfEnglishLevelNext');prev&&prev.addEventListener('click',()=>move(-1));next&&next.addEventListener('click',()=>move(1));
+ window.addEventListener('resize',()=>{center(nearest(),'auto');update();});
+ requestAnimationFrame(()=>{center(list()[0],'auto');update();});
 }
-
 function mrfluentCourseActive(sub){const now=Date.now();return !!sub&&String(sub.status||'').toLowerCase()==='active'&&(!sub.starts_at||new Date(sub.starts_at).getTime()<=now)&&(!sub.expires_at||new Date(sub.expires_at).getTime()>now)}
 async function mrfluentRefreshEnglishCourseInternal(){
   const levelsHost=$('mrfluentEnglishLevels'),statusHost=$('mrfluentEnglishCourseStatus');
