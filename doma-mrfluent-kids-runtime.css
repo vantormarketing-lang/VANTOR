@@ -4022,3 +4022,12 @@ html body.mf-kids-route #mfKidsStandaloneRoot .mfkj-course-level-card.mfkj-photo
 html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level.mfkr-photo-level{padding:0!important;min-height:190px!important;justify-content:flex-end!important}
 html body.mf-kids-route #mfKidsStandaloneRoot .mfkj-course-level-card.mfkj-photo-level:hover,
 html body.mf-kids-route #mfKidsStandaloneRoot .mfkr-level.mfkr-photo-level:hover{transform:translateY(-2px) scale(1.015)!important;filter:saturate(1.06)!important}
+
+
+/* FIX: photo covers were hidden by the later hub background shorthand. */
+html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel>.mfkj-course-level-card.mfkj-photo-level{
+ background:transparent!important;background-color:transparent!important;
+ background-image:linear-gradient(180deg,rgba(12,14,12,.04) 20%,rgba(12,14,12,.10) 48%,rgba(12,14,12,.78) 100%),var(--mfkj-cover)!important;
+ background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel>.mfkj-course-level-card.mfkj-photo-level h3{background:transparent!important;color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.8)!important;}
