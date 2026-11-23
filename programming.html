@@ -750,37 +750,7 @@ console.log("Hello, " + name);
   <h1>مرحبًا بك في DOMA!</h1>
   <p>عدّل هذا الملف ثم اضغط تشغيل لمشاهدة النتيجة.</p>
 
-<style id="pa20-hub-coverflow-v2">
-.pa20-hub-carousel{overflow:visible!important;padding:4px 0 10px!important}
-#pa20HubCarousel{position:relative!important;gap:14px!important;align-items:center!important;overflow-x:auto!important;overflow-y:visible!important;scroll-snap-type:x mandatory!important;scroll-padding-inline:0!important;padding:24px calc(50vw - 145px) 32px!important;perspective:1100px!important;scrollbar-width:none!important;touch-action:pan-x!important}
-#pa20HubCarousel::-webkit-scrollbar{display:none!important}
-#pa20HubCarousel .pa20-hub-card{position:relative!important;flex:0 0 270px!important;width:270px!important;height:270px!important;min-height:270px!important;max-height:270px!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:13px!important;padding:24px!important;border-radius:30px!important;text-align:center!important;scroll-snap-align:center!important;transform:scale(.78) rotateY(0deg)!important;opacity:.55!important;filter:blur(2px)!important;transition:transform .28s ease,opacity .28s ease,filter .28s ease!important;backface-visibility:hidden!important}
-#pa20HubCarousel .pa20-hub-card.pa20-center{transform:scale(1) rotateY(0deg)!important;opacity:1!important;filter:none!important;z-index:3!important;box-shadow:0 18px 46px rgba(20,10,28,.35),0 0 24px rgba(181,138,79,.12)!important}
-#pa20HubCarousel .pa20-hub-card.pa20-left{transform:scale(.78) rotateY(32deg)!important;opacity:.6!important;filter:blur(1.6px)!important}
-#pa20HubCarousel .pa20-hub-card.pa20-right{transform:scale(.78) rotateY(-32deg)!important;opacity:.6!important;filter:blur(1.6px)!important}
-#pa20HubCarousel .pa20-hub-card>span:nth-child(2){flex:0 0 auto!important;min-width:0!important}
-#pa20HubCarousel .pa20-hub-card strong{font-size:clamp(18px,2vw,23px)!important;line-height:1.45!important}
-#pa20HubCarousel .pa20-hub-card small{font-size:13px!important;line-height:1.6!important}
-#pa20HubCarousel .pa20-hub-icon{width:68px!important;height:68px!important;flex:0 0 68px!important;display:grid!important;place-items:center!important;border-radius:22px!important;font-size:28px!important}
-#pa20HubCarousel .pa20-hub-arrow{display:none!important}
-.pa20-hub-carousel-controls{gap:12px!important;padding-top:2px!important}
-.pa20-hub-carousel-hint{display:none!important}
-@media(max-width:650px){#pa20HubCarousel{gap:12px!important;padding:20px calc(50vw - 36vw) 26px!important}#pa20HubCarousel .pa20-hub-card{flex-basis:72vw!important;width:72vw!important;height:72vw!important;min-height:220px!important;max-height:270px!important;padding:20px!important;border-radius:26px!important}#pa20HubCarousel .pa20-hub-icon{width:58px!important;height:58px!important;flex-basis:58px!important;border-radius:18px!important;font-size:24px!important}#pa20HubCarousel .pa20-hub-card.pa20-left,#pa20HubCarousel .pa20-hub-card.pa20-right{transform:scale(.78) rotateY(29deg)!important}}
-@media(prefers-reduced-motion:reduce){#pa20HubCarousel .pa20-hub-card{transition:none!important}}
-</style>
-<script id="pa20-hub-coverflow-controls-v2">
-(function(){
- function init(){var track=document.getElementById('pa20HubCarousel');if(!track||track.dataset.coverflowReady)return;track.dataset.coverflowReady='1';var cards=Array.from(track.querySelectorAll('.pa20-hub-card'));if(!cards.length)return;
- function centerCard(card,behavior){card.scrollIntoView({behavior:behavior||'smooth',block:'nearest',inline:'center'});}
- function update(){var center=track.scrollLeft+track.clientWidth/2,best=null,dist=Infinity;cards.forEach(function(card){card.classList.remove('pa20-center','pa20-left','pa20-right');var c=card.offsetLeft+card.offsetWidth/2,d=Math.abs(c-center);if(d<dist){dist=d;best=card;}});if(!best)return;best.classList.add('pa20-center');var index=cards.indexOf(best);if(cards[index-1])cards[index-1].classList.add('pa20-left');if(cards[index+1])cards[index+1].classList.add('pa20-right');}
- var ticking=false;track.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(function(){update();ticking=false;});},{passive:true});window.addEventListener('resize',function(){if(track.dataset.coverflowInitial==='1'){var current=track.querySelector('.pa20-center')||cards[0];centerCard(current,'auto');}update();});
- function move(dir){var current=track.querySelector('.pa20-center')||cards[0],i=cards.indexOf(current);i=Math.max(0,Math.min(cards.length-1,i+dir));centerCard(cards[i]);}
- var prev=document.getElementById('pa20HubPrev'),next=document.getElementById('pa20HubNext');if(prev)prev.addEventListener('click',function(){move(-1)});if(next)next.addEventListener('click',function(){move(1)});
- var start=cards[0];track.dataset.coverflowInitial='1';requestAnimationFrame(function(){centerCard(start,'auto');update();});
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();
-</script>
+
 
 </body>
 </html>`,
@@ -1601,5 +1571,36 @@ body.pa-embedded-subscription-only .pa-modal-card{max-height:min(88vh,820px);box
 
 
 
+<style id="pa20-hub-coverflow-v2">
+.pa20-hub-carousel{overflow:visible!important;padding:4px 0 10px!important}
+#pa20HubCarousel{position:relative!important;gap:14px!important;align-items:center!important;overflow-x:auto!important;overflow-y:visible!important;scroll-snap-type:x mandatory!important;scroll-padding-inline:0!important;padding:24px calc(50vw - 145px) 32px!important;perspective:1100px!important;scrollbar-width:none!important;touch-action:pan-x!important}
+#pa20HubCarousel::-webkit-scrollbar{display:none!important}
+#pa20HubCarousel .pa20-hub-card{position:relative!important;flex:0 0 270px!important;width:270px!important;height:270px!important;min-height:270px!important;max-height:270px!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:13px!important;padding:24px!important;border-radius:30px!important;text-align:center!important;scroll-snap-align:center!important;transform:scale(.78) rotateY(0deg)!important;opacity:.55!important;filter:blur(2px)!important;transition:transform .28s ease,opacity .28s ease,filter .28s ease!important;backface-visibility:hidden!important}
+#pa20HubCarousel .pa20-hub-card.pa20-center{transform:scale(1) rotateY(0deg)!important;opacity:1!important;filter:none!important;z-index:3!important;box-shadow:0 18px 46px rgba(20,10,28,.35),0 0 24px rgba(181,138,79,.12)!important}
+#pa20HubCarousel .pa20-hub-card.pa20-left{transform:scale(.78) rotateY(32deg)!important;opacity:.6!important;filter:blur(1.6px)!important}
+#pa20HubCarousel .pa20-hub-card.pa20-right{transform:scale(.78) rotateY(-32deg)!important;opacity:.6!important;filter:blur(1.6px)!important}
+#pa20HubCarousel .pa20-hub-card>span:nth-child(2){flex:0 0 auto!important;min-width:0!important}
+#pa20HubCarousel .pa20-hub-card strong{font-size:clamp(18px,2vw,23px)!important;line-height:1.45!important}
+#pa20HubCarousel .pa20-hub-card small{font-size:13px!important;line-height:1.6!important}
+#pa20HubCarousel .pa20-hub-icon{width:68px!important;height:68px!important;flex:0 0 68px!important;display:grid!important;place-items:center!important;border-radius:22px!important;font-size:28px!important}
+#pa20HubCarousel .pa20-hub-arrow{display:none!important}
+.pa20-hub-carousel-controls{gap:12px!important;padding-top:2px!important}
+.pa20-hub-carousel-hint{display:none!important}
+@media(max-width:650px){#pa20HubCarousel{gap:12px!important;padding:20px calc(50vw - 36vw) 26px!important}#pa20HubCarousel .pa20-hub-card{flex-basis:72vw!important;width:72vw!important;height:72vw!important;min-height:220px!important;max-height:270px!important;padding:20px!important;border-radius:26px!important}#pa20HubCarousel .pa20-hub-icon{width:58px!important;height:58px!important;flex-basis:58px!important;border-radius:18px!important;font-size:24px!important}#pa20HubCarousel .pa20-hub-card.pa20-left,#pa20HubCarousel .pa20-hub-card.pa20-right{transform:scale(.78) rotateY(29deg)!important}}
+@media(prefers-reduced-motion:reduce){#pa20HubCarousel .pa20-hub-card{transition:none!important}}
+</style>
+<script id="pa20-hub-coverflow-controls-v2">
+(function(){
+ function init(){var track=document.getElementById('pa20HubCarousel');if(!track||track.dataset.coverflowReady)return;track.dataset.coverflowReady='1';var cards=Array.from(track.querySelectorAll('.pa20-hub-card'));if(!cards.length)return;
+ function centerCard(card,behavior){card.scrollIntoView({behavior:behavior||'smooth',block:'nearest',inline:'center'});}
+ function update(){var center=track.scrollLeft+track.clientWidth/2,best=null,dist=Infinity;cards.forEach(function(card){card.classList.remove('pa20-center','pa20-left','pa20-right');var c=card.offsetLeft+card.offsetWidth/2,d=Math.abs(c-center);if(d<dist){dist=d;best=card;}});if(!best)return;best.classList.add('pa20-center');var index=cards.indexOf(best);if(cards[index-1])cards[index-1].classList.add('pa20-left');if(cards[index+1])cards[index+1].classList.add('pa20-right');}
+ var ticking=false;track.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(function(){update();ticking=false;});},{passive:true});window.addEventListener('resize',function(){if(track.dataset.coverflowInitial==='1'){var current=track.querySelector('.pa20-center')||cards[0];centerCard(current,'auto');}update();});
+ function move(dir){var current=track.querySelector('.pa20-center')||cards[0],i=cards.indexOf(current);i=Math.max(0,Math.min(cards.length-1,i+dir));centerCard(cards[i]);}
+ var prev=document.getElementById('pa20HubPrev'),next=document.getElementById('pa20HubNext');if(prev)prev.addEventListener('click',function(){move(-1)});if(next)next.addEventListener('click',function(){move(1)});
+ var start=cards[0];track.dataset.coverflowInitial='1';requestAnimationFrame(function(){centerCard(start,'auto');update();});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 </body>
 </html>
