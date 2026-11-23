@@ -2954,9 +2954,11 @@ function mrfluentRenderEnglishLevelCards(){
  });
  }
  let sx=0,sy=0;
- stage.addEventListener('touchstart',e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
- stage.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy)){active=(active+(dx<0?1:cards.length-1))%cards.length;paint();}},{passive:true});
- window.addEventListener('resize',paint,{passive:true});
+  let dragX=0,dragY=0,dragActive=false;
+  stage.addEventListener('pointerdown',e=>{dragX=e.clientX;dragY=e.clientY;dragActive=true;},{passive:true});
+  const endDrag=e=>{if(!dragActive)return;const dx=e.clientX-dragX,dy=e.clientY-dragY;if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy)){active=(active+(dx<0?1:cards.length-1))%cards.length;paint();}dragActive=false;};
+  stage.addEventListener('pointerup',endDrag,{passive:true});
+  stage.addEventListener('pointercancel',endDrag,{passive:true});
  paint();
 }
 function mrfluentCourseActive(sub){const now=Date.now();return !!sub&&String(sub.status||'').toLowerCase()==='active'&&(!sub.starts_at||new Date(sub.starts_at).getTime()<=now)&&(!sub.expires_at||new Date(sub.expires_at).getTime()>now)}
