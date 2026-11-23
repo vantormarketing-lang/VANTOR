@@ -3672,6 +3672,16 @@ html body #mrfluentEnglishWorkspace .mf3d-level{background:#f3ead3!important;bor
 html body #mrfluentEnglishWorkspace .mf3d-level-name{background:linear-gradient(130deg,#f3ead3,#e2d9b9)!important;color:#4f5c2a!important;}
 html body #mrfluentEnglishWorkspace .mf-course-content{background:rgba(246,241,221,.82)!important;border:1px solid rgba(104,117,70,.24)!important;color:#4e5831!important;box-shadow:0 12px 35px rgba(73,75,48,.08)!important;}
 </style>
+
+<style id="mf-english-course-levels-touch-layout-v3">
+/* Hide the redundant school/course logo inside placement screen; clean title and give carousel breathing room. */
+html body #mrfluentEnglishWorkspace .mf-placement-intro-brand{display:none!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels{height:clamp(430px,58vw,550px)!important;padding:30px 0 20px!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-title{margin:0 0 12px!important;position:relative!important;top:0!important;z-index:3!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-ring{inset:72px 0 0!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level{transition:filter .2s,opacity .2s,transform .18s ease-out!important;touch-action:pan-y!important;}
+@media(max-width:600px){html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels{height:430px!important;padding-top:22px!important;}html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-ring{inset:68px 0 0!important;}}
+</style>
 </body></html>`);
   w.document.close();
   w.print();
