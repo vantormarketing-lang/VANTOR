@@ -167,7 +167,24 @@ body.programming-page #paSubscribeModal .pa-modal-close{
   body.programming-page #paSubscribeModal .pa-course-pay-cell>small{font-size:12px!important}
 }
 </style>
-</head>
+<style id="pa20-hub-circular-carousel">
+.pa20-hub-carousel{display:block!important;position:relative!important;overflow:hidden!important;padding:14px 0 8px!important}
+.pa20-hub-carousel-viewport{display:flex!important;align-items:center!important;gap:18px!important;overflow-x:auto!important;overflow-y:hidden!important;padding:24px max(7vw,26px) 30px!important;scroll-snap-type:x mandatory!important;scroll-behavior:smooth!important;scrollbar-width:none!important;perspective:1000px!important;overscroll-behavior-inline:contain!important}
+.pa20-hub-carousel-viewport::-webkit-scrollbar{display:none!important}
+.pa20-hub-carousel .pa20-hub-card{flex:0 0 clamp(270px,36vw,390px)!important;min-height:150px!important;scroll-snap-align:center!important;scroll-snap-stop:always!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;gap:18px!important;padding:25px!important;border-radius:24px!important;transform:rotateY(-5deg) scale(.96)!important;transition:transform .35s ease,box-shadow .35s ease!important;text-align:right!important}
+.pa20-hub-carousel .pa20-hub-card:nth-child(even){transform:rotateY(5deg) scale(.96)!important}
+.pa20-hub-carousel .pa20-hub-card:focus-visible{outline:3px solid #b58a4f!important;outline-offset:4px}
+.pa20-hub-carousel .pa20-hub-card:hover{transform:rotateY(0deg) scale(1)!important}
+.pa20-hub-carousel .pa20-hub-card>span:nth-child(2){min-width:0!important;flex:1!important}
+.pa20-hub-carousel .pa20-hub-card strong{display:block!important;font-size:clamp(17px,2.2vw,22px)!important;line-height:1.45!important;margin-bottom:6px!important;overflow-wrap:anywhere!important}
+.pa20-hub-carousel .pa20-hub-card small{display:block!important;font-size:13px!important;line-height:1.6!important;white-space:normal!important}
+.pa20-hub-carousel .pa20-hub-icon{width:56px!important;height:56px!important;flex:0 0 56px!important;font-size:25px!important;border-radius:18px!important}
+.pa20-hub-carousel .pa20-hub-arrow{font-size:22px!important;flex:0 0 auto!important}
+.pa20-hub-carousel-controls{display:flex!important;align-items:center!important;justify-content:center!important;gap:16px!important;padding:2px 0 8px!important}
+.pa20-hub-carousel-controls button{width:40px!important;height:40px!important;border-radius:50%!important;border:1px solid rgba(161,120,62,.35)!important;background:#f1dfc5!important;color:#8c632d!important;font-size:25px!important;font-weight:800!important;cursor:pointer!important}
+.pa20-hub-carousel-hint{font-size:12px!important;color:#806849!important}
+@media(max-width:650px){.pa20-hub-carousel-viewport{gap:12px!important;padding:18px 8vw 24px!important}.pa20-hub-carousel .pa20-hub-card{flex-basis:82vw!important;min-height:138px!important;padding:19px!important;gap:14px!important;border-radius:20px!important}.pa20-hub-carousel .pa20-hub-icon{width:48px!important;height:48px!important;flex-basis:48px!important}.pa20-hub-carousel-controls{gap:13px!important}}
+</style></head>
 
 <body class="programming-page">
 <header class="pa-topbar">
@@ -188,7 +205,8 @@ body.programming-page #paSubscribeModal .pa-modal-close{
         <div class="pa-home-gears" aria-hidden="true">⚙</div>
       </div>
     </div>
-    <section class="pa20-hub" aria-label="أقسام أكاديمية البرمجة">
+    <section class="pa20-hub pa20-hub-carousel" aria-label="أقسام أكاديمية البرمجة">
+      <div class="pa20-hub-carousel-viewport" id="pa20HubCarousel" tabindex="0" aria-label="اسحب أفقيًا للتنقل بين أقسام الأكاديمية">
       <button type="button" class="pa20-hub-card" id="pa20OpenPaths"><span class="pa20-hub-icon" aria-hidden="true">◉</span><span><strong>Learning Paths</strong><small>Your step-by-step journey</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="pa20-hub-card" id="pa20OpenTutor"><span class="pa20-hub-icon" aria-hidden="true">♟</span><span><strong>Doma Study Assistant</strong><small>Your AI learning buddy</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="pa20-hub-card" id="pa20OpenBoard"><span class="pa20-hub-icon" aria-hidden="true">▣</span><span><strong>Interactive Whiteboard</strong><small>Learn by doing</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
@@ -196,6 +214,12 @@ body.programming-page #paSubscribeModal .pa-modal-close{
       <button type="button" class="pa20-hub-card" id="pa20OpenTerminal"><span class="pa20-hub-icon" aria-hidden="true">⌘</span><span><strong>Terminal Simulator</strong><small>Command practice</small></span><span class="pa20-hub-arrow" aria-hidden="true">↗</span></button>
       
       
+      </div>
+      <div class="pa20-hub-carousel-controls" aria-label="التحكم في أقسام الأكاديمية">
+        <button type="button" id="pa20HubPrev" aria-label="القسم السابق">‹</button>
+        <span class="pa20-hub-carousel-hint">اسحب يمينًا أو شمالًا</span>
+        <button type="button" id="pa20HubNext" aria-label="القسم التالي">›</button>
+      </div>
     </section>
   </section>
 
@@ -1520,6 +1544,24 @@ body.pa-embedded-subscription-only .pa-modal-card{max-height:min(88vh,820px);box
   },true);
   var params=new URLSearchParams(window.location.search);
   if(params.get('view')==='paths')revealPaths();
+})();
+</script><script id="pa20-hub-carousel-controls">
+(function(){
+  function init(){
+    var track=document.getElementById('pa20HubCarousel');
+    if(!track||track.dataset.carouselReady)return;
+    track.dataset.carouselReady='1';
+    function move(dir){
+      var card=track.querySelector('.pa20-hub-card');
+      if(!card)return;
+      var gap=parseFloat(getComputedStyle(track).gap)||18;
+      track.scrollBy({left:dir*(card.getBoundingClientRect().width+gap),behavior:'smooth'});
+    }
+    var prev=document.getElementById('pa20HubPrev'),next=document.getElementById('pa20HubNext');
+    if(prev)prev.addEventListener('click',function(){move(-1)});
+    if(next)next.addEventListener('click',function(){move(1)});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 
