@@ -771,7 +771,7 @@ console.log("Hello, " + name);
 <script id="pa20-hub-coverflow-controls-v2">
 (function(){
  function init(){var track=document.getElementById('pa20HubCarousel');if(!track||track.dataset.coverflowReady)return;track.dataset.coverflowReady='1';var cards=Array.from(track.querySelectorAll('.pa20-hub-card'));if(!cards.length)return;
- function centerCard(card,behavior){var left=card.offsetLeft+(card.offsetWidth/2)-(track.clientWidth/2);track.scrollTo({left:left,behavior:behavior||'smooth'});}
+ function centerCard(card,behavior){card.scrollIntoView({behavior:behavior||'smooth',block:'nearest',inline:'center'});}
  function update(){var center=track.scrollLeft+track.clientWidth/2,best=null,dist=Infinity;cards.forEach(function(card){card.classList.remove('pa20-center','pa20-left','pa20-right');var c=card.offsetLeft+card.offsetWidth/2,d=Math.abs(c-center);if(d<dist){dist=d;best=card;}});if(!best)return;best.classList.add('pa20-center');var index=cards.indexOf(best);if(cards[index-1])cards[index-1].classList.add('pa20-left');if(cards[index+1])cards[index+1].classList.add('pa20-right');}
  var ticking=false;track.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(function(){update();ticking=false;});},{passive:true});window.addEventListener('resize',function(){if(track.dataset.coverflowInitial==='1'){var current=track.querySelector('.pa20-center')||cards[0];centerCard(current,'auto');}update();});
  function move(dir){var current=track.querySelector('.pa20-center')||cards[0],i=cards.indexOf(current);i=Math.max(0,Math.min(cards.length-1,i+dir));centerCard(cards[i]);}
