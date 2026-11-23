@@ -3982,3 +3982,12 @@ html body.mf-kids-route:has(#mfKidsStandaloneRoot .mfkj-course-catalog) #mfKidsS
 html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel>.mfkj-course-level-card{background:linear-gradient(138deg,rgba(255,253,247,.60) 0%,rgba(232,230,212,.34) 46%,rgba(183,194,151,.30) 100%)!important;backdrop-filter:blur(28px) saturate(155%)!important;-webkit-backdrop-filter:blur(28px) saturate(155%)!important;border:1px solid rgba(114,127,82,.38)!important;box-shadow:0 22px 52px rgba(72,82,48,.18),0 5px 16px rgba(81,93,58,.10),inset 0 1px 0 rgba(255,255,255,.76),inset 0 -1px 0 rgba(111,126,75,.12)!important}
 html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel>.mfkj-course-level-card:before{background:linear-gradient(128deg,rgba(255,255,255,.34),rgba(221,226,203,.08) 52%,rgba(125,139,87,.12))!important}
 html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel>.mfkj-course-level-card:after{content:""!important;position:absolute!important;inset:1px!important;border-radius:inherit!important;pointer-events:none!important;background:radial-gradient(ellipse at 18% 5%,rgba(255,255,255,.50),transparent 55%)!important}
+
+/* Remove decorative icons from all six kids-course level cards */
+html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel .mfkj-course-icon,
+html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel .mfkj-course-level-card svg,
+html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel .mfkj-course-level-card img,
+html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel .mfkj-course-level-card [class*="icon"]{
+ display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;margin:0!important;padding:0!important;
+}
+html body.mf-kids-route #mfKidsStandaloneRoot #mfkjKidsSixLevelCarousel .mfkj-course-level-card{gap:0!important}
