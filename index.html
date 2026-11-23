@@ -2954,14 +2954,14 @@ function mrfluentRenderEnglishLevelCards(){
  if(cards.length!==6){host.insertAdjacentHTML('beforeend','<p class="empty">Six English levels are not available yet.</p>');return;}
  let angle=0,dragging=false,startX=0,lastX=0,move=0;
  function position(){const cardNodes=Array.from(ring.children),radius=300;cardNodes.forEach((el,i)=>{const a=(i*60+angle)*Math.PI/180;const depth=Math.cos(a),x=Math.sin(a)*radius;el.style.transform='translate3d('+x+'px,-50%,'+(depth*190)+'px) rotateY('+(-Math.sin(a)*25)+'deg) scale('+(0.78+Math.max(0,depth)*.22)+')';el.style.zIndex=String(Math.round((depth+1)*10));el.style.opacity=String(Math.max(.45,Math.min(1,.55+depth*.45)));el.style.filter='brightness('+(0.65+Math.max(0,depth)*.35)+')';});}
- const dragArea=$('mrfluentEnglishWorkspace')||host;
- // Install the page-wide touch/mouse handlers once (avoid accumulating duplicate listeners on rerender).
+ const dragArea=ring;
+ // Bind drag to the carousel itself, with pointer capture and horizontal touch support.
  if(!dragArea.dataset.mfLevelDragBound){
   dragArea.dataset.mfLevelDragBound='1';
   let moved=false;
-  dragArea.addEventListener('pointerdown',e=>{dragging=true;moved=false;startX=lastX=e.clientX;move=0;},{passive:true});
-  dragArea.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-lastX;lastX=e.clientX;move+=dx;if(Math.abs(move)>5){moved=true;angle+=dx*.42;position();}},{passive:true});
-  const endDrag=()=>{dragging=false;if(moved){dragArea.dataset.mfLevelSwipe='1';requestAnimationFrame(()=>{dragArea.dataset.mfLevelSwipe='0'});}};
+  dragArea.addEventListener('pointerdown',e=>{dragging=true;moved=false;startX=lastX=e.clientX;move=0;dragArea.setPointerCapture?.(e.pointerId);},{passive:true});
+  dragArea.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-lastX;lastX=e.clientX;move+=dx;if(Math.abs(move)>5){moved=true;angle+=dx*.65;position();}},{passive:true});
+  const endDrag=e=>{dragging=false;if(dragArea.hasPointerCapture?.(e.pointerId))dragArea.releasePointerCapture(e.pointerId);};
   dragArea.addEventListener('pointerup',endDrag);
   dragArea.addEventListener('pointercancel',endDrag);
   dragArea.addEventListener('wheel',e=>{angle+=Math.sign(e.deltaY)*12;position();},{passive:true});
@@ -3687,6 +3687,15 @@ html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-title{margin:0 
 html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-ring{inset:72px 0 0!important;}
 html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level{transition:filter .2s,opacity .2s,transform .18s ease-out!important;touch-action:pan-y!important;}
 @media(max-width:600px){html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels{height:430px!important;padding-top:22px!important;}html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-ring{inset:68px 0 0!important;}}
+</style>
+<style id="mf-english-carousel-center-drag-fix">
+/* Center the level carousel in the visible course area and enable horizontal touch rotation. */
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels{height:clamp(480px,65vh,640px)!important;min-height:480px!important;padding:0!important;overflow:visible!important;touch-action:pan-y!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-title{position:absolute!important;top:12px!important;left:0!important;right:0!important;margin:0!important;text-align:center!important;z-index:5!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-ring{position:absolute!important;inset:0!important;touch-action:none!important;cursor:grab!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-ring:active{cursor:grabbing!important;}
+html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels .mf3d-level{margin-top:0!important;touch-action:none!important;}
+@media(max-width:600px){html body #mrfluentEnglishWorkspace #mrfluentEnglishLevels{height:480px!important;min-height:480px!important;}}
 </style>
 </body></html>`);
   w.document.close();
