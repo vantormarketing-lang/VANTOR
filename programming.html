@@ -1795,3 +1795,15 @@ html body.programming-page #paTracks .pa-track-card::after{content:""!important;
 html body.programming-page #paTracks .pa-track-card::before{z-index:0!important}
 @media(max-width:650px){html body.programming-page #paTracks .pa-track-content b{font-size:18px!important}html body.programming-page #paTracks .pa-track-description{font-size:12px!important}}
 </style>
+
+<!-- Definitive programming path card cleanup: typography, card-only background, and gradient dots -->
+<style id="programming-paths-definitive-cleanup-20261123">
+html body.programming-page #paTracks.pa-track-grid>.pa-track-card{background-image:none!important;position:relative!important;isolation:isolate!important;}
+html body.programming-page #paTracks .pa-track-card::before{content:none!important;display:none!important;}
+html body.programming-page #paTracks .pa-track-card::after{content:""!important;position:absolute!important;top:15px!important;left:15px!important;right:auto!important;bottom:auto!important;width:30px!important;height:8px!important;border-radius:8px!important;background:linear-gradient(90deg,#7e8d5b,#b8c7a0,#e6d6b9)!important;box-shadow:0 0 9px rgba(184,199,160,.38)!important;opacity:1!important;z-index:1!important;}
+html body.programming-page #paTracks .pa-track-card .pa-track-number,html body.programming-page #paTracks .pa-track-card .pa-track-icon,html body.programming-page #paTracks .pa-track-card svg,html body.programming-page #paTracks .pa-track-card img,html body.programming-page #paTracks .pa-track-card i,html body.programming-page #paTracks .pa-track-card [class*="icon"],html body.programming-page #paTracks .pa-track-card [class*="Icon"],html body.programming-page #paTracks .pa-track-card [aria-hidden="true"]{display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;margin:0!important;padding:0!important;background:none!important;}
+html body.programming-page #paTracks .pa-track-card> :not(.pa-track-content){display:none!important;}
+html body.programming-page #paTracks .pa-track-content,html body.programming-page #paTracks .pa-track-content b,html body.programming-page #paTracks .pa-track-description{background:transparent!important;background-image:none!important;box-shadow:none!important;border:0!important;border-radius:0!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+html body.programming-page #paTracks .pa-track-content b{color:#786044!important;font-family:inherit!important;font-weight:750!important;text-shadow:none!important;}
+html body.programming-page #paTracks .pa-track-description{color:#f7f5ef!important;font-family:inherit!important;font-weight:400!important;text-shadow:none!important;}
+</style>
