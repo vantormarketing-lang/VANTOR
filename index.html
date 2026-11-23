@@ -16587,3 +16587,88 @@ html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot bu
  }
 }
 </style>
+
+<style id="doma-home-real-circular-carousel-20261123">
+/* Homepage circular carousel: school grades and learning course cards */
+.doma-home-carousel-stage{position:relative!important;perspective:1100px!important;overflow:hidden!important;width:100%!important;margin:8px auto 18px!important;isolation:isolate!important}
+.doma-home-carousel-stage.doma-grade-carousel{height:clamp(260px,34vw,350px)!important;max-width:980px!important}
+.doma-home-carousel-stage.doma-course-carousel{height:clamp(310px,40vw,390px)!important;max-width:1080px!important}
+.doma-home-carousel-track{position:absolute!important;inset:0!important;display:block!important;transform-style:preserve-3d!important;transition:transform .7s cubic-bezier(.2,.72,.2,1)!important;will-change:transform!important}
+.doma-home-carousel-track>.grade,
+.doma-home-carousel-track>.mf-english-course-hero,
+.doma-home-carousel-track>.mf-kids-entry-card,
+.doma-home-carousel-track>.pa-programming-entry-card{position:absolute!important;left:50%!important;top:50%!important;display:flex!important;transform-style:preserve-3d!important;transition:transform .7s cubic-bezier(.2,.72,.2,1),opacity .7s,filter .7s!important;will-change:transform!important;backface-visibility:hidden!important}
+.doma-grade-carousel .doma-home-carousel-track>.grade{width:min(36%,310px)!important;min-width:0!important;max-width:310px!important}
+.doma-course-carousel .doma-home-carousel-track>.mf-english-course-hero,
+.doma-course-carousel .doma-home-carousel-track>.mf-kids-entry-card,
+.doma-course-carousel .doma-home-carousel-track>.pa-programming-entry-card{width:min(38%,350px)!important;min-width:0!important;max-width:350px!important}
+.doma-home-carousel-controls{position:absolute!important;z-index:20!important;left:0!important;right:0!important;top:50%!important;display:flex!important;justify-content:space-between!important;align-items:center!important;transform:translateY(-50%)!important;padding:0 8px!important;pointer-events:none!important}
+.doma-home-carousel-controls button{pointer-events:auto!important;width:42px!important;height:42px!important;border-radius:50%!important;border:1px solid rgba(222,197,255,.5)!important;background:rgba(24,14,36,.78)!important;color:#f5e9ff!important;font-size:23px!important;display:grid!important;place-items:center!important;box-shadow:0 4px 22px rgba(0,0,0,.25)!important;backdrop-filter:blur(12px)!important;cursor:pointer!important}
+.doma-home-carousel-controls button:hover{border-color:#e8c978!important;box-shadow:0 0 14px rgba(202,160,255,.3)!important}
+.doma-home-carousel-dots{position:absolute!important;bottom:8px!important;left:0!important;right:0!important;display:flex!important;justify-content:center!important;gap:7px!important;z-index:20!important}
+.doma-home-carousel-dots button{width:7px!important;height:7px!important;border-radius:50%!important;padding:0!important;border:0!important;background:rgba(208,190,238,.35)!important;cursor:pointer!important}
+.doma-home-carousel-dots button[aria-current=true]{width:20px!important;border-radius:10px!important;background:linear-gradient(90deg,#d9b65f,#b88cff)!important}
+.doma-home-carousel-stage:before{content:""!important;position:absolute!important;left:50%!important;top:50%!important;width:42%!important;height:70%!important;transform:translate(-50%,-50%)!important;border-radius:50%!important;background:radial-gradient(ellipse,rgba(172,120,255,.1),transparent 70%)!important;pointer-events:none!important}
+@media(max-width:700px){.doma-home-carousel-stage.doma-grade-carousel{height:265px!important}.doma-home-carousel-stage.doma-course-carousel{height:310px!important}.doma-grade-carousel .doma-home-carousel-track>.grade{width:min(66%,290px)!important}.doma-course-carousel .doma-home-carousel-track>.mf-english-course-hero,.doma-course-carousel .doma-home-carousel-track>.mf-kids-entry-card,.doma-course-carousel .doma-home-carousel-track>.pa-programming-entry-card{width:min(72%,310px)!important}.doma-home-carousel-controls{padding:0 4px!important}.doma-home-carousel-controls button{width:36px!important;height:36px!important;font-size:20px!important}}
+@media(prefers-reduced-motion:reduce){.doma-home-carousel-track,.doma-home-carousel-track>*{transition:none!important}}
+</style>
+<script id="doma-home-real-circular-carousel-20261123-js">
+(function(){
+ if(window.__domaHomeCircularCarousel20261123)return;window.__domaHomeCircularCarousel20261123=true;
+ function setup(stage,track,kind){
+  if(!stage||!track||stage.dataset.circularReady==='1')return;
+  const cards=Array.from(track.children).filter(el=>el.matches(kind==='grades'?'.grade':'.mf-english-course-hero,.mf-kids-entry-card,.pa-programming-entry-card'));
+  if(cards.length<2)return;
+  stage.dataset.circularReady='1';let index=0,angle=360/cards.length;
+  const radius=kind==='grades'?Math.min(270,Math.max(165,stage.clientWidth*.31)):Math.min(300,Math.max(190,stage.clientWidth*.34));
+  cards.forEach(el=>{el.style.transformOrigin='center center';});
+  function render(){
+   track.style.transform='rotateY('+(-index*angle)+'deg)';
+   cards.forEach((card,i)=>{
+    const theta=i*angle;
+    card.style.transform='translate(-50%,-50%) rotateY('+theta+'deg) translateZ('+radius+'px) rotateY('+(-theta)+'deg)';
+    const distance=Math.min((i-index+cards.length)%cards.length,(index-i+cards.length)%cards.length);
+    card.style.opacity=distance===0?'1':distance===1?'.82':'.36';
+    card.style.filter=distance===0?'none':distance===1?'brightness(.75) blur(.25px)':'brightness(.45) blur(1px)';
+    card.style.zIndex=String(cards.length-distance);
+    card.style.pointerEvents=distance>1?'none':'auto';
+   });
+   dots.querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-current',i===index?'true':'false'));
+  }
+  const controls=document.createElement('div');controls.className='doma-home-carousel-controls';
+  const prev=document.createElement('button');prev.type='button';prev.setAttribute('aria-label','Previous');prev.textContent='‹';
+  const next=document.createElement('button');next.type='button';next.setAttribute('aria-label','Next');next.textContent='›';
+  controls.append(prev,next);stage.appendChild(controls);
+  const dots=document.createElement('div');dots.className='doma-home-carousel-dots';
+  cards.forEach((_,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Go to card '+(i+1));b.addEventListener('click',()=>{index=i;render()});dots.appendChild(b)});stage.appendChild(dots);
+  prev.addEventListener('click',()=>{index=(index-1+cards.length)%cards.length;render()});
+  next.addEventListener('click',()=>{index=(index+1)%cards.length;render()});
+  stage.tabIndex=0;stage.setAttribute('aria-label','Circular carousel. Use left and right arrow keys.');
+  stage.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){index=(index+1)%cards.length;render()}else if(e.key==='ArrowLeft'){index=(index-1+cards.length)%cards.length;render()}});
+  let startX=0;stage.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX},{passive:true});
+  stage.addEventListener('touchend',e=>{const delta=e.changedTouches[0].clientX-startX;if(Math.abs(delta)>45){index=(index+(delta<0?1:-1)+cards.length)%cards.length;render()}},{passive:true});
+  render();window.addEventListener('resize',()=>{render()});
+ }
+ function init(){
+  const gradeGrid=document.getElementById('gradeGrid');
+  if(gradeGrid&&!gradeGrid.dataset.circularWrapper){
+   gradeGrid.dataset.circularWrapper='1';
+   const stage=document.createElement('div');stage.className='doma-home-carousel-stage doma-grade-carousel';
+   gradeGrid.parentNode.insertBefore(stage,gradeGrid);stage.appendChild(gradeGrid);gradeGrid.classList.add('doma-home-carousel-track');
+   const observer=new MutationObserver(()=>setup(stage,gradeGrid,'grades'));observer.observe(gradeGrid,{childList:true});setup(stage,gradeGrid,'grades');
+  }
+  const section=document.getElementById('english-course');
+  if(section&&!section.dataset.circularWrapper){
+   const trackCards=Array.from(section.querySelectorAll(':scope > .container > .mf-english-course-hero,:scope > .container > .mf-kids-entry-card,:scope > .container > .pa-programming-entry-card'));
+   if(trackCards.length>=2){
+    section.dataset.circularWrapper='1';
+    const container=section.querySelector(':scope > .container');const stage=document.createElement('div');stage.className='doma-home-carousel-stage doma-course-carousel';
+    const track=document.createElement('div');track.className='doma-home-carousel-track';container.insertBefore(stage,trackCards[0]);stage.appendChild(track);
+    trackCards.forEach(el=>track.appendChild(el));setup(stage,track,'courses');
+   }
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+ window.addEventListener('load',()=>setTimeout(init,700));
+})();
+</script>
