@@ -16618,7 +16618,7 @@ html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot bu
  function setup(stage,track,kind){
   if(!stage||!track||stage.dataset.circularReady==='1')return;
   const cards=Array.from(track.children).filter(el=>el.matches(kind==='grades'?'.grade':'.mf-english-course-hero,.mf-kids-entry-card,.pa-programming-entry-card'));
-  if(cards.length<2)return;
+  if(cards.length<(kind==='grades'?6:3))return;
   stage.dataset.circularReady='1';let index=0,angle=360/cards.length;
   const radius=kind==='grades'?Math.min(270,Math.max(165,stage.clientWidth*.31)):Math.min(300,Math.max(190,stage.clientWidth*.34));
   cards.forEach(el=>{el.style.transformOrigin='center center';});
