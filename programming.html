@@ -54,6 +54,119 @@
 
 
 
+
+<style id="pa-subscription-modal-readable-v1">
+/* Subscription modal: larger, clearer payment tiles and inputs */
+body.programming-page #paSubscribeModal .pa-modal-card.pa-course-payment-card{
+  width:min(620px,calc(100vw - 28px))!important;
+  max-height:min(92vh,900px)!important;
+  padding:clamp(20px,4vw,30px)!important;
+  border-radius:26px!important;
+  box-sizing:border-box!important;
+}
+body.programming-page #paSubscribeModal .pa-course-pay-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+  align-items:stretch!important;
+}
+body.programming-page #paSubscribeModal .pa-course-pay-cell{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  align-items:stretch!important;
+  gap:10px!important;
+  min-width:0!important;
+  min-height:116px!important;
+  padding:18px!important;
+  box-sizing:border-box!important;
+  border:1px solid rgba(161,120,62,.30)!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,#fffaf2,#f5e8d5)!important;
+  box-shadow:0 7px 18px rgba(100,70,34,.07)!important;
+  text-align:right!important;
+  line-height:1.55!important;
+}
+body.programming-page #paSubscribeModal .pa-course-pay-cell>span{
+  display:block!important;
+  font-size:14px!important;
+  font-weight:800!important;
+  line-height:1.6!important;
+  margin:0!important;
+  overflow-wrap:anywhere!important;
+}
+body.programming-page #paSubscribeModal .pa-course-pay-cell>strong{
+  display:block!important;
+  font-size:clamp(19px,3vw,25px)!important;
+  font-weight:900!important;
+  line-height:1.35!important;
+  letter-spacing:.01em!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+}
+body.programming-page #paSubscribeModal .pa-course-pay-cell>small{
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.65!important;
+  opacity:.88!important;
+  overflow-wrap:anywhere!important;
+}
+body.programming-page #paSubscribeModal .pa-course-pay-cell input{
+  width:100%!important;
+  min-width:0!important;
+  min-height:48px!important;
+  padding:12px 14px!important;
+  box-sizing:border-box!important;
+  border-radius:12px!important;
+  font-size:15px!important;
+  line-height:1.5!important;
+}
+body.programming-page #paSubscribeModal .pa-course-pay-cell input[type=file]{
+  min-height:auto!important;
+  padding:12px!important;
+  font-size:13px!important;
+}
+body.programming-page #paSubscribeModal .pa-payment-status{
+  margin:14px 0!important;
+  font-size:14px!important;
+  line-height:1.75!important;
+  overflow-wrap:anywhere!important;
+}
+body.programming-page #paSubscribeModal .pa-submit-payment{
+  min-height:54px!important;
+  padding:14px 18px!important;
+  border-radius:15px!important;
+  font-size:16px!important;
+  line-height:1.5!important;
+  white-space:normal!important;
+}
+body.programming-page #paSubscribeModal .pa-modal-close{
+  width:42px!important;height:42px!important;
+  font-size:25px!important;line-height:1!important;
+}
+@media(max-width:560px){
+  body.programming-page #paSubscribeModal{padding:10px!important}
+  body.programming-page #paSubscribeModal .pa-modal-card.pa-course-payment-card{
+    width:min(100%,calc(100vw - 20px))!important;
+    max-height:94dvh!important;
+    padding:18px 15px!important;
+    border-radius:21px!important;
+  }
+  body.programming-page #paSubscribeModal .pa-course-pay-grid{
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+  }
+  body.programming-page #paSubscribeModal .pa-course-pay-cell{
+    min-height:0!important;
+    padding:16px!important;
+    gap:8px!important;
+    border-radius:15px!important;
+  }
+  body.programming-page #paSubscribeModal .pa-course-pay-cell>span{font-size:13px!important}
+  body.programming-page #paSubscribeModal .pa-course-pay-cell>strong{font-size:21px!important}
+  body.programming-page #paSubscribeModal .pa-course-pay-cell>small{font-size:12px!important}
+}
+</style>
 </head>
 
 <body class="programming-page">
