@@ -1003,13 +1003,25 @@ function journeyPrintCertificate(){
 }
 function journeyCourseCatalogHtml(){
   function card(item){
-    return '<a class="mfkj-course-level-card" href="'+url(item.route)+'" aria-label="'+esc(item.code+' '+item.title)+'"><span class="mfkj-course-icon">'+item.icon+'</span><span class="mfkj-course-code">'+esc(item.code)+'</span><h3>'+esc(item.title)+'</h3><span class="mfkj-course-ar" lang="ar">'+esc(item.arabic)+'</span></a>';
+    var groupLabel=item.group==='younger'?'Little Learners':'Growing Learners';
+    return '<a class="mfkj-course-level-card" href="'+url(item.route)+'" aria-label="'+esc(item.code+' '+item.title)+'"><span class="mfkj-course-group-tag">'+groupLabel+'</span><span class="mfkj-course-icon">'+item.icon+'</span><span class="mfkj-course-code">'+esc(item.code)+'</span><h3>'+esc(item.title)+'</h3><span class="mfkj-course-ar" lang="ar">'+esc(item.arabic)+'</span></a>';
   }
-  var young=journeyLevels.filter(function(item){return item.group==='younger';});
-  var growing=journeyLevels.filter(function(item){return item.group==='older';});
-  return '<div class="mfkj-course-catalog">'+
-    '<section class="mfkj-course-group"><div class="mfkj-course-group-head"><h2>Little Learners</h2></div><div class="mfkj-course-card-grid">'+young.map(card).join('')+'</div></section>'+
-    '<section class="mfkj-course-group"><div class="mfkj-course-group-head"><h2>Growing Learners</h2></div><div class="mfkj-course-card-grid">'+growing.map(card).join('')+'</div></section></div>';
+  return '<div class="mfkj-course-catalog"><div class="mfkj-course-carousel-controls" aria-label="Level carousel controls"><button type="button" id="mfkjKidsCarouselPrev" aria-label="Previous level">‹</button><button type="button" id="mfkjKidsCarouselNext" aria-label="Next level">›</button></div><div class="mfkj-course-card-grid" id="mfkjKidsSixLevelCarousel">'+journeyLevels.map(card).join('')+'</div></div>';
+}
+function journeyInitSixLevelCoverflow(){
+  var host=document.getElementById('mfkjKidsSixLevelCarousel');if(!host)return;
+  var prev=document.getElementById('mfkjKidsCarouselPrev'),next=document.getElementById('mfkjKidsCarouselNext');
+  var raf=0,settle=0,last=host.scrollLeft,direction=0,wrapping=false;
+  function cards(){return Array.from(host.querySelectorAll(':scope > .mfkj-course-level-card'));}
+  function center(card,behavior){if(!card)return;var hr=host.getBoundingClientRect(),cr=card.getBoundingClientRect();host.scrollTo({left:host.scrollLeft+cr.left+cr.width/2-(hr.left+hr.width/2),behavior:behavior||'smooth'});}
+  function nearest(){var list=cards();if(!list.length)return null;var mid=host.getBoundingClientRect().left+host.clientWidth/2,chosen=list[0],dist=Infinity;list.forEach(function(card){var r=card.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<dist){dist=d;chosen=card;}});return chosen;}
+  function update(){var list=cards(),active=nearest();if(!active)return;var index=list.indexOf(active);list.forEach(function(card,i){card.classList.remove('mfkj-cf-center','mfkj-cf-left','mfkj-cf-right');card.classList.toggle('mfkj-cf-center',i===index);card.classList.toggle('mfkj-cf-left',i===(index-1+list.length)%list.length);card.classList.toggle('mfkj-cf-right',i===(index+1)%list.length);});}
+  function move(step){var list=cards(),active=nearest();if(!active||!list.length)return;var i=list.indexOf(active),target=i+step;if(target<0){host.insertBefore(list[list.length-1],list[0]);target=0;}else if(target>=list.length){host.appendChild(list[0]);target=list.length-1;}center(cards()[target]);}
+  function wrapSwipe(){if(wrapping)return;var list=cards(),active=nearest();if(!active||list.length<2)return;var i=list.indexOf(active);if(direction<0&&i===0){wrapping=true;host.insertBefore(list[list.length-1],list[0]);center(cards()[0],'auto');wrapping=false;}else if(direction>0&&i===list.length-1){wrapping=true;host.appendChild(list[0]);center(cards()[list.length-1],'auto');wrapping=false;}update();}
+  host.addEventListener('scroll',function(){direction=host.scrollLeft-last;last=host.scrollLeft;if(raf)return;raf=requestAnimationFrame(function(){raf=0;update();});clearTimeout(settle);settle=setTimeout(wrapSwipe,180);},{passive:true});
+  prev&&prev.addEventListener('click',function(){move(-1);});next&&next.addEventListener('click',function(){move(1);});
+  window.addEventListener('resize',function(){center(nearest(),'auto');update();});
+  requestAnimationFrame(function(){center(cards()[0],'auto');update();});
 }
 
 function mfkjToolsCss(){return '';}
@@ -1100,6 +1112,7 @@ function renderHub(){
   document.body.classList.remove('mf-kids-inline-route');
   ['mf-kids-level-a1','mf-kids-level-a2','mf-kids-level-b1','mf-kids-level-b2','mf-kids-level-c1','mf-kids-level-c2'].forEach(function(cls){document.body.classList.remove(cls);});
   root.innerHTML=header()+'<section class="mfkr-page"><div class="mfkr-wrap"><div class="mfkr-heading"><h1>Choose Your Level</h1><div class="mfkr-ar" lang="ar">اختار المستوى اللي عايز تبدأ منه</div></div>'+journeyCourseCatalogHtml()+'</div></section>';
+  journeyInitSixLevelCoverflow();
 }
 function renderLevels(group){var young=group==='younger';var arr=young?[['A1','My First ABC','الحروف الكبيرة والصغيرة، صورة، كلمة، ترجمة عربية وزرّان للصوت.'],['B1','My First Words','كلمات يومية جديدة مع الاستماع والصور والألعاب.'],['C1','My First Sentences','كوّن جملًا بسيطة وابدأ فهم القصص المصورة.']]:[['A2','Word Explorers','وسّع حصيلة الكلمات واربطها بموضوعات قريبة من الطفل.'],['B2','Reading Builders','تدرّب على القراءة والفهم واستخدام الكلمات في سياقها.'],['C2','Confident English','قوّي الجمل والمحادثات القصيرة والفهم.']];var cards=arr.map(function(item){return levelCard(item[0],item[1],item[2],group);}).join('');document.title=(young?'Little Learners':'Growing Learners')+' | Mr. Fluent Kids';root.innerHTML=shell(young?'LITTLE LEARNERS':'GROWING LEARNERS',young?'Little Learners':'Growing Learners',young?'مسار الأطفال الأصغر سنًا':'مسار الأطفال الأكبر شوية','Select a level to start your next learning adventure.','<div class="mfkr-level-grid">'+cards+'</div>'+backButtons(url('hub'),'← Back to paths')+(young?'<div class="mfkr-note">المستويات A1 وB1 وC1 متاحة الآن. افتح C1 لتكوين الجمل وقراءة قصة قصيرة والتدرّب على الفهم والنطق.</div>':'<div class="mfkr-note">المستويات A2 وB2 وC2 متاحة الآن. استكشف الكلمات في A2، وطوّر القراءة في B2، ثم أتقن المهارات المتقدمة الشاملة في C2.</div>'));}
 
