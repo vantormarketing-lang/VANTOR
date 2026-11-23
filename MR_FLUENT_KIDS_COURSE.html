@@ -1200,7 +1200,24 @@ html body.mfh-page #tracks .track-grid>.level-card .pill{
 
 
 <script>
-(function(){const grid=document.getElementById('trackGrid');if(!grid)return;const scrollStep=()=>Math.max(260,grid.clientWidth*.72);document.getElementById('kidsLevelPrev')?.addEventListener('click',()=>grid.scrollBy({left:-scrollStep(),behavior:'smooth'}));document.getElementById('kidsLevelNext')?.addEventListener('click',()=>grid.scrollBy({left:scrollStep(),behavior:'smooth'}));})();
+(function(){
+ const grid=document.getElementById('trackGrid');if(!grid)return;
+ const prev=document.getElementById('kidsLevelPrev'),next=document.getElementById('kidsLevelNext');
+ const step=()=>Math.max(210,grid.clientWidth*.55);
+ const cards=()=>[...grid.querySelectorAll('.level-card')];
+ function update(){
+  const arr=cards();if(!arr.length)return;
+  const mid=grid.getBoundingClientRect().left+grid.clientWidth/2;let idx=0,best=Infinity;
+  arr.forEach((card,i)=>{const r=card.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<best){best=d;idx=i}});
+  arr.forEach((card,i)=>{card.classList.toggle('kids-carousel-center',i===idx);card.classList.toggle('kids-carousel-left',i===idx-1);card.classList.toggle('kids-carousel-right',i===idx+1);});
+ }
+ prev?.addEventListener('click',()=>grid.scrollBy({left:-step(),behavior:'smooth'}));
+ next?.addEventListener('click',()=>grid.scrollBy({left:step(),behavior:'smooth'}));
+ grid.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});
+ new MutationObserver(()=>requestAnimationFrame(update)).observe(grid,{childList:true});
+ window.addEventListener('resize',update);
+ requestAnimationFrame(update);
+})();
 </script>
 </body>
 </html>
