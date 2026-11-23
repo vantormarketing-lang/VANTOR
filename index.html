@@ -16587,38 +16587,3 @@ html body #modal.modal.show.doma-auth-photo.doma-auth-login .doma-v118-forgot bu
  }
 }
 </style>
-
-<style id="doma-home-real-circular-carousel-20261123">
-/* Three-card clean carousel: no arrows, dots, blur, or clipped cards */
-.doma-home-carousel-stage,.doma-how-carousel-stage{position:relative!important;width:100%!important;max-width:1080px!important;margin:14px auto 24px!important;overflow:visible!important;perspective:none!important;height:clamp(280px,34vw,390px)!important;isolation:isolate!important}
-.doma-home-carousel-track,.doma-how-carousel-track{position:relative!important;inset:0!important;width:100%!important;height:100%!important;transform:none!important;transition:none!important;transform-style:flat!important}
-.doma-home-carousel-track>.grade,.doma-home-carousel-track>.mf-english-course-hero,.doma-home-carousel-track>.mf-kids-entry-card,.doma-home-carousel-track>.pa-programming-entry-card,.doma-how-carousel-track>.how-card{position:absolute!important;left:50%!important;top:50%!important;display:flex!important;transition:transform .5s ease,opacity .5s!important;transform:none!important;filter:none!important;backface-visibility:visible!important}
-.doma-home-carousel-track>.grade{width:31%!important;max-width:310px!important;min-width:0!important}
-.doma-home-carousel-track>.mf-english-course-hero,.doma-home-carousel-track>.mf-kids-entry-card,.doma-home-carousel-track>.pa-programming-entry-card{width:34%!important;max-width:350px!important;min-width:0!important}
-.doma-how-carousel-track>.how-card{width:31%!important;max-width:360px!important;min-width:0!important}
-.doma-home-carousel-stage .doma-home-carousel-controls,.doma-home-carousel-stage .doma-home-carousel-dots,.doma-how-carousel-stage .doma-home-carousel-controls,.doma-how-carousel-stage .doma-home-carousel-dots{display:none!important}
-@media(max-width:700px){.doma-home-carousel-stage,.doma-how-carousel-stage{height:285px!important}.doma-home-carousel-track>.grade{width:39%!important;max-width:290px!important}.doma-home-carousel-track>.mf-english-course-hero,.doma-home-carousel-track>.mf-kids-entry-card,.doma-home-carousel-track>.pa-programming-entry-card{width:43%!important;max-width:310px!important}.doma-how-carousel-track>.how-card{width:39%!important;max-width:310px!important}}
-</style>
-<script id="doma-home-real-circular-carousel-20261123-js">
-(function(){
- function makeCarousel(stage,track,selector){
-  if(!stage||!track||stage.dataset.simpleCarousel==='1')return;
-  const cards=[...track.children].filter(el=>el.matches(selector));if(cards.length<3)return;
-  stage.dataset.simpleCarousel='1';let index=0;
-  function render(){cards.forEach((card,i)=>{const offset=(i-index+cards.length)%cards.length;
-   if(offset===0){card.style.transform='translate(-50%,-50%) scale(1.06)';card.style.opacity='1';card.style.zIndex='5';card.style.pointerEvents='auto'}
-   else if(offset===1){card.style.transform='translate(48%,-50%) scale(.91)';card.style.opacity='.94';card.style.zIndex='3';card.style.pointerEvents='auto'}
-   else if(offset===cards.length-1){card.style.transform='translate(-148%,-50%) scale(.91)';card.style.opacity='.94';card.style.zIndex='3';card.style.pointerEvents='auto'}
-   else{card.style.transform='translate(-50%,-50%) scale(.72)';card.style.opacity='0';card.style.zIndex='0';card.style.pointerEvents='none'}
-  })}
-  let x=0;stage.addEventListener('touchstart',e=>x=e.changedTouches[0].clientX,{passive:true});stage.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-x;if(Math.abs(dx)>40){index=(index+(dx<0?1:cards.length-1))%cards.length;render()}},{passive:true});
-  cards.forEach((card,i)=>card.addEventListener('click',e=>{const offset=(i-index+cards.length)%cards.length;if(offset===1||offset===cards.length-1){e.preventDefault();index=i;render()}},{capture:true}));render();
- }
- function init(){
-  const grades=document.getElementById('gradeGrid');if(grades&&!grades.dataset.carouselHost){grades.dataset.carouselHost='1';const stage=document.createElement('div');stage.className='doma-home-carousel-stage doma-grade-carousel';grades.parentNode.insertBefore(stage,grades);stage.appendChild(grades);grades.classList.add('doma-home-carousel-track');makeCarousel(stage,grades,'.grade')}
-  const section=document.getElementById('english-course');if(section&&!section.dataset.carouselHost){const container=section.querySelector(':scope > .container');if(container){const cards=[...container.querySelectorAll(':scope > .mf-english-course-hero,:scope > .mf-kids-entry-card,:scope > .pa-programming-entry-card')];if(cards.length>=3){section.dataset.carouselHost='1';const stage=document.createElement('div');stage.className='doma-home-carousel-stage doma-course-carousel';const track=document.createElement('div');track.className='doma-home-carousel-track';container.insertBefore(stage,cards[0]);stage.appendChild(track);cards.forEach(c=>track.appendChild(c));makeCarousel(stage,track,'.mf-english-course-hero,.mf-kids-entry-card,.pa-programming-entry-card')}}}
-  const how=document.getElementById('how-it-works'),grid=how&&how.querySelector('.how-grid');if(grid&&!grid.dataset.carouselHost){const cards=[...grid.querySelectorAll(':scope > .how-card')];if(cards.length===4){grid.dataset.carouselHost='1';const stage=document.createElement('div');stage.className='doma-home-carousel-stage doma-how-carousel-stage';const track=document.createElement('div');track.className='doma-home-carousel-track doma-how-carousel-track';grid.parentNode.insertBefore(stage,grid);stage.appendChild(track);cards.forEach(c=>track.appendChild(c));makeCarousel(stage,track,'.how-card')}}
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();window.addEventListener('load',()=>setTimeout(init,600));
-})();
-</script>
