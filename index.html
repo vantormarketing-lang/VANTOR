@@ -2942,7 +2942,7 @@ function mrfluentRenderEnglishLevelCards(){
  cards.forEach((l,i)=>{const code=String(l.code).toUpperCase(),allowed=canAccessAll||code===assignedCode;
   const card=document.createElement('button');card.type='button';card.className='mforbit-card '+(!allowed?'mf3d-locked':'');card.setAttribute('aria-label','Select '+code+' level '+String(l.title||descriptors[code]||''));
   card.innerHTML='<span class="mforbit-code">'+esc(code)+'</span>';
-  card.addEventListener('click',e=>{if(suppressClick){suppressClick=false;e.preventDefault();return;}if(i!==active){active=i;paint();}else mrfluentOpenEnglishLevel(l.id);});
+  card.addEventListener('click',e=>{if(suppressClick){e.preventDefault();return;}mrfluentOpenEnglishLevel(l.id);});
   stage.appendChild(card);
  });
  const nodes=Array.from(stage.querySelectorAll('.mforbit-card'));
@@ -2955,9 +2955,9 @@ function mrfluentRenderEnglishLevelCards(){
  function stepRotate(dir){active=(active+dir+cards.length)%cards.length;paint();}
  host.querySelector('.mforbit-nav-prev').addEventListener('click',()=>stepRotate(-1));
  host.querySelector('.mforbit-nav-next').addEventListener('click',()=>stepRotate(1));
- stage.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;dragging=true;pointerId=e.pointerId;startX=lastX=e.clientX;dragTotal=0;try{stage.setPointerCapture(e.pointerId);}catch(_){};},{passive:true});
- stage.addEventListener('pointermove',e=>{if(!dragging||e.pointerId!==pointerId)return;const dx=e.clientX-lastX;dragTotal+=dx;lastX=e.clientX;if(Math.abs(dx)>5)suppressClick=true;if(Math.abs(dragTotal)>=48){const steps=Math.trunc(dragTotal/48);stepRotate(-steps);dragTotal-=steps*48;}},{passive:true});
- const endDrag=e=>{if(!dragging|| (e.pointerId!==undefined&&e.pointerId!==pointerId))return;dragging=false;pointerId=null;if(Math.abs(dragTotal)>=18)stepRotate(dragTotal<0?1:-1);dragTotal=0;if(suppressClick){window.setTimeout(()=>{suppressClick=false;},350);}};
+ stage.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;dragging=true;pointerId=e.pointerId;startX=lastX=e.clientX;dragTotal=0;},{passive:true});
+ stage.addEventListener('pointermove',e=>{if(!dragging||e.pointerId!==pointerId)return;const dx=e.clientX-lastX,dy=e.clientY-startX;if(Math.abs(e.clientX-startX)>12&&Math.abs(e.clientX-startX)>Math.abs(dy)){if(!suppressClick){suppressClick=true;try{stage.setPointerCapture(e.pointerId);}catch(_){};}dragTotal+=dx;lastX=e.clientX;if(Math.abs(dragTotal)>=48){const steps=Math.trunc(dragTotal/48);stepRotate(-steps);dragTotal-=steps*48;}}},{passive:true});
+ const endDrag=e=>{if(!dragging|| (e.pointerId!==undefined&&e.pointerId!==pointerId))return;dragging=false;pointerId=null;if(Math.abs(dragTotal)>=18)stepRotate(dragTotal<0?1:-1);dragTotal=0;if(suppressClick){window.setTimeout(()=>{suppressClick=false;},280);}};
  stage.addEventListener('pointerup',endDrag,{passive:true});stage.addEventListener('pointercancel',endDrag,{passive:true});stage.addEventListener('lostpointercapture',endDrag,{passive:true});
  stage.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>8){e.preventDefault();stepRotate(e.deltaX>0?1:-1);}},{passive:false});
  window.addEventListener('resize',paint,{passive:true});paint();
