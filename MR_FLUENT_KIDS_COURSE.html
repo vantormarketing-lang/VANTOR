@@ -1230,3 +1230,36 @@ html body.mfh-page #tracks .track-grid>.level-card .pill{
 </style>
 </body>
 </html>
+
+<style id="kids-coverflow-fix-v2">
+/* Definitive mobile-first coverflow: flex row, centered active card, horizontal touch only. */
+#trackGrid.kids-levels-carousel{display:flex!important;flex-flow:row nowrap!important;align-items:center!important;gap:12px!important;box-sizing:border-box!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;scroll-behavior:smooth!important;touch-action:pan-x!important;overscroll-behavior-x:contain!important;scrollbar-width:none!important;padding:38px calc(50% - 112px) 38px!important;perspective:900px!important}
+#trackGrid.kids-levels-carousel::-webkit-scrollbar{display:none!important}
+#trackGrid.kids-levels-carousel>.level-card{display:flex!important;flex:0 0 224px!important;width:224px!important;max-width:224px!important;min-height:196px!important;scroll-snap-align:center!important;transform:scale(.76) rotateY(20deg)!important;transform-origin:center!important;filter:blur(1.5px)!important;opacity:.55!important;transition:transform .32s ease,filter .32s ease,opacity .32s ease,box-shadow .32s ease!important}
+#trackGrid.kids-levels-carousel>.level-card.kids-carousel-center{transform:scale(1.06) rotateY(0)!important;filter:none!important;opacity:1!important;z-index:4!important}
+#trackGrid.kids-levels-carousel>.level-card.kids-carousel-left{transform:scale(.76) rotateY(-24deg)!important;filter:blur(1.3px)!important;opacity:.55!important}
+#trackGrid.kids-levels-carousel>.level-card.kids-carousel-right{transform:scale(.76) rotateY(24deg)!important;filter:blur(1.3px)!important;opacity:.55!important}
+.kids-level-carousel-controls{display:none!important}
+@media(max-width:650px){
+ #trackGrid.kids-levels-carousel{gap:10px!important;padding:34px calc(50% - 92px) 34px!important;overflow-y:hidden!important}
+ #trackGrid.kids-levels-carousel>.level-card{flex-basis:184px!important;width:184px!important;max-width:184px!important;min-height:188px!important;padding:12px!important}
+ #trackGrid.kids-levels-carousel>.level-card.kids-carousel-center{transform:scale(1.04)!important}
+ #trackGrid.kids-levels-carousel>.level-card.kids-carousel-left{transform:scale(.75) rotateY(-20deg)!important}
+ #trackGrid.kids-levels-carousel>.level-card.kids-carousel-right{transform:scale(.75) rotateY(20deg)!important}
+}
+@media(prefers-reduced-motion:reduce){#trackGrid.kids-levels-carousel>.level-card{transition:none!important}}
+</style>
+<script id="kids-coverflow-fix-v2-js">
+(function(){
+ const grid=document.getElementById('trackGrid');if(!grid)return;
+ let centeredOnLoad=false;
+ function cards(){return Array.from(grid.querySelectorAll('.level-card'));}
+ function centerCard(card,behavior){if(!card)return;const gr=grid.getBoundingClientRect(),cr=card.getBoundingClientRect();const delta=(cr.left+cr.width/2)-(gr.left+gr.width/2);grid.scrollTo({left:grid.scrollLeft+delta,behavior:behavior||'auto'});}
+ function update(){const list=cards();if(!list.length)return;const gr=grid.getBoundingClientRect(),mid=gr.left+gr.width/2;let active=0,best=Infinity;list.forEach((card,i)=>{const r=card.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<best){best=d;active=i;}});list.forEach((card,i)=>{card.classList.toggle('kids-carousel-center',i===active);card.classList.toggle('kids-carousel-left',i===active-1);card.classList.toggle('kids-carousel-right',i===active+1);});}
+ function initialCenter(){const list=cards();if(!list.length||centeredOnLoad)return;centeredOnLoad=true;centerCard(list[0],'auto');requestAnimationFrame(update);}
+ grid.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});
+ new MutationObserver(()=>{centeredOnLoad=false;requestAnimationFrame(()=>{initialCenter();update();});}).observe(grid,{childList:true});
+ window.addEventListener('resize',()=>{requestAnimationFrame(()=>{const active=grid.querySelector('.kids-carousel-center')||cards()[0];centerCard(active,'auto');update();});});
+ requestAnimationFrame(()=>{initialCenter();update();});
+})();
+</script>
