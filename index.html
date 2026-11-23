@@ -2940,7 +2940,7 @@ function mrfluentRenderEnglishLevelCards(){
  cards.forEach((l,i)=>{
   const code=String(l.code).toUpperCase(),allowed=canAccessAll||code===assignedCode;
   const card=document.createElement('button');card.type='button';card.className='mf3d-level '+(!allowed?'mf3d-locked':'');card.setAttribute('aria-label','Open '+code+' level '+String(l.title||descriptors[code]||''));
-  card.innerHTML='<img class="mf3d-level-photo" loading="lazy" alt="'+esc(descriptors[code]+' English learning" src="'+photos[code]+'"><span class="mf3d-level-shade"></span><span class="mf3d-level-code">'+esc(code)+'</span><span class="mf3d-level-name">'+esc(l.title||descriptors[code])+'</span>';
+  card.innerHTML='<img class="mf3d-level-photo" loading="lazy" alt="'+esc(descriptors[code])+' English learning" src="'+photos[code]+'"><span class="mf3d-level-shade"></span><span class="mf3d-level-code">'+esc(code)+'</span><span class="mf3d-level-name">'+esc(l.title||descriptors[code])+'</span>';
   card.addEventListener('click',()=>mrfluentOpenEnglishLevel(l.id));
   ring.appendChild(card);
  });
