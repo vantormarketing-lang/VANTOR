@@ -2954,8 +2954,9 @@ function mrfluentRenderEnglishLevelCards(){
  });
  }
  let sx=0,sy=0;
-  let dragX=0,dragY=0,dragActive=false;
-  stage.addEventListener('pointerdown',e=>{dragX=e.clientX;dragY=e.clientY;dragActive=true;},{passive:true});
+  let dragX=0,dragY=0,dragLastX=0,dragActive=false;
+  stage.addEventListener('pointerdown',e=>{dragX=dragLastX=e.clientX;dragY=e.clientY;dragActive=true;},{passive:true});
+  stage.addEventListener('pointermove',e=>{if(!dragActive)return;const dx=e.clientX-dragX,dy=e.clientY-dragY;if(Math.abs(dx)>15&&Math.abs(dx)>Math.abs(dy)){const steps=Math.trunc((e.clientX-dragLastX)/38);if(steps){active=(active-steps+cards.length)%cards.length;dragLastX=e.clientX;paint();}}},{passive:true});
   const endDrag=e=>{if(!dragActive)return;const dx=e.clientX-dragX,dy=e.clientY-dragY;if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy)){active=(active+(dx<0?1:cards.length-1))%cards.length;paint();}dragActive=false;};
   stage.addEventListener('pointerup',endDrag,{passive:true});
   stage.addEventListener('pointercancel',endDrag,{passive:true});
