@@ -2928,7 +2928,7 @@ function mrfluentRenderEnglishLevelCards(){
  if(mrfluentEnglishTrialActive){host.innerHTML=mrFluentEnglishLevels.length?carouselTitle+mrFluentEnglishLevels.map(l=>openCard(l,true)).join(''):'<div class="empty">No published levels. Publish levels from Admin → English Course.</div>';return}
  if(!mrFluentEnglishSubscription||!mrFluentEnglishPlacement||Number(mrFluentEnglishPlacement.total_questions||0)<20){host.innerHTML='';return}
  const order=['A1','A2','B1','B2','C1','C2'];const assigned=order.indexOf(mrFluentEnglishPlacement.current_level_code||mrFluentEnglishPlacement.level_code);
- host.innerHTML=mrfluentEnglishLevels.length?carouselTitle+mrfluentEnglishLevels.map(l=>openCard(l,order.indexOf(l.code)===assigned)).join(''):'<div class="empty">No published levels. Publish levels from Admin → English Course.</div>';
+ host.innerHTML=mrFluentEnglishLevels.length?carouselTitle+mrFluentEnglishLevels.map(l=>openCard(l,order.indexOf(l.code)===assigned)).join(''):'<div class="empty">No published levels. Publish levels from Admin → English Course.</div>';
 }
 
 function mrfluentCourseActive(sub){const now=Date.now();return !!sub&&String(sub.status||'').toLowerCase()==='active'&&(!sub.starts_at||new Date(sub.starts_at).getTime()<=now)&&(!sub.expires_at||new Date(sub.expires_at).getTime()>now)}
