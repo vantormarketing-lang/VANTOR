@@ -2918,24 +2918,22 @@ function mrfluentRenderEnglishLevelCards(){
  const assignedCode=String(mrFluentEnglishPlacement?.current_level_code||mrFluentEnglishPlacement?.level_code||'').toUpperCase();
  const canAccessAll=!!mrfluentEnglishTrialActive;
  const cards=levels.filter(l=>order.includes(String(l.code||'').toUpperCase())).sort((a,b)=>order.indexOf(String(a.code).toUpperCase())-order.indexOf(String(b.code).toUpperCase()));
- const styleId='mf-english-level-horizontal-coverflow-v8';
- if(!document.getElementById(styleId)){const st=document.createElement('style');st.id=styleId;st.textContent=`
- #mrfluentEnglishLevels{position:relative!important;display:block!important;overflow:visible!important;max-width:100%!important;height:auto!important;min-height:0!important;padding:18px 0 16px!important;perspective:1000px!important;user-select:none!important}
- #mrfluentEnglishLevels .mf3d-title{position:relative!important;display:block!important;margin:0 0 14px!important;padding:0!important;text-align:center!important;color:#52602f!important;font-size:clamp(18px,2vw,24px)!important;font-weight:900!important;background:none!important;border:0!important}
- #mrfluentEnglishLevels .mf3d-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 8px}
- #mrfluentEnglishLevels .mf3d-controls button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(82,96,47,.28);background:#efe4ca;color:#586532;font-size:24px;font-weight:800;cursor:pointer}
- #mrfluentEnglishLevels .mf3d-ring{position:relative!important;display:flex!important;align-items:center!important;gap:16px!important;width:100%!important;box-sizing:border-box!important;overflow-x:auto!important;overflow-y:hidden!important;padding:24px max(7vw,26px) 28px!important;scroll-snap-type:x mandatory!important;scroll-behavior:smooth!important;scrollbar-width:none!important;perspective:1000px!important;overscroll-behavior-inline:contain!important;touch-action:pan-x!important;-webkit-overflow-scrolling:touch!important}
- #mrfluentEnglishLevels .mf3d-ring::-webkit-scrollbar{display:none!important}
- #mrfluentEnglishLevels .mf3d-level{position:relative!important;left:auto!important;top:auto!important;flex:0 0 clamp(148px,22vw,174px)!important;width:clamp(148px,22vw,174px)!important;height:clamp(172px,25vw,205px)!important;margin:0!important;scroll-snap-align:center!important;scroll-snap-stop:always!important;transform:scale(.84)!important;transition:transform .32s ease,opacity .32s ease,filter .32s ease!important;opacity:.68!important;filter:brightness(.86)!important;z-index:1!important;backface-visibility:visible!important;border-radius:20px!important;background:linear-gradient(145deg,#f3ead5,#e4d8b8)!important;border:1px solid rgba(75,87,45,.42)!important;box-shadow:0 14px 34px rgba(28,33,18,.28)!important;overflow:hidden!important}
- #mrfluentEnglishLevels .mf3d-level.mf3d-cf-center{transform:scale(1)!important;opacity:1!important;filter:none!important;z-index:4!important}
- #mrfluentEnglishLevels .mf3d-level.mf3d-cf-left{transform:scale(.72) rotateY(22deg)!important;opacity:.68!important;filter:brightness(.86)!important}
- #mrfluentEnglishLevels .mf3d-level.mf3d-cf-right{transform:scale(.72) rotateY(-22deg)!important;opacity:.68!important;filter:brightness(.86)!important}
- #mrfluentEnglishLevels .mf3d-level-code{position:absolute!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;padding:0!important;min-width:0!important;height:auto!important;background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;color:#46532b!important;font-size:clamp(24px,4vw,34px)!important;font-weight:950!important;letter-spacing:1.5px!important;text-align:center!important}
- #mrfluentEnglishLevels .mf3d-level-name,#mrfluentEnglishLevels .mf3d-level-photo,#mrfluentEnglishLevels .mf3d-level-shade{display:none!important}
- @media(max-width:600px){#mrfluentEnglishLevels .mf3d-ring{padding:18px calc(50vw - 74px) 22px!important;gap:10px!important}#mrfluentEnglishLevels .mf3d-level{flex-basis:148px!important;width:148px!important;height:172px!important}}
- @media(prefers-reduced-motion:reduce){#mrfluentEnglishLevels .mf3d-level{transition:none!important}}
- `;document.head.appendChild(st)}
- host.innerHTML='<div class="mf3d-title">Choose Your Level</div><div class="mf3d-controls" aria-label="Level carousel controls"><button type="button" id="mfEnglishLevelPrev" aria-label="Previous level">‹</button><button type="button" id="mfEnglishLevelNext" aria-label="Next level">›</button></div><div class="mf3d-ring" id="mfEnglish3dRing"></div>';
+ if(cards.length!==6){host.innerHTML='<div class="mf3d-title">Choose Your Level</div><p class="empty">Six English levels are not available yet.</p>';return;}
+ const styleId='mf-english-3d-levels-v2';
+ if(!document.getElementById(styleId)){
+  const st=document.createElement('style');st.id=styleId;st.textContent=`
+   #mrfluentEnglishLevels{position:relative!important;display:block!important;overflow:visible!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;padding:12px 0 18px!important;perspective:none!important;touch-action:auto!important;user-select:none!important}
+   .mf3d-title{position:relative!important;display:block!important;margin:0 0 8px!important;text-align:center!important;color:#52602f!important;font-size:clamp(18px,2vw,24px)!important;font-weight:900!important}
+   .mf3d-ring{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;box-sizing:border-box!important;padding:24px calc(50% - 88px) 30px!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;scroll-behavior:smooth!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;touch-action:pan-x!important;perspective:1000px!important;transform:none!important}
+   .mf3d-ring::-webkit-scrollbar{display:none!important}
+   .mf3d-level{position:relative!important;inset:auto!important;flex:0 0 176px!important;width:176px!important;min-width:176px!important;height:190px!important;margin:0!important;padding:0!important;scroll-snap-align:center!important;scroll-snap-stop:always!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid rgba(75,87,45,.42)!important;border-radius:20px!important;background:linear-gradient(145deg,#f3ead5 0%,#e4d8b8 100%)!important;color:#46532b!important;box-shadow:0 14px 34px rgba(28,33,18,.22)!important;cursor:pointer!important;backface-visibility:hidden!important;transition:transform .32s ease,opacity .32s ease,filter .32s ease!important}
+   .mf3d-level-code{position:static!important;display:block!important;transform:none!important;padding:0!important;min-width:0!important;background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;color:#46532b!important;font-size:32px!important;font-weight:950!important;letter-spacing:1.5px!important}
+   .mf3d-level.mf3d-locked{opacity:.88!important}
+   @media(max-width:600px){.mf3d-ring{gap:9px!important;padding-left:calc(50% - 37vw)!important;padding-right:calc(50% - 37vw)!important}.mf3d-level{flex-basis:74vw!important;width:74vw!important;min-width:74vw!important;max-width:250px!important;height:74vw!important;min-height:180px!important;max-height:220px!important}}
+   @media(prefers-reduced-motion:reduce){.mf3d-ring,.mf3d-level{scroll-behavior:auto!important;transition:none!important}}
+  `;document.head.appendChild(st);
+ }
+ host.innerHTML='<div class="mf3d-title">Choose Your Level</div><div class="mf3d-ring" id="mfEnglish3dRing"></div>';
  const ring=host.querySelector('#mfEnglish3dRing');if(!ring)return;
  cards.forEach(l=>{
   const code=String(l.code).toUpperCase(),allowed=canAccessAll||code===assignedCode;
@@ -2944,18 +2942,15 @@ function mrfluentRenderEnglishLevelCards(){
   card.addEventListener('click',()=>mrfluentOpenEnglishLevel(l.id));
   ring.appendChild(card);
  });
- if(cards.length!==6){host.insertAdjacentHTML('beforeend','<p class="empty">Six English levels are not available yet.</p>');return;}
- function list(){return Array.from(ring.children);}
+ function cardList(){return Array.from(ring.querySelectorAll(':scope > .mf3d-level'));}
  function center(card,behavior){if(!card)return;const hr=ring.getBoundingClientRect(),cr=card.getBoundingClientRect();ring.scrollTo({left:ring.scrollLeft+cr.left+cr.width/2-(hr.left+hr.width/2),behavior:behavior||'smooth'});}
- function nearest(){const items=list();if(!items.length)return null;const mid=ring.getBoundingClientRect().left+ring.clientWidth/2;let best=items[0],dist=Infinity;items.forEach(el=>{const r=el.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<dist){dist=d;best=el;}});return best;}
- function update(){const items=list(),active=nearest(),i=items.indexOf(active);items.forEach((el,n)=>{el.classList.remove('mf3d-cf-center','mf3d-cf-left','mf3d-cf-right');el.classList.toggle('mf3d-cf-center',n===i);el.classList.toggle('mf3d-cf-left',n===i-1);el.classList.toggle('mf3d-cf-right',n===i+1);});}
+ function nearest(){const list=cardList();if(!list.length)return null;const mid=ring.getBoundingClientRect().left+ring.clientWidth/2;let chosen=list[0],dist=Infinity;list.forEach(card=>{const r=card.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<dist){dist=d;chosen=card;}});return chosen;}
+ function update(){const list=cardList(),active=nearest(),index=list.indexOf(active);list.forEach((card,i)=>{card.classList.toggle('mf3d-cf-center',i===index);card.classList.toggle('mf3d-cf-left',i===index-1);card.classList.toggle('mf3d-cf-right',i===index+1);card.style.transform=i===index?'scale(1)':'scale(.72) rotateY('+(i<index?'22deg':i>index?'-22deg':'0deg')+')';card.style.opacity=i===index?'1':(Math.abs(i-index)===1?'.68':'.42');card.style.filter=i===index?'none':'brightness(.88)';card.style.zIndex=i===index?'5':'1';});}
  let raf=0,settle=0,last=ring.scrollLeft,direction=0,wrapping=false;
- function move(step){const items=list(),active=nearest();if(!active||!items.length)return;let i=items.indexOf(active),target=i+step;if(target<0){ring.insertBefore(items[items.length-1],items[0]);target=0;}else if(target>=items.length){ring.appendChild(items[0]);target=items.length-1;}center(list()[target]);}
- function wrap(){if(wrapping)return;const items=list(),active=nearest();if(!active||items.length<2)return;const i=items.indexOf(active);if(direction<0&&i===0){wrapping=true;ring.insertBefore(items[items.length-1],items[0]);center(list()[0],'auto');wrapping=false;}else if(direction>0&&i===items.length-1){wrapping=true;ring.appendChild(items[0]);center(list()[items.length-1],'auto');wrapping=false;}update();}
- ring.addEventListener('scroll',()=>{direction=ring.scrollLeft-last;last=ring.scrollLeft;if(raf)return;raf=requestAnimationFrame(()=>{raf=0;update();});clearTimeout(settle);settle=setTimeout(wrap,180);},{passive:true});
- const prev=host.querySelector('#mfEnglishLevelPrev'),next=host.querySelector('#mfEnglishLevelNext');prev&&prev.addEventListener('click',()=>move(-1));next&&next.addEventListener('click',()=>move(1));
- window.addEventListener('resize',()=>{center(nearest(),'auto');update();});
- requestAnimationFrame(()=>{center(list()[0],'auto');update();});
+ function wrapSwipe(){if(wrapping)return;const list=cardList(),active=nearest();if(!active||list.length<2)return;const i=list.indexOf(active);if(direction<0&&i===0){wrapping=true;ring.insertBefore(list[list.length-1],list[0]);center(cardList()[0],'auto');wrapping=false;}else if(direction>0&&i===list.length-1){wrapping=true;ring.appendChild(list[0]);center(cardList()[list.length-1],'auto');wrapping=false;}update();}
+ ring.addEventListener('scroll',()=>{direction=ring.scrollLeft-last;last=ring.scrollLeft;if(!raf)raf=requestAnimationFrame(()=>{raf=0;update();});clearTimeout(settle);settle=setTimeout(wrapSwipe,180);},{passive:true});
+ requestAnimationFrame(()=>{center(cardList()[0],'auto');update();});
+ window.addEventListener('resize',()=>{center(nearest(),'auto');update();},{passive:true});
 }
 function mrfluentCourseActive(sub){const now=Date.now();return !!sub&&String(sub.status||'').toLowerCase()==='active'&&(!sub.starts_at||new Date(sub.starts_at).getTime()<=now)&&(!sub.expires_at||new Date(sub.expires_at).getTime()>now)}
 async function mrfluentRefreshEnglishCourseInternal(){
