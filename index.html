@@ -3217,7 +3217,7 @@ async function renderDashboardData(profile,subs,reqs){
     $('dashAccessPill').textContent=pending?'Pending':'Not active';
     $('dashLessons').textContent='0';$('dashQuizzes').textContent='0';$('dashCerts').textContent='0';
     $('dashBreakdown').innerHTML='<div class="report-bars"><div class="report-line"><label>Lessons</label><div class="rbar"><i style="width:0%"></i></div><b>0%</b></div><div class="report-line"><label>Quizzes</label><div class="rbar"><i style="width:0%"></i></div><b>0%</b></div><div class="report-line"><label>Homework</label><div class="rbar"><i style="width:0%"></i></div><b>0%</b></div></div>';
-    $('dashActivity').innerHTML='<div class="empty">'+(pending?'Your approval status will appear in Notifications.':'No learning activity yet.')+'</div>';
+    if($('dashActivity'))$('dashActivity').innerHTML='<div class="empty">'+(pending?'Your approval status will appear in Notifications.':'No learning activity yet.')+'</div>';
     $('dashNotice').textContent=pending?'Subscription pending review. Watch Notifications for the decision.':'Choose a grade and submit the payment request to unlock your grade area.';
     return;
   }
@@ -3240,7 +3240,7 @@ async function renderDashboardData(profile,subs,reqs){
   $('dashAccessPill').textContent='Monthly'+' Access';
   $('dashLessons').textContent=counts.lessons;$('dashQuizzes').textContent=quizRows.length;$('dashCerts').textContent=certs.data?.length||counts.certs;
   $('dashBreakdown').innerHTML='<div class="report-bars"><div class="report-line"><label>Lessons</label><div class="rbar"><i style="width:'+prog.percent+'%"></i></div><b>'+prog.percent+'%</b></div><div class="report-line"><label>Quizzes</label><div class="rbar"><i style="width:'+avgQuiz+'%"></i></div><b>'+avgQuiz+'%</b></div><div class="report-line"><label>Homework</label><div class="rbar"><i style="width:'+hwPercent+'%"></i></div><b>'+hwPercent+'%</b></div><div class="notice" style="margin-top:9px">Overall learning snapshot: <b style="color:#e0b3be">'+overall+'%</b></div></div>';
-  $('dashActivity').innerHTML=activityRows.length?'<div class="activity-list">'+activityRows.map(a=>'<div class="activity-row"><div><strong>'+esc(String(a.activity_type||'Activity').replace(/_/g,' '))+'</strong><span>'+esc(a.metadata?.title||a.metadata?.source||'Student activity')+'</span></div><time>'+fmtDateTime(a.created_at)+'</time></div>').join('')+'</div>':'<div class="empty">No recent activity yet. Open a lesson or take a quiz to get started.</div>';
+  if($('dashActivity'))$('dashActivity').innerHTML=activityRows.length?'<div class="activity-list">'+activityRows.map(a=>'<div class="activity-row"><div><strong>'+esc(String(a.activity_type||'Activity').replace(/_/g,' '))+'</strong><span>'+esc(a.metadata?.title||a.metadata?.source||'Student activity')+'</span></div><time>'+fmtDateTime(a.created_at)+'</time></div>').join('')+'</div>':'<div class="empty">No recent activity yet. Open a lesson or take a quiz to get started.</div>';
   $('dashNotice').textContent='Active access until '+fmtDate(currentSubscription?.expires_at)+' • '+'Monthly'+' • '+esc(currentGrade.name);
 }
 
@@ -3470,7 +3470,7 @@ async function selectLesson(i){
   currentLessonIndex=index;
   renderLessonWorkspace(currentLessonProgress);
   $('drawerBody').scrollTop=0;
-  if(sessionUser&&lesson){sb.rpc('doma_log_activity',{p_activity_type:'lesson_open',p_entity_id:lesson.id,p_metadata:{title:lesson.title}}).catch(()=>{})}
+  if(sessionUser&&lesson){Promise.resolve(sb.rpc('doma_log_activity',{p_activity_type:'lesson_open',p_entity_id:lesson.id,p_metadata:{title:lesson.title}})).catch(()=>{})}
 }
 async function changeLesson(d){
   const delta=Number(d)||0;
@@ -3869,7 +3869,7 @@ async function saveProfile(){
   if(r.error)return showStatus('profileStatus',r.error.message,'error');
   const newPass=$('profileNewPass')?.value||'';
   if(newPass){if(newPass.length<6)return showStatus('profileStatus','Password must be at least 6 characters.','error');const pr=await sb.auth.updateUser({password:newPass});if(pr.error)return showStatus('profileStatus','Profile saved, but password change failed: '+pr.error.message,'error');}
-  await sb.rpc('doma_log_activity',{p_activity_type:'profile_update',p_entity_id:null,p_metadata:{grade_id:gradeId}}).catch(()=>{});
+  await Promise.resolve(sb.rpc('doma_log_activity',{p_activity_type:'profile_update',p_entity_id:null,p_metadata:{grade_id:gradeId}})).catch(()=>{});
   await refreshStudentState();updateStudentShell();showStatus('profileStatus','Profile saved successfully.','success');
 }function openReviewForm(){$('modalTitle').textContent='Leave a Review';$('modalText').textContent='Share your experience with Mr. Fluent.';$('modalBody').innerHTML='<div class="formgrid"><select id="reviewRating" class="field"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select><textarea id="reviewText" class="field full" rows="6" placeholder="Your review"></textarea><div id="reviewStatus" class="status full"></div><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="submitReview()">Send Review</button></div>';$('modal').classList.add('show')}
 async function submitReview(){const text=$('reviewText')?.value.trim()||'',rating=Number($('reviewRating')?.value||5);if(!text)return showStatus('reviewStatus','Write a review first.','error');const r=await sb.from('reviews').insert({student_id:sessionUser.id,rating,review_text:text,is_published:false});if(r.error)return showStatus('reviewStatus',r.error.message,'error');closeModal();showToast('Review submitted for approval.');}
@@ -4035,7 +4035,7 @@ async function boot(){
 
   await gradesPromise;
   if(sessionUser&&sb&&sessionUser.app_metadata?.must_change_password!==true){
-    try{sb.rpc('doma_log_activity',{p_activity_type:'login',p_entity_id:null,p_metadata:{source:'student_web'}}).catch(()=>{})}
+    try{Promise.resolve(sb.rpc('doma_log_activity',{p_activity_type:'login',p_entity_id:null,p_metadata:{source:'student_web'}})).catch(()=>{})}
     catch(error){console.warn('Login activity could not be recorded.',error)}
   }
   // Account and course-route checks run after the grade UI is rendered, without blocking app startup.
@@ -6721,7 +6721,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
   window.domaBattleLeave=function(){
     const room=X.room;
     try{send('leave',{id:sessionUser?.id})}catch(e){}
-    if(room&&!X.started)sb.rpc('doma_cancel_battle_session',{p_room_code:room}).catch(()=>{});
+    if(room&&!X.started)Promise.resolve(sb.rpc('doma_cancel_battle_session',{p_room_code:room})).catch(()=>{});
     closeDomaBattle();openDomaBattle();
   }
   async function createBattle(){
@@ -6767,7 +6767,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     try{
       await subscribeRoom(X.room);
     }catch(e){
-      await sb.rpc('doma_cancel_battle_session',{p_room_code:X.room}).catch(()=>{});
+      await Promise.resolve(sb.rpc('doma_cancel_battle_session',{p_room_code:X.room})).catch(()=>{});
       const code=X.room;
       closeChannel();
       X.role=null;
@@ -6802,7 +6802,7 @@ window.openStudentTool=function(view){if(__VALID.indexOf(view)<0)view='overview'
     try{
       await subscribeRoom(X.room);
     }catch(e){
-      await sb.rpc('doma_cancel_battle_session',{p_room_code:X.room}).catch(()=>{});
+      await Promise.resolve(sb.rpc('doma_cancel_battle_session',{p_room_code:X.room})).catch(()=>{});
       closeChannel();
       X.role=null;
       return showToast('Could not connect to that private Battle room.');
