@@ -1,7 +1,7 @@
 /* DOMA circular grade carousel - isolated to #gradeGrid */
 (function(){
 'use strict';
-if(window.DomaGradesCarousel?.version===3)return;
+if(window.DomaGradesCarousel?.version===4)return;
 const containerSelector='#gradeGrid', minCards=6;
 let state=null,observer=null,raf=0;
 const modulo=(v,n)=>(v%n+n)%n;
@@ -48,7 +48,7 @@ function init(){
  function go(p){st.pos=p;layout()}function goIndex(i){const cur=Math.round(st.pos);let delta=i-modulo(cur,n);delta-=n*Math.round(delta/n);go(cur+delta)}function stepNext(){go(Math.round(st.pos)+1)}function stepPrev(){go(Math.round(st.pos)-1)}
 
  let drag=false,moved=false,suppress=false,startX=0,startPos=0,lastX=0,lastT=0,velocity=0;
- box.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;startX=lastX=e.clientX;startPos=st.pos;lastT=performance.now();velocity=0;try{box.setPointerCapture(e.pointerId)}catch(_){ }});
+ box.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;startX=lastX=e.clientX;startPos=st.pos;lastT=performance.now();velocity=0;});
  box.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-startX;if(!moved&&Math.abs(dx)>7){moved=true;box.classList.add('doma-grade-carousel-dragging-v2');try{box.setPointerCapture(e.pointerId)}catch(_){}}if(!moved)return;if(e.cancelable)e.preventDefault();const now=performance.now(),dt=now-lastT;if(dt>0)velocity=.7*velocity+.3*(e.clientX-lastX)/dt;lastX=e.clientX;lastT=now;st.pos=startPos-dx/(st.width*.74);layout()});
  function release(){if(!drag)return;drag=false;if(!moved)return;box.classList.remove('doma-grade-carousel-dragging-v2');if(performance.now()-lastT>100)velocity=0;let base=Math.round(st.pos),target=Math.round(st.pos-velocity*170/(st.width*.74));go(Math.max(base-2,Math.min(base+2,target)));suppress=true;window.setTimeout(()=>suppress=false,100);moved=false}
  box.addEventListener('pointerup',release);box.addEventListener('pointercancel',release);
@@ -61,23 +61,23 @@ function init(){
  const box=document.querySelector(containerSelector);if(box)observer.observe(box,{childList:true});
  init();
  window.addEventListener('resize',()=>{if(state){state.width=Math.min(330,Math.max(205,state.box.clientWidth*.72));state.cards.forEach(c=>c.style.setProperty('width',state.width+'px','important'));state.box.style.setProperty('height',state.height+'px','important');}});
- window.DomaGradesCarousel={version:3,next:()=>state&&state.pos++,prev:()=>state&&state.pos--,goTo:i=>state&&i>=0&&i<state.n,refresh:init};
+ window.DomaGradesCarousel={version:4,next:()=>state&&go(Math.round(state.pos)+1),prev:()=>state&&go(Math.round(state.pos)-1),goTo:i=>state&&i>=0&&i<state.n&&goIndex(i),refresh:init};
 
 function initCourses(){
  const section=document.querySelector('#english-course .container');if(!section)return;
  const cards=[section.querySelector('.mf-english-course-hero'),section.querySelector('.mf-kids-entry-card'),section.querySelector('.pa-programming-entry-card')].filter(Boolean);
  if(cards.length!==3)return;
  let track=section.querySelector('.doma-course-track-v3');
- if(!track){track=document.createElement('div');track.className='doma-course-track-v3';track.style.cssText='position:relative!important;display:block!important;width:100%!important;height:320px!important;overflow:hidden!important;touch-action:pan-y!important;grid-column:1/-1!important';section.insertBefore(track,cards[0]);cards.forEach(c=>track.appendChild(c))}
+ if(!track){track=document.createElement('div');track.className='doma-course-track-v3';track.style.cssText='position:relative!important;display:block!important;width:100%!important;height:auto!important;min-height:0!important;overflow:hidden!important;touch-action:pan-y!important;grid-column:1/-1!important';section.insertBefore(track,cards[0]);cards.forEach(c=>track.appendChild(c))}
  if(track.dataset.carouselReady==='1')return;track.dataset.carouselReady='1';
- let pos=0,width=0,drag=false,moved=false,startX=0,startPos=0,suppress=false,pid=null;
+ let pos=0,width=0,drag=false,moved=false,startX=0,startPos=0,suppress=false,pid=null,trackHeight=0;
  cards.forEach(c=>{c.style.setProperty('position','absolute','important');c.style.setProperty('left','50%','important');c.style.setProperty('top','50%','important');c.style.setProperty('margin','0','important');c.style.setProperty('height','auto','important');c.style.setProperty('min-height','0','important');c.style.setProperty('max-height','360px','important');c.style.setProperty('transition','transform .3s, opacity .3s, filter .3s','important');c.style.setProperty('will-change','transform','important')});
- function measure(){width=Math.max(220,Math.min(360,track.clientWidth*.72));cards.forEach(c=>{c.style.setProperty('width',width+'px','important');c.style.setProperty('max-width',width+'px','important')})}
+ function measure(){width=Math.max(220,Math.min(360,track.clientWidth*.72));let h=0;cards.forEach(c=>{c.style.setProperty('width',width+'px','important');c.style.setProperty('max-width',width+'px','important');h=Math.max(h,c.offsetHeight)});trackHeight=Math.max(180,h+28);track.style.setProperty('height',trackHeight+'px','important')}
  function render(){const step=width*.78;cards.forEach((c,i)=>{let d=i-pos;d-=cards.length*Math.round(d/cards.length);const a=Math.abs(d),x=d*step,scale=a<1?1-.14*a:Math.max(.6-.1*(a-1),.42),opacity=a<1?1-.4*a:Math.max(.5*(2-a),0);c.style.setProperty('transform','translate(-50%,-50%) translateX('+x+'px) scale('+scale+')','important');c.style.setProperty('opacity',String(opacity),'important');c.style.setProperty('filter',a>.05?'blur('+Math.min(4,a*4)+'px)':'none','important');c.style.setProperty('z-index',String(100-Math.round(a*12)),'important');c.style.setProperty('visibility',a>2?'hidden':'visible','important');c.style.setProperty('pointer-events',a>1.15?'none':'auto','important')})}
  function go(p){pos=p;render()}
  function focus(i){let cur=Math.round(pos),delta=i-((cur%cards.length+cards.length)%cards.length);if(delta>cards.length/2)delta-=cards.length;go(cur+delta)}
- track.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;startX=e.clientX;startPos=pos;pid=e.pointerId;try{track.setPointerCapture(pid)}catch(_){}});
- track.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==pid)return;const dx=e.clientX-startX;if(Math.abs(dx)>6)moved=true;if(moved){if(e.cancelable)e.preventDefault();pos=startPos-dx/(width*.78);render()}});
+ track.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;startX=e.clientX;startPos=pos;pid=e.pointerId;});
+ track.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==pid)return;const dx=e.clientX-startX;if(Math.abs(dx)>6&&!moved){moved=true;try{track.setPointerCapture(pid)}catch(_){}}if(moved){if(e.cancelable)e.preventDefault();pos=startPos-dx/(width*.78);render()}});
  function end(e){if(!drag||(e&&e.pointerId!==pid))return;drag=false;if(moved){go(Math.round(pos));suppress=true;window.setTimeout(()=>suppress=false,180)}moved=false;pid=null}
  track.addEventListener('pointerup',end);track.addEventListener('pointercancel',end);
  track.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopPropagation();return}const card=e.target.closest('.doma-course-track-v3>*');if(!card||!cards.includes(card))return;let idx=cards.indexOf(card);if(idx!==((Math.round(pos)%cards.length+cards.length)%cards.length)){e.preventDefault();e.stopPropagation();focus(idx)}},true);
