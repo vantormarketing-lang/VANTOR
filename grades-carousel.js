@@ -46,7 +46,7 @@ function init(){
 
  }
  function go(p){st.pos=p;layout()}function goIndex(i){const cur=Math.round(st.pos);let delta=i-modulo(cur,n);delta-=n*Math.round(delta/n);go(cur+delta)}function stepNext(){go(Math.round(st.pos)+1)}function stepPrev(){go(Math.round(st.pos)-1)}
- prev.onclick=stepPrev;next.onclick=stepNext;
+
  let drag=false,moved=false,suppress=false,startX=0,startPos=0,lastX=0,lastT=0,velocity=0;
  box.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;startX=lastX=e.clientX;startPos=st.pos;lastT=performance.now();velocity=0});
  box.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-startX;if(!moved&&Math.abs(dx)>7){moved=true;box.classList.add('doma-grade-carousel-dragging-v2');try{box.setPointerCapture(e.pointerId)}catch(_){}}if(!moved)return;const now=performance.now(),dt=now-lastT;if(dt>0)velocity=.7*velocity+.3*(e.clientX-lastX)/dt;lastX=e.clientX;lastT=now;st.pos=startPos-dx/(st.width*.74);layout()});
