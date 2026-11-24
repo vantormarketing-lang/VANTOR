@@ -1,7 +1,7 @@
 /* DOMA circular grade carousel v5 — direct finger swipe on card surfaces */
 (function(){
 'use strict';
-if(window.DomaGradesCarousel?.version===6)return;
+if(window.DomaGradesCarousel?.version===7)return;
 const mod=(v,n)=>(v%n+n)%n,interactive='button,a,input,select,textarea,[role="button"]';
 let state=null,observer=null,raf=0;
 function dispose(){if(!state)return;state.ro?.disconnect();state.box.classList.remove('doma-grade-carousel-v2');state.cards.forEach(c=>{['position','left','top','width','max-width','margin','transform','opacity','filter','z-index','pointer-events','transition','visibility','touch-action'].forEach(p=>c.style.removeProperty(p));c.classList.remove('doma-grade-carousel-item-v2')});state=null}
@@ -33,9 +33,9 @@ function init(){
  box.addEventListener('touchend',touchEnd,{passive:true,capture:true});box.addEventListener('touchcancel',touchEnd,{passive:true,capture:true});
  box.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopPropagation();return}if(e.target.closest(interactive))return;const card=e.target.closest('.doma-grade-carousel-item-v2');if(!card||card.parentNode!==box)return;const i=cards.indexOf(card);if(i>=0&&i!==mod(Math.round(st.pos),n)){e.preventDefault();e.stopPropagation();focus(i)}},true);
  box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(Math.round(st.pos)+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(Math.round(st.pos)-1)}});
- st.ro=new ResizeObserver(()=>{measure();layout()});st.ro.observe(box);cards.forEach(c=>st.ro.observe(c));measure();layout();
+ st.measure=measure;st.layout=layout;st.ro=new ResizeObserver(()=>{st.measure();st.layout()});st.ro.observe(box);cards.forEach(c=>st.ro.observe(c));st.measure();st.layout();
 }
 observer=new MutationObserver(()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;init()})});const box=document.querySelector('#gradeGrid');if(box)observer.observe(box,{childList:true});
-init();window.addEventListener('resize',()=>{if(state){measure();layout()}});
-window.DomaGradesCarousel={version:6,refresh:init};
+init();window.addEventListener('resize',()=>{if(state){state.measure();state.layout()}});
+window.DomaGradesCarousel={version:7,refresh:init};
 })();
