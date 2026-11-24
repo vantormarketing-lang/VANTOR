@@ -1,0 +1,126 @@
+/* DOMA GLOBAL CENTERED MENU SYSTEM — screenshot-matched burgundy modal */
+:root{
+  --doma-menu-bg:#100b0e;
+  --doma-menu-edge:rgba(112,36,69,.62);
+  --doma-menu-ink:#f3e8dc;
+  --doma-menu-muted:#b7a8ad;
+}
+@media (min-width:0px){
+  /* Menu overlays: keep the page isolated behind a soft blur */
+  .mobile-menu-backdrop,
+  #mobileMenuBackdrop,
+  #mobileCourseMenu,
+  #mobileMenu,
+  .kid-menu-overlay,
+  #kidCourseMenuOverlay,
+  #domaMobileDrawerBackdrop,
+  #doma-mobile-drawer-backdrop,
+  #drawer,
+  #drawer-shell,
+  .drawer-shell,
+  .pa-modal-backdrop,
+  .modal-backdrop,
+  .menu-overlay,
+  .nav-menu-overlay{
+    background:rgba(7,5,8,.76)!important;
+    backdrop-filter:blur(16px) saturate(.75)!important;
+    -webkit-backdrop-filter:blur(16px) saturate(.75)!important;
+  }
+  /* Menu panels/dialogs */
+  .kid-menu-dialog,
+  .mobile-menu,
+  #mobileMenu,
+  #mobileCourseMenu,
+  #menu,
+  #drawer,
+  #drawer-shell,
+  .drawer-shell,
+  .drawer-side,
+  .student-sidebar,
+  .sidebar,
+  .modal-card,
+  .pa-modal-card,
+  .menu-dialog,
+  .menu-panel,
+  .nav-menu-panel{
+    background:#100b0e!important;
+    background-image:none!important;
+    border:1px solid var(--doma-menu-edge)!important;
+    border-radius:28px!important;
+    box-shadow:0 24px 80px rgba(0,0,0,.56)!important;
+    color:var(--doma-menu-ink)!important;
+  }
+  /* Centered, large menu dialogs (only when the menu overlay is active) */
+  .kid-menu-overlay .kid-menu-dialog,
+  .mobile-menu-backdrop .mobile-menu,
+  #mobileMenuBackdrop #mobileMenu,
+  #mobileCourseMenu,
+  #kidCourseMenuOverlay .kid-menu-dialog,
+  #domaMobileDrawerBackdrop .drawer-shell,
+  .pa-modal-backdrop .pa-modal-card,
+  .menu-overlay .menu-dialog,
+  .nav-menu-overlay .nav-menu-panel{
+    position:fixed!important;
+    left:50%!important;top:50%!important;
+    transform:translate(-50%,-50%)!important;
+    width:min(960px,calc(100vw - 30px))!important;
+    max-width:calc(100vw - 30px)!important;
+    height:min(74vh,720px)!important;
+    max-height:calc(100dvh - 36px)!important;
+    min-height:0!important;
+    overflow:auto!important;
+    overscroll-behavior:contain!important;
+    z-index:2147483000!important;
+  }
+  .kid-menu-dialog-header,
+  .modal-head,
+  .pa-modal-card header,
+  .menu-panel-header{
+    border-bottom-color:var(--doma-menu-edge)!important;
+  }
+  .kid-menu-item,
+  .menu-item,
+  .mobile-menu a,
+  .student-sidebar a,
+  .student-sidebar button,
+  .sidebar a,
+  .sidebar button{
+    background:transparent!important;
+    border-color:transparent!important;
+    color:var(--doma-menu-ink)!important;
+  }
+  .kid-menu-item:hover,
+  .menu-item:hover,
+  .mobile-menu a:hover,
+  .student-sidebar a:hover,
+  .student-sidebar button:hover,
+  .sidebar a:hover,
+  .sidebar button:hover{
+    background:rgba(112,36,69,.16)!important;
+    border-color:rgba(112,36,69,.28)!important;
+  }
+  .kid-menu-close,
+  .mobile-menu-close,
+  .menu-close,
+  .modal-close{
+    color:var(--doma-menu-muted)!important;
+  }
+}
+/* Mobile: same centered menu with comfortable margins */
+@media(max-width:640px){
+  .kid-menu-overlay .kid-menu-dialog,
+  .mobile-menu-backdrop .mobile-menu,
+  #mobileMenuBackdrop #mobileMenu,
+  #mobileCourseMenu,
+  #kidCourseMenuOverlay .kid-menu-dialog,
+  #domaMobileDrawerBackdrop .drawer-shell,
+  .pa-modal-backdrop .pa-modal-card,
+  .menu-overlay .menu-dialog,
+  .nav-menu-overlay .nav-menu-panel{
+    width:calc(100vw - 24px)!important;
+    height:min(76vh,680px)!important;
+    max-height:calc(100dvh - 24px)!important;
+    border-radius:24px!important;
+    padding:clamp(16px,4vw,26px)!important;
+  }
+}
