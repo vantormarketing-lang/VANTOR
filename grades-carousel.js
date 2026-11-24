@@ -50,7 +50,7 @@ function init(){
  dotArr.forEach((d,i)=>{const active=i===modulo(Math.round(st.pos),n);d.setAttribute('aria-current',active?'true':'false');d.style.setProperty('background',active?'#fff':'rgba(255,255,255,.35)');d.style.setProperty('width',active?'20px':'9px')});
  }
  function go(p){st.pos=p;layout()}function goIndex(i){const cur=Math.round(st.pos);let delta=i-modulo(cur,n);delta-=n*Math.round(delta/n);go(cur+delta)}function stepNext(){go(Math.round(st.pos)+1)}function stepPrev(){go(Math.round(st.pos)-1)}
- prev.onclick=stepPrev;next.onclick=stepNext;
+ prev.onclick=stepPrev;next.onclick=stepNext;st.next=stepNext;st.prev=stepPrev;st.goTo=goIndex;
  let drag=false,moved=false,suppress=false,startX=0,startPos=0,lastX=0,lastT=0,velocity=0;
  box.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;startX=lastX=e.clientX;startPos=st.pos;lastT=performance.now();velocity=0});
  box.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-startX;if(!moved&&Math.abs(dx)>7){moved=true;box.classList.add('doma-grade-carousel-dragging-v2');try{box.setPointerCapture(e.pointerId)}catch(_){}}if(!moved)return;const now=performance.now(),dt=now-lastT;if(dt>0)velocity=.7*velocity+.3*(e.clientX-lastX)/dt;lastX=e.clientX;lastT=now;st.pos=startPos-dx/(st.width*.74);layout()});
@@ -65,6 +65,6 @@ function init(){
  const box=document.querySelector(containerSelector);if(box)observer.observe(box,{childList:true});
  init();
  window.addEventListener('resize',()=>{if(state){state.width=Math.min(330,Math.max(205,state.box.clientWidth*.72));state.cards.forEach(c=>c.style.setProperty('width',state.width+'px','important'));state.box.style.setProperty('height',state.height+'px','important');}});
- window.DomaGradesCarousel={version:2,next:()=>state&&state.pos++,prev:()=>state&&state.pos--,goTo:i=>state&&i>=0&&i<state.n,refresh:init};
+ window.DomaGradesCarousel={version:2,next:()=>state&&state.next(),prev:()=>state&&state.prev(),goTo:i=>state&&state.goTo(i),refresh:init};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
