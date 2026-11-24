@@ -1,7 +1,7 @@
 /* DOMA circular grade carousel v5 — direct finger swipe on card surfaces */
 (function(){
 'use strict';
-if(window.DomaGradesCarousel?.version===5)return;
+if(window.DomaGradesCarousel?.version===6)return;
 const mod=(v,n)=>(v%n+n)%n,interactive='button,a,input,select,textarea,[role="button"]';
 let state=null,observer=null,raf=0;
 function dispose(){if(!state)return;state.ro?.disconnect();state.box.classList.remove('doma-grade-carousel-v2');state.cards.forEach(c=>{['position','left','top','width','max-width','margin','transform','opacity','filter','z-index','pointer-events','transition','visibility','touch-action'].forEach(p=>c.style.removeProperty(p));c.classList.remove('doma-grade-carousel-item-v2')});state=null}
@@ -24,19 +24,18 @@ function init(){
  box.addEventListener('pointermove',e=>{if(!mouseOn||e.pointerId!==mousePid)return;const dx=e.clientX-mx,dy=e.clientY-my;if(!mouseMoved&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)){mouseMoved=true;try{box.setPointerCapture(e.pointerId)}catch(_){}}if(mouseMoved){e.preventDefault();st.pos=mpos-dx/(st.width*.74);layout()}});
  function mouseEnd(e){if(!mouseOn||(e&&e.pointerId!==mousePid))return;mouseOn=false;if(mouseMoved){go(Math.round(st.pos));suppress=true;window.setTimeout(()=>suppress=false,220)}mouseMoved=false;mousePid=null}
  box.addEventListener('pointerup',mouseEnd);box.addEventListener('pointercancel',mouseEnd);
- // Native touch handlers attached to EACH card surface, not a hidden track area.
- let tActive=false,tMoved=false,tId=null,tStartX=0,tStartY=0,tStartPos=0,tLastX=0;
- cards.forEach(card=>{
-  card.addEventListener('touchstart',e=>{if(e.target.closest(interactive))return;if(e.touches.length!==1)return;const t=e.touches[0];tActive=true;tMoved=false;tId=t.identifier;tStartX=tLastX=t.clientX;tStartY=t.clientY;tStartPos=st.pos},{passive:true});
-  card.addEventListener('touchmove',e=>{if(!tActive)return;const t=[...e.touches].find(x=>x.identifier===tId);if(!t)return;const dx=t.clientX-tStartX,dy=t.clientY-tStartY;if(!tMoved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.15)tMoved=true;if(tMoved){e.preventDefault();st.pos=tStartPos-dx/(st.width*.74);layout()}},{passive:false});
-  const end=()=>{if(!tActive)return;tActive=false;if(tMoved){go(Math.round(st.pos));suppress=true;window.setTimeout(()=>suppress=false,220)}tMoved=false;tId=null};
-  card.addEventListener('touchend',end,{passive:true});card.addEventListener('touchcancel',end,{passive:true});
- });
+ // Delegated touch handlers on carousel container; drag transforms are immediate while finger is down.
+ let tActive=false,tMoved=false,tId=null,tStartX=0,tStartY=0,tStartPos=0;
+ box.style.setProperty('touch-action','pan-y','important');
+ box.addEventListener('touchstart',e=>{if(e.target.closest(interactive))return;if(!e.target.closest('.doma-grade-carousel-item-v2')||e.touches.length!==1)return;const t=e.touches[0];tActive=true;tMoved=false;tId=t.identifier;tStartX=t.clientX;tStartY=t.clientY;tStartPos=st.pos},{passive:true,capture:true});
+ box.addEventListener('touchmove',e=>{if(!tActive)return;const t=[...e.touches].find(x=>x.identifier===tId);if(!t)return;const dx=t.clientX-tStartX,dy=t.clientY-tStartY;if(!tMoved&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.08)tMoved=true;if(tMoved){e.preventDefault();cards.forEach(c=>c.style.setProperty('transition','none','important'));st.pos=tStartPos-dx/(st.width*.74);layout()}},{passive:false,capture:true});
+ function touchEnd(){if(!tActive)return;tActive=false;if(tMoved){go(Math.round(st.pos));cards.forEach(c=>c.style.setProperty('transition','transform .25s cubic-bezier(.2,.8,.25,1), opacity .25s, filter .25s','important'));suppress=true;window.setTimeout(()=>suppress=false,220)}tMoved=false;tId=null}
+ box.addEventListener('touchend',touchEnd,{passive:true,capture:true});box.addEventListener('touchcancel',touchEnd,{passive:true,capture:true});
  box.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopPropagation();return}if(e.target.closest(interactive))return;const card=e.target.closest('.doma-grade-carousel-item-v2');if(!card||card.parentNode!==box)return;const i=cards.indexOf(card);if(i>=0&&i!==mod(Math.round(st.pos),n)){e.preventDefault();e.stopPropagation();focus(i)}},true);
  box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(Math.round(st.pos)+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(Math.round(st.pos)-1)}});
  st.ro=new ResizeObserver(()=>{measure();layout()});st.ro.observe(box);cards.forEach(c=>st.ro.observe(c));measure();layout();
 }
 observer=new MutationObserver(()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;init()})});const box=document.querySelector('#gradeGrid');if(box)observer.observe(box,{childList:true});
 init();window.addEventListener('resize',()=>{if(state){measure();layout()}});
-window.DomaGradesCarousel={version:5,refresh:init};
+window.DomaGradesCarousel={version:6,refresh:init};
 })();
