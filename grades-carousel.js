@@ -1,42 +1,70 @@
-/* DOMA grade carousel: scoped strictly to #gradeGrid */
+/* DOMA circular grade carousel - isolated to #gradeGrid */
 (function(){
 'use strict';
-if(window.DomaGradesCarousel)return;
-const cfg={root:'#grades',container:'#gradeGrid',min:6,width:320,step:.74,scale:.86,opacity:.55,blur:6,depth:70,tilt:12,duration:300};
-let api=null;
-const mod=(x,n)=>(x%n+n)%n;
-function init(){
- const box=document.querySelector(cfg.container);
- if(!box||box.children.length<cfg.min||box.classList.contains('doma-cf'))return;
- const cards=[...box.children],n=cards.length;let pos=0,w=cfg.width,prev=[];
- box.classList.add('doma-cf');box.style.setProperty('display','block','important');box.style.setProperty('grid-template-columns','none','important');box.style.setProperty('height','var(--cf-h)','important');box.setAttribute('role','region');box.setAttribute('aria-label','Grades carousel');box.setAttribute('aria-roledescription','carousel');box.tabIndex=0;
- cards.forEach(c=>c.classList.add('doma-cf-item'));
- const style=document.createElement('style');style.id='doma-cf-style';
- style.textContent='html body #gradeGrid.doma-cf{position:relative!important;display:block!important;grid-template-columns:none!important;grid-auto-flow:initial!important;width:100%!important;height:var(--cf-h)!important;overflow:hidden!important;perspective:1000px!important;touch-action:pan-y!important;user-select:none!important;cursor:grab!important}html body #gradeGrid.doma-cf>.doma-cf-item{position:absolute!important;top:50%!important;left:50%!important;width:var(--cf-w)!important;max-width:none!important;margin:0!important;backface-visibility:hidden!important;will-change:transform,opacity,filter!important;transition:transform 300ms cubic-bezier(.2,.85,.25,1),opacity 300ms,filter 300ms!important}.doma-cf.is-dragging>.doma-cf-item{transition:none!important}.doma-cf-ctrl{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px auto}.doma-cf-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(118,35,55,.3);color:#fff;display:grid;place-items:center;cursor:pointer}.doma-cf-dots{display:flex;gap:8px;align-items:center}.doma-cf-dot{width:8px;height:8px;border-radius:99px;border:0;background:#ffffff55;padding:0;cursor:pointer}.doma-cf-dot[aria-current=true]{width:20px;background:#fff}@media(prefers-reduced-motion:reduce){.doma-cf>.doma-cf-item{transition-duration:1ms}}';
- document.head.appendChild(style);
- const controls=document.createElement('div');controls.className='doma-cf-ctrl';
- const prevBtn=document.createElement('button'),nextBtn=document.createElement('button');[prevBtn,nextBtn].forEach(b=>{b.type='button';b.className='doma-cf-btn'});
- prevBtn.setAttribute('aria-label','Previous grade');nextBtn.setAttribute('aria-label','Next grade');
- prevBtn.innerHTML='<span aria-hidden="true">‹</span>';nextBtn.innerHTML='<span aria-hidden="true">›</span>';
- const dots=document.createElement('div');dots.className='doma-cf-dots';const dotList=cards.map((_,i)=>{const b=document.createElement('button');b.type='button';b.className='doma-cf-dot';b.setAttribute('aria-label','Go to grade '+(i+1));dots.appendChild(b);b.onclick=()=>goIndex(i);return b});
- controls.append(prevBtn,dots,nextBtn);box.insertAdjacentElement('afterend',controls);
- function measure(){w=Math.min(cfg.width,Math.max(220,Math.floor(box.clientWidth*.74)));box.style.setProperty('--cf-w',w+'px');let h=0;cards.forEach(c=>h=Math.max(h,c.offsetHeight));box.style.setProperty('--cf-h',(h+56)+'px')}
- function layout(){const step=w*cfg.step;cards.forEach((c,i)=>{let d=i-pos;d-=n*Math.round(d/n);let a=Math.abs(d),sg=d<0?-1:1,x=a<=1?d*step:sg*(step+(a-1)*step*.55),z=-Math.min(a,2)*cfg.depth,rot=Math.max(-28,Math.min(28,-d*cfg.tilt)),sc=a<=1?1-(1-cfg.scale)*a:Math.max(cfg.scale-(a-1)*.1,.6),op=a<=1?1-(1-cfg.opacity)*a:Math.max(cfg.opacity*(2-a),0);c.style.setProperty('transform','translate(-50%,-50%) translate3d('+x+'px,0,'+z+'px) rotateY('+rot+'deg) scale('+sc+')','important');c.style.setProperty('opacity',String(op),'important');c.style.setProperty('filter',a>0.1?'blur('+Math.min(a,1)*cfg.blur+'px)':'none','important');c.style.setProperty('z-index',String(100-Math.round(a*10)),'important');c.style.setProperty('pointer-events',a>1.6?'none':'','important');c.classList.toggle('is-active',i===mod(Math.round(pos),n));prev[i]=d});dotList.forEach((d,i)=>d.setAttribute('aria-current',i===mod(Math.round(pos),n)?'true':'false'))}
- function go(t){pos=t;layout()}function goIndex(i){let base=Math.round(pos),delta=i-mod(base,n);delta-=n*Math.round(delta/n);go(base+delta)}function next(){go(Math.round(pos)+1)}function prevStep(){go(Math.round(pos)-1)}
- prevBtn.onclick=prevStep;nextBtn.onclick=next;
- let drag=false,moved=false,suppressTap=false,sx=0,sp=0,lp=0,lt=0,vel=0;
- box.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;sx=lp=e.clientX;sp=pos;lt=performance.now();vel=0});
- box.addEventListener('pointermove',e=>{if(!drag)return;let dx=e.clientX-sx;if(!moved&&Math.abs(dx)>6){moved=true;box.classList.add('is-dragging');try{box.setPointerCapture(e.pointerId)}catch(_){}}if(!moved)return;let now=performance.now(),dt=now-lt;if(dt>0)vel=.75*vel+.25*((e.clientX-lp)/dt);lp=e.clientX;lt=now;pos=sp-dx/(w*cfg.step);layout()});
- function release(){if(!drag)return;drag=false;if(!moved)return;box.classList.remove('is-dragging');if(performance.now()-lt>90)vel=0;let base=Math.round(pos),target=Math.round(pos-(vel*180)/(w*cfg.step));go(Math.max(base-2,Math.min(base+2,target)));suppressTap=true;setTimeout(()=>suppressTap=false,70);moved=false}
- box.addEventListener('pointerup',release);box.addEventListener('pointercancel',release);box.addEventListener('dragstart',e=>e.preventDefault());
- box.addEventListener('click',e=>{if(suppressTap){e.preventDefault();e.stopPropagation();return}if(moved){e.preventDefault();e.stopPropagation();return}let card=e.target.closest('.doma-cf-item');if(card&&card.parentNode===box){let i=cards.indexOf(card);if(i!==mod(Math.round(pos),n)){e.preventDefault();e.stopPropagation();goIndex(i)}}},true);
- box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();next()}if(e.key==='ArrowLeft'){e.preventDefault();prevStep()}});
- box.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>4){e.preventDefault();nextOrPrev(e.deltaX)}},{passive:false});
- function nextOrPrev(v){go(Math.round(pos)+(v>0?1:-1))}
- const ro=new ResizeObserver(()=>{measure();layout()});ro.observe(box);cards.forEach(c=>ro.observe(c));measure();layout();
- api={next,prev:prevStep,goTo:goIndex,refresh:init,config:cfg};
+if(window.DomaGradesCarousel?.version===2)return;
+const containerSelector='#gradeGrid', minCards=6;
+let state=null,observer=null,raf=0;
+const modulo=(v,n)=>(v%n+n)%n;
+function dispose(){
+ if(! state)return;
+ state.ro?.disconnect();
+ state.box.classList.remove('doma-grade-carousel-v2');
+ state.cards.forEach(c=>{['position','left','top','width','max-width','margin','transform','opacity','filter','z-index','pointer-events','transition'].forEach(p=>c.style.removeProperty(p));c.classList.remove('doma-grade-carousel-item-v2')});
+ state.controls?.remove();state=null;
 }
-function start(){init();const mo=new MutationObserver(()=>{if(!api)init()});mo.observe(document.body,{childList:true,subtree:true});window.addEventListener('load',init)}
-window.DomaGradesCarousel={refresh:init,next:()=>api&&api.next(),prev:()=>api&&api.prev(),goTo:i=>api&&api.goTo(i),config:cfg};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+function init(){
+ const box=document.querySelector(containerSelector);if(!box)return;
+ const cards=[...box.children].filter(el=>el.matches('.grade, article.card, .mf-pastel-grade-card'));
+ if(cards.length<minCards)return;
+ if(state&&state.box===box&&state.cards.every((c,i)=>c===cards[i])&&state.cards.length===cards.length)return;
+ dispose();
+ const n=cards.length;
+ const st={box,cards,n,pos:0,width:0,height:0,controls:null,ro:null};state=st;
+ box.classList.add('doma-grade-carousel-v2');
+ box.setAttribute('role','region');box.setAttribute('aria-label','Choose your grade carousel');box.setAttribute('aria-roledescription','carousel');box.tabIndex=0;
+ box.style.setProperty('display','block','important');box.style.setProperty('position','relative','important');box.style.setProperty('grid-template-columns','none','important');box.style.setProperty('grid-auto-flow','unset','important');box.style.setProperty('overflow','hidden','important');box.style.setProperty('touch-action','pan-y','important');
+ cards.forEach(c=>{c.classList.add('doma-grade-carousel-item-v2');c.style.setProperty('position','absolute','important');c.style.setProperty('left','50%','important');c.style.setProperty('top','50%','important');c.style.setProperty('margin','0','important');c.style.setProperty('backface-visibility','hidden','important');c.style.setProperty('transition','transform .3s cubic-bezier(.2,.8,.25,1), opacity .3s, filter .3s','important');c.style.setProperty('will-change','transform,opacity,filter','important')});
+ const controls=document.createElement('div');controls.className='doma-grade-carousel-controls-v2';controls.style.cssText='display:flex;align-items:center;justify-content:center;gap:12px;margin:12px auto';
+ const mkBtn=(label,txt)=>{let b=document.createElement('button');b.type='button';b.setAttribute('aria-label',label);b.textContent=txt;b.style.cssText='width:42px;height:42px;border-radius:50%;background:rgba(118,35,55,.35);color:#fff;border:1px solid rgba(255,230,205,.35);font-size:24px;cursor:pointer;';return b};
+ const prev=mkBtn('Previous grade','‹'),next=mkBtn('Next grade','›'),dots=document.createElement('div');dots.style.cssText='display:flex;gap:8px;align-items:center';
+ const dotArr=cards.map((_,i)=>{const d=document.createElement('button');d.type='button';d.setAttribute('aria-label','Go to grade '+(i+1));d.style.cssText='width:9px;height:9px;border:0;border-radius:50%;padding:0;background:rgba(255,255,255,.35);cursor:pointer';d.onclick=()=>goIndex(i);dots.appendChild(d);return d});
+ controls.append(prev,dots,next);box.insertAdjacentElement('afterend',controls);st.controls=controls;
+ function measure(){
+ st.width=Math.min(330,Math.max(205,box.clientWidth*.72));
+ let h=0;cards.forEach(c=>{c.style.setProperty('width',st.width+'px','important');c.style.setProperty('max-width',st.width+'px','important');h=Math.max(h,c.offsetHeight)});
+ st.height=Math.max(240,h+45);box.style.setProperty('height',st.height+'px','important');
+ }
+ function layout(){
+ const step=st.width*.74;
+ cards.forEach((c,i)=>{
+ let d=i-st.pos;d-=n*Math.round(d/n);const abs=Math.abs(d),sign=d<0?-1:1;
+ let x=abs<1.01?d*step:sign*(step+(abs-1)*step*.6);
+ let scale=abs<1.01?1-.14*abs:Math.max(.72-(abs-1)*.12,.48);
+ let opacity=abs<1.01?1-.48*abs:Math.max(.48*(2-abs),0);
+ let z=-Math.min(abs,3)*80,rot=Math.max(-20,Math.min(20,-d*10));
+ c.style.setProperty('transform','translate(-50%,-50%) translate3d('+x+'px,0,'+z+'px) rotateY('+rot+'deg) scale('+scale+')','important');
+ c.style.setProperty('opacity',String(opacity),'important');c.style.setProperty('filter',abs>.08?'blur('+Math.min(abs,1)*5+'px)':'none','important');c.style.setProperty('z-index',String(100-Math.round(abs*10)),'important');
+ c.style.setProperty('pointer-events',abs>1.4?'none':'auto','important');
+ c.style.setProperty('visibility',abs>2.4?'hidden':'visible','important');
+ });
+ dotArr.forEach((d,i)=>{const active=i===modulo(Math.round(st.pos),n);d.setAttribute('aria-current',active?'true':'false');d.style.setProperty('background',active?'#fff':'rgba(255,255,255,.35)');d.style.setProperty('width',active?'20px':'9px')});
+ }
+ function go(p){st.pos=p;layout()}function goIndex(i){const cur=Math.round(st.pos);let delta=i-modulo(cur,n);delta-=n*Math.round(delta/n);go(cur+delta)}function stepNext(){go(Math.round(st.pos)+1)}function stepPrev(){go(Math.round(st.pos)-1)}
+ prev.onclick=stepPrev;next.onclick=stepNext;
+ let drag=false,moved=false,suppress=false,startX=0,startPos=0,lastX=0,lastT=0,velocity=0;
+ box.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;startX=lastX=e.clientX;startPos=st.pos;lastT=performance.now();velocity=0});
+ box.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-startX;if(!moved&&Math.abs(dx)>7){moved=true;box.classList.add('doma-grade-carousel-dragging-v2');try{box.setPointerCapture(e.pointerId)}catch(_){}}if(!moved)return;const now=performance.now(),dt=now-lastT;if(dt>0)velocity=.7*velocity+.3*(e.clientX-lastX)/dt;lastX=e.clientX;lastT=now;st.pos=startPos-dx/(st.width*.74);layout()});
+ function release(){if(!drag)return;drag=false;if(!moved)return;box.classList.remove('doma-grade-carousel-dragging-v2');if(performance.now()-lastT>100)velocity=0;let base=Math.round(st.pos),target=Math.round(st.pos-velocity*170/(st.width*.74));go(Math.max(base-2,Math.min(base+2,target)));suppress=true;window.setTimeout(()=>suppress=false,100);moved=false}
+ box.addEventListener('pointerup',release);box.addEventListener('pointercancel',release);
+ box.addEventListener('click',e=>{if(suppress)return;const card=e.target.closest('.doma-grade-carousel-item-v2');if(!card||card.parentNode!==box)return;const i=cards.indexOf(card);if(i!==modulo(Math.round(st.pos),n)){e.preventDefault();e.stopPropagation();goIndex(i)}},true);
+ box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();stepNext()}if(e.key==='ArrowLeft'){e.preventDefault();stepPrev()}});
+ st.ro=new ResizeObserver(()=>{measure();layout()});st.ro.observe(box);cards.forEach(c=>st.ro.observe(c));measure();layout();
+ }
+ if(observer)observer.disconnect();
+ observer=new MutationObserver(()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;init()})});
+ const box=document.querySelector(containerSelector);if(box)observer.observe(box,{childList:true});
+ init();
+ window.addEventListener('resize',()=>{if(state){state.width=Math.min(330,Math.max(205,state.box.clientWidth*.72));state.cards.forEach(c=>c.style.setProperty('width',state.width+'px','important'));state.box.style.setProperty('height',state.height+'px','important');}});
+ window.DomaGradesCarousel={version:2,next:()=>state&&state.pos++,prev:()=>state&&state.pos--,goTo:i=>state&&i>=0&&i<state.n,refresh:init};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
