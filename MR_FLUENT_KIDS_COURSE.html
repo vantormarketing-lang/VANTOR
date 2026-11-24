@@ -233,6 +233,15 @@ body.kid-subscription-modal #enrol .request-card{position:relative;max-height:ca
 @media(max-width:560px){body.kid-subscription-modal #enrol{padding:10px}body.kid-subscription-modal #enrol>.wrap{max-height:calc(100dvh - 20px)}body.kid-subscription-modal #enrol .request-card{max-height:calc(100dvh - 20px);padding:54px 14px 16px}}
 </style>
 <link rel="stylesheet" href="./doma-global-centered-menu.css?v=1">
+<style>
+/* GLOBAL CENTERED MENU — kids course override */
+.kid-menu-overlay{position:fixed!important;inset:0!important;z-index:99999!important;display:grid!important;place-items:center!important;padding:clamp(10px,3vw,24px)!important;background:rgba(5,4,6,.82)!important;backdrop-filter:blur(18px) saturate(.72)!important;-webkit-backdrop-filter:blur(18px) saturate(.72)!important;isolation:isolate!important}
+.kid-menu-dialog{width:min(700px,100%)!important;max-height:min(86vh,840px)!important;max-height:min(86dvh,840px)!important;border:1px solid rgba(135,44,70,.7)!important;border-radius:24px!important;background:linear-gradient(150deg,rgba(20,12,14,.985),rgba(31,14,20,.985) 58%,rgba(14,12,14,.99))!important;box-shadow:0 30px 100px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.045)!important;color:#f7edf0!important}
+.kid-menu-dialog-header{border-bottom-color:rgba(126,39,64,.38)!important}.kid-menu-dialog-header h3{color:#f7e9ed!important}.kid-menu-dialog-header p{color:#c6b2b7!important}.kid-menu-eyebrow{color:#bd7389!important}
+.kid-menu-item{border-color:rgba(124,38,63,.32)!important;background:linear-gradient(145deg,rgba(67,27,37,.22),rgba(255,255,255,.025))!important;color:#f6e9ed!important}.kid-menu-item:hover,.kid-menu-item:focus-visible{border-color:rgba(154,58,87,.72)!important;background:linear-gradient(135deg,rgba(87,30,46,.48),rgba(41,23,31,.42))!important}
+.kid-menu-close{border-color:rgba(126,39,64,.42)!important;background:rgba(65,23,35,.26)!important;color:#f1dce2!important}
+@media(max-width:600px){.kid-menu-overlay{padding:9px!important}.kid-menu-dialog{width:100%!important;max-height:88vh!important;max-height:88dvh!important;border-radius:19px!important}}
+</style>
 </head>
 <body class="mfh-page">
 <div class="topbar"><div class="wrap nav">
