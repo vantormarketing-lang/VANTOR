@@ -19,9 +19,14 @@ function mount(track,cards,{kind='grades'}={}){
   cards.forEach(card=>{
    card.style.setProperty('width',width+'px','important');
    card.style.setProperty('max-width',width+'px','important');
+   card.style.setProperty('height','auto','important');
+   card.style.setProperty('min-height','0','important');
+   card.style.setProperty('max-height',kind==='grades'?'300px':'340px','important');
+   card.style.setProperty('align-self','start','important');
    maxH=Math.max(maxH,card.offsetHeight);
   });
-  track.style.setProperty('height',Math.max(kind==='grades'?230:160,maxH+36)+'px','important');
+  const natural=Math.max(kind==='grades'?230:180,maxH+36);
+  track.style.setProperty('height',Math.min(kind==='grades'?340:380,natural)+'px','important');
  }
  function render(){
   if(!width)measure();
