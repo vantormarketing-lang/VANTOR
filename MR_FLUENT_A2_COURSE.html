@@ -444,6 +444,25 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
   }
 </style>
 <link rel="stylesheet" href="./doma-global-centered-menu.css?v=1">
+<style id="doma-global-centered-course-menu-v1">
+/* Unified centered overlay menu: all screen sizes */
+html body .mobile-menu-backdrop[hidden]{display:none!important}
+html body .mobile-menu-backdrop:not([hidden]){display:block!important;position:fixed!important;inset:0!important;z-index:1400!important;background:rgba(5,4,6,.84)!important;backdrop-filter:blur(18px) saturate(.72)!important;-webkit-backdrop-filter:blur(18px) saturate(.72)!important}
+html body #mobileCourseMenu.student-sidebar{position:fixed!important;inset:auto!important;left:50%!important;top:50%!important;transform:translate(-50%,-46%) scale(.985)!important;visibility:hidden!important;pointer-events:none!important;opacity:0!important;width:min(680px,calc(100vw - 32px))!important;max-width:680px!important;height:auto!important;max-height:min(86vh,86dvh)!important;margin:0!important;padding:16px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain!important;border:1px solid rgba(126,39,64,.68)!important;border-radius:24px!important;background:linear-gradient(150deg,rgba(20,12,14,.985),rgba(31,14,20,.985) 58%,rgba(14,12,14,.99))!important;box-shadow:0 30px 100px rgba(0,0,0,.68),inset 0 1px 0 rgba(255,255,255,.045)!important;color:#f7edf0!important;z-index:1401!important;transition:transform .2s ease,opacity .2s ease,visibility .2s ease!important}
+html body.mobile-menu-open #mobileCourseMenu.student-sidebar{transform:translate(-50%,-50%) scale(1)!important;visibility:visible!important;pointer-events:auto!important;opacity:1!important}
+html body.mobile-menu-open #mobileCourseMenu .sidebar-brand{position:relative!important;top:auto!important;background:transparent!important}
+html body #mobileCourseMenu .sidebar-brand{border-bottom-color:rgba(126,39,64,.38)!important}
+html body #mobileCourseMenu .sidebar-brand strong{color:#f7e9ed!important}html body #mobileCourseMenu .sidebar-brand span{color:#c6b2b7!important}
+html body #mobileCourseMenu .sidebar-caption{color:#bd7389!important}
+html body #mobileCourseMenu nav button{color:#f6e9ed!important;border-color:rgba(124,38,63,.3)!important;background:linear-gradient(145deg,rgba(67,27,37,.22),rgba(255,255,255,.025))!important}
+html body #mobileCourseMenu nav button:hover,html body #mobileCourseMenu nav button.active{border-color:rgba(154,58,87,.72)!important;background:linear-gradient(135deg,rgba(87,30,46,.48),rgba(41,23,31,.42))!important;color:#fff!important;box-shadow:none!important}
+html body #mobileCourseMenu .sidebar-foot{border-color:rgba(126,39,64,.38)!important;color:#c6b2b7!important}
+html body .mobile-menu-toggle{display:inline-flex!important;position:fixed!important;left:14px!important;top:calc(12px + env(safe-area-inset-top,0px))!important;z-index:1403!important;opacity:1!important;pointer-events:auto!important;color:#f4e8ed!important;background:rgba(24,12,16,.95)!important;border:1px solid rgba(135,44,70,.7)!important;border-radius:13px!important;box-shadow:0 8px 24px rgba(0,0,0,.36)!important;backdrop-filter:blur(12px)!important}
+html body.mobile-menu-open .mobile-menu-toggle{opacity:0!important;pointer-events:none!important}
+html body #mobileCourseMenu .mobile-menu-close{display:inline-flex!important;background:rgba(65,23,35,.26)!important;border:1px solid rgba(126,39,64,.42)!important;color:#f1dce2!important}
+@media(max-width:700px){html body #mobileCourseMenu.student-sidebar{width:calc(100vw - 20px)!important;max-width:none!important;max-height:88vh!important;max-height:88dvh!important;border-radius:20px!important;padding:12px!important}}
+@media(prefers-reduced-motion:reduce){html body #mobileCourseMenu.student-sidebar,html body .mobile-menu-toggle{transition:none!important}}
+</style>
 </head>
 <body>
 <div class="course-top-controls"><a href="./index.html?english-course=1" onclick="return mrFluentBackToLevels(event)" class="course-back-arrow" aria-label="Back to Mr. Fluent levels" title="Back to levels">←</a><button type="button" id="mobileMenuToggle" class="mobile-menu-toggle" aria-controls="mobileCourseMenu" aria-expanded="false" aria-label="Open course navigation">☰ <span>Menu</span></button></div>
@@ -776,7 +795,7 @@ footer{color:#806d5e!important;border-color:#ecd8c5!important}
     document.body.classList.remove('mobile-menu-open');
     backdrop.hidden=true;
     trigger.setAttribute('aria-expanded','false');
-    drawer.setAttribute('aria-hidden',mobile()?'true':'false');
+    drawer.setAttribute('aria-hidden','true');
     if(returnFocus&&mobile())trigger.focus({preventScroll:true});
   }
   trigger.addEventListener('click',openMenu);
