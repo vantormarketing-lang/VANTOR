@@ -1,7 +1,7 @@
 /* DOMA circular grade carousel v5 — direct finger swipe on card surfaces */
 (function(){
 'use strict';
-if(window.DomaGradesCarousel?.version===7)return;
+if(window.DomaGradesCarousel?.version===8)return;
 const mod=(v,n)=>(v%n+n)%n,interactive='button,a,input,select,textarea,[role="button"]';
 let state=null,observer=null,raf=0;
 function dispose(){if(!state)return;state.ro?.disconnect();state.box.classList.remove('doma-grade-carousel-v2');state.cards.forEach(c=>{['position','left','top','width','max-width','margin','transform','opacity','filter','z-index','pointer-events','transition','visibility','touch-action'].forEach(p=>c.style.removeProperty(p));c.classList.remove('doma-grade-carousel-item-v2')});state=null}
@@ -27,7 +27,7 @@ function init(){
  // Delegated touch handlers on carousel container; drag transforms are immediate while finger is down.
  let tActive=false,tMoved=false,tId=null,tStartX=0,tStartY=0,tStartPos=0;
  box.style.setProperty('touch-action','pan-y','important');
- box.addEventListener('touchstart',e=>{if(e.target.closest(interactive))return;if(!e.target.closest('.doma-grade-carousel-item-v2')||e.touches.length!==1)return;const t=e.touches[0];tActive=true;tMoved=false;tId=t.identifier;tStartX=t.clientX;tStartY=t.clientY;tStartPos=st.pos},{passive:true,capture:true});
+ box.addEventListener('touchstart',e=>{if(!e.target.closest('.doma-grade-carousel-item-v2')||e.touches.length!==1)return;const t=e.touches[0];tActive=true;tMoved=false;tId=t.identifier;tStartX=t.clientX;tStartY=t.clientY;tStartPos=st.pos},{passive:true,capture:true});
  box.addEventListener('touchmove',e=>{if(!tActive)return;const t=[...e.touches].find(x=>x.identifier===tId);if(!t)return;const dx=t.clientX-tStartX,dy=t.clientY-tStartY;if(!tMoved&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.08)tMoved=true;if(tMoved){e.preventDefault();cards.forEach(c=>c.style.setProperty('transition','none','important'));st.pos=tStartPos-dx/(st.width*.74);layout()}},{passive:false,capture:true});
  function touchEnd(){if(!tActive)return;tActive=false;if(tMoved){go(Math.round(st.pos));cards.forEach(c=>c.style.setProperty('transition','transform .25s cubic-bezier(.2,.8,.25,1), opacity .25s, filter .25s','important'));suppress=true;window.setTimeout(()=>suppress=false,220)}tMoved=false;tId=null}
  box.addEventListener('touchend',touchEnd,{passive:true,capture:true});box.addEventListener('touchcancel',touchEnd,{passive:true,capture:true});
@@ -37,5 +37,5 @@ function init(){
 }
 observer=new MutationObserver(()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;init()})});const box=document.querySelector('#gradeGrid');if(box)observer.observe(box,{childList:true});
 init();window.addEventListener('resize',()=>{if(state){state.measure();state.layout()}});
-window.DomaGradesCarousel={version:7,refresh:init};
+window.DomaGradesCarousel={version:8,refresh:init};
 })();
