@@ -784,7 +784,6 @@ html body #mobileCourseMenu .mobile-menu-close{display:inline-flex!important;bac
   if(!trigger||!drawer||!closer||!backdrop)return;
   const mobile=()=>window.matchMedia('(max-width: 700px)').matches;
   function openMenu(){
-    if(!mobile())return;
     backdrop.hidden=false;
     document.body.classList.add('mobile-menu-open');
     trigger.setAttribute('aria-expanded','true');
@@ -804,7 +803,7 @@ html body #mobileCourseMenu .mobile-menu-close{display:inline-flex!important;bac
   drawer.querySelectorAll('nav button[data-view]').forEach(button=>button.addEventListener('click',()=>closeMenu(false)));
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&document.body.classList.contains('mobile-menu-open'))closeMenu(true)});
   window.addEventListener('resize',()=>{if(!mobile())closeMenu(false)});
-  drawer.setAttribute('aria-hidden',mobile()?'true':'false');
+  drawer.setAttribute('aria-hidden','true');
 })();
 </script>
 
